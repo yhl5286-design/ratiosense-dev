@@ -67,6 +67,10 @@
 .p5side{min-width:150px;text-align:center}
 .p5mini{width:70px;height:96px;border:2.5px solid #26303f;border-radius:0 0 12px 12px;border-top:none;margin:8px auto;position:relative;overflow:hidden}
 .p5mini .mf{position:absolute;bottom:0;left:0;right:0;height:88%}
+
+.minusrow{display:flex;gap:5px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+.mbtn{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:7px 9px;font-weight:800;font-size:14px;color:#c0392b;cursor:pointer;min-width:44px}
+.mbtn:active{background:#fdeeec;transform:translateY(1px)}
 </style>
 </head>
 <body>
@@ -134,6 +138,8 @@ function tubeSVG(c){return `<svg viewBox="0 0 60 118" xmlns="http://www.w3.org/2
   <line x1="15" y1="105" x2="15" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="21" y1="105" x2="21" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="27" y1="105" x2="27" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="33" y1="105" x2="33" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="39" y1="105" x2="39" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="45" y1="105" x2="45" y2="111" stroke="#c8c3b6" stroke-width="1.4"/>
 </g></svg>`;}
 function squeezeBtns(color){return [['xs',5],['s',10],['m',25],['l',50]].map(([sz,a])=>`<button class="bottle ${sz}" data-a="${a}">${tubeSVG(rgb(PRIM[color]))}<div class="cap">+${a}</div></button>`).join('');}
+function minusBtns(){return `<div class="minusrow">`+[5,10,25,50].map(v=>`<button class="mbtn" data-m="${v}">−${v}</button>`).join('')+`</div>`;}
+function wireMinus(el,color,cb){if(!el)return;el.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{S.amt[color]=Math.max(0,(S.amt[color]||0)-(+b.dataset.m));plog('paintSub',{color,sub:+b.dataset.m,amt:Object.assign({},S.amt)});cb();});}
 function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
 
 function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS4,5:renderS5}[S.stage])();}
@@ -156,8 +162,8 @@ function renderS1(){
   $('#stageBody').innerHTML=chips+
    `<div class="tools"><div class="lbl" style="text-align:center">물감을 짜서 섞어요</div>
       <div class="paints">
-        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0}</div><div class="bottles" id="b0"></div></div>
-        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1}</div><div class="bottles" id="b1"></div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0}</div><div class="bottles" id="b0"></div><div id="m0">${minusBtns()}</div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1}</div><div class="bottles" id="b1"></div><div id="m1">${minusBtns()}</div></div>
       </div>
       <div style="max-width:300px;margin:10px auto 0;background:#fbfaf6;border:1.5px solid var(--line);border-radius:12px;padding:8px 14px">
         <table style="width:100%;font-size:17px;font-weight:800;border-collapse:collapse">
@@ -186,6 +192,7 @@ function renderS1(){
       }
     }};
   wire($('#b0'),p0,step);wire($('#b1'),p1,step);
+  wireMinus($('#m0'),p0,step);wireMinus($('#m1'),p1,step);
   $('#clr').onclick=()=>{S.amt={};render();};
   $('#hint').onclick=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0;let msg;
     if(got.length>0){const g0=got[got.length-1];
@@ -216,17 +223,16 @@ function renderS23(baseIdx){
   $('#mProg').textContent=`${base} ${BASE}mL는 이미 담겨 있어요. ${comp}만 넣어 Ⓐ와 같게. (문제 ${S.subIdx+1}/3)`;
   $('#stageBody').innerHTML=probHTML()+
    `<div class="tools"><div class="paints">
-      <div class="basepane"><div class="h">기준 · ${base}</div><div class="amt">이미 ${BASE}mL</div></div>
-      <div class="paint"><div class="nm" style="color:${rgb(PRIM[comp])}">${comp} <span id="ca" class="muted"></span></div><div class="bottles" id="bc"></div></div>
+      <div class="paint"><div class="nm" style="color:${rgb(PRIM[comp])}">${comp} <span id="ca" class="muted"></span></div><div class="bottles" id="bc"></div><div id="mc">${minusBtns()}</div></div>
     </div></div>`+
    pairHTML(tgt,`${comp}:${base} = ${rc}:${ra}`)+
-   `<div class="row"><button class="btn" id="undo">↶ 되돌리기</button><button class="btn" id="clr">🗑 ${comp} 비우기</button>
+   `<div class="row"><button class="btn" id="clr">🗑 ${comp} 비우기</button>
       <label class="toggle"><input type="checkbox" id="nt" checked> 숫자</label></div>
     <div id="reveal"></div><div style="margin-top:10px"><button class="btn primary big" id="commit">답 제출!</button></div>`;
   $('#bc').innerHTML=squeezeBtns(comp);
   const upd=()=>{updateB(tgt,0.25);$('#ca').textContent=S.showNum?`${S.amt[comp]||0}mL`:'';};
   wire($('#bc'),comp,upd);
-  $('#undo').onclick=()=>{S.amt[comp]=Math.max(0,(S.amt[comp]||0)-10);upd();};
+  wireMinus($('#mc'),comp,upd);
   $('#clr').onclick=()=>{S.amt[comp]=0;upd();};
   $('#nt').checked=S.showNum;
   $('#nt').onchange=e=>{S.showNum=e.target.checked;upd();};
@@ -331,8 +337,8 @@ function renderS5(){
     $('#mText').innerHTML=`<b>${p0} : ${p1} = ${ra} : ${rb}</b>의 비로 <b>100칸을 가득</b> 채워 보세요`;
     $('#mProg').textContent='백분율 ①: 물감 1mL = 1칸! 짜는 만큼 바로 칠해져요';
     let body=`<div class="tools"><div class="paints">
-        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <b>${a}</b>칸</div><div class="bottles" id="b0">${squeezeBtns(p0)}</div></div>
-        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <b>${b}</b>칸</div><div class="bottles" id="b1">${squeezeBtns(p1)}</div></div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <b>${a}</b>칸</div><div class="bottles" id="b0">${squeezeBtns(p0)}</div><div id="m0">${minusBtns()}</div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <b>${b}</b>칸</div><div class="bottles" id="b1">${squeezeBtns(p1)}</div><div id="m1">${minusBtns()}</div></div></div>
       <div class="row" style="justify-content:center;margin-top:6px"><button class="btn" id="p5clr">🗑 비우기</button></div></div>`
       +gridHTML(a,tot,false)
       +`<div class="pctlab">${p0} <b>${a}</b>칸 + ${p1} <b>${b}</b>칸 = <b>${tot}</b>칸 / 100칸</div>`;
@@ -354,6 +360,12 @@ function renderS5(){
           else{plog('pctFull',{a:na,b:nb,ok:false});
             banner('help','다시 한번 도전해볼까요?',`100칸이 찼지만 비가 <b>${ra}:${rb}</b>가 아니에요. 비우고 다시 채워 보세요.`,[['비우고 다시',()=>{hideBanner();S.amt={};S.p5.phase='fill';render();}],['그대로 볼게요',hideBanner]]);chime(false);}
         }
+        render();});});
+    [[p0,'#m0'],[p1,'#m1']].forEach(([color,sel])=>{
+      document.querySelectorAll(sel+' .mbtn').forEach(bt=>bt.onclick=()=>{
+        S.amt[color]=Math.max(0,(S.amt[color]||0)-(+bt.dataset.m));
+        plog('paintSub',{color,sub:+bt.dataset.m,amt:Object.assign({},S.amt)});
+        if((S.amt[p0]||0)+(S.amt[p1]||0)<100)S.p5.phase='fill';
         render();});});
     $('#p5clr').onclick=()=>{S.amt={};S.p5.phase='fill';S.p5.ans='';render();};
     if(S.p5.phase==='ask'){
