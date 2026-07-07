@@ -74,6 +74,13 @@
 
 .bsel{border-color:var(--accent)!important;background:#eaf7ef!important;box-shadow:0 0 0 2px #bfe6cf}
 .steps button.locked{opacity:.45}
+
+.numfield{display:flex;flex-direction:column;align-items:center;gap:2px}
+.numfield input{width:104px;font-size:26px;font-weight:800;border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;outline:none;background:#fff}
+.numfield input:focus{border-color:var(--accent)}
+.numfield .u{font-size:14px;color:var(--sub);font-weight:700}
+.liquid{width:120px;height:160px;border:3px solid #26303f;border-top-width:2px;border-radius:0 0 18px 18px;margin:10px auto;position:relative;overflow:hidden;background:#fbfaf6}
+.liquid .mf{position:absolute;bottom:0;left:0;right:0;height:90%}
 </style>
 </head>
 <body>
@@ -308,59 +315,55 @@ function renderS5(){
   const p5=S.fam.p5,p0=S.fam.paints[0],p1=S.fam.paints[1];
   if(S.p5.m===1){
     const [ra,rb]=p5.r1,pct=p5.pct1;
-    const a=S.amt[p0]||0,b=S.amt[p1]||0,tot=a+b;
-    const full=(tot===100&&a*rb===b*ra);
-    $('#mText').innerHTML=`<b>${p0} : ${p1} = ${ra} : ${rb}</b>의 비로 <b>100칸</b>을 칠해 보세요`;
-    $('#mProg').textContent='🖌 붓을 고르고 → 몇 칸 칠할지 숫자로 입력 → 칠하기!';
-    let mixGrid='';
-    if(full){const mc={};mc[p0]=a;mc[p1]=b;const col=rgb(mix(mc));
-      mixGrid=`<div class="pgrid">`+Array.from({length:100},(_,i)=>`<div class="pcell" style="background:${col};transition-delay:${i*4}ms"></div>`).join('')+`</div>
-        <div class="pctlab">섞였어요! ${ra}:${rb}의 ${S.fam.id} 100칸 완성 🎨</div>`;}
-    let body=`<div class="tools"><div class="row">
-        <button class="btn ${S.p5.brush===p0?'bsel':''}" id="br0" style="font-size:15px">🖌 <b style="color:${rgb(PRIM[p0])}">${p0}</b> 붓</button>
-        <button class="btn ${S.p5.brush===p1?'bsel':''}" id="br1" style="font-size:15px">🖌 <b style="color:${rgb(PRIM[p1])}">${p1}</b> 붓</button>
-        <button class="btn" id="p5clr">🗑 비우기</button></div>`;
-    if(S.p5.brush&&!full){
-      body+=`<div class="numin" style="margin-top:8px"><div class="field active"><div class="v" id="v5n">${S.p5.num||'0'}</div><div class="u">칸</div></div></div>
-        <div class="pad" id="padN"></div>
-        <div style="text-align:center;margin-top:6px"><button class="btn primary big" id="paint5">🖌 ${S.p5.brush} ${S.p5.num||0}칸 칠하기</button></div>`;
-    } else if(!full){ body+=`<div class="cap">먼저 <b>붓</b>을 골라요!</div>`; }
-    body+=`</div>`+(full?mixGrid:gridHTML(a,tot,false)+`<div class="pctlab">${p0} <b>${a}</b>칸 + ${p1} <b>${b}</b>칸 = <b>${tot}</b>칸 / 100칸</div>`);
-    if(S.p5.phase==='ask'){
-      body+=`<div class="pctlab" style="margin-top:10px">이 액체에서 <b>${p0}</b>${jz(p0,'은','는')} <b>몇 %</b>인가요?</div>
-        <div class="tools"><div class="numin"><div class="field active"><div class="v" id="v5">${S.p5.ans||'0'}</div><div class="u">%</div></div></div>
-        <div class="pad" id="pad5"></div><div style="text-align:center;margin-top:6px"><button class="btn primary big" id="ck5">확인</button></div></div>`;
+    const ph=S.p5.phase, a=S.amt[p0]||0, b=S.amt[p1]||0;
+    const mc={};mc[p0]=ra;mc[p1]=rb;const mixCol=rgb(mix(mc));
+    if(ph==='fill'||ph==='painted'){
+      $('#mText').innerHTML=`<b>${p0} : ${p1}</b>${jz(p1,'이','가')} <b>${ra} : ${rb}</b>${[1,3,6,7,8].includes(rb)?'이':'가'} 되도록 <b>100칸</b>을 색칠해 보세요`;
+      $('#mProg').textContent='각 색을 몇 칸 칠할지 숫자로 입력하고 → 색칠하기!';
+      let body=`<div class="tools"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
+          <div class="numfield"><input id="inR" type="number" inputmode="numeric" min="0" max="100" value="${a||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p0])}">● ${p0} 칸</div></div>
+          <div class="numfield"><input id="inY" type="number" inputmode="numeric" min="0" max="100" value="${b||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p1])}">● ${p1} 칸</div></div></div>
+        <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="paintGo" style="max-width:280px">🖌 색칠하기</button></div></div>`;
+      if(ph==='painted'){
+        body+=gridHTML(a,100,true)+`<div class="pctlab">✔ ${p0} ${a}칸 : ${p1} ${b}칸 = ${ra} : ${rb}</div>
+          <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="goQuiz" style="max-width:280px">문제 풀러 가기 →</button></div>`;
+      } else {
+        body+=gridHTML(0,0,false)+`<div class="pctlab" style="color:#8a8577">아직 비어 있어요</div>`;
+      }
+      $('#stageBody').innerHTML=body;
+      $('#paintGo').onclick=()=>{
+        const r=parseInt($('#inR').value||'0',10),y=parseInt($('#inY').value||'0',10);
+        if(r+y!==100){plog('pctFillRetry',{r,y});
+          banner('help','다시 한번 도전해볼까요?',`100칸을 <b>모두</b> 칠해야 해요 — 지금은 <b>${r+y}칸</b>이에요.`,[['다시 해보기',hideBanner]]);chime(false);return;}
+        if(r*rb!==y*ra){plog('pctFillRetry',{r,y});
+          banner('help','다시 한번 도전해볼까요?',`100칸이지만 <b>${ra} : ${rb}</b>의 비가 아니에요. ${p0}와 ${p1}의 칸 수를 다시 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);return;}
+        S.amt={};S.amt[p0]=r;S.amt[p1]=y;S.p5.phase='painted';plog('pctFillOk',{r,y});
+        render();chime(true);
+        setTimeout(()=>banner('ok',`${p0} : ${p1}${jz(p1,'이','가')} ${ra} : ${rb}의 비가 되도록 잘 색칠했어요!`,'화살표를 눌러 문제를 풀어 보세요.',[['문제 풀러 가기 →',()=>{hideBanner();S.p5.phase='q1';render();}]]),200);};
+      if(ph==='painted'){$('#goQuiz').onclick=()=>{S.p5.phase='q1';render();};}
+    } else {
+      const isQ1=(ph==='q1');
+      $('#mText').innerHTML=isQ1
+        ? `이 액체에서 <b>${p0}</b>${jz(p0,'은','는')} 100칸 중 <b>몇 칸</b>이었나요?`
+        : `그렇다면 이 액체에서 <b>${p0}의 비율</b>은 <b>몇 %</b>일까요?`;
+      $('#mProg').textContent=`${p0} ${ra} : ${p1} ${rb}의 비로 만들어진 ${S.fam.id} 액체예요. (문제 ${isQ1?1:2}/2)`;
+      $('#stageBody').innerHTML=
+        `<div class="tools" style="text-align:center"><div class="lbl">${ra} : ${rb}의 ${S.fam.id} 액체</div>
+          <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div></div>
+        <div class="tools"><div style="display:flex;gap:10px;justify-content:center;align-items:center">
+          <div class="numfield"><input id="qIn" type="number" inputmode="numeric" min="0" max="100" placeholder="?"><div class="u">${isQ1?'칸':'%'}</div></div></div>
+        <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="qGo" style="max-width:220px">확인</button></div></div>`;
+      $('#qGo').onclick=()=>{
+        const v=parseInt($('#qIn').value||'0',10);
+        if(v===pct){
+          if(isQ1){plog('pctQ1Ok',{v});
+            success(`맞았어요! ${p0} ${pct}칸!`,`섞여서 안 보여도 이 액체 100칸 중 <b>${pct}칸</b>은 ${p0}예요.`,()=>{S.p5.phase='q2';render();});}
+          else{plog('pctQ2Ok',{v});
+            success(`맞았어요! ${p0}의 비율 = ${pct}%!`,`100칸 중 ${pct}칸 = <b>${pct}%</b> — 백분율은 <b>전체를 100</b>으로 볼 때의 비예요!`,
+              ()=>{S.p5={m:2,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.amt={};render();});}
+        } else {plog(isQ1?'pctQ1Retry':'pctQ2Retry',{v});
+          banner('help','다시 한번 도전해볼까요?',isQ1?`내가 <b>${p0} 칸</b>을 몇 칸으로 칠했는지 떠올려 보세요.`:`${p0}${jz(p0,'은','는')} 100칸 중 ${pct}칸이었죠 — 그럼 몇 %일까요?`,[['다시 해보기',hideBanner]]);chime(false);}};
     }
-    $('#stageBody').innerHTML=body;
-    $('#br0').onclick=()=>{S.p5.brush=p0;render();};
-    $('#br1').onclick=()=>{S.p5.brush=p1;render();};
-    $('#p5clr').onclick=()=>{S.amt={};S.p5.phase='fill';S.p5.ans='';S.p5.num='';render();};
-    if(S.p5.brush&&!full){
-      const padN=$('#padN');['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(k=>{const bt=document.createElement('button');bt.textContent=k;bt.onclick=()=>{
-        let v=S.p5.num||'';if(k==='⌫')v=v.slice(0,-1);else if(v.length<3)v+=k;S.p5.num=v;
-        $('#v5n').textContent=v||'0';$('#paint5').innerHTML=`🖌 ${S.p5.brush} ${v||0}칸 칠하기`;};padN.appendChild(bt);});
-      $('#paint5').onclick=()=>{const n=parseInt(S.p5.num||'0',10);if(!n)return;
-        const cur=(S.amt[p0]||0)+(S.amt[p1]||0);
-        if(cur+n>100){plog('pctOverfill',{brush:S.p5.brush,n,cur});
-          banner('help','100칸이 넘어요!',`지금 ${cur}칸 — <b>${100-cur}칸</b>만 더 칠할 수 있어요.`,[['알겠어요',hideBanner]]);chime(false);return;}
-        S.amt[S.p5.brush]=(S.amt[S.p5.brush]||0)+n;S.p5.num='';
-        plog('paintBrush',{brush:S.p5.brush,n,amt:Object.assign({},S.amt)});
-        const na=S.amt[p0]||0,nb=S.amt[p1]||0;
-        if(na+nb===100){
-          if(na*rb===nb*ra){S.p5.phase='ask';plog('pctFull',{a:na,b:nb,ok:true});}
-          else{plog('pctFull',{a:na,b:nb,ok:false});
-            banner('help','다시 한번 도전해볼까요?',`100칸이 찼지만 비가 <b>${ra}:${rb}</b>가 아니에요. 비우고 다시 칠해 보세요.`,[['비우고 다시',()=>{hideBanner();S.amt={};S.p5.phase='fill';S.p5.num='';render();}],['그대로 볼게요',hideBanner]]);chime(false);}
-        }
-        render();};
-    }
-    if(S.p5.phase==='ask'){
-      const pad=$('#pad5');['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(k=>{const bt=document.createElement('button');bt.textContent=k;bt.onclick=()=>{
-        let v=S.p5.ans||'';if(k==='⌫')v=v.slice(0,-1);else if(v.length<3)v+=k;S.p5.ans=v;$('#v5').textContent=v||'0';};pad.appendChild(bt);});
-      $('#ck5').onclick=()=>{const val=parseInt(S.p5.ans||'0',10);
-        if(val===pct){plog('pctCalcOk',{val});
-          success(`맞았어요! ${p0} ${pct}칸 = ${pct}%!`,`섞여서 안 보여도 이 액체 100칸 중 <b>${pct}칸</b>은 ${p0} — 그래서 <b>${pct}%</b>. 비 ${ra}:${rb}와 같은 말이에요!`,
-            ()=>{S.p5={m:2,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.amt={};render();});}
-        else{plog('pctCalcRetry',{val});banner('help','다시 한번 도전해볼까요?',`내가 <b>${p0} 붓</b>으로 몇 칸 칠했는지 떠올려 보세요. (100칸 중)`,[['다시',hideBanner]]);chime(false);}};}
   } else {
     const pct=p5.pct2,g=gcd(pct,100-pct)||1,ca=pct/g,cb=(100-pct)/g;
     if(S.p5.phase==='fill'){
