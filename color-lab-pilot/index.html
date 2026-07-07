@@ -157,16 +157,12 @@ function renderS1(){
   const fam=FAM[S.s1fi],sh=fam.shades[0],t=shadeColor(fam,sh),p0=fam.paints[0],p1=fam.paints[1];
   const got=S.s1got;
   const q=[
-    `Ⓐ 목표 색은 <b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>${[1,3,6,7,8].includes(sh.r[1])?'입니다':'입니다'}. 물감을 짜서 <b>똑같은 색</b>을 만들어 보세요!`,
+    `${fam.emoji} <b>${fam.id} 만들기!</b> Ⓐ 목표 색은 <b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>입니다. 물감을 짜서 <b>똑같은 색</b>을 만들어 보세요!`,
     `방금 만들었던 색을 <b>다른 양</b>으로도 만들어 보세요. ${p0} 몇 mL, ${p1} 몇 mL씩 들어가야 할까요?`,
     `방금 만들었던 색을 <b>또 다른 양</b>으로도 만들어 보세요. ${p0} 몇 mL, ${p1} 몇 mL 들어가야 할까요?`][Math.min(got.length,2)];
   $('#mText').innerHTML=q;
   $('#mProg').textContent=`${fam.id} 만들기 · ${got.length}/3`;
-  const chips=`<div class="seq">`+FAM.map((f,i)=>{
-    const c=rgb(shadeColor(f,f.shades[0]));
-    const cls=i<S.s1fi?'done':(i===S.s1fi?'cur':'');
-    return `<div class="s ${cls}"><div class="c" style="background:${c}"></div>${f.emoji} ${f.id} ${i<S.s1fi?'✓':''}</div>`;}).join('')+`</div>`;
-  $('#stageBody').innerHTML=chips+
+  $('#stageBody').innerHTML=
    `<div class="tools"><div class="lbl" style="text-align:center">물감을 짜서 섞어요</div>
       <div class="paints">
         <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0}</div><div class="bottles" id="b0"></div><div id="m0">${minusBtns()}</div></div>
@@ -192,7 +188,7 @@ function renderS1(){
       const g=gcd(a,b)||1;
       if(got.length>=3){
         const nxt=S.s1fi+1<FAM.length;
-        success('맞았어요! 양은 달라져도 비는 같아요!',`${fam.id}: ${got.map(x=>x.a+':'+x.b).join(' · ')} — 모두 <b>${a/g}:${b/g}</b>!`,
+        success('맞았어요! 양은 달라져도 비는 같아요!',`${fam.id}: ${got.map(x=>x.a+':'+x.b).join(' · ')} — 모두 <b>${a/g}:${b/g}</b>!`+(nxt?` 다음은 ${FAM[S.s1fi+1].emoji} <b>${FAM[S.s1fi+1].id} 만들기</b>!`:''),
           nxt?()=>{S.s1fi++;S.s1got=[];S.amt={};render();}:stageDone);
       } else {
         success(`1번째 성공! 🎨`,`${p0} ${a} : ${p1} ${b} = <b>${a/g}:${b/g}</b> — 이번엔 <b>또 다른 양</b>으로!`,()=>{S.amt={};render();});
