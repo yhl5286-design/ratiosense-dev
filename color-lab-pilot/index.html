@@ -140,7 +140,7 @@ function tubeSVG(c){return `<svg viewBox="0 0 60 118" xmlns="http://www.w3.org/2
   <line x1="15" y1="105" x2="15" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="21" y1="105" x2="21" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="27" y1="105" x2="27" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="33" y1="105" x2="33" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="39" y1="105" x2="39" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="45" y1="105" x2="45" y2="111" stroke="#c8c3b6" stroke-width="1.4"/>
 </g></svg>`;}
 function squeezeBtns(color){return [['xs',5],['s',10],['m',25],['l',50]].map(([sz,a])=>`<button class="bottle ${sz}" data-a="${a}">${tubeSVG(rgb(PRIM[color]))}<div class="cap">+${a}</div></button>`).join('');}
-function minusBtns(){return `<div class="minusrow">`+[5,10,25,50].map(v=>`<button class="mbtn" data-m="${v}">−${v}</button>`).join('')+`</div>`;}
+function minusBtns(){return `<div class="minusrow">`+[5,10,50].map(v=>`<button class="mbtn" data-m="${v}">−${v}</button>`).join('')+`</div>`;}
 function wireMinus(el,color,cb){if(!el)return;el.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{S.amt[color]=Math.max(0,(S.amt[color]||0)-(+b.dataset.m));plog('paintSub',{color,sub:+b.dataset.m,amt:Object.assign({},S.amt)});cb();});}
 function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
 
