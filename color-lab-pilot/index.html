@@ -406,9 +406,8 @@ function famDone(){S.done[S.fam.id+':5']=true;
   plog('famDone',{allDone:true});
   try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
   banner('ok','색상 실험실 다섯 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
-const REM={A:['<b>더 쉬운 진하기</b>부터 해볼까요?','<b>다른 양</b>으로도 이 색이 될까요?'],B:['Ⓐ와 지금 색을 <b>나란히 두고</b> 같은지 봐요.','색만 보며 <b>어느 쪽에 치우쳤는지</b> 봐요.']};
-let ri={A:0,B:0};
-function remedial(m){const msg=REM[m][ri[m]++%REM[m].length];banner('help','다시 한번 도전해볼까요?',msg,[['해볼게요',hideBanner],['계속 탐색',hideBanner]]);chime(false);plog('retry',{mode:m});}
+function remedial(m){const p0=S.fam.paints[0],p1=S.fam.paints[1];
+  banner('help','다시 한번 도전해볼까요?',`${p1}${iga(p1)} 지금 몇 mL인가요? ${p0}${jz(p0,'은','는')} 지금 몇 mL인가요?<br>Ⓐ와 같은 색이 되려면 <b>무슨 물감을 얼마</b>가 되게 해야 할지 먼저 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);plog('retry',{mode:m});}
 function success(t,s,after){banner('ok',t,s,[[after?'다음':'좋아요',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}
 function placeBanner(b){let y;try{const fe=window.frameElement;
   if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
