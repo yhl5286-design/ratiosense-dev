@@ -73,6 +73,7 @@
 .mbtn:active{background:#fdeeec;transform:translateY(1px)}
 
 .bsel{border-color:var(--accent)!important;background:#eaf7ef!important;box-shadow:0 0 0 2px #bfe6cf}
+.steps button.locked{opacity:.45}
 </style>
 </head>
 <body>
@@ -103,7 +104,7 @@ const FAM=[
  {id:'보라',emoji:'🟣',paints:['빨강','파랑'],shades:[{n:'연한',r:[2,1]}]},
  {id:'초록',emoji:'🟢',paints:['노랑','파랑'],shades:[{n:'연한',r:[1,1]}]},
 ];
-const STEP=['1 감각','2 기준량','3 뒤집기','4 숫자','5 백분율'];
+const STEP=['1 감각','2 기준량','3 뒤집기','4 백분율'];
 let S={fam:FAM[0],stage:1,done:{},amt:{},subIdx:0,fails:0,n4:{a:0,b:0,active:0},showNum:false};
 const $=s=>document.querySelector(s);
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'color',event:ev,data:Object.assign({fam:S.fam&&S.fam.id,stage:S.stage,sub:S.subIdx},data||{})},'*');}catch(e){}}
@@ -115,7 +116,11 @@ function segF(){const el=$('#famSeg');el.innerHTML='';FAM.forEach(f=>{const b=do
   if(f===S.fam)b.className='active';b.innerHTML=`<span class="dot" style="background:${rgb(shadeColor(f,f.shades[0]))}"></span>${f.emoji} ${f.id}<small>${f.paints.join('+')}</small>`;
   b.onclick=()=>{S.fam=f;S.stage=1;resetStage();};el.appendChild(b);});}
 function segS(){const el=$('#steps');el.innerHTML='';STEP.forEach((t,i)=>{const st=i+1;const b=document.createElement('button');
-  b.className=(st===S.stage?'active':'')+(S.done[S.fam.id+':'+st]?' done':'');b.textContent=t;b.onclick=()=>{S.stage=st;resetStage();};el.appendChild(b);});}
+  const locked=st>1&&!S.done[S.fam.id+':'+(st-1)];
+  b.className=(st===S.stage?'active':'')+(S.done[S.fam.id+':'+st]?' done':'')+(locked?' locked':'');
+  b.textContent=locked?'🔒 '+t:t;
+  b.onclick=()=>{if(locked){banner('help','아직 잠겨 있어요!','이전 단계를 먼저 완성하면 열려요.',[['알겠어요',hideBanner]]);chime(false);return;}S.stage=st;resetStage();};
+  el.appendChild(b);});}
 /* 진행 스트립(연한·중간·진한) */
 function seqHTML(){return `<div class="seq">`+S.fam.shades.map((s,i)=>{
   const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
@@ -144,7 +149,7 @@ function minusBtns(){return `<div class="minusrow">`+[5,10,50].map(v=>`<button c
 function wireMinus(el,color,cb){if(!el)return;el.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{S.amt[color]=Math.max(0,(S.amt[color]||0)-(+b.dataset.m));plog('paintSub',{color,sub:+b.dataset.m,amt:Object.assign({},S.amt)});cb();});}
 function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
 
-function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS4,5:renderS5}[S.stage])();}
+function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS5}[S.stage])();}
 
 /* ===== 1단계 감각 — 주황·보라·초록, 서로 다른 양으로 ===== */
 function renderS1(){
@@ -295,35 +300,7 @@ function renderS23Lang(baseIdx){
     }};});
 }
 
-/* ===== 4단계 숫자 — 제시된 비로 양 정하기 ===== */
-function renderS4(){
-  const pr4=S.fam.p4,ra=pr4[0],rb=pr4[1],p0=S.fam.paints[0],p1=S.fam.paints[1];
-  const tc={};tc[p0]=ra;tc[p1]=rb;const tgt=mix(tc);
-  $('#mText').innerHTML=`<b>${p0} : ${p1} = ${ra} : ${rb}</b>의 비로 ${S.fam.id}을 만들려고 해요. <b>${p0}을 몇 mL, ${p1}을 몇 mL</b>로 할지 정해 보세요.`;
-  $('#mProg').textContent=`비만 맞으면 양은 얼마든 좋아요 — 답이 여러 개인 문제!`;
-  S.amt={};S.amt[p0]=S.n4.a||0;S.amt[p1]=S.n4.b||0;
-  $('#stageBody').innerHTML=
-   `<div class="tools"><div class="numin">
-      <div class="field ${S.n4.active===0?'active':''}" id="f0"><div class="v" id="v0">${S.n4.a||0}</div><div class="u">${p0} mL</div></div>
-      <div class="field ${S.n4.active===1?'active':''}" id="f1"><div class="v" id="v1">${S.n4.b||0}</div><div class="u">${p1} mL</div></div></div>
-      <div class="pad" id="pad"></div></div>`+
-   pairHTML(tgt,`${p0}:${p1} = ${ra}:${rb}`)+
-   `<div id="reveal"></div><div style="margin-top:8px"><button class="btn primary big" id="commit">확인</button></div>`;
-  const pad=$('#pad');['1','2','3','4','5','6','7','8','9','0','00','⌫'].forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>press(k);pad.appendChild(b);});
-  $('#f0').onclick=()=>{S.n4.active=0;render();};$('#f1').onclick=()=>{S.n4.active=1;render();};
-  $('#commit').onclick=()=>{const a=S.n4.a||0,b=S.n4.b||0;if(!(a&&b))return;
-    const ok=(a*rb===b*ra);
-    plog('commit4',{a,b,ra,rb,ok});
-    if(ok){const g=gcd(a,b)||1;$('#reveal').style.display='block';$('#reveal').innerHTML=`<b>맞았어요!</b> ${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`;
-      success('맞았어요! 양은 달라져도 비는 같아요!',`${p0} ${a}mL : ${p1} ${b}mL = ${ra}:${rb}`,stageDone);
-    } else remedial('A');};
-  updateB(tgt,0.25);
-}
-function press(k){const f=S.n4.active===0?'a':'b';let v=String(S.n4[f]||0);
-  if(k==='⌫')v=v.slice(0,-1)||'0';else if(k==='00')v=v+'00';else v=(v==='0'?'':v)+k;
-  S.n4[f]=Math.min(999,parseInt(v||'0',10));S.amt[S.fam.paints[0]]=S.n4.a||0;S.amt[S.fam.paints[1]]=S.n4.b||0;render();}
-
-/* ===== 5단계 백분율 — 전체를 100으로 ===== */
+/* ===== 4단계 백분율 — 전체를 100으로 ===== */
 function gridHTML(red,total,pour){let h='<div class="pgrid">';
   const c0=rgb(PRIM[S.fam.paints[0]]),c1=rgb(PRIM[S.fam.paints[1]]);
   for(let i=0;i<100;i++){const on=i<red, yel=i>=red&&i<total;
@@ -425,11 +402,11 @@ function renderS5(){
 
 /* ===== 피드백 ===== */
 function stageDone(){const nx=S.stage+1;S.done[S.fam.id+':'+S.stage]=true;
-  if(nx<=5)banner('ok',`${STEP[S.stage-1]} 단계 완성!`,'다음 단계로 가 볼까요?',[['다음 단계',()=>{hideBanner();S.stage=nx;resetStage();}],['여기 더 하기',hideBanner]]);else famDone();}
-function famDone(){S.done[S.fam.id+':5']=true;
+  if(nx<=4)banner('ok',`${STEP[S.stage-1]} 단계 완성!`,'다음 단계로 가 볼까요?',[['다음 단계',()=>{hideBanner();S.stage=nx;resetStage();}],['여기 더 하기',hideBanner]]);else famDone();}
+function famDone(){S.done[S.fam.id+':4']=true;
   plog('famDone',{allDone:true});
   try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
-  banner('ok','색상 실험실 다섯 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
+  banner('ok','색상 실험실 네 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
 function remedial(m){const p0=S.fam.paints[0],p1=S.fam.paints[1];
   banner('help','다시 한번 도전해볼까요?',`${p1}${iga(p1)} 지금 몇 mL인가요? ${p0}${jz(p0,'은','는')} 지금 몇 mL인가요?<br>Ⓐ와 같은 색이 되려면 <b>무슨 물감을 얼마</b>가 되게 해야 할지 먼저 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);plog('retry',{mode:m});}
 function success(t,s,after){banner('ok',t,s,[[after?'다음':'좋아요',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}
