@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>RatioSense — 색상 실험실 (파일럿)</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--warn:#e0a02a;--r:16px;--shadow:0 6px 20px rgba(0,0,0,.07)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:560px;margin:0 auto;padding:12px 12px 80px}
+  h1{font-size:21px;margin:4px 0 2px}.muted{color:var(--sub);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px;margin:10px 0}
+  .lbl{font-size:12px;color:var(--sub);margin-bottom:6px}
+  .seg{display:flex;gap:6px}.seg button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 4px;font-weight:700;font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .seg button .dot{width:24px;height:24px;border-radius:7px;border:1px solid rgba(0,0,0,.12)}
+  .seg button small{font-weight:600;color:var(--sub);font-size:10px}.seg button.active{border-color:var(--ink);transform:translateY(-2px)}
+  .steps{display:flex;gap:4px;margin-top:4px}.steps button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 2px;font-size:14px;font-weight:700;cursor:pointer;color:var(--sub)}
+  .steps button.active{background:#1f2a3d;color:#fff;border-color:#1f2a3d}.steps button.done{color:var(--accent)}
+  .mission{background:#1f2a3d;color:#fff;border:none;font-size:17.5px;line-height:1.65}.mission b{color:#ffd966}.mission .prog{margin-top:6px;font-size:14.5px;color:#cdd6e4}
+  /* 진행(연한·중간·진한) */
+  .seq{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
+  .seq .s{flex:1;max-width:130px;text-align:center;border:2px solid var(--line);border-radius:10px;padding:6px;font-size:14px;font-weight:700;color:var(--sub)}
+  .seq .s .c{height:16px;border-radius:5px;margin-bottom:3px;border:1px solid rgba(0,0,0,.1)}
+  .seq .s.cur{border-color:var(--ink);color:var(--ink)}.seq .s.done{border-color:var(--accent);background:#eef7f1;color:var(--accent)}
+  /* 물감/조작부 */
+  .tools{border:1px dashed var(--line);border-radius:12px;padding:10px;background:#fbfaf6}
+  .paints{display:flex;gap:10px;justify-content:center}
+  .paint{flex:1;text-align:center;max-width:200px}.paint .nm{font-weight:800;font-size:16px;margin-bottom:6px}
+  .bottles{display:flex;gap:8px;align-items:flex-end;justify-content:center}
+  .bottle{border:none;background:transparent;cursor:pointer;padding:0;display:flex;flex-direction:column;align-items:center;gap:1px}
+  .bottle:active{transform:scale(.9)}
+  .bottle svg{display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.14))}
+  .bottle .cap{font-size:13px;font-weight:800;color:var(--sub)}
+  .bottle.xs svg{width:24px}.bottle.s svg{width:32px}.bottle.m svg{width:40px}.bottle.l svg{width:50px}
+  .basepane{flex:1;text-align:center;background:#f2efe7;border-radius:10px;padding:8px;max-width:180px}
+  .basepane .h{font-weight:800;font-size:15px}.basepane .amt{font-size:14px;color:var(--sub)}
+  /* 비커 비교 */
+  .pair{display:flex;gap:22px;justify-content:center;align-items:flex-end;margin:12px 0 2px}
+  .col{text-align:center}.col .lab{font-size:14px;color:var(--sub);margin-bottom:6px;font-weight:700}
+  .beaker{position:relative;height:150px;width:92px;border:3px solid #c9c2b4;border-top:none;border-radius:0 0 26px 26px;overflow:hidden;background:linear-gradient(#fff,#faf8f3)}
+  .fill{position:absolute;left:0;right:0;bottom:0;transition:height .18s,background .18s}.fill.full{height:100%}
+  .gauge{height:11px;border-radius:8px;background:#eee;overflow:hidden;margin:9px 30px 0}.gauge>i{display:block;height:100%;width:0;transition:.2s}
+  .near{text-align:center;font-size:15px;color:var(--sub);margin-top:6px;min-height:18px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 15px;font-size:15px;cursor:pointer;font-weight:600;color:var(--ink)}
+  .btn:active{background:#f2efe8}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.big{width:100%;padding:15px;font-size:17px}
+  .toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub)}
+  .numin{display:flex;gap:10px;justify-content:center;margin:2px 0 6px}
+  .field{flex:1;max-width:150px;border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;cursor:pointer}.field.active{border-color:var(--ink)}
+  .field .v{font-size:26px;font-weight:800}.field .u{font-size:12px;color:var(--sub)}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px;margin:6px auto 0}.pad button{padding:15px;font-size:20px;font-weight:700;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  #reveal{display:none;margin-top:10px;padding:12px;border-radius:12px;background:#eef7f1;border:1px solid #cfe9db;font-size:16px}#reveal b{color:#136a3d}
+  #banner{position:absolute;left:10px;right:10px;display:none;z-index:60;transform:translateY(-50%)}
+  #banner .in{max-width:560px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700}
+  #banner.show{display:block}#banner.ok .in{background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}#banner.help .in{background:#fff6e3;color:#7a5a12;border-top:3px solid var(--warn)}
+  #banner .sub{font-weight:600;font-size:15px;margin-top:4px}#banner .acts{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+  .hidden{display:none!important}
+
+/* 5단계 백분율 100칸 */
+.pgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;max-width:330px;margin:10px auto}
+.pcell{aspect-ratio:1;border-radius:3px;background:#edeae2;transition:background .25s}
+.pctlab{text-align:center;font-weight:800;font-size:18px;margin-top:6px}
+.fillrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.fillrow .btn{font-size:15px;font-weight:800;min-width:58px}
+.p5wrap{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.p5side{min-width:150px;text-align:center}
+.p5mini{width:70px;height:96px;border:2.5px solid #26303f;border-radius:0 0 12px 12px;border-top:none;margin:8px auto;position:relative;overflow:hidden}
+.p5mini .mf{position:absolute;bottom:0;left:0;right:0;height:88%}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎨 색상 실험실 <span class="muted">파일럿</span></h1>
+  <div class="card">
+    <div class="lbl" style="display:none">색 계열</div><div class="seg" id="famSeg" style="display:none"></div>
+    <div class="lbl" style="margin-top:10px">단계</div><div class="steps" id="steps"></div>
+  </div>
+  <div class="card mission" id="mission"><div id="mText">…</div><div class="prog" id="mProg"></div></div>
+  <div class="card" id="stageBody"></div>
+  <div class="muted" style="text-align:center;font-size:11px">RatioSense 색상 실험실 · 4단계(감각→기준량→뒤집기→숫자) · 게이트 없음 · 2026-07-03</div>
+</div>
+<div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
+
+<script>
+const PRIM={빨강:[230,40,55],노랑:[250,215,45],파랑:[45,100,205]};
+function mix(c){const ks=Object.keys(c).filter(k=>c[k]>0),t=ks.reduce((s,k)=>s+c[k],0);if(!t)return[252,250,245];
+  let o=[1,1,1];for(const k of ks){const w=c[k]/t,p=PRIM[k];for(let i=0;i<3;i++)o[i]*=Math.pow(Math.max(p[i]/255,.02),w);}return o.map(v=>Math.round(v*255));}
+const rgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
+const dist=(a,b)=>Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2);
+const prox=(a,b)=>Math.max(0,1-dist(a,b)/230);
+const gcd=(a,b)=>b?gcd(Math.round(b),Math.round(a%b)):Math.round(a);
+function shadeColor(f,s){const c={};c[f.paints[0]]=s.r[0];c[f.paints[1]]=s.r[1];return mix(c);}
+function unit(base,comp){const g=gcd(base,comp)||1,b=base/g,c=comp/g;if(b===c)return'같은 양';if(c%b===0)return`${c/b}배`;if(b%c===0)return`${c}/${b}(${b}분의 ${c})`;return`${c}/${b}`;}
+const FAM=[
+ {id:'주황',emoji:'🟠',paints:['빨강','노랑'],shades:[{n:'연한',r:[1,2]},{n:'중간',r:[1,1]},{n:'진한',r:[2,1]}],p4:[3,4],p5:{r1:[2,3],pct1:40,pct2:60}},
+ {id:'보라',emoji:'🟣',paints:['빨강','파랑'],shades:[{n:'연한',r:[2,1]}]},
+ {id:'초록',emoji:'🟢',paints:['노랑','파랑'],shades:[{n:'연한',r:[1,1]}]},
+];
+const STEP=['1 감각','2 기준량','3 뒤집기','4 숫자','5 백분율'];
+let S={fam:FAM[0],stage:1,done:{},amt:{},subIdx:0,fails:0,n4:{a:0,b:0,active:0},showNum:false};
+const $=s=>document.querySelector(s);
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'color',event:ev,data:Object.assign({fam:S.fam&&S.fam.id,stage:S.stage,sub:S.subIdx},data||{})},'*');}catch(e){}}
+function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill'};S.s1got=[];S.s1fi=0;S.phase23='make';S.made23=0;render();plog('enter');}
+function shadeName(){return S.fam.shades[S.subIdx].n;}
+function curTargetColor(){return shadeColor(S.fam,S.fam.shades[S.subIdx]);}
+
+function segF(){const el=$('#famSeg');el.innerHTML='';FAM.forEach(f=>{const b=document.createElement('button');
+  if(f===S.fam)b.className='active';b.innerHTML=`<span class="dot" style="background:${rgb(shadeColor(f,f.shades[0]))}"></span>${f.emoji} ${f.id}<small>${f.paints.join('+')}</small>`;
+  b.onclick=()=>{S.fam=f;S.stage=1;resetStage();};el.appendChild(b);});}
+function segS(){const el=$('#steps');el.innerHTML='';STEP.forEach((t,i)=>{const st=i+1;const b=document.createElement('button');
+  b.className=(st===S.stage?'active':'')+(S.done[S.fam.id+':'+st]?' done':'');b.textContent=t;b.onclick=()=>{S.stage=st;resetStage();};el.appendChild(b);});}
+/* 진행 스트립(연한·중간·진한) */
+function seqHTML(){return `<div class="seq">`+S.fam.shades.map((s,i)=>{
+  const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
+  return `<div class="s ${cls}"><div class="c" style="background:${rgb(shadeColor(S.fam,s))}"></div>${s.n} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
+/* 비커 비교(같은 크기) */
+function pairHTML(target,label){return `<div class="pair">
+   <div class="col"><div class="lab">Ⓐ 목표 (${label||(shadeName()+' '+S.fam.id)})</div><div class="beaker"><div class="fill full" style="background:${rgb(target)}"></div></div></div>
+   <div class="col"><div class="lab">Ⓑ 내가 만든 색</div><div class="beaker"><div class="fill" id="fill"></div></div></div></div>
+   <div class="near" id="near">Ⓐ와 Ⓑ 색을 견주어 보세요</div>`;}
+function updateB(target,scale){const c=mix(S.amt),tot=Object.values(S.amt).reduce((s,v)=>s+v,0);
+  const f=$('#fill');if(f){f.style.background=rgb(c);f.style.height=Math.min(96,tot*(scale||0.5))+'%';}
+  return prox(c,target);}
+function tubeSVG(c){return `<svg viewBox="0 0 60 118" xmlns="http://www.w3.org/2000/svg">
+  <g><rect x="20" y="2" width="20" height="15" rx="3" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/>
+  <line x1="24" y1="3" x2="24" y2="16" stroke="#c8c3b6" stroke-width="1.6"/><line x1="30" y1="3" x2="30" y2="16" stroke="#c8c3b6" stroke-width="1.6"/><line x1="36" y1="3" x2="36" y2="16" stroke="#c8c3b6" stroke-width="1.6"/>
+  <rect x="24" y="17" width="12" height="6" fill="#d8d4c9" stroke="#b9b4a8" stroke-width="1.2"/>
+  <path d="M14 26 Q14 23 17 23 L43 23 Q46 23 46 26 L48 104 L12 104 Z" fill="#f7f5f0" stroke="#b9b4a8" stroke-width="1.6"/>
+  <path d="M17 25 L22 25 L23 102 L14 102 Z" fill="#ffffff" opacity="0.85"/>
+  <rect x="13.5" y="46" width="33.5" height="34" fill="${c}" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+  <rect x="15" y="48" width="6" height="30" fill="#fff" opacity="0.25"/>
+  <path d="M12 104 L48 104 L49 112 L11 112 Z" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/>
+  <line x1="15" y1="105" x2="15" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="21" y1="105" x2="21" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="27" y1="105" x2="27" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="33" y1="105" x2="33" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="39" y1="105" x2="39" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="45" y1="105" x2="45" y2="111" stroke="#c8c3b6" stroke-width="1.4"/>
+</g></svg>`;}
+function squeezeBtns(color){return [['xs',5],['s',10],['m',25],['l',50]].map(([sz,a])=>`<button class="bottle ${sz}" data-a="${a}">${tubeSVG(rgb(PRIM[color]))}<div class="cap">+${a}</div></button>`).join('');}
+function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
+
+function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS4,5:renderS5}[S.stage])();}
+
+/* ===== 1단계 감각 — 주황·보라·초록, 서로 다른 양으로 ===== */
+function renderS1(){
+  if(S.s1fi==null||S.s1fi>=FAM.length)S.s1fi=0;
+  const fam=FAM[S.s1fi],sh=fam.shades[0],t=shadeColor(fam,sh),p0=fam.paints[0],p1=fam.paints[1];
+  const got=S.s1got;
+  const q=[
+    `Ⓐ 목표 색을 만들려면 <b>${p0}</b>${jz(p0,'과','와')} <b>${p1}</b>${jz(p1,'이','가')} <b>몇 대 몇</b>으로 들어가야 할까요?`,
+    `방금 만들었던 색을 <b>다른 양</b>으로도 만들어 보세요. ${p0} 몇 mL, ${p1} 몇 mL씩 들어가야 할까요?`,
+    `방금 만들었던 색을 <b>또 다른 양</b>으로도 만들어 보세요. ${p0} 몇 mL, ${p1} 몇 mL 들어가야 할까요?`][Math.min(got.length,2)];
+  $('#mText').innerHTML=q;
+  $('#mProg').textContent=`${fam.id} 만들기 · ${got.length}/3`;
+  const chips=`<div class="seq">`+FAM.map((f,i)=>{
+    const c=rgb(shadeColor(f,f.shades[0]));
+    const cls=i<S.s1fi?'done':(i===S.s1fi?'cur':'');
+    return `<div class="s ${cls}"><div class="c" style="background:${c}"></div>${f.emoji} ${f.id} ${i<S.s1fi?'✓':''}</div>`;}).join('')+`</div>`;
+  $('#stageBody').innerHTML=chips+
+   `<div class="tools"><div class="lbl" style="text-align:center">물감을 짜서 섞어요</div>
+      <div class="paints">
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0}</div><div class="bottles" id="b0"></div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1}</div><div class="bottles" id="b1"></div></div>
+      </div>
+      <div style="max-width:300px;margin:10px auto 0;background:#fbfaf6;border:1.5px solid var(--line);border-radius:12px;padding:8px 14px">
+        <table style="width:100%;font-size:17px;font-weight:800;border-collapse:collapse">
+          <tr><td style="color:${rgb(PRIM[p0])}">● ${p0}</td><td style="text-align:right"><span id="am0">0</span> mL</td></tr>
+          <tr><td style="color:${rgb(PRIM[p1])}">● ${p1}</td><td style="text-align:right"><span id="am1">0</span> mL</td></tr>
+        </table></div></div>`+
+   (got.length?`<div class="tools" style="background:#eef7f1;border:1.5px solid #cfe9db;border-radius:12px;padding:8px 14px;margin-top:8px">
+      <div style="font-size:15px;font-weight:800;line-height:1.8">`+got.map((g,i)=>`✔ ${i+1}번째 · ${p0} ${g.a} : ${p1} ${g.b}`).join('<br>')+`</div></div>`:'')+
+   pairHTML(t,`목표: ${fam.id}`)+
+   `<div class="row"><button class="btn" id="clr">🗑 비우기</button><button class="btn" id="hint">💡 힌트</button></div>`;
+  $('#b0').innerHTML=squeezeBtns(p0);$('#b1').innerHTML=squeezeBtns(p1);
+  const step=()=>{const p=updateB(t);const a=S.amt[p0]||0,b=S.amt[p1]||0;
+    const e0=$('#am0'),e1=$('#am1');if(e0)e0.textContent=a;if(e1)e1.textContent=b;
+    const exact=(a*sh.r[1]===b*sh.r[0]);
+    if(p>=.9&&exact&&a>0&&b>0){
+      if(got.some(g=>g.a===a&&g.b===b)){
+        banner('help','이미 만든 양이에요!','같은 색을 <b>다른 양</b>으로도 만들어 보세요.',[['해볼게요',()=>{hideBanner();S.amt={};render();}]]);chime(false);return;}
+      got.push({a,b});plog('s1collect',{fam:fam.id,a,b,n:got.length});
+      const g=gcd(a,b)||1;
+      if(got.length>=3){
+        const nxt=S.s1fi+1<FAM.length;
+        success('맞았어요! 양은 달라져도 비는 같아요!',`${fam.id}: ${got.map(x=>x.a+':'+x.b).join(' · ')} — 모두 <b>${a/g}:${b/g}</b>!`,
+          nxt?()=>{S.s1fi++;S.s1got=[];S.amt={};render();}:stageDone);
+      } else {
+        success(`1번째 성공! 🎨`,`${p0} ${a} : ${p1} ${b} = <b>${a/g}:${b/g}</b> — 이번엔 <b>또 다른 양</b>으로!`,()=>{S.amt={};render();});
+      }
+    }};
+  wire($('#b0'),p0,step);wire($('#b1'),p1,step);
+  $('#clr').onclick=()=>{S.amt={};render();};
+  $('#hint').onclick=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0;let msg;
+    if(got.length>0){const g0=got[got.length-1];
+      msg=`✔ 기록을 봐요! <b>${p0} ${g0.a} : ${p1} ${g0.b}</b>으로 성공했죠 — <b>두 양을 똑같이 몇 배</b>(×2, ×3…)로 늘리거나 줄이면 같은 색이 돼요.`;}
+    else if(a===0&&b===0){msg=`작은 양부터 <b>하나씩</b> 넣으면서 Ⓑ 색이 어떻게 변하는지 봐요.`;}
+    else if(a*sh.r[1]<b*sh.r[0]){msg=`지금은 <b>${p1}</b>${jz(p1,'이','가')} 많은 편이에요 — <b>${p0}</b>${jz(p0,'을','를')} 조금 더 넣어 볼까요?`;}
+    else if(a*sh.r[1]>b*sh.r[0]){msg=`지금은 <b>${p0}</b>${jz(p0,'이','가')} 많은 편이에요 — <b>${p1}</b>${jz(p1,'을','를')} 조금 더 넣어 볼까요?`;}
+    else{msg=`비는 딱 맞아요! 조금만 더 넣거나 그대로 완성해 보세요.`;}
+    plog('hint',{fam:fam.id,a,b,n:got.length});
+    banner('help','💡 힌트',msg,[['해볼게요',hideBanner]]);};
+  updateB(t);
+}
+
+/* ===== 2·3단계 기준량 / 뒤집기 — 제시된 비대로 만들기 ===== */
+const P23={2:[{r:[1,1],b:50},{r:[1,2],b:100},{r:[2,3],b:90}], 3:[{r:[1,2],b:100},{r:[3,2],b:90},{r:[1,4],b:100}]};
+function probHTML(){const bi=(S.stage===2?0:1);return `<div class="seq">`+P23[S.stage].map((pp,i)=>{
+  const r=pp.r;const c={};c[S.fam.paints[0]]=r[0];c[S.fam.paints[1]]=r[1];
+  const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
+  return `<div class="s ${cls}"><div class="c" style="background:${rgb(mix(c))}"></div>${r[1-bi]}:${r[bi]} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
+function renderS23(baseIdx){
+  if(S.phase23==='lang'){renderS23Lang(baseIdx);return;}
+  const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
+  const base=S.fam.paints[baseIdx],comp=S.fam.paints[1-baseIdx];
+  const ra=pr[baseIdx],rc=pr[1-baseIdx];
+  const tc={};tc[S.fam.paints[0]]=pr[0];tc[S.fam.paints[1]]=pr[1];const tgt=mix(tc);
+  S.amt={};S.amt[base]=BASE;
+  $('#mText').innerHTML=`'<b>${base}에 대한 ${comp}의 비</b>'가 <b>${rc} : ${ra}</b>${[1,3,6,7,8,10].includes(ra)?'이':'가'} 되도록 하여 <b>${S.fam.id}</b>${jz(S.fam.id,'을','를')} 만들려고 해요. <b>${base}</b>${jz(base,'이','가')} <b>${BASE}mL</b> 이미 들어 있다면, <b>${comp}</b>${jz(comp,'은','는')} 몇 mL 넣어야 할까요?`;
+  $('#mProg').textContent=`${base} ${BASE}mL는 이미 담겨 있어요. ${comp}만 넣어 Ⓐ와 같게. (문제 ${S.subIdx+1}/3)`;
+  $('#stageBody').innerHTML=probHTML()+
+   `<div class="tools"><div class="paints">
+      <div class="basepane"><div class="h">기준 · ${base}</div><div class="amt">이미 ${BASE}mL</div></div>
+      <div class="paint"><div class="nm" style="color:${rgb(PRIM[comp])}">${comp} <span id="ca" class="muted"></span></div><div class="bottles" id="bc"></div></div>
+    </div></div>`+
+   pairHTML(tgt,`${comp}:${base} = ${rc}:${ra}`)+
+   `<div class="row"><button class="btn" id="undo">↶ 되돌리기</button><button class="btn" id="clr">🗑 ${comp} 비우기</button>
+      <label class="toggle"><input type="checkbox" id="nt" checked> 숫자</label></div>
+    <div id="reveal"></div><div style="margin-top:10px"><button class="btn primary big" id="commit">답 제출!</button></div>`;
+  $('#bc').innerHTML=squeezeBtns(comp);
+  const upd=()=>{updateB(tgt,0.25);$('#ca').textContent=S.showNum?`${S.amt[comp]||0}mL`:'';};
+  wire($('#bc'),comp,upd);
+  $('#undo').onclick=()=>{S.amt[comp]=Math.max(0,(S.amt[comp]||0)-10);upd();};
+  $('#clr').onclick=()=>{S.amt[comp]=0;upd();};
+  $('#nt').checked=S.showNum;
+  $('#nt').onchange=e=>{S.showNum=e.target.checked;upd();};
+  $('#commit').onclick=()=>{const cv=S.amt[comp]||0;if(!cv)return;
+    const ok=(cv*ra===BASE*rc);
+    plog('commit23',{base,comp,cv,ok});
+    if(ok){S.fails=0;S.made23=cv;S.phase23='lang';chime(true);render();
+    } else {S.fails++;remedial(S.fails>=2?'B':'A');}};
+  upd();
+}
+
+/* ── 기준량·비교하는 양 — 말로 확인 ── */
+function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b;}
+function iga(w){return jz(w,'이','가');}
+function renderS23Lang(baseIdx){
+  const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
+  const base=S.fam.paints[baseIdx],comp=S.fam.paints[1-baseIdx];
+  const ra=pr[baseIdx],rc=pr[1-baseIdx],cv=S.made23;
+  const isEq=(ra===rc);
+  const cb=rgb(PRIM[base]),cc=rgb(PRIM[comp]);
+  $('#mText').innerHTML=isEq
+    ? `색 완성! 그럼 '<b>${base}에 대한 ${comp}의 비</b>'에서 <b>기준량</b>은 무엇일까요?`
+    : `색 완성! '<b>${base}에 대한 ${comp}의 비</b>' <b>${rc} : ${ra}</b> 를 <b>분수</b>로 나타내면?`;
+  $('#mProg').textContent=`(문제 ${S.subIdx+1}/3)`;
+  const expl=isEq
+    ? `<b style="color:${cb}">${base} ${BASE}mL</b>는 처음부터 들어 있었고,<br>
+       내가 <b style="color:${cc}">${comp} ${cv}mL</b>를 넣어 맞췄어요.<br>
+       '<b>${base}에 대한 ${comp}의 비</b>' = <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
+       💡 '~<b>에 대한</b>'이 붙은 쪽이 <b>기준량</b>, 기준량은 비의 <b>뒤</b>에 와요.`
+    : `이 문제에서 <b>기준량</b>은 <b style="color:${cb}">${base}</b> — 처음부터 <b>${BASE}mL</b> 들어 있었죠.<br>
+       내가 넣은 <b style="color:${cc}">${comp} ${cv}mL</b>${iga(comp)} <b>비교하는 양</b>이에요.<br>
+       '<b>${base}에 대한 ${comp}의 비</b>' = <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
+       💡 비 <b>a : b</b>는 분수로 <b>a/b</b> — <b>앞의 수가 위</b>로 가요.`;
+  let opts;
+  if(isEq) opts=[[base,true],[comp,false]];
+  else opts=[[`${rc}/${ra}`,true],[`${ra}/${rc}`,false],[`${rc}/${ra+rc}`,false]];
+  opts.sort(()=>Math.random()-0.5);
+  $('#stageBody').innerHTML=probHTML()+
+   `<div class="tools" style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:16.5px;line-height:1.95">${expl}</div></div>
+   <div class="tools" style="text-align:center">
+      <div class="row" style="justify-content:center;margin-top:4px">`+
+      opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="lg${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
+   `</div></div>`;
+  opts.forEach((o,i)=>{$('#lg'+i).onclick=()=>{
+    plog(o[1]?'lang23Ok':'lang23Retry',{q:base+'에 대한 '+comp,pick:String(o[0])});
+    if(o[1]){
+      const nx=S.subIdx+1;
+      const fb=isEq
+        ? `'${base}<b>에 대한</b>'이니까 기준량은 <b>${base}</b>! 비교하는 양은 ${comp}이에요.`
+        : `${comp} : ${base} = ${rc} : ${ra} → 분수로 <b>${rc}/${ra}</b>. 앞(비교하는 양)이 위, 뒤(기준량)가 아래!`;
+      success('맞았어요! 말도 완벽해요!',fb,nx>=3?stageDone:()=>{S.subIdx=nx;S.phase23='make';render();});
+    } else {
+      banner('help','다시 한번 도전해볼까요?',isEq
+        ? `'~<b>에 대한</b>'이 붙은 쪽이 <b>기준량</b>이에요.`
+        : `비 <b>a : b</b>에서 <b>앞의 a가 분수의 위</b>로 가요.`,[['다시 고르기',hideBanner]]);chime(false);
+    }};});
+}
+
+/* ===== 4단계 숫자 — 제시된 비로 양 정하기 ===== */
+function renderS4(){
+  const pr4=S.fam.p4,ra=pr4[0],rb=pr4[1],p0=S.fam.paints[0],p1=S.fam.paints[1];
+  const tc={};tc[p0]=ra;tc[p1]=rb;const tgt=mix(tc);
+  $('#mText').innerHTML=`<b>${p0} : ${p1} = ${ra} : ${rb}</b>의 비로 ${S.fam.id}을 만들려고 해요. <b>${p0}을 몇 mL, ${p1}을 몇 mL</b>로 할지 정해 보세요.`;
+  $('#mProg').textContent=`비만 맞으면 양은 얼마든 좋아요 — 답이 여러 개인 문제!`;
+  S.amt={};S.amt[p0]=S.n4.a||0;S.amt[p1]=S.n4.b||0;
+  $('#stageBody').innerHTML=
+   `<div class="tools"><div class="numin">
+      <div class="field ${S.n4.active===0?'active':''}" id="f0"><div class="v" id="v0">${S.n4.a||0}</div><div class="u">${p0} mL</div></div>
+      <div class="field ${S.n4.active===1?'active':''}" id="f1"><div class="v" id="v1">${S.n4.b||0}</div><div class="u">${p1} mL</div></div></div>
+      <div class="pad" id="pad"></div></div>`+
+   pairHTML(tgt,`${p0}:${p1} = ${ra}:${rb}`)+
+   `<div id="reveal"></div><div style="margin-top:8px"><button class="btn primary big" id="commit">확인</button></div>`;
+  const pad=$('#pad');['1','2','3','4','5','6','7','8','9','0','00','⌫'].forEach(k=>{const b=document.createElement('button');b.textContent=k;b.onclick=()=>press(k);pad.appendChild(b);});
+  $('#f0').onclick=()=>{S.n4.active=0;render();};$('#f1').onclick=()=>{S.n4.active=1;render();};
+  $('#commit').onclick=()=>{const a=S.n4.a||0,b=S.n4.b||0;if(!(a&&b))return;
+    const ok=(a*rb===b*ra);
+    plog('commit4',{a,b,ra,rb,ok});
+    if(ok){const g=gcd(a,b)||1;$('#reveal').style.display='block';$('#reveal').innerHTML=`<b>맞았어요!</b> ${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`;
+      success('맞았어요! 양은 달라져도 비는 같아요!',`${p0} ${a}mL : ${p1} ${b}mL = ${ra}:${rb}`,stageDone);
+    } else remedial('A');};
+  updateB(tgt,0.25);
+}
+function press(k){const f=S.n4.active===0?'a':'b';let v=String(S.n4[f]||0);
+  if(k==='⌫')v=v.slice(0,-1)||'0';else if(k==='00')v=v+'00';else v=(v==='0'?'':v)+k;
+  S.n4[f]=Math.min(999,parseInt(v||'0',10));S.amt[S.fam.paints[0]]=S.n4.a||0;S.amt[S.fam.paints[1]]=S.n4.b||0;render();}
+
+/* ===== 5단계 백분율 — 전체를 100으로 ===== */
+function gridHTML(red,total,pour){let h='<div class="pgrid">';
+  const c0=rgb(PRIM[S.fam.paints[0]]),c1=rgb(PRIM[S.fam.paints[1]]);
+  for(let i=0;i<100;i++){const on=i<red, yel=i>=red&&i<total;
+    const bg=on?c0:(yel?c1:'#edeae2');
+    h+=`<div class="pcell" style="background:${bg}${pour?`;transition-delay:${i*5}ms`:''}"></div>`;}
+  return h+'</div>';}
+function p5Preview(red){const c={};c[S.fam.paints[0]]=red;c[S.fam.paints[1]]=100-red;return rgb(mix(c));}
+function renderS5(){
+  const p5=S.fam.p5,p0=S.fam.paints[0],p1=S.fam.paints[1];
+  if(S.p5.m===1){
+    const [ra,rb]=p5.r1,pct=p5.pct1;
+    const a=S.amt[p0]||0,b=S.amt[p1]||0,tot=a+b;
+    $('#mText').innerHTML=`<b>${p0} : ${p1} = ${ra} : ${rb}</b>의 비로 <b>100칸을 가득</b> 채워 보세요`;
+    $('#mProg').textContent='백분율 ①: 물감 1mL = 1칸! 짜는 만큼 바로 칠해져요';
+    let body=`<div class="tools"><div class="paints">
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <b>${a}</b>칸</div><div class="bottles" id="b0">${squeezeBtns(p0)}</div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <b>${b}</b>칸</div><div class="bottles" id="b1">${squeezeBtns(p1)}</div></div></div>
+      <div class="row" style="justify-content:center;margin-top:6px"><button class="btn" id="p5clr">🗑 비우기</button></div></div>`
+      +gridHTML(a,tot,false)
+      +`<div class="pctlab">${p0} <b>${a}</b>칸 + ${p1} <b>${b}</b>칸 = <b>${tot}</b>칸 / 100칸</div>`;
+    if(S.p5.phase==='ask'){
+      body+=`<div class="pctlab" style="margin-top:10px">가득 찼어요! ${p0}은 <b>몇 %</b>일까요?</div>
+        <div class="tools"><div class="numin"><div class="field active"><div class="v" id="v5">${S.p5.ans||'0'}</div><div class="u">%</div></div></div>
+        <div class="pad" id="pad5"></div><div style="text-align:center;margin-top:6px"><button class="btn primary big" id="ck5">확인</button></div></div>`;
+    }
+    $('#stageBody').innerHTML=body;
+    [[p0,'#b0'],[p1,'#b1']].forEach(([color,sel])=>{
+      document.querySelectorAll(sel+' .bottle').forEach(bt=>bt.onclick=()=>{
+        const add=+bt.dataset.a,cur=(S.amt[p0]||0)+(S.amt[p1]||0);
+        if(cur+add>100){plog('pctOverfill',{color,add,cur});
+          banner('help','100칸이 넘어요!',`지금 ${cur}칸 — <b>${100-cur}칸</b>만 더 들어가요. 비우거나 작은 병을 써 보세요.`,[['알겠어요',hideBanner]]);chime(false);return;}
+        S.amt[color]=(S.amt[color]||0)+add;plog('paint',{color,add,amt:Object.assign({},S.amt)});
+        const na=S.amt[p0]||0,nb=S.amt[p1]||0;
+        if(na+nb===100){
+          if(na*rb===nb*ra){S.p5.phase='ask';plog('pctFull',{a:na,b:nb,ok:true});}
+          else{plog('pctFull',{a:na,b:nb,ok:false});
+            banner('help','다시 한번 도전해볼까요?',`100칸이 찼지만 비가 <b>${ra}:${rb}</b>가 아니에요. 비우고 다시 채워 보세요.`,[['비우고 다시',()=>{hideBanner();S.amt={};S.p5.phase='fill';render();}],['그대로 볼게요',hideBanner]]);chime(false);}
+        }
+        render();});});
+    $('#p5clr').onclick=()=>{S.amt={};S.p5.phase='fill';S.p5.ans='';render();};
+    if(S.p5.phase==='ask'){
+      const pad=$('#pad5');['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(k=>{const bt=document.createElement('button');bt.textContent=k;bt.onclick=()=>{
+        let v=S.p5.ans||'';if(k==='⌫')v=v.slice(0,-1);else if(v.length<3)v+=k;S.p5.ans=v;$('#v5').textContent=v||'0';};pad.appendChild(bt);});
+      $('#ck5').onclick=()=>{const val=parseInt(S.p5.ans||'0',10);
+        if(val===pct){plog('pctCalcOk',{val});
+          success(`맞았어요! ${p0} ${pct}칸 = ${pct}%!`,`100칸 중 ${pct}칸이 ${p0} — 그래서 <b>${pct}%</b>. 비 ${ra}:${rb}와 같은 말이에요!`,
+            ()=>{S.p5={m:2,red:0,ans:'',poured:false,phase:'fill'};S.amt={};render();});}
+        else{plog('pctCalcRetry',{val});banner('help','다시 한번 도전해볼까요?','한 줄이 <b>10칸</b>이에요 — '+p0+' 칸을 세어 보세요.',[['해볼게요',hideBanner]]);chime(false);}};}
+  } else {
+    const pct=p5.pct2,g=gcd(pct,100-pct)||1,ca=pct/g,cb=(100-pct)/g;
+    if(S.p5.phase==='fill'){
+      $('#mText').innerHTML=`반대로! <b>${p0}이 ${pct}%</b>인 ${S.fam.id}을 칸으로 만들어 보세요`;
+      $('#mProg').textContent='백분율 ②: % → 비 · 버튼(±10, ±1)이나 숫자로 칸을 채워요';
+      const red=S.p5.red;
+      $('#stageBody').innerHTML=
+        `<div class="fillrow"><button class="btn" id="m10">−10칸</button><button class="btn" id="m1">−1칸</button>
+          <button class="btn" id="a1">+1칸</button><button class="btn" id="a10">+10칸</button></div>`+
+        `<div class="p5wrap"><div>`+gridHTML(red,100,false)+`<div class="pctlab">${p0} <b>${red}</b>칸 / 100칸</div></div>
+         <div class="p5side"><div class="lab">지금 섞인 색</div><div class="p5mini"><div class="mf" style="background:${p5Preview(red)}"></div></div>
+          <div class="tools" style="margin-top:6px"><div class="pad" id="pad5"></div></div></div></div>
+        <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="ck5">확인</button></div>`;
+      const setRed=v=>{S.p5.red=Math.max(0,Math.min(100,v));S.p5.ans=String(S.p5.red);render();};
+      $('#m10').onclick=()=>setRed(S.p5.red-10);$('#m1').onclick=()=>setRed(S.p5.red-1);
+      $('#a1').onclick=()=>setRed(S.p5.red+1);$('#a10').onclick=()=>setRed(S.p5.red+10);
+      const pad=$('#pad5');['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(k=>{const bt=document.createElement('button');bt.textContent=k;bt.onclick=()=>{
+        let v=S.p5.ans==='0'?'':(S.p5.ans||'');if(k==='⌫')v=v.slice(0,-1);else if(v.length<3)v+=k;S.p5.ans=v;setRed(parseInt(v||'0',10));};pad.appendChild(bt);});
+      $('#ck5').onclick=()=>{if(S.p5.red===pct){S.p5.phase='ratio';plog('pctFillOk',{red:S.p5.red});render();}
+        else{plog('pctFillRetry',{red:S.p5.red});banner('help','다시 한번 도전해볼까요?',`${p0} 칸이 <b>${pct}%</b>가 되게 채워 보세요. (100칸 중)`,[['해볼게요',hideBanner]]);chime(false);}};
+    } else {
+      $('#mText').innerHTML=`${p0} ${pct}% — 그럼 <b>${p0} : ${p1}</b> 비는 몇 대 몇일까요?`;
+      $('#mProg').textContent='백분율 ②: % → 비';
+      const opts=[[ca,cb],[cb,ca],[ca,ca+cb]].map(([x,y],i)=>({x,y,ok:i===0}));
+      opts.sort(()=>Math.random()-0.5);
+      $('#stageBody').innerHTML=gridHTML(pct,100,false)+`<div class="pctlab">${p0} ${pct}칸 : ${p1} ${100-pct}칸</div>
+        <div class="fillrow" style="margin-top:10px">`+opts.map((o,i)=>`<button class="btn big" data-ok="${o.ok?1:0}" id="op${i}">${o.x} : ${o.y}</button>`).join('')+`</div>`;
+      opts.forEach((o,i)=>{$('#op'+i).onclick=()=>{
+        if(o.ok){plog('pctRatioOk',{pct,ratio:ca+':'+cb});
+          success(`맞았어요! ${pct}% = ${pct}:${100-pct} = ${ca}:${cb}!`,`백분율은 <b>전체를 100</b>으로 볼 때의 비예요.`,famDone);}
+        else{plog('pctRatioRetry',{pick:o.x+':'+o.y});banner('help','다시 한번 도전해볼까요?',`${pct}:${100-pct}를 <b>가장 간단한 비</b>로 줄여 보세요.`,[['해볼게요',hideBanner]]);chime(false);}};});
+    }
+  }
+}
+
+/* ===== 피드백 ===== */
+function stageDone(){const nx=S.stage+1;S.done[S.fam.id+':'+S.stage]=true;
+  if(nx<=5)banner('ok',`${STEP[S.stage-1]} 단계 완성!`,'다음 단계로 가 볼까요?',[['다음 단계',()=>{hideBanner();S.stage=nx;resetStage();}],['여기 더 하기',hideBanner]]);else famDone();}
+function famDone(){S.done[S.fam.id+':5']=true;
+  plog('famDone',{allDone:true});
+  try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
+  banner('ok','색상 실험실 다섯 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
+const REM={A:['<b>더 쉬운 진하기</b>부터 해볼까요?','<b>다른 양</b>으로도 이 색이 될까요?'],B:['Ⓐ와 지금 색을 <b>나란히 두고</b> 같은지 봐요.','색만 보며 <b>어느 쪽에 치우쳤는지</b> 봐요.']};
+let ri={A:0,B:0};
+function remedial(m){const msg=REM[m][ri[m]++%REM[m].length];banner('help','다시 한번 도전해볼까요?',msg,[['해볼게요',hideBanner],['계속 탐색',hideBanner]]);chime(false);plog('retry',{mode:m});}
+function success(t,s,after){banner('ok',t,s,[[after?'다음':'좋아요',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}
+function placeBanner(b){let y;try{const fe=window.frameElement;
+  if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
+    const vt=Math.max(0,-r.top),vb=Math.min(r.height,ph-r.top);y=vt+(vb-vt)*0.55;}
+  else{y=window.scrollY+window.innerHeight*0.6;}}catch(e){y=window.scrollY+window.innerHeight*0.6;}
+  b.style.top=Math.max(90,Math.round(y))+'px';}
+function banner(cls,t,s,acts){const b=$('#banner');b.className=cls+' show';placeBanner(b);$('#bT').innerHTML=t;$('#bS').innerHTML=s||'';const ae=$('#bA');ae.innerHTML='';(acts||[['확인',hideBanner]]).forEach(([x,fn])=>{const q=document.createElement('button');q.className='btn';q.innerHTML=x;q.onclick=fn;ae.appendChild(q);});}
+function hideBanner(){$('#banner').className='';}
+let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
+function tone(f,w,d){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.2,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}
+function chime(ok){ok?(tone(523,0,.14),tone(659,.12,.16),tone(784,.26,.22)):(tone(392,0,.16),tone(349,.16,.2));}
+resetStage();
+</script>
+</body>
+</html>

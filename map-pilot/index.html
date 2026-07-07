@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지도의 비밀</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--blue:#3b6db5;--red:#c0392b;--r:16px;--shadow:0 6px 20px rgba(0,0,0,.07)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:700px;margin:0 auto;padding:12px 12px 40px}
+  h1{font-size:19px;margin:4px 0 2px}.muted{color:var(--sub);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px;margin:10px 0}
+  .lbl{font-size:12.5px;color:var(--sub);margin-bottom:6px}.lbl b{color:var(--ink)}
+  .seg{display:flex;gap:6px}.seg button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:9px 3px;font-weight:700;font-size:11.5px;cursor:pointer}
+  .seg button.active{border-color:var(--ink);background:#fbf6e8}
+  .readout{background:#1f2a3d;color:#fff;border:none;text-align:center}
+  .readout .big{font-size:20px;font-weight:800;margin:2px 0}.readout .big b{color:#ffd966}.readout .nm{font-size:13px;color:#cdd6e4}
+  canvas{display:block;max-width:100%}
+  input[type=range]{width:100%}
+  .dialv{text-align:center;font-size:17px;font-weight:800;margin:2px 0}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+  .btn:active{transform:translateY(1px)}
+  .btn.big{font-size:15px;padding:11px 20px;background:#eaf7ef;border-color:var(--accent);color:#136a3d;font-weight:800}
+  .choice{display:block;width:100%;text-align:left;margin:6px 0;padding:11px 13px;border:2px solid var(--line);border-radius:12px;background:#fff;font-weight:700;font-size:13.5px;cursor:pointer}
+  .choice:active{background:#fbf6e8}
+  .cap{font-size:12px;color:var(--sub);text-align:center;margin-top:8px}.cap b{color:var(--ink)}
+  .status{text-align:center;font-size:16px;font-weight:800;margin-top:8px}
+  /* 계산기 */
+  .calc{max-width:280px;margin:10px auto 4px}
+  .calcdisp{background:#1f2a3d;color:#fff;font-size:26px;font-weight:800;text-align:right;padding:9px 15px;border-radius:10px;font-variant-numeric:tabular-nums;min-height:46px}
+  .calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:7px}
+  .cbtn{padding:13px 0;font-size:18px;font-weight:800;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  .cbtn:active{background:#f0ece2;transform:translateY(1px)}
+  .cbtn.op{background:#f7f0dd;border-color:#e0c98a}.cbtn.wide{grid-column:span 2}
+  /* 지도(2단계) */
+  .mapbox{position:relative;overflow:hidden;border:2px solid #cdc6b8;border-radius:12px;background:#eef3e4}
+  .mapgrid{position:absolute;inset:0;pointer-events:none;z-index:3;
+    background-image:linear-gradient(rgba(60,90,140,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(60,90,140,.18) 1px,transparent 1px)}
+  .mapcontent{position:absolute;left:0;top:0;transform-origin:0 0;transition:transform .5s}
+  .mobj{position:absolute;display:flex;align-items:center;justify-content:center;font-weight:800;border-radius:6px;font-size:12px}
+  .scalebar{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;margin-top:8px}
+  .scalebar .sc{background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:5px 11px}
+  /* 복사기(3단계) */
+  .copier{display:flex;gap:12px;align-items:stretch;justify-content:center;flex-wrap:wrap}
+  .tray{flex:1;min-width:150px;border:2px dashed var(--line);border-radius:12px;padding:10px;text-align:center;background:#fbfaf6}
+  .tray .tt{font-size:11px;color:var(--sub);font-weight:700;margin-bottom:6px}
+  .pctrow{display:flex;gap:7px;justify-content:center;margin:10px 0 4px;flex-wrap:wrap}
+  .pctbtn{border:2px solid var(--line);background:#fff;border-radius:11px;padding:9px 14px;font-weight:800;font-size:14px;cursor:pointer}
+  .pctbtn.active{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
+  #banner{position:absolute;left:10px;right:10px;display:none;z-index:60;transform:translateY(-50%)}
+  #banner .in{max-width:700px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700;background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}
+  #banner.show{display:block}#banner .sub{font-weight:600;font-size:13px;margin-top:4px}#banner .acts{margin-top:10px}#banner .acts .btn{margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🗺️ 지도의 비밀</h1>
+  <div class="muted">작은 지도에서 시작해 <b>지구 지도</b>까지 — 비·비율·백분율로 세상을 종이에 담아요.</div>
+  <div class="card"><div class="lbl">단계</div><div class="seg" id="stageSeg"></div></div>
+  <div class="card readout" id="readout"></div>
+  <div id="body"></div>
+  <div class="muted" style="text-align:center;font-size:11px">지도의 비밀 · 닮음·축척·백분율·지구 · 2026-07-06</div>
+</div>
+<div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+let stage=1;
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'map',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
+const STAGES=[['1 · 그림 확대',1],['2 · 축척의 비밀',2],['3 · 복사기 %',3],['4 · 지구 재기',4]];
+function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([t,s])=>{
+  const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=t;b.onclick=()=>{stage=s;render();plog('enter');};el.appendChild(b);});}
+function placeBanner(b){let y;try{const fe=window.frameElement;
+  if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
+    const vt=Math.max(0,-r.top),vb=Math.min(r.height,ph-r.top);y=vt+(vb-vt)*0.55;}
+  else{y=window.scrollY+window.innerHeight*0.6;}}catch(e){y=window.scrollY+window.innerHeight*0.6;}
+  b.style.top=Math.max(90,Math.round(y))+'px';}
+function banner(t,s,acts){const b=$('#banner');b.className='show';placeBanner(b);$('#bT').innerHTML=t;$('#bS').innerHTML=s||'';const ae=$('#bA');ae.innerHTML='';(acts||[]).forEach(([x,fn])=>{const q=document.createElement('button');q.className='btn';q.textContent=x;q.onclick=fn;ae.appendChild(q);});}
+function hideBanner(){$('#banner').className='';}
+function reduce(a,b){const g=(x,y)=>y?g(y,x%y):x;const k=g(Math.round(a*2),Math.round(b*2));return [Math.round(a*2)/k,Math.round(b*2)/k];}
+
+/* ══════ 1단계 · 지도 그림 확대 (비·닮음) ══════ */
+let sx=1, sy=1, m1idx=0, m1done=[];
+const M1=[{t:'2배',v:2,f:'1 : 2'},{t:'1.5배',v:1.5,f:'2 : 3'}];
+function render1(){
+  const ms=M1[m1idx];
+  $('#readout').innerHTML=`<div class="nm">미션 ${m1done.length}/${M1.length} — 지도에 넣을 그림을 확대해요</div><div class="big">집을 <b>${ms.t}</b>로 — 닮게!</div>`;
+  $('#body').innerHTML=`<div class="card">
+    <div class="lbl">🧵 고무줄 확대 — <b>가로·세로 배</b>를 각각 바꿔 보세요. 모눈 칸으로 길이를 재요.</div>
+    <canvas id="cv1" style="width:100%;height:250px"></canvas>
+    <div class="status" id="st1"></div>
+    <div style="display:flex;gap:14px;margin-top:8px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px"><div class="dialv">가로 <span id="sxv">×${sx}</span></div><input type="range" id="rsx" min="1" max="3" step="0.5" value="${sx}"></div>
+      <div style="flex:1;min-width:180px"><div class="dialv">세로 <span id="syv">×${sy}</span></div><input type="range" id="rsy" min="1" max="3" step="0.5" value="${sy}"></div>
+    </div>
+    <div class="cap">가로·세로를 <b>같은 배</b>로 늘리면 모양이 그대로(닮음), 다르게 늘리면 찌그러져요.</div></div>`;
+  $('#rsx').oninput=e=>{sx=+e.target.value;$('#sxv').textContent='×'+sx;draw1();};
+  $('#rsy').oninput=e=>{sy=+e.target.value;$('#syv').textContent='×'+sy;draw1();};
+  draw1();
+}
+function house(ctx,x,y,w,h,body,roof){ // (x,y)=왼쪽 아래
+  ctx.fillStyle=body;ctx.fillRect(x,y-h*0.7,w,h*0.7);
+  ctx.fillStyle=roof;ctx.beginPath();ctx.moveTo(x-w*0.08,y-h*0.7);ctx.lineTo(x+w/2,y-h);ctx.lineTo(x+w*1.08,y-h*0.7);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillRect(x+w*0.38,y-h*0.38,w*0.24,h*0.38);}
+function draw1(){
+  const cv=$('#cv1');if(!cv)return;const rect=cv.getBoundingClientRect();
+  if(rect.width<8)return; // 숨김 상태(폭 0)에서 그리기 금지 — 0 간격 무한루프 방지
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=500;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const C=Math.max(1,Math.min(W/16,H/9));
+  ctx.strokeStyle='rgba(60,90,140,.16)';ctx.lineWidth=1;
+  for(let x=0;x<=W;x+=C){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=H;y>=0;y-=C){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const base=H-C*0.8;
+  // 원본: 2칸 × 2칸
+  house(ctx,C*1,base,C*2,C*2,'#b8895a','#8a5a3b');
+  ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';ctx.textAlign='center';
+  ctx.fillText('원본 2칸',C*2,base+C*0.62);
+  // 확대본
+  const nx=C*5.5, w2=C*2*sx, h2=C*2*sy;
+  const ok=(sx===sy);
+  house(ctx,nx,base,w2,h2, ok?'#5aa77a':'#c96d5f', ok?'#2e7d57':'#a04537');
+  ctx.fillStyle='#26303f';ctx.fillText(`가로 ${2*sx}칸 · 세로 ${2*sy}칸`,nx+w2/2,base+C*0.62);
+  const [ra,rb]=reduce(2,2*sx), [rc,rd]=reduce(2,2*sy);
+  const st=$('#st1');
+  if(sx===1&&sy===1){st.innerHTML='<span style="color:var(--sub)">슬라이더로 늘려 보세요</span>';}
+  else if(ok){st.innerHTML=`✅ <span style="color:var(--accent)">닮음!</span> 가로 ${ra}:${rb} · 세로 ${rc}:${rd} — 비가 같아요`;check1();}
+  else{st.innerHTML=`😵 <span style="color:var(--red)">찌그러졌어요</span> — 가로 ${ra}:${rb} ≠ 세로 ${rc}:${rd}`;}
+}
+function check1(){const ms=M1[m1idx];
+  if(sx===ms.v&&sy===ms.v&&!m1done.includes(m1idx)){
+    m1done.push(m1idx);plog('similarOk',{mult:ms.v,ratio:ms.f});
+    setTimeout(()=>banner(`맞았어요! ${ms.t} 닮음 완성 🏠`,`가로도 세로도 ${ms.t} — 대응하는 변의 비가 모두 <b>${ms.f}</b>. 이게 닮음이에요!`,
+      m1done.length<M1.length?[['다음 미션 →',()=>{hideBanner();m1idx=1;sx=1;sy=1;render();}]]:[['2단계로 →',()=>{hideBanner();stage=2;render();}]]),150);}}
+
+/* ══════ 2단계 · 축척의 비밀 (비율) ══════ */
+const CELL=28;
+let zoom=1, m2idx=0, m2done=[];
+const M2=[
+ {q:'다리는 지도에서 <b>3칸</b>. 실제 길이는 몇 m?', hint:'1칸 = 100 m → 3 × 100', ans:300, unit:'m'},
+ {q:'실제 <b>500 m</b>인 큰길은 지도에서 몇 칸?', hint:'500 ÷ 100', ans:5, unit:'칸'},
+ {q:'지도를 <b>2배로 확대</b>했어요(아래 버튼). 이제 다리는 몇 칸?', hint:'3칸 × 2', ans:6, unit:'칸', needZoom:true}
+];
+function render2(){
+  const ms=M2[m2idx];
+  $('#readout').innerHTML=`<div class="nm">미션 ${m2done.length}/${M2.length} · 축척 <b id="scTop">1 : ${zoom===1?'10,000':'5,000'}</b> (1칸 = ${zoom===1?100:50} m)</div><div class="big">${ms.q}</div>`;
+  $('#body').innerHTML=`<div class="card">
+    <div class="lbl">🗺️ 우리 마을 지도 — 모눈 <b>1칸 = ${zoom===1?100:50} m</b></div>
+    <div class="mapbox" id="mapbox" style="height:${CELL*8}px">
+      <div class="mapcontent" id="mapc" style="width:${CELL*12}px;height:${CELL*8}px;transform:scale(${zoom})">
+        <div class="mobj" style="left:${CELL*2}px;top:${CELL*4}px;width:${CELL*3}px;height:${CELL}px;background:#9a7b4f;color:#fff">🌉 다리 3칸</div>
+        <div class="mobj" style="left:${CELL*7}px;top:${CELL*1}px;width:${CELL*2}px;height:${CELL*2}px;background:#d8763b;color:#fff">🏫</div>
+        <div class="mobj" style="left:${CELL*1}px;top:${CELL*6}px;width:${CELL*5}px;height:${CELL*0.8}px;background:#8f9aa8;color:#fff">🛣 큰길</div>
+        <div class="mobj" style="left:${CELL*8.5}px;top:${CELL*5}px;width:${CELL*1.5}px;height:${CELL*1.5}px;background:#4f89c6;color:#fff;border-radius:50%">⛲</div>
+      </div>
+      <div class="mapgrid" style="background-size:${CELL}px ${CELL}px"></div>
+    </div>
+    <div class="scalebar"><span class="sc">축척 1 : ${zoom===1?'10,000':'5,000'}</span>
+      <button class="btn" onclick="toggleZoom()">${zoom===1?'🔍 지도를 2배로 확대':'↩ 원래 크기로'}</button></div>
+    <div class="cap">지도를 확대하면 <b>사물은 커지고</b>, 1칸이 나타내는 <b>실제 거리는 줄어요</b> (축척이 바뀜).</div></div>
+   <div class="card"><div class="lbl">💡 ${ms.hint} — 계산기로 구한 뒤 확인!</div>
+    ${calcHTML()}
+    <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check2()">✓ 확인 (${ms.unit})</button></div></div>`;
+  cShow();
+}
+function toggleZoom(){zoom=zoom===1?2:1;render2();plog('zoom',{zoom});}
+function check2(){cEq();const ms=M2[m2idx];const val=Math.round(parseFloat(cDisp)||0);
+  if(ms.needZoom&&zoom!==2){banner('먼저 지도를 확대해요','🔍 <b>지도를 2배로 확대</b> 버튼을 누르고 지도를 관찰해 보세요.',[['알겠어요',hideBanner]]);return;}
+  plog(val===ms.ans?'scaleOk':'scaleRetry',{mission:m2idx+1,val});
+  if(val===ms.ans){if(!m2done.includes(m2idx))m2done.push(m2idx);
+    const last=m2done.length>=M2.length;
+    banner(`맞았어요! ${ms.ans}${ms.unit} 🎯`, m2idx===2?'지도가 2배가 되면 같은 다리가 <b>더 많은 칸</b>을 차지해요 — 축척은 1:5,000이 됐죠!':'축척은 지도와 실제를 잇는 <b>비</b>예요!',
+      last?[['3단계로 →',()=>{hideBanner();stage=3;render();}]]:[['다음 미션 →',()=>{hideBanner();m2idx++;cClear();render();}]]);}
+  else banner('다시 한번 도전해볼까요?',`힌트: ${ms.hint}`,[['다시',hideBanner]]);}
+
+/* ══════ 3단계 · 복사기 백분율 ══════ */
+let pct=100, m3idx=0, m3done=[];
+const M3=[
+ {type:'predict', q:'호수 지도를 <b>150%</b>로 복사하면 어떻게 될까요?', choices:[['모양 그대로, 1.5배 커진다',true],['가로만 1.5배 길어진다',false],['크기가 그대로다',false]], pct:150,
+  ok:'150% = ×1.5 — 가로도 세로도 1.5배, 모양은 그대로! (2:3 — 화음의 완전5도와 같은 비예요 🎵)'},
+ {type:'quiz', q:'가로 <b>4칸</b> 호수를 <b>6칸</b>으로 만들려면 몇 %로 복사할까요?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
+  ok:'4칸 → 6칸 = 4:6 = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
+ {type:'quiz', q:'<b>200%</b>로 복사하면 가로 2칸 나무는 몇 칸이 될까요?', choices:[['3칸',false],['4칸',true],['6칸',false]], pct:200,
+  ok:'200% = ×2 → 2칸이 <b>4칸</b>으로. 백분율은 <b>배율의 다른 이름</b>이에요!'}
+];
+function lake(scale){const w=56*scale,h=36*scale;
+  return `<div style="width:${w}px;height:${h}px;background:#4f89c6;border-radius:45% 55% 50% 50%;margin:8px auto;position:relative">
+    <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:${11*scale}px;font-weight:800">호수</span></div>`;}
+function render3(){
+  const ms=M3[m3idx];
+  $('#readout').innerHTML=`<div class="nm">미션 ${m3done.length}/${M3.length} — 지도 공방의 복사기</div><div class="big">${ms.q}</div>`;
+  $('#body').innerHTML=`<div class="card">
+    <div class="lbl">🖨️ 복사기 — 원본을 넣고 <b>배율(%)</b>을 골라요</div>
+    <div class="copier">
+      <div class="tray"><div class="tt">원본 (가로 4칸)</div>${lake(1)}</div>
+      <div style="display:flex;align-items:center;font-size:26px">➜</div>
+      <div class="tray"><div class="tt">복사본 <span id="pctlab">${pct}%</span></div><div id="outTray">${pct===100?lake(1):lake(pct/100)}</div></div>
+    </div>
+    <div class="pctrow">${[50,100,150,200].map(p=>`<button class="pctbtn ${p===pct?'active':''}" onclick="setPct(${p})">${p}%</button>`).join('')}</div>
+    <div class="cap">%를 눌러 복사해 보고, 아래에서 답을 골라요. <b>100% = ×1(그대로)</b></div></div>
+   <div class="card">${ms.choices.map(([t,ok],i)=>`<button class="choice" onclick="pick3(${i})">${['①','②','③'][i]} ${t}</button>`).join('')}</div>`;
+}
+function setPct(p){pct=p;plog('copy',{pct:p});$('#pctlab').textContent=p+'%';$('#outTray').innerHTML=lake(p/100);
+  document.querySelectorAll('.pctbtn').forEach(b=>b.classList.toggle('active',b.textContent===p+'%'));}
+function pick3(i){const ms=M3[m3idx];plog(ms.choices[i][1]?'pctOk':'pctRetry',{mission:m3idx+1,pick:i});
+  if(ms.choices[i][1]){if(!m3done.includes(m3idx))m3done.push(m3idx);
+    pct=ms.pct;const last=m3done.length>=M3.length;
+    banner('맞았어요! 🖨️',ms.ok, last?[['4단계 — 지구 재기! →',()=>{hideBanner();stage=4;render();}]]:[['다음 미션 →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
+  else banner('다시 한번 도전해볼까요?','%를 직접 눌러 복사해 보면서 관찰해 보세요.',[['다시',hideBanner]]);}
+
+/* ══════ 4단계 · 지구를 재는 미션 (종합) ══════ */
+let m4step=1; // 1: 2% 구하기, 2: 둘레 구하기, 3: 완성
+function render4(){
+  if(m4step===1){
+    $('#readout').innerHTML=`<div class="nm">마지막 지도: 지구 🌍 — 그런데 지구 둘레를 몰라요!</div><div class="big">그림자 각도 <b>7.2°</b>는 360°의 몇 %?</div>`;
+    $('#body').innerHTML=`<div class="card">
+      <div class="lbl">📜 2200년 전, 에라토스테네스의 발견 — 같은 시각, 두 도시</div>
+      <canvas id="cv4" style="width:100%;height:230px"></canvas>
+      <div class="cap"><b>시에네</b>: 우물 바닥까지 해가 닿아요(그림자 0°) · <b>알렉산드리아</b>: 막대 그림자가 <b>7.2°</b> 기울어요.<br>둥근 지구 위라서 두 도시 사이의 각도가 바로 7.2°!</div></div>
+     <div class="card"><div class="lbl">💡 7.2 ÷ 360 × 100 — 계산기로!</div>
+      ${calcHTML()}
+      <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check4a()">✓ 확인 (%)</button></div></div>`;
+    draw4(); cShow();
+  } else if(m4step===2){
+    $('#readout').innerHTML=`<div class="nm">두 도시 사이 거리 = <b>800 km</b> (낙타로 50일!)</div><div class="big">800 km가 <b>2%</b>라면, 지구 둘레는?</div>`;
+    $('#body').innerHTML=`<div class="card">
+      <div class="lbl">🍕 지구를 원 그래프로 — 800 km 조각이 딱 2%</div>
+      <canvas id="cvPie" style="width:100%;height:200px"></canvas>
+      <div class="cap">2%가 50개 모이면 100%. 그러니 <b>800 × 50</b> — 계산기로!</div></div>
+     <div class="card">${calcHTML()}
+      <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check4b()">✓ 확인 (km)</button></div></div>`;
+    drawPie(); cShow();
+  } else {
+    $('#readout').innerHTML=`<div class="nm">🎉 지도의 비밀 — 모두 풀었어요!</div><div class="big">지구 둘레 = <b>40,000 km</b></div>`;
+    $('#body').innerHTML=`<div class="card" style="text-align:center">
+      <div style="font-size:64px;margin:6px">🌍</div>
+      <div style="font-weight:800;font-size:17px">세계 지도 완성!</div>
+      <div class="sc" style="display:inline-block;background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:6px 14px;margin:10px 0;font-weight:800">축척 1 : 40,000,000</div>
+      <div class="cap">실제 지구 둘레는 40,075 km — 막대기 하나와 <b>'비'</b>만으로 2200년 전에 지구를 쟀어요.<br>
+      확대(1) → 축척(2) → 백분율(3) → 지구(4)… 전부 <b>같은 비의 비밀</b>이었죠!</div>
+      <button class="btn big" onclick="m4step=1;stage=1;sx=1;sy=1;m1idx=0;m1done=[];m2idx=0;m2done=[];zoom=1;m3idx=0;m3done=[];pct=100;cClear();render()" style="margin-top:8px">처음부터 다시 탐험</button></div>`;
+  }
+}
+function draw4(){const cv=$('#cv4');if(!cv)return;const rect=cv.getBoundingClientRect();
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=460;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  // 둥근 지구(큰 원의 윗부분)
+  const R=W*1.1, cx=W/2, cy=H+R-H*0.62;
+  ctx.fillStyle='#bfe0c2';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+  ctx.strokeStyle='#7fae84';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+  // 태양광(평행)
+  ctx.strokeStyle='#e0a02a';ctx.lineWidth=3;
+  for(let i=0;i<6;i++){const x=W*0.18+i*W*0.13;ctx.beginPath();ctx.moveTo(x+H*0.16,0);ctx.lineTo(x,H*0.30);ctx.stroke();}
+  ctx.fillStyle='#e0a02a';ctx.font='bold 26px sans-serif';ctx.textAlign='left';ctx.fillText('☀️ 햇빛은 평행!',W*0.02,H*0.10);
+  // 막대 2개: 시에네(수직으로 해 닿음), 알렉산드리아(그림자)
+  function stick(angleFromTop,label,shadow){
+    const a=-Math.PI/2+angleFromTop;
+    const bx=cx+R*Math.cos(a), by=cy+R*Math.sin(a);
+    const tx=cx+(R+H*0.16)*Math.cos(a), ty=cy+(R+H*0.16)*Math.sin(a);
+    ctx.strokeStyle='#26303f';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(tx,ty);ctx.stroke();
+    if(shadow){ctx.strokeStyle='#c0392b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(bx,by);
+      ctx.lineTo(bx-H*0.11,by+H*0.035);ctx.stroke();
+      ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';ctx.textAlign='center';ctx.fillText('7.2°',tx-H*0.13,ty-8);}
+    ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.fillText(label,Math.min(tx,W-60),ty-H*0.045);}
+  stick(0.16,'알렉산드리아',true);
+  stick(0.40,'시에네',false);
+}
+function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingClientRect();
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=400;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2,R=H*0.40;
+  ctx.fillStyle='#dfe9f5';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+  ctx.strokeStyle='#9fb6d4';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+  // 2% 조각
+  ctx.fillStyle='#c0392b';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*0.02);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c0392b';ctx.font='bold 26px sans-serif';ctx.textAlign='center';
+  ctx.fillText('800 km = 2%',cx+R*0.32,cy-R*1.06);
+  ctx.fillStyle='#26303f';ctx.font='bold 30px sans-serif';ctx.fillText('지구 둘레 = 100% = ?',cx,cy+12);}
+function check4a(){cEq();const v=parseFloat(cDisp);plog(Math.abs(v-2)<0.01?'earthPctOk':'earthPctRetry',{val:v});
+  if(Math.abs(v-2)<0.01){m4step=2;cClear();
+    banner('맞았어요! 딱 2% 🎯','7.2°는 360°의 <b>2%</b> — 두 도시 사이가 지구 둘레의 2%라는 뜻!',[['계속 →',()=>{hideBanner();render();}]]);}
+  else banner('다시 한번 도전해볼까요?','계산기로 <b>7.2 ÷ 360 × 100</b> 을 눌러 보세요. (C로 지우기)',[['다시',hideBanner]]);}
+function check4b(){cEq();const v=Math.round(parseFloat(cDisp)||0);plog(v===40000?'earthDone':'earthRetry',{val:v});
+  if(v===40000){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
+    banner('지구를 쟀어요!! 🌍','800 × 50 = <b>40,000 km</b>. 실제 값 40,075 km — 오차 0.2%!',[['지도 완성 →',()=>{hideBanner();render();}]]);}
+  else banner('다시 한번 도전해볼까요?','2%씩 <b>50조각</b>이면 100%. <b>800 × 50</b> 을 계산해 보세요.',[['다시',hideBanner]]);}
+
+/* ══════ 계산기 (공용) ══════ */
+let cDisp='0', cAcc=null, cOp=null, cFresh=true;
+function cShow(){const d=$('#cd');if(d)d.textContent=cDisp;}
+function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
+function cDot(){if(cFresh){cDisp='0.';cFresh=false;}else if(!cDisp.includes('.'))cDisp+='.';cShow();}
+function cCompute(){const y=parseFloat(cDisp);let r=cAcc;if(cOp==='×')r=cAcc*y;else if(cOp==='÷')r=cAcc/y;r=Math.round(r*10000)/10000;cDisp=String(r);cAcc=r;cShow();}
+function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;}
+function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;}}
+function cClear(){cDisp='0';cAcc=null;cOp=null;cFresh=true;cShow();}
+function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f}">${t}</button>`;
+  return `<div class="calc"><div class="calcdisp" id="cd">${cDisp}</div><div class="calcgrid">
+   ${b('7','cD(7)')}${b('8','cD(8)')}${b('9','cD(9)')}${b('÷',"cO('÷')",'op')}
+   ${b('4','cD(4)')}${b('5','cD(5)')}${b('6','cD(6)')}${b('×',"cO('×')",'op')}
+   ${b('1','cD(1)')}${b('2','cD(2)')}${b('3','cD(3)')}${b('C','cClear()','op')}
+   ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
+
+function render(){renderStage();({1:render1,2:render2,3:render3,4:render4}[stage])();}
+window.addEventListener('resize',()=>{if(stage===1)draw1();if(stage===4&&m4step===1)draw4();if(stage===4&&m4step===2)drawPie();});
+render();
+/* 숨김 iframe으로 로드된 경우: 보이게 되면 1회 다시 그림 */
+let _vchk=setInterval(()=>{const cv=$('#cv1');
+  if(document.body.getBoundingClientRect().width>8){ if(stage===1&&cv)draw1(); clearInterval(_vchk); }},350);
+</script>
+</body>
+</html>
