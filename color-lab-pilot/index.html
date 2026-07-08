@@ -81,6 +81,10 @@
 .numfield .u{font-size:14px;color:var(--sub);font-weight:700}
 .liquid{width:120px;height:160px;border:3px solid #26303f;border-top-width:2px;border-radius:0 0 18px 18px;margin:10px auto;position:relative;overflow:hidden;background:#fbfaf6}
 .liquid .mf{position:absolute;bottom:0;left:0;right:0;height:90%}
+
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 3px}
+.frac .fn{border-bottom:2.5px solid currentColor;padding:0 7px}
+.frac .fd{padding:0 7px}
 </style>
 </head>
 <body>
@@ -257,6 +261,7 @@ function renderS23(baseIdx){
 
 /* ── 기준량·비교하는 양 — 말로 확인 ── */
 function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b;}
+function fracHTML(n,d){return `<span class="frac"><span class="fn">${n}</span><span class="fd">${d}</span></span>`;}
 function iga(w){return jz(w,'이','가');}
 function renderS23Lang(baseIdx){
   const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
@@ -276,10 +281,10 @@ function renderS23Lang(baseIdx){
     : `이 문제에서 <b>기준량</b>은 <b style="color:${cb}">${base}</b> — 처음부터 <b>${BASE}mL</b> 들어 있었죠.<br>
        내가 넣은 <b style="color:${cc}">${comp} ${cv}mL</b>${iga(comp)} <b>비교하는 양</b>이에요.<br>
        '<b>${base}에 대한 ${comp}의 비</b>' = <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
-       💡 비 <b>a : b</b>는 분수로 <b>a/b</b> — <b>앞의 수가 위</b>로 가요.`;
+       💡 비 <b>a : b</b>는 분수로 ${fracHTML('a','b')} — <b>앞의 수가 위</b>로 가요.`;
   let opts;
   if(isEq) opts=[[base,true],[comp,false]];
-  else opts=[[`${rc}/${ra}`,true],[`${ra}/${rc}`,false],[`${rc}/${ra+rc}`,false]];
+  else opts=[[fracHTML(rc,ra),true,rc+'/'+ra],[fracHTML(ra,rc),false,ra+'/'+rc],[fracHTML(rc,ra+rc),false,rc+'/'+(ra+rc)]];
   opts.sort(()=>Math.random()-0.5);
   $('#stageBody').innerHTML=probHTML()+
    `<div class="tools" style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;margin-bottom:8px">
@@ -289,12 +294,12 @@ function renderS23Lang(baseIdx){
       opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="lg${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
    `</div></div>`;
   opts.forEach((o,i)=>{$('#lg'+i).onclick=()=>{
-    plog(o[1]?'lang23Ok':'lang23Retry',{q:base+'에 대한 '+comp,pick:String(o[0])});
+    plog(o[1]?'lang23Ok':'lang23Retry',{q:base+'에 대한 '+comp,pick:String(o[2]||o[0])});
     if(o[1]){
       const nx=S.subIdx+1;
       const fb=isEq
         ? `'${base}에 대한 ${comp}의 비'이므로 <b>${base}</b>${iga(base)} 기준이 되는 것이고 <b>${comp}</b>${jz(comp,'을','를')} 비교하는 것이죠? <b>${base}${jz(base,'은','는')} 기준량, ${comp}${iga(comp)} 비교하는 양</b>이 됩니다.`
-        : `${comp} : ${base} = ${rc} : ${ra} → 분수로 <b>${rc}/${ra}</b>. 앞(비교하는 양)이 위, 뒤(기준량)가 아래!`;
+        : `${comp} : ${base} = ${rc} : ${ra} → 분수로 <b>${fracHTML(rc,ra)}</b>. 앞(비교하는 양)이 위, 뒤(기준량)가 아래!`;
       success(isEq?'맞아요!':'맞았어요! 말도 완벽해요!',fb,nx>=3?stageDone:()=>{S.subIdx=nx;S.phase23='make';render();});
     } else {
       banner('help','다시 한번 도전해볼까요?',isEq
