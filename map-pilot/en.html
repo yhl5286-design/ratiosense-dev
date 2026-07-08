@@ -67,6 +67,8 @@
 <script>
 const $=s=>document.querySelector(s);
 let stage=1;
+let _ac;function _a(){return _ac||(_ac=new(window.AudioContext||window.webkitAudioContext)());}
+function chime(){try{const c=_a();[[523,0,.2],[659,.2,.2],[784,.4,.42]].forEach(([f,w,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d+.05);});}catch(e){}}
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'map',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
 const STAGES=[['1 · Enlarge It',1],['2 · Secret of Scale',2],['3 · Copier %',3],['4 · Measure the Earth',4]];
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([t,s])=>{
@@ -130,7 +132,7 @@ function draw1(){
 function check1(){const ms=M1[m1idx];
   if(sx===ms.v&&sy===ms.v&&!m1done.includes(m1idx)){
     m1done.push(m1idx);plog('similarOk',{mult:ms.v,ratio:ms.f});
-    setTimeout(()=>banner(`Correct! A similar ${ms.t} house 🏠`,`Width and height both ${ms.t} — every pair of sides has ratio <b>${ms.f}</b>. That's similarity!`,
+    chime();setTimeout(()=>banner(`Correct! A similar ${ms.t} house 🏠`,`Width and height both ${ms.t} — every pair of sides has ratio <b>${ms.f}</b>. That's similarity!`,
       m1done.length<M1.length?[['Next mission →',()=>{hideBanner();m1idx=1;sx=1;sy=1;render();}]]:[['To step 2 →',()=>{hideBanner();stage=2;render();}]]),150);}}
 
 /* ══════ 2단계 · 축척의 비밀 (비율) ══════ */
@@ -169,7 +171,7 @@ function check2(){cEq();const ms=M2[m2idx];const val=Math.round(parseFloat(cDisp
   plog(val===ms.ans?'scaleOk':'scaleRetry',{mission:m2idx+1,val});
   if(val===ms.ans){if(!m2done.includes(m2idx))m2done.push(m2idx);
     const last=m2done.length>=M2.length;
-    banner(`Correct! ${ms.ans} ${ms.unit} 🎯`, m2idx===2?'Zoomed ×2, the same bridge covers <b>more cells</b> — the scale became 1:5,000!':'Scale is the <b>ratio</b> connecting the map to the real world!',
+    chime();banner(`Correct! ${ms.ans} ${ms.unit} 🎯`, m2idx===2?'Zoomed ×2, the same bridge covers <b>more cells</b> — the scale became 1:5,000!':'Scale is the <b>ratio</b> connecting the map to the real world!',
       last?[['To step 3 →',()=>{hideBanner();stage=3;render();}]]:[['Next mission →',()=>{hideBanner();m2idx++;cClear();render();}]]);}
   else banner('Try again!',`Hint: ${ms.hint}`,[['Retry',hideBanner]]);}
 
@@ -205,7 +207,7 @@ function setPct(p){pct=p;plog('copy',{pct:p});$('#pctlab').textContent=p+'%';$('
 function pick3(i){const ms=M3[m3idx];plog(ms.choices[i][1]?'pctOk':'pctRetry',{mission:m3idx+1,pick:i});
   if(ms.choices[i][1]){if(!m3done.includes(m3idx))m3done.push(m3idx);
     pct=ms.pct;const last=m3done.length>=M3.length;
-    banner('Correct! 🖨️',ms.ok, last?[['Step 4 — measure the Earth! →',()=>{hideBanner();stage=4;render();}]]:[['Next mission →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
+    chime();banner('Correct! 🖨️',ms.ok, last?[['Step 4 — measure the Earth! →',()=>{hideBanner();stage=4;render();}]]:[['Next mission →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
   else banner('Try again!','Press the % buttons and observe the copies.',[['Retry',hideBanner]]);}
 
 /* ══════ 4단계 · 지구를 재는 미션 (종합) ══════ */
@@ -276,11 +278,11 @@ function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingC
   ctx.fillStyle='#26303f';ctx.font='bold 30px sans-serif';ctx.fillText('Circumference = 100% = ?',cx,cy+12);}
 function check4a(){cEq();const v=parseFloat(cDisp);plog(Math.abs(v-2)<0.01?'earthPctOk':'earthPctRetry',{val:v});
   if(Math.abs(v-2)<0.01){m4step=2;cClear();
-    banner('Correct! Exactly 2% 🎯','7.2° is <b>2%</b> of 360° — so the two cities are 2% of the circumference apart!',[['Continue →',()=>{hideBanner();render();}]]);}
+    chime();banner('Correct! Exactly 2% 🎯','7.2° is <b>2%</b> of 360° — so the two cities are 2% of the circumference apart!',[['Continue →',()=>{hideBanner();render();}]]);}
   else banner('Try again!','Try <b>7.2 ÷ 360 × 100</b> on the calculator. (C to clear)',[['Retry',hideBanner]]);}
 function check4b(){cEq();const v=Math.round(parseFloat(cDisp)||0);plog(v===40000?'earthDone':'earthRetry',{val:v});
   if(v===40000){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
-    banner('You measured the Earth!! 🌍','800 × 50 = <b>40,000 km</b>. The real value is 40,075 km — only 0.2% off!',[['Finish the map →',()=>{hideBanner();render();}]]);}
+    chime();banner('You measured the Earth!! 🌍','800 × 50 = <b>40,000 km</b>. The real value is 40,075 km — only 0.2% off!',[['Finish the map →',()=>{hideBanner();render();}]]);}
   else banner('Try again!','Fifty <b>2% slices</b> make 100%. Calculate <b>800 × 50</b>.',[['Retry',hideBanner]]);}
 
 /* ══════ 계산기 (공용) ══════ */

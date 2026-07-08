@@ -64,6 +64,8 @@
 <script>
 const $=s=>document.querySelector(s);
 let stage=3;
+let _ac;function _a(){return _ac||(_ac=new(window.AudioContext||window.webkitAudioContext)());}
+function chime(){try{const c=_a();[[523,0,.2],[659,.2,.2],[784,.4,.42]].forEach(([f,w,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d+.05);});}catch(e){}}
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'mart',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
 const STAGES=[['1 · Price of One',3],['2 · Which Is Cheaper?',4],['3 · Secret of Discounts',5]];
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([x,s])=>{
@@ -119,14 +121,14 @@ function render3(){
 function g3pick(el){const ok=el.dataset.ok==='1';
   plog(ok?'unitOk':'unitRetry',{q:g3.q,pick:el.textContent});
   if(ok){
-    if(g3.q===0){banner('Correct! One = ₩400 🍊','1200÷3=400 — that is the <b>unit price</b>!',[['Next →',()=>{hideBanner();g3.q=1;render3();}]]);}
-    else{banner('Correct! 5 = ₩2,000 🍊','Know the unit price and you can price <b>any number</b> (400×5).',[['Next step →',()=>{hideBanner();stage=4;cClear();render();plog('enter');}]]);}
+    if(g3.q===0){chime();banner('Correct! One = ₩400 🍊','1200÷3=400 — that is the <b>unit price</b>!',[['Next →',()=>{hideBanner();g3.q=1;render3();}]]);}
+    else{chime();banner('Correct! 5 = ₩2,000 🍊','Know the unit price and you can price <b>any number</b> (400×5).',[['Next step →',()=>{hideBanner();stage=4;cClear();render();plog('enter');}]]);}
   } else banner('Try again!',g3.q===0?'3 for ₩1,200 — divide to find one!':'Five at ₩400 each!',[['Retry',hideBanner]]);}
 
 /* ===== 4단계 · 어디가 더 싸? ===== */
 const G4=[
- {em:'🥛',name:'Milk',a:{n:5,p:4500},b:{n:7,p:5950},ansB:true},   // 900 vs 850 → B
- {em:'🧃',name:'Juice',a:{n:4,p:3200},b:{n:5,p:4250},ansB:false},  // 800 vs 850 → A
+ {em:'🥛',name:'Milk',a:{n:2,p:1800},b:{n:3,p:2400},ansB:true},   // 900 vs 850 → B
+ {em:'🧃',name:'Juice',a:{n:3,p:1500},b:{n:2,p:1200},ansB:false},  // 800 vs 850 → A
 ];
 let g4={q:0};
 function render4(){
@@ -135,15 +137,14 @@ function render4(){
   $('#body').innerHTML=`<div class="card"><div class="shop">
       <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">Mart A</div><div class="pr">${P.a.n} for ${won(P.a.p)}</div></div>
       <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">Mart B</div><div class="pr">${P.b.n} for ${won(P.b.p)}</div></div></div>
-    <div class="cap">Work out the <b>unit price</b> for each, then tap the cheaper mart!</div>
-    ${calcHTML()}</div>`;
+    <div class="cap">No calculator — divide <b>in your head</b> to find each unit price, then tap the cheaper mart!</div></div>`;
 }
 function g4pick(isB){const P=G4[g4.q];const ok=(isB===P.ansB);
   const ua=P.a.p/P.a.n,ub=P.b.p/P.b.n;
   plog(ok?'compareOk':'compareRetry',{q:g4.q,pick:isB?'B':'A'});
   if(ok){
     const nxt=g4.q+1<G4.length;
-    banner(`Correct! Mart ${isB?'B':'A'} is cheaper ${P.em}`,`Unit price: A ${won(ua)} vs B ${won(ub)} — <b>unit prices</b> make things comparable!`,
+    chime();banner(`Correct! Mart ${isB?'B':'A'} is cheaper ${P.em}`,`Unit price: A ${won(ua)} vs B ${won(ub)} — <b>unit prices</b> make things comparable!`,
       nxt?[['Next problem →',()=>{hideBanner();g4.q++;cClear();render4();}]]:[['Step 3 — Secret of Discounts →',()=>{hideBanner();stage=5;cClear();render();plog('enter');}]]);
   } else banner('Try again!',`Calculate the <b>unit price</b> at each mart and compare.`,[['Retry',hideBanner]]);}
 
@@ -177,11 +178,11 @@ function render5(){
 function g5pick(el){const ok=el.dataset.ok==='1';
   plog(ok?'discountOk':'discountRetry',{q:g5.q,step:g5.step,pick:el.textContent});
   if(!ok){banner('Try again!','Type the given expression on the calculator, then choose again.',[['Retry',hideBanner]]);return;}
-  if(g5.q===0&&g5.step===0){banner('Correct! ₩1,000 off','25% means <b>25 out of 100 parts</b> — 4000×25÷100=1000!',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
-  else if(g5.q===0){banner('Correct! You pay just ₩3,000 🥛','4000−1000=3000. Original minus discount = <b>what you pay</b>!',[['Next problem →',()=>{hideBanner();g5={q:1,step:0};cClear();render5();}]]);}
-  else if(g5.step===0){banner('Correct! ₩1,000 off','Now find what <b>percent</b> of the original price that ₩1,000 is.',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+  if(g5.q===0&&g5.step===0){chime();banner('Correct! ₩1,000 off','25% means <b>25 out of 100 parts</b> — 4000×25÷100=1000!',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+  else if(g5.q===0){chime();banner('Correct! You pay just ₩3,000 🥛','4000−1000=3000. Original minus discount = <b>what you pay</b>!',[['Next problem →',()=>{hideBanner();g5={q:1,step:0};cClear();render5();}]]);}
+  else if(g5.step===0){chime();banner('Correct! ₩1,000 off','Now find what <b>percent</b> of the original price that ₩1,000 is.',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
   else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
-    banner('Correct! A 20% discount 🎉','1000÷5000×100=20 — 20 parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.',[['Secret of the Mart complete! 🛒',hideBanner]]);}}
+    chime();banner('Correct! A 20% discount 🎉','1000÷5000×100=20 — 20 parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.',[['Secret of the Mart complete! 🛒',hideBanner]]);}}
 
 function render(){renderStage();({3:render3,4:render4,5:render5}[stage])();}
 render();

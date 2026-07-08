@@ -67,6 +67,8 @@
 <script>
 const $=s=>document.querySelector(s);
 let stage=1;
+let _ac;function _a(){return _ac||(_ac=new(window.AudioContext||window.webkitAudioContext)());}
+function chime(){try{const c=_a();[[523,0,.2],[659,.2,.2],[784,.4,.42]].forEach(([f,w,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d+.05);});}catch(e){}}
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'map',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
 const STAGES=[['1 · 그림 확대',1],['2 · 축척의 비밀',2],['3 · 복사기 %',3],['4 · 지구 재기',4]];
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([t,s])=>{
@@ -130,7 +132,7 @@ function draw1(){
 function check1(){const ms=M1[m1idx];
   if(sx===ms.v&&sy===ms.v&&!m1done.includes(m1idx)){
     m1done.push(m1idx);plog('similarOk',{mult:ms.v,ratio:ms.f});
-    setTimeout(()=>banner(`맞았어요! ${ms.t} 닮음 완성 🏠`,`가로도 세로도 ${ms.t} — 대응하는 변의 비가 모두 <b>${ms.f}</b>. 이게 닮음이에요!`,
+    chime();setTimeout(()=>banner(`맞았어요! ${ms.t} 닮음 완성 🏠`,`가로도 세로도 ${ms.t} — 대응하는 변의 비가 모두 <b>${ms.f}</b>. 이게 닮음이에요!`,
       m1done.length<M1.length?[['다음 미션 →',()=>{hideBanner();m1idx=1;sx=1;sy=1;render();}]]:[['2단계로 →',()=>{hideBanner();stage=2;render();}]]),150);}}
 
 /* ══════ 2단계 · 축척의 비밀 (비율) ══════ */
@@ -169,7 +171,7 @@ function check2(){cEq();const ms=M2[m2idx];const val=Math.round(parseFloat(cDisp
   plog(val===ms.ans?'scaleOk':'scaleRetry',{mission:m2idx+1,val});
   if(val===ms.ans){if(!m2done.includes(m2idx))m2done.push(m2idx);
     const last=m2done.length>=M2.length;
-    banner(`맞았어요! ${ms.ans}${ms.unit} 🎯`, m2idx===2?'지도가 2배가 되면 같은 다리가 <b>더 많은 칸</b>을 차지해요 — 축척은 1:5,000이 됐죠!':'축척은 지도와 실제를 잇는 <b>비</b>예요!',
+    chime();banner(`맞았어요! ${ms.ans}${ms.unit} 🎯`, m2idx===2?'지도가 2배가 되면 같은 다리가 <b>더 많은 칸</b>을 차지해요 — 축척은 1:5,000이 됐죠!':'축척은 지도와 실제를 잇는 <b>비</b>예요!',
       last?[['3단계로 →',()=>{hideBanner();stage=3;render();}]]:[['다음 미션 →',()=>{hideBanner();m2idx++;cClear();render();}]]);}
   else banner('다시 한번 도전해볼까요?',`힌트: ${ms.hint}`,[['다시',hideBanner]]);}
 
@@ -205,7 +207,7 @@ function setPct(p){pct=p;plog('copy',{pct:p});$('#pctlab').textContent=p+'%';$('
 function pick3(i){const ms=M3[m3idx];plog(ms.choices[i][1]?'pctOk':'pctRetry',{mission:m3idx+1,pick:i});
   if(ms.choices[i][1]){if(!m3done.includes(m3idx))m3done.push(m3idx);
     pct=ms.pct;const last=m3done.length>=M3.length;
-    banner('맞았어요! 🖨️',ms.ok, last?[['4단계 — 지구 재기! →',()=>{hideBanner();stage=4;render();}]]:[['다음 미션 →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
+    chime();banner('맞았어요! 🖨️',ms.ok, last?[['4단계 — 지구 재기! →',()=>{hideBanner();stage=4;render();}]]:[['다음 미션 →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
   else banner('다시 한번 도전해볼까요?','%를 직접 눌러 복사해 보면서 관찰해 보세요.',[['다시',hideBanner]]);}
 
 /* ══════ 4단계 · 지구를 재는 미션 (종합) ══════ */
@@ -276,11 +278,11 @@ function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingC
   ctx.fillStyle='#26303f';ctx.font='bold 30px sans-serif';ctx.fillText('지구 둘레 = 100% = ?',cx,cy+12);}
 function check4a(){cEq();const v=parseFloat(cDisp);plog(Math.abs(v-2)<0.01?'earthPctOk':'earthPctRetry',{val:v});
   if(Math.abs(v-2)<0.01){m4step=2;cClear();
-    banner('맞았어요! 딱 2% 🎯','7.2°는 360°의 <b>2%</b> — 두 도시 사이가 지구 둘레의 2%라는 뜻!',[['계속 →',()=>{hideBanner();render();}]]);}
+    chime();banner('맞았어요! 딱 2% 🎯','7.2°는 360°의 <b>2%</b> — 두 도시 사이가 지구 둘레의 2%라는 뜻!',[['계속 →',()=>{hideBanner();render();}]]);}
   else banner('다시 한번 도전해볼까요?','계산기로 <b>7.2 ÷ 360 × 100</b> 을 눌러 보세요. (C로 지우기)',[['다시',hideBanner]]);}
 function check4b(){cEq();const v=Math.round(parseFloat(cDisp)||0);plog(v===40000?'earthDone':'earthRetry',{val:v});
   if(v===40000){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
-    banner('지구를 쟀어요!! 🌍','800 × 50 = <b>40,000 km</b>. 실제 값 40,075 km — 오차 0.2%!',[['지도 완성 →',()=>{hideBanner();render();}]]);}
+    chime();banner('지구를 쟀어요!! 🌍','800 × 50 = <b>40,000 km</b>. 실제 값 40,075 km — 오차 0.2%!',[['지도 완성 →',()=>{hideBanner();render();}]]);}
   else banner('다시 한번 도전해볼까요?','2%씩 <b>50조각</b>이면 100%. <b>800 × 50</b> 을 계산해 보세요.',[['다시',hideBanner]]);}
 
 /* ══════ 계산기 (공용) ══════ */
