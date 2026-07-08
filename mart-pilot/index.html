@@ -63,9 +63,9 @@
 
 <script>
 const $=s=>document.querySelector(s);
-let stage=1;
+let stage=3;
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'mart',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
-const STAGES=[['1 · 묶어 세기',1],['2 · 뛰어 세기',2],['3 · 하나에 얼마?',3],['4 · 어디가 싸?',4],['5 · 할인의 비밀',5]];
+const STAGES=[['1 · 하나에 얼마?',3],['2 · 어디가 싸?',4],['3 · 할인의 비밀',5]];
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([x,s])=>{
   const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=x;b.onclick=()=>{stage=s;render();plog('enter');};el.appendChild(b);});}
 function placeBanner(b){let y;try{const fe=window.frameElement;
@@ -97,67 +97,11 @@ function calcHTML(){const b=(x,f,c)=>`<button class="cbtn ${c||''}" onclick="${f
    ${b('C','cClear()','op')}${b('0','cD(0)')}${b('00',"cD('00')")}${b('=','cEq()','op')}</div></div>`;}
 function ckBtn(label,fn){return `<div style="text-align:center;margin-top:6px"><button class="btn big" onclick="${fn}">${label}</button></div>`;}
 
-/* ===== 1단계 · 묶어 세기 ===== */
-let g1={mode:0,m:0}; // m: 0=3개씩, 1=6개씩, 2=완료
-function render1(){
-  const M=[{k:3,ans:4},{k:6,ans:2}][Math.min(g1.m,1)];
-  $('#readout').innerHTML= g1.m<2
-    ? `<div class="nm">달걀 12개가 왔어요! 묶으면 세기 쉬워져요</div><div class="big">달걀을 <b>${M.k}개씩</b> 묶으면 몇 팩이 될까요?</div>`
-    : `<div class="nm">묶어도 풀어도 달걀은 12개!</div><div class="big">묶음이 <b>클수록</b> 팩 수는 <b>줄어요</b></div>`;
-  let eggs='';
-  if(g1.mode===0){eggs=`<div class="eggs">${'<span class="egg">🥚</span>'.repeat(12)}</div>`;}
-  else{const packs=12/g1.mode;eggs=`<div class="eggs">`+Array.from({length:packs},()=>`<div class="pack">${'<span class="egg">🥚</span>'.repeat(g1.mode)}</div>`).join('')+`</div>`;}
-  let quiz='';
-  if(g1.m<2&&g1.mode===M.k){
-    quiz=`<div class="cap"><b>몇 팩</b>이 되었나요?</div><div class="row">`+[2,3,4,6].map(n=>`<button class="btn" style="font-size:16px;font-weight:800;min-width:56px" onclick="g1ans(${n})">${n}팩</button>`).join('')+`</div>`;}
-  $('#body').innerHTML=`<div class="card">
-    <div class="lbl">🥚 버튼을 눌러 묶거나 풀어 보세요</div>${eggs}
-    <div class="row">
-      <button class="btn" onclick="g1mode(3)">3개씩 묶기</button>
-      <button class="btn" onclick="g1mode(6)">6개씩 묶기</button>
-      <button class="btn" onclick="g1mode(4)">4개씩 묶기</button>
-      <button class="btn" onclick="g1mode(0)">🧺 다시 풀기</button></div>
-    ${quiz}
-    <div class="cap">묶음 = 새로운 <b>단위</b>! 낱개로 세지 않고 <b>팩으로</b> 셀 수 있어요.</div></div>`;
-}
-function g1mode(k){g1.mode=k;plog('groupMode',{k});render1();}
-function g1ans(n){const M=[{k:3,ans:4},{k:6,ans:2}][Math.min(g1.m,1)];
-  plog(n===M.ans?'groupOk':'groupRetry',{k:M.k,pick:n});
-  if(n===M.ans){
-    if(g1.m===0){banner('맞았어요! 3개씩 4팩 🥚','12 = 3씩 <b>4묶음</b>. 이제 풀고, <b>6개씩</b>도 묶어 볼까요?',[['풀고 6개씩!',()=>{hideBanner();g1={mode:0,m:1};render1();}]]);}
-    else{g1.m=2;banner('맞았어요! 6개씩 2팩 🥚','같은 12개인데 <b>3개씩=4팩, 6개씩=2팩</b> — 묶음이 클수록 팩 수는 줄어요! 묶어도 풀어도 달걀은 12개.',[['2단계로 →',()=>{hideBanner();stage=2;render();plog('enter');}]]);}
-  } else banner('다시 한번 도전해볼까요?','팩(묶음)의 수를 세어 보세요.',[['다시',hideBanner]]);}
-
-/* ===== 2단계 · 뛰어 세기 ===== */
-let g2={opened:0,q:0};
-function render2(){
-  if(g2.q===0){
-    $('#readout').innerHTML=`<div class="nm">사과가 <b>4개씩</b> 든 봉지 5개!</div><div class="big">봉지를 차례로 눌러 <b>묶음으로</b> 세어 보세요</div>`;
-    const seq=Array.from({length:g2.opened},(_,i)=>(i+1)*4).join(' → ');
-    $('#body').innerHTML=`<div class="card">
-      <div class="bags">`+Array.from({length:5},(_,i)=>`<div class="bag ${i<g2.opened?'opened':''}" onclick="g2bag(${i})">🍎<br>4개</div>`).join('')+`</div>
-      <div class="jump">${seq?seq.replace(/(\d+)$/,'<b>$1</b>'):' '}</div>
-      ${g2.opened>=5?`<div class="cap">낱개로 안 세도 돼요! <b>사과는 모두 몇 개?</b></div>${calcHTML()}${ckBtn('확인','g2check(20)')}`:`<div class="cap">4, 8, 12, … <b>4씩 뛰어 세기</b>!</div>`}
-    </div>`;
-  } else {
-    $('#readout').innerHTML=`<div class="nm">이번엔 반대로 — 낱개를 묶음으로!</div><div class="big">사과 <b>24개</b>를 <b>6개씩</b> 담으면 몇 봉지?</div>`;
-    $('#body').innerHTML=`<div class="card"><div class="eggs">${'<span class="egg">🍎</span>'.repeat(24)}</div>
-      <div class="cap">계산기로: 24 ÷ 6</div>${calcHTML()}${ckBtn('확인 (봉지)','g2check(4)')}</div>`;
-  }
-}
-function g2bag(i){if(i===g2.opened&&g2.opened<5){g2.opened++;plog('bagOpen',{n:g2.opened});render2();}}
-function g2check(ans){cEq();const v=Math.round(parseFloat(cDisp)||0);
-  plog(v===ans?'jumpOk':'jumpRetry',{q:g2.q,val:v});
-  if(v===ans){
-    if(g2.q===0){banner('맞았어요! 4개씩 5봉지 = 20개 🍎','4×5=20 — <b>묶음으로 세면</b> 곱셈이 돼요!',[['다음 문제 →',()=>{hideBanner();g2.q=1;cClear();render2();}]]);}
-    else{banner('맞았어요! 24÷6 = 4봉지 🍎','묶으면(÷) 봉지 수, 풀면(×) 낱개 수 — <b>서로 되돌릴 수 있어요!</b>',[['3단계로 →',()=>{hideBanner();stage=3;cClear();render();plog('enter');}]]);}
-  } else banner('다시 한번 도전해볼까요?',g2.q===0?'봉지마다 4개씩, 봉지는 5개예요.':'24를 6씩 묶으면 몇 묶음일까요?',[['다시',hideBanner]]);}
-
-/* 숫자 입력 패드(계산 기능 없음) */
-let mAns='';
-function ansHTML(){return `<div class="calc"><div class="calcdisp" id="ad">${mAns||'0'}</div><div class="calcgrid">`+
- ['7','8','9','4','5','6','1','2','3','0','00','⌫'].map(k=>`<button class="cbtn" onclick="aK('${k}')">${k}</button>`).join('')+`</div></div>`;}
-function aK(k){if(k==='⌫')mAns=mAns.slice(0,-1);else if(mAns.length<6)mAns+=k;const d=$('#ad');if(d)d.textContent=mAns||'0';}
+/* 3지선다 */
+function mcHTML(opts,fn){
+  const o=opts.map(x=>x.slice());o.sort(()=>Math.random()-0.5);
+  return `<div class="row" style="margin-top:10px">`+o.map(([lb,ok])=>
+    `<button class="btn big" data-ok="${ok?1:0}" onclick="${fn}(this)" style="font-size:17px;font-weight:800;padding:12px 20px;min-width:96px">${lb}</button>`).join('')+`</div>`;}
 
 /* ===== 3단계 · 하나에 얼마? (단위비율·암산) ===== */
 let g3={q:0};
@@ -165,19 +109,19 @@ function render3(){
   if(g3.q===0){
     $('#readout').innerHTML=`<div class="nm">가격표엔 묶음 값만 있네요!</div><div class="big">귤 <b>3개에 1,200원</b> — <b>1개</b>는 얼마?</div>`;
     $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🍊🍊🍊</div><div class="pr">3개 ${won(1200)}</div></div></div>
-      <div class="cap">계산기 없이 <b>머릿속으로</b>! 1,200원을 3으로 나누면? 답만 눌러요.</div>${ansHTML()}${ckBtn('확인 (원)','g3check(400)')}</div>`;
+      <div class="cap">계산기 없이 <b>머릿속으로</b>! 1,200원을 3으로 나누면?</div>${mcHTML([[won(400),true],[won(300),false],[won(600),false]],'g3pick')}</div>`;
   } else {
     $('#readout').innerHTML=`<div class="nm">1개 값(단위 가격)을 알면 뭐든 구해요!</div><div class="big">그럼 귤 <b>5개</b>를 사면 얼마?</div>`;
     $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🍊×5</div><div class="pr">1개 = ${won(400)}</div></div></div>
-      <div class="cap">이번에도 머릿속으로! 400원이 5개면? 답만 눌러요.</div>${ansHTML()}${ckBtn('확인 (원)','g3check(2000)')}</div>`;
+      <div class="cap">이번에도 머릿속으로! 400원이 5개면?</div>${mcHTML([[won(2000),true],[won(1600),false],[won(2400),false]],'g3pick')}</div>`;
   }
 }
-function g3check(ans){const v=parseInt(mAns||'0',10);
-  plog(v===ans?'unitOk':'unitRetry',{q:g3.q,val:v});
-  if(v===ans){
-    if(g3.q===0){banner('맞았어요! 1개 = 400원 🍊','1200÷3=400 — 이게 <b>1개의 값(단위 가격)</b>이에요!',[['다음 →',()=>{hideBanner();g3.q=1;mAns='';render3();}]]);}
-    else{banner('맞았어요! 5개 = 2,000원 🍊','1개 값만 알면 <b>몇 개든</b> 구할 수 있어요 (400×5).',[['4단계로 →',()=>{hideBanner();stage=4;mAns='';cClear();render();plog('enter');}]]);}
-  } else banner('다시 한번 도전해볼까요?',g3.q===0?'3개가 1,200원 — 1개는 나누면?':'1개 400원이 12개!',[['다시',hideBanner]]);}
+function g3pick(el){const ok=el.dataset.ok==='1';
+  plog(ok?'unitOk':'unitRetry',{q:g3.q,pick:el.textContent});
+  if(ok){
+    if(g3.q===0){banner('맞았어요! 1개 = 400원 🍊','1200÷3=400 — 이게 <b>1개의 값(단위 가격)</b>이에요!',[['다음 →',()=>{hideBanner();g3.q=1;render3();}]]);}
+    else{banner('맞았어요! 5개 = 2,000원 🍊','1개 값만 알면 <b>몇 개든</b> 구할 수 있어요 (400×5).',[['다음 방으로 →',()=>{hideBanner();stage=4;cClear();render();plog('enter');}]]);}
+  } else banner('다시 한번 도전해볼까요?',g3.q===0?'3개가 1,200원 — 1개는 나누면?':'1개 400원이 5개!',[['다시',hideBanner]]);}
 
 /* ===== 4단계 · 어디가 더 싸? ===== */
 const G4=[
@@ -210,34 +154,36 @@ function render5(){
     if(g5.step===0){
       $('#readout').innerHTML=`<div class="nm">오늘의 특가! <span class="sale">25% 할인</span></div><div class="big">${won(4000)} 우유 — <b>얼마나</b> 깎아 줄까요?</div>`;
       $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr">${won(4000)} <span class="sale">25%↓</span></div></div></div>
-        <div class="cap">할인율은 <b>원래 가격을 100</b>으로 볼 때 깎는 부분! 4000 × 25 ÷ 100</div>${calcHTML()}${ckBtn('확인 — 할인 금액(원)','g5check(1000)')}</div>`;
+        <div class="cap">할인율은 <b>원래 가격을 100</b>으로 볼 때 깎는 부분! 계산기로 구하고 고르세요.</div>${calcHTML()}
+        <div class="cap"><b>할인 금액</b>은 얼마?</div>${mcHTML([[won(1000),true],[won(750),false],[won(1250),false]],'g5pick')}</div>`;
     } else {
       $('#readout').innerHTML=`<div class="nm">할인 금액은 1,000원!</div><div class="big">그럼 <b>얼마를 내면</b> 될까요?</div>`;
       $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr"><s style="color:#999">${won(4000)}</s> − ${won(1000)}</div></div></div>
-        <div class="cap">계산기로: 4000 − 1000</div>${calcHTML()}${ckBtn('확인 — 낼 돈(원)','g5check(3000)')}</div>`;
+        <div class="cap"><b>낼 돈</b>은 얼마? (계산기를 써도 좋아요)</div>${calcHTML()}${mcHTML([[won(3000),true],[won(2750),false],[won(3250),false]],'g5pick')}</div>`;
     }
   } else {
     if(g5.step===0){
       $('#readout').innerHTML=`<div class="nm">이번엔 반대로! 가방이 ${won(5000)} → ${won(4000)}</div><div class="big">얼마나 <b>깎였나요</b>?</div>`;
       $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr"><s style="color:#999">${won(5000)}</s> → ${won(4000)}</div></div></div>
-        <div class="cap">계산기로: 5000 − 4000</div>${calcHTML()}${ckBtn('확인 — 할인 금액(원)','g5check(1000)')}</div>`;
+        <div class="cap">얼마나 깎였을까요?</div>${calcHTML()}${mcHTML([[won(1000),true],[won(500),false],[won(1500),false]],'g5pick')}</div>`;
     } else {
       $('#readout').innerHTML=`<div class="nm">1,000원이 깎였어요</div><div class="big">할인율은 <b>몇 %</b>일까요?</div>`;
       $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr">${won(1000)} ÷ ${won(5000)}</div></div></div>
-        <div class="cap">원래 가격(5000)을 100으로! 1000 ÷ 5000 × 100</div>${calcHTML()}${ckBtn('확인 — 할인율(%)','g5check(20)')}</div>`;
+        <div class="cap">원래 가격(5000)을 100으로 볼 때! 계산기: 1000 ÷ 5000 × 100</div>${calcHTML()}
+        <div class="cap"><b>할인율</b>은 몇 %?</div>${mcHTML([['20%',true],['25%',false],['15%',false]],'g5pick')}</div>`;
     }
   }
 }
-function g5check(ans){cEq();const v=Math.round(parseFloat(cDisp)||0);
-  plog(v===ans?'discountOk':'discountRetry',{q:g5.q,step:g5.step,val:v});
-  if(v!==ans){banner('다시 한번 도전해볼까요?','안내된 식을 계산기로 눌러 보세요. (C로 지우기)',[['다시',hideBanner]]);return;}
+function g5pick(el){const ok=el.dataset.ok==='1';
+  plog(ok?'discountOk':'discountRetry',{q:g5.q,step:g5.step,pick:el.textContent});
+  if(!ok){banner('다시 한번 도전해볼까요?','안내된 식을 계산기로 눌러 보고 다시 고르세요.',[['다시',hideBanner]]);return;}
   if(g5.q===0&&g5.step===0){banner('맞았어요! 할인 금액 1,000원','25%란 <b>100으로 나눈 것 중 25</b> — 4000×25÷100=1000!',[['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
   else if(g5.q===0){banner('맞았어요! 3,000원만 내면 돼요 🥛','4000−1000=3000. 할인 금액을 빼면 <b>낼 돈</b>!',[['다음 문제 →',()=>{hideBanner();g5={q:1,step:0};cClear();render5();}]]);}
   else if(g5.step===0){banner('맞았어요! 1,000원 깎였어요','이제 이 1,000원이 원래 가격의 <b>몇 %</b>인지 구해요.',[['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
   else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
     banner('맞았어요! 20% 할인 🎉','1000÷5000×100=20 — <b>원래 가격을 100으로</b> 볼 때 20만큼! 색상 실험실의 100칸과 같은 비밀이죠.',[['마트의 비밀 완성! 🛒',hideBanner]]);}}
 
-function render(){renderStage();({1:render1,2:render2,3:render3,4:render4,5:render5}[stage])();}
+function render(){renderStage();({3:render3,4:render4,5:render5}[stage])();}
 render();
 </script>
 </body>
