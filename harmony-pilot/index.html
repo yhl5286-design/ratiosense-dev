@@ -97,7 +97,7 @@ function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'harmony',eve
 function keyLabel(i){const n=NOTE[i];return n.name+({'낮은':'˷','가운데':'','높은':'′','맨위':'″'}[n.oct]||'');}
 
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';
-  [['1 · 진동수 느끼기',1],['2 · 피아노로 찾는 음의 비밀',2],['3 · 바이올린 만들기',3]].forEach(([t,s])=>{
+  [['1 · 진동수 느끼기',1],['2 · 화음의 비밀',2],['3 · 바이올린 만들기',3]].forEach(([t,s])=>{
     const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=t;b.onclick=()=>{stage=s;sel=-1;liveOff();stopAll2();stop1();render();plog('enter');};el.appendChild(b);});}
 
 /* ===== 파동 그리기 ===== */
@@ -165,9 +165,9 @@ function render2(){const WW=30,GAP=2,STEP=WW+GAP;
      <div class="meetinfo" id="mi2"></div>
      <div class="cap">숫자가 <b>작을수록(자주 만날수록) 잘 어울려요</b>. 큰 숫자 = 가끔 만남 = 거칠어요.</div></div>`
     :`<div class="card"><div class="cap">흰 건반을 누르면 <b>1초 쉬고 2초 동안</b> 기준음과 선택음이 함께 울리고, 파동이 왼쪽에서 오른쪽으로 흘러요.</div></div>`;
-  $('#body').innerHTML=`<div class="card"><div class="lbl">피아노 — 도레미파솔라시도레미파솔라시도 — 흰 건반만 눌러요. <b style="color:var(--accent)">★기준</b> 건반이 기준음.</div>${piano}
-     <div style="text-align:center;margin-top:8px"><button class="btn" onclick="setBase()">고른 음을 ★기준으로</button>
-       <button class="btn" onclick="stopAll2();baseIdx=MIDDO;sel=-1;render()">가운데 도로 기준 되돌리기</button></div></div>
+  $('#body').innerHTML=`<div class="card">
+     <div style="font-size:17px;font-weight:800;line-height:1.6;margin-bottom:8px">Ⓠ <b style="color:var(--accent)">★가운데 도</b>를 기준으로 <b>진동수의 비</b>가 어떻게 되는지 건반을 눌러 보세요!</div>
+     <div class="lbl">흰 건반만 눌러요 — 누르면 가운데 도와 함께 울려요.</div>${piano}</div>
    ${meet}`;
   updateReadout();
   if(hasSel)drawMeetAnim();
