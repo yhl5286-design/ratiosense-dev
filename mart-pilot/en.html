@@ -137,7 +137,7 @@ function render4(){
   $('#body').innerHTML=`<div class="card"><div class="shop">
       <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">Mart A</div><div class="pr">${P.a.n} for ${won(P.a.p)}</div></div>
       <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">Mart B</div><div class="pr">${P.b.n} for ${won(P.b.p)}</div></div></div>
-    <div class="cap">No calculator — divide <b>in your head</b> to find each unit price, then tap the cheaper mart!</div></div>`;
+  </div></div>`;
 }
 function g4pick(isB){const P=G4[g4.q];const ok=(isB===P.ansB);
   const ua=P.a.p/P.a.n,ub=P.b.p/P.b.n;
@@ -148,41 +148,65 @@ function g4pick(isB){const P=G4[g4.q];const ok=(isB===P.ansB);
       nxt?[['Next problem →',()=>{hideBanner();g4.q++;cClear();render4();}]]:[['Step 3 — Secret of Discounts →',()=>{hideBanner();stage=5;cClear();render();plog('enter');}]]);
   } else banner('Try again!',`Calculate the <b>unit price</b> at each mart and compare.`,[['Retry',hideBanner]]);}
 
-/* ===== 5단계 · 할인의 비밀 (백분율) ===== */
+/* ===== 5단계 · 할인의 비밀 (점차 어려운 3문제) ===== */
+const G5=[
+ {em:'🥛',name:'Milk',price:5000,rate:50,disc:2500,pay:2500,
+  dOpts:[['₩2,500',true],['₩500',false],['₩1,250',false]],
+  pOpts:[['₩2,500',true],['₩3,000',false],['₩2,000',false]]},
+ {em:'🍕',name:'Pizza',price:8000,rate:25,disc:2000,pay:6000,
+  dOpts:[['₩2,000',true],['₩2,500',false],['₩4,000',false]],
+  pOpts:[['₩6,000',true],['₩5,500',false],['₩6,500',false]]},
+ {em:'🎒',name:'Bag',reverse:true,price:5000,now:4000,disc:1000,rate:20,
+  dOpts:[['₩1,000',true],['₩500',false],['₩1,500',false]],
+  rOpts:[['20%',true],['25%',false],['10%',false]]}
+];
 let g5={q:0,step:0};
 function render5(){
-  if(g5.q===0){
+  const P=G5[g5.q];
+  if(!P.reverse){
     if(g5.step===0){
-      $('#readout').innerHTML=`<div class="nm">Today's deal! <span class="sale">25% off</span></div><div class="big">${won(4000)} milk — <b>how much</b> is taken off?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr">${won(4000)} <span class="sale">25%↓</span></div></div></div>
-        <div class="cap">A discount rate is the part taken off when <b>the original price is seen as 100</b>! Calculate, then choose.</div>${calcHTML()}
-        <div class="cap">How much is the <b>discount</b>?</div>${mcHTML([[won(1000),true],[won(750),false],[won(1250),false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">Discount problem ${g5.q+1}/3 · <span class="sale">${P.rate}% off</span></div><div class="big">${won(P.price)} ${P.name} — <b>how much</b> is taken off?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr">${won(P.price)} <span class="sale">${P.rate}%↓</span></div></div></div>
+        <div class="cap">A discount rate is the part taken off when <b>the original price is 100</b>! Calculator: ${P.price} × ${P.rate} ÷ 100</div>${calcHTML()}
+        <div class="cap">How much is the <b>discount</b>?</div>${mcHTML(P.dOpts,'g5pick')}</div>`;
     } else {
-      $('#readout').innerHTML=`<div class="nm">The discount is ₩1,000!</div><div class="big">So <b>how much do you pay</b>?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr"><s style="color:#999">${won(4000)}</s> − ${won(1000)}</div></div></div>
-        <div class="cap">How much <b>do you pay</b>? (calculator welcome)</div>${calcHTML()}${mcHTML([[won(3000),true],[won(2750),false],[won(3250),false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">The discount is ${won(P.disc)}!</div><div class="big">So <b>how much do you pay</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr"><s style="color:#999">${won(P.price)}</s> − ${won(P.disc)}</div></div></div>
+        ${calcHTML()}<div class="cap">How much <b>do you pay</b>?</div>${mcHTML(P.pOpts,'g5pick')}</div>`;
     }
   } else {
     if(g5.step===0){
-      $('#readout').innerHTML=`<div class="nm">Now the reverse! A bag went ${won(5000)} → ${won(4000)}</div><div class="big">How much was <b>taken off</b>?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr"><s style="color:#999">${won(5000)}</s> → ${won(4000)}</div></div></div>
-        <div class="cap">How much was taken off?</div>${calcHTML()}${mcHTML([[won(1000),true],[won(500),false],[won(1500),false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">Discount problem 3/3 — the reverse! The ${P.name} went ${won(P.price)} → ${won(P.now)}</div><div class="big">How much was <b>taken off</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr"><s style="color:#999">${won(P.price)}</s> → ${won(P.now)}</div></div></div>
+        ${calcHTML()}<div class="cap">How much was taken off?</div>${mcHTML(P.dOpts,'g5pick')}</div>`;
     } else {
-      $('#readout').innerHTML=`<div class="nm">₩1,000 was taken off</div><div class="big">What is the <b>discount rate (%)</b>?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr">${won(1000)} ÷ ${won(5000)}</div></div></div>
-        <div class="cap">See the original price (5000) as 100! Calculator: 1000 ÷ 5000 × 100</div>${calcHTML()}
-        <div class="cap">What % is the <b>discount rate</b>?</div>${mcHTML([['20%',true],['25%',false],['15%',false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">${won(P.disc)} was taken off</div><div class="big">What is the <b>discount rate (%)</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr">${won(P.disc)} ÷ ${won(P.price)}</div></div></div>
+        <div class="cap">See the original price (${P.price}) as 100! Calculator: ${P.disc} ÷ ${P.price} × 100</div>${calcHTML()}
+        <div class="cap">What % is the <b>discount rate</b>?</div>${mcHTML(P.rOpts,'g5pick')}</div>`;
     }
   }
 }
-function g5pick(el){const ok=el.dataset.ok==='1';
+function g5pick(el){const ok=el.dataset.ok==='1';const P=G5[g5.q];
   plog(ok?'discountOk':'discountRetry',{q:g5.q,step:g5.step,pick:el.textContent});
   if(!ok){banner('Try again!','Type the given expression on the calculator, then choose again.',[['Retry',hideBanner]]);return;}
-  if(g5.q===0&&g5.step===0){chime();banner('Correct! ₩1,000 off','25% means <b>25 out of 100 parts</b> — 4000×25÷100=1000!',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
-  else if(g5.q===0){chime();banner('Correct! You pay just ₩3,000 🥛','4000−1000=3000. Original minus discount = <b>what you pay</b>!',[['Next problem →',()=>{hideBanner();g5={q:1,step:0};cClear();render5();}]]);}
-  else if(g5.step===0){chime();banner('Correct! ₩1,000 off','Now find what <b>percent</b> of the original price that ₩1,000 is.',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
-  else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
-    chime();banner('Correct! A 20% discount 🎉','1000÷5000×100=20 — 20 parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.',[['Secret of the Mart complete! 🛒',hideBanner]]);}}
+  chime();
+  if(!P.reverse){
+    if(g5.step===0){
+      banner(`Correct! ${won(P.disc)} off`,`${P.rate}% means <b>${P.rate} out of 100 parts</b> — ${P.price}×${P.rate}÷100=${P.disc}!${P.rate===50?' Exactly <b>half</b>!':''}`,
+        [['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+    else{
+      banner(`Correct! You pay just ${won(P.pay)} ${P.em}`,`${P.price}−${P.disc}=${P.pay}. Original minus discount = <b>what you pay</b>!`,
+        [['Next problem →',()=>{hideBanner();g5={q:g5.q+1,step:0};cClear();render5();}]]);}
+  } else {
+    if(g5.step===0){
+      banner(`Correct! ${won(P.disc)} off`,`Now find what <b>percent</b> of the original price that is.`,
+        [['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+    else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
+      banner(`Correct! A ${P.rate}% discount 🎉`,`${P.disc}÷${P.price}×100=${P.rate} — ${P.rate} parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.`,
+        [['Secret of the Mart complete! 🛒',hideBanner]]);}
+  }
+}
 
 function render(){renderStage();({3:render3,4:render4,5:render5}[stage])();}
 render();

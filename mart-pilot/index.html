@@ -137,7 +137,7 @@ function render4(){
   $('#body').innerHTML=`<div class="card"><div class="shop">
       <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">A마트</div><div class="pr">${P.a.n}개 ${won(P.a.p)}</div></div>
       <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">B마트</div><div class="pr">${P.b.n}개 ${won(P.b.p)}</div></div></div>
-    <div class="cap">계산기 없이 <b>머릿속으로 1개 값</b>을 나눠 보고, 더 싼 마트를 눌러요!</div></div>`;
+  </div></div>`;
 }
 function g4pick(isB){const P=G4[g4.q];const ok=(isB===P.ansB);
   const ua=P.a.p/P.a.n,ub=P.b.p/P.b.n;
@@ -148,41 +148,65 @@ function g4pick(isB){const P=G4[g4.q];const ok=(isB===P.ansB);
       nxt?[['다음 문제 →',()=>{hideBanner();g4.q++;cClear();render4();}]]:[['5단계 — 할인의 비밀 →',()=>{hideBanner();stage=5;cClear();render();plog('enter');}]]);
   } else banner('다시 한번 도전해볼까요?',`두 마트의 <b>1개 값</b>을 각각 계산해 비교해 보세요.`,[['다시',hideBanner]]);}
 
-/* ===== 5단계 · 할인의 비밀 (백분율) ===== */
+/* ===== 5단계 · 할인의 비밀 (점차 어려운 3문제) ===== */
+const G5=[
+ {em:'🥛',name:'우유',price:5000,rate:50,disc:2500,pay:2500,
+  dOpts:[['2,500원',true],['500원',false],['1,250원',false]],
+  pOpts:[['2,500원',true],['3,000원',false],['2,000원',false]]},
+ {em:'🍕',name:'피자',price:8000,rate:25,disc:2000,pay:6000,
+  dOpts:[['2,000원',true],['2,500원',false],['4,000원',false]],
+  pOpts:[['6,000원',true],['5,500원',false],['6,500원',false]]},
+ {em:'🎒',name:'가방',reverse:true,price:5000,now:4000,disc:1000,rate:20,
+  dOpts:[['1,000원',true],['500원',false],['1,500원',false]],
+  rOpts:[['20%',true],['25%',false],['10%',false]]}
+];
 let g5={q:0,step:0};
 function render5(){
-  if(g5.q===0){
+  const P=G5[g5.q];
+  if(!P.reverse){
     if(g5.step===0){
-      $('#readout').innerHTML=`<div class="nm">오늘의 특가! <span class="sale">25% 할인</span></div><div class="big">${won(4000)} 우유 — <b>얼마나</b> 깎아 줄까요?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr">${won(4000)} <span class="sale">25%↓</span></div></div></div>
-        <div class="cap">할인율은 <b>원래 가격을 100</b>으로 볼 때 깎는 부분! 계산기로 구하고 고르세요.</div>${calcHTML()}
-        <div class="cap"><b>할인 금액</b>은 얼마?</div>${mcHTML([[won(1000),true],[won(750),false],[won(1250),false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">할인 문제 ${g5.q+1}/3 · <span class="sale">${P.rate}% 할인</span></div><div class="big">${won(P.price)} ${P.name} — <b>얼마나</b> 깎아 줄까요?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr">${won(P.price)} <span class="sale">${P.rate}%↓</span></div></div></div>
+        <div class="cap">할인율은 <b>원래 가격을 100</b>으로 볼 때 깎는 부분! 계산기: ${P.price} × ${P.rate} ÷ 100</div>${calcHTML()}
+        <div class="cap"><b>할인 금액</b>은 얼마?</div>${mcHTML(P.dOpts,'g5pick')}</div>`;
     } else {
-      $('#readout').innerHTML=`<div class="nm">할인 금액은 1,000원!</div><div class="big">그럼 <b>얼마를 내면</b> 될까요?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr"><s style="color:#999">${won(4000)}</s> − ${won(1000)}</div></div></div>
-        <div class="cap"><b>낼 돈</b>은 얼마? (계산기를 써도 좋아요)</div>${calcHTML()}${mcHTML([[won(3000),true],[won(2750),false],[won(3250),false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">할인 금액은 ${won(P.disc)}!</div><div class="big">그럼 <b>얼마를 내면</b> 될까요?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr"><s style="color:#999">${won(P.price)}</s> − ${won(P.disc)}</div></div></div>
+        ${calcHTML()}<div class="cap"><b>낼 돈</b>은 얼마?</div>${mcHTML(P.pOpts,'g5pick')}</div>`;
     }
   } else {
     if(g5.step===0){
-      $('#readout').innerHTML=`<div class="nm">이번엔 반대로! 가방이 ${won(5000)} → ${won(4000)}</div><div class="big">얼마나 <b>깎였나요</b>?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr"><s style="color:#999">${won(5000)}</s> → ${won(4000)}</div></div></div>
-        <div class="cap">얼마나 깎였을까요?</div>${calcHTML()}${mcHTML([[won(1000),true],[won(500),false],[won(1500),false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">할인 문제 3/3 — 이번엔 반대로! ${P.name}이 ${won(P.price)} → ${won(P.now)}</div><div class="big">얼마나 <b>깎였나요</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr"><s style="color:#999">${won(P.price)}</s> → ${won(P.now)}</div></div></div>
+        ${calcHTML()}<div class="cap">얼마나 깎였을까요?</div>${mcHTML(P.dOpts,'g5pick')}</div>`;
     } else {
-      $('#readout').innerHTML=`<div class="nm">1,000원이 깎였어요</div><div class="big">할인율은 <b>몇 %</b>일까요?</div>`;
-      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr">${won(1000)} ÷ ${won(5000)}</div></div></div>
-        <div class="cap">원래 가격(5000)을 100으로 볼 때! 계산기: 1000 ÷ 5000 × 100</div>${calcHTML()}
-        <div class="cap"><b>할인율</b>은 몇 %?</div>${mcHTML([['20%',true],['25%',false],['15%',false]],'g5pick')}</div>`;
+      $('#readout').innerHTML=`<div class="nm">${won(P.disc)}이 깎였어요</div><div class="big">할인율은 <b>몇 %</b>일까요?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">${P.em}</div><div class="pr">${won(P.disc)} ÷ ${won(P.price)}</div></div></div>
+        <div class="cap">원래 가격(${P.price})을 100으로 볼 때! 계산기: ${P.disc} ÷ ${P.price} × 100</div>${calcHTML()}
+        <div class="cap"><b>할인율</b>은 몇 %?</div>${mcHTML(P.rOpts,'g5pick')}</div>`;
     }
   }
 }
-function g5pick(el){const ok=el.dataset.ok==='1';
+function g5pick(el){const ok=el.dataset.ok==='1';const P=G5[g5.q];
   plog(ok?'discountOk':'discountRetry',{q:g5.q,step:g5.step,pick:el.textContent});
   if(!ok){banner('다시 한번 도전해볼까요?','안내된 식을 계산기로 눌러 보고 다시 고르세요.',[['다시',hideBanner]]);return;}
-  if(g5.q===0&&g5.step===0){chime();banner('맞았어요! 할인 금액 1,000원','25%란 <b>100으로 나눈 것 중 25</b> — 4000×25÷100=1000!',[['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
-  else if(g5.q===0){chime();banner('맞았어요! 3,000원만 내면 돼요 🥛','4000−1000=3000. 할인 금액을 빼면 <b>낼 돈</b>!',[['다음 문제 →',()=>{hideBanner();g5={q:1,step:0};cClear();render5();}]]);}
-  else if(g5.step===0){chime();banner('맞았어요! 1,000원 깎였어요','이제 이 1,000원이 원래 가격의 <b>몇 %</b>인지 구해요.',[['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
-  else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
-    chime();banner('맞았어요! 20% 할인 🎉','1000÷5000×100=20 — <b>원래 가격을 100으로</b> 볼 때 20만큼! 색상 실험실의 100칸과 같은 비밀이죠.',[['마트의 비밀 완성! 🛒',hideBanner]]);}}
+  chime();
+  if(!P.reverse){
+    if(g5.step===0){
+      banner(`맞았어요! 할인 금액 ${won(P.disc)}`,`${P.rate}%란 <b>100으로 나눈 것 중 ${P.rate}</b> — ${P.price}×${P.rate}÷100=${P.disc}!${P.rate===50?' 딱 <b>절반</b>이죠!':''}`,
+        [['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+    else{
+      banner(`맞았어요! ${won(P.pay)}만 내면 돼요 ${P.em}`,`${P.price}−${P.disc}=${P.pay}. 할인 금액을 빼면 <b>낼 돈</b>!`,
+        [['다음 문제 →',()=>{hideBanner();g5={q:g5.q+1,step:0};cClear();render5();}]]);}
+  } else {
+    if(g5.step===0){
+      banner(`맞았어요! ${won(P.disc)} 깎였어요`,`이제 이 ${won(P.disc)}이 원래 가격의 <b>몇 %</b>인지 구해요.`,
+        [['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+    else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
+      banner(`맞았어요! ${P.rate}% 할인 🎉`,`${P.disc}÷${P.price}×100=${P.rate} — <b>원래 가격을 100으로</b> 볼 때 ${P.rate}만큼! 색상 실험실의 100칸과 같은 비밀이죠.`,
+        [['마트의 비밀 완성! 🛒',hideBanner]]);}
+  }
+}
 
 function render(){renderStage();({3:render3,4:render4,5:render5}[stage])();}
 render();
