@@ -279,9 +279,7 @@ function renderS23Lang(baseIdx){
   $('#mProg').textContent=`(문제 ${S.subIdx+1}/3)`;
   const expl=isEq
     ? `<b style="color:${cb}">${base} ${BASE}mL</b>는 처음부터 들어 있었고,<br>
-       내가 <b style="color:${cc}">${comp} ${cv}mL</b>를 넣어 맞췄어요.<br>
-       '<b>${base}에 대한 ${comp}의 비</b>' = <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
-       💡 '~<b>에 대한</b>'이 붙은 쪽이 <b>기준량</b>, 기준량은 비의 <b>뒤</b>에 와요.`
+       내가 <b style="color:${cc}">${comp} ${cv}mL</b>를 넣어 맞췄어요.`
     : `이 문제에서 <b>기준량</b>은 <b style="color:${cb}">${base}</b> — 처음부터 <b>${BASE}mL</b> 들어 있었죠.<br>
        내가 넣은 <b style="color:${cc}">${comp} ${cv}mL</b>${iga(comp)} <b>비교하는 양</b>이에요.<br>
        '<b>${base}에 대한 ${comp}의 비</b>' = <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
