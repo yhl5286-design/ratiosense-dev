@@ -180,8 +180,8 @@ let pct=100, m3idx=0, m3done=[];
 const M3=[
  {type:'predict', q:'호수 지도를 <b>150%</b>로 복사하면 어떻게 될까요?', choices:[['모양 그대로, 1.5배 커진다',true],['가로만 1.5배 길어진다',false],['크기가 그대로다',false]], pct:150,
   ok:'150% = ×1.5 — 가로도 세로도 1.5배, 모양은 그대로! (2:3 — 화음의 완전5도와 같은 비예요 🎵)'},
- {type:'quiz', q:'가로 <b>4칸</b> 호수를 <b>6칸</b>으로 만들려면 몇 %로 복사할까요?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
-  ok:'4칸 → 6칸 = 4:6 = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
+ {type:'quiz', q:'가로 <b>2칸</b> 호수를 <b>3칸</b>으로 만들려면 몇 %로 복사할까요?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
+  ok:'2칸 → 3칸 = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
  {type:'quiz', q:'<b>200%</b>로 복사하면 가로 2칸 나무는 몇 칸이 될까요?', choices:[['3칸',false],['4칸',true],['6칸',false]], pct:200,
   ok:'200% = ×2 → 2칸이 <b>4칸</b>으로. 백분율은 <b>배율의 다른 이름</b>이에요!'}
 ];
@@ -194,7 +194,7 @@ function render3(){
   $('#body').innerHTML=`<div class="card">
     <div class="lbl">🖨️ 복사기 — 원본을 넣고 <b>배율(%)</b>을 골라요</div>
     <div class="copier">
-      <div class="tray"><div class="tt">원본 (가로 4칸)</div>${lake(1)}</div>
+      <div class="tray"><div class="tt">원본 (가로 2칸)</div>${lake(1)}</div>
       <div style="display:flex;align-items:center;font-size:26px">➜</div>
       <div class="tray"><div class="tt">복사본 <span id="pctlab">${pct}%</span></div><div id="outTray">${pct===100?lake(1):lake(pct/100)}</div></div>
     </div>

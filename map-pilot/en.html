@@ -180,8 +180,8 @@ let pct=100, m3idx=0, m3done=[];
 const M3=[
  {type:'predict', q:'What happens if we copy the lake map at <b>150%</b>?', choices:[['Same shape, 1.5× bigger',true],['Only the width gets 1.5× longer',false],['Same size',false]], pct:150,
   ok:'150% = ×1.5 — width and height both ×1.5, same shape! (2:3 — the same ratio as a perfect fifth 🎵)'},
- {type:'quiz', q:'The lake is <b>4 cells</b> wide. What % makes it <b>6 cells</b>?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
-  ok:'4 → 6 cells = 4:6 = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
+ {type:'quiz', q:'The lake is <b>2 cells</b> wide. What % makes it <b>3 cells</b>?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
+  ok:'2 → 3 cells = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
  {type:'quiz', q:'At <b>200%</b>, a tree 2 cells wide becomes how many cells?', choices:[['3 cells',false],['4 cells',true],['6 cells',false]], pct:200,
   ok:'200% = ×2 → 2 cells become <b>4</b>. Percent is just <b>another name for a scale factor</b>!'}
 ];
@@ -194,7 +194,7 @@ function render3(){
   $('#body').innerHTML=`<div class="card">
     <div class="lbl">🖨️ Copier — insert the original and pick a <b>zoom (%)</b></div>
     <div class="copier">
-      <div class="tray"><div class="tt">Original (4 cells wide)</div>${lake(1)}</div>
+      <div class="tray"><div class="tt">Original (2 cells wide)</div>${lake(1)}</div>
       <div style="display:flex;align-items:center;font-size:26px">➜</div>
       <div class="tray"><div class="tt">Copy <span id="pctlab">${pct}%</span></div><div id="outTray">${pct===100?lake(1):lake(pct/100)}</div></div>
     </div>
