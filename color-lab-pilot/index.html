@@ -300,7 +300,9 @@ function renderS23Lang(baseIdx){
 /* ===== 3단계 비율 — '~에 대한' 표현 이해 ===== */
 const R3=[
   {a:100,b:200,dir:'ab',type:'ratio'},
+  {a:100,b:200,dir:'ab',type:'frac'},
   {a:100,b:200,dir:'ba',type:'ratio'},
+  {a:100,b:200,dir:'ba',type:'frac'},
   {a:40,b:60,dir:'ab',type:'ratio'},
   {a:40,b:60,dir:'ab',type:'frac'}
 ];
@@ -335,7 +337,7 @@ function renderS3R(){
       const nx=S.r3i+1;
       let fb;
       if(q.type==='ratio'){
-        fb=`${S.r3i===1?'같은 액체여도 <b>기준이 다르니 비가 바뀌었죠?</b> ':''}'<b>${K}에 대한 ${F}의 비</b>'는 <b>${F} : ${K}</b>${iga(K)} 되며, <b>${F}</b>${jz(F,'은','는')} 비교하는 양, <b>${K}</b>${jz(K,'은','는')} 기준량입니다.`;
+        fb=`${S.r3i===2?'같은 액체여도 <b>기준이 다르니 비가 바뀌었죠?</b> ':''}'<b>${K}에 대한 ${F}의 비</b>'는 <b>${F} : ${K}</b>${iga(K)} 되며, <b>${F}</b>${jz(F,'은','는')} 비교하는 양, <b>${K}</b>${jz(K,'은','는')} 기준량입니다.`;
       } else fb=`${F} ÷ ${K} = <b>${fracHTML(fV,kV)}</b> — <b>${K}</b>${jz(K,'은','는')} 기준량(아래), <b>${F}</b>${jz(F,'은','는')} 비교하는 양(위)입니다.`;
       success('맞아요!',fb,nx>=R3.length?stageDone:()=>{S.r3i=nx;render();});
     } else {
