@@ -338,13 +338,11 @@ function renderS3R(){
       const nx=S.r3i+1;
       let fb;
       if(q.type==='ratio'){
-        fb=`'에 대한' 앞의 <b>${K}</b>${iga(K)} 기준량 → <b>${F} : ${K}</b> = ${abFront?q.b:q.a} : ${abFront?q.a:q.b} = <b>${fV} : ${kV}</b>!`;
-        if(S.r3i===1)fb+=`<br>👀 같은 액체인데 <b>기준이 바뀌니 비가 뒤집혔죠?</b>`;
-      } else fb=`${F} ÷ ${K} = ${abFront?q.b:q.a}/${abFront?q.a:q.b} = <b>${fracHTML(fV,kV)}</b>!`;
-      fb+=`<br>💡 '<b>A에 대한 B</b>' — '에 대한' 앞(A)이 <b>기준량</b>: 비의 <b>뒤</b>, 분수의 <b>아래</b>!`;
+        fb=`${S.r3i===1?'같은 액체여도 <b>기준이 다르니 비가 바뀌었죠?</b> ':''}'<b>${K}에 대한 ${F}의 비</b>'는 <b>${F} : ${K}</b>${iga('비')} 되며, <b>${F}</b>${jz(F,'은','는')} 비교하는 양, <b>${K}</b>${jz(K,'은','는')} 기준량입니다.`;
+      } else fb=`${F} ÷ ${K} = <b>${fracHTML(fV,kV)}</b> — <b>${K}</b>${jz(K,'은','는')} 기준량(아래), <b>${F}</b>${jz(F,'은','는')} 비교하는 양(위)입니다.`;
       success('맞아요!',fb,nx>=R3.length?stageDone:()=>{S.r3i=nx;render();});
     } else {
-      banner('help','다시 한번 도전해볼까요?',`'<b>A에 대한 B</b>의 비' = <b>B : A</b> — '에 대한' 앞의 <b>${K}</b>${iga(K)} <b>기준량</b>이라 비의 <b>뒤</b>(분수의 <b>아래</b>)에 와요.`,[['다시 고르기',hideBanner]]);chime(false);
+      banner('help','다시 한번 도전해볼까요?',`'<b>${K}에 대한 ${F}의 비</b>'는 <b>${F} : ${K}</b>예요.`,[['도전!',hideBanner]]);chime(false);
     }};});
 }
 
