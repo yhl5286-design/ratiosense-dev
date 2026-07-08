@@ -111,15 +111,15 @@ const gcd=(a,b)=>b?gcd(Math.round(b),Math.round(a%b)):Math.round(a);
 function shadeColor(f,s){const c={};c[f.paints[0]]=s.r[0];c[f.paints[1]]=s.r[1];return mix(c);}
 function unit(base,comp){const g=gcd(base,comp)||1,b=base/g,c=comp/g;if(b===c)return'같은 양';if(c%b===0)return`${c/b}배`;if(b%c===0)return`${c}/${b}(${b}분의 ${c})`;return`${c}/${b}`;}
 const FAM=[
- {id:'주황',emoji:'🟠',paints:['빨강','노랑'],shades:[{n:'연한',r:[1,2]},{n:'중간',r:[1,1]},{n:'진한',r:[2,1]}],p4:[3,4],p5:{r1:[2,3],pct1:40,pct2:60}},
+ {id:'주황',emoji:'🟠',paints:['빨강','노랑'],shades:[{n:'연한',r:[1,2]},{n:'중간',r:[1,1]},{n:'진한',r:[2,1]}],p4:[3,4],p5:{r1:[2,3],pct1:40,pct2:60},p6:{rc:2,rb:3,pct:60}},
  {id:'보라',emoji:'🟣',paints:['빨강','파랑'],shades:[{n:'연한',r:[2,1]}]},
- {id:'초록',emoji:'🟢',paints:['노랑','파랑'],shades:[{n:'연한',r:[1,1]}]},
+ {id:'초록',emoji:'🟢',paints:['노랑','파랑'],shades:[{n:'연한',r:[3,5]}]},
 ];
-const STEP=['1 감각','2 기준량','3 뒤집기','4 백분율'];
+const STEP=['1 감각','2 기준량','3 뒤집기','4 백 칸 칠하기','5 백분율'];
 let S={fam:FAM[0],stage:1,done:{},amt:{},subIdx:0,fails:0,n4:{a:0,b:0,active:0},showNum:false};
 const $=s=>document.querySelector(s);
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'color',event:ev,data:Object.assign({fam:S.fam&&S.fam.id,stage:S.stage,sub:S.subIdx},data||{})},'*');}catch(e){}}
-function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.s1got=[];S.s1fi=0;S.phase23='make';S.made23=0;render();plog('enter');}
+function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.p6={step:1,r:0,y:0};S.s1got=[];S.s1fi=0;S.phase23='make';S.made23=0;render();plog('enter');}
 function shadeName(){return S.fam.shades[S.subIdx].n;}
 function curTargetColor(){return shadeColor(S.fam,S.fam.shades[S.subIdx]);}
 
@@ -160,7 +160,7 @@ function minusBtns(){return `<div class="minusrow">`+[5,10,50].map(v=>`<button c
 function wireMinus(el,color,cb){if(!el)return;el.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{S.amt[color]=Math.max(0,(S.amt[color]||0)-(+b.dataset.m));plog('paintSub',{color,sub:+b.dataset.m,amt:Object.assign({},S.amt)});cb();});}
 function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
 
-function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS5}[S.stage])();}
+function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS5,5:renderS6}[S.stage])();}
 
 /* ===== 1단계 감각 — 주황·보라·초록, 서로 다른 양으로 ===== */
 function renderS1(){
@@ -308,109 +308,104 @@ function renderS23Lang(baseIdx){
     }};});
 }
 
-/* ===== 4단계 백분율 — 전체를 100으로 ===== */
+/* ===== 4단계 백 칸 칠하기 ===== */
 function gridHTML(red,total,pour){let h='<div class="pgrid">';
   const c0=rgb(PRIM[S.fam.paints[0]]),c1=rgb(PRIM[S.fam.paints[1]]);
   for(let i=0;i<100;i++){const on=i<red, yel=i>=red&&i<total;
     const bg=on?c0:(yel?c1:'#edeae2');
     h+=`<div class="pcell" style="background:${bg}${pour?`;transition-delay:${i*5}ms`:''}"></div>`;}
   return h+'</div>';}
-function p5Preview(red){const c={};c[S.fam.paints[0]]=red;c[S.fam.paints[1]]=100-red;return rgb(mix(c));}
 function renderS5(){
   const p5=S.fam.p5,p0=S.fam.paints[0],p1=S.fam.paints[1];
-  if(S.p5.m===1){
-    const [ra,rb]=p5.r1,pct=p5.pct1;
-    const ph=S.p5.phase, a=S.amt[p0]||0, b=S.amt[p1]||0;
-    const mc={};mc[p0]=ra;mc[p1]=rb;const mixCol=rgb(mix(mc));
-    if(ph==='fill'||ph==='painted'){
-      $('#mText').innerHTML=`<b>${p0} : ${p1}</b>${jz(p1,'이','가')} <b>${ra} : ${rb}</b>${[1,3,6,7,8].includes(rb)?'이':'가'} 되도록 <b>100칸</b>을 색칠해 보세요`;
-      $('#mProg').textContent='각 색을 몇 칸 칠할지 숫자로 입력하고 → 색칠하기!';
-      let body=`<div class="tools"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
-          <div class="numfield"><input id="inR" type="number" inputmode="numeric" min="0" max="100" value="${a||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p0])}">● ${p0} 칸</div></div>
-          <div class="numfield"><input id="inY" type="number" inputmode="numeric" min="0" max="100" value="${b||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p1])}">● ${p1} 칸</div></div></div>
-        <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="paintGo" style="max-width:280px">🖌 색칠하기</button></div></div>`;
-      if(ph==='painted'){
-        body+=gridHTML(a,100,true)+`<div class="pctlab">✔ ${p0} ${a}칸 : ${p1} ${b}칸 = ${ra} : ${rb}</div>
-          <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="goQuiz" style="max-width:280px">문제 풀러 가기 →</button></div>`;
-      } else {
-        body+=gridHTML(0,0,false)+`<div class="pctlab" style="color:#8a8577">아직 비어 있어요</div>`;
-      }
-      $('#stageBody').innerHTML=body;
-      $('#paintGo').onclick=()=>{
-        const r=parseInt($('#inR').value||'0',10),y=parseInt($('#inY').value||'0',10);
-        if(r+y!==100){plog('pctFillRetry',{r,y});
-          banner('help','다시 한번 도전해볼까요?',`100칸을 <b>모두</b> 칠해야 해요 — 지금은 <b>${r+y}칸</b>이에요.`,[['다시 해보기',hideBanner]]);chime(false);return;}
-        if(r*rb!==y*ra){plog('pctFillRetry',{r,y});
-          banner('help','다시 한번 도전해볼까요?',`100칸이지만 <b>${ra} : ${rb}</b>의 비가 아니에요. ${p0}와 ${p1}의 칸 수를 다시 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);return;}
-        S.amt={};S.amt[p0]=r;S.amt[p1]=y;S.p5.phase='painted';plog('pctFillOk',{r,y});
-        render();chime(true);
-        setTimeout(()=>banner('ok',`${p0} : ${p1}${jz(p1,'이','가')} ${ra} : ${rb}의 비가 되도록 잘 색칠했어요!`,'화살표를 눌러 문제를 풀어 보세요.',[['문제 풀러 가기 →',()=>{hideBanner();S.p5.phase='q1';render();}]]),200);};
-      if(ph==='painted'){$('#goQuiz').onclick=()=>{S.p5.phase='q1';render();};}
+  const [ra,rb]=p5.r1,pct=p5.pct1;
+  const ph=S.p5.phase, a=S.amt[p0]||0, b=S.amt[p1]||0;
+  if(ph==='fill'||ph==='painted'){
+    $('#mText').innerHTML=`<b>${p0} : ${p1}</b>${jz(p1,'이','가')} <b>${ra} : ${rb}</b>${[1,3,6,7,8].includes(rb)?'이':'가'} 되도록 <b>100칸</b>을 색칠해 보세요`;
+    $('#mProg').textContent='각 색을 몇 칸 칠할지 숫자로 입력하고 → 색칠하기!';
+    let body=`<div class="tools"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
+        <div class="numfield"><input id="inR" type="number" inputmode="numeric" min="0" max="100" value="${a||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p0])}">● ${p0} 칸</div></div>
+        <div class="numfield"><input id="inY" type="number" inputmode="numeric" min="0" max="100" value="${b||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p1])}">● ${p1} 칸</div></div></div>
+      <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="paintGo" style="max-width:280px">🖌 색칠하기</button></div></div>`;
+    if(ph==='painted'){
+      body+=gridHTML(a,100,true)+`<div class="pctlab">✔ ${p0} ${a}칸 : ${p1} ${b}칸 = ${ra} : ${rb}</div>
+        <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="goQuiz" style="max-width:280px">문제 풀러 가기 →</button></div>`;
     } else {
-      const isQ1=(ph==='q1');
-      $('#mText').innerHTML=isQ1
-        ? `이 액체에서 <b>${p0}</b>${jz(p0,'은','는')} 100칸 중 <b>몇 칸</b>이었나요?`
-        : `그렇다면 이 액체에서 <b>${p0}의 비율</b>은 <b>몇 %</b>일까요?`;
-      $('#mProg').textContent=`${p0} ${ra} : ${p1} ${rb}의 비로 만들어진 ${S.fam.id} 액체예요. (문제 ${isQ1?1:2}/2)`;
-      $('#stageBody').innerHTML=
-        `<div class="tools" style="text-align:center"><div class="lbl">${ra} : ${rb}의 ${S.fam.id} 액체</div>
-          <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div></div>
-        <div class="tools"><div style="display:flex;gap:10px;justify-content:center;align-items:center">
-          <div class="numfield"><input id="qIn" type="number" inputmode="numeric" min="0" max="100" placeholder="?"><div class="u">${isQ1?'칸':'%'}</div></div></div>
-        <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="qGo" style="max-width:220px">확인</button></div></div>`;
-      $('#qGo').onclick=()=>{
-        const v=parseInt($('#qIn').value||'0',10);
-        if(v===pct){
-          if(isQ1){plog('pctQ1Ok',{v});
-            success(`맞았어요! ${p0} ${pct}칸!`,`섞여서 안 보여도 이 액체 100칸 중 <b>${pct}칸</b>은 ${p0}예요.`,()=>{S.p5.phase='q2';render();});}
-          else{plog('pctQ2Ok',{v});
-            success(`맞았어요! ${p0}의 비율 = ${pct}%!`,`100칸 중 ${pct}칸 = <b>${pct}%</b> — 백분율은 <b>전체를 100</b>으로 볼 때의 비예요!`,
-              ()=>{S.p5={m:2,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.amt={};render();});}
-        } else {plog(isQ1?'pctQ1Retry':'pctQ2Retry',{v});
-          banner('help','다시 한번 도전해볼까요?',isQ1?`내가 <b>${p0} 칸</b>을 몇 칸으로 칠했는지 떠올려 보세요.`:`${p0}${jz(p0,'은','는')} 100칸 중 ${pct}칸이었죠 — 그럼 몇 %일까요?`,[['다시 해보기',hideBanner]]);chime(false);}};
+      body+=gridHTML(0,0,false)+`<div class="pctlab" style="color:#8a8577">아직 비어 있어요</div>`;
     }
+    $('#stageBody').innerHTML=body;
+    $('#paintGo').onclick=()=>{
+      const r=parseInt($('#inR').value||'0',10),y=parseInt($('#inY').value||'0',10);
+      if(r+y!==100){plog('pctFillRetry',{r,y});
+        banner('help','다시 한번 도전해볼까요?',`100칸을 <b>모두</b> 칠해야 해요 — 지금은 <b>${r+y}칸</b>이에요.`,[['다시 해보기',hideBanner]]);chime(false);return;}
+      if(r*rb!==y*ra){plog('pctFillRetry',{r,y});
+        banner('help','다시 한번 도전해볼까요?',`100칸이지만 <b>${ra} : ${rb}</b>의 비가 아니에요. ${p0}와 ${p1}의 칸 수를 다시 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);return;}
+      S.amt={};S.amt[p0]=r;S.amt[p1]=y;S.p5.phase='painted';plog('pctFillOk',{r,y});
+      render();chime(true);
+      setTimeout(()=>banner('ok',`${p0} : ${p1}${jz(p1,'이','가')} ${ra} : ${rb}의 비가 되도록 잘 색칠했어요!`,'화살표를 눌러 문제를 풀어 보세요.',[['문제 풀러 가기 →',()=>{hideBanner();S.p5.phase='q1';render();}]]),200);};
+    if(ph==='painted'){$('#goQuiz').onclick=()=>{S.p5.phase='q1';render();};}
   } else {
-    const pct=p5.pct2,g=gcd(pct,100-pct)||1,ca=pct/g,cb=(100-pct)/g;
-    if(S.p5.phase==='fill'){
-      $('#mText').innerHTML=`반대로! <b>${p0}이 ${pct}%</b>인 ${S.fam.id}을 칸으로 만들어 보세요`;
-      $('#mProg').textContent='백분율 ②: % → 비 · 버튼(±10, ±1)이나 숫자로 칸을 채워요';
-      const red=S.p5.red;
-      $('#stageBody').innerHTML=
-        `<div class="fillrow"><button class="btn" id="m10">−10칸</button><button class="btn" id="m1">−1칸</button>
-          <button class="btn" id="a1">+1칸</button><button class="btn" id="a10">+10칸</button></div>`+
-        `<div class="p5wrap"><div>`+gridHTML(red,100,false)+`<div class="pctlab">${p0} <b>${red}</b>칸 / 100칸</div></div>
-         <div class="p5side"><div class="lab">지금 섞인 색</div><div class="p5mini"><div class="mf" style="background:${p5Preview(red)}"></div></div>
-          <div class="tools" style="margin-top:6px"><div class="pad" id="pad5"></div></div></div></div>
-        <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="ck5">확인</button></div>`;
-      const setRed=v=>{S.p5.red=Math.max(0,Math.min(100,v));S.p5.ans=String(S.p5.red);render();};
-      $('#m10').onclick=()=>setRed(S.p5.red-10);$('#m1').onclick=()=>setRed(S.p5.red-1);
-      $('#a1').onclick=()=>setRed(S.p5.red+1);$('#a10').onclick=()=>setRed(S.p5.red+10);
-      const pad=$('#pad5');['1','2','3','4','5','6','7','8','9','0','⌫'].forEach(k=>{const bt=document.createElement('button');bt.textContent=k;bt.onclick=()=>{
-        let v=S.p5.ans==='0'?'':(S.p5.ans||'');if(k==='⌫')v=v.slice(0,-1);else if(v.length<3)v+=k;S.p5.ans=v;setRed(parseInt(v||'0',10));};pad.appendChild(bt);});
-      $('#ck5').onclick=()=>{if(S.p5.red===pct){S.p5.phase='ratio';plog('pctFillOk',{red:S.p5.red});render();}
-        else{plog('pctFillRetry',{red:S.p5.red});banner('help','다시 한번 도전해볼까요?',`${p0} 칸이 <b>${pct}%</b>가 되게 채워 보세요. (100칸 중)`,[['해볼게요',hideBanner]]);chime(false);}};
-    } else {
-      $('#mText').innerHTML=`${p0} ${pct}% — 그럼 <b>${p0} : ${p1}</b> 비는 몇 대 몇일까요?`;
-      $('#mProg').textContent='백분율 ②: % → 비';
-      const opts=[[ca,cb],[cb,ca],[ca,ca+cb]].map(([x,y],i)=>({x,y,ok:i===0}));
-      opts.sort(()=>Math.random()-0.5);
-      $('#stageBody').innerHTML=gridHTML(pct,100,false)+`<div class="pctlab">${p0} ${pct}칸 : ${p1} ${100-pct}칸</div>
-        <div class="fillrow" style="margin-top:10px">`+opts.map((o,i)=>`<button class="btn big" data-ok="${o.ok?1:0}" id="op${i}">${o.x} : ${o.y}</button>`).join('')+`</div>`;
-      opts.forEach((o,i)=>{$('#op'+i).onclick=()=>{
-        if(o.ok){plog('pctRatioOk',{pct,ratio:ca+':'+cb});
-          success(`맞았어요! ${pct}% = ${pct}:${100-pct} = ${ca}:${cb}!`,`백분율은 <b>전체를 100</b>으로 볼 때의 비예요.`,famDone);}
-        else{plog('pctRatioRetry',{pick:o.x+':'+o.y});banner('help','다시 한번 도전해볼까요?',`${pct}:${100-pct}를 <b>가장 간단한 비</b>로 줄여 보세요.`,[['해볼게요',hideBanner]]);chime(false);}};});
-    }
+    $('#mText').innerHTML=`이 <b>100칸</b> 중에 <b>${p0}</b>${jz(p0,'은','는')} <b>몇 칸</b>인가요?`;
+    $('#mProg').textContent=`${p0} ${ra} : ${p1} ${rb}의 비로 칠한 100칸이에요.`;
+    $('#stageBody').innerHTML=
+      gridHTML(a,100,false)+
+      `<div class="tools" style="margin-top:10px"><div style="display:flex;gap:10px;justify-content:center;align-items:center">
+        <div class="numfield"><input id="qIn" type="number" inputmode="numeric" min="0" max="100" placeholder="?"><div class="u">칸</div></div></div>
+      <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="qGo" style="max-width:220px">확인</button></div></div>`;
+    $('#qGo').onclick=()=>{
+      const v=parseInt($('#qIn').value||'0',10);
+      if(v===pct){plog('pctQ1Ok',{v});
+        success(`맞았어요! ${p0} ${pct}칸!`,`100칸 중 <b>${pct}칸</b>${jz('칸','이','가')} ${p0}${jz(p0,'이','가')}에요.`,stageDone);}
+      else{plog('pctQ1Retry',{v});
+        banner('help','다시 한번 도전해볼까요?',`${p0} 칸을 직접 세어 보거나, 내가 칠한 수를 떠올려 보세요.`,[['다시 해보기',hideBanner]]);chime(false);}};
+  }
+}
+
+/* ===== 5단계 백분율 — 물감 만들기와 % ===== */
+function renderS6(){
+  const p6=S.fam.p6,p0=S.fam.paints[0],p1=S.fam.paints[1];
+  const rc=p6.rc,rb=p6.rb,pct=p6.pct; // '빨강에 대한 노랑의 비' = 노랑:빨강 = rc:rb
+  const mc={};mc[p0]=rb;mc[p1]=rc;const mixCol=rgb(mix(mc));
+  if(S.p6.step===1){
+    $('#mText').innerHTML=`'<b>${p0}에 대한 ${p1}의 비</b>'가 <b>${rc} : ${rb}</b>${[1,3,6,7,8].includes(rb)?'이':'가'} 되도록 <b>${S.fam.id} 물감</b>을 만들려고 합니다.<br>이때 <b>${p0}</b>${jz(p0,'과','와')} <b>${p1}</b>${jz(p1,'은','는')} 몇 mL씩 넣어야 할까요?`;
+    $('#mProg').textContent='step 1 · 비에 맞는 양 정하기 (답이 여러 개!)';
+    $('#stageBody').innerHTML=
+      `<div class="tools"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
+        <div class="numfield"><input id="inR6" type="number" inputmode="numeric" min="0" placeholder="?"><div class="u" style="color:${rgb(PRIM[p0])}">● ${p0} mL</div></div>
+        <div class="numfield"><input id="inY6" type="number" inputmode="numeric" min="0" placeholder="?"><div class="u" style="color:${rgb(PRIM[p1])}">● ${p1} mL</div></div></div>
+      <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="mk6" style="max-width:280px">🧪 물감 만들기</button></div></div>`;
+    $('#mk6').onclick=()=>{
+      const r=parseInt($('#inR6').value||'0',10),y=parseInt($('#inY6').value||'0',10);
+      const ok=(r>0&&y>0&&y*rb===r*rc);
+      plog(ok?'p6MakeOk':'p6MakeRetry',{r,y});
+      if(ok){S.p6={step:2,r,y};chime(true);
+        banner('ok',`잘 만들었어요! ${p0} ${r}mL : ${p1} ${y}mL`,`'${p0}에 대한 ${p1}의 비' = ${p1} : ${p0} = ${y} : ${r} = <b>${rc} : ${rb}</b>!`,[['다음 문제 →',()=>{hideBanner();render();}]]);}
+      else banner('help','다시 한번 도전해볼까요?',`'${p0}에 대한 ${p1}의 비'가 ${rc} : ${rb}이니까, <b>${p1} : ${p0}</b>${jz(p0,'이','가')} ${rc} : ${rb}${[1,3,6,7,8].includes(rb)?'이':'가'} 되는 양을 찾아보세요.`,[['다시 해보기',hideBanner]]);};
+  } else {
+    const r=S.p6.r,y=S.p6.y;
+    $('#mText').innerHTML=`이때 <b>${p0}</b>${jz(p0,'은','는')} 전체 ${S.fam.id} 물감의 <b>몇 %</b>인가요?`;
+    $('#mProg').textContent=`step 2 · ${p0} ${r}mL + ${p1} ${y}mL = 전체 ${r+y}mL`;
+    $('#stageBody').innerHTML=
+      `<div class="tools" style="text-align:center"><div class="lbl">내가 만든 ${S.fam.id} 물감 (${p0} ${r} : ${p1} ${y})</div>
+        <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div></div>
+      <div class="tools"><div style="display:flex;gap:10px;justify-content:center;align-items:center">
+        <div class="numfield"><input id="qIn6" type="number" inputmode="numeric" min="0" max="100" placeholder="?"><div class="u">%</div></div></div>
+      <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="qGo6" style="max-width:220px">확인</button></div></div>`;
+    $('#qGo6').onclick=()=>{
+      const v=parseInt($('#qIn6').value||'0',10);
+      if(v===pct){plog('p6PctOk',{v});
+        success(`맞았어요! ${p0}${jz(p0,'은','는')} 전체의 ${pct}%!`,`전체 ${r+y}mL 중 ${p0} ${r}mL — 전체를 100으로 보면 <b>${pct}%</b>예요. 백분율은 <b>전체를 100</b>으로 볼 때의 비!`,famDone);}
+      else{plog('p6PctRetry',{v});
+        banner('help','다시 한번 도전해볼까요?',`전체는 ${p0}+${p1} = <b>${r+y}mL</b> — 그중 ${p0}${jz(p0,'이','가')} 차지하는 부분을 <b>100 기준</b>으로 바꿔 보세요.`,[['다시 해보기',hideBanner]]);chime(false);}};
   }
 }
 
 /* ===== 피드백 ===== */
 function stageDone(){const nx=S.stage+1;S.done[S.fam.id+':'+S.stage]=true;
-  if(nx<=4)banner('ok',`${STEP[S.stage-1]} 단계 완성!`,'다음 단계로 가 볼까요?',[['다음 단계',()=>{hideBanner();S.stage=nx;resetStage();}],['여기 더 하기',hideBanner]]);else famDone();}
-function famDone(){S.done[S.fam.id+':4']=true;
+  if(nx<=5)banner('ok',`${STEP[S.stage-1]} 단계 완성!`,'다음 단계로 가 볼까요?',[['다음 단계',()=>{hideBanner();S.stage=nx;resetStage();}],['여기 더 하기',hideBanner]]);else famDone();}
+function famDone(){S.done[S.fam.id+':5']=true;
   plog('famDone',{allDone:true});
   try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
-  banner('ok','색상 실험실 네 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
+  banner('ok','색상 실험실 다섯 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
 function remedial(m){const p0=S.fam.paints[0],p1=S.fam.paints[1];
   banner('help','다시 한번 도전해볼까요?',`${p1}${iga(p1)} 지금 몇 mL인가요? ${p0}${jz(p0,'은','는')} 지금 몇 mL인가요?<br>Ⓐ와 같은 색이 되려면 <b>무슨 물감을 얼마</b>가 되게 해야 할지 먼저 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);plog('retry',{mode:m});}
 function success(t,s,after){banner('ok',t,s,[[after?'다음':'좋아요',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}
