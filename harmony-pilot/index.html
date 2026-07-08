@@ -59,8 +59,8 @@
 .hbeam{height:13px;background:linear-gradient(#d9b26a,#8a6a34);border-radius:7px;box-shadow:0 2px 4px rgba(0,0,0,.4)}
 .hrow{display:flex;justify-content:space-around;align-items:flex-start;padding:0 6px}
 .hcol{display:flex;flex-direction:column;align-items:center;width:44px}
-.hs{width:4px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:2px;cursor:pointer;box-shadow:0 0 4px rgba(255,240,200,.35)}
-.hs.ghost{background:none;border-left:3px dashed #5a4a30;cursor:default;box-shadow:none}
+.hs{width:11px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:2px;cursor:pointer;box-shadow:0 0 4px rgba(255,240,200,.35)}
+.hs.ghost{background:none;border-left:5px dashed #5a4a30;cursor:default;box-shadow:none}
 .hs.test{background:linear-gradient(#ffe9a8,#e0a02a)}
 .hs.pluck{animation:wig .35s}
 @keyframes wig{20%{transform:translateX(3px)}50%{transform:translateX(-3px)}80%{transform:translateX(1.5px)}}
@@ -259,8 +259,7 @@ function render4(){
   $('#readout').innerHTML=`<div class="nm">🪕 하프 공방 — 도 줄 <b>${HBASE}cm</b>에서 시작! 5음계 줄을 만들어요 (${done}/${HP.length})</div><div class="big">${cur?`<b>${cur.n}</b> 줄은 도 줄의 <b>${cur.a}/${cur.b}</b> — <b>몇 cm</b>로 만들어야 할까요?`:'5음계 하프 완성!'}</div>`;
   if(done>=HP.length){
     $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 완성! 줄을 눌러 연주해 보세요 — 짧을수록 높은 음!</div>${harpHTML()}
-      <div style="text-align:center;margin-top:10px"><button class="btn" style="font-size:15px;padding:11px 20px" onclick="hSong()">🎶 아리랑 연주</button></div>
-      <div class="cap">아리랑은 <b>5음계</b> 노래 — 내가 만든 하프로 진짜 노래가 돼요!</div></div>`;
+      <div class="cap">줄을 눌러 자유롭게 연주해 보세요 — <b>짧은 줄일수록 높은 음</b>!</div></div>`;
     return;}
   $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 나의 하프 — 만든 줄은 눌러서 소리 확인!</div>${harpHTML()}</div>
    <div class="card"><div class="lbl">🎚 시험 줄 — 손잡이를 움직여 <b>길이에 따라 음이 어떻게 변하는지</b> 들어 보세요</div>
