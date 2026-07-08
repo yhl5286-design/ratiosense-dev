@@ -301,6 +301,7 @@ function renderS23Lang(baseIdx){
 const R3=[
   {a:100,b:200,dir:'ab',type:'ratio'},
   {a:100,b:200,dir:'ba',type:'ratio'},
+  {a:40,b:60,dir:'ab',type:'ratio'},
   {a:40,b:60,dir:'ab',type:'frac'}
 ];
 function renderS3R(){
@@ -314,7 +315,7 @@ function renderS3R(){
   const kmL=abFront?q.a:q.b, fmL=abFront?q.b:q.a;
   $('#mText').innerHTML=q.type==='ratio'
     ? `'<b>${K} ${kmL}mL에 대한 ${F} ${fmL}mL의 비</b>'는 몇 대 몇일까요?`
-    : `'<b>${K} ${kmL}mL에 대한 ${F} ${fmL}mL의 비율</b>'을 <b>분수</b>로 나타내면?`;
+    : `방금 구한 '<b>${K} ${kmL}mL에 대한 ${F} ${fmL}mL의 비</b>'! 그 <b>비율</b>을 <b>분수</b>로 나타내면?`;
   $('#mProg').textContent=`(문제 ${S.r3i+1}/${R3.length})`;
   let opts;
   if(q.type==='ratio')
