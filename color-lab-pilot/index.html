@@ -136,7 +136,7 @@ function seqHTML(){return `<div class="seq">`+S.fam.shades.map((s,i)=>{
 function pairHTML(target,label){return `<div class="pair">
    <div class="col"><div class="lab">Ⓐ 목표 (${label||(shadeName()+' '+S.fam.id)})</div><div class="beaker"><div class="fill full" style="background:${rgb(target)}"></div></div></div>
    <div class="col"><div class="lab">Ⓑ 내가 만든 색</div><div class="beaker"><div class="fill" id="fill"></div></div></div></div>
-   <div class="near" id="near">Ⓐ와 Ⓑ 색을 견주어 보세요</div>`;}
+   <div class="near" id="near">Ⓐ색과 Ⓑ색이 같아지려면 어떻게 해야 할까요?</div>`;}
 function updateB(target,scale){const c=mix(S.amt),tot=Object.values(S.amt).reduce((s,v)=>s+v,0);
   const f=$('#fill');if(f){f.style.background=rgb(c);f.style.height=Math.min(96,tot*(scale||0.5))+'%';}
   return prox(c,target);}
@@ -165,8 +165,8 @@ function renderS1(){
   const got=S.s1got;
   const q=[
     `${fam.emoji} <b>${fam.id} 만들기!</b> Ⓐ 목표 색은 <b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>입니다. 물감을 짜서 <b>똑같은 색</b>을 만들어 보세요!`,
-    `방금 만들었던 색을 <b>다른 양</b>으로도 만들어 보세요. ${p0} 몇 mL, ${p1} 몇 mL씩 들어가야 할까요?`,
-    `방금 만들었던 색을 <b>또 다른 양</b>으로도 만들어 보세요. ${p0} 몇 mL, ${p1} 몇 mL 들어가야 할까요?`][Math.min(got.length,2)];
+    `<b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>입니다. 방금 만든 색을 <b>다른 양</b>으로도 만들어 봅시다.`,
+    `<b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>입니다. 방금 만든 색을 <b>또 다른 양</b>으로도 만들어 봅시다.`][Math.min(got.length,2)];
   $('#mText').innerHTML=q;
   $('#mProg').textContent=`${fam.id} 만들기 · ${got.length}/3`;
   $('#stageBody').innerHTML=
