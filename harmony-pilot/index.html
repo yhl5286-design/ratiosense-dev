@@ -214,11 +214,13 @@ function drawMeetAnim(){const cv=$('#cv2');if(!cv||sel<0){stopAnim();return;}
 
 /* ===== 계산기 (공용) ===== */
 let cDisp='0', cAcc=null, cOp=null, cFresh=true;
-function cShow(){const d=$('#cd');if(d)d.textContent=cDisp;}
+function cShow(){const d=$('#cd');if(!d)return;
+  let s;if(cOp&&cAcc!==null){s=cAcc+' '+cOp+(cFresh?'':' '+cDisp);}else s=cDisp;
+  d.textContent=s;}
 function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
 function cDot(){if(cFresh){cDisp='0.';cFresh=false;}else if(!cDisp.includes('.'))cDisp+='.';cShow();}
 function cCompute(){const y=parseFloat(cDisp);let r=cAcc;if(cOp==='×')r=cAcc*y;else if(cOp==='÷')r=cAcc/y;r=Math.round(r*1000)/1000;cDisp=String(r);cAcc=r;cShow();}
-function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;}
+function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;cShow();}
 function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;cShow();}}
 function cClear(){cDisp='0';cAcc=null;cOp=null;cFresh=true;cShow();}
 function calcHTML(){const b=(x,f,c)=>`<button class="cbtn ${c||''}" onclick="${f}">${x}</button>`;
