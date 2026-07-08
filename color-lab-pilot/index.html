@@ -116,13 +116,13 @@ const FAM=[
  {id:'보라',emoji:'🟣',paints:['빨강','파랑'],shades:[{n:'연한',r:[2,1]}]},
  {id:'초록',emoji:'🟢',paints:['노랑','파랑'],shades:[{n:'연한',r:[3,5]}]},
 ];
-const STEP=['1 감각','2 기준량','3 뒤집기','4 백 칸 칠하기','5 백분율'];
+const STEP=['1 감각','2 기준량','3 비율','4 백 칸 칠하기','5 백분율'];
 let S={fam:FAM[0],stage:1,done:{},amt:{},subIdx:0,fails:0,n4:{a:0,b:0,active:0},showNum:false};
 const $=s=>document.querySelector(s);
 let TEACHER=false;
 try{TEACHER=/[?&](teacher|test)=1/.test(location.search)||/[?&](teacher|test)=1/.test(parent.location.search);}catch(e){}
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'color',event:ev,data:Object.assign({fam:S.fam&&S.fam.id,stage:S.stage,sub:S.subIdx},data||{})},'*');}catch(e){}}
-function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.p6={step:1,r:0,y:0};S.s1got=[];S.s1fi=0;S.phase23='make';S.made23=0;render();plog('enter');}
+function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.p6={step:1,r:0,y:0};S.s1got=[];S.s1fi=0;S.r3i=0;S.phase23='make';S.made23=0;render();plog('enter');}
 function shadeName(){return S.fam.shades[S.subIdx].n;}
 function curTargetColor(){return shadeColor(S.fam,S.fam.shades[S.subIdx]);}
 
@@ -163,7 +163,7 @@ function minusBtns(){return `<div class="minusrow">`+[5,10,50].map(v=>`<button c
 function wireMinus(el,color,cb){if(!el)return;el.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{S.amt[color]=Math.max(0,(S.amt[color]||0)-(+b.dataset.m));plog('paintSub',{color,sub:+b.dataset.m,amt:Object.assign({},S.amt)});cb();});}
 function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
 
-function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:()=>renderS23(1),4:renderS5,5:renderS6}[S.stage])();}
+function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:renderS3R,4:renderS5,5:renderS6}[S.stage])();}
 
 /* ===== 1단계 감각 — 주황·보라·초록, 서로 다른 양으로 ===== */
 function renderS1(){
@@ -270,24 +270,16 @@ function iga(w){return jz(w,'이','가');}
 function renderS23Lang(baseIdx){
   const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
   const base=S.fam.paints[baseIdx],comp=S.fam.paints[1-baseIdx];
-  const ra=pr[baseIdx],rc=pr[1-baseIdx],cv=S.made23;
-  const d0=S.fam.paints[0],d1=S.fam.paints[1];
-  const isEq=(ra===rc);
+  const cv=S.made23;
   const cb=rgb(PRIM[base]),cc=rgb(PRIM[comp]);
-  $('#mText').innerHTML=isEq
-    ? `색 완성! 그럼 '<b>${base}에 대한 ${comp}의 비</b>'에서 <b>기준량</b>은 무엇일까요?`
-    : `색 완성! 문제의 비는 <b>${d0} : ${d1} = ${pr[0]} : ${pr[1]}</b>이었죠. 그럼 '<b>${base}에 대한 ${comp}의 비</b>'를 <b>분수</b>로 나타내면?`;
+  const askBase=(S.subIdx!==1); // 문제2는 비교하는 양을 물음
+  $('#mText').innerHTML=askBase
+    ? `색 완성! 이 문제에서 <b>기준량</b>은 무엇일까요?`
+    : `색 완성! 이 문제에서 <b>비교하는 양</b>은 무엇일까요?`;
   $('#mProg').textContent=`(문제 ${S.subIdx+1}/3)`;
-  const expl=isEq
-    ? `<b style="color:${cb}">${base} ${BASE}mL</b>는 처음부터 들어 있었고,<br>
-       내가 <b style="color:${cc}">${comp} ${cv}mL</b>를 넣어 맞췄어요.`
-    : `문제의 비는 <b>${d0} : ${d1} = ${pr[0]} : ${pr[1]}</b> — ${base} <b style="color:${cb}">${BASE}mL</b>에 ${comp} <b style="color:${cc}">${cv}mL</b>를 넣었죠.<br>
-       그런데 '<b>${base}에 대한 ${comp}의 비</b>'는 <b>${comp}${iga(comp)} 앞, ${base}${iga(base)} 뒤</b>!<br>
-       → <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
-       💡 '<b>A에 대한 B</b>의 비율' = <b>B ÷ A</b> — '에 대한' 앞(<b>${base}</b>)이 기준량으로 <b>아래(분모)</b>, ${comp}${iga(comp)} <b>위(분자)</b>!`;
-  let opts;
-  if(isEq) opts=[[base,true],[comp,false]];
-  else opts=[[fracHTML(rc,ra),true,rc+'/'+ra],[fracHTML(ra,rc),false,ra+'/'+rc],[fracHTML(rc,ra+rc),false,rc+'/'+(ra+rc)]];
+  const expl=`<b style="color:${cb}">${base} ${BASE}mL</b>는 처음부터 들어 있었고,<br>
+       내가 <b style="color:${cc}">${comp} ${cv}mL</b>를 넣어 맞췄어요.`;
+  let opts=askBase?[[base,true],[comp,false]]:[[comp,true],[base,false]];
   opts.sort(()=>Math.random()-0.5);
   $('#stageBody').innerHTML=probHTML()+
    `<div class="tools" style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;margin-bottom:8px">
@@ -297,19 +289,65 @@ function renderS23Lang(baseIdx){
       opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="lg${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
    `</div></div>`;
   opts.forEach((o,i)=>{$('#lg'+i).onclick=()=>{
-    plog(o[1]?'lang23Ok':'lang23Retry',{q:base+'에 대한 '+comp,pick:String(o[2]||o[0])});
+    plog(o[1]?'lang23Ok':'lang23Retry',{q:askBase?'기준량':'비교하는 양',pick:String(o[0])});
     if(o[1]){
       const nx=S.subIdx+1;
-      const fb=isEq
-        ? `'${base}에 대한 ${comp}의 비'이므로 <b>${base}</b>${iga(base)} 기준이 되는 것이고 <b>${comp}</b>${jz(comp,'을','를')} 비교하는 것이죠? <b>${base}${jz(base,'은','는')} 기준량, ${comp}${iga(comp)} 비교하는 양</b>이 됩니다.`
-        : `${comp} : ${base} = ${rc} : ${ra} → 분수로 <b>${fracHTML(rc,ra)}</b>. 앞(비교하는 양)이 위, 뒤(기준량)가 아래!`;
-      success(isEq?'맞아요!':'맞았어요! 말도 완벽해요!',fb,nx>=3?stageDone:()=>{S.subIdx=nx;S.phase23='make';render();});
+      const fb=askBase
+        ? `처음부터 들어 있던 <b>${base}</b>에 맞춰 <b>${comp}</b>${jz(comp,'을','를')} 넣었죠? 그래서 <b>${base}${jz(base,'은','는')} 기준량, ${comp}${iga(comp)} 비교하는 양</b>이 됩니다.`
+        : `기준량 <b>${base}</b>에 맞춰 내가 넣은 <b>${comp}</b>${iga(comp)} <b>비교하는 양</b>이에요.`;
+      success('맞아요!',fb,nx>=3?stageDone:()=>{S.subIdx=nx;S.phase23='make';render();});
     } else {
-      banner('help','다시 한번 도전해볼까요?',isEq
-        ? `'~<b>에 대한</b>'이 붙은 쪽이 <b>기준량</b>이에요.`
-        : `비 <b>a : b</b>에서 <b>앞의 a가 분수의 위</b>로 가요.`,[['다시 고르기',hideBanner]]);chime(false);
+      banner('help','다시 한번 도전해볼까요?','처음부터 <b>정해져 있던 쪽</b>이 기준량, 그에 <b>맞춰 넣은 쪽</b>이 비교하는 양이에요.',[['다시 고르기',hideBanner]]);chime(false);
     }};});
 }
+
+/* ===== 3단계 비율 — '~에 대한' 표현 이해 ===== */
+const R3=[
+  {a:100,b:200,dir:'ab',type:'ratio'},
+  {a:100,b:200,dir:'ba',type:'ratio'},
+  {a:40,b:60,dir:'ab',type:'frac'}
+];
+function renderS3R(){
+  if(S.r3i==null)S.r3i=0;
+  const q=R3[S.r3i],p0=S.fam.paints[0],p1=S.fam.paints[1];
+  const g=gcd(q.a,q.b)||1,ra=q.a/g,rb=q.b/g; // 빨강:노랑 기약비
+  const abFront=(q.dir==='ab'); // 'ab' = '빨강에 대한 노랑' (노랑이 앞)
+  const F=abFront?p1:p0, K=abFront?p0:p1;           // F=앞(비교), K=기준
+  const fV=abFront?rb:ra, kV=abFront?ra:rb;
+  const mc={};mc[p0]=q.a;mc[p1]=q.b;const mixCol=rgb(mix(mc));
+  $('#mText').innerHTML=q.type==='ratio'
+    ? `'<b>${K}에 대한 ${F}의 비</b>'는 몇 대 몇일까요?`
+    : `'<b>${K}에 대한 ${F}의 비율</b>'을 <b>분수</b>로 나타내면?`;
+  $('#mProg').textContent=`(문제 ${S.r3i+1}/${R3.length})`;
+  let opts;
+  if(q.type==='ratio')
+    opts=[[`${fV} : ${kV}`,true],[`${kV} : ${fV}`,false],[`${fV} : ${fV+kV}`,false]];
+  else
+    opts=[[fracHTML(fV,kV),true,fV+'/'+kV],[fracHTML(kV,fV),false,kV+'/'+fV],[fracHTML(fV,fV+kV),false,fV+'/'+(fV+kV)]];
+  opts.sort(()=>Math.random()-0.5);
+  $('#stageBody').innerHTML=
+   `<div class="tools" style="text-align:center"><div class="lbl">${S.fam.id} 액체 — <b style="color:${rgb(PRIM[p0])}">${p0} ${q.a}mL</b> + <b style="color:${rgb(PRIM[p1])}">${p1} ${q.b}mL</b></div>
+      <div class="liquid" style="width:100px;height:130px"><div class="mf" style="background:${mixCol}"></div></div></div>
+   <div class="tools" style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:16px;line-height:1.9">💡 '<b>A에 대한 B</b>의 비' = <b>B : A</b> — '에 대한' 앞(<b>A</b>)이 <b>기준량</b>이라 비의 <b>뒤</b>로 가요.<br>비율(비의 값)은 <b>B ÷ A</b>, 분수로 ${fracHTML('B','A')}!</div></div>
+   <div class="tools" style="text-align:center"><div class="row" style="justify-content:center;margin-top:4px">`+
+      opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="r3${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
+   `</div></div>`;
+  opts.forEach((o,i)=>{$('#r3'+i).onclick=()=>{
+    plog(o[1]?'r3Ok':'r3Retry',{q:`${K}에 대한 ${F}`,type:q.type,pick:String(o[2]||o[0])});
+    if(o[1]){
+      const nx=S.r3i+1;
+      let fb;
+      if(q.type==='ratio'){
+        fb=`'에 대한' 앞의 <b>${K}</b>${iga(K)} 기준량 → <b>${F} : ${K}</b> = ${abFront?q.b:q.a} : ${abFront?q.a:q.b} = <b>${fV} : ${kV}</b>!`;
+        if(S.r3i===1)fb+=`<br>👀 같은 액체인데 <b>기준이 바뀌니 비가 뒤집혔죠?</b>`;
+      } else fb=`${F} ÷ ${K} = ${abFront?q.b:q.a}/${abFront?q.a:q.b} = <b>${fracHTML(fV,kV)}</b>!`;
+      success('맞아요!',fb,nx>=R3.length?stageDone:()=>{S.r3i=nx;render();});
+    } else {
+      banner('help','다시 한번 도전해볼까요?',`'~<b>에 대한</b>' 앞에 오는 <b>${K}</b>${iga(K)} <b>기준량</b> — 기준량은 비의 <b>뒤</b>(분수의 <b>아래</b>)에 와요.`,[['다시 고르기',hideBanner]]);chime(false);
+    }};});
+}
+
 
 /* ===== 4단계 백 칸 칠하기 ===== */
 function gridHTML(red,total,pour){let h='<div class="pgrid">';
