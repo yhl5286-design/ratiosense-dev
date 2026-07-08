@@ -96,6 +96,7 @@
   </div>
   <div class="card mission" id="mission"><div id="mText">…</div><div class="prog" id="mProg"></div></div>
   <div class="card" id="stageBody"></div>
+  <div class="muted" id="tmBadge" style="display:none;text-align:center;font-size:12px;color:#8a5a3b;font-weight:700">🔓 교사용 모드 — 단계 잠금 해제됨</div>
   <div class="muted" style="text-align:center;font-size:11px">RatioSense 색상 실험실 · 4단계(감각→기준량→뒤집기→숫자) · 게이트 없음 · 2026-07-03</div>
 </div>
 <div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
@@ -118,6 +119,8 @@ const FAM=[
 const STEP=['1 감각','2 기준량','3 뒤집기','4 백 칸 칠하기','5 백분율'];
 let S={fam:FAM[0],stage:1,done:{},amt:{},subIdx:0,fails:0,n4:{a:0,b:0,active:0},showNum:false};
 const $=s=>document.querySelector(s);
+let TEACHER=false;
+try{TEACHER=/[?&](teacher|test)=1/.test(location.search)||/[?&](teacher|test)=1/.test(parent.location.search);}catch(e){}
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'color',event:ev,data:Object.assign({fam:S.fam&&S.fam.id,stage:S.stage,sub:S.subIdx},data||{})},'*');}catch(e){}}
 function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.p6={step:1,r:0,y:0};S.s1got=[];S.s1fi=0;S.phase23='make';S.made23=0;render();plog('enter');}
 function shadeName(){return S.fam.shades[S.subIdx].n;}
@@ -127,7 +130,7 @@ function segF(){const el=$('#famSeg');el.innerHTML='';FAM.forEach(f=>{const b=do
   if(f===S.fam)b.className='active';b.innerHTML=`<span class="dot" style="background:${rgb(shadeColor(f,f.shades[0]))}"></span>${f.emoji} ${f.id}<small>${f.paints.join('+')}</small>`;
   b.onclick=()=>{S.fam=f;S.stage=1;resetStage();};el.appendChild(b);});}
 function segS(){const el=$('#steps');el.innerHTML='';STEP.forEach((t,i)=>{const st=i+1;const b=document.createElement('button');
-  const locked=st>1&&!S.done[S.fam.id+':'+(st-1)];
+  const locked=!TEACHER&&st>1&&!S.done[S.fam.id+':'+(st-1)];
   b.className=(st===S.stage?'active':'')+(S.done[S.fam.id+':'+st]?' done':'')+(locked?' locked':'');
   b.textContent=locked?'🔒 '+t:t;
   b.onclick=()=>{if(locked){banner('help','아직 잠겨 있어요!','이전 단계를 먼저 완성하면 열려요.',[['알겠어요',hideBanner]]);chime(false);return;}S.stage=st;resetStage();};
@@ -419,6 +422,7 @@ function hideBanner(){$('#banner').className='';}
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.2,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}
 function chime(ok){ok?(tone(523,0,.14),tone(659,.12,.16),tone(784,.26,.22)):(tone(392,0,.16),tone(349,.16,.2));}
+if(TEACHER){const b=$('#tmBadge');if(b)b.style.display='block';}
 resetStage();
 </script>
 </body>
