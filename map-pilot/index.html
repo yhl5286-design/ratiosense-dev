@@ -136,7 +136,7 @@ function renderZoom(){
   const cur=qs[z2q];
   $('#readout').innerHTML=`<div class="nm">지도가 작아서 잘 안 보여요 — 크게 보고 싶어요!</div><div class="big">배율(%)을 눌러 <b>지도를 확대</b>해 보세요</div>`;
   $('#body').innerHTML=`<div class="card"><div class="lbl">🔍 배율을 고르면 지도의 <b>모든 길이가 같은 비</b>로 커져요</div>
-    <div class="pctrow">${[100,200,400].map(p=>`<button class="pctbtn ${z2===p?'active':''}" onclick="z2=${p};render();plog('zoom',{p:${p}})">${p}%</button>`).join('')}</div>
+    <div class="pctrow">${[100,200].map(p=>`<button class="pctbtn ${z2===p?'active':''}" onclick="z2=${p};render();plog('zoom',{p:${p}})">${p}%</button>`).join('')}</div>
     <div style="max-height:330px;overflow:auto;border-radius:12px">${townMap(f)}</div>
     <div class="scalebar"><span class="sc">배율 ${z2}% = ×${f}</span><span>지도 위 다리: 3cm × ${f} = <b>${3*f}cm</b></span></div>
     <div class="cap">커진 지도에서는 같은 100m가 더 <b>길게</b> 그려져요 → 축척은 1 : ${(10000/f).toLocaleString('ko-KR')}</div></div>
@@ -159,46 +159,61 @@ let m4step=0, eSt=0; // 0: 과학자 이야기, 1: 몇 배?, 2: 둘레, 3: 완�
 function mc4(opts,fn){const o=opts.map(x=>x.slice());o.sort(()=>Math.random()-0.5);
   return `<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">`+o.map(([lb,ok])=>
     `<button class="btn big" data-ok="${ok?1:0}" onclick="${fn}(this)" style="font-size:16px;font-weight:800;padding:11px 18px;min-width:104px">${lb}</button>`).join('')+`</div>`;}
-const EST=[
- {t:'① 이상한 관찰',h:'같은 날 정오 — <b>시에네</b>의 우물엔 그림자가 없는데(0°), <b>알렉산드리아</b>의 막대엔 <b>7.2°</b> 그림자가 생겼어요.'},
- {t:'② 번뜩이는 생각',h:'"햇빛은 평행한데 그림자가 다르다고? <b>지구가 둥글기 때문</b>이야! 지구 중심에서 두 도시가 벌어진 각도가 바로 <b>7.2°</b>구나!"'},
- {t:'③ 그의 계산 하나 — 몇 배?',h:'"한 바퀴는 360°. <b>360 ÷ 7.2 = 50</b>. 한 바퀴는 이 각의 딱 <b>50배</b>!"',f:'360° ÷ 7.2° = 50'},
- {t:'④ 그의 계산 둘 — 비로 잇기!',h:'"각도가 50배면 <b>거리도 50배</b>! 두 도시 사이가 800km니까… <b>800 × 50 = 40,000km</b>. 지구 한 바퀴는 40,000km다!"',f:'7.2° : 360° = 800km : 40,000km'}
-];
+function comicSVG(){return `
+<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+ <svg viewBox="0 0 340 305" style="flex:1;min-width:270px;max-width:370px;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">
+   <text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">컷 1 · 같은 날 정오, 두 도시</text>
+   <circle cx="302" cy="44" r="16" fill="#ffd34d"/>
+   <line x1="278" y1="60" x2="292" y2="52" stroke="#e0a02a" stroke-width="3"/>
+   <line x1="266" y1="76" x2="282" y2="66" stroke="#e0a02a" stroke-width="3"/>
+   <rect x="42" y="196" width="44" height="56" fill="#8a6a34" rx="4"/>
+   <rect x="50" y="204" width="28" height="40" fill="#3c2c14" rx="3"/>
+   <line x1="64" y1="140" x2="64" y2="204" stroke="#e0a02a" stroke-width="3"/>
+   <text x="64" y="272" text-anchor="middle" font-size="13" font-weight="800" fill="#26303f">시에네 우물</text>
+   <text x="64" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#2e9e63">그림자 0°</text>
+   <line x1="232" y1="158" x2="232" y2="252" stroke="#26303f" stroke-width="6"/>
+   <line x1="232" y1="252" x2="196" y2="252" stroke="#c0392b" stroke-width="6"/>
+   <line x1="232" y1="158" x2="196" y2="252" stroke="#e0a02a" stroke-width="2" stroke-dasharray="4 3"/>
+   <text x="240" y="186" font-size="13.5" font-weight="800" fill="#c0392b">7.2°</text>
+   <text x="232" y="272" text-anchor="middle" font-size="13" font-weight="800" fill="#26303f">알렉산드리아 막대</text>
+   <text x="232" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#c0392b">그림자 7.2°</text>
+   <rect x="52" y="54" width="216" height="58" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <path d="M150 112 l10 16 l8 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <rect x="151" y="108" width="16" height="5" fill="#fff"/>
+   <text x="160" y="78" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">"같은 시각인데</text>
+   <text x="160" y="98" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">그림자가 다르다고?!"</text>
+ </svg>
+ <svg viewBox="0 0 340 305" style="flex:1;min-width:270px;max-width:370px;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">
+   <text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">컷 2 · 에라토스테네스의 깨달음</text>
+   <circle cx="110" cy="215" r="68" fill="#bfe0c2" stroke="#7fae84" stroke-width="3"/>
+   <path d="M110 215 L110 147 A68 68 0 0 0 78 155 Z" fill="rgba(224,160,42,.35)"/>
+   <line x1="110" y1="215" x2="110" y2="147" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
+   <line x1="110" y1="215" x2="78" y2="155" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
+   <path d="M78 155 A68 68 0 0 1 110 147" fill="none" stroke="#c0392b" stroke-width="7"/>
+   <text x="100" y="185" font-size="13" font-weight="800" fill="#8a6a34">7.2°</text>
+   <text x="70" y="136" font-size="12.5" font-weight="800" fill="#c0392b">800km</text>
+   <circle cx="110" cy="215" r="4" fill="#26303f"/>
+   <text x="258" y="215" text-anchor="middle" font-size="46">🧔</text>
+   <rect x="150" y="48" width="180" height="118" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <path d="M240 166 l8 18 l10 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <rect x="241" y="162" width="18" height="5" fill="#fff"/>
+   <text x="240" y="72" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">"지구가 둥글어서야!</text>
+   <text x="240" y="92" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">한 바퀴 360°는</text>
+   <text x="240" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">7.2°의 딱 50배!"</text>
+   <text x="240" y="142" text-anchor="middle" font-size="15" font-weight="800" fill="#1a5fb4">360 ÷ 7.2 = 50</text>
+ </svg>
+</div>`;}
 function render4(){
   if(m4step===0){
-    $('#readout').innerHTML=`<div class="nm">🌍 2200년 전, 과학자 에라토스테네스는 <b>막대기 하나</b>로 지구를 쟀어요</div><div class="big">그가 <b>어떻게 계산했는지</b> 따라가 봐요! (${eSt+1}/${EST.length})</div>`;
-    let cards='';
-    for(let i=0;i<=eSt;i++){const s=EST[i];
-      cards+=`<div style="background:${i===eSt?'#fbf6e8':'#faf8f2'};border:1.5px solid ${i===eSt?'#e0c98a':'#e6e1d6'};border-radius:12px;padding:11px 14px;margin-top:8px;${i<eSt?'opacity:.75':''}">
-        <div style="font-weight:800;font-size:15.5px">${s.t}</div>
-        <div style="font-size:14.5px;line-height:1.8;margin-top:3px">${s.h}</div>
-        ${s.f?`<div style="text-align:center;font-size:20px;font-weight:800;background:#eef4fb;border:1.5px solid #b8cfec;border-radius:10px;padding:9px;margin-top:8px">${s.f}</div>`:''}
-      </div>`;}
-    $('#body').innerHTML=`<div class="card">
-      <canvas id="cv4" style="width:100%;height:250px"></canvas>
-      ${cards}
-      <div style="text-align:center;margin-top:12px">
-        <button class="btn big" onclick="${eSt<EST.length-1?'eSt++;render();plog(\'story\',{step:eSt})':'m4step=1;render();plog(\'storyDone\',{})'}">${eSt<EST.length-1?'계속 →':'이제 내가 직접 계산해 보기! ✏️'}</button>
+    $('#readout').innerHTML=`<div class="nm">🌍 2200년 전, 과학자 에라토스테네스는 <b>막대기 하나</b>로 지구를 쟀어요</div><div class="big">두 컷 만화로 만나는 <b>그의 발견</b>!</div>`;
+    $('#body').innerHTML=`<div class="card">${comicSVG()}
+      <div class="cap" style="margin-top:8px">두 도시 사이의 거리는 <b>800 km</b> — 이제 지구 한 바퀴를 구할 수 있어요!</div>
+      <div style="text-align:center;margin-top:10px">
+        <button class="btn big" onclick="m4step=2;render();plog('storyDone',{})">비로 계산해 보기! ✏️</button>
       </div></div>`;
-    draw4();
     return;
   }
-  if(m4step===1){
-    $('#readout').innerHTML=`<div class="nm">마지막 지도: 지구 🌍 — 막대기 하나로 지구 둘레를 재요!</div><div class="big">한 바퀴 <b>360°</b>는 <b>7.2°</b>의 <b>몇 배</b>일까요?</div>`;
-    $('#body').innerHTML=`<div class="card">
-      <div class="lbl">📜 2200년 전, 에라토스테네스의 발견 — 같은 시각, 두 도시</div>
-      <canvas id="cv4" style="width:100%;height:270px"></canvas>
-      <div style="background:#fbf6e8;border:1.5px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:14.5px;line-height:1.9;margin-top:8px">
-        ① 같은 시각 — <b>시에네</b>는 그림자가 없고(0°), <b>알렉산드리아</b>는 그림자가 <b>7.2°</b> 기울어요.<br>
-        ② 지구가 둥글기 때문! 지구 <b>중심에서 두 도시가 벌어진 각</b>이 바로 <b>7.2°</b>예요.<br>
-        ③ 두 도시 사이의 거리(빨간 호)는 <b>800 km</b>. <span class="cap" style="display:inline">(그림은 각도를 크게 과장했어요)</span></div></div>
-     <div class="card"><div class="lbl">💡 식 세우기 첫걸음 — 한 바퀴는 360°니까, <b>360 ÷ 7.2</b> 계산!</div>
-      ${calcHTML()}
-      <div class="cap">360°는 7.2°의 <b>몇 배</b>?</div>
-      ${mc4([['50배',true],['5배',false],['500배',false]],'e4pick1')}</div>`;
-    draw4(); cShow();
-  } else if(m4step===2){
+  if(m4step===2){
     $('#readout').innerHTML=`<div class="nm">각도가 50배면, 거리도 50배!</div><div class="big">그럼 <b>지구 둘레</b>는 몇 km?</div>`;
     $('#body').innerHTML=`<div class="card">
       <div class="lbl">🧮 비례식 세우기 — 각도의 비 = 거리의 비</div>
@@ -216,60 +231,16 @@ function render4(){
       <div class="cap">지구 둘레는?</div>
       ${mc4([['40,000 km',true],['4,000 km',false],['400,000 km',false]],'e4pick2')}</div>`;
     drawPie(); cShow();
-  } else {
+  } else if(m4step!==0&&m4step!==2){
     $('#readout').innerHTML=`<div class="nm">🎉 지도의 비밀 — 모두 풀었어요!</div><div class="big">지구 둘레 = <b>40,000 km</b></div>`;
     $('#body').innerHTML=`<div class="card" style="text-align:center">
       <div style="font-size:64px;margin:6px">🌍</div>
       <div style="font-weight:800;font-size:17px">세계 지도 완성!</div>
       <div class="sc" style="display:inline-block;background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:6px 14px;margin:10px 0;font-weight:800">축척 1 : 40,000,000</div>
       <div class="cap">실제 지구 둘레는 40,075 km — 막대기 하나와 <b>'비'</b>만으로 2200년 전에 지구를 쟀어요.<br>
-      확대(1) → 축척(2) → 복사기 %(3) → 지구(4)… 전부 <b>같은 비의 비밀</b>이었죠!</div>
-      <button class="btn big" onclick="m4step=0;eSt=0;stage=1;sx=1;sy=1;m1idx=0;m1done=[];m2idx=0;m2done=[];zoom=1;m3idx=0;m3done=[];pct=100;cClear();render()" style="margin-top:8px">처음부터 다시 탐험</button></div>`;
+      축척(1) → 확대(2) → 지구(3)… 전부 <b>같은 비의 비밀</b>이었죠!</div>
+      <button class="btn big" onclick="m4step=0;eSt=0;stage=1;s1done=[];s1idx=0;z2=100;z2q=0;cClear();render()" style="margin-top:8px">처음부터 다시 탐험</button></div>`;
   }
-}
-function draw4(){const cv=$('#cv4');if(!cv)return;const rect=cv.getBoundingClientRect();
-  if(rect.width<8)return;
-  const W=cv.width=Math.round(rect.width*2),H=cv.height=540;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  const cx=W*0.40, cy=H*0.54, R=H*0.40, EX=0.55; // EX: 과장 각(라디안)
-  // 지구
-  ctx.fillStyle='#bfe0c2';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
-  ctx.strokeStyle='#7fae84';ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
-  // 두 도시 각도 (수직 위 = 시에네, 과장각만큼 왼쪽 = 알렉산드리아)
-  const aS=-Math.PI/2, aA=-Math.PI/2-EX;
-  const sx1=cx+R*Math.cos(aS), sy1=cy+R*Math.sin(aS);
-  const ax1=cx+R*Math.cos(aA), ay1=cy+R*Math.sin(aA);
-  // 중심각(부채꼴 표시)
-  ctx.fillStyle='rgba(224,160,42,.20)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R*0.55,aA,aS);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#8a6a34';ctx.lineWidth=3;ctx.setLineDash([8,6]);
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(sx1,sy1);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ax1,ay1);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='#8a6a34';ctx.font='bold 26px sans-serif';ctx.textAlign='center';
-  ctx.fillText('7.2°',cx+R*0.30*Math.cos((aS+aA)/2),cy+R*0.30*Math.sin((aS+aA)/2)+8);
-  ctx.font='bold 20px sans-serif';ctx.fillText('지구 중심',cx,cy+30);
-  ctx.fillStyle='#26303f';ctx.beginPath();ctx.arc(cx,cy,7,0,7);ctx.fill();
-  // 빨간 호 = 800km
-  ctx.strokeStyle='#c0392b';ctx.lineWidth=9;ctx.beginPath();ctx.arc(cx,cy,R,aA,aS);ctx.stroke();
-  ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';
-  ctx.fillText('800 km',cx+R*1.06*Math.cos((aS+aA)/2)-10,cy+R*1.12*Math.sin((aS+aA)/2));
-  // 막대 + 그림자
-  function stick(a,label,shadow){
-    const bx=cx+R*Math.cos(a),by=cy+R*Math.sin(a);
-    const tx=cx+(R+H*0.11)*Math.cos(a),ty=cy+(R+H*0.11)*Math.sin(a);
-    ctx.strokeStyle='#26303f';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(tx,ty);ctx.stroke();
-    if(shadow){ctx.strokeStyle='#e0a02a';ctx.lineWidth=4;ctx.setLineDash([2,4]);
-      ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(bx-H*0.085,by-H*0.01);ctx.stroke();ctx.setLineDash([]);
-      ctx.strokeStyle='#c0392b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx-H*0.085,by-H*0.01);ctx.stroke();}
-    ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';
-    if(shadow){ctx.textAlign='center';ctx.fillText(label,tx,ty-14);}
-    else{ctx.textAlign='left';ctx.fillText(label,tx+14,ty+22);}}
-  stick(aA,'알렉산드리아',true);
-  stick(aS,'시에네',false);
-  // 평행 햇살
-  ctx.strokeStyle='#e0a02a';ctx.lineWidth=3;
-  for(let i=0;i<5;i++){const y=H*0.06+i*H*0.10;
-    ctx.beginPath();ctx.moveTo(W*0.98,y);ctx.lineTo(W*0.72,y+H*0.05);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(W*0.72,y+H*0.05);ctx.lineTo(W*0.75,y+H*0.028);ctx.stroke();}
-  ctx.fillStyle='#e0a02a';ctx.font='bold 26px sans-serif';ctx.textAlign='right';ctx.fillText('☀️ 햇빛은 평행!',W*0.98,H*0.045);
 }
 function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingClientRect();
   if(rect.width<8)return;
@@ -287,10 +258,6 @@ function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingC
   ctx.fillText('800 km 조각',cx+R*0.55,cy-R*1.05);
   ctx.fillStyle='#26303f';ctx.font='bold 28px sans-serif';
   ctx.fillText('이 조각 50개 = 한 바퀴!',cx,cy+10);}
-function e4pick1(el){const ok=el.dataset.ok==='1';plog(ok?'earthX50Ok':'earthX50Retry',{pick:el.textContent});
-  if(ok){m4step=2;cClear();chime();
-    banner('맞았어요! 50배 🎯','360 ÷ 7.2 = <b>50</b> — 한 바퀴는 7.2°의 딱 50배예요!',[['비례식 세우러 →',()=>{hideBanner();render();}]]);}
-  else banner('다시 한번 도전해볼까요?','계산기로 <b>360 ÷ 7.2</b> 를 눌러 보세요. (C로 지우기)',[['다시',hideBanner]]);}
 function e4pick2(el){const ok=el.dataset.ok==='1';plog(ok?'earthDone':'earthRetry',{pick:el.textContent});
   if(ok){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
     chime();banner('지구를 쟀어요!! 🌍',`7.2° : 360° = 800 : <b>40,000</b> — 실제 값 40,075 km, 오차 0.2%!`+'<br><div style="margin-top:10px;font-weight:800">📝 오늘 지도에서 찾은 <b>비의 비밀</b>을 한 문장으로 남겨 주세요!</div><input id="rfx" type="text" maxlength="100" placeholder="예: 지도는 실제를 같은 비로 줄인 것이다!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',[['한 문장 남기고 완성! 🌍',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();render();}]]);}
@@ -313,7 +280,7 @@ function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f
    ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
 
 function render(){renderStage();({1:renderScale,2:renderZoom,4:render4}[stage])();}
-window.addEventListener('resize',()=>{if(stage===4&&m4step===1)draw4();if(stage===4&&m4step===2)drawPie();});
+window.addEventListener('resize',()=>{if(stage===4&&m4step===2)drawPie();});
 render();
 /* 숨김 iframe으로 로드된 경우: 보이게 되면 1회 다시 그림 */
 let _vchk=setInterval(()=>{

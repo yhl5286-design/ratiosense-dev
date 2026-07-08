@@ -136,7 +136,7 @@ function renderZoom(){
   const cur=qs[z2q];
   $('#readout').innerHTML=`<div class="nm">The map is too small to read — let's see it bigger!</div><div class="big">Press a zoom (%) to <b>enlarge the map</b></div>`;
   $('#body').innerHTML=`<div class="card"><div class="lbl">🔍 Pick a zoom and <b>every length grows by the same ratio</b></div>
-    <div class="pctrow">${[100,200,400].map(p=>`<button class="pctbtn ${z2===p?'active':''}" onclick="z2=${p};render();plog('zoom',{p:${p}})">${p}%</button>`).join('')}</div>
+    <div class="pctrow">${[100,200].map(p=>`<button class="pctbtn ${z2===p?'active':''}" onclick="z2=${p};render();plog('zoom',{p:${p}})">${p}%</button>`).join('')}</div>
     <div style="max-height:330px;overflow:auto;border-radius:12px">${townMap(f)}</div>
     <div class="scalebar"><span class="sc">Zoom ${z2}% = ×${f}</span><span>Bridge on map: 3cm × ${f} = <b>${3*f}cm</b></span></div>
     <div class="cap">On the bigger map the same 100m is drawn <b>longer</b> → the scale becomes 1 : ${(10000/f).toLocaleString('en-US')}</div></div>
@@ -159,46 +159,61 @@ let m4step=0, eSt=0; // 0: 과학자 이야기, 1: 몇 배?, 2: 둘레, 3: 완�
 function mc4(opts,fn){const o=opts.map(x=>x.slice());o.sort(()=>Math.random()-0.5);
   return `<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">`+o.map(([lb,ok])=>
     `<button class="btn big" data-ok="${ok?1:0}" onclick="${fn}(this)" style="font-size:16px;font-weight:800;padding:11px 18px;min-width:104px">${lb}</button>`).join('')+`</div>`;}
-const EST=[
- {t:'① A strange observation',h:'At noon on the same day — the well in <b>Syene</b> had no shadow (0°), but a stick in <b>Alexandria</b> cast a <b>7.2°</b> shadow.'},
- {t:'② A flash of insight',h:'"Sunlight is parallel, yet the shadows differ? <b>Because the Earth is round!</b> The angle between the two cities at the Earth’s center must be <b>7.2°</b>!"'},
- {t:'③ His first calculation — how many times?',h:'"A full turn is 360°. <b>360 ÷ 7.2 = 50</b>. A full turn is exactly <b>50</b> of this angle!"',f:'360° ÷ 7.2° = 50'},
- {t:'④ His second calculation — connect with a ratio!',h:'"If the angle is ×50, <b>the distance is ×50 too</b>! The cities are 800km apart, so… <b>800 × 50 = 40,000km</b>. The Earth is 40,000km around!"',f:'7.2° : 360° = 800km : 40,000km'}
-];
+function comicSVG(){return `
+<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+ <svg viewBox="0 0 340 305" style="flex:1;min-width:270px;max-width:370px;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">
+   <text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">Panel 1 · Noon on the same day, two cities</text>
+   <circle cx="302" cy="44" r="16" fill="#ffd34d"/>
+   <line x1="278" y1="60" x2="292" y2="52" stroke="#e0a02a" stroke-width="3"/>
+   <line x1="266" y1="76" x2="282" y2="66" stroke="#e0a02a" stroke-width="3"/>
+   <rect x="42" y="196" width="44" height="56" fill="#8a6a34" rx="4"/>
+   <rect x="50" y="204" width="28" height="40" fill="#3c2c14" rx="3"/>
+   <line x1="64" y1="140" x2="64" y2="204" stroke="#e0a02a" stroke-width="3"/>
+   <text x="64" y="272" text-anchor="middle" font-size="13" font-weight="800" fill="#26303f">Well in Syene</text>
+   <text x="64" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#2e9e63">shadow 0°</text>
+   <line x1="232" y1="158" x2="232" y2="252" stroke="#26303f" stroke-width="6"/>
+   <line x1="232" y1="252" x2="196" y2="252" stroke="#c0392b" stroke-width="6"/>
+   <line x1="232" y1="158" x2="196" y2="252" stroke="#e0a02a" stroke-width="2" stroke-dasharray="4 3"/>
+   <text x="240" y="186" font-size="13.5" font-weight="800" fill="#c0392b">7.2°</text>
+   <text x="232" y="272" text-anchor="middle" font-size="13" font-weight="800" fill="#26303f">Stick in Alexandria</text>
+   <text x="232" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#c0392b">shadow 7.2°</text>
+   <rect x="52" y="54" width="216" height="58" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <path d="M150 112 l10 16 l8 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <rect x="151" y="108" width="16" height="5" fill="#fff"/>
+   <text x="160" y="78" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">"Same moment, but</text>
+   <text x="160" y="98" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">different shadows?!"</text>
+ </svg>
+ <svg viewBox="0 0 340 305" style="flex:1;min-width:270px;max-width:370px;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">
+   <text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">Panel 2 · Eratosthenes' insight</text>
+   <circle cx="110" cy="215" r="68" fill="#bfe0c2" stroke="#7fae84" stroke-width="3"/>
+   <path d="M110 215 L110 147 A68 68 0 0 0 78 155 Z" fill="rgba(224,160,42,.35)"/>
+   <line x1="110" y1="215" x2="110" y2="147" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
+   <line x1="110" y1="215" x2="78" y2="155" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
+   <path d="M78 155 A68 68 0 0 1 110 147" fill="none" stroke="#c0392b" stroke-width="7"/>
+   <text x="100" y="185" font-size="13" font-weight="800" fill="#8a6a34">7.2°</text>
+   <text x="70" y="136" font-size="12.5" font-weight="800" fill="#c0392b">800km</text>
+   <circle cx="110" cy="215" r="4" fill="#26303f"/>
+   <text x="258" y="215" text-anchor="middle" font-size="46">🧔</text>
+   <rect x="150" y="48" width="180" height="118" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <path d="M240 166 l8 18 l10 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/>
+   <rect x="241" y="162" width="18" height="5" fill="#fff"/>
+   <text x="240" y="72" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">"Because Earth is round!</text>
+   <text x="240" y="92" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">A full turn of 360° is</text>
+   <text x="240" y="112" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">exactly 50 of these 7.2°!"</text>
+   <text x="240" y="142" text-anchor="middle" font-size="15" font-weight="800" fill="#1a5fb4">360 ÷ 7.2 = 50</text>
+ </svg>
+</div>`;}
 function render4(){
   if(m4step===0){
-    $('#readout').innerHTML=`<div class="nm">🌍 2,200 years ago, the scientist Eratosthenes measured the Earth <b>with a single stick</b></div><div class="big">Follow <b>how he calculated it</b>! (${eSt+1}/${EST.length})</div>`;
-    let cards='';
-    for(let i=0;i<=eSt;i++){const s=EST[i];
-      cards+=`<div style="background:${i===eSt?'#fbf6e8':'#faf8f2'};border:1.5px solid ${i===eSt?'#e0c98a':'#e6e1d6'};border-radius:12px;padding:11px 14px;margin-top:8px;${i<eSt?'opacity:.75':''}">
-        <div style="font-weight:800;font-size:15.5px">${s.t}</div>
-        <div style="font-size:14.5px;line-height:1.8;margin-top:3px">${s.h}</div>
-        ${s.f?`<div style="text-align:center;font-size:20px;font-weight:800;background:#eef4fb;border:1.5px solid #b8cfec;border-radius:10px;padding:9px;margin-top:8px">${s.f}</div>`:''}
-      </div>`;}
-    $('#body').innerHTML=`<div class="card">
-      <canvas id="cv4" style="width:100%;height:250px"></canvas>
-      ${cards}
-      <div style="text-align:center;margin-top:12px">
-        <button class="btn big" onclick="${eSt<EST.length-1?'eSt++;render();plog(\'story\',{step:eSt})':'m4step=1;render();plog(\'storyDone\',{})'}">${eSt<EST.length-1?'Continue →':'Now let me calculate it myself! ✏️'}</button>
+    $('#readout').innerHTML=`<div class="nm">🌍 2,200 years ago, Eratosthenes measured the Earth <b>with a single stick</b></div><div class="big">His discovery — <b>in a two-panel comic</b>!</div>`;
+    $('#body').innerHTML=`<div class="card">${comicSVG()}
+      <div class="cap" style="margin-top:8px">The two cities are <b>800 km</b> apart — now we can find the whole circumference!</div>
+      <div style="text-align:center;margin-top:10px">
+        <button class="btn big" onclick="m4step=2;render();plog('storyDone',{})">Calculate it with a ratio! ✏️</button>
       </div></div>`;
-    draw4();
     return;
   }
-  if(m4step===1){
-    $('#readout').innerHTML=`<div class="nm">The last map: Earth 🌍 — measure it with a single stick!</div><div class="big">How many times does <b>7.2°</b> fit into a full turn of <b>360°</b>?</div>`;
-    $('#body').innerHTML=`<div class="card">
-      <div class="lbl">📜 Eratosthenes' discovery, 2,200 years ago — two cities at the same moment</div>
-      <canvas id="cv4" style="width:100%;height:270px"></canvas>
-      <div style="background:#fbf6e8;border:1.5px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:14.5px;line-height:1.9;margin-top:8px">
-        ① At the same moment — <b>Syene</b> has no shadow (0°), while a stick in <b>Alexandria</b> casts a <b>7.2°</b> shadow.<br>
-        ② Because the Earth is round! The <b>angle between the two cities at the Earth's center</b> is exactly <b>7.2°</b>.<br>
-        ③ The distance between the cities (red arc) is <b>800 km</b>. <span class="cap" style="display:inline">(the angle is exaggerated in the picture)</span></div></div>
-     <div class="card"><div class="lbl">💡 First step — a full turn is 360°, so calculate <b>360 ÷ 7.2</b>!</div>
-      ${calcHTML()}
-      <div class="cap">How many times does 7.2° fit into 360°?</div>
-      ${mc4([['50 times',true],['5 times',false],['500 times',false]],'e4pick1')}</div>`;
-    draw4(); cShow();
-  } else if(m4step===2){
+  if(m4step===2){
     $('#readout').innerHTML=`<div class="nm">If the angle is ×50, the distance is ×50 too!</div><div class="big">So what is the <b>Earth's circumference</b>?</div>`;
     $('#body').innerHTML=`<div class="card">
       <div class="lbl">🧮 Building the proportion — ratio of angles = ratio of distances</div>
@@ -216,60 +231,16 @@ function render4(){
       <div class="cap">The Earth's circumference is…?</div>
       ${mc4([['40,000 km',true],['4,000 km',false],['400,000 km',false]],'e4pick2')}</div>`;
     drawPie(); cShow();
-  } else {
+  } else if(m4step!==0&&m4step!==2){
     $('#readout').innerHTML=`<div class="nm">🎉 Secret of Maps — all solved!</div><div class="big">Earth's circumference = <b>40,000 km</b></div>`;
     $('#body').innerHTML=`<div class="card" style="text-align:center">
       <div style="font-size:64px;margin:6px">🌍</div>
       <div style="font-weight:800;font-size:17px">World map complete!</div>
       <div class="sc" style="display:inline-block;background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:6px 14px;margin:10px 0;font-weight:800">Scale 1 : 40,000,000</div>
       <div class="cap">The real circumference is 40,075 km — measured 2,200 years ago with one stick and <b>a ratio</b>.<br>
-      Enlarging (1) → scale (2) → copier % (3) → the Earth (4)… all <b>the same secret of ratios</b>!</div>
-      <button class="btn big" onclick="m4step=0;eSt=0;stage=1;sx=1;sy=1;m1idx=0;m1done=[];m2idx=0;m2done=[];zoom=1;m3idx=0;m3done=[];pct=100;cClear();render()" style="margin-top:8px">Explore again from the start</button></div>`;
+      Scale (1) → zooming (2) → the Earth (3)… all <b>the same secret of ratios</b>!</div>
+      <button class="btn big" onclick="m4step=0;eSt=0;stage=1;s1done=[];s1idx=0;z2=100;z2q=0;cClear();render()" style="margin-top:8px">Explore again from the start</button></div>`;
   }
-}
-function draw4(){const cv=$('#cv4');if(!cv)return;const rect=cv.getBoundingClientRect();
-  if(rect.width<8)return;
-  const W=cv.width=Math.round(rect.width*2),H=cv.height=540;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  const cx=W*0.40, cy=H*0.54, R=H*0.40, EX=0.55; // EX: 과장 각(라디안)
-  // 지구
-  ctx.fillStyle='#bfe0c2';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
-  ctx.strokeStyle='#7fae84';ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
-  // 두 도시 각도 (수직 위 = 시에네, 과장각만큼 왼쪽 = 알렉산드리아)
-  const aS=-Math.PI/2, aA=-Math.PI/2-EX;
-  const sx1=cx+R*Math.cos(aS), sy1=cy+R*Math.sin(aS);
-  const ax1=cx+R*Math.cos(aA), ay1=cy+R*Math.sin(aA);
-  // 중심각(부채꼴 표시)
-  ctx.fillStyle='rgba(224,160,42,.20)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R*0.55,aA,aS);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#8a6a34';ctx.lineWidth=3;ctx.setLineDash([8,6]);
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(sx1,sy1);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ax1,ay1);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle='#8a6a34';ctx.font='bold 26px sans-serif';ctx.textAlign='center';
-  ctx.fillText('7.2°',cx+R*0.30*Math.cos((aS+aA)/2),cy+R*0.30*Math.sin((aS+aA)/2)+8);
-  ctx.font='bold 20px sans-serif';ctx.fillText('Earth center',cx,cy+30);
-  ctx.fillStyle='#26303f';ctx.beginPath();ctx.arc(cx,cy,7,0,7);ctx.fill();
-  // 빨간 호 = 800km
-  ctx.strokeStyle='#c0392b';ctx.lineWidth=9;ctx.beginPath();ctx.arc(cx,cy,R,aA,aS);ctx.stroke();
-  ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';
-  ctx.fillText('800 km',cx+R*1.06*Math.cos((aS+aA)/2)-10,cy+R*1.12*Math.sin((aS+aA)/2));
-  // 막대 + 그림자
-  function stick(a,label,shadow){
-    const bx=cx+R*Math.cos(a),by=cy+R*Math.sin(a);
-    const tx=cx+(R+H*0.11)*Math.cos(a),ty=cy+(R+H*0.11)*Math.sin(a);
-    ctx.strokeStyle='#26303f';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(tx,ty);ctx.stroke();
-    if(shadow){ctx.strokeStyle='#e0a02a';ctx.lineWidth=4;ctx.setLineDash([2,4]);
-      ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(bx-H*0.085,by-H*0.01);ctx.stroke();ctx.setLineDash([]);
-      ctx.strokeStyle='#c0392b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx-H*0.085,by-H*0.01);ctx.stroke();}
-    ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';
-    if(shadow){ctx.textAlign='center';ctx.fillText(label,tx,ty-14);}
-    else{ctx.textAlign='left';ctx.fillText(label,tx+14,ty+22);}}
-  stick(aA,'Alexandria',true);
-  stick(aS,'Syene',false);
-  // 평행 햇살
-  ctx.strokeStyle='#e0a02a';ctx.lineWidth=3;
-  for(let i=0;i<5;i++){const y=H*0.06+i*H*0.10;
-    ctx.beginPath();ctx.moveTo(W*0.98,y);ctx.lineTo(W*0.72,y+H*0.05);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(W*0.72,y+H*0.05);ctx.lineTo(W*0.75,y+H*0.028);ctx.stroke();}
-  ctx.fillStyle='#e0a02a';ctx.font='bold 26px sans-serif';ctx.textAlign='right';ctx.fillText('☀️ Sunlight is parallel!',W*0.98,H*0.045);
 }
 function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingClientRect();
   if(rect.width<8)return;
@@ -287,10 +258,6 @@ function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingC
   ctx.fillText('the 800 km slice',cx+R*0.55,cy-R*1.05);
   ctx.fillStyle='#26303f';ctx.font='bold 28px sans-serif';
   ctx.fillText('50 slices = one full turn!',cx,cy+10);}
-function e4pick1(el){const ok=el.dataset.ok==='1';plog(ok?'earthX50Ok':'earthX50Retry',{pick:el.textContent});
-  if(ok){m4step=2;cClear();chime();
-    banner('Correct! 50 times 🎯','360 ÷ 7.2 = <b>50</b> — a full turn is exactly 50 of those angles!',[['Build the proportion →',()=>{hideBanner();render();}]]);}
-  else banner('Try again!','Try <b>360 ÷ 7.2</b> on the calculator. (C to clear)',[['Retry',hideBanner]]);}
 function e4pick2(el){const ok=el.dataset.ok==='1';plog(ok?'earthDone':'earthRetry',{pick:el.textContent});
   if(ok){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
     chime();banner('You measured the Earth!! 🌍',`7.2° : 360° = 800 : <b>40,000</b> — the real value is 40,075 km, only 0.2% off!`+'<br><div style="margin-top:10px;font-weight:800">📝 Write one sentence about the <b>secret of ratios</b> you found in maps today!</div><input id="rfx" type="text" maxlength="100" placeholder="e.g., A map shrinks the real world by one ratio!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',[['Leave a sentence & finish! 🌍',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();render();}]]);}
@@ -313,7 +280,7 @@ function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f
    ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
 
 function render(){renderStage();({1:renderScale,2:renderZoom,4:render4}[stage])();}
-window.addEventListener('resize',()=>{if(stage===4&&m4step===1)draw4();if(stage===4&&m4step===2)drawPie();});
+window.addEventListener('resize',()=>{if(stage===4&&m4step===2)drawPie();});
 render();
 /* 숨김 iframe으로 로드된 경우: 보이게 되면 1회 다시 그림 */
 let _vchk=setInterval(()=>{
