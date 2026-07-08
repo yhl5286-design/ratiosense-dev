@@ -221,7 +221,7 @@ function renderS1(){
 }
 
 /* ===== 2·3단계 기준량 / 뒤집기 — 제시된 비대로 만들기 ===== */
-const P23={2:[{r:[1,1],b:50},{r:[1,2],b:100},{r:[2,3],b:90}], 3:[{r:[1,2],b:100},{r:[3,2],b:90},{r:[1,4],b:100}]};
+const P23={2:[{r:[1,1],b:50},{r:[1,2],b:100},{r:[2,3],b:40}], 3:[{r:[1,2],b:100},{r:[3,2],b:90},{r:[1,4],b:100}]};
 function probHTML(){const bi=(S.stage===2?0:1);return `<div class="seq">`+P23[S.stage].map((pp,i)=>{
   const r=pp.r;const c={};c[S.fam.paints[0]]=r[0];c[S.fam.paints[1]]=r[1];
   const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
