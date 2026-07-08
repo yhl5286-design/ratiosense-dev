@@ -70,7 +70,7 @@ let stage=1;
 let _ac;function _a(){return _ac||(_ac=new(window.AudioContext||window.webkitAudioContext)());}
 function chime(){try{const c=_a();[[523,0,.2],[659,.2,.2],[784,.4,.42]].forEach(([f,w,d])=>{const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d+.05);});}catch(e){}}
 function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'map',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
-const STAGES=[['1 · 그림 확대',1],['2 · 축척의 비밀',2],['3 · 복사기 %',3],['4 · 지구 재기',4]];
+const STAGES=[['1 · 축척의 비밀',1],['2 · 지도 확대해보기',2],['3 · 지구 재기',4]];
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([t,s])=>{
   const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=t;b.onclick=()=>{stage=s;render();plog('enter');};el.appendChild(b);});}
 function placeBanner(b){let y;try{const fe=window.frameElement;
@@ -82,133 +82,77 @@ function banner(t,s,acts){const b=$('#banner');b.className='show';placeBanner(b)
 function hideBanner(){$('#banner').className='';}
 function reduce(a,b){const g=(x,y)=>y?g(y,x%y):x;const k=g(Math.round(a*2),Math.round(b*2));return [Math.round(a*2)/k,Math.round(b*2)/k];}
 
-/* ══════ 1단계 · 지도 그림 확대 (비·닮음) ══════ */
-let sx=1, sy=1, m1idx=0, m1done=[];
-const M1=[{t:'2배',v:2,f:'1 : 2'},{t:'1.5배',v:1.5,f:'2 : 3'}];
-function render1(){
-  const ms=M1[m1idx];
-  $('#readout').innerHTML=`<div class="nm">미션 ${m1done.length}/${M1.length} — 지도에 넣을 그림을 확대해요</div><div class="big">집을 <b>${ms.t}</b>로 — 닮게!</div>`;
-  $('#body').innerHTML=`<div class="card">
-    <div class="lbl">🧵 고무줄 확대 — <b>가로·세로 배</b>를 각각 바꿔 보세요. 모눈 칸으로 길이를 재요.</div>
-    <canvas id="cv1" style="width:100%;height:250px"></canvas>
-    <div class="status" id="st1"></div>
-    <div style="display:flex;gap:14px;margin-top:8px;flex-wrap:wrap">
-      <div style="flex:1;min-width:180px"><div class="dialv">가로 <span id="sxv">×${sx}</span></div><input type="range" id="rsx" min="1" max="3" step="0.5" value="${sx}"></div>
-      <div style="flex:1;min-width:180px"><div class="dialv">세로 <span id="syv">×${sy}</span></div><input type="range" id="rsy" min="1" max="3" step="0.5" value="${sy}"></div>
-    </div>
-    <div class="cap">가로·세로를 <b>같은 배</b>로 늘리면 모양이 그대로(닮음), 다르게 늘리면 찌그러져요.</div></div>`;
-  $('#rsx').oninput=e=>{sx=+e.target.value;$('#sxv').textContent='×'+sx;draw1();};
-  $('#rsy').oninput=e=>{sy=+e.target.value;$('#syv').textContent='×'+sy;draw1();};
-  draw1();
-}
-function house(ctx,x,y,w,h,body,roof){ // (x,y)=왼쪽 아래
-  ctx.fillStyle=body;ctx.fillRect(x,y-h*0.7,w,h*0.7);
-  ctx.fillStyle=roof;ctx.beginPath();ctx.moveTo(x-w*0.08,y-h*0.7);ctx.lineTo(x+w/2,y-h);ctx.lineTo(x+w*1.08,y-h*0.7);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#fff';ctx.fillRect(x+w*0.38,y-h*0.38,w*0.24,h*0.38);}
-function draw1(){
-  const cv=$('#cv1');if(!cv)return;const rect=cv.getBoundingClientRect();
-  if(rect.width<8)return; // 숨김 상태(폭 0)에서 그리기 금지 — 0 간격 무한루프 방지
-  const W=cv.width=Math.round(rect.width*2),H=cv.height=500;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  const C=Math.max(1,Math.min(W/16,H/9));
-  ctx.strokeStyle='rgba(60,90,140,.16)';ctx.lineWidth=1;
-  for(let x=0;x<=W;x+=C){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=H;y>=0;y-=C){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  const base=H-C*0.8;
-  // 원본: 2칸 × 2칸
-  house(ctx,C*1,base,C*2,C*2,'#b8895a','#8a5a3b');
-  ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';ctx.textAlign='center';
-  ctx.fillText('원본 2칸',C*2,base+C*0.62);
-  // 확대본
-  const nx=C*5.5, w2=C*2*sx, h2=C*2*sy;
-  const ok=(sx===sy);
-  house(ctx,nx,base,w2,h2, ok?'#5aa77a':'#c96d5f', ok?'#2e7d57':'#a04537');
-  ctx.fillStyle='#26303f';ctx.fillText(`가로 ${2*sx}칸 · 세로 ${2*sy}칸`,nx+w2/2,base+C*0.62);
-  const [ra,rb]=reduce(2,2*sx), [rc,rd]=reduce(2,2*sy);
-  const st=$('#st1');
-  if(sx===1&&sy===1){st.innerHTML='<span style="color:var(--sub)">슬라이더로 늘려 보세요</span>';}
-  else if(ok){st.innerHTML=`✅ <span style="color:var(--accent)">닮음!</span> 가로 ${ra}:${rb} · 세로 ${rc}:${rd} — 비가 같아요`;check1();}
-  else{st.innerHTML=`😵 <span style="color:var(--red)">찌그러졌어요</span> — 가로 ${ra}:${rb} ≠ 세로 ${rc}:${rd}`;}
-}
-function check1(){const ms=M1[m1idx];
-  if(sx===ms.v&&sy===ms.v&&!m1done.includes(m1idx)){
-    m1done.push(m1idx);plog('similarOk',{mult:ms.v,ratio:ms.f});
-    chime();setTimeout(()=>banner(`맞았어요! ${ms.t} 닮음 완성 🏠`,`가로도 세로도 ${ms.t} — 대응하는 변의 비가 모두 <b>${ms.f}</b>. 이게 닮음이에요!`,
-      m1done.length<M1.length?[['다음 미션 →',()=>{hideBanner();m1idx=1;sx=1;sy=1;render();}]]:[['2단계로 →',()=>{hideBanner();stage=2;render();}]]),150);}}
-
-/* ══════ 2단계 · 축척의 비밀 (비율) ══════ */
-const CELL=28;
-let zoom=1, m2idx=0, m2done=[];
-const M2=[
- {q:'다리는 지도에서 <b>3칸</b>. 실제 길이는 몇 m?', hint:'1칸 = 100 m → 3 × 100', ans:300, unit:'m'},
- {q:'실제 <b>500 m</b>인 큰길은 지도에서 몇 칸?', hint:'500 ÷ 100', ans:5, unit:'칸'},
- {q:'지도를 <b>2배로 확대</b>했어요(아래 버튼). 이제 다리는 몇 칸?', hint:'3칸 × 2', ans:6, unit:'칸', needZoom:true}
+/* ══════ 1단계 · 축척의 비밀 — 실제를 비에 맞게 줄여 지도에 담기 ══════ */
+const CELL2=34;
+const SC1=[
+ {em:'🌉',n:'다리',real:300,cells:3,x:2,y:4,color:'#9a7b4f'},
+ {em:'🏫',n:'학교 운동장',real:100,cells:1,x:6,y:2,color:'#c96b6b'},
+ {em:'🛣',n:'큰길',real:500,cells:5,x:1,y:6,color:'#8f9aa8'}
 ];
-function render2(){
-  const ms=M2[m2idx];
-  $('#readout').innerHTML=`<div class="nm">미션 ${m2done.length}/${M2.length} · 축척 <b id="scTop">1 : ${zoom===1?'10,000':'5,000'}</b> (1칸 = ${zoom===1?100:50} m)</div><div class="big">${ms.q}</div>`;
-  $('#body').innerHTML=`<div class="card">
-    <div class="lbl">🗺️ 우리 마을 지도 — 모눈 <b>1칸 = ${zoom===1?100:50} m</b></div>
-    <div class="mapbox" id="mapbox" style="height:${CELL*8}px">
-      <div class="mapcontent" id="mapc" style="width:${CELL*12}px;height:${CELL*8}px;transform:scale(${zoom})">
-        <div class="mobj" style="left:${CELL*2}px;top:${CELL*4}px;width:${CELL*3}px;height:${CELL}px;background:#9a7b4f;color:#fff">🌉 다리 3칸</div>
-        <div class="mobj" style="left:${CELL*7}px;top:${CELL*1}px;width:${CELL*2}px;height:${CELL*2}px;background:#d8763b;color:#fff">🏫</div>
-        <div class="mobj" style="left:${CELL*1}px;top:${CELL*6}px;width:${CELL*5}px;height:${CELL*0.8}px;background:#8f9aa8;color:#fff">🛣 큰길</div>
-        <div class="mobj" style="left:${CELL*8.5}px;top:${CELL*5}px;width:${CELL*1.5}px;height:${CELL*1.5}px;background:#4f89c6;color:#fff;border-radius:50%">⛲</div>
-      </div>
-      <div class="mapgrid" style="background-size:${CELL}px ${CELL}px"></div>
-    </div>
-    <div class="scalebar"><span class="sc">축척 1 : ${zoom===1?'10,000':'5,000'}</span>
-      <button class="btn" onclick="toggleZoom()">${zoom===1?'🔍 지도를 2배로 확대':'↩ 원래 크기로'}</button></div>
-    <div class="cap">지도를 확대하면 <b>사물은 커지고</b>, 1칸이 나타내는 <b>실제 거리는 줄어요</b> (축척이 바뀜).</div></div>
-   <div class="card"><div class="lbl">💡 ${ms.hint} — 계산기로 구한 뒤 확인!</div>
-    ${calcHTML()}
-    <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check2()">✓ 확인 (${ms.unit})</button></div></div>`;
-  cShow();
+let s1done=[], s1idx=0;
+function townMap(f){f=f||1;const C=CELL2*f;
+  let objs='';
+  SC1.forEach((o,i)=>{if(stage!==1||s1done.includes(i)){
+    objs+=`<div class="mobj" style="left:${C*o.x}px;top:${C*o.y}px;width:${C*o.cells}px;height:${C*0.8}px;background:${o.color};color:#fff;font-size:${12*f}px">${o.em} ${o.n} ${o.cells}칸</div>`;}});
+  return `<div class="mapbox" style="width:${C*8+4}px;height:${C*8+4}px;margin:0 auto;max-width:100%;overflow:auto">
+    <div class="mapgrid" style="background-size:${C}px ${C}px;width:${C*8}px;height:${C*8}px"></div>${objs}</div>`;}
+function renderScale(){
+  const done=s1done.length, cur=SC1[s1idx];
+  $('#readout').innerHTML=`<div class="nm">마을을 종이에 담아요 — 축척의 비밀! (${done}/${SC1.length})</div><div class="big">${cur?`${cur.em} <b>${cur.n}</b>(실제 <b>${cur.real}m</b>)는 지도에서 <b>몇 칸</b>일까요?`:'축척 지도 완성!'}</div>`;
+  let body=`<div class="card">
+    <div style="background:#fbf6e8;border:1.5px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:14.5px;line-height:1.9">
+      우리 마을을 종이에 그리고 싶어요. 그런데 다리만 해도 <b>300m</b> — 진짜 크기로는 종이에 못 그려요!<br>
+      그래서 약속해요: <b>실제 100m를 지도 1칸으로</b> 줄이기. 무엇이든 <b>같은 비(1:10,000)</b>로 줄여요 — 이 약속이 <b>축척</b>이에요.</div></div>
+   <div class="card"><div class="lbl">🗺️ 우리 마을 지도 — 정답을 맞히면 지도에 그려져요!</div>
+    ${townMap(1)}
+    <div class="scalebar"><span class="sc">축척 1 : 10,000</span><span>1칸 = 100 m</span></div></div>`;
+  if(cur){
+    const opts={300:[['3칸',true],['30칸',false],['5칸',false]],100:[['1칸',true],['10칸',false],['2칸',false]],500:[['5칸',true],['50칸',false],['4칸',false]]}[cur.real];
+    body+=`<div class="card"><div class="lbl">💡 실제 ${cur.real}m ÷ 100m = ? — 100m가 1칸이니까!</div>
+      ${mc4(opts,'s1pick')}</div>`;
+  } else {
+    body+=`<div class="card" style="text-align:center"><div class="cap">모든 것을 <b>같은 비</b>로 줄였더니 마을이 종이 한 장에 쏙!</div>
+      <button class="btn big" onclick="stage=2;render();plog('enter')" style="margin-top:6px">2단계 — 지도 확대해보기 →</button></div>`;
+  }
+  $('#body').innerHTML=body;
 }
-function toggleZoom(){zoom=zoom===1?2:1;render2();plog('zoom',{zoom});}
-function check2(){cEq();const ms=M2[m2idx];const val=Math.round(parseFloat(cDisp)||0);
-  if(ms.needZoom&&zoom!==2){banner('먼저 지도를 확대해요','🔍 <b>지도를 2배로 확대</b> 버튼을 누르고 지도를 관찰해 보세요.',[['알겠어요',hideBanner]]);return;}
-  plog(val===ms.ans?'scaleOk':'scaleRetry',{mission:m2idx+1,val});
-  if(val===ms.ans){if(!m2done.includes(m2idx))m2done.push(m2idx);
-    const last=m2done.length>=M2.length;
-    chime();banner(`맞았어요! ${ms.ans}${ms.unit} 🎯`, m2idx===2?'지도가 2배가 되면 같은 다리가 <b>더 많은 칸</b>을 차지해요 — 축척은 1:5,000이 됐죠!':'축척은 지도와 실제를 잇는 <b>비</b>예요!',
-      last?[['3단계로 →',()=>{hideBanner();stage=3;render();}]]:[['다음 미션 →',()=>{hideBanner();m2idx++;cClear();render();}]]);}
-  else banner('다시 한번 도전해볼까요?',`힌트: ${ms.hint}`,[['다시',hideBanner]]);}
+function s1pick(el){const ok=el.dataset.ok==='1';const cur=SC1[s1idx];
+  plog(ok?'scaleOk':'scaleRetry',{obj:cur.n,pick:el.textContent});
+  if(ok){s1done.push(s1idx);chime();
+    banner(`맞았어요! ${cur.em} ${cur.n} = ${cur.cells}칸 🎯`,`${cur.real}m ÷ 100 = <b>${cur.cells}칸</b> — 실제를 <b>비에 맞게 줄여서</b> 지도에 그렸어요!`,
+      [[s1done.length<SC1.length?'다음 →':'지도 완성!',()=>{hideBanner();s1idx++;render();}]]);}
+  else banner('다시 한번 도전해볼까요?',`100m가 1칸 — <b>${cur.real} ÷ 100</b> 을 생각해 보세요.`,[['다시',hideBanner]]);}
 
-/* ══════ 3단계 · 복사기 백분율 ══════ */
-let pct=100, m3idx=0, m3done=[];
-const M3=[
- {type:'predict', q:'호수 지도를 <b>150%</b>로 복사하면 어떻게 될까요?', choices:[['모양 그대로, 1.5배 커진다',true],['가로만 1.5배 길어진다',false],['크기가 그대로다',false]], pct:150,
-  ok:'150% = ×1.5 — 가로도 세로도 1.5배, 모양은 그대로! (2:3 — 화음의 완전5도와 같은 비예요 🎵)'},
- {type:'quiz', q:'가로 <b>2칸</b> 호수를 <b>3칸</b>으로 만들려면 몇 %로 복사할까요?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
-  ok:'2칸 → 3칸 = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
- {type:'quiz', q:'<b>200%</b>로 복사하면 가로 2칸 나무는 몇 칸이 될까요?', choices:[['3칸',false],['4칸',true],['6칸',false]], pct:200,
-  ok:'200% = ×2 → 2칸이 <b>4칸</b>으로. 백분율은 <b>배율의 다른 이름</b>이에요!'}
-];
-function lake(scale){const w=56*scale,h=36*scale;
-  return `<div style="width:${w}px;height:${h}px;background:#4f89c6;border-radius:45% 55% 50% 50%;margin:8px auto;position:relative">
-    <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:${11*scale}px;font-weight:800">호수</span></div>`;}
-function render3(){
-  const ms=M3[m3idx];
-  $('#readout').innerHTML=`<div class="nm">미션 ${m3done.length}/${M3.length} — 지도 공방의 복사기</div><div class="big">${ms.q}</div>`;
-  $('#body').innerHTML=`<div class="card">
-    <div class="lbl">🖨️ 복사기 — 원본을 넣고 <b>배율(%)</b>을 골라요</div>
-    <div class="copier">
-      <div class="tray"><div class="tt">원본 (가로 2칸)</div>${lake(1)}</div>
-      <div style="display:flex;align-items:center;font-size:26px">➜</div>
-      <div class="tray"><div class="tt">복사본 <span id="pctlab">${pct}%</span></div><div id="outTray">${pct===100?lake(1):lake(pct/100)}</div></div>
-    </div>
-    <div class="pctrow">${[50,100,150,200].map(p=>`<button class="pctbtn ${p===pct?'active':''}" onclick="setPct(${p})">${p}%</button>`).join('')}</div>
-    <div class="cap">%를 눌러 복사해 보고, 아래에서 답을 골라요. <b>100% = ×1(그대로)</b></div></div>
-   <div class="card">${ms.choices.map(([t,ok],i)=>`<button class="choice" onclick="pick3(${i})">${['①','②','③'][i]} ${t}</button>`).join('')}</div>`;
+/* ══════ 2단계 · 지도 확대해보기 — 비율로 확대 시뮬레이션 ══════ */
+let z2=100, z2q=0;
+function renderZoom(){
+  const f=z2/100;
+  const qs=[
+   {q:'<b>200%</b>로 확대하면, 지도 위 다리(3cm)는 몇 cm가 될까요?',opts:[['6cm',true],['3cm',false],['12cm',false]],
+    ok:'200% = ×2 — 지도 위 길이가 <b>2배</b>! 3cm → <b>6cm</b>.'},
+   {q:'지도를 아무리 확대해도 <b>변하지 않는 것</b>은?',opts:[['다리의 실제 길이',true],['지도 위 다리의 길이',false],['지도 1칸의 크기',false]],
+    ok:'확대는 <b>그림</b>만 커지는 것 — <b>실제 마을</b>은 그대로예요!'}
+  ];
+  const cur=qs[z2q];
+  $('#readout').innerHTML=`<div class="nm">지도가 작아서 잘 안 보여요 — 크게 보고 싶어요!</div><div class="big">배율(%)을 눌러 <b>지도를 확대</b>해 보세요</div>`;
+  $('#body').innerHTML=`<div class="card"><div class="lbl">🔍 배율을 고르면 지도의 <b>모든 길이가 같은 비</b>로 커져요</div>
+    <div class="pctrow">${[100,200,400].map(p=>`<button class="pctbtn ${z2===p?'active':''}" onclick="z2=${p};render();plog('zoom',{p:${p}})">${p}%</button>`).join('')}</div>
+    <div style="max-height:330px;overflow:auto;border-radius:12px">${townMap(f)}</div>
+    <div class="scalebar"><span class="sc">배율 ${z2}% = ×${f}</span><span>지도 위 다리: 3cm × ${f} = <b>${3*f}cm</b></span></div>
+    <div class="cap">커진 지도에서는 같은 100m가 더 <b>길게</b> 그려져요 → 축척은 1 : ${(10000/f).toLocaleString('ko-KR')}</div></div>
+   ${cur?`<div class="card"><div class="lbl">Ⓠ 문제 ${z2q+1}/2</div>
+    <div style="font-size:16px;font-weight:800;margin:4px 0 2px">${cur.q}</div>
+    ${mc4(cur.opts,'z2pick')}</div>`
+   :`<div class="card" style="text-align:center"><div class="cap"><b>비율(%)</b>은 모든 길이를 같은 배로 바꾸는 약속 — 지도를 크게 봐도 <b>실제 세상은 그대로</b>!</div>
+    <button class="btn big" onclick="stage=4;render();plog('enter')" style="margin-top:6px">3단계 — 지구 재기! →</button></div>`}`;
 }
-function setPct(p){pct=p;plog('copy',{pct:p});$('#pctlab').textContent=p+'%';$('#outTray').innerHTML=lake(p/100);
-  document.querySelectorAll('.pctbtn').forEach(b=>b.classList.toggle('active',b.textContent===p+'%'));}
-function pick3(i){const ms=M3[m3idx];plog(ms.choices[i][1]?'pctOk':'pctRetry',{mission:m3idx+1,pick:i});
-  if(ms.choices[i][1]){if(!m3done.includes(m3idx))m3done.push(m3idx);
-    pct=ms.pct;const last=m3done.length>=M3.length;
-    chime();banner('맞았어요! 🖨️',ms.ok, last?[['4단계 — 지구 재기! →',()=>{hideBanner();stage=4;render();}]]:[['다음 미션 →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
-  else banner('다시 한번 도전해볼까요?','%를 직접 눌러 복사해 보면서 관찰해 보세요.',[['다시',hideBanner]]);}
+function z2pick(el){const ok=el.dataset.ok==='1';
+  const qs=['zoomLen','zoomInvariant'];
+  plog(ok?qs[z2q]+'Ok':qs[z2q]+'Retry',{pick:el.textContent});
+  const oks=['200% = ×2 — 지도 위 길이가 <b>2배</b>! 3cm → <b>6cm</b>.','확대는 <b>그림</b>만 커지는 것 — <b>실제 마을</b>은 그대로예요!'];
+  if(ok){chime();const last=z2q>=1;
+    banner('맞았어요! 🔍',oks[z2q],[[last?'좋아요!':'다음 문제 →',()=>{hideBanner();z2q++;render();}]]);}
+  else banner('다시 한번 도전해볼까요?',z2q===0?'배율 버튼을 눌러 <b>지도 위 다리 길이</b>가 어떻게 변하는지 관찰해 보세요.':'확대했을 때 <b>진짜 마을</b>도 커질까요? 생각해 보세요.',[['다시',hideBanner]]);}
 
 /* ══════ 4단계 · 지구를 재는 미션 (비례식) ══════ */
 let m4step=1; // 1: 몇 배?, 2: 둘레, 3: 완성
@@ -344,12 +288,12 @@ function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f
    ${b('1','cD(1)')}${b('2','cD(2)')}${b('3','cD(3)')}${b('C','cClear()','op')}
    ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
 
-function render(){renderStage();({1:render1,2:render2,3:render3,4:render4}[stage])();}
-window.addEventListener('resize',()=>{if(stage===1)draw1();if(stage===4&&m4step===1)draw4();if(stage===4&&m4step===2)drawPie();});
+function render(){renderStage();({1:renderScale,2:renderZoom,4:render4}[stage])();}
+window.addEventListener('resize',()=>{if(stage===4&&m4step===1)draw4();if(stage===4&&m4step===2)drawPie();});
 render();
 /* 숨김 iframe으로 로드된 경우: 보이게 되면 1회 다시 그림 */
-let _vchk=setInterval(()=>{const cv=$('#cv1');
-  if(document.body.getBoundingClientRect().width>8){ if(stage===1&&cv)draw1(); clearInterval(_vchk); }},350);
+let _vchk=setInterval(()=>{
+  if(document.body.getBoundingClientRect().width>8){ if(stage===4)render4(); clearInterval(_vchk); }},350);
 </script>
 </body>
 </html>
