@@ -315,9 +315,10 @@ function renderS3R(){
   const F=abFront?p1:p0, K=abFront?p0:p1;           // F=앞(비교), K=기준
   const fV=abFront?rb:ra, kV=abFront?ra:rb;
   const mc={};mc[p0]=q.a;mc[p1]=q.b;const mixCol=rgb(mix(mc));
+  const kmL=abFront?q.a:q.b, fmL=abFront?q.b:q.a;
   $('#mText').innerHTML=q.type==='ratio'
-    ? `'<b>${K}에 대한 ${F}의 비</b>'는 몇 대 몇일까요?`
-    : `'<b>${K}에 대한 ${F}의 비율</b>'을 <b>분수</b>로 나타내면?`;
+    ? `'<b>${K} ${kmL}mL에 대한 ${F} ${fmL}mL의 비</b>'는 몇 대 몇일까요?`
+    : `'<b>${K} ${kmL}mL에 대한 ${F} ${fmL}mL의 비율</b>'을 <b>분수</b>로 나타내면?`;
   $('#mProg').textContent=`(문제 ${S.r3i+1}/${R3.length})`;
   let opts;
   if(q.type==='ratio')
@@ -326,10 +327,8 @@ function renderS3R(){
     opts=[[fracHTML(fV,kV),true,fV+'/'+kV],[fracHTML(kV,fV),false,kV+'/'+fV],[fracHTML(fV,fV+kV),false,fV+'/'+(fV+kV)]];
   opts.sort(()=>Math.random()-0.5);
   $('#stageBody').innerHTML=
-   `<div class="tools" style="text-align:center"><div class="lbl">${S.fam.id} 액체 — <b style="color:${rgb(PRIM[p0])}">${p0} ${q.a}mL</b> + <b style="color:${rgb(PRIM[p1])}">${p1} ${q.b}mL</b></div>
+   `<div class="tools" style="text-align:center"><div style="font-size:17.5px;font-weight:800;margin-bottom:6px">${S.fam.id} 액체 — <b style="color:${rgb(PRIM[p0])}">${p0} ${q.a}mL</b> + <b style="color:${rgb(PRIM[p1])}">${p1} ${q.b}mL</b></div>
       <div class="liquid" style="width:100px;height:130px"><div class="mf" style="background:${mixCol}"></div></div></div>
-   <div class="tools" style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;margin-bottom:8px">
-      <div style="font-size:16px;line-height:1.9">💡 '<b>A에 대한 B</b>의 비' = <b>B : A</b> — '에 대한' 앞(<b>A</b>)이 <b>기준량</b>이라 비의 <b>뒤</b>로 가요.<br>비율(비의 값)은 <b>B ÷ A</b>, 분수로 ${fracHTML('B','A')}!</div></div>
    <div class="tools" style="text-align:center"><div class="row" style="justify-content:center;margin-top:4px">`+
       opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="r3${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
    `</div></div>`;
@@ -342,9 +341,10 @@ function renderS3R(){
         fb=`'에 대한' 앞의 <b>${K}</b>${iga(K)} 기준량 → <b>${F} : ${K}</b> = ${abFront?q.b:q.a} : ${abFront?q.a:q.b} = <b>${fV} : ${kV}</b>!`;
         if(S.r3i===1)fb+=`<br>👀 같은 액체인데 <b>기준이 바뀌니 비가 뒤집혔죠?</b>`;
       } else fb=`${F} ÷ ${K} = ${abFront?q.b:q.a}/${abFront?q.a:q.b} = <b>${fracHTML(fV,kV)}</b>!`;
+      fb+=`<br>💡 '<b>A에 대한 B</b>' — '에 대한' 앞(A)이 <b>기준량</b>: 비의 <b>뒤</b>, 분수의 <b>아래</b>!`;
       success('맞아요!',fb,nx>=R3.length?stageDone:()=>{S.r3i=nx;render();});
     } else {
-      banner('help','다시 한번 도전해볼까요?',`'~<b>에 대한</b>' 앞에 오는 <b>${K}</b>${iga(K)} <b>기준량</b> — 기준량은 비의 <b>뒤</b>(분수의 <b>아래</b>)에 와요.`,[['다시 고르기',hideBanner]]);chime(false);
+      banner('help','다시 한번 도전해볼까요?',`'<b>A에 대한 B</b>의 비' = <b>B : A</b> — '에 대한' 앞의 <b>${K}</b>${iga(K)} <b>기준량</b>이라 비의 <b>뒤</b>(분수의 <b>아래</b>)에 와요.`,[['다시 고르기',hideBanner]]);chime(false);
     }};});
 }
 
