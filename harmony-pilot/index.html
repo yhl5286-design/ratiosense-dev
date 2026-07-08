@@ -54,16 +54,19 @@
   #banner .in{max-width:700px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700;background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}
   #banner.show{display:block}#banner .sub{font-weight:600;font-size:13px;margin-top:4px}#banner .acts{margin-top:10px}
 
-/* 3단계 바이올린 */
-.vwrap{background:#2b1d12;border-radius:14px;padding:18px 14px 10px;margin-top:8px}
-.vneck{position:relative;height:92px;background:linear-gradient(#4a3categories,#3a2a1a)}
-.vboard{position:relative;height:64px;background:linear-gradient(#171310,#241c15);border-radius:6px}
-.vnut{position:absolute;left:0;top:0;bottom:0;width:7px;background:#e8e2d2;border-radius:3px}
-.vbridge{position:absolute;right:0;top:-6px;bottom:-6px;width:9px;background:#c9a86a;border-radius:3px}
-.vstring{position:absolute;left:7px;right:9px;top:50%;height:3px;background:linear-gradient(#f5f0e0,#b9b19a);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.5)}
-.vtape{position:absolute;top:6px;bottom:6px;width:8px;background:#e74c3c;border-radius:3px;box-shadow:0 0 6px rgba(231,76,60,.6);cursor:pointer}
-.vtape.open{background:#2e9e63}
-.vlab{position:absolute;top:100%;margin-top:4px;transform:translateX(-50%);font-size:11.5px;font-weight:800;color:#f0e9d8;text-align:center;line-height:1.25;white-space:nowrap}
+/* 3단계 하프 공방 */
+.harp{background:#241a10;border-radius:14px;padding:14px 10px 10px;margin-top:8px}
+.hbeam{height:13px;background:linear-gradient(#d9b26a,#8a6a34);border-radius:7px;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.hrow{display:flex;justify-content:space-around;align-items:flex-start;padding:0 6px}
+.hcol{display:flex;flex-direction:column;align-items:center;width:44px}
+.hs{width:4px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:2px;cursor:pointer;box-shadow:0 0 4px rgba(255,240,200,.35)}
+.hs.ghost{background:none;border-left:3px dashed #5a4a30;cursor:default;box-shadow:none}
+.hs.test{background:linear-gradient(#ffe9a8,#e0a02a)}
+.hs.pluck{animation:wig .35s}
+@keyframes wig{20%{transform:translateX(3px)}50%{transform:translateX(-3px)}80%{transform:translateX(1.5px)}}
+.hlab{margin-top:6px;font-size:13.5px;font-weight:800;color:#f0e9d8;text-align:center;line-height:1.3}
+.hlab span{font-size:12px;color:#cbbfa8}
+.hlab.ghost{color:#6a583a}
 </style>
 </head>
 <body>
@@ -97,7 +100,7 @@ function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'harmony',eve
 function keyLabel(i){const n=NOTE[i];return n.name+({'낮은':'˷','가운데':'','높은':'′','맨위':'″'}[n.oct]||'');}
 
 function renderStage(){const el=$('#stageSeg');el.innerHTML='';
-  [['1 · 진동수 느끼기',1],['2 · 화음의 비밀',2],['3 · 바이올린 만들기',3]].forEach(([t,s])=>{
+  [['1 · 진동수 느끼기',1],['2 · 화음의 비밀',2],['3 · 하프 공방',3]].forEach(([t,s])=>{
     const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=t;b.onclick=()=>{stage=s;sel=-1;liveOff();stopAll2();stop1();render();plog('enter');};el.appendChild(b);});}
 
 /* ===== 파동 그리기 ===== */
@@ -225,53 +228,66 @@ function calcHTML(){const b=(x,f,c)=>`<button class="cbtn ${c||''}" onclick="${f
    ${b('1','cD(1)')}${b('2','cD(2)')}${b('3','cD(3)')}${b('C','cClear()','op')}
    ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
 
-/* ===== 3단계: 바이올린 만들기 (떨리는 길이 계산) ===== */
-const VBASE=33; // 실제 4/4 바이올린 개방현 진동 길이(cm)
-const P4=[{n:'레',a:8,b:9},{n:'미',a:4,b:5},{n:'파',a:3,b:4},{n:'솔',a:2,b:3},{n:'라',a:3,b:5},{n:'시',a:8,b:15},{n:'도′',a:1,b:2}];
-let p4done=[], p4i=0;
-function p4exact(i){return VBASE*P4[i].a/P4[i].b;}
-function p4freq(i){return Math.round(262*P4[i].b/P4[i].a);}
-function violinHTML(){
-  // 줄: 왼쪽=너트(브릿지 반대), 오른쪽=브릿지. 떨리는 길이 L → 테이프 위치 = 너트에서 (33−L)
-  let tapes=`<div class="vtape open" style="left:0px"><div class="vlab">도(빈 줄)<br>${VBASE}cm</div></div>`;
-  P4.forEach((p,i)=>{if(p4done.includes(i)){const L=p4exact(i);
-    const pct=((VBASE-L)/VBASE*100);
-    tapes+=`<div class="vtape" style="left:calc(${pct}% - 4px)" onclick="tone(${p4freq(i)},0,.8);event.stopPropagation()"><div class="vlab">${p.n}<br>${Math.round(L*10)/10}cm</div></div>`;}});
-  return `<div class="vwrap"><div class="vboard">
-    <div class="vnut"></div><div class="vbridge"></div>
-    <div class="vstring" onclick="tone(262,0,.9)"></div>
-    ${tapes}
-  </div><div style="height:44px"></div>
-  <div style="text-align:center;font-size:12px;color:#cbbfa8">◀ 너트 · 테이프(손가락 자리)를 누르면 그 음이 나요 · 브릿지 ▶</div></div>`;}
+/* ===== 3단계: 하프 공방 — 5음계 줄 만들기 ===== */
+const HBASE=81; // 도 줄 길이(cm) — 분수 계산이 딱 떨어지는 마법의 수
+const HP=[{n:'레',a:8,b:9},{n:'미',a:64,b:81},{n:'솔',a:2,b:3},{n:'라',a:16,b:27},{n:'도′',a:1,b:2}];
+let hDone=[], hI=0, tstL=81;
+function hLen(i){return HBASE*HP[i].a/HP[i].b;}
+function hFreq(L){return Math.round(262*HBASE/L);}
+function pluck(f,w){const c=ac(),t0=c.currentTime+(w||0);
+  [[f,.22],[f*2,.07],[f*3,.03]].forEach(([ff,v])=>{const o=c.createOscillator(),g=c.createGain();
+    o.type='triangle';o.frequency.value=ff;o.connect(g);g.connect(c.destination);
+    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.008);
+    g.gain.exponentialRampToValueAtTime(.001,t0+1.3);o.start(t0);o.stop(t0+1.35);});}
+function hPluck(el,L,name){pluck(hFreq(L));plog('hPluck',{name});
+  if(el){el.classList.remove('pluck');void el.offsetWidth;el.classList.add('pluck');}}
+function fmtL(L){return (Math.round(L*10)/10)+'cm';}
+function harpHTML(){
+  const items=[{n:'도',L:HBASE,made:true,frac:'1'}].concat(HP.map((p,i)=>({n:p.n,L:hLen(i),made:hDone.includes(i),frac:p.a+'/'+p.b})));
+  return `<div class="harp"><div class="hbeam"></div><div class="hrow">`+
+    items.map(it=>`<div class="hcol">${it.made
+      ?`<div class="hs" style="height:${Math.round(it.L*2.6)}px" onclick="hPluck(this,${it.L},'${it.n}')"></div><div class="hlab">${it.n}<br><span>${fmtL(it.L)}</span></div>`
+      :`<div class="hs ghost" style="height:${Math.round(it.L*2.6)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
+  `</div></div>`;}
+function tstUpd(v){tstL=+v;const e=$('#tst');if(e){e.style.height=Math.round(tstL*2.6)+'px';}
+  const l=$('#tstlab');if(l)l.textContent=tstL+'cm';
+  liveOn(262*HBASE/tstL);}
 function render4(){
-  const done=p4done.length,cur=P4[p4i];
-  $('#readout').innerHTML=`<div class="nm">바이올린 공방 — 빈 줄(도)의 떨리는 길이 = <b>${VBASE}cm</b> · 실제 바이올린이에요! (${done}/${P4.length})</div><div class="big">${cur?`<b>${cur.n}</b> 소리를 내려면 줄이 <b>몇 cm</b> 떨려야 할까요?`:'바이올린 완성!'}</div>`;
-  if(done>=P4.length){
-    $('#body').innerHTML=`<div class="card"><div class="lbl">🎻 완성! 테이프(손가락 자리)를 눌러 연주해 보세요</div>${violinHTML()}
-      <div style="text-align:center;margin-top:10px"><button class="btn" style="font-size:15px;padding:11px 20px" onclick="vPlay()">🎶 도레미파솔라시도 연주</button></div>
-      <div class="cap">손가락으로 짚으면 <b>떨리는 길이가 짧아져</b> 높은 음 — 진동수 비를 <b>거꾸로</b> 하면 길이의 비!</div></div>`;
+  const done=hDone.length,cur=HP[hI];
+  $('#readout').innerHTML=`<div class="nm">🪕 하프 공방 — 도 줄 <b>${HBASE}cm</b>에서 시작! 5음계 줄을 만들어요 (${done}/${HP.length})</div><div class="big">${cur?`<b>${cur.n}</b> 줄은 도 줄의 <b>${cur.a}/${cur.b}</b> — <b>몇 cm</b>로 만들어야 할까요?`:'5음계 하프 완성!'}</div>`;
+  if(done>=HP.length){
+    $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 완성! 줄을 눌러 연주해 보세요 — 짧을수록 높은 음!</div>${harpHTML()}
+      <div style="text-align:center;margin-top:10px"><button class="btn" style="font-size:15px;padding:11px 20px" onclick="hSong()">🎶 아리랑 연주</button></div>
+      <div class="cap">아리랑은 <b>5음계</b> 노래 — 내가 만든 하프로 진짜 노래가 돼요!</div></div>`;
     return;}
-  $('#body').innerHTML=`<div class="card"><div class="lbl">🎻 지금까지 붙인 손가락 자리</div>${violinHTML()}</div>
+  $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 나의 하프 — 만든 줄은 눌러서 소리 확인!</div>${harpHTML()}</div>
+   <div class="card"><div class="lbl">🎚 시험 줄 — 손잡이를 움직여 <b>길이에 따라 음이 어떻게 변하는지</b> 들어 보세요</div>
+     <div class="harp" style="display:inline-block;padding:12px 26px 8px;margin-left:calc(50% - 60px)"><div class="hbeam" style="width:60px"></div>
+       <div class="hcol" style="width:60px"><div class="hs test" id="tst" style="height:${Math.round(tstL*2.6)}px"></div><div class="hlab" id="tstlab">${tstL}cm</div></div></div>
+     <input type="range" id="tr" min="35" max="81" step="1" value="${tstL}" style="width:82%;display:block;margin:10px auto 2px">
+   </div>
    <div class="card"><div style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;font-size:15.5px;line-height:1.9">
-      ① <b>${cur.n}</b>${jz(cur.n,'은','는')} 도보다 높은 음이에요 — 도가 <b>${cur.a}번</b> 떨리는 동안 ${cur.n}${jz(cur.n,'은','는')} <b>${cur.b}번</b> 떨려요. (2단계에서 봤죠!)<br>
-      ② 빨리 떨리는 음일수록 <b>떨리는 줄이 짧아요</b> — 손가락으로 짚어서 줄을 짧게 만들어요! ${cur.n}의 떨리는 길이는 빈 줄의 <b>${cur.b}분의 ${cur.a}</b>(${cur.a}/${cur.b})만큼.<br>
-      ③ <b style="font-size:17px;color:var(--ink)">${cur.n} = ${VBASE} × ${cur.a} ÷ ${cur.b} = ? cm</b></div>
-    <div class="lbl" style="margin-top:8px">계산기로 구하고 테이프를 붙이세요. (소수는 그대로 두거나 반올림해도 좋아요)</div>
+      ① <b>${cur.n}</b> 줄의 길이는 도 줄(<b>${HBASE}cm</b>)의 <b>${cur.b}분의 ${cur.a}</b>(${cur.a}/${cur.b})이에요.<br>
+      ② <b style="font-size:17px;color:var(--ink)">${cur.n} = ${HBASE} × ${cur.a} ÷ ${cur.b} = ? cm</b></div>
+    <div class="lbl" style="margin-top:8px">계산기로 구해 입력하면 줄이 매달려요!</div>
     ${calcHTML()}
-    <div style="text-align:center;margin-top:6px"><button class="btn" style="font-size:15px;padding:11px 20px;background:#eaf7ef;border-color:#2e9e63;color:#136a3d;font-weight:800" onclick="p4cut()">📍 이 길이에 테이프 붙이기</button></div></div>`;
+    <div style="text-align:center;margin-top:6px"><button class="btn" style="font-size:15px;padding:11px 20px;background:#eaf7ef;border-color:#2e9e63;color:#136a3d;font-weight:800" onclick="hCut()">🪕 이 길이로 줄 매달기</button></div></div>`;
+  const tr=$('#tr');
+  if(tr){tr.oninput=e=>tstUpd(e.target.value);
+    tr.onchange=()=>liveOff();tr.onpointerup=()=>liveOff();tr.onmouseup=()=>liveOff();tr.ontouchend=()=>liveOff();}
   cShow();
 }
-function p4cut(){cEq();const cur=P4[p4i],ex=p4exact(p4i),val=parseFloat(cDisp)||0;
-  const ok=Math.abs(val-ex)<=0.35;
-  plog(ok?'p4Ok':'p4Retry',{note:cur.n,val,exact:Math.round(ex*100)/100});
-  if(ok){p4done.push(p4i);tone(p4freq(p4i),0,.9);cClear();
-    const last=p4done.length>=P4.length;
+function hCut(){cEq();const cur=HP[hI],ex=hLen(hI),val=parseFloat(cDisp)||0;
+  const ok=Math.abs(val-ex)<=0.3;
+  plog(ok?'hOk':'hRetry',{note:cur.n,val,exact:Math.round(ex*10)/10});
+  if(ok){hDone.push(hI);pluck(hFreq(ex));cClear();
+    const last=hDone.length>=HP.length;
     if(last){try{parent.postMessage({type:'harmonyLabDone'},'*');}catch(e){}}
-    banner(`${cur.n} 자리 완성! 📍 ${Math.round(ex*10)/10}cm`,`도 ${VBASE}cm의 ${cur.a}/${cur.b} = ${Math.round(ex*10)/10}cm — 손가락으로 짚으면 딱 ${cur.n}!`,
-      last?[['바이올린 완성! 🎻',()=>{hideBanner();render();}]]:[['다음 음 →',()=>{hideBanner();p4i++;render();}]]);}
-  else banner('다시 계산해 볼까요?',`계산기로 <b>${VBASE} × ${cur.a} ÷ ${cur.b}</b> 를 눌러 보세요. (C로 지우기)`,[['다시',hideBanner]]);}
-function vPlay(){const fs=[262].concat(P4.map((p,i)=>p4freq(i)));
-  fs.sort((x,y)=>x-y).forEach((f,i)=>tone(f,i*0.28,.26));plog('vPlay',{});}
+    banner(`${cur.n} 줄 완성! 🪕 ${Math.round(ex*10)/10}cm`,`도 줄 ${HBASE}cm의 ${cur.a}/${cur.b} = ${Math.round(ex*10)/10}cm — 뜯으면 딱 ${cur.n}!`,
+      last?[['하프 완성! 🪕',()=>{hideBanner();render();}]]:[['다음 줄 →',()=>{hideBanner();hI++;render();}]]);}
+  else banner('다시 계산해 볼까요?',`계산기로 <b>${HBASE} × ${cur.a} ÷ ${cur.b}</b> 를 눌러 보세요. (C로 지우기)`,[['다시',hideBanner]]);}
+const MEL=[[332,.7],[442,.7],[442,.7],[393,.35],[442,.35],[524,.7],[442,.35],[524,.35],[442,.7],[393,.35],[332,.35],[295,.7],[262,1.1]];
+function hSong(){let w=0;MEL.forEach(([f,d])=>{pluck(f,w);w+=d;});plog('hPlay',{});}
 
 function render(){renderStage();({1:render1,2:render2,3:render4}[stage])();}
 function placeBanner(b){let y;try{const fe=window.frameElement;
