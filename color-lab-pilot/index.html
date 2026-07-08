@@ -225,10 +225,10 @@ function renderS1(){
 
 /* ===== 2·3단계 기준량 / 뒤집기 — 제시된 비대로 만들기 ===== */
 const P23={2:[{r:[1,1],b:50},{r:[1,2],b:100},{r:[2,3],b:40}], 3:[{r:[1,2],b:100},{r:[3,2],b:90},{r:[1,4],b:100}]};
-function probHTML(){const bi=(S.stage===2?0:1);return `<div class="seq">`+P23[S.stage].map((pp,i)=>{
+function probHTML(){return `<div class="seq">`+P23[S.stage].map((pp,i)=>{
   const r=pp.r;const c={};c[S.fam.paints[0]]=r[0];c[S.fam.paints[1]]=r[1];
   const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
-  return `<div class="s ${cls}"><div class="c" style="background:${rgb(mix(c))}"></div>${r[1-bi]}:${r[bi]} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
+  return `<div class="s ${cls}"><div class="c" style="background:${rgb(mix(c))}"></div>${r[0]}:${r[1]} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
 function renderS23(baseIdx){
   if(S.phase23==='lang'){renderS23Lang(baseIdx);return;}
   const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
@@ -236,13 +236,14 @@ function renderS23(baseIdx){
   const ra=pr[baseIdx],rc=pr[1-baseIdx];
   const tc={};tc[S.fam.paints[0]]=pr[0];tc[S.fam.paints[1]]=pr[1];const tgt=mix(tc);
   S.amt={};S.amt[base]=BASE;
-  $('#mText').innerHTML=`'<b>${base}에 대한 ${comp}의 비</b>'가 <b>${rc} : ${ra}</b>${[1,3,6,7,8,10].includes(ra)?'이':'가'} 되도록 하여 <b>${S.fam.id}</b>${jz(S.fam.id,'을','를')} 만들려고 해요. <b>${base}</b>${jz(base,'이','가')} <b>${BASE}mL</b> 이미 들어 있다면, <b>${comp}</b>${jz(comp,'은','는')} 몇 mL 넣어야 할까요?`;
+  const d0=S.fam.paints[0],d1=S.fam.paints[1];
+  $('#mText').innerHTML=`<b>${d0} : ${d1} = ${pr[0]} : ${pr[1]}</b>${[1,3,6,7,8].includes(pr[1])?'이':'가'} 되도록 하여 <b>${S.fam.id}</b>${jz(S.fam.id,'을','를')} 만들려고 해요. <b>${base}</b>${jz(base,'이','가')} <b>${BASE}mL</b> 이미 들어 있다면, <b>${comp}</b>${jz(comp,'은','는')} 몇 mL 넣어야 할까요?`;
   $('#mProg').textContent=`${base} ${BASE}mL는 이미 담겨 있어요. ${comp}만 넣어 Ⓐ와 같게. (문제 ${S.subIdx+1}/3)`;
   $('#stageBody').innerHTML=probHTML()+
    `<div class="tools"><div class="paints">
       <div class="paint"><div class="nm" style="color:${rgb(PRIM[comp])}">${comp} <span id="ca" class="muted"></span></div><div class="bottles" id="bc"></div><div id="mc">${minusBtns()}</div></div>
     </div></div>`+
-   pairHTML(tgt,`${comp}:${base} = ${rc}:${ra}`)+
+   pairHTML(tgt,`${d0}:${d1} = ${pr[0]}:${pr[1]}`)+
    `<div class="row"><button class="btn" id="clr">🗑 ${comp} 비우기</button>
       <label class="toggle"><input type="checkbox" id="nt" checked> 숫자</label></div>
     <div id="reveal"></div><div style="margin-top:10px"><button class="btn primary big" id="commit">답 제출!</button></div>`;
@@ -258,7 +259,7 @@ function renderS23(baseIdx){
     plog('commit23',{base,comp,cv,ok});
     if(ok){S.fails=0;S.made23=cv;S.phase23='lang';chime(true);render();
     } else {S.fails++;plog('retry',{mode:'hint23'});
-      banner('help','다시 한번 도전해볼까요?',`무엇이 <b>기준</b>일까요? ${base}${iga(base)} <b>${BASE}mL</b>일 때, ${comp}${jz(comp,'은','는')} <b>몇 mL</b>여야 ${comp} : ${base}의 비가 <b>${rc} : ${ra}</b>${[1,3,6,7,8].includes(ra)?'이':'가'} 될까요?`,[['해볼게요',hideBanner]]);chime(false);}};
+      banner('help','다시 한번 도전해볼까요?',`${base}${iga(base)} <b>${BASE}mL</b>일 때, ${comp}${jz(comp,'은','는')} <b>몇 mL</b>여야 ${d0} : ${d1}의 비가 <b>${pr[0]} : ${pr[1]}</b>${[1,3,6,7,8].includes(pr[1])?'이':'가'} 될까요?`,[['해볼게요',hideBanner]]);chime(false);}};
   upd();
 }
 
@@ -274,7 +275,7 @@ function renderS23Lang(baseIdx){
   const cb=rgb(PRIM[base]),cc=rgb(PRIM[comp]);
   $('#mText').innerHTML=isEq
     ? `색 완성! 그럼 '<b>${base}에 대한 ${comp}의 비</b>'에서 <b>기준량</b>은 무엇일까요?`
-    : `색 완성! '<b>${base}에 대한 ${comp}의 비</b>' <b>${rc} : ${ra}</b> 를 <b>분수</b>로 나타내면?`;
+    : `색 완성! 그럼 '<b>${base}에 대한 ${comp}의 비</b>'를 <b>분수</b>로 나타내면?`;
   $('#mProg').textContent=`(문제 ${S.subIdx+1}/3)`;
   const expl=isEq
     ? `<b style="color:${cb}">${base} ${BASE}mL</b>는 처음부터 들어 있었고,<br>
@@ -284,7 +285,7 @@ function renderS23Lang(baseIdx){
     : `이 문제에서 <b>기준량</b>은 <b style="color:${cb}">${base}</b> — 처음부터 <b>${BASE}mL</b> 들어 있었죠.<br>
        내가 넣은 <b style="color:${cc}">${comp} ${cv}mL</b>${iga(comp)} <b>비교하는 양</b>이에요.<br>
        '<b>${base}에 대한 ${comp}의 비</b>' = <b>${comp} : ${base}</b> = ${cv} : ${BASE} = <b>${rc} : ${ra}</b><br>
-       💡 비 <b>a : b</b>는 분수로 ${fracHTML('a','b')} — <b>앞의 수가 위</b>로 가요.`;
+       💡 '<b>A에 대한 B</b>의 비율' = <b>B ÷ A</b> — '에 대한' 앞(<b>${base}</b>)이 기준량으로 <b>아래(분모)</b>, ${comp}${iga(comp)} <b>위(분자)</b>!`;
   let opts;
   if(isEq) opts=[[base,true],[comp,false]];
   else opts=[[fracHTML(rc,ra),true,rc+'/'+ra],[fracHTML(ra,rc),false,ra+'/'+rc],[fracHTML(rc,ra+rc),false,rc+'/'+(ra+rc)]];
@@ -369,7 +370,7 @@ function renderS6(){
   const rc=p6.rc,rb=p6.rb,pct=p6.pct; // '빨강에 대한 노랑의 비' = 노랑:빨강 = rc:rb
   const mc={};mc[p0]=rb;mc[p1]=rc;const mixCol=rgb(mix(mc));
   if(S.p6.step===1){
-    $('#mText').innerHTML=`'<b>${p0}에 대한 ${p1}의 비</b>'가 <b>${rc} : ${rb}</b>${[1,3,6,7,8].includes(rb)?'이':'가'} 되도록 <b>${S.fam.id} 물감</b>을 만들려고 합니다.<br>이때 <b>${p0}</b>${jz(p0,'과','와')} <b>${p1}</b>${jz(p1,'은','는')} 몇 mL씩 넣어야 할까요?`;
+    $('#mText').innerHTML=`<b>${p0} : ${p1} = ${rb} : ${rc}</b>${[1,3,6,7,8].includes(rc)?'이':'가'} 되도록 <b>${S.fam.id} 물감</b>을 만들려고 합니다.<br>이때 <b>${p0}</b>${jz(p0,'과','와')} <b>${p1}</b>${jz(p1,'은','는')} 몇 mL씩 넣어야 할까요?`;
     $('#mProg').textContent='step 1 · 비에 맞는 양 정하기 (답이 여러 개!)';
     $('#stageBody').innerHTML=
       `<div class="tools"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
@@ -381,8 +382,8 @@ function renderS6(){
       const ok=(r>0&&y>0&&y*rb===r*rc);
       plog(ok?'p6MakeOk':'p6MakeRetry',{r,y});
       if(ok){S.p6={step:2,r,y};chime(true);
-        banner('ok',`잘 만들었어요! ${p0} ${r}mL : ${p1} ${y}mL`,`'${p0}에 대한 ${p1}의 비' = ${p1} : ${p0} = ${y} : ${r} = <b>${rc} : ${rb}</b>!`,[['다음 문제 →',()=>{hideBanner();render();}]]);}
-      else banner('help','다시 한번 도전해볼까요?',`'${p0}에 대한 ${p1}의 비'가 ${rc} : ${rb}이니까, <b>${p1} : ${p0}</b>${jz(p0,'이','가')} ${rc} : ${rb}${[1,3,6,7,8].includes(rb)?'이':'가'} 되는 양을 찾아보세요.`,[['다시 해보기',hideBanner]]);};
+        banner('ok',`잘 만들었어요! ${p0} ${r}mL : ${p1} ${y}mL`,`${p0} : ${p1} = ${r} : ${y} = <b>${rb} : ${rc}</b>!`,[['다음 문제 →',()=>{hideBanner();render();}]]);}
+      else banner('help','다시 한번 도전해볼까요?',`<b>${p0} : ${p1}</b>${jz(p1,'이','가')} <b>${rb} : ${rc}</b>${[1,3,6,7,8].includes(rc)?'이':'가'} 되는 양을 찾아보세요. (답은 여러 개!)`,[['다시 해보기',hideBanner]]);};
   } else {
     const r=S.p6.r,y=S.p6.y;
     $('#mText').innerHTML=`이때 <b>${p0}</b>${jz(p0,'은','는')} 전체 ${S.fam.id} 물감의 <b>몇 %</b>인가요?`;
