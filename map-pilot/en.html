@@ -210,27 +210,43 @@ function pick3(i){const ms=M3[m3idx];plog(ms.choices[i][1]?'pctOk':'pctRetry',{m
     chime();banner('Correct! 🖨️',ms.ok, last?[['Step 4 — measure the Earth! →',()=>{hideBanner();stage=4;render();}]]:[['Next mission →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
   else banner('Try again!','Press the % buttons and observe the copies.',[['Retry',hideBanner]]);}
 
-/* ══════ 4단계 · 지구를 재는 미션 (종합) ══════ */
-let m4step=1; // 1: 2% 구하기, 2: 둘레 구하기, 3: 완성
+/* ══════ 4단계 · 지구를 재는 미션 (비례식) ══════ */
+let m4step=1; // 1: 몇 배?, 2: 둘레, 3: 완성
+function mc4(opts,fn){const o=opts.map(x=>x.slice());o.sort(()=>Math.random()-0.5);
+  return `<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px">`+o.map(([lb,ok])=>
+    `<button class="btn big" data-ok="${ok?1:0}" onclick="${fn}(this)" style="font-size:16px;font-weight:800;padding:11px 18px;min-width:104px">${lb}</button>`).join('')+`</div>`;}
 function render4(){
   if(m4step===1){
-    $('#readout').innerHTML=`<div class="nm">The last map: Earth 🌍 — but nobody knows its circumference!</div><div class="big">The shadow angle <b>7.2°</b> is what % of 360°?</div>`;
+    $('#readout').innerHTML=`<div class="nm">The last map: Earth 🌍 — measure it with a single stick!</div><div class="big">How many times does <b>7.2°</b> fit into a full turn of <b>360°</b>?</div>`;
     $('#body').innerHTML=`<div class="card">
       <div class="lbl">📜 Eratosthenes' discovery, 2,200 years ago — two cities at the same moment</div>
-      <canvas id="cv4" style="width:100%;height:230px"></canvas>
-      <div class="cap"><b>Syene</b>: the sun reaches the bottom of a well (shadow 0°) · <b>Alexandria</b>: a stick casts a <b>7.2°</b> shadow.<br>On a round Earth, the angle between the two cities is exactly 7.2°!</div></div>
-     <div class="card"><div class="lbl">💡 7.2 ÷ 360 × 100 — use the calculator!</div>
+      <canvas id="cv4" style="width:100%;height:270px"></canvas>
+      <div style="background:#fbf6e8;border:1.5px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:14.5px;line-height:1.9;margin-top:8px">
+        ① At the same moment — <b>Syene</b> has no shadow (0°), while a stick in <b>Alexandria</b> casts a <b>7.2°</b> shadow.<br>
+        ② Because the Earth is round! The <b>angle between the two cities at the Earth's center</b> is exactly <b>7.2°</b>.<br>
+        ③ The distance between the cities (red arc) is <b>800 km</b>. <span class="cap" style="display:inline">(the angle is exaggerated in the picture)</span></div></div>
+     <div class="card"><div class="lbl">💡 First step — a full turn is 360°, so calculate <b>360 ÷ 7.2</b>!</div>
       ${calcHTML()}
-      <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check4a()">✓ Check (%)</button></div></div>`;
+      <div class="cap">How many times does 7.2° fit into 360°?</div>
+      ${mc4([['50 times',true],['5 times',false],['500 times',false]],'e4pick1')}</div>`;
     draw4(); cShow();
   } else if(m4step===2){
-    $('#readout').innerHTML=`<div class="nm">Distance between the cities = <b>800 km</b> (50 days by camel!)</div><div class="big">If 800 km is <b>2%</b>, what is the Earth's circumference?</div>`;
+    $('#readout').innerHTML=`<div class="nm">If the angle is ×50, the distance is ×50 too!</div><div class="big">So what is the <b>Earth's circumference</b>?</div>`;
     $('#body').innerHTML=`<div class="card">
-      <div class="lbl">🍕 Earth as a pie chart — the 800 km slice is exactly 2%</div>
-      <canvas id="cvPie" style="width:100%;height:200px"></canvas>
-      <div class="cap">Fifty 2% slices make 100%. So <b>800 × 50</b> — calculator!</div></div>
-     <div class="card">${calcHTML()}
-      <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check4b()">✓ Check (km)</button></div></div>`;
+      <div class="lbl">🧮 Building the proportion — ratio of angles = ratio of distances</div>
+      <div style="background:#eef4fb;border:1.5px solid #b8cfec;border-radius:12px;padding:14px;text-align:center">
+        <table style="margin:0 auto;border-collapse:collapse;font-size:17px;font-weight:800">
+          <tr><td style="padding:4px 10px;color:#6b7683;font-size:13px;font-weight:700">ratio of angles</td><td></td><td style="padding:4px 10px;color:#6b7683;font-size:13px;font-weight:700">ratio of distances</td></tr>
+          <tr><td style="padding:4px 10px">7.2° : 360°</td><td style="padding:4px 6px">=</td><td style="padding:4px 10px">800 km : <span style="color:#c0392b">❓</span></td></tr>
+          <tr><td style="padding:2px 10px;color:#2e9e63;font-size:14px">↓ ×50</td><td></td><td style="padding:2px 10px;color:#2e9e63;font-size:14px">↓ ×50</td></tr>
+          <tr><td style="padding:4px 10px">360°</td><td></td><td style="padding:4px 10px;color:#c0392b">❓ km</td></tr>
+        </table>
+        <div class="cap" style="margin-top:8px">Multiply 7.2° <b>by 50</b> to get a full turn (360°) → <b>multiply 800 km by the same 50</b> to get the circumference!</div>
+      </div>
+      <canvas id="cvPie" style="width:100%;height:190px;margin-top:8px"></canvas></div>
+     <div class="card"><div class="lbl">💡 Calculator: 800 × 50</div>${calcHTML()}
+      <div class="cap">The Earth's circumference is…?</div>
+      ${mc4([['40,000 km',true],['4,000 km',false],['400,000 km',false]],'e4pick2')}</div>`;
     drawPie(); cShow();
   } else {
     $('#readout').innerHTML=`<div class="nm">🎉 Secret of Maps — all solved!</div><div class="big">Earth's circumference = <b>40,000 km</b></div>`;
@@ -239,51 +255,78 @@ function render4(){
       <div style="font-weight:800;font-size:17px">World map complete!</div>
       <div class="sc" style="display:inline-block;background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:6px 14px;margin:10px 0;font-weight:800">Scale 1 : 40,000,000</div>
       <div class="cap">The real circumference is 40,075 km — measured 2,200 years ago with one stick and <b>a ratio</b>.<br>
-      Enlarging (1) → scale (2) → percent (3) → the Earth (4)… all <b>the same secret of ratios</b>!</div>
+      Enlarging (1) → scale (2) → copier % (3) → the Earth (4)… all <b>the same secret of ratios</b>!</div>
       <button class="btn big" onclick="m4step=1;stage=1;sx=1;sy=1;m1idx=0;m1done=[];m2idx=0;m2done=[];zoom=1;m3idx=0;m3done=[];pct=100;cClear();render()" style="margin-top:8px">Explore again from the start</button></div>`;
   }
 }
 function draw4(){const cv=$('#cv4');if(!cv)return;const rect=cv.getBoundingClientRect();
-  const W=cv.width=Math.round(rect.width*2),H=cv.height=460;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  // 둥근 지구(큰 원의 윗부분)
-  const R=W*1.1, cx=W/2, cy=H+R-H*0.62;
+  if(rect.width<8)return;
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=540;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const cx=W*0.40, cy=H*0.54, R=H*0.40, EX=0.55; // EX: 과장 각(라디안)
+  // 지구
   ctx.fillStyle='#bfe0c2';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
-  ctx.strokeStyle='#7fae84';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
-  // 태양광(평행)
-  ctx.strokeStyle='#e0a02a';ctx.lineWidth=3;
-  for(let i=0;i<6;i++){const x=W*0.18+i*W*0.13;ctx.beginPath();ctx.moveTo(x+H*0.16,0);ctx.lineTo(x,H*0.30);ctx.stroke();}
-  ctx.fillStyle='#e0a02a';ctx.font='bold 26px sans-serif';ctx.textAlign='left';ctx.fillText('☀️ Sunlight is parallel!',W*0.02,H*0.10);
-  // 막대 2개: 시에네(수직으로 해 닿음), 알렉산드리아(그림자)
-  function stick(angleFromTop,label,shadow){
-    const a=-Math.PI/2+angleFromTop;
-    const bx=cx+R*Math.cos(a), by=cy+R*Math.sin(a);
-    const tx=cx+(R+H*0.16)*Math.cos(a), ty=cy+(R+H*0.16)*Math.sin(a);
+  ctx.strokeStyle='#7fae84';ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+  // 두 도시 각도 (수직 위 = 시에네, 과장각만큼 왼쪽 = 알렉산드리아)
+  const aS=-Math.PI/2, aA=-Math.PI/2-EX;
+  const sx1=cx+R*Math.cos(aS), sy1=cy+R*Math.sin(aS);
+  const ax1=cx+R*Math.cos(aA), ay1=cy+R*Math.sin(aA);
+  // 중심각(부채꼴 표시)
+  ctx.fillStyle='rgba(224,160,42,.20)';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R*0.55,aA,aS);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#8a6a34';ctx.lineWidth=3;ctx.setLineDash([8,6]);
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(sx1,sy1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ax1,ay1);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#8a6a34';ctx.font='bold 26px sans-serif';ctx.textAlign='center';
+  ctx.fillText('7.2°',cx+R*0.30*Math.cos((aS+aA)/2),cy+R*0.30*Math.sin((aS+aA)/2)+8);
+  ctx.font='bold 20px sans-serif';ctx.fillText('Earth center',cx,cy+30);
+  ctx.fillStyle='#26303f';ctx.beginPath();ctx.arc(cx,cy,7,0,7);ctx.fill();
+  // 빨간 호 = 800km
+  ctx.strokeStyle='#c0392b';ctx.lineWidth=9;ctx.beginPath();ctx.arc(cx,cy,R,aA,aS);ctx.stroke();
+  ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';
+  ctx.fillText('800 km',cx+R*1.06*Math.cos((aS+aA)/2)-10,cy+R*1.12*Math.sin((aS+aA)/2));
+  // 막대 + 그림자
+  function stick(a,label,shadow){
+    const bx=cx+R*Math.cos(a),by=cy+R*Math.sin(a);
+    const tx=cx+(R+H*0.11)*Math.cos(a),ty=cy+(R+H*0.11)*Math.sin(a);
     ctx.strokeStyle='#26303f';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(tx,ty);ctx.stroke();
-    if(shadow){ctx.strokeStyle='#c0392b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(bx,by);
-      ctx.lineTo(bx-H*0.11,by+H*0.035);ctx.stroke();
-      ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';ctx.textAlign='center';ctx.fillText('7.2°',tx-H*0.13,ty-8);}
-    ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.fillText(label,Math.min(tx,W-60),ty-H*0.045);}
-  stick(0.16,'Alexandria',true);
-  stick(0.40,'Syene',false);
+    if(shadow){ctx.strokeStyle='#e0a02a';ctx.lineWidth=4;ctx.setLineDash([2,4]);
+      ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(bx-H*0.085,by-H*0.01);ctx.stroke();ctx.setLineDash([]);
+      ctx.strokeStyle='#c0392b';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx-H*0.085,by-H*0.01);ctx.stroke();}
+    ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';
+    if(shadow){ctx.textAlign='center';ctx.fillText(label,tx,ty-14);}
+    else{ctx.textAlign='left';ctx.fillText(label,tx+14,ty+22);}}
+  stick(aA,'Alexandria',true);
+  stick(aS,'Syene',false);
+  // 평행 햇살
+  ctx.strokeStyle='#e0a02a';ctx.lineWidth=3;
+  for(let i=0;i<5;i++){const y=H*0.06+i*H*0.10;
+    ctx.beginPath();ctx.moveTo(W*0.98,y);ctx.lineTo(W*0.72,y+H*0.05);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(W*0.72,y+H*0.05);ctx.lineTo(W*0.75,y+H*0.028);ctx.stroke();}
+  ctx.fillStyle='#e0a02a';ctx.font='bold 26px sans-serif';ctx.textAlign='right';ctx.fillText('☀️ Sunlight is parallel!',W*0.98,H*0.045);
 }
 function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingClientRect();
-  const W=cv.width=Math.round(rect.width*2),H=cv.height=400;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  if(rect.width<8)return;
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=380;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
   const cx=W/2,cy=H/2,R=H*0.40;
   ctx.fillStyle='#dfe9f5';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+  // 50조각 눈금
+  ctx.strokeStyle='#b9c9de';ctx.lineWidth=2;
+  for(let i=0;i<50;i++){const a=-Math.PI/2+i*Math.PI*2/50;
+    ctx.beginPath();ctx.moveTo(cx+R*0.86*Math.cos(a),cy+R*0.86*Math.sin(a));ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.stroke();}
   ctx.strokeStyle='#9fb6d4';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
-  // 2% 조각
-  ctx.fillStyle='#c0392b';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*0.02);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#c0392b';ctx.font='bold 26px sans-serif';ctx.textAlign='center';
-  ctx.fillText('800 km = 2%',cx+R*0.32,cy-R*1.06);
-  ctx.fillStyle='#26303f';ctx.font='bold 30px sans-serif';ctx.fillText('Circumference = 100% = ?',cx,cy+12);}
-function check4a(){cEq();const v=parseFloat(cDisp);plog(Math.abs(v-2)<0.01?'earthPctOk':'earthPctRetry',{val:v});
-  if(Math.abs(v-2)<0.01){m4step=2;cClear();
-    chime();banner('Correct! Exactly 2% 🎯','7.2° is <b>2%</b> of 360° — so the two cities are 2% of the circumference apart!',[['Continue →',()=>{hideBanner();render();}]]);}
-  else banner('Try again!','Try <b>7.2 ÷ 360 × 100</b> on the calculator. (C to clear)',[['Retry',hideBanner]]);}
-function check4b(){cEq();const v=Math.round(parseFloat(cDisp)||0);plog(v===40000?'earthDone':'earthRetry',{val:v});
-  if(v===40000){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
-    chime();banner('You measured the Earth!! 🌍','800 × 50 = <b>40,000 km</b>. The real value is 40,075 km — only 0.2% off!',[['Finish the map →',()=>{hideBanner();render();}]]);}
-  else banner('Try again!','Fifty <b>2% slices</b> make 100%. Calculate <b>800 × 50</b>.',[['Retry',hideBanner]]);}
+  // 800km 조각(1/50)
+  ctx.fillStyle='#c0392b';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2/50);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';ctx.textAlign='center';
+  ctx.fillText('the 800 km slice',cx+R*0.55,cy-R*1.05);
+  ctx.fillStyle='#26303f';ctx.font='bold 28px sans-serif';
+  ctx.fillText('50 slices = one full turn!',cx,cy+10);}
+function e4pick1(el){const ok=el.dataset.ok==='1';plog(ok?'earthX50Ok':'earthX50Retry',{pick:el.textContent});
+  if(ok){m4step=2;cClear();chime();
+    banner('Correct! 50 times 🎯','360 ÷ 7.2 = <b>50</b> — a full turn is exactly 50 of those angles!',[['Build the proportion →',()=>{hideBanner();render();}]]);}
+  else banner('Try again!','Try <b>360 ÷ 7.2</b> on the calculator. (C to clear)',[['Retry',hideBanner]]);}
+function e4pick2(el){const ok=el.dataset.ok==='1';plog(ok?'earthDone':'earthRetry',{pick:el.textContent});
+  if(ok){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
+    chime();banner('You measured the Earth!! 🌍','7.2° : 360° = 800 : <b>40,000</b> — the real value is 40,075 km, only 0.2% off!',[['Finish the map →',()=>{hideBanner();render();}]]);}
+  else banner('Try again!','The angle is ×50, so the distance is ×50 — calculate <b>800 × 50</b>.',[['Retry',hideBanner]]);}
 
 /* ══════ 계산기 (공용) ══════ */
 let cDisp='0', cAcc=null, cOp=null, cFresh=true;
