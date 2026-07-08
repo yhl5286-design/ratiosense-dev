@@ -4039,6 +4039,13 @@ function showNextMissionBar(tab,msg,btnText){ var old=document.getElementById('n
     tNode(document.body);
     document.title = lang==='en' ? (I18N[_origTitle]||'RatioSense — Ratio Explorer') : _origTitle;
     document.querySelectorAll('.lang-toggle').forEach(b=>b.textContent = lang==='ko'?'EN':'한');
+    // 파일럿 iframe도 언어에 맞는 판으로 교체 (en.html ↔ index.html)
+    document.querySelectorAll('iframe').forEach(f=>{
+      const src=f.getAttribute('src')||'';
+      if(!/-pilot\//.test(src))return;
+      const want=lang==='en'?src.replace(/index\.html/,'en.html'):src.replace(/en\.html/,'index.html');
+      if(want!==src)f.setAttribute('src',want);
+    });
     try{localStorage.setItem('ratiosense_lang',lang);}catch(e){}
     busy=false;
   }

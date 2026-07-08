@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secret of Maps</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--blue:#3b6db5;--red:#c0392b;--r:16px;--shadow:0 6px 20px rgba(0,0,0,.07)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:700px;margin:0 auto;padding:12px 12px 40px}
+  h1{font-size:19px;margin:4px 0 2px}.muted{color:var(--sub);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px;margin:10px 0}
+  .lbl{font-size:12.5px;color:var(--sub);margin-bottom:6px}.lbl b{color:var(--ink)}
+  .seg{display:flex;gap:6px}.seg button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:9px 3px;font-weight:700;font-size:11.5px;cursor:pointer}
+  .seg button.active{border-color:var(--ink);background:#fbf6e8}
+  .readout{background:#1f2a3d;color:#fff;border:none;text-align:center}
+  .readout .big{font-size:20px;font-weight:800;margin:2px 0}.readout .big b{color:#ffd966}.readout .nm{font-size:13px;color:#cdd6e4}
+  canvas{display:block;max-width:100%}
+  input[type=range]{width:100%}
+  .dialv{text-align:center;font-size:17px;font-weight:800;margin:2px 0}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+  .btn:active{transform:translateY(1px)}
+  .btn.big{font-size:15px;padding:11px 20px;background:#eaf7ef;border-color:var(--accent);color:#136a3d;font-weight:800}
+  .choice{display:block;width:100%;text-align:left;margin:6px 0;padding:11px 13px;border:2px solid var(--line);border-radius:12px;background:#fff;font-weight:700;font-size:13.5px;cursor:pointer}
+  .choice:active{background:#fbf6e8}
+  .cap{font-size:12px;color:var(--sub);text-align:center;margin-top:8px}.cap b{color:var(--ink)}
+  .status{text-align:center;font-size:16px;font-weight:800;margin-top:8px}
+  /* 계산기 */
+  .calc{max-width:280px;margin:10px auto 4px}
+  .calcdisp{background:#1f2a3d;color:#fff;font-size:26px;font-weight:800;text-align:right;padding:9px 15px;border-radius:10px;font-variant-numeric:tabular-nums;min-height:46px}
+  .calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:7px}
+  .cbtn{padding:13px 0;font-size:18px;font-weight:800;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  .cbtn:active{background:#f0ece2;transform:translateY(1px)}
+  .cbtn.op{background:#f7f0dd;border-color:#e0c98a}.cbtn.wide{grid-column:span 2}
+  /* 지도(2단계) */
+  .mapbox{position:relative;overflow:hidden;border:2px solid #cdc6b8;border-radius:12px;background:#eef3e4}
+  .mapgrid{position:absolute;inset:0;pointer-events:none;z-index:3;
+    background-image:linear-gradient(rgba(60,90,140,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(60,90,140,.18) 1px,transparent 1px)}
+  .mapcontent{position:absolute;left:0;top:0;transform-origin:0 0;transition:transform .5s}
+  .mobj{position:absolute;display:flex;align-items:center;justify-content:center;font-weight:800;border-radius:6px;font-size:12px}
+  .scalebar{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;margin-top:8px}
+  .scalebar .sc{background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:5px 11px}
+  /* 복사기(3단계) */
+  .copier{display:flex;gap:12px;align-items:stretch;justify-content:center;flex-wrap:wrap}
+  .tray{flex:1;min-width:150px;border:2px dashed var(--line);border-radius:12px;padding:10px;text-align:center;background:#fbfaf6}
+  .tray .tt{font-size:11px;color:var(--sub);font-weight:700;margin-bottom:6px}
+  .pctrow{display:flex;gap:7px;justify-content:center;margin:10px 0 4px;flex-wrap:wrap}
+  .pctbtn{border:2px solid var(--line);background:#fff;border-radius:11px;padding:9px 14px;font-weight:800;font-size:14px;cursor:pointer}
+  .pctbtn.active{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
+  #banner{position:absolute;left:10px;right:10px;display:none;z-index:60;transform:translateY(-50%)}
+  #banner .in{max-width:700px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700;background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}
+  #banner.show{display:block}#banner .sub{font-weight:600;font-size:13px;margin-top:4px}#banner .acts{margin-top:10px}#banner .acts .btn{margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🗺️ Secret of Maps</h1>
+  <div class="muted">From a tiny map to a <b>map of the Earth</b> — putting the world on paper with ratios, rates, and percent.</div>
+  <div class="card"><div class="lbl">Steps</div><div class="seg" id="stageSeg"></div></div>
+  <div class="card readout" id="readout"></div>
+  <div id="body"></div>
+  <div class="muted" style="text-align:center;font-size:11px">RatioSense — Secret of Maps</div>
+</div>
+<div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+let stage=1;
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'map',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
+const STAGES=[['1 · Enlarge It',1],['2 · Secret of Scale',2],['3 · Copier %',3],['4 · Measure the Earth',4]];
+function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([t,s])=>{
+  const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=t;b.onclick=()=>{stage=s;render();plog('enter');};el.appendChild(b);});}
+function placeBanner(b){let y;try{const fe=window.frameElement;
+  if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
+    const vt=Math.max(0,-r.top),vb=Math.min(r.height,ph-r.top);y=vt+(vb-vt)*0.55;}
+  else{y=window.scrollY+window.innerHeight*0.6;}}catch(e){y=window.scrollY+window.innerHeight*0.6;}
+  b.style.top=Math.max(90,Math.round(y))+'px';}
+function banner(t,s,acts){const b=$('#banner');b.className='show';placeBanner(b);$('#bT').innerHTML=t;$('#bS').innerHTML=s||'';const ae=$('#bA');ae.innerHTML='';(acts||[]).forEach(([x,fn])=>{const q=document.createElement('button');q.className='btn';q.textContent=x;q.onclick=fn;ae.appendChild(q);});}
+function hideBanner(){$('#banner').className='';}
+function reduce(a,b){const g=(x,y)=>y?g(y,x%y):x;const k=g(Math.round(a*2),Math.round(b*2));return [Math.round(a*2)/k,Math.round(b*2)/k];}
+
+/* ══════ 1단계 · 지도 그림 확대 (비·닮음) ══════ */
+let sx=1, sy=1, m1idx=0, m1done=[];
+const M1=[{t:'×2',v:2,f:'1 : 2'},{t:'×1.5',v:1.5,f:'2 : 3'}];
+function render1(){
+  const ms=M1[m1idx];
+  $('#readout').innerHTML=`<div class="nm">Mission ${m1done.length}/${M1.length} — enlarge a picture for the map</div><div class="big">Make the house <b>${ms.t}</b> — keep it similar!</div>`;
+  $('#body').innerHTML=`<div class="card">
+    <div class="lbl">🧵 Rubber-band enlarger — change the <b>width and height factors</b> separately. Measure with grid cells.</div>
+    <canvas id="cv1" style="width:100%;height:250px"></canvas>
+    <div class="status" id="st1"></div>
+    <div style="display:flex;gap:14px;margin-top:8px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px"><div class="dialv">Width <span id="sxv">×${sx}</span></div><input type="range" id="rsx" min="1" max="3" step="0.5" value="${sx}"></div>
+      <div style="flex:1;min-width:180px"><div class="dialv">Height <span id="syv">×${sy}</span></div><input type="range" id="rsy" min="1" max="3" step="0.5" value="${sy}"></div>
+    </div>
+    <div class="cap">Stretch width and height by the <b>same factor</b> and the shape stays (similar); different factors squash it.</div></div>`;
+  $('#rsx').oninput=e=>{sx=+e.target.value;$('#sxv').textContent='×'+sx;draw1();};
+  $('#rsy').oninput=e=>{sy=+e.target.value;$('#syv').textContent='×'+sy;draw1();};
+  draw1();
+}
+function house(ctx,x,y,w,h,body,roof){ // (x,y)=왼쪽 아래
+  ctx.fillStyle=body;ctx.fillRect(x,y-h*0.7,w,h*0.7);
+  ctx.fillStyle=roof;ctx.beginPath();ctx.moveTo(x-w*0.08,y-h*0.7);ctx.lineTo(x+w/2,y-h);ctx.lineTo(x+w*1.08,y-h*0.7);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#fff';ctx.fillRect(x+w*0.38,y-h*0.38,w*0.24,h*0.38);}
+function draw1(){
+  const cv=$('#cv1');if(!cv)return;const rect=cv.getBoundingClientRect();
+  if(rect.width<8)return; // 숨김 상태(폭 0)에서 그리기 금지 — 0 간격 무한루프 방지
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=500;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const C=Math.max(1,Math.min(W/16,H/9));
+  ctx.strokeStyle='rgba(60,90,140,.16)';ctx.lineWidth=1;
+  for(let x=0;x<=W;x+=C){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=H;y>=0;y-=C){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  const base=H-C*0.8;
+  // 원본: 2칸 × 2칸
+  house(ctx,C*1,base,C*2,C*2,'#b8895a','#8a5a3b');
+  ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';ctx.textAlign='center';
+  ctx.fillText('original: 2 cells',C*2,base+C*0.62);
+  // 확대본
+  const nx=C*5.5, w2=C*2*sx, h2=C*2*sy;
+  const ok=(sx===sy);
+  house(ctx,nx,base,w2,h2, ok?'#5aa77a':'#c96d5f', ok?'#2e7d57':'#a04537');
+  ctx.fillStyle='#26303f';ctx.fillText(`w ${2*sx} · h ${2*sy} cells`,nx+w2/2,base+C*0.62);
+  const [ra,rb]=reduce(2,2*sx), [rc,rd]=reduce(2,2*sy);
+  const st=$('#st1');
+  if(sx===1&&sy===1){st.innerHTML='<span style="color:var(--sub)">Stretch it with the sliders</span>';}
+  else if(ok){st.innerHTML=`✅ <span style="color:var(--accent)">Similar!</span> width ${ra}:${rb} · height ${rc}:${rd} — equal ratios`;check1();}
+  else{st.innerHTML=`😵 <span style="color:var(--red)">Squashed!</span> — width ${ra}:${rb} ≠ height ${rc}:${rd}`;}
+}
+function check1(){const ms=M1[m1idx];
+  if(sx===ms.v&&sy===ms.v&&!m1done.includes(m1idx)){
+    m1done.push(m1idx);plog('similarOk',{mult:ms.v,ratio:ms.f});
+    setTimeout(()=>banner(`Correct! A similar ${ms.t} house 🏠`,`Width and height both ${ms.t} — every pair of sides has ratio <b>${ms.f}</b>. That's similarity!`,
+      m1done.length<M1.length?[['Next mission →',()=>{hideBanner();m1idx=1;sx=1;sy=1;render();}]]:[['To step 2 →',()=>{hideBanner();stage=2;render();}]]),150);}}
+
+/* ══════ 2단계 · 축척의 비밀 (비율) ══════ */
+const CELL=28;
+let zoom=1, m2idx=0, m2done=[];
+const M2=[
+ {q:'The bridge is <b>3 cells</b> on the map. How long is it in real life (m)?', hint:'1 cell = 100 m → 3 × 100', ans:300, unit:'m'},
+ {q:'The main road is <b>500 m</b> long. How many cells on the map?', hint:'500 ÷ 100', ans:5, unit:'cells'},
+ {q:'We <b>zoomed the map ×2</b> (button below). How many cells is the bridge now?', hint:'3 cells × 2', ans:6, unit:'cells', needZoom:true}
+];
+function render2(){
+  const ms=M2[m2idx];
+  $('#readout').innerHTML=`<div class="nm">Mission ${m2done.length}/${M2.length} · scale <b id="scTop">1 : ${zoom===1?'10,000':'5,000'}</b> (1 cell = ${zoom===1?100:50} m)</div><div class="big">${ms.q}</div>`;
+  $('#body').innerHTML=`<div class="card">
+    <div class="lbl">🗺️ Our town map — grid <b>1 cell = ${zoom===1?100:50} m</b></div>
+    <div class="mapbox" id="mapbox" style="height:${CELL*8}px">
+      <div class="mapcontent" id="mapc" style="width:${CELL*12}px;height:${CELL*8}px;transform:scale(${zoom})">
+        <div class="mobj" style="left:${CELL*2}px;top:${CELL*4}px;width:${CELL*3}px;height:${CELL}px;background:#9a7b4f;color:#fff">🌉 Bridge (3 cells)</div>
+        <div class="mobj" style="left:${CELL*7}px;top:${CELL*1}px;width:${CELL*2}px;height:${CELL*2}px;background:#d8763b;color:#fff">🏫</div>
+        <div class="mobj" style="left:${CELL*1}px;top:${CELL*6}px;width:${CELL*5}px;height:${CELL*0.8}px;background:#8f9aa8;color:#fff">🛣 Main road</div>
+        <div class="mobj" style="left:${CELL*8.5}px;top:${CELL*5}px;width:${CELL*1.5}px;height:${CELL*1.5}px;background:#4f89c6;color:#fff;border-radius:50%">⛲</div>
+      </div>
+      <div class="mapgrid" style="background-size:${CELL}px ${CELL}px"></div>
+    </div>
+    <div class="scalebar"><span class="sc">Scale 1 : ${zoom===1?'10,000':'5,000'}</span>
+      <button class="btn" onclick="toggleZoom()">${zoom===1?'🔍 Zoom map ×2':'↩ Back to original'}</button></div>
+    <div class="cap">Zoom in and <b>things look bigger</b>, but each cell stands for a <b>shorter real distance</b> (the scale changes).</div></div>
+   <div class="card"><div class="lbl">💡 ${ms.hint} — use the calculator, then check!</div>
+    ${calcHTML()}
+    <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check2()">✓ Check (${ms.unit})</button></div></div>`;
+  cShow();
+}
+function toggleZoom(){zoom=zoom===1?2:1;render2();plog('zoom',{zoom});}
+function check2(){cEq();const ms=M2[m2idx];const val=Math.round(parseFloat(cDisp)||0);
+  if(ms.needZoom&&zoom!==2){banner('Zoom the map first!','Press <b>🔍 Zoom map ×2</b> and observe the map.',[['Got it',hideBanner]]);return;}
+  plog(val===ms.ans?'scaleOk':'scaleRetry',{mission:m2idx+1,val});
+  if(val===ms.ans){if(!m2done.includes(m2idx))m2done.push(m2idx);
+    const last=m2done.length>=M2.length;
+    banner(`Correct! ${ms.ans} ${ms.unit} 🎯`, m2idx===2?'Zoomed ×2, the same bridge covers <b>more cells</b> — the scale became 1:5,000!':'Scale is the <b>ratio</b> connecting the map to the real world!',
+      last?[['To step 3 →',()=>{hideBanner();stage=3;render();}]]:[['Next mission →',()=>{hideBanner();m2idx++;cClear();render();}]]);}
+  else banner('Try again!',`Hint: ${ms.hint}`,[['Retry',hideBanner]]);}
+
+/* ══════ 3단계 · 복사기 백분율 ══════ */
+let pct=100, m3idx=0, m3done=[];
+const M3=[
+ {type:'predict', q:'What happens if we copy the lake map at <b>150%</b>?', choices:[['Same shape, 1.5× bigger',true],['Only the width gets 1.5× longer',false],['Same size',false]], pct:150,
+  ok:'150% = ×1.5 — width and height both ×1.5, same shape! (2:3 — the same ratio as a perfect fifth 🎵)'},
+ {type:'quiz', q:'The lake is <b>4 cells</b> wide. What % makes it <b>6 cells</b>?', choices:[['110%',false],['150%',true],['200%',false]], pct:150,
+  ok:'4 → 6 cells = 4:6 = <b>2:3</b> = ×1.5 = <b>150%</b>!'},
+ {type:'quiz', q:'At <b>200%</b>, a tree 2 cells wide becomes how many cells?', choices:[['3 cells',false],['4 cells',true],['6 cells',false]], pct:200,
+  ok:'200% = ×2 → 2 cells become <b>4</b>. Percent is just <b>another name for a scale factor</b>!'}
+];
+function lake(scale){const w=56*scale,h=36*scale;
+  return `<div style="width:${w}px;height:${h}px;background:#4f89c6;border-radius:45% 55% 50% 50%;margin:8px auto;position:relative">
+    <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:${11*scale}px;font-weight:800">lake</span></div>`;}
+function render3(){
+  const ms=M3[m3idx];
+  $('#readout').innerHTML=`<div class="nm">Mission ${m3done.length}/${M3.length} — the map workshop copier</div><div class="big">${ms.q}</div>`;
+  $('#body').innerHTML=`<div class="card">
+    <div class="lbl">🖨️ Copier — insert the original and pick a <b>zoom (%)</b></div>
+    <div class="copier">
+      <div class="tray"><div class="tt">Original (4 cells wide)</div>${lake(1)}</div>
+      <div style="display:flex;align-items:center;font-size:26px">➜</div>
+      <div class="tray"><div class="tt">Copy <span id="pctlab">${pct}%</span></div><div id="outTray">${pct===100?lake(1):lake(pct/100)}</div></div>
+    </div>
+    <div class="pctrow">${[50,100,150,200].map(p=>`<button class="pctbtn ${p===pct?'active':''}" onclick="setPct(${p})">${p}%</button>`).join('')}</div>
+    <div class="cap">Try the % buttons, then pick your answer below. <b>100% = ×1 (unchanged)</b></div></div>
+   <div class="card">${ms.choices.map(([t,ok],i)=>`<button class="choice" onclick="pick3(${i})">${['①','②','③'][i]} ${t}</button>`).join('')}</div>`;
+}
+function setPct(p){pct=p;plog('copy',{pct:p});$('#pctlab').textContent=p+'%';$('#outTray').innerHTML=lake(p/100);
+  document.querySelectorAll('.pctbtn').forEach(b=>b.classList.toggle('active',b.textContent===p+'%'));}
+function pick3(i){const ms=M3[m3idx];plog(ms.choices[i][1]?'pctOk':'pctRetry',{mission:m3idx+1,pick:i});
+  if(ms.choices[i][1]){if(!m3done.includes(m3idx))m3done.push(m3idx);
+    pct=ms.pct;const last=m3done.length>=M3.length;
+    banner('Correct! 🖨️',ms.ok, last?[['Step 4 — measure the Earth! →',()=>{hideBanner();stage=4;render();}]]:[['Next mission →',()=>{hideBanner();m3idx++;pct=100;render();}]]);}
+  else banner('Try again!','Press the % buttons and observe the copies.',[['Retry',hideBanner]]);}
+
+/* ══════ 4단계 · 지구를 재는 미션 (종합) ══════ */
+let m4step=1; // 1: 2% 구하기, 2: 둘레 구하기, 3: 완성
+function render4(){
+  if(m4step===1){
+    $('#readout').innerHTML=`<div class="nm">The last map: Earth 🌍 — but nobody knows its circumference!</div><div class="big">The shadow angle <b>7.2°</b> is what % of 360°?</div>`;
+    $('#body').innerHTML=`<div class="card">
+      <div class="lbl">📜 Eratosthenes' discovery, 2,200 years ago — two cities at the same moment</div>
+      <canvas id="cv4" style="width:100%;height:230px"></canvas>
+      <div class="cap"><b>Syene</b>: the sun reaches the bottom of a well (shadow 0°) · <b>Alexandria</b>: a stick casts a <b>7.2°</b> shadow.<br>On a round Earth, the angle between the two cities is exactly 7.2°!</div></div>
+     <div class="card"><div class="lbl">💡 7.2 ÷ 360 × 100 — use the calculator!</div>
+      ${calcHTML()}
+      <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check4a()">✓ Check (%)</button></div></div>`;
+    draw4(); cShow();
+  } else if(m4step===2){
+    $('#readout').innerHTML=`<div class="nm">Distance between the cities = <b>800 km</b> (50 days by camel!)</div><div class="big">If 800 km is <b>2%</b>, what is the Earth's circumference?</div>`;
+    $('#body').innerHTML=`<div class="card">
+      <div class="lbl">🍕 Earth as a pie chart — the 800 km slice is exactly 2%</div>
+      <canvas id="cvPie" style="width:100%;height:200px"></canvas>
+      <div class="cap">Fifty 2% slices make 100%. So <b>800 × 50</b> — calculator!</div></div>
+     <div class="card">${calcHTML()}
+      <div style="text-align:center;margin-top:6px"><button class="btn big" onclick="check4b()">✓ Check (km)</button></div></div>`;
+    drawPie(); cShow();
+  } else {
+    $('#readout').innerHTML=`<div class="nm">🎉 Secret of Maps — all solved!</div><div class="big">Earth's circumference = <b>40,000 km</b></div>`;
+    $('#body').innerHTML=`<div class="card" style="text-align:center">
+      <div style="font-size:64px;margin:6px">🌍</div>
+      <div style="font-weight:800;font-size:17px">World map complete!</div>
+      <div class="sc" style="display:inline-block;background:#fbf6e8;border:1.5px solid var(--gold);border-radius:9px;padding:6px 14px;margin:10px 0;font-weight:800">Scale 1 : 40,000,000</div>
+      <div class="cap">The real circumference is 40,075 km — measured 2,200 years ago with one stick and <b>a ratio</b>.<br>
+      Enlarging (1) → scale (2) → percent (3) → the Earth (4)… all <b>the same secret of ratios</b>!</div>
+      <button class="btn big" onclick="m4step=1;stage=1;sx=1;sy=1;m1idx=0;m1done=[];m2idx=0;m2done=[];zoom=1;m3idx=0;m3done=[];pct=100;cClear();render()" style="margin-top:8px">Explore again from the start</button></div>`;
+  }
+}
+function draw4(){const cv=$('#cv4');if(!cv)return;const rect=cv.getBoundingClientRect();
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=460;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  // 둥근 지구(큰 원의 윗부분)
+  const R=W*1.1, cx=W/2, cy=H+R-H*0.62;
+  ctx.fillStyle='#bfe0c2';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+  ctx.strokeStyle='#7fae84';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+  // 태양광(평행)
+  ctx.strokeStyle='#e0a02a';ctx.lineWidth=3;
+  for(let i=0;i<6;i++){const x=W*0.18+i*W*0.13;ctx.beginPath();ctx.moveTo(x+H*0.16,0);ctx.lineTo(x,H*0.30);ctx.stroke();}
+  ctx.fillStyle='#e0a02a';ctx.font='bold 26px sans-serif';ctx.textAlign='left';ctx.fillText('☀️ Sunlight is parallel!',W*0.02,H*0.10);
+  // 막대 2개: 시에네(수직으로 해 닿음), 알렉산드리아(그림자)
+  function stick(angleFromTop,label,shadow){
+    const a=-Math.PI/2+angleFromTop;
+    const bx=cx+R*Math.cos(a), by=cy+R*Math.sin(a);
+    const tx=cx+(R+H*0.16)*Math.cos(a), ty=cy+(R+H*0.16)*Math.sin(a);
+    ctx.strokeStyle='#26303f';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(tx,ty);ctx.stroke();
+    if(shadow){ctx.strokeStyle='#c0392b';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(bx,by);
+      ctx.lineTo(bx-H*0.11,by+H*0.035);ctx.stroke();
+      ctx.fillStyle='#c0392b';ctx.font='bold 24px sans-serif';ctx.textAlign='center';ctx.fillText('7.2°',tx-H*0.13,ty-8);}
+    ctx.fillStyle='#26303f';ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.fillText(label,Math.min(tx,W-60),ty-H*0.045);}
+  stick(0.16,'Alexandria',true);
+  stick(0.40,'Syene',false);
+}
+function drawPie(){const cv=$('#cvPie');if(!cv)return;const rect=cv.getBoundingClientRect();
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=400;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2,R=H*0.40;
+  ctx.fillStyle='#dfe9f5';ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.fill();
+  ctx.strokeStyle='#9fb6d4';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,7);ctx.stroke();
+  // 2% 조각
+  ctx.fillStyle='#c0392b';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*0.02);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#c0392b';ctx.font='bold 26px sans-serif';ctx.textAlign='center';
+  ctx.fillText('800 km = 2%',cx+R*0.32,cy-R*1.06);
+  ctx.fillStyle='#26303f';ctx.font='bold 30px sans-serif';ctx.fillText('Circumference = 100% = ?',cx,cy+12);}
+function check4a(){cEq();const v=parseFloat(cDisp);plog(Math.abs(v-2)<0.01?'earthPctOk':'earthPctRetry',{val:v});
+  if(Math.abs(v-2)<0.01){m4step=2;cClear();
+    banner('Correct! Exactly 2% 🎯','7.2° is <b>2%</b> of 360° — so the two cities are 2% of the circumference apart!',[['Continue →',()=>{hideBanner();render();}]]);}
+  else banner('Try again!','Try <b>7.2 ÷ 360 × 100</b> on the calculator. (C to clear)',[['Retry',hideBanner]]);}
+function check4b(){cEq();const v=Math.round(parseFloat(cDisp)||0);plog(v===40000?'earthDone':'earthRetry',{val:v});
+  if(v===40000){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
+    banner('You measured the Earth!! 🌍','800 × 50 = <b>40,000 km</b>. The real value is 40,075 km — only 0.2% off!',[['Finish the map →',()=>{hideBanner();render();}]]);}
+  else banner('Try again!','Fifty <b>2% slices</b> make 100%. Calculate <b>800 × 50</b>.',[['Retry',hideBanner]]);}
+
+/* ══════ 계산기 (공용) ══════ */
+let cDisp='0', cAcc=null, cOp=null, cFresh=true;
+function cShow(){const d=$('#cd');if(d)d.textContent=cDisp;}
+function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
+function cDot(){if(cFresh){cDisp='0.';cFresh=false;}else if(!cDisp.includes('.'))cDisp+='.';cShow();}
+function cCompute(){const y=parseFloat(cDisp);let r=cAcc;if(cOp==='×')r=cAcc*y;else if(cOp==='÷')r=cAcc/y;r=Math.round(r*10000)/10000;cDisp=String(r);cAcc=r;cShow();}
+function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;}
+function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;}}
+function cClear(){cDisp='0';cAcc=null;cOp=null;cFresh=true;cShow();}
+function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f}">${t}</button>`;
+  return `<div class="calc"><div class="calcdisp" id="cd">${cDisp}</div><div class="calcgrid">
+   ${b('7','cD(7)')}${b('8','cD(8)')}${b('9','cD(9)')}${b('÷',"cO('÷')",'op')}
+   ${b('4','cD(4)')}${b('5','cD(5)')}${b('6','cD(6)')}${b('×',"cO('×')",'op')}
+   ${b('1','cD(1)')}${b('2','cD(2)')}${b('3','cD(3)')}${b('C','cClear()','op')}
+   ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
+
+function render(){renderStage();({1:render1,2:render2,3:render3,4:render4}[stage])();}
+window.addEventListener('resize',()=>{if(stage===1)draw1();if(stage===4&&m4step===1)draw4();if(stage===4&&m4step===2)drawPie();});
+render();
+/* 숨김 iframe으로 로드된 경우: 보이게 되면 1회 다시 그림 */
+let _vchk=setInterval(()=>{const cv=$('#cv1');
+  if(document.body.getBoundingClientRect().width>8){ if(stage===1&&cv)draw1(); clearInterval(_vchk); }},350);
+</script>
+</body>
+</html>

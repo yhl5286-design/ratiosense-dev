@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Secret of the Mart</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--red:#c0392b;--r:16px;--shadow:0 6px 20px rgba(0,0,0,.07)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:700px;margin:0 auto;padding:12px 12px 40px}
+  h1{font-size:19px;margin:4px 0 2px}.muted{color:var(--sub);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px;margin:10px 0}
+  .lbl{font-size:12.5px;color:var(--sub);margin-bottom:6px}.lbl b{color:var(--ink)}
+  .seg{display:flex;gap:5px}.seg button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:9px 2px;font-weight:700;font-size:11px;cursor:pointer}
+  .seg button.active{border-color:var(--ink);background:#fbf6e8}
+  .readout{background:#1f2a3d;color:#fff;border:none;text-align:center}
+  .readout .big{font-size:20px;font-weight:800;margin:2px 0}.readout .big b{color:#ffd966}.readout .nm{font-size:13px;color:#cdd6e4}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+  .btn:active{transform:translateY(1px)}
+  .btn.big{font-size:15px;padding:11px 20px;background:#eaf7ef;border-color:var(--accent);color:#136a3d;font-weight:800}
+  .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+  .cap{font-size:12px;color:var(--sub);text-align:center;margin-top:8px}.cap b{color:var(--ink)}
+  /* 달걀·묶음 */
+  .eggs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;min-height:90px;align-items:center}
+  .egg{font-size:26px}
+  .pack{border:2.5px dashed #b99b5f;background:#fdf6e3;border-radius:12px;padding:6px 8px;display:flex;gap:2px;flex-wrap:wrap;max-width:120px;justify-content:center}
+  /* 봉지 */
+  .bags{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .bag{border:2px solid #7a9a5a;background:#f0f6e8;border-radius:12px 12px 14px 14px;padding:10px 12px;font-weight:800;cursor:pointer;text-align:center;font-size:14px;min-width:74px}
+  .bag.opened{background:#d8ecc4;border-color:#4a7a2a}
+  .jump{text-align:center;font-size:26px;font-weight:800;letter-spacing:2px;min-height:38px}
+  .jump b{color:var(--accent)}
+  /* 상품 카드 */
+  .shop{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .item{border:2px solid var(--line);border-radius:14px;padding:12px 16px;text-align:center;min-width:150px;background:#fffdf7}
+  .item .em{font-size:34px}.item .pr{font-weight:800;font-size:16px;margin-top:4px}
+  .item.pick{cursor:pointer}.item.pick:active{background:#fbf6e8}
+  .sale{display:inline-block;background:var(--red);color:#fff;font-weight:800;border-radius:8px;padding:2px 8px;font-size:13px}
+  /* 계산기 */
+  .calc{max-width:290px;margin:10px auto 4px}
+  .calcdisp{background:#1f2a3d;color:#fff;font-size:26px;font-weight:800;text-align:right;padding:9px 15px;border-radius:10px;font-variant-numeric:tabular-nums;min-height:46px}
+  .calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:7px}
+  .cbtn{padding:13px 0;font-size:18px;font-weight:800;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  .cbtn:active{background:#f0ece2;transform:translateY(1px)}
+  .cbtn.op{background:#f7f0dd;border-color:#e0c98a}
+  #banner{position:absolute;left:10px;right:10px;display:none;z-index:60;transform:translateY(-50%)}
+  #banner.show{display:block}
+  #banner .in{max-width:560px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700;background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}
+  #banner .sub{font-weight:600;font-size:13px;margin-top:4px}#banner .acts{margin-top:10px}#banner .acts .btn{margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🛒 Secret of the Mart</h1>
+  <div class="muted">Bundle, unbundle, and price things — find the <b>secret of units</b> hidden in the mart.</div>
+  <div class="card"><div class="lbl">Steps</div><div class="seg" id="stageSeg"></div></div>
+  <div class="card readout" id="readout"></div>
+  <div id="body"></div>
+  <div class="muted" style="text-align:center;font-size:11px">RatioSense — Secret of the Mart</div>
+</div>
+<div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+let stage=3;
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'mart',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
+const STAGES=[['1 · Price of One',3],['2 · Which Is Cheaper?',4],['3 · Secret of Discounts',5]];
+function renderStage(){const el=$('#stageSeg');el.innerHTML='';STAGES.forEach(([x,s])=>{
+  const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=x;b.onclick=()=>{stage=s;render();plog('enter');};el.appendChild(b);});}
+function placeBanner(b){let y;try{const fe=window.frameElement;
+  if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
+    const vt=Math.max(0,-r.top),vb=Math.min(r.height,ph-r.top);y=vt+(vb-vt)*0.55;}
+  else{y=window.scrollY+window.innerHeight*0.6;}}catch(e){y=window.scrollY+window.innerHeight*0.6;}
+  b.style.top=Math.max(90,Math.round(y))+'px';}
+function banner(t,s,acts){const b=$('#banner');b.className='show';placeBanner(b);$('#bT').innerHTML=t;$('#bS').innerHTML=s||'';const ae=$('#bA');ae.innerHTML='';(acts||[]).forEach(([x,fn])=>{const q=document.createElement('button');q.className='btn';q.innerHTML=x;q.onclick=fn;ae.appendChild(q);});}
+function hideBanner(){$('#banner').className='';}
+function won(n){return '₩'+n.toLocaleString('en-US');}
+
+/* ===== 계산기 (−, ×, ÷) ===== */
+let cDisp='0', cAcc=null, cOp=null, cFresh=true;
+function cShow(){const d=$('#cd');if(!d)return;
+  let s;if(cOp&&cAcc!==null){s=cAcc+' '+cOp+(cFresh?'':' '+cDisp);}else s=cDisp;
+  d.textContent=s;}
+function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
+function cCompute(){const y=parseFloat(cDisp);let r=cAcc;
+  if(cOp==='×')r=cAcc*y;else if(cOp==='÷')r=cAcc/y;else if(cOp==='−')r=cAcc-y;
+  r=Math.round(r*1000)/1000;cDisp=String(r);cAcc=r;cShow();}
+function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;cShow();}
+function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;cShow();}}
+function cClear(){cDisp='0';cAcc=null;cOp=null;cFresh=true;cShow();}
+function calcHTML(){const b=(x,f,c)=>`<button class="cbtn ${c||''}" onclick="${f}">${x}</button>`;
+  return `<div class="calc"><div class="calcdisp" id="cd">${cDisp}</div><div class="calcgrid">
+   ${b('7','cD(7)')}${b('8','cD(8)')}${b('9','cD(9)')}${b('÷',"cO('÷')",'op')}
+   ${b('4','cD(4)')}${b('5','cD(5)')}${b('6','cD(6)')}${b('×',"cO('×')",'op')}
+   ${b('1','cD(1)')}${b('2','cD(2)')}${b('3','cD(3)')}${b('−',"cO('−')",'op')}
+   ${b('C','cClear()','op')}${b('0','cD(0)')}${b('00',"cD('00')")}${b('=','cEq()','op')}</div></div>`;}
+function ckBtn(label,fn){return `<div style="text-align:center;margin-top:6px"><button class="btn big" onclick="${fn}">${label}</button></div>`;}
+
+/* 3지선다 */
+function mcHTML(opts,fn){
+  const o=opts.map(x=>x.slice());o.sort(()=>Math.random()-0.5);
+  return `<div class="row" style="margin-top:10px">`+o.map(([lb,ok])=>
+    `<button class="btn big" data-ok="${ok?1:0}" onclick="${fn}(this)" style="font-size:17px;font-weight:800;padding:12px 20px;min-width:96px">${lb}</button>`).join('')+`</div>`;}
+
+/* ===== 3단계 · 하나에 얼마? (단위비율·암산) ===== */
+let g3={q:0};
+function render3(){
+  if(g3.q===0){
+    $('#readout').innerHTML=`<div class="nm">The price tag only shows the bundle price!</div><div class="big">Tangerines: <b>3 for ₩1,200</b> — how much is <b>one</b>?</div>`;
+    $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🍊🍊🍊</div><div class="pr">3 for ${won(1200)}</div></div></div>
+      <div class="cap">No calculator — <b>in your head</b>! What is 1,200 divided by 3?</div>${mcHTML([[won(400),true],[won(300),false],[won(600),false]],'g3pick')}</div>`;
+  } else {
+    $('#readout').innerHTML=`<div class="nm">Once you know the unit price, you can find anything!</div><div class="big">So how much are <b>5</b> tangerines?</div>`;
+    $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🍊×5</div><div class="pr">1 = ${won(400)}</div></div></div>
+      <div class="cap">In your head again! Five at ₩400 each?</div>${mcHTML([[won(2000),true],[won(1600),false],[won(2400),false]],'g3pick')}</div>`;
+  }
+}
+function g3pick(el){const ok=el.dataset.ok==='1';
+  plog(ok?'unitOk':'unitRetry',{q:g3.q,pick:el.textContent});
+  if(ok){
+    if(g3.q===0){banner('Correct! One = ₩400 🍊','1200÷3=400 — that is the <b>unit price</b>!',[['Next →',()=>{hideBanner();g3.q=1;render3();}]]);}
+    else{banner('Correct! 5 = ₩2,000 🍊','Know the unit price and you can price <b>any number</b> (400×5).',[['Next step →',()=>{hideBanner();stage=4;cClear();render();plog('enter');}]]);}
+  } else banner('Try again!',g3.q===0?'3 for ₩1,200 — divide to find one!':'Five at ₩400 each!',[['Retry',hideBanner]]);}
+
+/* ===== 4단계 · 어디가 더 싸? ===== */
+const G4=[
+ {em:'🥛',name:'Milk',a:{n:5,p:4500},b:{n:7,p:5950},ansB:true},   // 900 vs 850 → B
+ {em:'🧃',name:'Juice',a:{n:4,p:3200},b:{n:5,p:4250},ansB:false},  // 800 vs 850 → A
+];
+let g4={q:0};
+function render4(){
+  const P=G4[g4.q];
+  $('#readout').innerHTML=`<div class="nm">A real supermarket problem! (${g4.q+1}/2)</div><div class="big">${P.name} — <b>which mart</b> is cheaper?</div>`;
+  $('#body').innerHTML=`<div class="card"><div class="shop">
+      <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">Mart A</div><div class="pr">${P.a.n} for ${won(P.a.p)}</div></div>
+      <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">Mart B</div><div class="pr">${P.b.n} for ${won(P.b.p)}</div></div></div>
+    <div class="cap">Work out the <b>unit price</b> for each, then tap the cheaper mart!</div>
+    ${calcHTML()}</div>`;
+}
+function g4pick(isB){const P=G4[g4.q];const ok=(isB===P.ansB);
+  const ua=P.a.p/P.a.n,ub=P.b.p/P.b.n;
+  plog(ok?'compareOk':'compareRetry',{q:g4.q,pick:isB?'B':'A'});
+  if(ok){
+    const nxt=g4.q+1<G4.length;
+    banner(`Correct! Mart ${isB?'B':'A'} is cheaper ${P.em}`,`Unit price: A ${won(ua)} vs B ${won(ub)} — <b>unit prices</b> make things comparable!`,
+      nxt?[['Next problem →',()=>{hideBanner();g4.q++;cClear();render4();}]]:[['Step 3 — Secret of Discounts →',()=>{hideBanner();stage=5;cClear();render();plog('enter');}]]);
+  } else banner('Try again!',`Calculate the <b>unit price</b> at each mart and compare.`,[['Retry',hideBanner]]);}
+
+/* ===== 5단계 · 할인의 비밀 (백분율) ===== */
+let g5={q:0,step:0};
+function render5(){
+  if(g5.q===0){
+    if(g5.step===0){
+      $('#readout').innerHTML=`<div class="nm">Today's deal! <span class="sale">25% off</span></div><div class="big">${won(4000)} milk — <b>how much</b> is taken off?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr">${won(4000)} <span class="sale">25%↓</span></div></div></div>
+        <div class="cap">A discount rate is the part taken off when <b>the original price is seen as 100</b>! Calculate, then choose.</div>${calcHTML()}
+        <div class="cap">How much is the <b>discount</b>?</div>${mcHTML([[won(1000),true],[won(750),false],[won(1250),false]],'g5pick')}</div>`;
+    } else {
+      $('#readout').innerHTML=`<div class="nm">The discount is ₩1,000!</div><div class="big">So <b>how much do you pay</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🥛</div><div class="pr"><s style="color:#999">${won(4000)}</s> − ${won(1000)}</div></div></div>
+        <div class="cap">How much <b>do you pay</b>? (calculator welcome)</div>${calcHTML()}${mcHTML([[won(3000),true],[won(2750),false],[won(3250),false]],'g5pick')}</div>`;
+    }
+  } else {
+    if(g5.step===0){
+      $('#readout').innerHTML=`<div class="nm">Now the reverse! A bag went ${won(5000)} → ${won(4000)}</div><div class="big">How much was <b>taken off</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr"><s style="color:#999">${won(5000)}</s> → ${won(4000)}</div></div></div>
+        <div class="cap">How much was taken off?</div>${calcHTML()}${mcHTML([[won(1000),true],[won(500),false],[won(1500),false]],'g5pick')}</div>`;
+    } else {
+      $('#readout').innerHTML=`<div class="nm">₩1,000 was taken off</div><div class="big">What is the <b>discount rate (%)</b>?</div>`;
+      $('#body').innerHTML=`<div class="card"><div class="shop"><div class="item"><div class="em">🎒</div><div class="pr">${won(1000)} ÷ ${won(5000)}</div></div></div>
+        <div class="cap">See the original price (5000) as 100! Calculator: 1000 ÷ 5000 × 100</div>${calcHTML()}
+        <div class="cap">What % is the <b>discount rate</b>?</div>${mcHTML([['20%',true],['25%',false],['15%',false]],'g5pick')}</div>`;
+    }
+  }
+}
+function g5pick(el){const ok=el.dataset.ok==='1';
+  plog(ok?'discountOk':'discountRetry',{q:g5.q,step:g5.step,pick:el.textContent});
+  if(!ok){banner('Try again!','Type the given expression on the calculator, then choose again.',[['Retry',hideBanner]]);return;}
+  if(g5.q===0&&g5.step===0){banner('Correct! ₩1,000 off','25% means <b>25 out of 100 parts</b> — 4000×25÷100=1000!',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+  else if(g5.q===0){banner('Correct! You pay just ₩3,000 🥛','4000−1000=3000. Original minus discount = <b>what you pay</b>!',[['Next problem →',()=>{hideBanner();g5={q:1,step:0};cClear();render5();}]]);}
+  else if(g5.step===0){banner('Correct! ₩1,000 off','Now find what <b>percent</b> of the original price that ₩1,000 is.',[['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
+  else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
+    banner('Correct! A 20% discount 🎉','1000÷5000×100=20 — 20 parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.',[['Secret of the Mart complete! 🛒',hideBanner]]);}}
+
+function render(){renderStage();({3:render3,4:render4,5:render5}[stage])();}
+render();
+</script>
+</body>
+</html>

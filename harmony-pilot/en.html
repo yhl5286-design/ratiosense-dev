@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Secret of Sound</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--r:16px;--shadow:0 6px 20px rgba(0,0,0,.07)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:700px;margin:0 auto;padding:12px 12px 40px}
+  h1{font-size:19px;margin:4px 0 2px}.muted{color:var(--sub);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px;margin:10px 0}
+  .lbl{font-size:12px;color:var(--sub);margin-bottom:6px}
+  .seg{display:flex;gap:6px}.seg button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:9px 4px;font-weight:700;font-size:12px;cursor:pointer}
+  .seg button.active{border-color:var(--ink);background:#fbf6e8}
+  .readout{background:#1f2a3d;color:#fff;border:none;text-align:center}
+  .readout .big{font-size:21px;font-weight:800;margin:2px 0}.readout .big b{color:#ffd966}.readout .nm{font-size:13px;color:#cdd6e4}
+  .keys8{display:flex;gap:4px;justify-content:center;margin-top:8px}
+  .k8{flex:1;max-width:62px;height:96px;border:1px solid #cdc6b8;border-radius:0 0 8px 8px;background:linear-gradient(#fff,#f3efe6);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:8px;cursor:pointer;font-weight:800;transition:.08s}
+  .k8:active,.k8.play{background:linear-gradient(#fff6df,#ffe9ad);transform:translateY(2px)}.k8 .do{color:#c0392b}.k8 .hz{font-size:10px;color:var(--sub);font-weight:600;margin-top:3px}
+  .piano1{position:relative;margin:0 auto}
+  .wkey1{position:absolute;bottom:0;width:40px;height:112px;border:1px solid #cdc6b8;border-top:none;border-radius:0 0 7px 7px;background:linear-gradient(#fff,#f1ede4);cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:9px;font-weight:800;font-size:13px;transition:.06s}
+  .wkey1:active,.wkey1.play{background:linear-gradient(#fff2cf,#ffe39c);transform:translateY(2px)}
+  .wkey1 .do{color:#c0392b}
+  .bkey1{position:absolute;top:0;width:26px;height:68px;background:linear-gradient(#3a3f47,#191d23);border-radius:0 0 4px 4px;z-index:3;pointer-events:none}
+  .pianoWrap{overflow-x:auto;padding:4px 2px}
+  .piano2{position:relative;height:150px;display:inline-block}
+  .wkey{position:absolute;bottom:0;width:30px;height:150px;border:1px solid #cdc6b8;border-radius:0 0 6px 6px;background:linear-gradient(#fff,#f3efe6);cursor:pointer;transition:.08s;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:6px;font-size:11px;font-weight:700}
+  .wkey:active,.wkey.play{background:linear-gradient(#fff6df,#ffe9ad)}
+  .wkey.base{background:linear-gradient(#eaf7ef,#d6efdf);box-shadow:inset 0 0 0 3px var(--accent)}.wkey.sel{box-shadow:inset 0 0 0 3px var(--gold)}.wkey .do{color:#c0392b}
+  .basetag{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:9px;font-weight:800;padding:2px 5px;border-radius:6px;white-space:nowrap;z-index:5}
+  .bkey{position:absolute;top:0;width:20px;height:92px;background:linear-gradient(#3a3f47,#20242b);border-radius:0 0 4px 4px;z-index:3;opacity:.85;pointer-events:none}
+  .graph{display:flex;gap:2px;align-items:flex-end;height:140px;padding:6px 2px;overflow-x:auto;border-bottom:2px solid var(--line)}
+  .bar{flex:0 0 auto;width:30px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+  .bar .b{width:20px;border-radius:5px 5px 0 0;background:#8fb0dd}.bar.base .b{background:var(--accent)}.bar.sel .b{background:var(--gold)}
+  .bar .rt{font-size:9px;color:var(--sub);margin-bottom:2px}.bar .nm{font-size:10px;font-weight:700;margin-top:3px}
+  table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:1px solid var(--line);padding:4px 5px;text-align:center}th{background:#f7f5ef;color:var(--sub)}td.simple{background:#eef7f1;font-weight:700;color:#136a3d}
+  .cap{font-size:12px;color:var(--sub);text-align:center;margin-top:8px}.cap b{color:var(--ink)}
+  canvas{width:100%;height:230px;display:block;background:#fbfaf6;border-radius:12px;border:1px solid var(--line)}
+  input[type=range]{width:100%}
+  .dialv{text-align:center;font-size:24px;font-weight:800;margin:4px}
+  .meetinfo{text-align:center;font-size:15px;font-weight:700;margin-top:8px}.meetinfo b{color:var(--accent)}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:8px 11px;font-weight:600;cursor:pointer;font-size:13px}
+  .r3:hover{background:#fbf6e8}
+  .calc{max-width:290px;margin:12px auto 4px}
+  .calcdisp{background:#1f2a3d;color:#fff;font-size:28px;font-weight:800;text-align:right;padding:10px 16px;border-radius:10px;font-variant-numeric:tabular-nums;min-height:48px}
+  .calcgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+  .cbtn{padding:15px 0;font-size:19px;font-weight:800;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  .cbtn:active{background:#f0ece2;transform:translateY(1px)}
+  .cbtn.op{background:#f7f0dd;border-color:#e0c98a}
+  .cbtn.wide{grid-column:span 2}
+  #banner{position:absolute;left:10px;right:10px;display:none;z-index:60;transform:translateY(-50%)}
+  #banner .in{max-width:700px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700;background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}
+  #banner.show{display:block}#banner .sub{font-weight:600;font-size:13px;margin-top:4px}#banner .acts{margin-top:10px}
+
+/* 3단계 하프 공방 */
+.harp{background:#241a10;border-radius:14px;padding:14px 10px 10px;margin-top:8px}
+.hbeam{height:13px;background:linear-gradient(#d9b26a,#8a6a34);border-radius:7px;box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.hrow{display:flex;justify-content:space-around;align-items:flex-start;padding:0 6px}
+.hcol{display:flex;flex-direction:column;align-items:center;width:44px}
+.hs{width:11px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:2px;cursor:pointer;box-shadow:0 0 4px rgba(255,240,200,.35)}
+.hs.ghost{background:none;border-left:5px dashed #5a4a30;cursor:default;box-shadow:none}
+.hs.test{background:linear-gradient(#ffe9a8,#e0a02a)}
+.hs.pluck{animation:wig .35s}
+@keyframes wig{20%{transform:translateX(3px)}50%{transform:translateX(-3px)}80%{transform:translateX(1.5px)}}
+.hlab{margin-top:6px;font-size:13.5px;font-weight:800;color:#f0e9d8;text-align:center;line-height:1.3}
+.hlab span{font-size:12px;color:#cbbfa8}
+.hlab.ghost{color:#6a583a}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎼 Secret of Sound</h1>
+  <div class="card"><div class="lbl">Steps</div><div class="seg" id="stageSeg"></div></div>
+  <div class="card readout" id="readout"></div>
+  <div id="body"></div>
+  <div class="muted" style="text-align:center;font-size:11px">RatioSense — Secret of Sound</div>
+</div>
+<div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
+
+<script>
+const NAMES=['Do','Re','Mi','Fa','Sol','La','Ti'];
+const DEG=[[1,1],[9,8],[5,4],[4,3],[3,2],[5,3],[15,8]];
+const OCTS=[['low',1,2],['middle',1,1]]; // 도레미파솔라시 ×2 (가운데 도 기준)
+let NOTE=[]; OCTS.forEach(([lab,nm,dm])=>DEG.forEach(([n,d],i)=>NOTE.push({name:NAMES[i],oct:lab,num:n*nm,den:d*dm})));
+NOTE.push({name:'Do',oct:'high',num:2,den:1});
+const MIDDO=NOTE.findIndex(x=>x.oct==='middle'&&x.name==='Do');
+const BLACK_AFTER=[0,1,3,4,5];
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function reduce(n,d){const g=gcd(Math.round(n),Math.round(d))||1;return[Math.round(n)/g,Math.round(d)/g];}
+const MIDHZ=262;
+function freq(i){return MIDHZ*NOTE[i].num/NOTE[i].den;}
+function baseToNote(i){const b=NOTE[baseIdx];return reduce(b.num*NOTE[i].den,NOTE[i].num*b.den);}
+const INTV={'1:1':'unison','1:2':'octave','2:3':'perfect 5th','3:4':'perfect 4th','4:5':'major 3rd','5:6':'minor 3rd','3:5':'major 6th','5:8':'minor 6th','8:9':'major 2nd','8:15':'major 7th','1:3':'octave+5th','1:4':'2 octaves','2:5':'octave+3rd','3:8':'octave+4th'};
+let stage=1, baseIdx=MIDDO, sel=-1;
+const $=s=>document.querySelector(s);
+function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b;}
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'harmony',event:ev,data:Object.assign({stage},data||{})},'*');}catch(e){}}
+function keyLabel(i){const n=NOTE[i];return n.name+({'low':'˷','middle':'','high':'′','top':'″'}[n.oct]||'');}
+
+function renderStage(){const el=$('#stageSeg');el.innerHTML='';
+  [['1 · Feel the Vibration',1],['2 · Secret of Harmony',2],['3 · Harp Workshop',3]].forEach(([t,s])=>{
+    const b=document.createElement('button');b.className=stage===s?'active':'';b.textContent=t;b.onclick=()=>{stage=s;sel=-1;liveOff();stopAll2();stop1();render();plog('enter');};el.appendChild(b);});}
+
+/* ===== 파동 그리기 ===== */
+function drawSine(ctx,cycles,x0,W,mid,amp,color,phase){ctx.beginPath();ctx.lineWidth=4;ctx.strokeStyle=color;
+  for(let x=0;x<=W;x++){const y=mid-amp*Math.sin(x/W*cycles*2*Math.PI+(phase||0));x?ctx.lineTo(x0+x,y):ctx.moveTo(x0+x,y);}ctx.stroke();}
+function drawMeet(cvId,a,b){const cv=$('#'+cvId);if(!cv)return;const rect=cv.getBoundingClientRect();
+  const W=cv.width=Math.round(rect.width*2),H=cv.height=460;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const pad=36,GW=W-pad*2,mid=H/2,amp=H*0.30;const periods=(a*b<=12)?2:1;
+  drawSine(ctx,a*periods,pad,GW,mid-amp*0.55,amp,'#2e9e63');
+  drawSine(ctx,b*periods,pad,GW,mid+amp*0.55,amp,'#e0a02a');
+  ctx.setLineDash([8,8]);ctx.strokeStyle='#c0392b';ctx.lineWidth=2;ctx.fillStyle='#c0392b';
+  for(let p=0;p<=periods;p++){const x=pad+GW*p/periods;ctx.beginPath();ctx.moveTo(x,16);ctx.lineTo(x,H-26);ctx.stroke();
+    ctx.setLineDash([]);ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.fillText('🤝',x,H-6);ctx.setLineDash([8,8]);}
+  ctx.setLineDash([]);ctx.fillStyle='#2e9e63';ctx.font='bold 16px sans-serif';ctx.textAlign='left';ctx.fillText('base',pad+4,28);
+  ctx.fillStyle='#b5810f';ctx.fillText('yours',pad+4,H-32);}
+
+/* ===== 1단계: 진동수 느끼기 ===== */
+const OCT1=[['Do',262],['Re',295],['Mi',328],['Fa',349],['Sol',393],['La',437],['Ti',491],['Do',524]];
+let f1=262, s1Req=null, s1T=0, plucks=[0,0,0,0,0,0,0,0], lastPluck=0;
+const S1WW=40,S1GAP=3,S1STEP=43,S1PW=344; // 8*43
+function render1(){
+  $('#readout').innerHTML='<div class="nm">Sound is <b>vibration</b>. Press a key and the string behind it vibrates!</div><div class="big">Frequency = how many times it vibrates <b>per second</b></div>';
+  let white='',black='';
+  OCT1.forEach((o,i)=>{white+=`<div class="wkey1" style="left:${i*S1STEP}px" onclick="press1(${i})"><span class="${o[0]==='Do'?'do':''}">${o[0]}</span></div>`;});
+  [0,1,3,4,5].forEach(w=>{black+=`<div class="bkey1" style="left:${w*S1STEP+S1WW-9+S1GAP}px"></div>`;});
+  $('#body').innerHTML=`<div class="card"><div class="lbl">🎹 Grand piano — press a key and <b>its string</b> vibrates (higher note = shorter, faster string)</div>
+     <canvas id="harp" style="height:210px;width:${S1PW}px;display:block;margin:0 auto;background:#241610;border-radius:12px 12px 0 0"></canvas>
+     <div class="piano1" style="width:${S1PW}px;height:112px">${white}${black}</div></div>
+   <div class="card"><div class="lbl">🌊 The <b>wave</b> made by that vibration — flowing left to right</div>
+     <canvas id="w1" style="height:150px"></canvas>
+     <div class="dialv" id="hz1" style="font-size:20px">This note vibrates <b>${OCT1[lastPluck][1]} times</b> per second</div>
+     <div class="cap">It's really much faster (hundreds per second!) — we slowed it down.</div></div>`;
+  start1();
+}
+function updateHz1(){const h=$('#hz1');if(h)h.innerHTML=`This note vibrates <b>${Math.round(f1)} times</b> per second`;}
+function start1(){if(s1Req)cancelAnimationFrame(s1Req);s1T=0;loop1();}
+function stop1(){if(s1Req){cancelAnimationFrame(s1Req);s1Req=null;}}
+function loop1(){s1T++;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=.988;drawHarp();drawW1();s1Req=requestAnimationFrame(loop1);}
+function drawHarp(){const cv=$('#harp');if(!cv)return;const rect=cv.getBoundingClientRect();const W=cv.width=Math.round(rect.width*2),H=cv.height=Math.round(rect.height*2);const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const sc=W/S1PW,yBot=H-14,maxLen=H-28;
+  ctx.fillStyle='#6b4a2a';ctx.fillRect(0,yBot,W,H-yBot);
+  OCT1.forEach((o,i)=>{const f=o[1],cx=(i*S1STEP+S1WW/2)*sc,len=maxLen*(262/f),yTop=yBot-len,amp=S1WW*0.5*sc*plucks[i],vf=f/45,ph=2*Math.PI*vf*(s1T/60),active=plucks[i]>.03;
+    ctx.beginPath();ctx.lineWidth=active?3.5:2;ctx.strokeStyle=active?'#ffd24a':'#9c8557';
+    for(let y=yTop;y<=yBot;y++){const dx=amp*Math.sin(Math.PI*(y-yTop)/len)*Math.cos(ph);(y===yTop)?ctx.moveTo(cx+dx,y):ctx.lineTo(cx+dx,y);}ctx.stroke();
+    ctx.fillStyle='#cdb98a';ctx.beginPath();ctx.arc(cx,yTop,4,0,7);ctx.fill();});}
+function drawW1(){const cv=$('#w1');if(!cv)return;const rect=cv.getBoundingClientRect();const W=cv.width=Math.round(rect.width*2),H=cv.height=300;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const mid=H/2,amp=H*0.34,pad=24,L=W-pad*2,cycles=Math.max(3,Math.round(f1/45)),color=f1>360?'#c0392b':(f1>240?'#e0a02a':'#3b6db5');
+  const shift=(s1T*2.4)%(L/cycles);
+  ctx.beginPath();ctx.lineWidth=4;ctx.strokeStyle=color;
+  for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*cycles*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
+function press1(i){f1=OCT1[i][1];plucks[i]=1;lastPluck=i;updateHz1();tone(f1,0,1.1);plog('key1',{note:OCT1[i][0],hz:OCT1[i][1]});
+  const k=document.querySelectorAll('.wkey1')[i];if(k){k.classList.add('play');setTimeout(()=>k.classList.remove('play'),160);}}
+
+/* ===== 2단계: 피아노 + 비 + 만남점 ===== */
+function render2(){const WW=30,GAP=2,STEP=WW+GAP;
+  let white='';NOTE.forEach((n,i)=>{const left=i*STEP;
+    white+=`<div class="wkey ${i===baseIdx?'base':''} ${i===sel?'sel':''}" style="left:${left}px" onclick="pick2(${i})">${i===baseIdx?'<span class="basetag">★base</span>':''}<span class="${n.name==='Do'?'do':''}">${n.name}</span></div>`;});
+  let black='';NOTE.forEach((n,i)=>{const oi=OCTS.findIndex(o=>o[0]===n.oct);const within=NAMES.indexOf(n.name);
+    if(oi>=0&&BLACK_AFTER.includes(within))black+=`<div class="bkey" style="left:${i*STEP+WW-10+GAP}px"></div>`;});
+  const piano=`<div class="pianoWrap"><div class="piano2" style="width:${NOTE.length*STEP+6}px">${white}${black}</div></div>`;
+  const hasSel=sel>=0;
+  const meet=hasSel?`<div class="card"><div class="lbl">🌊 Meeting points — <b>the better the blend, the more often 🤝 they meet</b> (1s pause, then 2s of sound)</div>
+     <canvas id="cv2"></canvas>
+     <div id="verdict2" style="text-align:center;margin-top:8px"></div>
+     <div class="meetinfo" id="mi2"></div>
+     <div class="cap">Smaller numbers = <b>meet more often = blend well</b>. Big numbers = rare meetings = rough.</div></div>`
+    :`<div class="card"><div class="cap">Press a white key: after <b>a 1s pause</b> the base note and your note sound together for 2s, and the waves flow left to right.</div></div>`;
+  $('#body').innerHTML=`<div class="card">
+     <div style="font-size:17px;font-weight:800;line-height:1.6;margin-bottom:8px">Ⓠ Press the keys and find the <b>frequency ratio</b> of each note to <b style="color:var(--accent)">★middle Do</b>!</div>
+     <div class="lbl">White keys only — each key sounds together with middle Do.</div>${piano}</div>
+   ${meet}`;
+  updateReadout();
+  if(hasSel)drawMeetAnim();
+}
+let seqT1=null;
+function pick2(i){sel=i;render();scheduleSeq();const r=baseToNote(i);plog('pick',{note:keyLabel(i),base:keyLabel(baseIdx),ratio:r[0]+':'+r[1]});}
+function scheduleSeq(){stopSeq();const bf=freq(baseIdx),nf=sel!==baseIdx?freq(sel):null;
+  seqT1=setTimeout(()=>{seqT1=null;playChord3(bf,nf);startAnim();},1000);}
+function stopSeq(){if(seqT1){clearTimeout(seqT1);seqT1=null;}stopAnim();stopChord3();}
+function setBase(){if(sel>=0){stopAll2();baseIdx=sel;sel=-1;render();plog('setBase',{base:keyLabel(baseIdx)});}}
+function updateReadout(){if(sel>=0){const [a,b]=baseToNote(sel);const nm=INTV[`${Math.min(a,b)}:${Math.max(a,b)}`]||'';const hb=Math.round(freq(baseIdx)),hn=Math.round(freq(sel));
+    $('#readout').innerHTML=`<div class="nm">★base ${keyLabel(baseIdx)} ${hb}Hz and ${keyLabel(sel)} ${hn}Hz</div><div class="big">${hb} : ${hn} = <b>${a} : ${b}</b>${nm?' · '+nm:''}</div>`;}
+  else $('#readout').innerHTML=`<div class="nm">★base = ${keyLabel(baseIdx)} ${Math.round(freq(baseIdx))}Hz · press another white key to hear the chord and see the waves</div><div class="big">Ratio to the base note</div>`;}
+/* 흐르는 만남점 애니메이션 */
+let animReq=null, animT=0, animTimer=null;
+function startAnim(){stopAnim();animT=0;animLoop();animTimer=setTimeout(stopAnim,2000);}
+function stopAnim(){if(animReq){cancelAnimationFrame(animReq);animReq=null;}if(animTimer){clearTimeout(animTimer);animTimer=null;}}
+function animLoop(){animT+=2.2;drawMeetAnim();animReq=requestAnimationFrame(animLoop);}
+function stopAll2(){stopSeq();chordOff();}
+function consonance(a,b){const p=a*b;
+  if(p<=6)return{e:'😍',t:'Blend beautifully',c:'#2e9e63',lv:3};
+  if(p<=20)return{e:'😊',t:'Blend well',c:'#4a9e63',lv:2};
+  if(p<=42)return{e:'😐',t:'A bit rough',c:'#e0a02a',lv:1};
+  return{e:'😖',t:'Rough (clashing)',c:'#c0392b',lv:0};}
+function drawMeetAnim(){const cv=$('#cv2');if(!cv||sel<0){stopAnim();return;}
+  const rect=cv.getBoundingClientRect();const W=cv.width=Math.round(rect.width*2),H=cv.height=440;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const [a,b]=baseToNote(sel);const pad=30,GW=W-pad*2,mid=H/2,amp=H*0.28;
+  const BC=8,tau=animT/70; // 창에 기준음 진동 8번 고정 → 협화도에 따라 만남점 밀도가 달라짐. 오른쪽으로 흐름
+  function cx(x){return tau+BC*(1-x/GW);}
+  function wave(rate,color,ys){ctx.beginPath();ctx.lineWidth=4;ctx.strokeStyle=color;for(let x=0;x<=GW;x++){const y=mid+ys-amp*Math.sin(2*Math.PI*cx(x)*rate);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
+  wave(1,'#2e9e63',-amp*0.6);wave(b/a,'#e0a02a',amp*0.6);
+  ctx.setLineDash([7,7]);ctx.strokeStyle='#c0392b';ctx.lineWidth=2;ctx.fillStyle='#c0392b';
+  const mS=Math.ceil(tau/a),mE=Math.floor((tau+BC)/a);
+  for(let m=mS;m<=mE;m++){const c=m*a,x=(1-(c-tau)/BC)*GW;if(x<0||x>GW)continue;ctx.beginPath();ctx.moveTo(pad+x,14);ctx.lineTo(pad+x,H-26);ctx.stroke();ctx.setLineDash([]);ctx.font='bold 18px sans-serif';ctx.textAlign='center';ctx.fillText('🤝',pad+x,H-4);ctx.setLineDash([7,7]);}
+  ctx.setLineDash([]);ctx.fillStyle='#2e9e63';ctx.font='bold 15px sans-serif';ctx.textAlign='left';ctx.fillText('base '+Math.round(freq(baseIdx))+'Hz',pad+4,26);
+  ctx.fillStyle='#b5810f';ctx.fillText('yours '+Math.round(freq(sel))+'Hz',pad+4,H-30);
+  const con=consonance(a,b),nm=INTV[`${Math.min(a,b)}:${Math.max(a,b)}`]||'';
+  const v=$('#verdict2');if(v){const w=Math.max(6,Math.min(100,Math.round(100-Math.log2(a*b)*15)));
+    v.innerHTML=`<div style="font-size:20px;font-weight:800;color:${con.c}">${con.e} ${con.t}</div><div style="height:12px;border-radius:6px;background:#ececec;overflow:hidden;margin:6px auto 0;max-width:280px"><div style="height:100%;width:${w}%;background:${con.c};transition:.2s"></div></div>`;}
+  const mi=$('#mi2');if(mi)mi.innerHTML=`They meet every <b>${a}</b> base · <b>${b}</b> selected vibrations → <b>${a}:${b}</b>${nm?' · '+nm:''} — ${con.lv>=2?'<b style="color:#2e9e63">frequent meetings</b>':'<b style="color:#c0392b">rare meetings</b>'}`;}
+
+/* ===== 계산기 (공용) ===== */
+let cDisp='0', cAcc=null, cOp=null, cFresh=true;
+function cShow(){const d=$('#cd');if(!d)return;
+  let s;if(cOp&&cAcc!==null){s=cAcc+' '+cOp+(cFresh?'':' '+cDisp);}else s=cDisp;
+  d.textContent=s;}
+function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
+function cDot(){if(cFresh){cDisp='0.';cFresh=false;}else if(!cDisp.includes('.'))cDisp+='.';cShow();}
+function cCompute(){const y=parseFloat(cDisp);let r=cAcc;if(cOp==='×')r=cAcc*y;else if(cOp==='÷')r=cAcc/y;r=Math.round(r*1000)/1000;cDisp=String(r);cAcc=r;cShow();}
+function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;cShow();}
+function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;cShow();}}
+function cClear(){cDisp='0';cAcc=null;cOp=null;cFresh=true;cShow();}
+function calcHTML(){const b=(x,f,c)=>`<button class="cbtn ${c||''}" onclick="${f}">${x}</button>`;
+  return `<div class="calc"><div class="calcdisp" id="cd">${cDisp}</div><div class="calcgrid">
+   ${b('7','cD(7)')}${b('8','cD(8)')}${b('9','cD(9)')}${b('÷',"cO('÷')",'op')}
+   ${b('4','cD(4)')}${b('5','cD(5)')}${b('6','cD(6)')}${b('×',"cO('×')",'op')}
+   ${b('1','cD(1)')}${b('2','cD(2)')}${b('3','cD(3)')}${b('C','cClear()','op')}
+   ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
+
+/* ===== 3단계: 하프 공방 — 5음계 줄 만들기 ===== */
+const HBASE=81; // 도 줄 길이(cm) — 분수 계산이 딱 떨어지는 마법의 수
+const HP=[{n:'Re',a:8,b:9},{n:'Mi',a:64,b:81},{n:'Sol',a:2,b:3},{n:'La',a:16,b:27},{n:'Do′',a:1,b:2}];
+let hDone=[], hI=0, tstL=81;
+function hLen(i){return HBASE*HP[i].a/HP[i].b;}
+function hFreq(L){return Math.round(262*HBASE/L);}
+function pluck(f,w){const c=ac(),t0=c.currentTime+(w||0);
+  [[f,.22],[f*2,.07],[f*3,.03]].forEach(([ff,v])=>{const o=c.createOscillator(),g=c.createGain();
+    o.type='triangle';o.frequency.value=ff;o.connect(g);g.connect(c.destination);
+    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.008);
+    g.gain.exponentialRampToValueAtTime(.001,t0+1.3);o.start(t0);o.stop(t0+1.35);});}
+function hPluck(el,L,name){pluck(hFreq(L));plog('hPluck',{name});
+  if(el){el.classList.remove('pluck');void el.offsetWidth;el.classList.add('pluck');}}
+function fmtL(L){return (Math.round(L*10)/10)+'cm';}
+function harpHTML(){
+  const items=[{n:'Do',L:HBASE,made:true,frac:'1'}].concat(HP.map((p,i)=>({n:p.n,L:hLen(i),made:hDone.includes(i),frac:p.a+'/'+p.b})));
+  return `<div class="harp"><div class="hbeam"></div><div class="hrow">`+
+    items.map(it=>`<div class="hcol">${it.made
+      ?`<div class="hs" style="height:${Math.round(it.L*2.6)}px" onclick="hPluck(this,${it.L},'${it.n}')"></div><div class="hlab">${it.n}<br><span>${fmtL(it.L)}</span></div>`
+      :`<div class="hs ghost" style="height:${Math.round(it.L*2.6)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
+  `</div></div>`;}
+function tstUpd(v){tstL=+v;const e=$('#tst');if(e){e.style.height=Math.round(tstL*2.6)+'px';}
+  const l=$('#tstlab');if(l)l.textContent=tstL+'cm';
+  liveOn(262*HBASE/tstL);}
+function render4(){
+  const done=hDone.length,cur=HP[hI];
+  $('#readout').innerHTML=`<div class="nm">🪕 Harp Workshop — start from the <b>${HBASE}cm</b> Do string! Build the pentatonic scale (${done}/${HP.length})</div><div class="big">${cur?`The <b>${cur.n}</b> string is <b>${cur.a}/${cur.b}</b> of the Do string — <b>how many cm</b>?`:'Pentatonic harp complete!'}</div>`;
+  if(done>=HP.length){
+    $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 Done! Tap the strings to play — shorter means higher!</div>${harpHTML()}
+      <div class="cap">Play freely by tapping the strings — <b>shorter string, higher note</b>!</div></div>`;
+    return;}
+  $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 My harp — tap a finished string to hear it!</div>${harpHTML()}</div>
+   <div class="card"><div class="lbl">🎚 Test string — drag the handle and hear <b>how pitch changes with length</b></div>
+     <div class="harp" style="display:inline-block;padding:12px 26px 8px;margin-left:calc(50% - 60px)"><div class="hbeam" style="width:60px"></div>
+       <div class="hcol" style="width:60px"><div class="hs test" id="tst" style="height:${Math.round(tstL*2.6)}px"></div><div class="hlab" id="tstlab">${tstL}cm</div></div></div>
+     <input type="range" id="tr" min="35" max="81" step="1" value="${tstL}" style="width:82%;display:block;margin:10px auto 2px">
+   </div>
+   <div class="card"><div style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;font-size:15.5px;line-height:1.9">
+      ① The <b>${cur.n}</b> string is <b>${cur.a}/${cur.b}</b> of the Do string (<b>${HBASE}cm</b>).<br>
+      ② <b style="font-size:17px;color:var(--ink)">${cur.n} = ${HBASE} × ${cur.a} ÷ ${cur.b} = ? cm</b></div>
+    <div class="lbl" style="margin-top:8px">Work it out with the calculator — the string will be hung!</div>
+    ${calcHTML()}
+    <div style="text-align:center;margin-top:6px"><button class="btn" style="font-size:15px;padding:11px 20px;background:#eaf7ef;border-color:#2e9e63;color:#136a3d;font-weight:800" onclick="hCut()">🪕 Hang the string at this length</button></div></div>`;
+  const tr=$('#tr');
+  if(tr){tr.oninput=e=>tstUpd(e.target.value);
+    tr.onchange=()=>liveOff();tr.onpointerup=()=>liveOff();tr.onmouseup=()=>liveOff();tr.ontouchend=()=>liveOff();}
+  cShow();
+}
+function hCut(){cEq();const cur=HP[hI],ex=hLen(hI),val=parseFloat(cDisp)||0;
+  const ok=Math.abs(val-ex)<=0.3;
+  plog(ok?'hOk':'hRetry',{note:cur.n,val,exact:Math.round(ex*10)/10});
+  if(ok){hDone.push(hI);pluck(hFreq(ex));cClear();
+    const last=hDone.length>=HP.length;
+    if(last){try{parent.postMessage({type:'harmonyLabDone'},'*');}catch(e){}}
+    banner(`${cur.n} string done! 🪕 ${Math.round(ex*10)/10}cm`,`${cur.a}/${cur.b} of the ${HBASE}cm Do string = ${Math.round(ex*10)/10}cm — pluck it and you get ${cur.n}!`,
+      last?[['Harp complete! 🪕',()=>{hideBanner();render();}]]:[['Next string →',()=>{hideBanner();hI++;render();}]]);}
+  else banner('Let\'s recalculate!',`Try <b>${HBASE} × ${cur.a} ÷ ${cur.b}</b> on the calculator. (C to clear)`,[['Retry',hideBanner]]);}
+const MEL=[[332,.7],[442,.7],[442,.7],[393,.35],[442,.35],[524,.7],[442,.35],[524,.35],[442,.7],[393,.35],[332,.35],[295,.7],[262,1.1]];
+function hSong(){let w=0;MEL.forEach(([f,d])=>{pluck(f,w);w+=d;});plog('hPlay',{});}
+
+function render(){renderStage();({1:render1,2:render2,3:render4}[stage])();}
+function placeBanner(b){let y;try{const fe=window.frameElement;
+  if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
+    const vt=Math.max(0,-r.top),vb=Math.min(r.height,ph-r.top);y=vt+(vb-vt)*0.55;}
+  else{y=window.scrollY+window.innerHeight*0.6;}}catch(e){y=window.scrollY+window.innerHeight*0.6;}
+  b.style.top=Math.max(90,Math.round(y))+'px';}
+function banner(t,s,acts){const b=$('#banner');b.className='show';placeBanner(b);$('#bT').innerHTML=t;$('#bS').innerHTML=s||'';const ae=$('#bA');ae.innerHTML='';(acts||[]).forEach(([x,fn])=>{const q=document.createElement('button');q.className='btn';q.textContent=x;q.onclick=fn;ae.appendChild(q);});}
+function hideBanner(){$('#banner').className='';}
+/* 오디오 */
+let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
+function tone(f,w,d){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.16,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}
+let lOsc,lGain;
+function liveOn(f){const c=ac();if(!lOsc){lOsc=c.createOscillator();lGain=c.createGain();lGain.gain.value=0;lOsc.type='triangle';lOsc.connect(lGain);lGain.connect(c.destination);lOsc.start();}
+  lOsc.frequency.setTargetAtTime(f,c.currentTime,.01);lGain.gain.setTargetAtTime(.16,c.currentTime,.01);}
+function liveOff(){if(lGain)lGain.gain.setTargetAtTime(0,ac().currentTime,.06);}
+function playChord(fA,fB,dur){const c=ac();dur=dur||1.3;[[fA,.18],[fB,.15]].forEach(([f,v])=>{if(!f)return;const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(v,c.currentTime+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);o.start(c.currentTime);o.stop(c.currentTime+dur);});}
+let cA,cB,cG;
+function chordOn(fA,fB){const c=ac();if(!cA){cA=c.createOscillator();cB=c.createOscillator();cG=c.createGain();cG.gain.value=0;cA.type=cB.type='triangle';cA.connect(cG);cB.connect(cG);cG.connect(c.destination);cA.start();cB.start();}
+  cA.frequency.setTargetAtTime(fA,c.currentTime,.008);cB.frequency.setTargetAtTime(fB,c.currentTime,.008);cG.gain.setTargetAtTime(.12,c.currentTime,.01);}
+function chordOff(){if(cG)cG.gain.setTargetAtTime(0,ac().currentTime,.08);}
+let chordNodes=null;
+function playChord3(fA,fB){const c=ac();stopChord3();const dur=2,t=c.currentTime;const g=c.createGain();g.connect(c.destination);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.15,t+.03);g.gain.setValueAtTime(.15,t+dur-.35);g.gain.linearRampToValueAtTime(.0001,t+dur);
+  const os=[];[fA,fB].forEach(f=>{if(!f)return;const o=c.createOscillator();o.type='triangle';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+dur+.05);os.push(o);});
+  chordNodes={g,os};}
+function stopChord3(){if(chordNodes){try{const c=ac();chordNodes.g.gain.cancelScheduledValues(c.currentTime);chordNodes.g.gain.setTargetAtTime(0,c.currentTime,.02);}catch(e){}chordNodes=null;}}
+window.addEventListener('resize',()=>{if(stage===2&&sel>=0)drawMeetAnim();if(stage===1)drawW1();});
+render();
+</script>
+</body>
+</html>

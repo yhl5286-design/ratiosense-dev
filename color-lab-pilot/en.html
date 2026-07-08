@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>RatioSense — Color Lab (Pilot)</title>
+<style>
+  :root{--bg:#f4f1ea;--card:#fff;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--warn:#e0a02a;--r:16px;--shadow:0 6px 20px rgba(0,0,0,.07)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  .wrap{max-width:560px;margin:0 auto;padding:12px 12px 80px}
+  h1{font-size:21px;margin:4px 0 2px}.muted{color:var(--sub);font-size:13px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px;margin:10px 0}
+  .lbl{font-size:12px;color:var(--sub);margin-bottom:6px}
+  .seg{display:flex;gap:6px}.seg button{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 4px;font-weight:700;font-size:13px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+  .seg button .dot{width:24px;height:24px;border-radius:7px;border:1px solid rgba(0,0,0,.12)}
+  .seg button small{font-weight:600;color:var(--sub);font-size:10px}.seg button.active{border-color:var(--ink);transform:translateY(-2px)}
+  .steps{display:flex;gap:4px;margin-top:4px}.steps button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 2px;font-size:14px;font-weight:700;cursor:pointer;color:var(--sub)}
+  .steps button.active{background:#1f2a3d;color:#fff;border-color:#1f2a3d}.steps button.done{color:var(--accent)}
+  .mission{background:#1f2a3d;color:#fff;border:none;font-size:17.5px;line-height:1.65}.mission b{color:#ffd966}.mission .prog{margin-top:6px;font-size:14.5px;color:#cdd6e4}
+  /* 진행(light·mid·deep) */
+  .seq{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
+  .seq .s{flex:1;max-width:130px;text-align:center;border:2px solid var(--line);border-radius:10px;padding:6px;font-size:14px;font-weight:700;color:var(--sub)}
+  .seq .s .c{height:16px;border-radius:5px;margin-bottom:3px;border:1px solid rgba(0,0,0,.1)}
+  .seq .s.cur{border-color:var(--ink);color:var(--ink)}.seq .s.done{border-color:var(--accent);background:#eef7f1;color:var(--accent)}
+  /* 물감/조작부 */
+  .tools{border:1px dashed var(--line);border-radius:12px;padding:10px;background:#fbfaf6}
+  .paints{display:flex;gap:10px;justify-content:center}
+  .paint{flex:1;text-align:center;max-width:200px}.paint .nm{font-weight:800;font-size:16px;margin-bottom:6px}
+  .bottles{display:flex;gap:8px;align-items:flex-end;justify-content:center}
+  .bottle{border:none;background:transparent;cursor:pointer;padding:0;display:flex;flex-direction:column;align-items:center;gap:1px}
+  .bottle:active{transform:scale(.9)}
+  .bottle svg{display:block;filter:drop-shadow(0 2px 2px rgba(0,0,0,.14))}
+  .bottle .cap{font-size:13px;font-weight:800;color:var(--sub)}
+  .bottle.xs svg{width:24px}.bottle.s svg{width:32px}.bottle.m svg{width:40px}.bottle.l svg{width:50px}
+  .basepane{flex:1;text-align:center;background:#f2efe7;border-radius:10px;padding:8px;max-width:180px}
+  .basepane .h{font-weight:800;font-size:15px}.basepane .amt{font-size:14px;color:var(--sub)}
+  /* 비커 비교 */
+  .pair{display:flex;gap:22px;justify-content:center;align-items:flex-end;margin:12px 0 2px}
+  .col{text-align:center}.col .lab{font-size:14px;color:var(--sub);margin-bottom:6px;font-weight:700}
+  .beaker{position:relative;height:150px;width:92px;border:3px solid #c9c2b4;border-top:none;border-radius:0 0 26px 26px;overflow:hidden;background:linear-gradient(#fff,#faf8f3)}
+  .fill{position:absolute;left:0;right:0;bottom:0;transition:height .18s,background .18s}.fill.full{height:100%}
+  .gauge{height:11px;border-radius:8px;background:#eee;overflow:hidden;margin:9px 30px 0}.gauge>i{display:block;height:100%;width:0;transition:.2s}
+  .near{text-align:center;font-size:15px;color:var(--sub);margin-top:6px;min-height:18px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:11px 15px;font-size:15px;cursor:pointer;font-weight:600;color:var(--ink)}
+  .btn:active{background:#f2efe8}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn.big{width:100%;padding:15px;font-size:17px}
+  .toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub)}
+  .numin{display:flex;gap:10px;justify-content:center;margin:2px 0 6px}
+  .field{flex:1;max-width:150px;border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;cursor:pointer}.field.active{border-color:var(--ink)}
+  .field .v{font-size:26px;font-weight:800}.field .u{font-size:12px;color:var(--sub)}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:220px;margin:6px auto 0}.pad button{padding:15px;font-size:20px;font-weight:700;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  #reveal{display:none;margin-top:10px;padding:12px;border-radius:12px;background:#eef7f1;border:1px solid #cfe9db;font-size:16px}#reveal b{color:#136a3d}
+  #banner{position:absolute;left:10px;right:10px;display:none;z-index:60;transform:translateY(-50%)}
+  #banner .in{max-width:560px;margin:0 auto;padding:14px 16px;border-radius:16px;box-shadow:0 14px 44px rgba(0,0,0,.28);font-weight:700}
+  #banner.show{display:block}#banner.ok .in{background:#e7f7ee;color:#136a3d;border-top:3px solid var(--accent)}#banner.help .in{background:#fff6e3;color:#7a5a12;border-top:3px solid var(--warn)}
+  #banner .sub{font-weight:600;font-size:15px;margin-top:4px}#banner .acts{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+  .hidden{display:none!important}
+
+/* 5단계 백분율 100칸 */
+.pgrid{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;max-width:330px;margin:10px auto}
+.pcell{aspect-ratio:1;border-radius:3px;background:#edeae2;transition:background .25s}
+.pctlab{text-align:center;font-weight:800;font-size:18px;margin-top:6px}
+.fillrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.fillrow .btn{font-size:15px;font-weight:800;min-width:58px}
+.p5wrap{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.p5side{min-width:150px;text-align:center}
+.p5mini{width:70px;height:96px;border:2.5px solid #26303f;border-radius:0 0 12px 12px;border-top:none;margin:8px auto;position:relative;overflow:hidden}
+.p5mini .mf{position:absolute;bottom:0;left:0;right:0;height:88%}
+
+.minusrow{display:flex;gap:5px;justify-content:center;margin-top:6px;flex-wrap:wrap}
+.mbtn{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:7px 9px;font-weight:800;font-size:14px;color:#c0392b;cursor:pointer;min-width:44px}
+.mbtn:active{background:#fdeeec;transform:translateY(1px)}
+
+.bsel{border-color:var(--accent)!important;background:#eaf7ef!important;box-shadow:0 0 0 2px #bfe6cf}
+.steps button.locked{opacity:.45}
+
+.numfield{display:flex;flex-direction:column;align-items:center;gap:2px}
+.numfield input{width:104px;font-size:26px;font-weight:800;border:2px solid var(--line);border-radius:12px;padding:8px;text-align:center;outline:none;background:#fff}
+.numfield input:focus{border-color:var(--accent)}
+.numfield .u{font-size:14px;color:var(--sub);font-weight:700}
+.liquid{width:120px;height:160px;border:3px solid #26303f;border-top-width:2px;border-radius:0 0 18px 18px;margin:10px auto;position:relative;overflow:hidden;background:#fbfaf6}
+.liquid .mf{position:absolute;bottom:0;left:0;right:0;height:90%}
+
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 3px}
+.frac .fn{border-bottom:2.5px solid currentColor;padding:0 7px}
+.frac .fd{padding:0 7px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎨 Color Lab <span class="muted">pilot</span></h1>
+  <div class="card">
+    <div class="lbl" style="display:none">Color family</div><div class="seg" id="famSeg" style="display:none"></div>
+    <div class="lbl" style="margin-top:10px">Steps</div><div class="steps" id="steps"></div>
+  </div>
+  <div class="card mission" id="mission"><div id="mText">…</div><div class="prog" id="mProg"></div></div>
+  <div class="card" id="stageBody"></div>
+  <div class="muted" id="tmBadge" style="display:none;text-align:center;font-size:12px;color:#8a5a3b;font-weight:700">🔓 Teacher mode — all steps unlocked</div>
+  <div class="muted" style="text-align:center;font-size:11px">RatioSense Color Lab</div>
+</div>
+<div id="banner"><div class="in"><div id="bT"></div><div class="sub" id="bS"></div><div class="acts" id="bA"></div></div></div>
+
+<script>
+const PRIM={Red:[230,40,55],Yellow:[250,215,45],Blue:[45,100,205]};
+function mix(c){const ks=Object.keys(c).filter(k=>c[k]>0),t=ks.reduce((s,k)=>s+c[k],0);if(!t)return[252,250,245];
+  let o=[1,1,1];for(const k of ks){const w=c[k]/t,p=PRIM[k];for(let i=0;i<3;i++)o[i]*=Math.pow(Math.max(p[i]/255,.02),w);}return o.map(v=>Math.round(v*255));}
+const rgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
+const dist=(a,b)=>Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2);
+const prox=(a,b)=>Math.max(0,1-dist(a,b)/230);
+const gcd=(a,b)=>b?gcd(Math.round(b),Math.round(a%b)):Math.round(a);
+function shadeColor(f,s){const c={};c[f.paints[0]]=s.r[0];c[f.paints[1]]=s.r[1];return mix(c);}
+function unit(base,comp){const g=gcd(base,comp)||1,b=base/g,c=comp/g;if(b===c)return'same amount';if(c%b===0)return`×${c/b}`;if(b%c===0)return`${c}/${b}`;return`${c}/${b}`;}
+const FAM=[
+ {id:'Orange',emoji:'🟠',paints:['Red','Yellow'],shades:[{n:'light',r:[1,2]},{n:'mid',r:[1,1]},{n:'deep',r:[2,1]}],p4:[3,4],p5:{r1:[2,3],pct1:40,pct2:60},p6:{r:40,y:60,pct:40}},
+ {id:'Purple',emoji:'🟣',paints:['Red','Blue'],shades:[{n:'light',r:[2,1]}]},
+ {id:'Green',emoji:'🟢',paints:['Yellow','Blue'],shades:[{n:'light',r:[2,5]}]},
+];
+const STEP=['1 Same Ratio, Many Ways','2 Mix to a Ratio','3 Ratio & Rate','4 Paint 100 Cells','5 Percent'];
+let S={fam:FAM[0],stage:1,done:{},amt:{},subIdx:0,fails:0,n4:{a:0,b:0,active:0},showNum:false};
+const $=s=>document.querySelector(s);
+let TEACHER=false;
+try{TEACHER=/[?&](teacher|test)=1/.test(location.search)||/[?&](teacher|test)=1/.test(parent.location.search);}catch(e){}
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'color',event:ev,data:Object.assign({fam:S.fam&&S.fam.id,stage:S.stage,sub:S.subIdx},data||{})},'*');}catch(e){}}
+function resetStage(){S.amt={};S.subIdx=0;S.fails=0;S.showNum=(S.stage>=2);S.n4={a:0,b:0,active:0};S.p5={m:1,red:0,ans:'',poured:false,phase:'fill',brush:null,num:''};S.p6={step:1,r:0,y:0};S.s1got=[];S.s1fi=0;S.r3i=0;S.phase23='make';S.made23=0;render();plog('enter');}
+function shadeName(){return S.fam.shades[S.subIdx].n;}
+function curTargetColor(){return shadeColor(S.fam,S.fam.shades[S.subIdx]);}
+
+function segF(){const el=$('#famSeg');el.innerHTML='';FAM.forEach(f=>{const b=document.createElement('button');
+  if(f===S.fam)b.className='active';b.innerHTML=`<span class="dot" style="background:${rgb(shadeColor(f,f.shades[0]))}"></span>${f.emoji} ${f.id}<small>${f.paints.join('+')}</small>`;
+  b.onclick=()=>{S.fam=f;S.stage=1;resetStage();};el.appendChild(b);});}
+function segS(){const el=$('#steps');el.innerHTML='';STEP.forEach((t,i)=>{const st=i+1;const b=document.createElement('button');
+  const locked=!TEACHER&&st>1&&!S.done[S.fam.id+':'+(st-1)];
+  b.className=(st===S.stage?'active':'')+(S.done[S.fam.id+':'+st]?' done':'')+(locked?' locked':'');
+  b.textContent=locked?'🔒 '+t:t;
+  b.onclick=()=>{if(locked){banner('help','Still locked!','Complete the previous step to unlock this one.',[['Got it',hideBanner]]);chime(false);return;}S.stage=st;resetStage();};
+  el.appendChild(b);});}
+/* 진행 스트립(light·mid·deep) */
+function seqHTML(){return `<div class="seq">`+S.fam.shades.map((s,i)=>{
+  const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
+  return `<div class="s ${cls}"><div class="c" style="background:${rgb(shadeColor(S.fam,s))}"></div>${s.n} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
+/* 비커 비교(같은 크기) */
+function pairHTML(target,label){return `<div class="pair">
+   <div class="col"><div class="lab">Ⓐ Target (${label||S.fam.id})</div><div class="beaker"><div class="fill full" style="background:${rgb(target)}"></div></div></div>
+   <div class="col"><div class="lab">Ⓑ My color</div><div class="beaker"><div class="fill" id="fill"></div></div></div></div>
+   <div class="near" id="near">What should you do to make Ⓐ and Ⓑ the same color?</div>`;}
+function updateB(target,scale){const c=mix(S.amt),tot=Object.values(S.amt).reduce((s,v)=>s+v,0);
+  const f=$('#fill');if(f){f.style.background=rgb(c);f.style.height=Math.min(96,tot*(scale||0.5))+'%';}
+  return prox(c,target);}
+function tubeSVG(c){return `<svg viewBox="0 0 60 118" xmlns="http://www.w3.org/2000/svg">
+  <g><rect x="20" y="2" width="20" height="15" rx="3" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/>
+  <line x1="24" y1="3" x2="24" y2="16" stroke="#c8c3b6" stroke-width="1.6"/><line x1="30" y1="3" x2="30" y2="16" stroke="#c8c3b6" stroke-width="1.6"/><line x1="36" y1="3" x2="36" y2="16" stroke="#c8c3b6" stroke-width="1.6"/>
+  <rect x="24" y="17" width="12" height="6" fill="#d8d4c9" stroke="#b9b4a8" stroke-width="1.2"/>
+  <path d="M14 26 Q14 23 17 23 L43 23 Q46 23 46 26 L48 104 L12 104 Z" fill="#f7f5f0" stroke="#b9b4a8" stroke-width="1.6"/>
+  <path d="M17 25 L22 25 L23 102 L14 102 Z" fill="#ffffff" opacity="0.85"/>
+  <rect x="13.5" y="46" width="33.5" height="34" fill="${c}" stroke="rgba(0,0,0,.12)" stroke-width="1"/>
+  <rect x="15" y="48" width="6" height="30" fill="#fff" opacity="0.25"/>
+  <path d="M12 104 L48 104 L49 112 L11 112 Z" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/>
+  <line x1="15" y1="105" x2="15" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="21" y1="105" x2="21" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="27" y1="105" x2="27" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="33" y1="105" x2="33" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="39" y1="105" x2="39" y2="111" stroke="#c8c3b6" stroke-width="1.4"/><line x1="45" y1="105" x2="45" y2="111" stroke="#c8c3b6" stroke-width="1.4"/>
+</g></svg>`;}
+function squeezeBtns(color){return [['xs',5],['s',10],['m',25],['l',50]].map(([sz,a])=>`<button class="bottle ${sz}" data-a="${a}">${tubeSVG(rgb(PRIM[color]))}<div class="cap">+${a}</div></button>`).join('');}
+function minusBtns(){return `<div class="minusrow">`+[5,10,50].map(v=>`<button class="mbtn" data-m="${v}">−${v}</button>`).join('')+`</div>`;}
+function wireMinus(el,color,cb){if(!el)return;el.querySelectorAll('.mbtn').forEach(b=>b.onclick=()=>{S.amt[color]=Math.max(0,(S.amt[color]||0)-(+b.dataset.m));plog('paintSub',{color,sub:+b.dataset.m,amt:Object.assign({},S.amt)});cb();});}
+function wire(el,color,cb){el.querySelectorAll('.bottle').forEach(b=>b.onclick=()=>{S.amt[color]=(S.amt[color]||0)+ +b.dataset.a;plog('paint',{color,add:+b.dataset.a,amt:Object.assign({},S.amt)});cb();});}
+
+function render(){segF();segS();({1:renderS1,2:()=>renderS23(0),3:renderS3R,4:renderS5,5:renderS6}[S.stage])();}
+
+/* ===== 1단계 감각 — Orange·Purple·Green, 서로 다른 양으로 ===== */
+function renderS1(){
+  if(S.s1fi==null||S.s1fi>=FAM.length)S.s1fi=0;
+  const fam=FAM[S.s1fi],sh=fam.shades[0],t=shadeColor(fam,sh),p0=fam.paints[0],p1=fam.paints[1];
+  const got=S.s1got;
+  const q=[
+    `${fam.emoji} <b>Make ${fam.id}!</b> The target color is <b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>. Squeeze the paints to make <b>the exact same color</b>!`,
+    `<b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>. Now make the same color with a <b>different amount</b>.`,
+    `<b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>. One more time — with <b>yet another amount</b>!`][Math.min(got.length,2)];
+  $('#mText').innerHTML=q;
+  $('#mProg').textContent=`Making ${fam.id} · ${got.length}/3`;
+  $('#stageBody').innerHTML=
+   `<div class="tools"><div class="lbl" style="text-align:center">Squeeze and mix the paints</div>
+      <div class="paints">
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0}</div><div class="bottles" id="b0"></div><div id="m0">${minusBtns()}</div></div>
+        <div class="paint"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1}</div><div class="bottles" id="b1"></div><div id="m1">${minusBtns()}</div></div>
+      </div>
+      <div style="max-width:300px;margin:10px auto 0;background:#fbfaf6;border:1.5px solid var(--line);border-radius:12px;padding:8px 14px">
+        <table style="width:100%;font-size:17px;font-weight:800;border-collapse:collapse">
+          <tr><td style="color:${rgb(PRIM[p0])}">● ${p0}</td><td style="text-align:right"><span id="am0">0</span> mL</td></tr>
+          <tr><td style="color:${rgb(PRIM[p1])}">● ${p1}</td><td style="text-align:right"><span id="am1">0</span> mL</td></tr>
+        </table></div></div>`+
+   (got.length?`<div class="tools" style="background:#eef7f1;border:1.5px solid #cfe9db;border-radius:12px;padding:8px 14px;margin-top:8px">
+      <div style="font-size:15px;font-weight:800;line-height:1.8">`+got.map((g,i)=>`✔ Try ${i+1} · ${p0} ${g.a} : ${p1} ${g.b}`).join('<br>')+`</div></div>`:'')+
+   pairHTML(t,`Target: ${fam.id}`)+
+   `<div class="row"><button class="btn" id="clr">🗑 Empty</button><button class="btn" id="hint">💡 Hint</button></div>`;
+  $('#b0').innerHTML=squeezeBtns(p0);$('#b1').innerHTML=squeezeBtns(p1);
+  const step=()=>{const p=updateB(t);const a=S.amt[p0]||0,b=S.amt[p1]||0;
+    const e0=$('#am0'),e1=$('#am1');if(e0)e0.textContent=a;if(e1)e1.textContent=b;
+    const exact=(a*sh.r[1]===b*sh.r[0]);
+    if(p>=.9&&exact&&a>0&&b>0){
+      if(got.some(g=>g.a===a&&g.b===b)){
+        banner('help','You already used those amounts!','Make the same color with a <b>different amount</b>.',[['OK',()=>{hideBanner();S.amt={};render();}]]);chime(false);return;}
+      got.push({a,b});plog('s1collect',{fam:fam.id,a,b,n:got.length});
+      const g=gcd(a,b)||1;
+      if(got.length>=3){
+        const nxt=S.s1fi+1<FAM.length;
+        success('Correct! Different amounts, same ratio!',`${fam.id}: ${got.map(x=>x.a+':'+x.b).join(' · ')} — all <b>${a/g}:${b/g}</b>!`+(nxt?` Next: ${FAM[S.s1fi+1].emoji} <b>make ${FAM[S.s1fi+1].id}</b>!`:''),
+          nxt?()=>{S.s1fi++;S.s1got=[];S.amt={};render();}:stageDone);
+      } else {
+        success(`Success! 🎨`,`${p0} ${a} : ${p1} ${b} = <b>${a/g}:${b/g}</b> — now try <b>another amount</b>!`,()=>{S.amt={};render();});
+      }
+    }};
+  wire($('#b0'),p0,step);wire($('#b1'),p1,step);
+  wireMinus($('#m0'),p0,step);wireMinus($('#m1'),p1,step);
+  $('#clr').onclick=()=>{S.amt={};render();};
+  $('#hint').onclick=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0;let msg;
+    if(got.length>0){const g0=got[got.length-1];
+      msg=`✔ Check your records! <b>${p0} ${g0.a} : ${p1} ${g0.b}</b> worked — multiply <b>both amounts by the same number</b> (×2, ×3…) and you get the same color.`;}
+    else if(a===0&&b===0){msg=`Add small amounts <b>one at a time</b> and watch how color Ⓑ changes.`;}
+    else if(a*sh.r[1]<b*sh.r[0]){msg=`Right now there is too much <b>${p1}</b> — try adding a bit more <b>${p0}</b>.`;}
+    else if(a*sh.r[1]>b*sh.r[0]){msg=`Right now there is too much <b>${p0}</b> — try adding a bit more <b>${p1}</b>.`;}
+    else{msg=`The ratio is exactly right! Add a little more, or submit as is.`;}
+    plog('hint',{fam:fam.id,a,b,n:got.length});
+    banner('help','💡 Hint',msg,[['OK',hideBanner]]);};
+  updateB(t);
+}
+
+/* ===== 2·3단계 기준량 / 뒤집기 — 제시된 비대로 만들기 ===== */
+const P23={2:[{r:[2,3],b:200},{r:[1,2],b:100},{r:[2,3],b:40}], 3:[{r:[1,2],b:100},{r:[3,2],b:90},{r:[1,4],b:100}]};
+function probHTML(){return `<div class="seq">`+P23[S.stage].map((pp,i)=>{
+  const r=pp.r;const c={};c[S.fam.paints[0]]=r[0];c[S.fam.paints[1]]=r[1];
+  const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
+  return `<div class="s ${cls}"><div class="c" style="background:${rgb(mix(c))}"></div>${r[0]}:${r[1]} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
+function renderS23(baseIdx){
+  if(S.phase23==='lang'){renderS23Lang(baseIdx);return;}
+  const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
+  const base=S.fam.paints[baseIdx],comp=S.fam.paints[1-baseIdx];
+  const ra=pr[baseIdx],rc=pr[1-baseIdx];
+  const tc={};tc[S.fam.paints[0]]=pr[0];tc[S.fam.paints[1]]=pr[1];const tgt=mix(tc);
+  S.amt={};S.amt[base]=BASE;
+  const d0=S.fam.paints[0],d1=S.fam.paints[1];
+  $('#mText').innerHTML=`We want to make <b>${S.fam.id}</b> so that <b>${d0} : ${d1} = ${pr[0]} : ${pr[1]}</b>. If <b>${BASE}mL</b> of <b>${base}</b> is already in the beaker, how many mL of <b>${comp}</b> should you add?`;
+  $('#mProg').textContent=`${BASE}mL of ${base} is already in. Add only ${comp} to match Ⓐ. (Problem ${S.subIdx+1}/3)`;
+  $('#stageBody').innerHTML=probHTML()+
+   `<div class="tools" style="text-align:center">
+      <div style="display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap">
+        <div class="numfield"><input id="inC" type="number" inputmode="numeric" min="0" placeholder="?"><div class="u" style="color:${rgb(PRIM[comp])};font-size:15px">● ${comp} mL</div></div>
+      </div>
+      <div id="ca" style="font-size:21px;font-weight:800;color:${rgb(PRIM[comp])};margin-top:8px">${comp} 0mL</div></div>`+
+   pairHTML(tgt,`${d0}:${d1} = ${pr[0]}:${pr[1]}`)+
+   `<div id="reveal"></div><div style="margin-top:10px;text-align:center"><button class="btn primary big" id="commit">Submit!</button></div>`;
+  const upd=()=>{updateB(tgt,0.25);$('#ca').textContent=`${comp} ${S.amt[comp]||0}mL`;};
+  $('#inC').oninput=()=>{S.amt[comp]=Math.max(0,parseInt($('#inC').value||'0',10)||0);upd();};
+  $('#commit').onclick=()=>{const cv=S.amt[comp]||0;if(!cv)return;
+    const ok=(cv*ra===BASE*rc);
+    plog('commit23',{base,comp,cv,ok});
+    if(ok){S.fails=0;S.made23=cv;
+      success('Correct! 🎨',`${d0} ${BASE}mL : ${d1} ${cv}mL = <b>${pr[0]} : ${pr[1]}</b>!`,()=>{S.phase23='lang';render();});
+    } else {S.fails++;plog('retry',{mode:'hint23'});
+      banner('help','Try again!',`With <b>${BASE}mL</b> of ${base}, how many mL of ${comp} make the ratio ${d0} : ${d1} equal to <b>${pr[0]} : ${pr[1]}</b>?`,[['OK',hideBanner]]);chime(false);}};
+  upd();
+}
+
+/* ── 기준량·비교하는 양 — 말로 확인 ── */
+function jz(){return '';}
+function fracHTML(n,d){return `<span class="frac"><span class="fn">${n}</span><span class="fd">${d}</span></span>`;}
+function iga(){return '';}
+function renderS23Lang(baseIdx){
+  const prob=P23[S.stage][S.subIdx],pr=prob.r,BASE=prob.b;
+  const base=S.fam.paints[baseIdx],comp=S.fam.paints[1-baseIdx];
+  const cv=S.made23;
+  const cb=rgb(PRIM[base]),cc=rgb(PRIM[comp]);
+  const askBase=(S.subIdx!==1); // 문제2는 비교하는 양을 물음
+  $('#mText').innerHTML=askBase
+    ? `Color done! In this problem, which is the <b>base quantity</b>?`
+    : `Color done! In this problem, which is the <b>compared quantity</b>?`;
+  $('#mProg').textContent=`(Problem ${S.subIdx+1}/3)`;
+  const expl=`<b style="color:${cb}">${BASE}mL of ${base}</b> was there from the start,<br>
+       and I added <b style="color:${cc}">${cv}mL of ${comp}</b> to match.`;
+  let opts=askBase?[[base,true],[comp,false]]:[[comp,true],[base,false]];
+  opts.sort(()=>Math.random()-0.5);
+  $('#stageBody').innerHTML=probHTML()+
+   `<div class="tools" style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;margin-bottom:8px">
+      <div style="font-size:16.5px;line-height:1.95">${expl}</div></div>
+   <div class="tools" style="text-align:center">
+      <div class="row" style="justify-content:center;margin-top:4px">`+
+      opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="lg${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
+   `</div></div>`;
+  opts.forEach((o,i)=>{$('#lg'+i).onclick=()=>{
+    plog(o[1]?'lang23Ok':'lang23Retry',{q:askBase?'base':'compared',pick:String(o[0])});
+    if(o[1]){
+      const nx=S.subIdx+1;
+      const fb=askBase
+        ? `You added <b>${comp}</b> to match the <b>${base}</b> that was already there. So <b>${base} is the base quantity, and ${comp} is the compared quantity</b>.`
+        : `The <b>${comp}</b> you added to match the base <b>${base}</b> is the <b>compared quantity</b>.`;
+      success('Correct!',fb,nx>=3?stageDone:()=>{S.subIdx=nx;S.phase23='make';render();});
+    } else {
+      banner('help','Try again!','The amount that was <b>fixed from the start</b> is the base; the amount you <b>added to match it</b> is the compared quantity.',[['Pick again',hideBanner]]);chime(false);
+    }};});
+}
+
+/* ===== 3단계 비율 — '~에 대한' 표현 이해 ===== */
+const R3=[
+  {a:100,b:200,dir:'ab',type:'ratio'},
+  {a:100,b:200,dir:'ab',type:'frac'},
+  {a:100,b:200,dir:'ba',type:'ratio'},
+  {a:100,b:200,dir:'ba',type:'frac'},
+  {a:40,b:60,dir:'ab',type:'ratio'},
+  {a:40,b:60,dir:'ab',type:'frac'}
+];
+function renderS3R(){
+  if(S.r3i==null)S.r3i=0;
+  const q=R3[S.r3i],p0=S.fam.paints[0],p1=S.fam.paints[1];
+  const g=gcd(q.a,q.b)||1,ra=q.a/g,rb=q.b/g; // Red:Yellow 기약비
+  const abFront=(q.dir==='ab'); // 'ab' = 'Red에 대한 Yellow' (Yellow이 앞)
+  const F=abFront?p1:p0, K=abFront?p0:p1;           // F=앞(비교), K=기준
+  const fV=abFront?rb:ra, kV=abFront?ra:rb;
+  const mc={};mc[p0]=q.a;mc[p1]=q.b;const mixCol=rgb(mix(mc));
+  const kmL=abFront?q.a:q.b, fmL=abFront?q.b:q.a;
+  $('#mText').innerHTML=q.type==='ratio'
+    ? `What is '<b>the ratio of ${fmL}mL of ${F} to ${kmL}mL of ${K}</b>'?`
+    : `You just found '<b>the ratio of ${fmL}mL of ${F} to ${kmL}mL of ${K}</b>'! Now write that <b>rate as a fraction</b>.`;
+  $('#mProg').textContent=`(Problem ${S.r3i+1}/${R3.length})`;
+  let opts;
+  if(q.type==='ratio')
+    opts=[[`${fV} : ${kV}`,true],[`${kV} : ${fV}`,false],[`${fV} : ${fV+kV}`,false]];
+  else
+    opts=[[fracHTML(fV,kV),true,fV+'/'+kV],[fracHTML(kV,fV),false,kV+'/'+fV],[fracHTML(fV,fV+kV),false,fV+'/'+(fV+kV)]];
+  opts.sort(()=>Math.random()-0.5);
+  $('#stageBody').innerHTML=
+   `<div class="tools" style="text-align:center"><div style="font-size:17.5px;font-weight:800;margin-bottom:6px">${S.fam.id} liquid — <b style="color:${rgb(PRIM[p0])}">${q.a}mL ${p0}</b> + <b style="color:${rgb(PRIM[p1])}">${q.b}mL ${p1}</b></div>
+      <div class="liquid" style="width:100px;height:130px"><div class="mf" style="background:${mixCol}"></div></div></div>
+   <div class="tools" style="text-align:center"><div class="row" style="justify-content:center;margin-top:4px">`+
+      opts.map((o,i)=>`<button class="btn big" data-ok="${o[1]?1:0}" id="r3${i}" style="font-size:17px;font-weight:800;padding:12px 22px">${o[0]}</button>`).join('')+
+   `</div></div>`;
+  opts.forEach((o,i)=>{$('#r3'+i).onclick=()=>{
+    plog(o[1]?'r3Ok':'r3Retry',{q:`${F} to ${K}`,type:q.type,pick:String(o[2]||o[0])});
+    if(o[1]){
+      const nx=S.r3i+1;
+      let fb;
+      if(q.type==='ratio'){
+        fb=`${S.r3i===2?'Same liquid, but <b>a different base flips the ratio!</b> ':''}'The <b>ratio of ${F} to ${K}</b>' is <b>${F} : ${K}</b> — <b>${F}</b> is the compared quantity and <b>${K}</b> is the base.`;
+      } else fb=`${F} ÷ ${K} = <b>${fracHTML(fV,kV)}</b> — <b>${K}</b> is the base (bottom) and <b>${F}</b> is the compared quantity (top).`;
+      success('Correct!',fb,nx>=R3.length?stageDone:()=>{S.r3i=nx;render();});
+    } else {
+      banner('help','Try again!',`'The <b>ratio of ${F} to ${K}</b>' is <b>${F} : ${K}</b>.`,[['Go!',hideBanner]]);chime(false);
+    }};});
+}
+
+
+/* ===== 4단계 백 칸 칠하기 ===== */
+function gridHTML(red,total,pour){let h='<div class="pgrid">';
+  const c0=rgb(PRIM[S.fam.paints[0]]),c1=rgb(PRIM[S.fam.paints[1]]);
+  for(let i=0;i<100;i++){const on=i<red, yel=i>=red&&i<total;
+    const bg=on?c0:(yel?c1:'#edeae2');
+    h+=`<div class="pcell" style="background:${bg}${pour?`;transition-delay:${i*5}ms`:''}"></div>`;}
+  return h+'</div>';}
+function renderS5(){
+  const p5=S.fam.p5,p0=S.fam.paints[0],p1=S.fam.paints[1];
+  const [ra,rb]=p5.r1,pct=p5.pct1;
+  const ph=S.p5.phase, a=S.amt[p0]||0, b=S.amt[p1]||0;
+  if(ph==='fill'||ph==='painted'){
+    $('#mText').innerHTML=`Paint all <b>100 cells</b> so that <b>${p0} : ${p1} = ${ra} : ${rb}</b>`;
+    $('#mProg').textContent='Type how many cells of each color → then Paint!';
+    let body=`<div class="tools"><div style="display:flex;gap:18px;justify-content:center;flex-wrap:wrap">
+        <div class="numfield"><input id="inR" type="number" inputmode="numeric" min="0" max="100" value="${a||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p0])}">● ${p0} cells</div></div>
+        <div class="numfield"><input id="inY" type="number" inputmode="numeric" min="0" max="100" value="${b||''}" placeholder="?"><div class="u" style="color:${rgb(PRIM[p1])}">● ${p1} cells</div></div></div>
+      <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="paintGo" style="max-width:280px">🖌 Paint!</button></div></div>`;
+    if(ph==='painted'){
+      body+=gridHTML(a,100,true)+`<div class="pctlab">✔ ${p0} ${a} cells : ${p1} ${b} cells = ${ra} : ${rb}</div>
+        <div style="text-align:center;margin-top:10px"><button class="btn primary big" id="goQuiz" style="max-width:280px">Go to the question →</button></div>`;
+    } else {
+      body+=gridHTML(0,0,false)+`<div class="pctlab" style="color:#8a8577">Still empty</div>`;
+    }
+    $('#stageBody').innerHTML=body;
+    $('#paintGo').onclick=()=>{
+      const r=parseInt($('#inR').value||'0',10),y=parseInt($('#inY').value||'0',10);
+      if(r+y!==100){plog('pctFillRetry',{r,y});
+        banner('help','Try again!',`You must paint <b>all 100</b> cells — right now you have <b>${r+y}</b>.`,[['Retry',hideBanner]]);chime(false);return;}
+      if(r*rb!==y*ra){plog('pctFillRetry',{r,y});
+        banner('help','Try again!',`That's 100 cells, but the ratio isn't <b>${ra} : ${rb}</b>. Recalculate the cells for ${p0} and ${p1}.`,[['Retry',hideBanner]]);chime(false);return;}
+      S.amt={};S.amt[p0]=r;S.amt[p1]=y;S.p5.phase='painted';plog('pctFillOk',{r,y});
+      render();chime(true);
+      setTimeout(()=>banner('ok',`Nicely painted — ${p0} : ${p1} = ${ra} : ${rb}!`,'Press the arrow to answer a question.',[['Go to the question →',()=>{hideBanner();S.p5.phase='q1';render();}]]),200);};
+    if(ph==='painted'){$('#goQuiz').onclick=()=>{S.p5.phase='q1';render();};}
+  } else {
+    $('#mText').innerHTML=`Out of these <b>100 cells</b>, how many are <b>${p0}</b>?`;
+    $('#mProg').textContent=`100 cells painted at a ratio of ${p0} ${ra} : ${p1} ${rb}.`;
+    $('#stageBody').innerHTML=
+      gridHTML(a,100,false)+
+      `<div class="tools" style="margin-top:10px"><div style="display:flex;gap:10px;justify-content:center;align-items:center">
+        <div class="numfield"><input id="qIn" type="number" inputmode="numeric" min="0" max="100" placeholder="?"><div class="u">cells</div></div></div>
+      <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="qGo" style="max-width:220px">Check</button></div></div>`;
+    $('#qGo').onclick=()=>{
+      const v=parseInt($('#qIn').value||'0',10);
+      if(v===pct){plog('pctQ1Ok',{v});
+        success(`Correct! ${pct} cells of ${p0}!`,`<b>${pct}</b> of the 100 cells are ${p0}.`,stageDone);}
+      else{plog('pctQ1Retry',{v});
+        banner('help','Try again!',`Count the ${p0} cells, or remember how many you painted.`,[['Retry',hideBanner]]);chime(false);}};
+  }
+}
+
+/* ===== 5단계 백분율 ===== */
+function renderS6(){
+  const p6=S.fam.p6,p0=S.fam.paints[0],p1=S.fam.paints[1];
+  const r=p6.r,y=p6.y,pct=p6.pct;
+  const mc={};mc[p0]=r;mc[p1]=y;const mixCol=rgb(mix(mc));
+  $('#mText').innerHTML=`We mixed <b>${r}mL of ${p0}</b> and <b>${y}mL of ${p1}</b> to make <b>${r+y}mL of ${S.fam.id} paint</b>.<br>In this ${r+y}mL of ${S.fam.id} paint, what <b>percent</b> is <b>${p0}</b>?`;
+  $('#mProg').textContent='';
+  $('#stageBody').innerHTML=
+    `<div class="tools" style="text-align:center"><div style="font-size:17.5px;font-weight:800;margin-bottom:6px"><b style="color:${rgb(PRIM[p0])}">${p0} ${r}mL</b> + <b style="color:${rgb(PRIM[p1])}">${p1} ${y}mL</b></div>
+      <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div></div>
+    <div class="tools"><div style="display:flex;gap:10px;justify-content:center;align-items:center">
+      <div class="numfield"><input id="qIn6" type="number" inputmode="numeric" min="0" max="100" placeholder="?"><div class="u">%</div></div></div>
+    <div style="text-align:center;margin-top:8px"><button class="btn primary big" id="qGo6" style="max-width:220px">Check</button></div></div>`;
+  $('#qGo6').onclick=()=>{
+    const v=parseInt($('#qIn6').value||'0',10);
+    if(v===pct){plog('p6PctOk',{v});
+      success(`Correct! ${p0} is ${pct}% of the whole!`,`Out of ${r}+${y} = <b>${r+y}mL</b>, ${p0} is <b>${r}mL</b> — seen out of 100, that's <b>${pct}%</b>.`,famDone);}
+    else{plog('p6PctRetry',{v});
+      banner('help','Try again!',`The whole is ${r}+${y} = <b>${r+y}mL</b> — express the ${p0} part (<b>${r}mL</b>) out of <b>100</b>.`,[['Go!',hideBanner]]);chime(false);}};
+}
+
+/* ===== 피드백 ===== */
+function stageDone(){const nx=S.stage+1;S.done[S.fam.id+':'+S.stage]=true;
+  if(nx<=5)banner('ok',`Step done: ${STEP[S.stage-1]}!`,'Ready for the next step?',[['Next step',()=>{hideBanner();S.stage=nx;resetStage();}],['Stay here',hideBanner]]);else famDone();}
+function famDone(){S.done[S.fam.id+':5']=true;
+  plog('famDone',{allDone:true});
+  try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
+  banner('ok','All five Color Lab steps complete! 🎉','Great job — your next mission is 🎼 Secret of Sound.',[['Nice!',hideBanner]]);}
+function remedial(m){const p0=S.fam.paints[0],p1=S.fam.paints[1];
+  banner('help','Try again!',`How many mL of ${p1} do you have now? How many mL of ${p0}?<br>First work out <b>which paint needs how much</b> to match Ⓐ.`,[['Retry',hideBanner]]);chime(false);plog('retry',{mode:m});}
+function success(t,s,after){banner('ok',t,s,[[after?'Next':'Nice!',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}
+function placeBanner(b){let y;try{const fe=window.frameElement;
+  if(fe){const r=fe.getBoundingClientRect(),ph=window.parent.innerHeight;
+    const vt=Math.max(0,-r.top),vb=Math.min(r.height,ph-r.top);y=vt+(vb-vt)*0.55;}
+  else{y=window.scrollY+window.innerHeight*0.6;}}catch(e){y=window.scrollY+window.innerHeight*0.6;}
+  b.style.top=Math.max(90,Math.round(y))+'px';}
+function banner(cls,t,s,acts){const b=$('#banner');b.className=cls+' show';placeBanner(b);$('#bT').innerHTML=t;$('#bS').innerHTML=s||'';const ae=$('#bA');ae.innerHTML='';(acts||[['OK',hideBanner]]).forEach(([x,fn])=>{const q=document.createElement('button');q.className='btn';q.innerHTML=x;q.onclick=fn;ae.appendChild(q);});}
+function hideBanner(){$('#banner').className='';}
+let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
+function tone(f,w,d){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.2,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}
+function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
+if(TEACHER){const b=$('#tmBadge');if(b)b.style.display='block';}
+resetStage();
+</script>
+</body>
+</html>
