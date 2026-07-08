@@ -403,7 +403,7 @@ function renderS6(){
   const p6=S.fam.p6,p0=S.fam.paints[0],p1=S.fam.paints[1];
   const r=p6.r,y=p6.y,pct=p6.pct;
   const mc={};mc[p0]=r;mc[p1]=y;const mixCol=rgb(mix(mc));
-  $('#mText').innerHTML=`<b>${p0} ${r}mL</b>, <b>${p1} ${y}mL</b>를 넣어서 <b>${S.fam.id} 물감</b>을 만들었습니다.<br>이 ${S.fam.id}색 액체에서 <b>${p0}</b>${jz(p0,'은','는')} <b>몇 %</b>인가요?`;
+  $('#mText').innerHTML=`<b>${p0} ${r}mL</b>, <b>${p1} ${y}mL</b>를 넣어서 <b>${S.fam.id} 물감 ${r+y}mL</b>를 만들었습니다.<br>이 ${S.fam.id} 물감 ${r+y}mL에서 <b>${p0}</b>${jz(p0,'은','는')} <b>몇 %</b>인가요?`;
   $('#mProg').textContent='';
   $('#stageBody').innerHTML=
     `<div class="tools" style="text-align:center"><div style="font-size:17.5px;font-weight:800;margin-bottom:6px"><b style="color:${rgb(PRIM[p0])}">${p0} ${r}mL</b> + <b style="color:${rgb(PRIM[p1])}">${p1} ${y}mL</b></div>
