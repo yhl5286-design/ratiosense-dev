@@ -203,8 +203,8 @@ function g5pick(el){const ok=el.dataset.ok==='1';const P=G5[g5.q];
       banner(`맞았어요! ${won(P.disc)} 깎였어요`,`이제 이 ${won(P.disc)}이 원래 가격의 <b>몇 %</b>인지 구해요.`,
         [['계속 →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
     else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
-      banner(`맞았어요! ${P.rate}% 할인 🎉`,`${P.disc}÷${P.price}×100=${P.rate} — <b>원래 가격을 100으로</b> 볼 때 ${P.rate}만큼! 색상 실험실의 100칸과 같은 비밀이죠.`,
-        [['마트의 비밀 완성! 🛒',hideBanner]]);}
+      banner(`맞았어요! ${P.rate}% 할인 🎉`,`${P.disc}÷${P.price}×100=${P.rate} — <b>원래 가격을 100으로</b> 볼 때 ${P.rate}만큼! 색상 실험실의 100칸과 같은 비밀이죠.`+'<br><div style="margin-top:10px;font-weight:800">📝 오늘 마트에서 찾은 <b>비의 비밀</b>을 한 문장으로 남겨 주세요!</div><input id="rfx" type="text" maxlength="100" placeholder="예: 1개 값을 알면 무엇이든 비교할 수 있다!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',
+        [['한 문장 남기고 완성! 🛒',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();}]]);}
   }
 }
 

@@ -284,8 +284,8 @@ function hCut(){cEq();const cur=HP[hI],ex=hLen(hI),val=parseFloat(cDisp)||0;
   if(ok){hDone.push(hI);pluck(hFreq(ex));cClear();
     const last=hDone.length>=HP.length;
     if(last){try{parent.postMessage({type:'harmonyLabDone'},'*');}catch(e){}}
-    banner(`${cur.n} 줄 완성! 🪕 ${Math.round(ex*10)/10}cm`,`도 줄 ${HBASE}cm의 ${cur.a}/${cur.b} = ${Math.round(ex*10)/10}cm — 뜯으면 딱 ${cur.n}!`,
-      last?[['하프 완성! 🪕',()=>{hideBanner();render();}]]:[['다음 줄 →',()=>{hideBanner();hI++;render();}]]);}
+    banner(`${cur.n} 줄 완성! 🪕 ${Math.round(ex*10)/10}cm`,`도 줄 ${HBASE}cm의 ${cur.a}/${cur.b} = ${Math.round(ex*10)/10}cm — 뜯으면 딱 ${cur.n}!`+(last?'<br><div style="margin-top:10px;font-weight:800">📝 오늘 소리에서 찾은 <b>비의 비밀</b>을 한 문장으로 남겨 주세요!</div><input id="rfx" type="text" maxlength="100" placeholder="예: 줄이 짧을수록 빨리 떨려서 높은 소리가 난다!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">':''),
+      last?[['한 문장 남기고 완성! 🪕',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();render();}]]:[['다음 줄 →',()=>{hideBanner();hI++;render();}]]);}
   else banner('다시 계산해 볼까요?',`계산기로 <b>${HBASE} × ${cur.a} ÷ ${cur.b}</b> 를 눌러 보세요. (C로 지우기)`,[['다시',hideBanner]]);}
 const MEL=[[332,.7],[442,.7],[442,.7],[393,.35],[442,.35],[524,.7],[442,.35],[524,.35],[442,.7],[393,.35],[332,.35],[295,.7],[262,1.1]];
 function hSong(){let w=0;MEL.forEach(([f,d])=>{pluck(f,w);w+=d;});plog('hPlay',{});}

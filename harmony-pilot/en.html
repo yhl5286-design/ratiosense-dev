@@ -284,8 +284,8 @@ function hCut(){cEq();const cur=HP[hI],ex=hLen(hI),val=parseFloat(cDisp)||0;
   if(ok){hDone.push(hI);pluck(hFreq(ex));cClear();
     const last=hDone.length>=HP.length;
     if(last){try{parent.postMessage({type:'harmonyLabDone'},'*');}catch(e){}}
-    banner(`${cur.n} string done! 🪕 ${Math.round(ex*10)/10}cm`,`${cur.a}/${cur.b} of the ${HBASE}cm Do string = ${Math.round(ex*10)/10}cm — pluck it and you get ${cur.n}!`,
-      last?[['Harp complete! 🪕',()=>{hideBanner();render();}]]:[['Next string →',()=>{hideBanner();hI++;render();}]]);}
+    banner(`${cur.n} string done! 🪕 ${Math.round(ex*10)/10}cm`,`${cur.a}/${cur.b} of the ${HBASE}cm Do string = ${Math.round(ex*10)/10}cm — pluck it and you get ${cur.n}!`+(last?'<br><div style="margin-top:10px;font-weight:800">📝 Write one sentence about the <b>secret of ratios</b> you found in sound today!</div><input id="rfx" type="text" maxlength="100" placeholder="e.g., Shorter strings vibrate faster and sound higher!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">':''),
+      last?[['Leave a sentence & finish! 🪕',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();render();}]]:[['Next string →',()=>{hideBanner();hI++;render();}]]);}
   else banner('Let\'s recalculate!',`Try <b>${HBASE} × ${cur.a} ÷ ${cur.b}</b> on the calculator. (C to clear)`,[['Retry',hideBanner]]);}
 const MEL=[[332,.7],[442,.7],[442,.7],[393,.35],[442,.35],[524,.7],[442,.35],[524,.35],[442,.7],[393,.35],[332,.35],[295,.7],[262,1.1]];
 function hSong(){let w=0;MEL.forEach(([f,d])=>{pluck(f,w);w+=d;});plog('hPlay',{});}

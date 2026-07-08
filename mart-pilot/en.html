@@ -203,8 +203,8 @@ function g5pick(el){const ok=el.dataset.ok==='1';const P=G5[g5.q];
       banner(`Correct! ${won(P.disc)} off`,`Now find what <b>percent</b> of the original price that is.`,
         [['Continue →',()=>{hideBanner();g5.step=1;cClear();render5();}]]);}
     else{try{parent.postMessage({type:'martLabDone'},'*');}catch(e){}
-      banner(`Correct! A ${P.rate}% discount 🎉`,`${P.disc}÷${P.price}×100=${P.rate} — ${P.rate} parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.`,
-        [['Secret of the Mart complete! 🛒',hideBanner]]);}
+      banner(`Correct! A ${P.rate}% discount 🎉`,`${P.disc}÷${P.price}×100=${P.rate} — ${P.rate} parts when <b>the original price is 100</b>! The same secret as the 100 cells in the Color Lab.`+'<br><div style="margin-top:10px;font-weight:800">📝 Write one sentence about the <b>secret of ratios</b> you found at the mart today!</div><input id="rfx" type="text" maxlength="100" placeholder="e.g., Unit prices make everything comparable!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',
+        [['Leave a sentence & finish! 🛒',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();}]]);}
   }
 }
 

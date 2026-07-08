@@ -425,7 +425,7 @@ function stageDone(){const nx=S.stage+1;S.done[S.fam.id+':'+S.stage]=true;
 function famDone(){S.done[S.fam.id+':5']=true;
   plog('famDone',{allDone:true});
   try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
-  banner('ok','All five Color Lab steps complete! 🎉','Great job — your next mission is 🎼 Secret of Sound.',[['Nice!',hideBanner]]);}
+  banner('ok','All five Color Lab steps complete! 🎉',`Great job — your next mission is 🎼 Secret of Sound.`+'<br><div style="margin-top:10px;font-weight:800">📝 Write one sentence about the <b>secret of ratios</b> you found in color today!</div><input id="rfx" type="text" maxlength="100" placeholder="e.g., Different amounts, same ratio, same color!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',[['Leave a sentence & finish!',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();}]]);}
 function remedial(m){const p0=S.fam.paints[0],p1=S.fam.paints[1];
   banner('help','Try again!',`How many mL of ${p1} do you have now? How many mL of ${p0}?<br>First work out <b>which paint needs how much</b> to match Ⓐ.`,[['Retry',hideBanner]]);chime(false);plog('retry',{mode:m});}
 function success(t,s,after){banner('ok',t,s,[[after?'Next':'Nice!',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}

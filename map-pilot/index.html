@@ -269,7 +269,7 @@ function e4pick1(el){const ok=el.dataset.ok==='1';plog(ok?'earthX50Ok':'earthX50
   else banner('다시 한번 도전해볼까요?','계산기로 <b>360 ÷ 7.2</b> 를 눌러 보세요. (C로 지우기)',[['다시',hideBanner]]);}
 function e4pick2(el){const ok=el.dataset.ok==='1';plog(ok?'earthDone':'earthRetry',{pick:el.textContent});
   if(ok){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
-    chime();banner('지구를 쟀어요!! 🌍','7.2° : 360° = 800 : <b>40,000</b> — 실제 값 40,075 km, 오차 0.2%!',[['지도 완성 →',()=>{hideBanner();render();}]]);}
+    chime();banner('지구를 쟀어요!! 🌍',`7.2° : 360° = 800 : <b>40,000</b> — 실제 값 40,075 km, 오차 0.2%!`+'<br><div style="margin-top:10px;font-weight:800">📝 오늘 지도에서 찾은 <b>비의 비밀</b>을 한 문장으로 남겨 주세요!</div><input id="rfx" type="text" maxlength="100" placeholder="예: 지도는 실제를 같은 비로 줄인 것이다!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',[['한 문장 남기고 완성! 🌍',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();render();}]]);}
   else banner('다시 한번 도전해볼까요?','각도가 50배니까 거리도 50배 — <b>800 × 50</b> 을 계산해 보세요.',[['다시',hideBanner]]);}
 
 /* ══════ 계산기 (공용) ══════ */

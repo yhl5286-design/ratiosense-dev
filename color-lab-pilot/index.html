@@ -425,7 +425,7 @@ function stageDone(){const nx=S.stage+1;S.done[S.fam.id+':'+S.stage]=true;
 function famDone(){S.done[S.fam.id+':5']=true;
   plog('famDone',{allDone:true});
   try{parent.postMessage({type:'colorLabDone'},'*');}catch(e){}
-  banner('ok','색상 실험실 다섯 단계 모두 완성! 🎉','잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.',[['좋아요',hideBanner]]);}
+  banner('ok','색상 실험실 다섯 단계 모두 완성! 🎉',`잘했어요 — 다음 미션은 🎼 소리의 비밀 찾기예요.`+'<br><div style="margin-top:10px;font-weight:800">📝 오늘 색에서 찾은 <b>비의 비밀</b>을 한 문장으로 남겨 주세요!</div><input id="rfx" type="text" maxlength="100" placeholder="예: 양이 달라도 비가 같으면 같은 색이다!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',[['한 문장 남기고 완성!',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();}]]);}
 function remedial(m){const p0=S.fam.paints[0],p1=S.fam.paints[1];
   banner('help','다시 한번 도전해볼까요?',`${p1}${iga(p1)} 지금 몇 mL인가요? ${p0}${jz(p0,'은','는')} 지금 몇 mL인가요?<br>Ⓐ와 같은 색이 되려면 <b>무슨 물감을 얼마</b>가 되게 해야 할지 먼저 계산해 보세요.`,[['다시 해보기',hideBanner]]);chime(false);plog('retry',{mode:m});}
 function success(t,s,after){banner('ok',t,s,[[after?'다음':'좋아요',()=>{hideBanner();if(after)after();}]]);chime(true);plog('success',{msg:t});}

@@ -269,7 +269,7 @@ function e4pick1(el){const ok=el.dataset.ok==='1';plog(ok?'earthX50Ok':'earthX50
   else banner('Try again!','Try <b>360 ÷ 7.2</b> on the calculator. (C to clear)',[['Retry',hideBanner]]);}
 function e4pick2(el){const ok=el.dataset.ok==='1';plog(ok?'earthDone':'earthRetry',{pick:el.textContent});
   if(ok){m4step=3;try{parent.postMessage({type:'mapLabDone'},'*');}catch(e){}
-    chime();banner('You measured the Earth!! 🌍','7.2° : 360° = 800 : <b>40,000</b> — the real value is 40,075 km, only 0.2% off!',[['Finish the map →',()=>{hideBanner();render();}]]);}
+    chime();banner('You measured the Earth!! 🌍',`7.2° : 360° = 800 : <b>40,000</b> — the real value is 40,075 km, only 0.2% off!`+'<br><div style="margin-top:10px;font-weight:800">📝 Write one sentence about the <b>secret of ratios</b> you found in maps today!</div><input id="rfx" type="text" maxlength="100" placeholder="e.g., A map shrinks the real world by one ratio!" style="width:100%;max-width:430px;margin-top:6px;padding:10px;border:1.5px solid #bfe6cf;border-radius:10px;font-size:14px;font-weight:600">',[['Leave a sentence & finish! 🌍',()=>{const _r=document.querySelector('#rfx');plog('reflection',{text:(_r&&_r.value||'').slice(0,100)});hideBanner();render();}]]);}
   else banner('Try again!','The angle is ×50, so the distance is ×50 — calculate <b>800 × 50</b>.',[['Retry',hideBanner]]);}
 
 /* ══════ 계산기 (공용) ══════ */
