@@ -93,14 +93,14 @@ function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b
 /* 순정률 */
 const NOTES=[['도',262,1,1],['레',295,9,8],['미',328,5,4],['파',349,4,3],['솔',393,3,2],['라',437,5,3],['시',491,15,8],['도′',524,2,1]];
 const INTV={'1:1':'유니즌','1:2':'옥타브','2:3':'완전5도','3:4':'완전4도','4:5':'장3도','5:6':'단3도','3:5':'장6도','8:9':'장2도','8:15':'장7도'};
-/* 하프(피타고라스 5음계) */
+/* 하프 — 화음 단계의 순정률 비 그대로(도:음 = a:b), 길이는 81×a/b */
 const HBASE=81;
-const HP=[{n:'레',a:8,b:9},{n:'미',a:64,b:81},{n:'솔',a:2,b:3},{n:'라',a:16,b:27},{n:'도′',a:1,b:2}];
+const HP=[{n:'레',a:8,b:9},{n:'미',a:4,b:5},{n:'파',a:3,b:4},{n:'솔',a:2,b:3},{n:'라',a:3,b:5},{n:'시',a:8,b:15},{n:'도′',a:1,b:2}];
 const hLen=i=>HBASE*HP[i].a/HP[i].b;
 const hFreq=L=>Math.round(262*HBASE/L);
-let hDone=0;
+let hDone=0; // 0~7
 function harpHTML(){
-  const items=[{n:'도',L:81,made:true,frac:'1'}].concat(HP.map((p,i)=>({n:p.n,L:hLen(i),made:i<hDone,frac:p.a+'/'+p.b})));
+  const items=[{n:'도',L:81,made:true,frac:'1'}].concat(HP.map((p,i)=>({n:p.n,L:hLen(i),made:i<hDone,frac:p.a+':'+p.b})));
   return `<div class="harp"><div class="hbeam"></div><div class="hrow">`+
     items.map((it,ix)=>`<div class="hcol">${it.made
       ?`<div class="hs" style="height:${Math.round(it.L*2.4)}px" onclick="pluckT(${hFreq(it.L)});this.classList.remove('pluckA');void this.offsetWidth;this.classList.add('pluckA')"></div><div class="hlab">${it.n}<br><span>${Math.round(it.L*10)/10}cm</span></div>`
@@ -209,19 +209,19 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireGoal(el);return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
     el.innerHTML=`${goalHTML(3,['음을 만들 때는 ','[도','를 기준으로 ','[비율','을 계산한다.'])}
-      <div class="q">🪕 <b>${p.n}</b> 줄은 도 줄(<b>81cm</b>)의 <b>${p.a}/${p.b}</b> —<br><b>몇 cm</b>로 만들어야 할까요?</div>
-      <div class="sub">하프 공방 ${d.i+1}/5 — 완성된 줄은 눌러서 소리 확인! (짧을수록 높은 음)</div>
+      <div class="q">도 : ${p.n}의 진동수 비는 <b>${p.a} : ${p.b}</b>입니다.<br>도 줄이 <b>81cm</b>일 때, <b>${p.n}</b>${jz(p.n,'을','를')} 만들려면 몇 cm가 되어야 할까요?</div>
+      <div class="sub">하프 공방 ${d.i+1}/7 — 빨리 떨리는 음일수록 줄은 <b>짧게</b>! 길이의 비는 진동수 비를 <b>거꾸로</b>예요</div>
       ${harpHTML()}
-      <div class="nf"><input id="inp" type="number" step="0.1" placeholder="?"><div class="u">cm</div></div>
+      <div class="nf"><input id="inp" type="number" step="0.01" placeholder="?"><div class="u">cm</div></div>
       <div><button class="btn pri" id="go">🪕 이 길이로 줄 매달기</button></div>`;
     $('#go').onclick=()=>{const v=parseFloat($('#inp').value||'0');
-      if(Math.abs(v-ex)<=0.3){hDone=d.i+1;pluckT(hFreq(ex));
-        success(`${p.n} 줄 완성! ${Math.round(ex*100)/100}cm`,`81cm의 ${p.a}/${p.b} = <b>${Math.round(ex*100)/100}cm</b> — 뜯으면 딱 ${p.n}!`);}
-      else retry(`도 줄 <b>81cm</b>의 <b>${p.a}/${p.b}</b>이 몇 cm인지 다시 구해 보세요.`);};
+      if(Math.abs(v-ex)<=0.5){hDone=d.i+1;pluckT(hFreq(ex));
+        success(`${p.n} 줄 완성! ${Math.round(ex*100)/100}cm`,`진동수 비가 ${p.a} : ${p.b}니까 길이는 거꾸로 — 도 줄 81cm의 <b>${p.a}/${p.b}</b> = <b>${Math.round(ex*100)/100}cm</b>. 뜯으면 딱 ${p.n}!`);}
+      else retry(`${p.n}${jz(p.n,'은','는')} 도보다 <b>빨리</b> 떨리니 줄이 더 <b>짧아야</b> 해요.<br>도 줄 81cm의 <b>${p.a}/${p.b}</b>을 구해 보세요.`);};
     wireGoal(el);return;}
-  if(d.t==='done'){hDone=5;
+  if(d.t==='done'){hDone=7;
     el.innerHTML=`<div style="font-size:80px">🎉</div>
-    <div class="q">5음계 하프 완성! 자유롭게 연주해 보세요</div>
+    <div class="q">도레미파솔라시도 하프 완성!<br>자유롭게 연주해 보세요</div>
     ${harpHTML()}
     <div class="sub" style="margin-top:12px">📝 오늘 소리에서 찾은 <b>비의 비밀</b>을 한 문장으로!</div>
     <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100" placeholder="예: 줄이 짧을수록 빨리 떨려서 높은 소리가 난다!"
