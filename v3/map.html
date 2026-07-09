@@ -50,11 +50,17 @@
   #fbT{font-size:30px;font-weight:800;margin-bottom:10px}
   #fbS{font-size:21px;line-height:1.8;color:#41506b;font-weight:600}
   #fbA{margin-top:22px}
-  .sumbox{background:#fff;border:3px solid var(--line);border-radius:20px;padding:20px 24px;display:inline-block;text-align:left;margin:8px 0;max-width:760px}
-  .sumbox .row{font-size:21px;font-weight:800;line-height:2.3}
-  .sumbox input{width:130px;font-size:20px;font-weight:800;border:none;border-bottom:3.5px solid var(--gold);background:#fffbef;text-align:center;outline:none;padding:2px 6px}
-  .sumbox input.okk{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
-  .sumbox input.bad{border-color:var(--red);background:#fdeeec}
+  .dz{display:inline-block;min-width:92px;min-height:34px;border-bottom:4px solid var(--gold);background:#fffbef;border-radius:10px 10px 0 0;padding:3px 12px;text-align:center;font-weight:800;color:#b3541e;vertical-align:bottom;cursor:pointer;font-size:21px}
+  .dz.sel{background:#ffe9a8;outline:3px dashed var(--gold)}
+  .dz.okk{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
+  .dz.bad{border-color:var(--red);background:#fdeeec;color:var(--red)}
+  .bank{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .chip{border:3px solid var(--gold);background:#fff;border-radius:16px;padding:11px 20px;font-size:21px;font-weight:800;cursor:grab;user-select:none;touch-action:none}
+  .chip:hover{background:#fffbef}
+  .chip.used{visibility:hidden}
+  #ghost{position:fixed;pointer-events:none;z-index:99;opacity:.9}
+  .sumbox{background:#fff;border:3px solid var(--line);border-radius:20px;padding:20px 24px;display:inline-block;text-align:left;margin:8px 0;max-width:780px}
+  .sumbox .row{font-size:21px;font-weight:800;line-height:2.6}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -149,6 +155,33 @@ function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
 function next(){idx=Math.min(idx+1,DECK.length-1);render();}
 function success(t,s,after){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',after||next);}
 function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
+function mountDrag(el){
+  let sel=null,drag=null;
+  const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
+  function place(dz,ch){if(dz.dataset.chip)unplace(dz);
+    dz.textContent=ch.dataset.w;dz.dataset.chip=ch.dataset.c;ch.classList.add('used');
+    dz.classList.remove('okk','bad','sel');if(sel===dz)sel=null;}
+  function unplace(dz){const c=chips.find(x=>x.dataset.c===dz.dataset.chip);
+    if(c)c.classList.remove('used');dz.textContent='';dz.dataset.chip='';dz.classList.remove('okk','bad');}
+  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.dataset.chip){unplace(dz);return;}
+    dzs.forEach(x=>x.classList.remove('sel'));dz.classList.add('sel');sel=dz;};});
+  chips.forEach(ch=>{
+    ch.onclick=()=>{if(ch.classList.contains('used'))return;
+      const dz=sel&&!sel.dataset.chip?sel:dzs.find(x=>!x.dataset.chip);
+      if(dz)place(dz,ch);};
+    ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      document.body.appendChild(g);drag={ch,g};g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
+  document.onpointermove=e=>{if(drag){drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';}};
+  document.onpointerup=e=>{if(!drag)return;
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const dz=under&&under.closest?under.closest('.dz'):null;
+    if(dz&&!dz.dataset.chip)place(dz,drag.ch);
+    drag.g.remove();drag=null;};
+  return {check(){let all=true;
+    dzs.forEach(dz=>{const ok=!!dz.dataset.chip&&dz.textContent===dz.dataset.a;
+      dz.classList.remove('okk','bad');dz.classList.add(ok?'okk':'bad');if(!ok)all=false;});
+    return all;},vals(){return dzs.map(d2=>d2.textContent);}};}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🗺️</div>
     <div class="q">지도의 비밀에 온 걸 환영해요!</div>
@@ -201,32 +234,27 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       b.dataset.ok==='1'?success('지구를 쟀어요!! 🌍','7.2° : 360° = 800 : <b>40,000</b> — 실제 값 40,075km, 오차 0.2%!<br>막대기 하나와 <b>비</b>만으로 지구를 쟀어요!')
         :retry('각도가 50배니까 거리도 50배 — <b>800 × 50</b>!');});return;}
   if(d.t==='done'){
+    const WORDS=["비", "100", "닮은", "차이", "10"].sort(()=>Math.random()-.5);
     el.innerHTML=`<div style="font-size:80px">🎉</div>
     <div class="q">지도의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="sub">지도의 비밀 찾기에서 알게 된 것을 <b>빈칸에 직접 써서</b> 정리해 봅시다</div>
-    <div class="sumbox"><div class="row">지도는 실제를 같은 (<input class="sq" data-i="0" autocomplete="off">)로 줄인 것이다.</div><div class="row">축척 1:10,000에서 지도 1cm는 실제 (<input class="sq" data-i="1" autocomplete="off">)m이다.</div><div class="row">지도 위 도형은 실제와 모양이 같은 (<input class="sq" data-i="2" autocomplete="off">)은 도형이다.</div></div>
-    <div><button class="btn pri" id="ck">정리 확인!</button></div>
+    <div class="sub"><b>지도의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
+    <div class="sumbox"><div class="row">지도는 실제를 같은 (<span class="dz" data-a="비"></span>)로 줄인 것이다.</div><div class="row">축척 1:10,000에서 지도 1cm는 실제 (<span class="dz" data-a="100"></span>)m이다.</div><div class="row">지도 위 도형은 실제와 모양이 같은 (<span class="dz" data-a="닮은"></span>) 도형이다.</div></div>
+    <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
+    <div style="margin-top:10px"><button class="btn pri" id="ck">정리 확인!</button></div>
     <div id="freeQ" style="display:none;margin-top:14px">
       <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
       <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
         style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
-      <button class="btn pri" id="go">남기고 완성! 🌍</button>
+      <button class="btn pri" id="go2">남기고 완성! 🌍</button>
     </div>`;
-    const ANS=[["비"], ["100"], ["닮"]];
-    const norm=s=>(s||'').replace(/\s/g,'');
+    const dc=mountDrag(el);
     $('#ck').onclick=()=>{
-      let all=true;
-      el.querySelectorAll('.sq').forEach(inp=>{
-        const ok=ANS[+inp.dataset.i].some(a=>norm(inp.value).includes(norm(a)));
-        inp.className='sq '+(ok?'okk':'bad');if(!ok)all=false;});
-      if(all){plog('summary',{a:[...el.querySelectorAll('.sq')].map(i=>i.value)});
-        chime(true);fb('','✅ 정리 완벽!','오늘 배운 비밀이 머릿속에 쏙 정리됐어요!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});}
-      else{chime(false);fb('help','🤔 빨간 칸을 다시!','오늘 활동에서 나왔던 말을 떠올려 보세요.','도전!',null);}};
-    $('#go')?null:null;
-    el.addEventListener('click',e=>{if(e.target&&e.target.id==='go'){
+      if(dc.check()){plog('summary',{a:dc.vals()});chime(true);
+        fb('','✅ 정리 완벽!','오늘 배운 비밀이 머릿속에 쏙 정리됐어요!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});}
+      else{chime(false);fb('help','🤔 빨간 칸을 다시!','낱말 카드를 눌러 빼고, 알맞은 자리에 다시 놓아 보세요.','도전!',null);}};
+    el.addEventListener('click',e=>{if(e.target&&e.target.id==='go2'){
       plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
       fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});
-    
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
