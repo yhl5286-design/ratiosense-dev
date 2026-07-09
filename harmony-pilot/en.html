@@ -119,7 +119,7 @@ function drawMeet(cvId,a,b){const cv=$('#'+cvId);if(!cv)return;const rect=cv.get
 
 /* ===== 1단계: 진동수 느끼기 ===== */
 const OCT1=[['Do',262],['Re',295],['Mi',328],['Fa',349],['Sol',393],['La',437],['Ti',491],['Do',524]];
-let f1=262, s1Req=null, s1T=0, plucks=[0,0,0,0,0,0,0,0], lastPluck=0;
+let f1=262, s1Req=null, s1T=0, plucks=[0,0,0,0,0,0,0,0], lastPluck=0, w1env=0;
 const S1WW=40,S1GAP=3,S1STEP=43,S1PW=344; // 8*43
 function render1(){
   $('#readout').innerHTML='<div class="nm">Sound is <b>vibration</b>. Press a key and the string behind it vibrates!</div><div class="big">Frequency = how many times it vibrates <b>per second</b></div>';
@@ -132,13 +132,13 @@ function render1(){
    <div class="card"><div class="lbl">🌊 The <b>wave</b> made by that vibration — flowing left to right</div>
      <canvas id="w1" style="height:150px"></canvas>
      <div class="dialv" id="hz1" style="font-size:20px">This note vibrates <b>${OCT1[lastPluck][1]} times</b> per second</div>
-     <div class="cap">It's really much faster (hundreds per second!) — we slowed it down.</div></div>`;
+     <div class="cap">It's really much faster (hundreds per second!) — we slowed it down. As the sound fades, the wave fades too.</div></div>`;
   start1();
 }
 function updateHz1(){const h=$('#hz1');if(h)h.innerHTML=`This note vibrates <b>${Math.round(f1)} times</b> per second`;}
 function start1(){if(s1Req)cancelAnimationFrame(s1Req);s1T=0;loop1();}
 function stop1(){if(s1Req){cancelAnimationFrame(s1Req);s1Req=null;}}
-function loop1(){s1T++;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=.988;drawHarp();drawW1();s1Req=requestAnimationFrame(loop1);}
+function loop1(){s1T++;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=.988;if(w1env>.001)w1env*=.985;drawHarp();drawW1();s1Req=requestAnimationFrame(loop1);}
 function drawHarp(){const cv=$('#harp');if(!cv)return;const rect=cv.getBoundingClientRect();const W=cv.width=Math.round(rect.width*2),H=cv.height=Math.round(rect.height*2);const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
   const sc=W/S1PW,yBot=H-14,maxLen=H-28;
   ctx.fillStyle='#6b4a2a';ctx.fillRect(0,yBot,W,H-yBot);
@@ -147,11 +147,20 @@ function drawHarp(){const cv=$('#harp');if(!cv)return;const rect=cv.getBoundingC
     for(let y=yTop;y<=yBot;y++){const dx=amp*Math.sin(Math.PI*(y-yTop)/len)*Math.cos(ph);(y===yTop)?ctx.moveTo(cx+dx,y):ctx.lineTo(cx+dx,y);}ctx.stroke();
     ctx.fillStyle='#cdb98a';ctx.beginPath();ctx.arc(cx,yTop,4,0,7);ctx.fill();});}
 function drawW1(){const cv=$('#w1');if(!cv)return;const rect=cv.getBoundingClientRect();const W=cv.width=Math.round(rect.width*2),H=cv.height=300;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  const mid=H/2,amp=H*0.34,pad=24,L=W-pad*2,cycles=Math.max(3,Math.round(f1/45)),color=f1>360?'#c0392b':(f1>240?'#e0a02a':'#3b6db5');
+  const mid=H/2,pad=24,L=W-pad*2,cycles=Math.max(3,Math.round(f1/45)),color=f1>360?'#c0392b':(f1>240?'#e0a02a':'#3b6db5');
+  // 축 라벨: 소리는 공기의 떨림 — 소리가 없으면 파동도 없어요
+  ctx.strokeStyle='#d8d2c4';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,mid);ctx.lineTo(pad+L,mid);ctx.stroke();
+  ctx.fillStyle='#8a8577';ctx.font='bold 17px sans-serif';ctx.textAlign='left';
+  ctx.fillText('↕ air vibration (amplitude)',pad+2,26);
+  ctx.textAlign='right';ctx.fillText('time →',pad+L,H-10);
+  const env=w1env;
+  if(env<.02){ctx.fillStyle='#a89f8d';ctx.font='bold 19px sans-serif';ctx.textAlign='center';
+    ctx.fillText('Press a key to see the wave — no sound, no vibration!',W/2,mid-20);return;}
+  const amp=H*0.34*env;
   const shift=(s1T*2.4)%(L/cycles);
   ctx.beginPath();ctx.lineWidth=4;ctx.strokeStyle=color;
   for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*cycles*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
-function press1(i){f1=OCT1[i][1];plucks[i]=1;lastPluck=i;updateHz1();tone(f1,0,1.1);plog('key1',{note:OCT1[i][0],hz:OCT1[i][1]});
+function press1(i){f1=OCT1[i][1];plucks[i]=1;w1env=1;lastPluck=i;updateHz1();tone(f1,0,1.1);plog('key1',{note:OCT1[i][0],hz:OCT1[i][1]});
   const k=document.querySelectorAll('.wkey1')[i];if(k){k.classList.add('play');setTimeout(()=>k.classList.remove('play'),160);}}
 
 /* ===== 2단계: 피아노 + 비 + 만남점 ===== */
@@ -186,7 +195,7 @@ function updateReadout(){if(sel>=0){const [a,b]=baseToNote(sel);const nm=INTV[`$
   else $('#readout').innerHTML=`<div class="nm">★base = ${keyLabel(baseIdx)} ${Math.round(freq(baseIdx))}Hz · press another white key to hear the chord and see the waves</div><div class="big">Ratio to the base note</div>`;}
 /* 흐르는 만남점 애니메이션 */
 let animReq=null, animT=0, animTimer=null;
-function startAnim(){stopAnim();animT=0;animLoop();animTimer=setTimeout(stopAnim,2000);}
+function startAnim(){stopAnim();animT=0;animLoop();animTimer=setTimeout(()=>{stopAnim();drawMeetIdle();},2000);}
 function stopAnim(){if(animReq){cancelAnimationFrame(animReq);animReq=null;}if(animTimer){clearTimeout(animTimer);animTimer=null;}}
 function animLoop(){animT+=2.2;drawMeetAnim();animReq=requestAnimationFrame(animLoop);}
 function stopAll2(){stopSeq();chordOff();}
@@ -211,6 +220,17 @@ function drawMeetAnim(){const cv=$('#cv2');if(!cv||sel<0){stopAnim();return;}
   const v=$('#verdict2');if(v){const w=Math.max(6,Math.min(100,Math.round(100-Math.log2(a*b)*15)));
     v.innerHTML=`<div style="font-size:20px;font-weight:800;color:${con.c}">${con.e} ${con.t}</div><div style="height:12px;border-radius:6px;background:#ececec;overflow:hidden;margin:6px auto 0;max-width:280px"><div style="height:100%;width:${w}%;background:${con.c};transition:.2s"></div></div>`;}
   const mi=$('#mi2');if(mi)mi.innerHTML=`They meet every <b>${a}</b> base · <b>${b}</b> selected vibrations → <b>${a}:${b}</b>${nm?' · '+nm:''} — ${con.lv>=2?'<b style="color:#2e9e63">frequent meetings</b>':'<b style="color:#c0392b">rare meetings</b>'}`;}
+
+function drawMeetIdle(){const cv=$('#cv2');if(!cv||sel<0)return;
+  const rect=cv.getBoundingClientRect();const W=cv.width=Math.round(rect.width*2),H=cv.height=440;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
+  const pad=30,GW=W-pad*2,mid=H/2,off=H*0.28*0.6;
+  ctx.lineWidth=4;
+  ctx.strokeStyle='#bfe0cd';ctx.beginPath();ctx.moveTo(pad,mid-off);ctx.lineTo(pad+GW,mid-off);ctx.stroke();
+  ctx.strokeStyle='#ecd9a8';ctx.beginPath();ctx.moveTo(pad,mid+off);ctx.lineTo(pad+GW,mid+off);ctx.stroke();
+  ctx.fillStyle='#2e9e63';ctx.font='bold 15px sans-serif';ctx.textAlign='left';ctx.fillText('기준음 '+Math.round(freq(baseIdx))+'Hz',pad+4,26);
+  ctx.fillStyle='#b5810f';ctx.fillText('선택음 '+Math.round(freq(sel))+'Hz',pad+4,H-30);
+  ctx.fillStyle='#a89f8d';ctx.font='bold 19px sans-serif';ctx.textAlign='center';
+  ctx.fillText('When the sound stops, the vibration stops — press a key again!',W/2,mid+7);}
 
 /* ===== 계산기 (공용) ===== */
 let cDisp='0', cAcc=null, cOp=null, cFresh=true;
@@ -262,10 +282,17 @@ function render4(){
       <div class="cap">Play freely by tapping the strings — <b>shorter string, higher note</b>!</div></div>`;
     return;}
   $('#body').innerHTML=`<div class="card"><div class="lbl">🪕 My harp — tap a finished string to hear it!</div>${harpHTML()}</div>
-   <div class="card"><div class="lbl">🎚 Test string — drag the handle and hear <b>how pitch changes with length</b></div>
-     <div class="harp" style="display:inline-block;padding:12px 26px 8px;margin-left:calc(50% - 60px)"><div class="hbeam" style="width:60px"></div>
-       <div class="hcol" style="width:60px"><div class="hs test" id="tst" style="height:${Math.round(tstL*2.6)}px"></div><div class="hlab" id="tstlab">${tstL}cm</div></div></div>
-     <input type="range" id="tr" min="35" max="81" step="1" value="${tstL}" style="width:82%;display:block;margin:10px auto 2px">
+   <div class="card"><div class="lbl">🎚 Test string — move the <b>handle up and down</b> to change the length and pitch (tap the string to hear it)</div>
+     <div style="display:flex;justify-content:center;align-items:flex-start;gap:14px">
+       <div class="harp" style="display:inline-block;padding:12px 26px 8px"><div class="hbeam" style="width:60px"></div>
+         <div class="hcol" style="width:60px"><div class="hs test" id="tst" style="height:${Math.round(tstL*2.6)}px" onclick="pluck(hFreq(tstL));plog('hPluck',{name:'test'})"></div><div class="hlab" id="tstlab">${tstL}cm</div></div></div>
+       <div style="position:relative;width:46px;height:${Math.round(81*2.6)+30}px;margin-top:12px">
+         <input type="range" id="tr" min="35" max="81" step="1" value="${tstL}"
+           style="position:absolute;top:50%;left:50%;width:${Math.round(81*2.6)}px;transform:translate(-50%,-50%) rotate(90deg)">
+         <div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:#8a8577">short↑</div>
+         <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:#8a8577">long↓</div>
+       </div>
+     </div>
    </div>
    <div class="card"><div style="background:#f4f0fb;border:1.5px solid #cbb8ec;border-radius:12px;padding:12px 14px;font-size:15.5px;line-height:1.9">
       ① The <b>${cur.n}</b> string is <b>${cur.a}/${cur.b}</b> of the Do string (<b>${HBASE}cm</b>).<br>
