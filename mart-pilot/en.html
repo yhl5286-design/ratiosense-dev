@@ -81,8 +81,9 @@ function won(n){return '₩'+n.toLocaleString('en-US');}
 
 /* ===== 계산기 (−, ×, ÷) ===== */
 let cDisp='0', cAcc=null, cOp=null, cFresh=true;
+function cFmt(v){const n=Number(v);return isFinite(n)&&String(v).indexOf('.')<0?n.toLocaleString('ko-KR'):String(v);}
 function cShow(){const d=$('#cd');if(!d)return;
-  let s;if(cOp&&cAcc!==null){s=cAcc+' '+cOp+(cFresh?'':' '+cDisp);}else s=cDisp;
+  let s;if(cOp&&cAcc!==null){s=cFmt(cAcc)+' '+cOp+(cFresh?'':' '+cFmt(cDisp));}else s=cFmt(cDisp);
   d.textContent=s;}
 function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
 function cCompute(){const y=parseFloat(cDisp);let r=cAcc;
@@ -133,7 +134,7 @@ const G4=[
 let g4={q:0};
 function render4(){
   const P=G4[g4.q];
-  $('#readout').innerHTML=`<div class="nm">A real supermarket problem! (${g4.q+1}/2)</div><div class="big">${P.name} — <b>which mart</b> is cheaper?</div>`;
+  $('#readout').innerHTML=`<div class="nm">A real supermarket problem! (${g4.q+1}/2)</div><div class="big">If you buy just <b>one</b> ${P.name}, which mart is cheaper?</div>`;
   $('#body').innerHTML=`<div class="card"><div class="shop">
       <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">Mart A</div><div class="pr">${P.a.n} for ${won(P.a.p)}</div></div>
       <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">Mart B</div><div class="pr">${P.b.n} for ${won(P.b.p)}</div></div></div>
