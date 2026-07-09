@@ -75,6 +75,17 @@
   .sumbox input{width:130px;font-size:20px;font-weight:800;border:none;border-bottom:3.5px solid var(--gold);background:#fffbef;text-align:center;outline:none;padding:2px 6px}
   .sumbox input.okk{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
   .sumbox input.bad{border-color:var(--red);background:#fdeeec}
+  .dz{display:inline-block;min-width:78px;min-height:36px;border-bottom:4px solid var(--gold);background:#fffbef;border-radius:10px 10px 0 0;padding:3px 12px;text-align:center;font-weight:800;color:#b3541e;vertical-align:middle;cursor:pointer;font-size:24px}
+  .dz.sel{background:#ffe9a8;outline:3px dashed var(--gold)}
+  .dz.okk{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
+  .dz.bad{border-color:var(--red);background:#fdeeec;color:var(--red)}
+  .bank{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .chip{border:3px solid var(--gold);background:#fff;border-radius:16px;padding:10px 20px;font-size:23px;font-weight:800;cursor:grab;user-select:none;touch-action:none}
+  .chip:hover{background:#fffbef}
+  .chip.used{visibility:hidden}
+  #ghost{position:fixed;pointer-events:none;z-index:99;opacity:.9}
+  .eq{background:#fff;border:3px solid var(--line);border-radius:20px;padding:18px 26px;display:inline-block;text-align:left;margin:8px 0}
+  .eq .row{font-size:25px;font-weight:800;line-height:2.5}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -163,6 +174,33 @@ function drawWave(){const cv=$('#wv');if(!cv)return;
   for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*cycles*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
 function loopWave(){s1T++;if(w1env>.001)w1env*=DECAY;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=DECAY;drawStrings();drawWave();animReq=requestAnimationFrame(loopWave);}
 
+function mountDrag(el,onAll){
+  let sel=null,drag=null;
+  const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
+  function place(dz,ch){if(dz.dataset.chip)unplace(dz);
+    dz.textContent=ch.dataset.w;dz.dataset.chip=ch.dataset.c;ch.classList.add('used');
+    dz.classList.remove('okk','bad','sel');if(sel===dz)sel=null;}
+  function unplace(dz){const c=chips.find(x=>x.dataset.c===dz.dataset.chip);
+    if(c)c.classList.remove('used');dz.textContent='';dz.dataset.chip='';dz.classList.remove('okk','bad');}
+  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.dataset.chip){unplace(dz);return;}
+    dzs.forEach(x=>x.classList.remove('sel'));dz.classList.add('sel');sel=dz;};});
+  chips.forEach(ch=>{
+    ch.onclick=()=>{if(ch.classList.contains('used'))return;
+      const dz=sel&&!sel.dataset.chip?sel:dzs.find(x=>!x.dataset.chip);
+      if(dz)place(dz,ch);};
+    ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      document.body.appendChild(g);drag={ch,g};g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
+  document.onpointermove=e=>{if(drag){drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';}};
+  document.onpointerup=e=>{if(!drag)return;
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const dz=under&&under.closest?under.closest('.dz'):null;
+    if(dz&&!dz.dataset.chip)place(dz,drag.ch);
+    drag.g.remove();drag=null;};
+  return {check(){let all=true;
+    dzs.forEach(dz=>{const ok=!!dz.dataset.chip&&dz.textContent===dz.dataset.a;
+      dz.classList.remove('okk','bad');dz.classList.add(ok?'okk':'bad');if(!ok)all=false;});
+    return all;}};}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🎼</div>
@@ -213,16 +251,26 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       else retry(`<b>${n[0]}</b> 건반(노란 테두리)을 눌러 도와 함께 들어 보세요 — 떨림 횟수 안내가 힌트예요!`);});
     wireGoal(el);return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
+    const exS=String(Math.round(ex*100)/100);
+    const revS=String(Math.round(HBASE*p.b/p.a*100)/100); // 뒤집어 계산한 함정값
+    const bank=[String(HBASE),String(p.a),String(p.b),exS,revS,'100']
+      .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${goalHTML(3,['음을 만들 때는 ','[도','를 기준으로 ','[비율','을 계산한다.'])}
       <div class="q">도 : ${p.n}의 진동수 비는 <b>${p.a} : ${p.b}</b>입니다.<br>도 줄이 <b>81cm</b>일 때, <b>${p.n}</b>${jz(p.n,'을','를')} 만들려면 몇 cm가 되어야 할까요?</div>
-      <div class="sub">하프 공방 ${d.i+1}/7 — 빨리 떨리는 음일수록 줄은 <b>짧게</b>! 길이의 비는 진동수 비를 <b>거꾸로</b>예요</div>
+      <div class="sub">하프 공방 ${d.i+1}/7 — 빨리 떨리는 음일수록 줄은 <b>짧게</b>! 숫자 카드를 끌어와 <b>풀이를 완성</b>하세요</div>
       ${harpHTML()}
-      <div class="nf"><input id="inp" type="number" step="0.01" placeholder="?"><div class="u">cm</div></div>
-      <div><button class="btn pri" id="go">🪕 이 길이로 줄 매달기</button></div>`;
-    $('#go').onclick=()=>{const v=parseFloat($('#inp').value||'0');
-      if(Math.abs(v-ex)<=0.5){hDone=d.i+1;pluckT(hFreq(ex));
-        success(`${p.n} 줄 완성! ${Math.round(ex*100)/100}cm`,`진동수 비가 ${p.a} : ${p.b}니까 길이는 거꾸로 — 도 줄 81cm의 <b>${p.a}/${p.b}</b> = <b>${Math.round(ex*100)/100}cm</b>. 뜯으면 딱 ${p.n}!`);}
-      else retry(`${p.n}${jz(p.n,'은','는')} 도보다 <b>빨리</b> 떨리니 줄이 더 <b>짧아야</b> 해요.<br>도 줄 81cm의 <b>${p.a}/${p.b}</b>을 구해 보세요.`);};
+      <div class="eq">
+        <div class="row">${p.n} 줄의 길이 = 도 줄의 길이 × <span style="color:#b3541e">도의 떨림 수</span> ÷ <span style="color:#b3541e">${p.n}의 떨림 수</span></div>
+        <div class="row" style="padding-left:120px">= <span class="dz" data-a="${HBASE}"></span> × <span class="dz" data-a="${p.a}"></span> ÷ <span class="dz" data-a="${p.b}"></span></div>
+        <div class="row" style="padding-left:120px">= <span class="dz" data-a="${exS}"></span> cm</div>
+      </div>
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
+      <div style="margin-top:10px"><button class="btn pri" id="go">🪕 이 길이로 줄 매달기</button></div>`;
+    const dragCtl=mountDrag(el);
+    $('#go').onclick=()=>{
+      if(dragCtl.check()){hDone=d.i+1;pluckT(hFreq(ex));
+        success(`${p.n} 줄 완성! ${exS}cm`,`81 × ${p.a} ÷ ${p.b} = <b>${exS}cm</b> — 진동수 비가 ${p.a} : ${p.b}니까 길이는 <b>거꾸로 ${p.a}/${p.b}</b>! 뜯으면 딱 ${p.n}.`);}
+      else retry(`${p.n}${jz(p.n,'은','는')} 도보다 <b>빨리</b> 떨리니 줄이 더 <b>짧아야</b> 해요.<br>× 뒤에는 <b>도의 떨림 수</b>, ÷ 뒤에는 <b>${p.n}의 떨림 수</b>!`);};
     wireGoal(el);return;}
   if(d.t==='done'){
 hDone=7;
