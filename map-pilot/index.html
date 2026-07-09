@@ -92,8 +92,15 @@ const SC1=[
 let s1done=[], s1idx=0;
 function townMap(f){f=f||1;const C=CELL2*f;
   let objs='';
+  // 강(다리 아래 배경)
+  objs+=`<div style="position:absolute;left:0;top:${C*3.9}px;width:${C*8}px;height:${C*1.0}px;background:linear-gradient(#bcd9f0,#9ec4e4);opacity:.85"></div>`;
   SC1.forEach((o,i)=>{if(stage!==1||s1done.includes(i)){
-    objs+=`<div class="mobj" style="left:${C*o.x}px;top:${C*o.y}px;width:${C*o.cells}px;height:${C*0.8}px;background:${o.color};color:#fff;font-size:${12*f}px">${o.em} ${o.n} ${o.cells}칸</div>`;}});
+    let shape='';
+    if(o.n==='다리'){shape=`<div class="mobj" style="left:${C*o.x}px;top:${C*o.y}px;width:${C*o.cells}px;height:${C*0.8}px;background:${o.color};border-top:3px solid #6d5432;border-bottom:3px solid #6d5432;background-image:repeating-linear-gradient(90deg,transparent 0 ${C*0.28}px,rgba(255,255,255,.35) ${C*0.28}px ${C*0.33}px)"></div>`;}
+    else if(o.n==='큰길'){shape=`<div class="mobj" style="left:${C*o.x}px;top:${C*o.y}px;width:${C*o.cells}px;height:${C*0.8}px;background:#8f9aa8;background-image:repeating-linear-gradient(90deg,transparent 0 ${C*0.35}px,#f4e37a ${C*0.35}px ${C*0.55}px);background-size:100% 3px;background-position:center;background-repeat:no-repeat"></div>`;}
+    else {shape=`<div class="mobj" style="left:${C*o.x}px;top:${C*o.y}px;width:${C*o.cells}px;height:${C*0.8}px;background:${o.color};border-radius:50%;border:2.5px solid #a34d4d"></div>`;}
+    const lb=(o.x>=4.5)?`right:${Math.max(2,C*(8-o.x-o.cells))}px`:`left:${C*o.x}px`;
+    objs+=shape+`<div style="position:absolute;${lb};top:${C*(o.y-0.62)}px;background:rgba(255,255,255,.94);border:1px solid #cdc6b8;border-radius:8px;padding:1px 7px;font-size:${11.5*Math.min(f,1.4)}px;font-weight:800;white-space:nowrap;z-index:5">${o.em} ${o.n} · ${o.cells}칸</div>`;}});
   return `<div class="mapbox" style="width:${C*8+4}px;height:${C*8+4}px;margin:0 auto;max-width:100%;overflow:auto">
     <div class="mapgrid" style="background-size:${C}px ${C}px;width:${C*8}px;height:${C*8}px"></div>${objs}</div>`;}
 function renderScale(){
@@ -206,7 +213,9 @@ function comicSVG(){return `
 function render4(){
   if(m4step===0){
     $('#readout').innerHTML=`<div class="nm">🌍 2200년 전, 과학자 에라토스테네스는 <b>막대기 하나</b>로 지구를 쟀어요</div><div class="big">두 컷 만화로 만나는 <b>그의 발견</b>!</div>`;
-    $('#body').innerHTML=`<div class="card">${comicSVG()}
+    $('#body').innerHTML=`<div class="card">
+      <div style="background:#fbf6e8;border:1.5px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:14.5px;line-height:1.8;margin-bottom:8px">옛날 그리스의 <b>에라토스테네스</b>는 궁금했어요 — "지구 한 바퀴는 얼마나 될까?" 그가 쓴 도구는 단 두 가지, <b>그림자</b>와 <b>거리</b>였어요!</div>
+      ${comicSVG()}
       <div class="cap" style="margin-top:8px">두 도시 사이의 거리는 <b>800 km</b> — 이제 지구 한 바퀴를 구할 수 있어요!</div>
       <div style="text-align:center;margin-top:10px">
         <button class="btn big" onclick="m4step=2;render();plog('storyDone',{})">비로 계산해 보기! ✏️</button>
@@ -265,12 +274,14 @@ function e4pick2(el){const ok=el.dataset.ok==='1';plog(ok?'earthDone':'earthRetr
 
 /* ══════ 계산기 (공용) ══════ */
 let cDisp='0', cAcc=null, cOp=null, cFresh=true;
-function cShow(){const d=$('#cd');if(d)d.textContent=cDisp;}
+function cShow(){const d=$('#cd');if(!d)return;
+  let s;if(cOp&&cAcc!==null){s=cAcc+' '+cOp+(cFresh?'':' '+cDisp);}else s=cDisp;
+  d.textContent=s;}
 function cD(d){if(cFresh){cDisp=String(d);cFresh=false;}else{cDisp=(cDisp==='0'?'':cDisp)+d;}cShow();}
 function cDot(){if(cFresh){cDisp='0.';cFresh=false;}else if(!cDisp.includes('.'))cDisp+='.';cShow();}
 function cCompute(){const y=parseFloat(cDisp);let r=cAcc;if(cOp==='×')r=cAcc*y;else if(cOp==='÷')r=cAcc/y;r=Math.round(r*10000)/10000;cDisp=String(r);cAcc=r;cShow();}
-function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;}
-function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;}}
+function cO(op){if(cOp!==null&&!cFresh)cCompute();cAcc=parseFloat(cDisp);cOp=op;cFresh=true;cShow();}
+function cEq(){if(cOp!==null){cCompute();cOp=null;cFresh=true;cShow();}}
 function cClear(){cDisp='0';cAcc=null;cOp=null;cFresh=true;cShow();}
 function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f}">${t}</button>`;
   return `<div class="calc"><div class="calcdisp" id="cd">${cDisp}</div><div class="calcgrid">
