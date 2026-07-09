@@ -210,6 +210,15 @@ function g5pick(el){const ok=el.dataset.ok==='1';const P=G5[g5.q];
 }
 
 function render(){renderStage();({3:render3,4:render4,5:render5}[stage])();}
+
+(function(){try{if(localStorage.getItem('rsg_mart'))return;}catch(e){}
+ const g=document.createElement('div');g.className='card';
+ g.style.cssText='background:#eef7f1;border:1.5px solid #bfe6cf';
+ g.innerHTML='<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'
+  +'<div style="font-size:14px;line-height:1.9"><b>🧭 How to play</b><br>① Read the <b>question in the dark bar</b> above<br>② Use the calculator if needed (your expression shows on screen)<br>③ Pick from the <b>choice buttons</b> — some questions ask you to tap a product card!</div>'
+  +'<button class="btn" id="rsgOk" style="white-space:nowrap">Got it!</button></div>';
+ const w=document.querySelector('.wrap'); w.insertBefore(g, w.querySelector('.card'));
+ g.querySelector('#rsgOk').onclick=function(){try{localStorage.setItem('rsg_mart',1)}catch(e){}g.remove();};})();
 render();
 </script>
 </body>

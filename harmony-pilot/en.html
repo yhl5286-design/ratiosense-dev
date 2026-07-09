@@ -343,6 +343,15 @@ function playChord3(fA,fB){const c=ac();stopChord3();const dur=2,t=c.currentTime
   const os=[];[fA,fB].forEach(f=>{if(!f)return;const o=c.createOscillator();o.type='triangle';o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+dur+.05);os.push(o);});
   chordNodes={g,os};}
 function stopChord3(){if(chordNodes){try{const c=ac();chordNodes.g.gain.cancelScheduledValues(c.currentTime);chordNodes.g.gain.setTargetAtTime(0,c.currentTime,.02);}catch(e){}chordNodes=null;}}
+
+(function(){try{if(localStorage.getItem('rsg_harmony'))return;}catch(e){}
+ const g=document.createElement('div');g.className='card';
+ g.style.cssText='background:#eef7f1;border:1.5px solid #bfe6cf';
+ g.innerHTML='<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'
+  +'<div style="font-size:14px;line-height:1.9"><b>🧭 How to play</b><br>① Read the <b>mission in the dark bar</b> above<br>② <b>Press the keys and strings</b> to hear the sounds<br>③ In the Harp Workshop, calculate first and submit with the <b>green button</b></div>'
+  +'<button class="btn" id="rsgOk" style="white-space:nowrap">Got it!</button></div>';
+ const w=document.querySelector('.wrap'); w.insertBefore(g, w.querySelector('.card'));
+ g.querySelector('#rsgOk').onclick=function(){try{localStorage.setItem('rsg_harmony',1)}catch(e){}g.remove();};})();
 window.addEventListener('resize',()=>{if(stage===2&&sel>=0)drawMeetAnim();if(stage===1)drawW1();});
 render();
 </script>

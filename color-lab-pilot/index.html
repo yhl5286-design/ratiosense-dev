@@ -445,6 +445,15 @@ let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)(
 function tone(f,w,d){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.2,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}
 function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
 if(TEACHER){const b=$('#tmBadge');if(b)b.style.display='block';}
+
+(function(){try{if(localStorage.getItem('rsg_color'))return;}catch(e){}
+ const g=document.createElement('div');g.className='card';
+ g.style.cssText='background:#eef7f1;border:1.5px solid #bfe6cf';
+ g.innerHTML='<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'
+  +'<div style="font-size:14px;line-height:1.9"><b>🧭 이렇게 해요</b><br>① 위 <b>검은 띠의 미션</b>을 읽어요<br>② 물감 튜브(＋)와 빨간 숫자(−), 또는 숫자 입력으로 조작해요<br>③ <b>[답 제출!]</b> 또는 보기 버튼을 눌러요 — 막히면 <b>💡 힌트</b>!</div>'
+  +'<button class="btn" id="rsgOk" style="white-space:nowrap">알겠어요!</button></div>';
+ const w=document.querySelector('.wrap'); w.insertBefore(g, w.querySelector('.card'));
+ g.querySelector('#rsgOk').onclick=function(){try{localStorage.setItem('rsg_color',1)}catch(e){}g.remove();};})();
 resetStage();
 </script>
 </body>

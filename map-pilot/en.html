@@ -291,6 +291,15 @@ function calcHTML(){const b=(t,f,c)=>`<button class="cbtn ${c||''}" onclick="${f
    ${b('0','cD(0)')}${b('.','cDot()')}${b('=','cEq()','op wide')}</div></div>`;}
 
 function render(){renderStage();({1:renderScale,2:renderZoom,4:render4}[stage])();}
+
+(function(){try{if(localStorage.getItem('rsg_map'))return;}catch(e){}
+ const g=document.createElement('div');g.className='card';
+ g.style.cssText='background:#eef7f1;border:1.5px solid #bfe6cf';
+ g.innerHTML='<div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">'
+  +'<div style="font-size:14px;line-height:1.9"><b>🧭 How to play</b><br>① Read the <b>question in the dark bar</b> above<br>② Calculate if there is a calculator, then pick from the <b>choice buttons</b><br>③ The <b>yellow box is a hint</b> — not a question!</div>'
+  +'<button class="btn" id="rsgOk" style="white-space:nowrap">Got it!</button></div>';
+ const w=document.querySelector('.wrap'); w.insertBefore(g, w.querySelector('.card'));
+ g.querySelector('#rsgOk').onclick=function(){try{localStorage.setItem('rsg_map',1)}catch(e){}g.remove();};})();
 window.addEventListener('resize',()=>{if(stage===4&&m4step===2)drawPie();});
 render();
 /* 숨김 iframe으로 로드된 경우: 보이게 되면 1회 다시 그림 */
