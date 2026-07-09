@@ -43,6 +43,11 @@
   #fbT{font-size:30px;font-weight:800;margin-bottom:10px}
   #fbS{font-size:21px;line-height:1.8;color:#41506b;font-weight:600}
   #fbA{margin-top:22px}
+  .sumbox{background:#fff;border:3px solid var(--line);border-radius:20px;padding:20px 24px;display:inline-block;text-align:left;margin:8px 0;max-width:760px}
+  .sumbox .row{font-size:21px;font-weight:800;line-height:2.3}
+  .sumbox input{width:130px;font-size:20px;font-weight:800;border:none;border-bottom:3.5px solid var(--gold);background:#fffbef;text-align:center;outline:none;padding:2px 6px}
+  .sumbox input.okk{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
+  .sumbox input.bad{border-color:var(--red);background:#fdeeec}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -114,14 +119,34 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="sub">더 싼 마트를 눌러 보세요!</div>`;
     el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
       (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
-  if(d.t==='done'){el.innerHTML=`<div style="font-size:90px">🎉</div>
-    <div class="q">마트의 비밀 완주!</div>
-    <div class="sub">📝 오늘 마트에서 찾은 <b>비의 비밀</b>을 한 문장으로!</div>
-    <div style="margin:10px 0"><input id="rfx" type="text" maxlength="100" placeholder="예: 1개 값을 알면 무엇이든 비교할 수 있다!"
-      style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
-    <button class="btn pri" id="go">남기고 완성! 🛒</button>`;
-    $('#go').onclick=()=>{plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
-      fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});};return;}
+  if(d.t==='done'){
+    el.innerHTML=`<div style="font-size:80px">🎉</div>
+    <div class="q">마트의 비밀을 모두 찾아냈군요! 대단해요!</div>
+    <div class="sub">마트의 비밀 찾기에서 알게 된 것을 <b>빈칸에 직접 써서</b> 정리해 봅시다</div>
+    <div class="sumbox"><div class="row">1개의 값을 알려면 묶음 가격을 개수로 (<input class="sq" data-i="0" autocomplete="off">)면 된다.</div><div class="row">할인율 20%는 원래 가격을 (<input class="sq" data-i="1" autocomplete="off">)으로 볼 때 20만큼 깎는 것이다.</div></div>
+    <div><button class="btn pri" id="ck">정리 확인!</button></div>
+    <div id="freeQ" style="display:none;margin-top:14px">
+      <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
+      <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
+        style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
+      <button class="btn pri" id="go">남기고 완성! 🛒</button>
+    </div>`;
+    const ANS=[["나누", "나눗"], ["100", "백"]];
+    const norm=s=>(s||'').replace(/\s/g,'');
+    $('#ck').onclick=()=>{
+      let all=true;
+      el.querySelectorAll('.sq').forEach(inp=>{
+        const ok=ANS[+inp.dataset.i].some(a=>norm(inp.value).includes(norm(a)));
+        inp.className='sq '+(ok?'okk':'bad');if(!ok)all=false;});
+      if(all){plog('summary',{a:[...el.querySelectorAll('.sq')].map(i=>i.value)});
+        chime(true);fb('','✅ 정리 완벽!','오늘 배운 비밀이 머릿속에 쏙 정리됐어요!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});}
+      else{chime(false);fb('help','🤔 빨간 칸을 다시!','오늘 활동에서 나왔던 말을 떠올려 보세요.','도전!',null);}};
+    $('#go')?null:null;
+    el.addEventListener('click',e=>{if(e.target&&e.target.id==='go'){
+      plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
+      fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});
+    
+    return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
 $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
