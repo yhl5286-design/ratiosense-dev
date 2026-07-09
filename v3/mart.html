@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RatioSense v3 — 마트의 비밀</title>
+<style>
+  :root{--bg:#f4f1ea;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--red:#c0392b}
+  *{box-sizing:border-box}html,body{height:100%}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+  #top{position:fixed;left:0;right:0;top:0;height:64px;background:#fff;border-bottom:2px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 26px;z-index:10}
+  #top .t{font-size:22px;font-weight:800;white-space:nowrap}
+  #top a{font-size:16px;color:var(--sub);text-decoration:none;font-weight:700}
+  #pbar{flex:1;height:14px;background:#ece8dd;border-radius:7px;overflow:hidden}
+  #pfill{height:100%;width:0%;background:linear-gradient(90deg,#2e9e63,#5cc98d);transition:width .4s}
+  #pnum{font-size:19px;font-weight:800;color:var(--sub)}
+  #stage{position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;overflow:auto}
+  .slide{width:min(960px,94vw);padding:20px 10px 40px;text-align:center;animation:in .35s ease both}
+  @keyframes in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+  .q{font-size:clamp(24px,3.4vw,34px);font-weight:800;line-height:1.55;margin:6px 0 8px}
+  .q b{color:#b3541e}
+  .sub{font-size:clamp(17px,2vw,21px);color:var(--sub);font-weight:700;margin-bottom:14px}
+  .btn{border:2.5px solid var(--line);background:#fff;border-radius:16px;padding:16px 30px;font-weight:800;font-size:21px;cursor:pointer;margin:6px}
+  .btn:hover{background:#fbf6e8}
+  .btn.pri{background:var(--accent);border-color:var(--accent);color:#fff;font-size:23px;padding:18px 44px}
+  .btn.pri:hover{background:#288a56}
+  .choices{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .choices .btn{min-width:170px;font-size:24px}
+  .shop{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+  .item{border:3px solid var(--line);border-radius:20px;padding:22px 30px;text-align:center;min-width:220px;background:#fffdf7;font-size:21px;font-weight:800}
+  .item .em{font-size:56px}
+  .item.pick{cursor:pointer}.item.pick:hover{background:#fbf6e8;border-color:var(--gold)}
+  .sale{display:inline-block;background:var(--red);color:#fff;font-weight:800;border-radius:10px;padding:4px 12px;font-size:19px}
+  .hintbox{font-size:19px;color:var(--sub);font-weight:700;background:#fbf6e8;border:2px solid #e0c98a;border-radius:14px;padding:10px 18px;display:inline-block;margin-top:8px}
+  .nav{position:fixed;top:50%;transform:translateY(-50%);width:64px;height:64px;border-radius:50%;border:3px solid var(--line);background:#fff;font-size:34px;font-weight:800;color:var(--sub);cursor:pointer;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center}
+  .nav:hover{background:#fbf6e8;color:var(--ink)}
+  #navL{left:14px}#navR{right:14px}.nav.off{opacity:.25;pointer-events:none}
+  #fb{position:fixed;inset:0;background:rgba(38,48,63,.45);display:none;align-items:center;justify-content:center;z-index:50}
+  #fb.show{display:flex}
+  #fb .in{background:#fff;border-radius:26px;max-width:620px;width:92vw;padding:38px 34px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35);border-top:8px solid var(--accent);animation:pop .3s ease}
+  #fb.help .in{border-top-color:var(--gold)}
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+  #fbT{font-size:30px;font-weight:800;margin-bottom:10px}
+  #fbS{font-size:21px;line-height:1.8;color:#41506b;font-weight:600}
+  #fbA{margin-top:22px}
+</style>
+</head>
+<body>
+<div id="top"><div class="t"><a href="index.html">🏠</a> 🛒 마트의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div></div>
+<div id="stage"><div class="slide" id="slide"></div></div>
+<button class="nav" id="navL">‹</button><button class="nav" id="navR">›</button>
+<div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'martV3',event:ev,data:data||{}},'*');}catch(e){}}
+let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
+function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
+function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
+const won=n=>'₩'.replace('₩','')+n.toLocaleString('ko-KR')+'원';
+
+const DECK=[
+ {t:'intro'},
+ {t:'mc',q:'귤 <b>3개에 1,200원</b> — <b>1개</b>는 얼마?',sub:'가격표엔 묶음 값만 있어요! 계산기 없이 머릿속으로 (하나에 얼마? 1/2)',
+  em:'🍊🍊🍊',price:'3개 1,200원',hint:'1,200 ÷ 3',opts:[['400원',1],['300원',0],['600원',0]],
+  ok:['맞았어요! 1개 = 400원 🍊','1200÷3=400 — 이게 <b>1개의 값(단위 가격)</b>이에요!'],no:'3개가 1,200원 — 1개는 나누면?'},
+ {t:'mc',q:'그럼 귤 <b>5개</b>를 사면 얼마?',sub:'1개 값을 알면 뭐든 구해요! (하나에 얼마? 2/2)',
+  em:'🍊×5',price:'1개 = 400원',hint:'400 × 5',opts:[['2,000원',1],['1,600원',0],['2,400원',0]],
+  ok:['맞았어요! 5개 = 2,000원 🍊','1개 값만 알면 <b>몇 개든</b> 구할 수 있어요 (400×5).'],no:'1개 400원이 5개!'},
+ {t:'shop',q:'어느 마트의 <b>우유</b>가 더 쌀까요?',sub:'머릿속으로 1개 값을 나눠 보세요 (어디가 싸? 1/2)',em:'🥛',
+  a:{n:2,p:1800},b:{n:3,p:2400},ansB:true,
+  ok:['맞았어요! B마트가 더 싸요 🥛','1개 값: A 900원 vs B <b>800원</b> — 단위 가격으로 만들면 비교할 수 있어요!'],
+  no:'두 마트의 <b>1개 값</b>을 각각 나눠 보세요.'},
+ {t:'shop',q:'어느 마트의 <b>주스</b>가 더 쌀까요?',sub:'(어디가 싸? 2/2)',em:'🧃',
+  a:{n:3,p:1500},b:{n:2,p:1200},ansB:false,
+  ok:['맞았어요! A마트가 더 싸요 🧃','1개 값: A <b>500원</b> vs B 600원!'],
+  no:'1개 값을 다시 계산해 보세요.'},
+ {t:'mc',q:'<b>5,000원</b> 우유가 <span class="sale">50% 할인</span>!<br><b>얼마나</b> 깎아 줄까요?',sub:'할인율은 원래 가격을 100으로 볼 때 깎는 부분 (할인 1/3)',
+  em:'🥛',price:'5,000원 50%↓',hint:'5000 × 50 ÷ 100',opts:[['2,500원',1],['500원',0],['1,250원',0]],
+  ok:['맞았어요! 2,500원 할인','50%란 <b>100 중 50</b> — 딱 <b>절반</b>이죠!'],no:'50%는 절반이에요!'},
+ {t:'mc',q:'<b>8,000원</b> 피자가 <span class="sale">25% 할인</span>!<br>그럼 <b>얼마를 내면</b> 될까요?',sub:'(할인 2/3)',
+  em:'🍕',price:'8,000원 25%↓',hint:'8000 × 25 ÷ 100 = 2000 → 8000 − 2000',opts:[['6,000원',1],['5,500원',0],['6,500원',0]],
+  ok:['맞았어요! 6,000원 🍕','할인 금액 2,000원을 빼면 <b>낼 돈</b>!'],no:'25%는 100 중 25 — 8000×25÷100을 먼저!'},
+ {t:'mc',q:'가방이 <b>5,000원 → 4,000원</b>이 됐어요.<br>할인율은 <b>몇 %</b>일까요?',sub:'이번엔 반대로! (할인 3/3)',
+  em:'🎒',price:'5,000원 → 4,000원',hint:'깎인 1000 ÷ 5000 × 100',opts:[['20%',1],['25%',0],['15%',0]],
+  ok:['맞았어요! 20% 할인 🎉','1000÷5000×100=20 — <b>원래 가격을 100으로</b> 볼 때 20만큼! 색상 실험실의 100칸과 같은 비밀이죠.'],no:'깎인 돈(1,000원)이 원래 가격의 몇 %인지!'},
+ {t:'done'}];
+let idx=0;
+function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
+  $('#navL').className='nav'+(idx<=0?' off':'');$('#navR').className='nav'+(idx>=DECK.length-1?' off':'');}
+function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
+  $('#fbT').innerHTML=t;$('#fbS').innerHTML=s||'';
+  $('#fbA').innerHTML=`<button class="btn pri" id="fbBtn">${btnText}</button>`;
+  $('#fbBtn').onclick=()=>{b.className='';if(after)after();};}
+function next(){idx=Math.min(idx+1,DECK.length-1);render();}
+function success(t,s){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',next);}
+function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
+function render(){prog();const d=DECK[idx];const el=$('#slide');
+  if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🛒</div>
+    <div class="q">마트의 비밀에 온 걸 환영해요!</div>
+    <div class="sub">묶음 가격, 어디가 싼지, 할인까지 — 마트 속 <b>단위와 비율의 비밀</b>을 찾아요!</div>
+    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
+  if(d.t==='mc'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
+    <div class="shop"><div class="item"><div class="em">${d.em}</div><div>${d.price}</div></div></div>
+    <div class="hintbox">💡 ${d.hint}</div>
+    <div class="choices">${d.opts.slice().sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
+    el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
+      b.dataset.ok==='1'?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='shop'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
+    <div class="shop">
+      <div class="item pick" data-b="0"><div class="em">${d.em}</div><div style="color:var(--sub)">A마트</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="1"><div class="em">${d.em}</div><div style="color:var(--sub)">B마트</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
+    </div>
+    <div class="sub">더 싼 마트를 눌러 보세요!</div>`;
+    el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
+      (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='done'){el.innerHTML=`<div style="font-size:90px">🎉</div>
+    <div class="q">마트의 비밀 완주!</div>
+    <div class="sub">📝 오늘 마트에서 찾은 <b>비의 비밀</b>을 한 문장으로!</div>
+    <div style="margin:10px 0"><input id="rfx" type="text" maxlength="100" placeholder="예: 1개 값을 알면 무엇이든 비교할 수 있다!"
+      style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
+    <button class="btn pri" id="go">남기고 완성! 🛒</button>`;
+    $('#go').onclick=()=>{plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
+      fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});};return;}
+}
+$('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
+$('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
+render();
+</script>
+</body>
+</html>
