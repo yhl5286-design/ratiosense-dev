@@ -134,7 +134,7 @@ const G4=[
 let g4={q:0};
 function render4(){
   const P=G4[g4.q];
-  $('#readout').innerHTML=`<div class="nm">진짜 마트 문제! (${g4.q+1}/2)</div><div class="big">${P.name}를 <b>1개만 산다면</b>, 어느 마트가 더 쌀까요?</div>`;
+  $('#readout').innerHTML=`<div class="nm">진짜 마트 문제! (${g4.q+1}/2)</div><div class="big">어느 마트의 <b>${P.name}</b>가 더 쌀까요?</div>`;
   $('#body').innerHTML=`<div class="card"><div class="shop">
       <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">A마트</div><div class="pr">${P.a.n}개 ${won(P.a.p)}</div></div>
       <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">B마트</div><div class="pr">${P.b.n}개 ${won(P.b.p)}</div></div></div>

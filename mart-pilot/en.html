@@ -134,7 +134,7 @@ const G4=[
 let g4={q:0};
 function render4(){
   const P=G4[g4.q];
-  $('#readout').innerHTML=`<div class="nm">A real supermarket problem! (${g4.q+1}/2)</div><div class="big">If you buy just <b>one</b> ${P.name}, which mart is cheaper?</div>`;
+  $('#readout').innerHTML=`<div class="nm">A real supermarket problem! (${g4.q+1}/2)</div><div class="big">Which mart has the cheaper <b>${P.name}</b>?</div>`;
   $('#body').innerHTML=`<div class="card"><div class="shop">
       <div class="item pick" onclick="g4pick(false)"><div class="em">${P.em}</div><div class="lbl">Mart A</div><div class="pr">${P.a.n} for ${won(P.a.p)}</div></div>
       <div class="item pick" onclick="g4pick(true)"><div class="em">${P.em}</div><div class="lbl">Mart B</div><div class="pr">${P.b.n} for ${won(P.b.p)}</div></div></div>
