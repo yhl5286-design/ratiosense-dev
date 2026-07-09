@@ -65,6 +65,11 @@
   #fbT{font-size:30px;font-weight:800;margin-bottom:10px}
   #fbS{font-size:21px;line-height:1.8;color:#41506b;font-weight:600}
   #fbA{margin-top:22px}
+  .goal{display:inline-block;background:#fbf6e8;border:2.5px solid var(--gold);border-radius:16px;padding:12px 22px;font-size:22px;font-weight:800;margin-bottom:14px;line-height:1.7}
+  .goal .gt{font-size:15px;color:#8a6a34;display:block;margin-bottom:2px}
+  .blank{display:inline-block;min-width:74px;border-bottom:3.5px solid var(--gold);color:#b3541e;cursor:pointer;text-align:center;padding:0 6px}
+  .blank.hid{color:transparent}
+  .blank.hid:hover{background:#fff3d6}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -106,6 +111,18 @@ const DECK=[{t:'intro'},{t:'vib'},{t:'chordQ'}];
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
 DECK.push({t:'done'});
 let idx=0,w1env=0,f1=262,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
+const GOAL_OPEN={};
+function goalHTML(no,parts){
+  // parts: 문자열 배열, '['로 시작하면 빈칸 (예: '[떨림')
+  let h='';
+  parts.forEach((p,i)=>{
+    if(p[0]==='['){const w=p.slice(1),key=no+'_'+i,open=GOAL_OPEN[key];
+      h+=`(<span class="blank ${open?'':'hid'}" data-k="${key}" data-w="${w}">${w}</span>)`;}
+    else h+=p;});
+  return `<div class="goal"><span class="gt">🎯 오늘의 목표 ${no} — 빈칸을 눌러 확인!</span>${h}</div>`;}
+function wireGoal(el){el.querySelectorAll('.blank').forEach(b=>b.onclick=()=>{
+  GOAL_OPEN[b.dataset.k]=true;b.classList.remove('hid');plog('goal',{k:b.dataset.k});});}
+
 const SND_DUR=1.6, DECAY=Math.pow(0.02,1/(60*SND_DUR));
 function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
   $('#navL').className='nav'+(idx<=0?' off':'');$('#navR').className='nav'+(idx>=DECK.length-1?' off':'');}
@@ -148,7 +165,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='vib'){
     plucks=[0,0,0,0,0,0,0,0];w1env=0;
-    el.innerHTML=`<div class="q">건반을 눌러 <b>진동수</b>를 느껴 보세요!</div>
+    el.innerHTML=`${goalHTML(1,['소리는 ','[떨림','이다.'])}
+      <div class="q">건반을 눌러 <b>진동수</b>를 느껴 보세요!</div>
       <div class="sub">건반을 누르면 <b>뒤쪽 현이 떨려요</b> — 높은 음일수록 현이 짧고 빨리! (실제보다 천천히 보여드려요)</div>
       <div class="pianoWrap">
         <canvas id="hc" style="width:634px;height:170px;display:block;background:#241610;border:none;border-radius:14px 14px 0 0"></canvas>
@@ -164,24 +182,30 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       tone(f1,0,SND_DUR);plog('key',{n:NOTES[i][0]});
       $('#hz').innerHTML=`<b>${NOTES[i][0]}</b> — 1초에 <b>${NOTES[i][1]}번</b> 떨려요`;
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
-    loopWave();return;}
+    wireGoal(el);loopWave();return;}
   if(d.t==='chordQ'){
-    el.innerHTML=`<div class="q">Ⓠ <b>도</b>와 함께 눌렀을 때, 진동수의 비가<br><b>2 : 3</b>이 되는 음을 찾아 보세요!</div>
-      <div class="sub">건반을 누르면 도와 함께 울려요 — 비가 간단할수록 잘 어울려요</div>
-      <div class="piano">${NOTES.map((n,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}">${n[0]}${i===0?'<br>★':''}</div>`).join('')}</div>
-      <div class="dial" id="ratio">&nbsp;</div>
-      <div class="verdict" id="vd"></div>`;
+    el.innerHTML=`${goalHTML(2,['화음은 ','[비','다.'])}
+      <div class="q">건반을 누르면 <b>★도</b>와 함께 울려요 —<br>진동수의 <b>비</b>가 어떻게 되는지 살펴보세요!</div>
+      <div class="sub">비가 <b>간단한 정수</b>일수록 두 소리가 잘 어울려요</div>
+      <div class="pianoWrap"><div class="piano">${NOTES.map((n,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}">${n[0]}${i===0?'<br>★':''}</div>`).join('')}
+        ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
+      </div></div>
+      <div class="dial" id="ratio">건반을 눌러 보세요</div>
+      <div class="dial" id="hzline" style="font-size:20px;color:var(--sub)">&nbsp;</div>
+      <div class="verdict" id="vd"></div>
+      <div style="margin-top:8px"><button class="btn pri" onclick="next()">다 들어봤어요 →</button></div>`;
     el.querySelectorAll('.key').forEach(k=>k.onclick=()=>{const i=+k.dataset.i;const n=NOTES[i];
       chord(262,n[1],1.4);plog('chord',{n:n[0]});
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);
       const a=n[3],b=n[2];const key=`${Math.min(a,b)}:${Math.max(a,b)}`;
-      $('#ratio').innerHTML=`도 262Hz : ${n[0]} ${n[1]}Hz = <b>${a} : ${b}</b>${INTV[key]?' · '+INTV[key]:''}`;
+      $('#ratio').innerHTML=`도 : ${n[0]} — 진동수의 비 = <b style="font-size:30px">${a} : ${b}</b>${INTV[key]?' <span style="color:var(--sub)">· '+INTV[key]+'</span>':''}`;
+      $('#hzline').innerHTML=`262Hz : ${n[1]}Hz — 도가 <b>${a}번</b> 떨릴 때 ${n[0]}${jz(n[0],'은','는')} <b>${b}번</b> 떨려요`;
       const nice=(a*b<=6);
-      $('#vd').innerHTML=nice?'😍 아주 잘 어울려요!':(a*b<=20?'😊 잘 어울려요':'😐 조금 거칠어요');
-      if(a===2&&b===3)setTimeout(()=>success('찾았다! 솔 🎵','도 : 솔 = <b>2 : 3</b> — <b>완전5도</b>! 간단한 정수비일수록 아름다운 화음이 돼요.'),600);});
-    return;}
+      $('#vd').innerHTML=nice?'😍 아주 잘 어울려요!':(a*b<=20?'😊 잘 어울려요':'😐 조금 거칠어요');});
+    wireGoal(el);return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
-    el.innerHTML=`<div class="q">🪕 <b>${p.n}</b> 줄은 도 줄(<b>81cm</b>)의 <b>${p.a}/${p.b}</b> —<br><b>몇 cm</b>로 만들어야 할까요?</div>
+    el.innerHTML=`${goalHTML(3,['음을 만들 때는 ','[도','를 기준으로 ','[비율','을 계산한다.'])}
+      <div class="q">🪕 <b>${p.n}</b> 줄은 도 줄(<b>81cm</b>)의 <b>${p.a}/${p.b}</b> —<br><b>몇 cm</b>로 만들어야 할까요?</div>
       <div class="sub">하프 공방 ${d.i+1}/5 — 완성된 줄은 눌러서 소리 확인! (짧을수록 높은 음)</div>
       ${harpHTML()}
       <div class="nf"><input id="inp" type="number" step="0.1" placeholder="?"><div class="u">cm</div></div>
@@ -189,7 +213,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     $('#go').onclick=()=>{const v=parseFloat($('#inp').value||'0');
       if(Math.abs(v-ex)<=0.3){hDone=d.i+1;pluckT(hFreq(ex));
         success(`${p.n} 줄 완성! ${Math.round(ex*100)/100}cm`,`81cm의 ${p.a}/${p.b} = <b>${Math.round(ex*100)/100}cm</b> — 뜯으면 딱 ${p.n}!`);}
-      else retry(`도 줄 <b>81cm</b>의 <b>${p.a}/${p.b}</b>이 몇 cm인지 다시 구해 보세요.`);};return;}
+      else retry(`도 줄 <b>81cm</b>의 <b>${p.a}/${p.b}</b>이 몇 cm인지 다시 구해 보세요.`);};
+    wireGoal(el);return;}
   if(d.t==='done'){hDone=5;
     el.innerHTML=`<div style="font-size:80px">🎉</div>
     <div class="q">5음계 하프 완성! 자유롭게 연주해 보세요</div>
