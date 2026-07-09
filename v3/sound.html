@@ -163,13 +163,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.innerHTML=`<div class="q">🪕 <b>${p.n}</b> 줄은 도 줄(<b>81cm</b>)의 <b>${p.a}/${p.b}</b> —<br><b>몇 cm</b>로 만들어야 할까요?</div>
       <div class="sub">하프 공방 ${d.i+1}/5 — 완성된 줄은 눌러서 소리 확인! (짧을수록 높은 음)</div>
       ${harpHTML()}
-      <div><div class="hintbox">💡 81 × ${p.a} ÷ ${p.b}</div></div>
       <div class="nf"><input id="inp" type="number" step="0.1" placeholder="?"><div class="u">cm</div></div>
       <div><button class="btn pri" id="go">🪕 이 길이로 줄 매달기</button></div>`;
     $('#go').onclick=()=>{const v=parseFloat($('#inp').value||'0');
       if(Math.abs(v-ex)<=0.3){hDone=d.i+1;pluckT(hFreq(ex));
         success(`${p.n} 줄 완성! ${Math.round(ex*100)/100}cm`,`81cm의 ${p.a}/${p.b} = <b>${Math.round(ex*100)/100}cm</b> — 뜯으면 딱 ${p.n}!`);}
-      else retry(`계산기나 암산으로 <b>81 × ${p.a} ÷ ${p.b}</b>을 구해 보세요.`);};return;}
+      else retry(`도 줄 <b>81cm</b>의 <b>${p.a}/${p.b}</b>이 몇 cm인지 다시 구해 보세요.`);};return;}
   if(d.t==='done'){hDone=5;
     el.innerHTML=`<div style="font-size:80px">🎉</div>
     <div class="q">5음계 하프 완성! 자유롭게 연주해 보세요</div>
