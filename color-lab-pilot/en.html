@@ -104,7 +104,10 @@
 <script>
 const PRIM={Red:[230,40,55],Yellow:[250,215,45],Blue:[45,100,205]};
 function mix(c){const ks=Object.keys(c).filter(k=>c[k]>0),t=ks.reduce((s,k)=>s+c[k],0);if(!t)return[252,250,245];
-  let o=[1,1,1];for(const k of ks){const w=c[k]/t,p=PRIM[k];for(let i=0;i<3;i++)o[i]*=Math.pow(Math.max(p[i]/255,.02),w);}return o.map(v=>Math.round(v*255));}
+  let o=[1,1,1];for(const k of ks){const w=c[k]/t,p=PRIM[k];for(let i=0;i<3;i++)o[i]*=Math.pow(Math.max(p[i]/255,.02),w);}
+  let out=o.map(v=>Math.round(v*255));
+  if(ks.length===2&&ks.includes('Yellow')&&ks.includes('Blue')){out[1]=Math.min(255,Math.round(out[1]*1.35+18));out[2]=Math.round(out[2]*0.88);}
+  return out;}
 const rgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
 const dist=(a,b)=>Math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2);
 const prox=(a,b)=>Math.max(0,1-dist(a,b)/230);
@@ -145,7 +148,8 @@ function pairHTML(target,label){return `<div class="pair">
    <div class="col"><div class="lab">Ⓑ My color</div><div class="beaker"><div class="fill" id="fill"></div></div></div></div>
    <div class="near" id="near">What should you do to make Ⓐ and Ⓑ the same color?</div>`;}
 function updateB(target,scale){const c=mix(S.amt),tot=Object.values(S.amt).reduce((s,v)=>s+v,0);
-  const f=$('#fill');if(f){f.style.background=rgb(c);f.style.height=Math.min(96,tot*(scale||0.5))+'%';}
+  const mx=S._bmax||192;
+  const f=$('#fill');if(f){f.style.background=rgb(c);f.style.height=Math.min(96,tot/mx*96)+'%';}
   return prox(c,target);}
 function tubeSVG(c){return `<svg viewBox="0 0 60 118" xmlns="http://www.w3.org/2000/svg">
   <g><rect x="20" y="2" width="20" height="15" rx="3" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/>
@@ -170,6 +174,7 @@ function renderS1(){
   if(S.s1fi==null||S.s1fi>=FAM.length)S.s1fi=0;
   const fam=FAM[S.s1fi],sh=fam.shades[0],t=shadeColor(fam,sh),p0=fam.paints[0],p1=fam.paints[1];
   const got=S.s1got;
+  S._bmax=170;
   const q=[
     `${fam.emoji} <b>Make ${fam.id}!</b> The target color is <b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>. Squeeze the paints to make <b>the exact same color</b>!`,
     `<b>${p0} : ${p1} = ${sh.r[0]} : ${sh.r[1]}</b>. Now make the same color with a <b>different amount</b>.`,
@@ -225,7 +230,7 @@ function renderS1(){
 
 /* ===== 2·3단계 기준량 / 뒤집기 — 제시된 비대로 만들기 ===== */
 const P23={2:[{r:[2,3],b:200},{r:[1,2],b:100},{r:[2,3],b:40}], 3:[{r:[1,2],b:100},{r:[3,2],b:90},{r:[1,4],b:100}]};
-function probHTML(){return `<div class="seq">`+P23[S.stage].map((pp,i)=>{
+function probHTML(){return `<div class="seq" style="pointer-events:none;align-items:center"><span style="font-size:11.5px;color:#8a8577;font-weight:800;margin-right:2px">problems</span>`+P23[S.stage].map((pp,i)=>{
   const r=pp.r;const c={};c[S.fam.paints[0]]=r[0];c[S.fam.paints[1]]=r[1];
   const cls=i<S.subIdx?'done':(i===S.subIdx?'cur':'');
   return `<div class="s ${cls}"><div class="c" style="background:${rgb(mix(c))}"></div>${r[0]}:${r[1]} ${i<S.subIdx?'✓':''}</div>`;}).join('')+`</div>`;}
@@ -235,9 +240,9 @@ function renderS23(baseIdx){
   const base=S.fam.paints[baseIdx],comp=S.fam.paints[1-baseIdx];
   const ra=pr[baseIdx],rc=pr[1-baseIdx];
   const tc={};tc[S.fam.paints[0]]=pr[0];tc[S.fam.paints[1]]=pr[1];const tgt=mix(tc);
-  S.amt={};S.amt[base]=BASE;
+  S.amt={};S.amt[base]=BASE;S._bmax=BASE+Math.round(BASE*rc/ra)+60;
   const d0=S.fam.paints[0],d1=S.fam.paints[1];
-  $('#mText').innerHTML=`We want to make <b>${S.fam.id}</b> so that <b>${d0} : ${d1} = ${pr[0]} : ${pr[1]}</b>. If <b>${BASE}mL</b> of <b>${base}</b> is already in the beaker, how many mL of <b>${comp}</b> should you add?`;
+  $('#mText').innerHTML=`We want to make <b>${S.fam.id}</b> so that <b>(amount of ${d0}) : (amount of ${d1}) = ${pr[0]} : ${pr[1]}</b>. If <b>${BASE}mL</b> of <b>${base}</b> is already in the beaker, how many mL of <b>${comp}</b> should you add?`;
   $('#mProg').textContent=`${BASE}mL of ${base} is already in. Add only ${comp} to match Ⓐ. (Problem ${S.subIdx+1}/3)`;
   $('#stageBody').innerHTML=probHTML()+
    `<div class="tools" style="text-align:center">
