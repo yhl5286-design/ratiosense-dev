@@ -15,7 +15,7 @@
   #pfill{height:100%;width:0%;background:linear-gradient(90deg,#2e9e63,#5cc98d);transition:width .4s}
   #pnum{font-size:19px;font-weight:800;color:var(--sub)}
   #stage{position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;overflow:auto}
-  .slide{width:min(960px,94vw);padding:20px 10px 40px;margin:auto;text-align:center;animation:in .35s ease both}
+  .slide{width:min(960px,94vw);padding:20px 18px 44px;margin:auto;text-align:center;animation:in .35s ease both}
   @keyframes in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
   .q{font-size:clamp(23px,3.2vw,32px);font-weight:800;line-height:1.55;margin:6px 0 8px}
   .q b{color:#b3541e}
@@ -168,6 +168,7 @@
   @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
   .stampb{display:inline-block;animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
   @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
+  button,.chip,.dz,.cell,.key,.tube,.mb,.pot,.pick,.symchip{touch-action:manipulation}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
   @media (max-height:860px){#stage .slide{zoom:.85}.harp{zoom:.72}}
@@ -225,7 +226,6 @@ const TRE_SVG=`<svg viewBox="0 0 220 132">
   <text x="176" y="84" font-size="19" fill="#f2d488">♫</text>
 </svg>`;
 function cardWin(el,texts,cb){try{
-  try{chime(true);}catch(e){}
   const bcs=[...el.querySelectorAll('.gcard')];
   if(!bcs.length){if(cb)cb();return;}
   const wk=document.createElement('div');wk.id='wpk';
@@ -328,15 +328,22 @@ function drawStrings(){const cv=$('#hc');if(!cv)return;
     ctx.fillStyle='#cdb98a';ctx.beginPath();ctx.arc(cx,yTop,5,0,7);ctx.fill();});}
 function drawWave(){const cv=$('#wv');if(!cv)return;
   const W=cv.width=cv.clientWidth*2,H=cv.height=280;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  const mid=H/2,pad=24,L=W-pad*2,cycles=Math.max(3,Math.round(f1/45));
+  const mid=H/2,pad=24,L=W-pad*2;
   ctx.strokeStyle='#d8d2c4';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad,mid);ctx.lineTo(pad+L,mid);ctx.stroke();
   ctx.fillStyle='#8a8577';ctx.font='bold 20px sans-serif';ctx.textAlign='left';ctx.fillText('↕ 공기의 떨림',pad+2,28);
   ctx.textAlign='right';ctx.fillText('시간 →',pad+L,H-12);
+  // 도(264) 기준 파동을 회색 점선으로 항상 깔아 비교
+  const cyc=f=>f/88; // 도=3물결, 도′=6물결
+  ctx.beginPath();ctx.lineWidth=2.5;ctx.strokeStyle='#cfc8b8';ctx.setLineDash([9,8]);
+  for(let x=0;x<=L;x++){const y=mid-H*0.30*Math.sin(x/L*cyc(264)*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}
+  ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle='#a89f8d';ctx.font='bold 17px sans-serif';ctx.textAlign='left';
+  ctx.fillText('┄ 도(264번)의 파동',pad+2,H-12);
   if(w1env<.02){ctx.fillStyle='#a89f8d';ctx.font='bold 22px sans-serif';ctx.textAlign='center';
-    ctx.fillText('건반을 누르면 파동이 나타나요!',W/2,mid-22);return;}
-  const amp=H*0.33*w1env,shift=(s1T*2.4)%(L/cycles);
-  ctx.beginPath();ctx.lineWidth=5;ctx.strokeStyle=f1>360?'#c0392b':(f1>240?'#e0a02a':'#3b6db5');
-  for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*cycles*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
+    ctx.fillText('건반을 누르면 파동이 나타나요!',W/2,36);return;}
+  const amp=H*0.33*w1env,c2=cyc(f1),shift=(s1T*2.4)%(L/c2);
+  ctx.beginPath();ctx.lineWidth=5;ctx.strokeStyle=f1>400?'#c0392b':(f1>290?'#e0a02a':'#3b6db5');
+  for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*c2*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
 function loopWave(){s1T++;if(w1env>.001)w1env*=DECAY;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=DECAY;drawStrings();drawWave();animReq=requestAnimationFrame(loopWave);}
 
 function mountDrag(el,onAll){
@@ -348,7 +355,7 @@ function mountDrag(el,onAll){
     if(ch.dataset.w===dz.dataset.a){
       dz.textContent=ch.dataset.w;ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
-      try{tone(880,0,.09);}catch(e){}
+      try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
       if(sel===dz)sel=null;allDone();}
     else{dz.classList.remove('hov');dz.classList.add('bad','shake');

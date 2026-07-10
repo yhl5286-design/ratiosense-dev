@@ -17,7 +17,7 @@
   #pnum{font-size:19px;font-weight:800;color:var(--sub);white-space:nowrap}
   /* 슬라이드 */
   #stage{position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;overflow:auto}
-  .slide{width:min(960px,94vw);padding:20px 10px 40px;margin:auto;text-align:center;animation:in .35s ease}
+  .slide{width:min(960px,94vw);padding:20px 18px 44px;margin:auto;text-align:center;animation:in .35s ease}
   @keyframes in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
   .q{font-size:clamp(24px,3.4vw,34px);font-weight:800;line-height:1.55;margin:6px 0 8px}
   .q b{color:#b3541e}
@@ -29,7 +29,7 @@
   .bk .fill.full{height:92%}
   .bklab{font-size:20px;font-weight:800;margin-top:10px}
   /* 물감 조작 */
-  .paints{display:flex;gap:56px;justify-content:center;margin:10px 0}
+  .paints{display:flex;gap:44px;justify-content:center;margin:10px 0;padding:0 12px}
   .pcol .nm{font-size:22px;font-weight:800;margin-bottom:8px}
   .tubes{display:flex;gap:12px;align-items:flex-end;justify-content:center}
   .tube{border:none;background:none;cursor:pointer;text-align:center;padding:0}
@@ -37,7 +37,7 @@
   .tube:hover svg{transform:translateY(-3px)}
   .tube .amtl{font-size:17px;font-weight:800}
   .minus{display:flex;gap:10px;justify-content:center;margin-top:10px}
-  .mb{border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 16px;font-weight:800;font-size:19px;color:var(--red);cursor:pointer;min-width:64px}
+  .mb{border:2.5px solid var(--line);background:#fff;border-radius:14px;padding:13px 20px;font-weight:800;font-size:21px;color:var(--red);cursor:pointer;min-width:78px}
   .mb:hover{background:#fdeeec}
   .amtnow{font-size:21px;font-weight:800;margin-top:10px}
   /* 버튼 */
@@ -173,6 +173,7 @@
   @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
   .stampb{display:inline-block;animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
   @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
+  button,.chip,.dz,.cell,.key,.tube,.mb,.pot,.pick,.symchip{touch-action:manipulation}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
   @media (max-height:860px){#stage .slide{zoom:.85}.grid{zoom:.8}}
@@ -240,7 +241,6 @@ const TRE_SVG=`<svg viewBox="0 0 220 132">
   <path d="M172 112 q3 -8 0 -12" stroke="#e63946" stroke-width="4" fill="none" stroke-linecap="round"/>
 </svg>`;
 function cardWin(el,texts,cb){try{
-  try{chime(true);}catch(e){}
   const bcs=[...el.querySelectorAll('.gcard')];
   if(!bcs.length){if(cb)cb();return;}
   const wk=document.createElement('div');wk.id='wpk';
@@ -335,7 +335,7 @@ function mountDrag(el,onAll){
     if(ch.dataset.w===dz.dataset.a){
       dz.textContent=ch.dataset.w;ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
-      try{tone(880,0,.09);}catch(e){}
+      try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
       if(sel===dz)sel=null;allDone();}
     else{dz.classList.remove('hov');dz.classList.add('bad','shake');
