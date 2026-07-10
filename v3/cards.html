@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RatioSense v3 — 비밀 카드 문제집</title>
+<style>
+  :root{--bg:#f4f1ea;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--red:#c0392b}
+  *{box-sizing:border-box}html,body{height:100%}
+  body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+  #top{position:fixed;left:0;right:0;top:0;height:64px;background:#fff;border-bottom:2px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 26px;z-index:10}
+  #top .t{font-size:22px;font-weight:800;white-space:nowrap}
+  #top a{font-size:16px;color:var(--sub);text-decoration:none;font-weight:700}
+  #pbar{flex:1;height:14px;background:#ece8dd;border-radius:7px;overflow:hidden}
+  #pfill{height:100%;width:0%;background:linear-gradient(90deg,#2e9e63,#5cc98d);transition:width .4s}
+  #pnum{font-size:19px;font-weight:800;color:var(--sub)}
+  #stage{position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;overflow:auto}
+  .slide{width:min(960px,94vw);padding:20px 18px 44px;margin:auto;text-align:center;animation:in .35s ease both}
+  @keyframes in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
+  .q{font-size:clamp(24px,3.4vw,34px);font-weight:800;line-height:1.55;margin:6px 0 8px}
+  .q b{color:#b3541e}
+  .sub{font-size:clamp(17px,2vw,21px);color:var(--sub);font-weight:700;margin-bottom:14px}
+  .btn{border:2.5px solid var(--line);background:#fff;border-radius:16px;padding:16px 30px;font-weight:800;font-size:21px;cursor:pointer;margin:6px}
+  .btn:hover{background:#fbf6e8}
+  .btn.pri{background:var(--accent);border-color:var(--accent);color:#fff;font-size:23px;padding:18px 44px}
+  .btn.pri:hover{background:#288a56}
+  .choices{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .choices .btn{min-width:170px;font-size:24px}
+  .shop{display:flex;gap:26px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+  .item{border:3px solid var(--line);border-radius:20px;padding:22px 30px;text-align:center;min-width:220px;background:#fffdf7;font-size:21px;font-weight:800}
+  .item .em{font-size:56px}
+  .item.pick{cursor:pointer}.item.pick:hover{background:#fbf6e8;border-color:var(--gold)}
+  .sale{display:inline-block;background:var(--red);color:#fff;font-weight:800;border-radius:10px;padding:4px 12px;font-size:19px}
+  .hintbox{font-size:19px;color:var(--sub);font-weight:700;background:#fbf6e8;border:2px solid #e0c98a;border-radius:14px;padding:10px 18px;display:inline-block;margin-top:8px}
+  .nav{position:fixed;top:50%;transform:translateY(-50%);width:64px;height:64px;border-radius:50%;border:3px solid var(--line);background:#fff;font-size:34px;font-weight:800;color:var(--sub);cursor:pointer;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center}
+  .nav:hover{background:#fbf6e8;color:var(--ink)}
+  #navL{left:14px}#navR{right:14px}.nav.off{opacity:.25;pointer-events:none}
+  #fb{position:fixed;inset:0;background:rgba(38,48,63,.45);display:none;align-items:center;justify-content:center;z-index:50}
+  #fb.show{display:flex}
+  #fb .in{background:#fff;border-radius:26px;max-width:620px;width:92vw;padding:38px 34px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.35);border-top:8px solid var(--accent);animation:pop .3s ease}
+  #fb.help .in{border-top-color:var(--gold)}
+  @keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+  #fbT{font-size:30px;font-weight:800;margin-bottom:10px}
+  #fbS{font-size:21px;line-height:1.8;color:#41506b;font-weight:600}
+  #fbA{margin-top:22px}
+  .dz{display:inline-block;min-width:92px;min-height:34px;border-bottom:4px solid var(--gold);background:#fffbef;border-radius:10px 10px 0 0;padding:3px 12px;text-align:center;font-weight:800;color:#b3541e;vertical-align:bottom;cursor:pointer;font-size:21px}
+  .dz.sel{background:#ffe9a8;outline:3px dashed var(--gold)}
+  .dz.okk{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
+  .dz.bad{border-color:var(--red);background:#fdeeec;color:var(--red)}
+  .bank{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .chip{border:3px solid var(--gold);background:#fff;border-radius:16px;padding:11px 20px;font-size:21px;font-weight:800;cursor:grab;user-select:none;touch-action:none}
+  .chip:hover{background:#fffbef}
+  .chip.used{visibility:hidden}
+  #ghost{position:fixed;pointer-events:none;z-index:99;opacity:.9}
+  .sumbox{background:#fff;border:3px solid var(--line);border-radius:20px;padding:20px 24px;display:inline-block;text-align:left;margin:8px 0;max-width:780px}
+  .sumbox .row{font-size:21px;font-weight:800;line-height:2.6}
+  .dz{transition:transform .15s,background .15s}
+  .dz.hov{background:#ffe9a8;transform:scale(1.12);outline:3px dashed var(--gold)}
+  .dz.snap{animation:snapIn .3s}
+  @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
+  .dz.shake{animation:shk .45s}
+  @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .martscene{margin:4px 0}
+  .martscene svg{width:min(720px,92vw);display:block;margin:0 auto}
+  .cback{position:relative;border-radius:14px;border:4px solid #c9a227;
+    background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 9px,transparent 9px 18px),
+      radial-gradient(circle at 50% 40%,#3d5a80 0 30%,#2b4570 62%,#1b2c49 100%);
+    box-shadow:0 8px 22px rgba(0,0,0,.35)}
+  .cback::before{content:'';position:absolute;inset:6px;border:2px solid rgba(233,196,106,.55);border-radius:9px;pointer-events:none}
+  .cback .emb{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:44%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(#f2d488,#e9c46a 70%);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 4px #c9a227,0 0 0 7px rgba(233,196,106,.35);font-size:200%}
+  .cback .bnm{position:absolute;bottom:8%;width:100%;text-align:center;color:#e9c46a;font-weight:800;letter-spacing:2px;font-size:75%}
+  .gcards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:stretch;margin:8px 0}
+  .gcard{position:relative;width:min(430px,92vw);border-radius:18px;padding:9px;display:inline-block;vertical-align:top;margin:6px;text-align:left;
+    background:linear-gradient(160deg,#e3bf62,#8a6a1e 55%,#d9b455);box-shadow:0 10px 26px rgba(0,0,0,.35);animation:flipin .45s ease both}
+  .gcard .gc-in{background:#20304a;border-radius:12px;overflow:hidden;border:2px solid #5d4310;height:100%;display:flex;flex-direction:column}
+  .gc-art{position:relative;height:195px;flex:none;background:radial-gradient(circle at 50% 26%,#41628c,#233a5e 55%,#16233c);display:flex;align-items:flex-end;justify-content:center}
+  .gc-art svg{width:88%;height:auto;display:block;margin-bottom:2px}
+  .gc-name{background:linear-gradient(#f2d488,#d9a83f);color:#5d4310;font-weight:800;text-align:center;padding:10px 4px;font-size:19px;letter-spacing:.5px;border-top:2px solid #5d4310;border-bottom:2px solid #5d4310;flex:none}
+  .gc-txt{background:linear-gradient(#fffdf4,#f3e9cc);padding:16px 20px;font-size:21px;font-weight:800;line-height:2.3;flex:1;display:flex;align-items:center}
+  .gc-txt .row{font-size:21px;font-weight:800;line-height:2.3}
+  .gc-txt .dz{min-width:88px;min-height:36px;font-size:20px;padding:3px 10px}
+  .bigcard{position:relative;border:4px solid #c9a227;border-radius:16px;background:linear-gradient(#fffdf4,#fff3d6);
+    box-shadow:0 8px 22px rgba(224,160,42,.4);max-width:820px;margin:10px auto;overflow:hidden;animation:flipin .45s ease both;text-align:left}
+  .bigcard .pcf-top{font-size:15px}
+  .bc-txt{padding:12px 22px}
+  .bc-txt .row{font-size:21px;font-weight:800;line-height:2.5}
+  .pcards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0 12px}
+  .pcard{width:170px;height:230px;perspective:900px;font-size:15px}
+  .pcard .pc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s}
+  .pcard.flip .pc-in{transform:rotateY(180deg)}
+  .pc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px}
+  .pc-front{transform:rotateY(180deg);border:4px solid #c9a227;background:linear-gradient(#fffdf4,#fff3d6);
+    box-shadow:0 8px 22px rgba(224,160,42,.4);display:flex;flex-direction:column;overflow:hidden}
+  .pcf-top{background:linear-gradient(#e9c46a,#d9a83f);color:#5d4310;font-weight:800;font-size:13.5px;padding:6px;text-align:center;letter-spacing:1px}
+  .pcf-txt{flex:1;display:flex;align-items:center;padding:8px 12px;font-size:13.5px;font-weight:800;line-height:1.6;text-align:left}
+  #wpk{position:fixed;right:26px;top:50%;transform:translateY(-50%);width:200px;height:258px;z-index:101;animation:wpkIn .4s ease both}
+  @keyframes wpkIn{from{transform:translateY(-50%) translateX(240px);opacity:0}to{transform:translateY(-50%);opacity:1}}
+  #wpk .wpk-back{position:absolute;inset:0;border-radius:18px;background:linear-gradient(#8a5a2b,#6f4518);border:4px solid #c9a227;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+  #wpk .wpk-front{position:absolute;left:0;right:0;bottom:0;height:60%;border-radius:12px 12px 18px 18px;
+    background:linear-gradient(#a9713a,#7d5020);border:4px solid #c9a227;border-top:5px solid #e9c46a;z-index:103}
+  #wpk .wpk-label{position:absolute;bottom:16px;width:100%;text-align:center;z-index:104;color:#f2d488;font-weight:800;font-size:16px;letter-spacing:2px}
+  #wpk.bump{animation:wpkBump .45s}
+  @keyframes wpkBump{50%{transform:translateY(-50%) scale(1.12) rotate(-4deg)}}
+  #wpk.wout{animation:wpkOut .45s both}
+  @keyframes wpkOut{to{transform:translateY(-50%) translateX(260px);opacity:0}}
+  .pfly{position:fixed;z-index:102;margin:0;transition:transform .7s cubic-bezier(.45,-0.05,.6,.35)}
+  .qcard{display:block;position:relative;border:3.5px solid var(--gold);background:linear-gradient(#fffdf4,#fff3d6);border-radius:18px;padding:16px 22px 16px 52px;margin:10px auto;max-width:780px;box-shadow:0 7px 20px rgba(224,160,42,.3)}
+  .qcard::before{content:'🃏';position:absolute;left:14px;top:12px;font-size:24px}
+  #walletFx{position:fixed;right:26px;top:50%;font-size:88px;z-index:110;filter:drop-shadow(0 8px 16px rgba(0,0,0,.3));animation:walIn .4s ease both}
+  @keyframes walIn{from{transform:translateY(-50%) translateX(150px);opacity:0}to{transform:translateY(-50%);opacity:1}}
+  #walletFx.bump{animation:walBump .45s ease both}
+  @keyframes walBump{0%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.35) rotate(-10deg)}100%{transform:translateY(-50%)}}
+  #walletFx.wout{animation:walOut .45s ease both}
+  @keyframes walOut{from{transform:translateY(-50%)}to{transform:translateY(-50%) translateX(170px);opacity:0}}
+  .flycard{position:fixed;z-index:105;margin:0;transition:transform .6s cubic-bezier(.5,-0.1,.75,.35),opacity .6s}
+  #walOv{position:fixed;inset:0;background:rgba(38,48,63,.45);display:none;align-items:center;justify-content:center;z-index:115}
+  #walOv.show{display:flex}
+  .walBox{background:#fff;border-radius:22px;padding:22px 28px;width:min(640px,94vw);max-height:82vh;overflow:auto;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .flyback.holdfx{animation:holdF 1.05s ease-in-out}
+  @keyframes holdF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.06)}}
+  #wal{font-size:18px;font-weight:800;color:#8a6a34;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:6px 16px;white-space:nowrap}
+  #wal.pulse{animation:walP .6s}
+  @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
+  .mini-card{border:3px solid var(--gold);background:#fffdf4;border-radius:12px;padding:9px 15px;margin:7px auto;font-size:17px;font-weight:800;max-width:520px;text-align:left;animation:stampIn .5s;box-shadow:0 3px 10px rgba(224,160,42,.25)}
+  .cardbn{display:inline-block;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:8px 22px;font-size:17.5px;font-weight:800;color:#8a6a34;margin:2px 0 10px;animation:bnPulse 1.6s ease-in-out infinite}
+  @keyframes bnPulse{0%,100%{transform:none}50%{transform:scale(1.05)}}
+  .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
+  @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
+  .stampb{display:inline-block;animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
+  button,.chip,.dz,.cell,.key,.tube,.mb,.pot,.pick,.symchip{touch-action:manipulation}
+  .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
+  .home:hover{background:#fbf6e8;border-color:var(--gold)}
+  @media (max-height:860px){#stage .slide{zoom:.85}}
+  @media (max-height:740px){#stage .slide{zoom:.72}}
+  @media (max-height:620px){#stage .slide{zoom:.6}}
+</style>
+</head>
+<body>
+<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🃏 비밀 카드 문제집 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/15</div></div>
+<div id="stage"><div class="slide" id="slide"></div></div>
+<button class="nav" id="navL">‹</button><button class="nav" id="navR">›</button>
+<div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
+<script>
+const $=s=>document.querySelector(s);
+/* ── 로그: GAS 직접 전송 (v2와 같은 시트) ── */
+const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
+const LOG_TK='ratiosense-2026',LAB='cardsV3';
+let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
+if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+function ukey(b){return b+':'+(RS3U||'anon');}
+const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+let SEQ3=0,LQ3=[];
+function luid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function lsend(bea){try{
+  if(!LQ3.length)return;
+  const batch=LQ3.splice(0),body=JSON.stringify({token:LOG_TK,records:batch});
+  if(bea&&navigator.sendBeacon){
+    if(!navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'})))LQ3.unshift(...batch);
+    return;}
+  fetch(LOG_EP,{method:'POST',headers:{'Content-Type':'text/plain'},body})
+    .catch(()=>{LQ3.unshift(...batch);});
+}catch(e){}}
+setInterval(()=>lsend(),5000);
+addEventListener('pagehide',()=>lsend(true));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')lsend(true);});
+function plog(ev,data){
+  try{if(window!==window.parent)parent.postMessage({type:'pilotLog',lab:LAB,event:ev,data:data||{}},'*');}catch(e){}
+  try{if(RS3U==='guest')return;
+    LQ3.push({_t:'events',schemaVersion:'1',sessionId:SESS3,userCode:RS3U,userName:'',seq:++SEQ3,
+      clientTs:new Date().toISOString(),eventId:luid(),tab:LAB,
+      eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
+    if(LQ3.length>=10)lsend();}catch(e){}}
+plog('enter',{ua:navigator.userAgent.slice(0,80)});
+const TRE_SVG=`<svg viewBox="0 0 220 132">
+  <ellipse cx="110" cy="120" rx="84" ry="9" fill="rgba(0,0,0,.4)"/><text x="26" y="26" font-size="16" fill="#f2d488">✦</text><text x="190" y="40" font-size="12" fill="#f2d488">✦</text><text x="44" y="60" font-size="9" fill="#fff">✦</text><text x="178" y="104" font-size="10" fill="#fff">✦</text>
+  <rect x="104" y="30" width="8" height="72" rx="4" fill="#c9a227" stroke="#8a6a1e" stroke-width="2"/>
+  <rect x="70" y="102" width="76" height="10" rx="5" fill="#c9a227" stroke="#8a6a1e" stroke-width="2"/>
+  <rect x="60" y="26" width="96" height="8" rx="4" fill="#e9c46a" stroke="#8a6a1e" stroke-width="2"/>
+  <line x1="70" y1="34" x2="70" y2="56" stroke="#8a6a1e" stroke-width="2.5"/>
+  <line x1="146" y1="34" x2="146" y2="66" stroke="#8a6a1e" stroke-width="2.5"/>
+  <path d="M48 56 Q70 76 92 56" fill="#e9c46a" stroke="#8a6a1e" stroke-width="2.5"/>
+  <path d="M124 66 Q146 86 168 66" fill="#e9c46a" stroke="#8a6a1e" stroke-width="2.5"/>
+  <circle cx="63" cy="52" r="6.5" fill="#f2d488" stroke="#c9a227" stroke-width="2"/>
+  <circle cx="76" cy="52" r="6.5" fill="#e9c46a" stroke="#c9a227" stroke-width="2"/>
+  <circle cx="70" cy="45" r="6.5" fill="#f2d488" stroke="#c9a227" stroke-width="2"/>
+  <circle cx="146" cy="61" r="7" fill="#f2d488" stroke="#c9a227" stroke-width="2"/>
+  <text x="140" y="66" font-size="12" font-weight="800" fill="#8a6a1e">₩</text>
+</svg>`;
+function martScene(em,kid){
+  const K=[{hair:'#6d4326',shirt:'#e76f51',name:'지우',girl:1},{hair:'#2b2b2b',shirt:'#457b9d',name:'민준',girl:0}][kid||0];
+  const row1=Array.from('🍎🍌🍇🍊🍉🥝🍞'), row2=Array.from('🥛🧃🥫🍪🧀🥚🍜');
+  const goods=(arr,y)=>arr.map((g,k)=>`<text x="${34+k*66}" y="${y}" font-size="30">${g}</text>`).join('');
+  const tags=(y)=>[0,1,2,3,4,5,6].map(k=>`<rect x="${30+k*66}" y="${y}" width="30" height="12" rx="3" fill="#ffe08a" stroke="#c9a227"/>`).join('');
+  const gx=555;
+  const hairSvg=K.girl
+    ?`<circle cx="${gx}" cy="128" r="26" fill="${K.hair}"/><circle cx="${gx-27}" cy="142" r="9" fill="${K.hair}"/><circle cx="${gx+27}" cy="142" r="9" fill="${K.hair}"/><circle cx="${gx-27}" cy="136" r="4" fill="#e63980"/><circle cx="${gx+27}" cy="136" r="4" fill="#e63980"/>`
+    :`<circle cx="${gx}" cy="126" r="25" fill="${K.hair}"/>`;
+  return `<div class="martscene"><svg viewBox="0 0 740 255">
+    <rect x="0" y="228" width="740" height="27" fill="#e2ddd2"/>
+    <rect x="12" y="14" width="478" height="200" rx="8" fill="#f7efe0" stroke="#d8cdb6" stroke-width="3"/>
+    ${goods(row1,86)}<rect x="18" y="92" width="466" height="11" rx="3" fill="#b98a4f"/>${tags(104)}
+    ${goods(row2,166)}<rect x="18" y="172" width="466" height="11" rx="3" fill="#b98a4f"/>${tags(184)}
+    <ellipse cx="${gx-58}" cy="52" rx="66" ry="34" fill="#fff" stroke="#26303f" stroke-width="2.5"/>
+    <circle cx="${gx-14}" cy="92" r="7" fill="#fff" stroke="#26303f" stroke-width="2"/>
+    <circle cx="${gx-26}" cy="78" r="4.5" fill="#fff" stroke="#26303f" stroke-width="2"/>
+    <text x="${gx-58}" y="64" text-anchor="middle" font-size="30">${em}❓</text>
+    ${hairSvg}
+    <circle cx="${gx}" cy="136" r="21" fill="#ffd9b3" stroke="#d9a877" stroke-width="2"/>
+    <circle cx="${gx-8}" cy="134" r="2.6" fill="#26303f"/><circle cx="${gx+8}" cy="134" r="2.6" fill="#26303f"/>
+    <line x1="${gx-12}" y1="126" x2="${gx-5}" y2="128" stroke="#26303f" stroke-width="2"/>
+    <line x1="${gx+12}" y1="126" x2="${gx+5}" y2="128" stroke="#26303f" stroke-width="2"/>
+    <path d="M${gx-6} 147 q6 5 12 0" fill="none" stroke="#26303f" stroke-width="2.4"/>
+    <text x="${gx+24}" y="118" font-size="13">💧</text>
+    <rect x="${gx-17}" y="156" width="34" height="38" rx="9" fill="${K.shirt}"/>
+    <rect x="${gx-13}" y="194" width="11" height="26" rx="4" fill="#41506b"/>
+    <rect x="${gx+3}" y="194" width="11" height="26" rx="4" fill="#41506b"/>
+    <line x1="${gx+15}" y1="166" x2="${gx+46}" y2="152" stroke="#ffd9b3" stroke-width="8" stroke-linecap="round"/>
+    <text x="${gx-62}" y="150" font-size="15" font-weight="800" fill="#8a6a34">음…</text>
+    <line x1="${gx+44}" y1="150" x2="${gx+62}" y2="164" stroke="#26303f" stroke-width="4" stroke-linecap="round"/>
+    <path d="M${gx+58} 164 L${gx+156} 164 L${gx+146} 208 L${gx+66} 208 Z" fill="rgba(233,196,106,.25)" stroke="#26303f" stroke-width="3.5"/>
+    <line x1="${gx+82}" y1="164" x2="${gx+86}" y2="208" stroke="#26303f" stroke-width="1.5"/>
+    <line x1="${gx+106}" y1="164" x2="${gx+106}" y2="208" stroke="#26303f" stroke-width="1.5"/>
+    <line x1="${gx+130}" y1="164" x2="${gx+126}" y2="208" stroke="#26303f" stroke-width="1.5"/>
+    <circle cx="${gx+78}" cy="222" r="9" fill="#41506b"/><circle cx="${gx+136}" cy="222" r="9" fill="#41506b"/>
+    <text x="${gx+108}" y="156" text-anchor="middle" font-size="13" font-weight="800" fill="#6b7683">카트</text>
+  </svg></div>`;}
+function cardWin(el,texts,cb){try{
+  const bcs=[...el.querySelectorAll('.gcard')];
+  if(!bcs.length){if(cb)cb();return;}
+  const wk=document.createElement('div');wk.id='wpk';
+  wk.innerHTML='<div class="wpk-back"></div><div class="wpk-front"></div><div class="wpk-label">🃏 카드 지갑</div>';
+  document.body.appendChild(wk);
+  bcs.forEach((c,i)=>{setTimeout(()=>{try{
+    const r=c.getBoundingClientRect(),wr=wk.getBoundingClientRect();
+    const g=document.createElement('div');g.className='cback flyback holdfx';
+    g.innerHTML='<div class="emb">🃏</div><div class="bnm">비밀 카드</div>';
+    const x0=(r.left+r.width/2)-59||300, y0=(r.top+r.height/2)-81||240;
+    g.style.left=x0+'px';g.style.top=y0+'px';
+    document.body.appendChild(g);
+    c.style.opacity='.35';
+    setTimeout(()=>{g.classList.remove('holdfx');
+      g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},1050);
+    setTimeout(()=>{g.style.transition='transform .35s ease-in, opacity .35s';
+      g.style.transform+=' translateY(150px)';g.style.opacity='0';
+      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');},330);},1700);
+  }catch(e){}},150+i*2150);});
+  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),400);if(cb)cb();},150+bcs.length*2150+900);
+}catch(e){if(cb)cb();}}
+function clap(){try{const c=ac();
+  // 박수갈채: 여러 명의 손뼉을 2초간 무작위로 겹쳐서
+  for(let i=0;i<42;i++){
+    const at=Math.random()*1.9, t0=c.currentTime+at;
+    const dur=0.05+Math.random()*0.03;
+    const buf=c.createBuffer(1,Math.floor(c.sampleRate*dur),c.sampleRate);
+    const dd=buf.getChannelData(0);
+    for(let j=0;j<dd.length;j++)dd[j]=(Math.random()*2-1)*Math.pow(1-j/dd.length,1.6);
+    const src=c.createBufferSource();src.buffer=buf;
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=700+Math.random()*2600;bp.Q.value=1.1;
+    const g=c.createGain();g.gain.value=(0.05+Math.random()*0.07)*(1-at*0.28); // 뒤로 갈수록 잦아들며
+    src.connect(bp);bp.connect(g);g.connect(c.destination);src.start(t0);}}catch(e){}}
+function walUpd(pulse){try{
+  const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
+  const e=document.getElementById('walN');if(e)e.textContent=n;
+  if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
+}catch(e){}}
+function addCards(ids){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem(ukey('rs3_cards'),JSON.stringify(a));}catch(e){}walUpd(true);}
+walUpd();
+function confetti(){try{
+  for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
+    s.style.left=(4+Math.random()*92)+'vw';
+    s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
+    s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
+function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'))||'[]');if(!a.includes(r))a.push(r);localStorage.setItem(ukey('rs3_done'),JSON.stringify(a));}catch(e){}}
+
+let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
+function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
+function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
+const won=n=>'₩'.replace('₩','')+n.toLocaleString('ko-KR')+'원';
+
+const CQ=[
+ {id:'color0',em:'🎨',room:'색깔의 비밀',t:["","이 달라도 ","가 같다면 같은 색을 만들 수 있다."],a:["양","비"],x:["차이","개수"]},
+ {id:'color1',em:'🎨',room:'색깔의 비밀',t:["기준이 되는 양을 ",", 그 기준량을 기준으로 비교할 때의 양을 ","이라 한다."],a:["기준량","비교하는 양"],x:["비율","전체 양"]},
+ {id:'color2',em:'🎨',room:'색깔의 비밀',t:["비교하는 양 : 기준량을 분수로 나타내면 ","이 되고 이것이 ","이다."],a:["비교하는 양/기준량","비율"],x:["기준량/비교하는 양","비"]},
+ {id:'color3',em:'🎨',room:'색깔의 비밀',t:["백분율은 기준량을 ","으로 할 때의 비율이다."],a:["100"],x:["10","1"]},
+ {id:'sound0',em:'🎼',room:'소리의 비밀',t:["소리는 ","이다."],a:["떨림"],x:["비","차이","기울임"]},
+ {id:'sound1',em:'🎼',room:'소리의 비밀',t:["화음은 진동수의 간단한 ","에서 나온다."],a:["비"],x:["비율","차이","떨림"]},
+ {id:'sound2',em:'🎼',room:'소리의 비밀',t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["라","비율"],x:["도","덧셈"]},
+ {id:'map0',em:'🗺️',room:'지도의 비밀',t:["지도는 실제 사물을 축척을 이용하여 일정한 ","로 줄여 나타낸 것이다."],a:["비율"],x:["덧셈","거리","차이"]},
+ {id:'map1',em:'🗺️',room:'지도의 비밀',t:["축척 1:10,000은 실제를 ","분의 1로 줄인 것이다."],a:["10,000"],x:["100","1,000"]},
+ {id:'map2',em:'🗺️',room:'지도의 비밀',t:["축척 1:10,000 지도에서 다리가 3cm라면, 실제 다리는 3 × 10,000 = ","cm이다."],a:["30,000"],x:["3,000","300"]},
+ {id:'map3',em:'🗺️',room:'지도의 비밀',t:["각도의 비 7.2° : 360° = 1 : ",", 두 도시 사이가 800km라면 지구 둘레는 800 × 50 = ","km이다."],a:["50","40,000"],x:["5","4,000"]},
+ {id:'mart0',em:'🛒',room:'마트의 비밀',t:["","\u00A0= 물건 1개의 값 = 묶음 전체 가격 ÷ ",""],a:["단위 가격","개수"],x:["전체 가격","덧셈"]},
+ {id:'mart1',em:'🛒',room:'마트의 비밀',t:["어떤 물건이 더 싼지 비교하려면 ","을 비교해야 한다."],a:["단위 가격"],x:["전체 가격","할인율","개수"]},
+ {id:'mart2',em:'🛒',room:'마트의 비밀',t:["할인율이 20%이면, 원래 가격에 ","을 곱한 뒤 ","으로 나눈 것만큼 가격에서 뺀다는 뜻이다."],a:["20","100"],x:["80","10"]},
+ {id:'mart3',em:'🛒',room:'마트의 비밀',t:["할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100. 1,000원짜리 물건을 20% 할인하면 ","원을 내면 된다."],a:["800"],x:["200","980"]}];
+const DECK=CQ.map((c,i)=>({t:'cq',i})).concat([{t:'done'}]);
+let idx=0;
+function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
+  $('#navL').className='nav'+(idx<=0?' off':'');$('#navR').className='nav'+(idx>=DECK.length-1?' off':'');}
+function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
+  $('#fbT').innerHTML=t;$('#fbS').innerHTML=s||'';
+  $('#fbA').innerHTML=`<button class="btn pri" id="fbBtn">${btnText}</button>`;
+  $('#fbBtn').onclick=()=>{b.className='';if(after)after();};}
+function next(){idx=Math.min(idx+1,DECK.length-1);render();}
+function success(t,s){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',next);}
+function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
+function mountDrag(el,onAll){
+  let sel=null,drag=null;
+  const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
+  function allDone(){if(dzs.every(z=>z.classList.contains('okk')))setTimeout(onAll,380);}
+  function judge(dz,ch){
+    if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
+    if(ch.dataset.w===dz.dataset.a){
+      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
+      try{chime(true);}catch(e){}
+      setTimeout(()=>dz.classList.remove('snap'),320);
+      if(sel===dz)sel=null;allDone();}
+    else{dz.classList.remove('hov');dz.classList.add('bad','shake');
+      try{tone(180,0,.2);}catch(e){}
+      setTimeout(()=>dz.classList.remove('bad','shake'),480);}}
+  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.classList.contains('okk'))return;
+    dzs.forEach(x=>x.classList.remove('sel'));dz.classList.add('sel');sel=dz;};});
+  chips.forEach(ch=>{
+    ch.onclick=()=>{if(ch.classList.contains('used'))return;
+      const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
+      if(dz)judge(dz,ch);};
+    ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      document.body.appendChild(g);drag={ch,g};
+      g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
+  document.onpointermove=e=>{if(!drag)return;
+    drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';
+    dzs.forEach(z=>z.classList.remove('hov'));
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const dz=under&&under.closest?under.closest('.dz'):null;
+    if(dz&&!dz.classList.contains('okk'))dz.classList.add('hov');};
+  document.onpointerup=e=>{if(!drag)return;
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const dz=under&&under.closest?under.closest('.dz'):null;
+    dzs.forEach(z=>z.classList.remove('hov'));
+    if(dz)judge(dz,drag.ch);
+    drag.g.remove();drag=null;};
+  return {};}
+function render(){prog();const d=DECK[idx];const el=$('#slide');
+  if(d.t==='cq'){const c=CQ[d.i];
+    const cards=c.a.concat(c.x).sort(()=>Math.random()-.5);
+    let h='';c.t.forEach((seg,j)=>{h+=seg;if(j<c.a.length)h+=`<span class="dz" data-a="${c.a[j]}"></span>`;});
+    let owned=false;try{owned=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').includes(c.id);}catch(e){}
+    el.innerHTML=`<div style="font-size:50px">${c.em}</div>
+    <div class="q">${c.room} — 카드 문제 ${d.i+1} / ${CQ.length}</div>
+    <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 완성하세요!${owned?' &nbsp;<b style="color:#2e9e63">✔ 이미 지갑에 있는 카드</b>':''}</div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('summary',{no:d.i+1,id:c.id});addCards([c.id]);
+      const full=c.t.map((seg,j)=>seg+(j<c.a.length?`『${c.a[j]}』`:'')).join('');
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
+      cardWin(el,null,()=>{
+      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 15</b>`,d.i<CQ.length-1?'다음 문제 →':'끝!',()=>next());});});
+    return;}
+  if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🛒</div>
+    <div class="q">마트의 비밀에 온 걸 환영해요!</div>
+    ${martScene('🛒',0)}
+    <div class="sub">오늘은 <b>지우</b>와 <b>민준</b>이의 장보기를 도와줘요 — 묶음 가격, 어디가 싼지, 할인까지 <b>마트 속 비율의 비밀</b>!</div>
+    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
+  if(d.t==='mc'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
+    ${martScene(d.bem,d.kid)}
+    <div class="shop"><div class="item"><div class="em">${d.em}</div><div>${d.price}</div></div></div>
+    <div class="choices">${d.opts.slice().sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
+    el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
+      b.dataset.ok==='1'?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='shop'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
+    ${martScene(d.bem,d.kid)}
+    <div class="shop">
+      <div class="item pick" data-b="0"><div class="em">${d.em}</div><div style="color:var(--sub)">A마트</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="1"><div class="em">${d.em}</div><div style="color:var(--sub)">B마트</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
+    </div>
+    <div class="sub">더 싼 마트를 눌러 보세요!</div>`;
+    el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
+      (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='tsum'){
+    const S3=[
+     {t:["","\u00A0= 물건 1개의 값 = 묶음 전체 가격 ÷ ",""],a:["단위 가격","개수"],x:["전체 가격","덧셈"]},
+     {t:["어떤 물건이 더 싼지 비교하려면 ","을 비교해야 한다."],a:["단위 가격"],x:["전체 가격","할인율","개수"]},
+     {t:["할인율이 20%이면, 원래 가격에 ","을 곱한 뒤 ","으로 나눈 것만큼 가격에서 뺀다는 뜻이다."],a:["20","100"],x:["80","10"]},
+     {t:["할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100. 1,000원짜리 물건을 20% 할인하면 ","원을 내면 된다."],a:["800"],x:["200","980"]}];
+    const s=S3[d.i];
+    const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
+    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    el.innerHTML=`<div style="font-size:60px">📝</div>
+    <div class="q">우리가 찾은 마트의 비밀 ${d.i+1} / 4</div>
+    <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['mart'+d.i]);
+      const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
+      cardWin(el,null,()=>{
+      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 15</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});});
+    return;}
+  if(d.t==='done'){
+    confetti();clap();
+    el.innerHTML=`<div><span class="stampb" style="font-size:84px">🃏</span></div>
+    <div class="q">카드 문제 15개를 모두 풀었어요! 대단해요!</div>
+    <div class="sub">지갑을 눌러 모은 카드를 확인하거나, 복습으로 넘어가요!</div>
+    <button class="btn pri" id="go2">🔁 카드 복습하러 →</button>
+    <button class="btn" id="goHome">🏠 처음으로</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});chime(true);location.href='index.html?review=1';};
+    $('#goHome').onclick=()=>{location.href='index.html';};
+    return;}
+}
+$('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
+$('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
+const RC=[
+ {id:'color0',r:'🎨 색깔의 비밀',t:'<b>양</b>이 달라도 <b>비</b>가 같다면 같은 색을 만들 수 있다.'},
+ {id:'color1',r:'🎨 색깔의 비밀',t:'기준이 되는 양을 <b>기준량</b>, 그 기준량을 기준으로 비교할 때의 양을 <b>비교하는 양</b>이라 한다.'},
+ {id:'color2',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량을 분수로 나타내면 <b>비교하는 양/기준량</b>이 되고 이것이 <b>비율</b>이다.'},
+ {id:'color3',r:'🎨 색깔의 비밀',t:'백분율은 기준량을 <b>100</b>으로 할 때의 비율이다.'},
+ {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 <b>떨림</b>이다.'},
+ {id:'sound1',r:'🎼 소리의 비밀',t:'화음은 진동수의 간단한 <b>비</b>에서 나온다.'},
+ {id:'sound2',r:'🎼 소리의 비밀',t:'음을 만들 때는 <b>라</b>를 기준으로 <b>비율</b>을 계산한다.'},
+ {id:'map0',r:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
+ {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
+ {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
+ {id:'map3',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
+ {id:'mart0',r:'🛒 마트의 비밀',t:'<b>단위 가격</b> = 물건 1개의 값 = 묶음 전체 가격 ÷ <b>개수</b>'},
+ {id:'mart1',r:'🛒 마트의 비밀',t:'어떤 물건이 더 싼지 비교하려면 <b>단위 가격</b>을 비교해야 한다.'},
+ {id:'mart2',r:'🛒 마트의 비밀',t:'할인율이 20%이면, 원래 가격에 <b>20</b>을 곱한 뒤 <b>100</b>으로 나눈 것만큼 가격에서 뺀다는 뜻이다.'},
+ {id:'mart3',r:'🛒 마트의 비밀',t:'할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100 — 1,000원짜리는 <b>800</b>원을 내면 된다.'}];
+(function(){
+  const o=document.createElement('div');o.id='walOv';
+  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 15</h3>
+    <div id="walList" style="text-align:left"></div>
+    <div style="margin-top:14px"><button class="btn pri" id="walRev">🔁 카드 복습하러 가기</button>
+    <button class="btn" id="walClose">닫기</button></div></div>`;
+  document.body.appendChild(o);
+  function renderWal(){
+    let got=[];try{got=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');}catch(e){}
+    document.getElementById('walN2').textContent=got.length;
+    let h='',cur='',miss='';
+    RC.forEach(c=>{
+      if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
+      h+=got.includes(c.id)
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
+    document.getElementById('walList').innerHTML=h;}
+  const w=document.getElementById('wal');
+  if(w){w.style.cursor='pointer';w.title='카드 지갑 열기';
+    w.onclick=()=>{renderWal();o.classList.add('show');};}
+  document.getElementById('walRev').onclick=()=>{location.href='index.html?review=1';};
+  document.getElementById('walClose').onclick=()=>{o.classList.remove('show');};
+})();
+render();
+</script>
+</body>
+</html>
