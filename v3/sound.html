@@ -102,6 +102,15 @@
   .hvseg.c2{background:#7fae84}
   .hvend{font-size:15px;font-weight:700;color:var(--sub);white-space:nowrap}
   .hvcap{font-size:16.5px;font-weight:700;color:var(--sub);margin-top:8px;line-height:1.65;text-align:left}
+  .qcard{display:block;position:relative;border:3.5px solid var(--gold);background:linear-gradient(#fffdf4,#fff3d6);border-radius:18px;padding:16px 22px 16px 52px;margin:10px auto;max-width:780px;box-shadow:0 7px 20px rgba(224,160,42,.3)}
+  .qcard::before{content:'🃏';position:absolute;left:14px;top:12px;font-size:24px}
+  #walletFx{position:fixed;right:26px;top:50%;font-size:88px;z-index:110;filter:drop-shadow(0 8px 16px rgba(0,0,0,.3));animation:walIn .4s ease both}
+  @keyframes walIn{from{transform:translateY(-50%) translateX(150px);opacity:0}to{transform:translateY(-50%);opacity:1}}
+  #walletFx.bump{animation:walBump .45s ease both}
+  @keyframes walBump{0%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.35) rotate(-10deg)}100%{transform:translateY(-50%)}}
+  #walletFx.wout{animation:walOut .45s ease both}
+  @keyframes walOut{from{transform:translateY(-50%)}to{transform:translateY(-50%) translateX(170px);opacity:0}}
+  .flycard{position:fixed;z-index:105;margin:0;transition:transform .6s cubic-bezier(.5,-0.1,.75,.35),opacity .6s}
   #wal{font-size:18px;font-weight:800;color:#8a6a34;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:6px 16px;white-space:nowrap}
   #wal.pulse{animation:walP .6s}
   @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
@@ -151,6 +160,27 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function flyToWallet(cardEls,cb){try{
+  const wfx=document.createElement('div');wfx.id='walletFx';wfx.textContent='👛';
+  document.body.appendChild(wfx);
+  setTimeout(()=>{
+    cardEls.forEach((c,i)=>{setTimeout(()=>{try{
+      const r=c.getBoundingClientRect();
+      const g=c.cloneNode(true);g.classList.add('flycard');
+      g.style.left=r.left+'px';g.style.top=r.top+'px';g.style.width=(r.width||400)+'px';
+      document.body.appendChild(g);
+      const wr=wfx.getBoundingClientRect();
+      requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+        g.style.transform=`translate(${(wr.left+wr.width/2)-(r.left+r.width/2)}px,${(wr.top+wr.height/2)-(r.top+r.height/2)}px) scale(.06) rotate(24deg)`;
+        g.style.opacity='.1';});});
+      setTimeout(()=>{g.remove();
+        wfx.classList.remove('bump');void wfx.offsetWidth;wfx.classList.add('bump');
+        try{tone(700+i*140,0,.09);}catch(e){}},620);
+    }catch(e){}},i*280);});
+    setTimeout(()=>{wfx.classList.remove('bump');wfx.classList.add('wout');
+      setTimeout(()=>wfx.remove(),500);if(cb)cb();},cardEls.length*280+950);
+  },380);
+}catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
   const e=document.getElementById('walN');if(e)e.textContent=n;
@@ -383,12 +413,12 @@ hDone=7;
     <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="sub"><b>소리의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div><span class="cardbn">🃏 비밀 카드 문제 — 3장이 걸려 있어요! 문장을 완성하면 카드 획득!</span></div>
-    <div class="sumbox"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
+    <div class="sumbox qcard"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div></div><div class="sumbox qcard"><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div></div><div class="sumbox qcard"><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('sound');addCards(['sound0','sound1','sound2']);confetti();chime(true);
-      const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>'🃏 '+r.textContent.trim());
+    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('sound');addCards(['sound0','sound1','sound2']);const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>'🃏 '+r.textContent.trim());
       const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
-      fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🎼</span></div>${rows.map(r=>`<div class="mini-card">${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>다음 탐험은 <b>🗺️ 지도의 비밀</b>!`,'다음 방으로 →',()=>{location.href='map.html';});});
+      flyToWallet([...el.querySelectorAll('.qcard')],()=>{confetti();chime(true);
+      fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🎼</span></div>${rows.map(r=>`<div class="mini-card">${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>다음 탐험은 <b>🗺️ 지도의 비밀</b>!`,'다음 방으로 →',()=>{location.href='map.html';});});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx--;render();plog('nav',{to:idx});}};
