@@ -555,8 +555,8 @@ if(d.t==='chord'){
     const exS=String(Math.round(ex*100)/100);
     const bank=[String(p.a),String(p.b),'440','100']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
-    el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:10px 20px;font-size:17px;font-weight:700;margin-bottom:8px">🎵 실제 음악의 세계 기준음은 <b>라(A4) = 440Hz</b> — 표준 주파수표에서 유일하게 딱 떨어지는 음이라, 악기 조율은 <b>라부터</b> 시작해요!</div>':''}
-      <div class="q">라 : ${p.n}의 진동수의 비는 <b>${p.a} : ${p.b}</b>.<br>라 줄(<b>36cm</b>)에 어떤 <b>비율(분수)</b>을 곱하면 <b>${p.n} 줄</b>이 될까요?</div>
+    el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:12px 22px;font-size:20px;font-weight:800;margin-bottom:8px">🎵 라(A)음은 진동수가 <b>440Hz</b>여서 표준 주파수 표에서 유일하게 딱 떨어지는 음이라, 악기 조율을 할 때 <b>라 음을 기준</b>으로 해요!</div>':''}
+      <div class="q">라 : ${p.n} = <b>${p.a} : ${p.b}</b>일 때,<br>라 줄이 <b>36cm</b>이면 어떤 <b>비율</b>을 곱해야 <b>${p.n} 줄</b>의 길이가 될까요?</div>
       <div class="sub">하프 공방 ${d.i+1}/7 — 비를 <b>분수(비율)</b>로 바꿔 길이에 곱해요! 계산은 하프가 해 줘요</div>
       ${harpHTML()}
       <div class="eq">
