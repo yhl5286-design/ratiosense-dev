@@ -376,6 +376,14 @@ function martScene(em,kid,type){
     <circle cx="${gx+96}" cy="224" r="9" fill="#41506b"/><circle cx="${gx+156}" cy="224" r="9" fill="#41506b"/>
     <text x="${gx+126}" y="154" text-anchor="middle" font-size="13" font-weight="800" fill="#6b7683">카트</text>
   </svg></div>`;}
+function juiceBox(c,label){
+  return `<svg viewBox="0 0 64 78" style="width:60px;display:block;margin:0 auto">
+    <polygon points="14,22 50,22 50,70 14,70" fill="${c}" stroke="rgba(0,0,0,.28)" stroke-width="2.5"/>
+    <polygon points="14,22 32,10 50,22" fill="${c}" stroke="rgba(0,0,0,.28)" stroke-width="2.5"/>
+    <rect x="40" y="2" width="4.5" height="13" rx="2" fill="#d9d9d9" transform="rotate(14 42 8)"/>
+    <rect x="19" y="36" width="26" height="20" rx="4" fill="#fffdf4"/>
+    <text x="32" y="50" text-anchor="middle" font-size="8.5" font-weight="800" fill="${c}">${label}</text>
+  </svg>`;}
 function icePack(n,label){ // 아이스크림 멀티팩 묶음 + 가격표
   const cols=['#f2b7c6','#b6d94b','#f4d35e','#9ecbee','#e76f51'];
   let bars='';
@@ -484,7 +492,7 @@ const DECK=[
   ok:['맞았어요! 고려 요구르트가 더 싸요 🥤','1개 값: 고려 2,100÷3=<b>700원</b> vs 사랑 4,000÷5=800원 — <b>단위 가격</b>으로 비교!'],
   no:'각 제품의 <b>1개 값</b>을 나눠 보세요 — 2,100÷3과 4,000÷5.'},
  {t:'shop',kid:0,bem:'🧃',q:'지우는 🧃 <b>주스</b>를 사려고 해요 — 주스가 <b>두 종류</b>!<br><b>사과주스는 3개에 1,500원</b>, <b>오렌지주스는 4개에 2,400원</b> — 어떤 주스가 더 쌀까요?',sub:'',em:'🧃',
-  an:'사과주스',bn:'오렌지주스',
+  an:'사과주스',bn:'오렌지주스',ai:juiceBox('#d94f3d','사과'),bi:juiceBox('#f7a325','오렌지'),
   a:{n:3,p:1500},b:{n:4,p:2400},ansB:false,
   ok:['맞았어요! 사과주스가 더 싸요 🧃','1개 값: 사과주스 1,500÷3=<b>500원</b> vs 오렌지주스 2,400÷4=600원!'],
   no:'각 주스의 <b>1개 값</b>을 나눠 보세요 — 1,500÷3과 2,400÷4.'},
@@ -566,10 +574,10 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='shop'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,d.bem==='🥤'?'yogurt':(d.bem==='🥛'?'dairy':'juice'))}
     <div class="shop">
-      <div class="item pick" data-b="0"><div class="em">${d.em}</div><div style="color:var(--sub)">${d.an||'고려마트'}</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
-      <div class="item pick" data-b="1"><div class="em">${d.em}</div><div style="color:var(--sub)">${d.bn||'사랑마트'}</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="0">${d.ai||`<div class="em">${d.em}</div>`}<div style="color:var(--sub)">${d.an||'고려마트'}</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="1">${d.bi||`<div class="em">${d.em}</div>`}<div style="color:var(--sub)">${d.bn||'사랑마트'}</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
     </div>
-    <div class="sub">더 싼 쪽을 눌러 보세요!</div>`;
+    `;
     el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
       (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
   if(d.t==='wsale'){
