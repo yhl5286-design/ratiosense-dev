@@ -110,6 +110,8 @@
   @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
   .dz.shake{animation:shk .45s}
   @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .cardbn{display:inline-block;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:8px 22px;font-size:17.5px;font-weight:800;color:#8a6a34;margin:2px 0 10px;animation:bnPulse 1.6s ease-in-out infinite}
+  @keyframes bnPulse{0%,100%{transform:none}50%{transform:scale(1.05)}}
   .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
   @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
   .stampb{display:inline-block;animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
@@ -413,6 +415,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 색깔의 비밀 ${d.i+1} / 4</div>
+    <div><span class="cardbn">🃏 비밀 카드 문제 ${d.i+1} / 4 — 문장을 완성하면 카드 획득!</span></div>
     <div class="sub">낱말 카드를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div class="sumbox"><div class="row" style="line-height:2.6">${h}</div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
