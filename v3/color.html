@@ -469,7 +469,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     const m=MAKE[d.i],BASE=m.b,cv=BASE*m.r[1]/m.r[0];
     const askBase=(d.i!==1);
     el.innerHTML=`<div class="q">색 완성! 이 문제에서 <b>${askBase?'기준량':'비교하는 양'}</b>은 무엇일까요?</div>
-      <div class="sub">빨강 ${BASE}mL는 처음부터 들어 있었고, 내가 노랑 ${cv}mL를 넣어 맞췄어요</div>
+      <div class="sub">노랑을 몇 mL 넣을지, <b>빨강 ${BASE}mL를 기준으로</b> 비를 계산해서 노랑 ${cv}mL를 구했어요</div>
       <div class="choices">
         <button class="btn" data-ok="${askBase?1:0}">빨강</button>
         <button class="btn" data-ok="${askBase?0:1}">노랑</button>
@@ -477,9 +477,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       if(b.dataset.ok==='1'){
         success('맞아요!',askBase
-          ?`처음부터 들어 있던 <b>빨강</b>에 맞춰 노랑을 넣었죠?<br><b>빨강은 기준량, 노랑이 비교하는 양</b>이 됩니다.`
-          :`기준량 빨강에 맞춰 내가 넣은 <b>노랑이 비교하는 양</b>이에요.`);}
-      else retry('처음부터 <b>정해져 있던 쪽</b>이 기준량, 그에 <b>맞춰 넣은 쪽</b>이 비교하는 양이에요.');});return;}
+          ?`노랑의 양을 <b>빨강의 양을 기준으로</b> 비를 세워 계산했죠?<br>비를 계산할 때 <b>기준이 된 빨강이 기준량</b>, 그 기준과 비교한 <b>노랑이 비교하는 양</b>입니다.`
+          :`빨강을 기준으로 <b>비교하며 양을 구한 노랑</b>이 <b>비교하는 양</b>이에요. 기준이 된 빨강은 기준량!`);}
+      else retry('비를 계산할 때 <b>기준으로 삼은 쪽</b>이 기준량, 그 기준과 <b>비교한 쪽</b>이 비교하는 양이에요.');});return;}
   if(d.t==='rate'){
     const q=R3[d.i],g=gcd(q.a,q.b),ra=q.a/g,rb=q.b/g;
     const abFront=(q.dir==='ab');
