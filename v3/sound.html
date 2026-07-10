@@ -384,7 +384,7 @@ function harpViz(p,exS){
   return `<div class="hviz">
     <div class="hvrow"><span class="hvlab">도 줄 <b>81cm</b></span><div class="hvbar" style="width:${W}px">${segs(p.b,'c1')}</div><span class="hvend">${p.b}칸 (한 칸 ${unit}cm)</span></div>
     <div class="hvrow"><span class="hvlab">${p.n} 줄 <b style="color:#136a3d">${exS}cm</b></span><div class="hvbar" style="width:${Math.round(W*p.a/p.b)}px">${segs(p.a,'c2')}</div><span class="hvend">그중 ${p.a}칸!</span></div>
-    <div class="hvcap">💡 ${p.n}${jz(p.n,'은','는')} 도가 <b>${p.a}번</b> 떨릴 때 <b>${p.b}번</b> 떨려요 — 빨리 떨리는 만큼 줄은 <b>거꾸로 짧게</b>!<br>그래서 도 줄을 ${p.n}의 떨림 수 <b>${p.b}</b>로 나누고(÷${p.b}), 도의 떨림 수 <b>${p.a}</b>칸만 가져와요(×${p.a}).</div>
+    <div class="hvcap">💡 도 줄 <b>전체(81cm)</b>를 똑같이 <b>${p.b}칸</b>으로 나누고(÷${p.b}), 그중 <b>${p.a}칸</b>을 가져오면(×${p.a}) —<br>${p.n} 줄은 도 줄 <b>전체의 ${p.a}/${p.b}</b>이 돼요!</div>
   </div>`;}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
@@ -445,37 +445,36 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       ${harpHTML()}
       <div class="eq">
         <div class="row">① 진동수의 비 — 도 : ${p.n} = <b>${p.a} : ${p.b}</b></div>
-        <div class="row">② 길이의 비율(분수)로 바꾸기 — ${p.n} 줄은 도 줄의 <b>몇 분의 몇</b>일까요? 떨림과 길이는 <span style="color:#b3541e"><b>거꾸로</b></span>!</div>
+        <div class="row">② 길이의 비율(분수)로 바꾸기 — ${p.n} 줄은 도 줄 <b>전체의 몇 분의 몇</b>일까요?</div>
         <div class="row">③ ${p.n} 줄의 길이 = <b>81</b> × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <b style="color:#136a3d">${exS} cm</b></div>
       </div>
       <div>${harpViz(p,exS)}</div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;
     mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
-      success(`${p.n} 줄 완성! ${exS}cm`,`진동수의 비 <b>${p.a} : ${p.b}</b> → 길이의 비율은 거꾸로라서 <b>${p.a}/${p.b}</b> (도의 ${p.a}${jz(String(p.a),'이','가')} 분자!)<br>81 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
+      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 도 줄 <b>전체의 ${p.a}/${p.b}</b>!<br>81 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
     wireGoal(el);return;}
   if(d.t==='challenge'){hDone=7;
     const opts=[['40cm',1,''],['90cm',0,'rev'],['30cm',0,'']].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">🏆 마지막 도전! — 왜 <b>거꾸로</b>일까요?</div>
+    el.innerHTML=`<div class="q">🏆 마지막 도전! — <b>비율</b>로 새 하프 만들기</div>
       <div class="eq" style="text-align:left">
-        <div class="row">도와 솔의 <b>떨림(진동수)의 비 = 2 : 3</b> — 솔이 더 <b>빨리</b> 떨려요</div>
-        <div class="row">도와 솔의 <b>줄 길이의 비 = <span style="color:#136a3d">3 : 2</span></b> — 솔 줄이 더 <b>짧아요</b> (81cm : 54cm)</div>
-        <div class="row">빨리 떨리게 하려면 줄을 짧게! 그래서 <b>길이의 비는 진동수의 비를 뒤집은 것</b>이에요.</div>
+        <div class="row">하프 공방에서 — <b>솔 줄은 도 줄 전체의 <span style="color:#136a3d">2/3</span></b>이었어요 (81 × 2/3 = 54cm)</div>
+        <div class="row">음의 줄 길이는 언제나 <b>도 줄 전체에 대한 비율</b>로 구해요!</div>
       </div>
       <div class="q" style="margin-top:14px">그렇다면 — 도 줄이 <b>60cm</b>인 <b>작은 하프</b>에서,<br><b>솔</b> 줄은 몇 cm로 잘라야 할까요?</div>
-      <div class="sub">이번엔 숫자 카드 없이 스스로! 배운 비(2 : 3)를 새 하프에 적용해 보세요</div>
+      <div class="sub">이번엔 숫자 카드 없이 스스로! 배운 비율(2/3)을 새 하프에 적용해 보세요</div>
       <div class="choices">${opts.map(o=>`<button class="btn" data-ok="${o[1]}" data-k="${o[2]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(bn=>bn.onclick=()=>{
       if(bn.dataset.ok==='1'){plog('challenge',{ok:1});
-        success('40cm! 완벽해요! 🏆',`60 × 2 ÷ 3 = <b>40cm</b>. 도 줄이 81cm든 60cm든, <b>비(2 : 3)만 알면 어떤 하프든 만들 수 있어요</b> — 소리 속에서 비를 찾은 이유가 바로 이거예요!`);}
+        success('40cm! 완벽해요! 🏆',`60 × 2/3 = <b>40cm</b>. 도 줄이 81cm든 60cm든 <b>솔 줄은 언제나 도 줄 전체의 2/3</b> — 비율만 알면 어떤 하프든 만들 수 있어요. 소리 속에서 비를 찾은 이유가 바로 이거예요!`);}
       else if(bn.dataset.k==='rev'){plog('challenge',{ok:0,pick:'rev'});
-        retry(`60 × 3 ÷ 2 = 90cm — <b>거꾸로의 거꾸로</b>가 됐어요!<br>솔은 도보다 <b>빨리</b> 떨리니 줄은 더 <b>짧아야</b> 해요. 길이는 진동수 비를 <b>뒤집어서</b> 2/3!`);}
+        retry(`90cm는 60cm의 3/2배 — 솔 줄이 도 줄보다 길어졌어요!<br>솔 줄은 도 줄 <b>전체의 2/3</b> — 60의 2/3를 구해 보세요.`);}
       else{plog('challenge',{ok:0});
-        retry(`도와 솔의 진동수 비는 <b>2 : 3</b> — 줄 길이는 거꾸로 <b>3 : 2</b>예요.<br>60cm의 <b>3분의 2</b>는 몇 cm일까요?`);}});
+        retry(`솔 줄은 도 줄 <b>전체의 2/3</b> — 60cm의 <b>3분의 2</b>는 몇 cm일까요?`);}});
     return;}
   if(d.t==='ssum'){
     const S3=[
-     {t:["소리는 ","이다."],a:["떨림"],x:["비","차이","울림"]},
+     {t:["소리는 ","이다."],a:["떨림"],x:["비","차이","기울임"]},
      {t:["화음은 진동수의 간단한 ","에서 나온다."],a:["비"],x:["비율","차이","떨림"]},
      {t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["도","비율"],x:["레","비"]}];
     const s=S3[d.i];
