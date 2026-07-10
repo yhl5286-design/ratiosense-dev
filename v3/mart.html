@@ -140,6 +140,8 @@
   #wal.pulse{animation:walP .6s}
   @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
   .mini-card{border:3px solid var(--gold);background:#fffdf4;border-radius:12px;padding:9px 15px;margin:7px auto;font-size:17px;font-weight:800;max-width:520px;text-align:left;animation:stampIn .5s;box-shadow:0 3px 10px rgba(224,160,42,.25)}
+  .eq{background:#fff;border:3px solid var(--line);border-radius:20px;padding:16px 24px;display:inline-block;text-align:left;margin:8px 0;max-width:840px}
+  .eq .row{font-size:21px;font-weight:800;line-height:2.4}
   .cardbn{display:inline-block;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:8px 22px;font-size:17.5px;font-weight:800;color:#8a6a34;margin:2px 0 10px;animation:bnPulse 1.6s ease-in-out infinite}
   @keyframes bnPulse{0%,100%{transform:none}50%{transform:scale(1.05)}}
   .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
@@ -473,34 +475,32 @@ const won=n=>'₩'.replace('₩','')+n.toLocaleString('ko-KR')+'원';
 
 const DECK=[
  {t:'intro'},
- {t:'mc',kid:0,bem:'🍦',q:'지우가 🍦 <b>5개 묶음에 4,000원</b>인 아이스크림 묶음을 사려고 해요.<br>아이스크림 <b>하나당 가격</b>은 얼마라고 볼 수 있나요?',sub:'묶음 가격을 개수로 나누면 하나의 값! (하나에 얼마?)',
+ {t:'mc',kid:0,bem:'🍦',q:'지우가 <b>5개 묶음에 4,000원</b>인 아이스크림 묶음을 사려고 해요.<br>아이스크림 <b>하나당 가격</b>은 얼마라고 볼 수 있나요?',sub:'',
   em:'🍦×5',price:'5개 묶음 4,000원',hint:'4,000 ÷ 5',opts:[['800원',1],['500원',0],['1,000원',0]],
   ok:['맞았어요! 1개 = 800원 🍦','4,000 ÷ 5 = 800 — 묶음 가격 ÷ 개수 = <b>단위 가격</b>!'],no:'5개가 4,000원 — 1개는 나누면?'},
- {t:'shop',kid:1,bem:'🥤',q:'현준이 앞에 🥤 요구르트가 <b>두 종류</b>!<br><b>고려 요구르트는 3개에 2,100원</b>, <b>사랑 요구르트는 5개에 4,000원</b> — 어떤 제품의 요구르트 <b>1개</b>가 더 싼가요?',sub:'머릿속으로 1개 값을 나눠 보세요 (어디가 싸? 1/2)',em:'🥤',
+ {t:'shop',kid:1,bem:'🥤',q:'현준이 앞에 🥤 요구르트가 <b>두 종류</b>!<br><b>고려 요구르트는 3개에 2,100원</b>, <b>사랑 요구르트는 5개에 4,000원</b> — 어떤 제품의 요구르트 <b>1개</b>가 더 싼가요?',sub:'',em:'🥤',
   an:'고려 요구르트',bn:'사랑 요구르트',
   a:{n:3,p:2100},b:{n:5,p:4000},ansB:false,
   ok:['맞았어요! 고려 요구르트가 더 싸요 🥤','1개 값: 고려 2,100÷3=<b>700원</b> vs 사랑 4,000÷5=800원 — <b>단위 가격</b>으로 비교!'],
   no:'각 제품의 <b>1개 값</b>을 나눠 보세요 — 2,100÷3과 4,000÷5.'},
- {t:'shop',kid:0,bem:'🧃',q:'지우는 🧃 <b>주스</b>도 마시고 싶어요 — 주스도 <b>두 종류</b>!<br><b>K주스는 3개에 1,500원</b>, <b>Y주스는 4개에 2,400원</b> — 어떤 주스가 더 쌀까요?',sub:'(어디가 싸? 2/2)',em:'🧃',
-  an:'K주스',bn:'Y주스',
+ {t:'shop',kid:0,bem:'🧃',q:'지우는 🧃 <b>주스</b>를 사려고 해요 — 주스가 <b>두 종류</b>!<br><b>사과주스는 3개에 1,500원</b>, <b>오렌지주스는 4개에 2,400원</b> — 어떤 주스가 더 쌀까요?',sub:'',em:'🧃',
+  an:'사과주스',bn:'오렌지주스',
   a:{n:3,p:1500},b:{n:4,p:2400},ansB:false,
-  ok:['맞았어요! K주스가 더 싸요 🧃','1개 값: K주스 1,500÷3=<b>500원</b> vs Y주스 2,400÷4=600원!'],
+  ok:['맞았어요! 사과주스가 더 싸요 🧃','1개 값: 사과주스 1,500÷3=<b>500원</b> vs 오렌지주스 2,400÷4=600원!'],
   no:'각 주스의 <b>1개 값</b>을 나눠 보세요 — 1,500÷3과 2,400÷4.'},
- {t:'mc',kid:1,bem:'🥛',q:'현준이가 고른 <b>우유</b>는 원래 <b>5,000원</b>인데 마침 <span class="sale">40% 할인</span> 행사 중이에요.<br>이 우유는 <b>얼마가 할인</b>될까요?',sub:'할인율은 원래 가격을 100으로 볼 때 깎는 부분 (할인 ① 할인 금액)',
+ {t:'mc',kid:1,bem:'🥛',q:'현준이가 고른 <b>우유</b>는 원래 <b>5,000원</b>인데 마침 <span class="sale">40% 할인</span> 행사 중이에요.<br>이 우유는 <b>얼마가 할인</b>될까요?',sub:'',
   em:'🥛',price:'5,000원 40%↓',hint:'5000 × 40 ÷ 100',opts:[['2,000원',1],['500원',0],['2,500원',0]],
   ok:['맞았어요! 2,000원 할인','40%란 <b>100 중 40</b> — 5,000 × 40 ÷ 100 = 2,000!'],no:'40%는 100 중 40이에요!'},
- {t:'mc',kid:1,bem:'🥛',q:'그러면 이 <b>우유</b>를 살 때 <b>얼마를 내면</b> 될까요?<br>(원래 5,000원 · 할인 2,000원)',sub:'(할인 ① 낼 돈)',
+ {t:'mc',kid:1,bem:'🥛',q:'그러면 이 <b>우유</b>를 살 때 <b>얼마를 내면</b> 될까요?<br>(원래 5,000원 · 할인 2,000원)',sub:'',
   em:'🥛',price:'5,000원 40%↓',hint:'5000 − 2000',opts:[['3,000원',1],['2,000원',0],['4,000원',0]],
   ok:['맞았어요! 3,000원 🥛','5,000 − 2,000 = <b>3,000원</b> — 원래 가격에서 할인 금액을 빼면 낼 돈!'],no:'원래 가격 5,000원에서 할인 금액 2,000원을 빼 보세요.'},
- {t:'mc',kid:0,bem:'🥟',q:'지우가 저녁으로 🥟 <b>만두</b>를 담았어요 — 마침 <b>마감 세일</b>!<br>원래 <b>6,000원</b>인데 <span class="sale">30% 할인</span>이면 <b>얼마만큼 할인</b>되는 걸까요?',sub:'(할인 ② 할인 금액)',
+ {t:'mc',kid:0,bem:'🥟',q:'지우가 저녁으로 🥟 <b>만두</b>를 담았어요 — 마침 <b>마감 세일</b>!<br>원래 <b>6,000원</b>인데 <span class="sale">30% 할인</span>이면 <b>얼마만큼 할인</b>되는 걸까요?',sub:'',
   em:'🥟',price:'6,000원 30%↓ 마감 세일',hint:'6000 × 30 ÷ 100',opts:[['1,800원',1],['600원',0],['3,000원',0]],
   ok:['맞았어요! 1,800원 할인 🥟','6,000 × 30 ÷ 100 = <b>1,800원</b>!'],no:'30%는 100 중 30 — 6,000×30÷100!'},
- {t:'mc',kid:0,bem:'🥟',q:'그럼 이 <b>만두</b>를 살 때는 <b>얼마를 내야</b> 할까요?<br>(원래 6,000원 · 할인 1,800원)',sub:'(할인 ② 낼 돈)',
+ {t:'mc',kid:0,bem:'🥟',q:'그럼 이 <b>만두</b>를 살 때는 <b>얼마를 내야</b> 할까요?<br>(원래 6,000원 · 할인 1,800원)',sub:'',
   em:'🥟',price:'6,000원 30%↓ 마감 세일',hint:'6000 − 1800',opts:[['4,200원',1],['1,800원',0],['4,800원',0]],
   ok:['맞았어요! 4,200원 🥟','6,000 − 1,800 = <b>4,200원</b> — 할인 금액을 빼면 낼 돈!'],no:'원래 가격 6,000원에서 할인 금액 1,800원을 빼 보세요.'},
- {t:'mc',kid:1,bem:'🍉',q:'과일 코너에서 🍉 <b>수박 세일</b> 중!<br>원래 <b>12,000원</b>이던 수박을 <b>9,000원</b>에 팔아요 — 할인율은 <b>몇 %</b>일까요?',sub:'이번엔 반대로! (할인 ③ 할인율 구하기)',
-  em:'🍉',price:'12,000원 → 9,000원',hint:'깎인 3000 ÷ 12000 × 100',opts:[['25%',1],['20%',0],['30%',0]],
-  ok:['맞았어요! 25% 할인 🍉','깎인 3,000원 ÷ 원래 12,000원 × 100 = 25 — <b>원래 가격을 100으로</b> 볼 때 25만큼!'],no:'깎인 돈(3,000원)이 원래 가격 12,000원의 몇 %인지!'},
+ {t:'wsale'},
  {t:'tsum',i:0},{t:'tsum',i:1},{t:'tsum',i:2},{t:'tsum',i:3},{t:'done'}];
 let idx=0;
 function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
@@ -572,6 +572,20 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="sub">더 싼 쪽을 눌러 보세요!</div>`;
     el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
       (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='wsale'){
+    const bank=['3,000','3,000','100','25','9,000','75'].sort(()=>Math.random()-.5);
+    el.innerHTML=`<div class="q">과일 코너에서 🍉 <b>수박 세일</b> 중! 원래 <b>12,000원</b> → <b>9,000원</b>.<br><b>얼마만큼 가격이 할인</b>되었나요?</div>
+    <div class="sub">숫자 카드를 빈칸에 끌어와 <b>풀이를 완성</b>하세요</div>
+    ${martScene('🍉',1,'fruit')}
+    <div class="eq">
+      <div class="row">① 할인 금액 = 12,000 − 9,000 = <span class="dz" data-a="3,000"></span>원</div>
+      <div class="row">② 할인 금액의 비율 = <span class="dz" data-a="3,000"></span> ÷ 12,000 = 1/4</div>
+      <div class="row">③ 백분율 = 1/4 × <span class="dz" data-a="100"></span> = <span class="dz" data-a="25"></span>%</div>
+    </div>
+    <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('success',{slide:idx});
+      success('수박은 25% 할인! 🍉','깎인 <b>3,000원</b>은 원래 가격 12,000원의 <b>1/4</b> — 1/4 × 100 = <b>25%</b>!');});
+    return;}
   if(d.t==='tsum'){
     const S3=[
      {t:["","\u00A0= 물건 1개의 값 = 묶음 전체 가격 ÷ ",""],a:["단위 가격","개수"],x:["전체 가격","덧셈"]},
