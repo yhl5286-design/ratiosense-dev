@@ -139,7 +139,7 @@
 </style>
 </head>
 <body>
-<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🛒 마트의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/13</div></div>
+<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🛒 마트의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/15</div></div>
 <div id="stage"><div class="slide" id="slide"></div></div>
 <button class="nav" id="navL">‹</button><button class="nav" id="navR">›</button>
 <div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
@@ -307,7 +307,7 @@ const DECK=[
  {t:'mc',kid:1,bem:'🎒',q:'학용품 코너의 🎒 <b>가방</b>이 <b>5,000원 → 4,000원</b>!<br>민준이는 궁금해요 — 할인율은 <b>몇 %</b>일까요?',sub:'이번엔 반대로! (할인 3/3)',
   em:'🎒',price:'5,000원 → 4,000원',hint:'깎인 1000 ÷ 5000 × 100',opts:[['20%',1],['25%',0],['15%',0]],
   ok:['맞았어요! 20% 할인 🎉','1000÷5000×100=20 — <b>원래 가격을 100으로</b> 볼 때 20만큼! 색상 실험실의 100칸과 같은 비밀이죠.'],no:'깎인 돈(1,000원)이 원래 가격의 몇 %인지!'},
- {t:'tsum',i:0},{t:'tsum',i:1},{t:'tsum',i:2},{t:'done'}];
+ {t:'tsum',i:0},{t:'tsum',i:1},{t:'tsum',i:2},{t:'tsum',i:3},{t:'done'}];
 let idx=0;
 function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
   $('#navL').className='nav'+(idx<=0?' off':'');$('#navR').className='nav'+(idx>=DECK.length-1?' off':'');}
@@ -379,28 +379,29 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
   if(d.t==='tsum'){
     const S3=[
-     {t:["1개의 값 = 묶음 가격 ÷ ",""],a:["개수"],x:["전체 가격","100","10"]},
-     {t:["","을 비교하면 어느 마트가 싼지 알 수 있다."],a:["단위 가격"],x:["전체 가격","할인율","개수"]},
-     {t:["할인율 20%는 원래 가격을 ","으로 볼 때 20만큼 깎는 것이다."],a:["100"],x:["10","20","1"]}];
+     {t:["","\u00A0= 물건 1개의 값 = 묶음 전체 가격 ÷ ",""],a:["단위 가격","개수"],x:["전체 가격","덧셈"]},
+     {t:["어떤 물건이 더 싼지 비교하려면 ","을 비교해야 한다."],a:["단위 가격"],x:["전체 가격","할인율","개수"]},
+     {t:["할인율이 20%이면, 원래 가격에 ","을 곱한 뒤 ","으로 나눈 것만큼 가격에서 뺀다는 뜻이다."],a:["20","100"],x:["80","10"]},
+     {t:["할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100. 1,000원짜리 물건을 20% 할인하면 ","원을 내면 된다."],a:["800"],x:["200","980"]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
-    <div class="q">우리가 찾은 마트의 비밀 ${d.i+1} / 3</div>
+    <div class="q">우리가 찾은 마트의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
-    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 3</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['mart'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
       cardWin(el,null,()=>{
-      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<2?'다음 비밀 →':'마지막으로 →',()=>next());});});
+      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 15</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});});
     return;}
   if(d.t==='done'){
     confetti();setTimeout(confetti,700);clap();
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎊</span></div>
     <div class="q">네 방 모두 완주! 비율 탐험 대성공!</div>
-    <div class="sub">색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — <b>비밀 카드 13장</b>도 모두 모았나요?</div>
+    <div class="sub">색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — <b>비밀 카드 15장</b>도 모두 모았나요?</div>
     <button class="btn pri" id="go2">🔁 모은 카드로 복습하러 →</button>`;
     $('#go2').onclick=()=>{plog('complete',{});markDone('mart');chime(true);location.href='index.html?review=1';};
     return;}
@@ -415,15 +416,17 @@ const RC=[
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 <b>떨림</b>이다.'},
  {id:'sound1',r:'🎼 소리의 비밀',t:'화음은 진동수의 간단한 <b>비</b>에서 나온다.'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'음을 만들 때는 <b>라</b>를 기준으로 <b>비율</b>을 계산한다.'},
- {id:'map0',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
- {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
- {id:'map2',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
- {id:'mart0',r:'🛒 마트의 비밀',t:'1개의 값 = 묶음 가격 ÷ <b>개수</b>'},
- {id:'mart1',r:'🛒 마트의 비밀',t:'<b>단위 가격</b>을 비교하면 어느 마트가 싼지 알 수 있다.'},
- {id:'mart2',r:'🛒 마트의 비밀',t:'할인율 20%는 원래 가격을 <b>100</b>으로 볼 때 20만큼 깎는 것이다.'}];
+ {id:'map0',r:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
+ {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
+ {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
+ {id:'map3',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
+ {id:'mart0',r:'🛒 마트의 비밀',t:'<b>단위 가격</b> = 물건 1개의 값 = 묶음 전체 가격 ÷ <b>개수</b>'},
+ {id:'mart1',r:'🛒 마트의 비밀',t:'어떤 물건이 더 싼지 비교하려면 <b>단위 가격</b>을 비교해야 한다.'},
+ {id:'mart2',r:'🛒 마트의 비밀',t:'할인율이 20%이면, 원래 가격에 <b>20</b>을 곱한 뒤 <b>100</b>으로 나눈 것만큼 가격에서 뺀다는 뜻이다.'},
+ {id:'mart3',r:'🛒 마트의 비밀',t:'할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100 — 1,000원짜리는 <b>800</b>원을 내면 된다.'}];
 (function(){
   const o=document.createElement('div');o.id='walOv';
-  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 13</h3>
+  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 15</h3>
     <div id="walList" style="text-align:left"></div>
     <div style="margin-top:14px"><button class="btn pri" id="walRev">🔁 카드 복습하러 가기</button>
     <button class="btn" id="walClose">닫기</button></div></div>`;

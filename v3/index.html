@@ -94,8 +94,8 @@
   <div class="sub">한 화면에 한 문제씩 — 슬라이드로 떠나는 <b>비의 비밀</b> 탐험!</div>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div style="margin-bottom:14px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">🚀 탐험 시작!</button></div>
-  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 13</button> <button id="revBtn" class="dex">🔁 카드 복습</button></div>
-  <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 13장을 모두 모아 보세요!</div>
+  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 15</button> <button id="revBtn" class="dex">🔁 카드 복습</button></div>
+  <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 15장을 모두 모아 보세요!</div>
   <div class="rooms">
     <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
     <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
@@ -113,7 +113,7 @@
       &nbsp;&nbsp;&nbsp;&nbsp;(한 방이 끝나면 <b>저절로 다음 방</b>으로 이어져요!)<br>
       2️⃣ 탐험 중에 <b>🃏 비밀 카드 문제</b>가 나타나요 — 표시가 뜨면 집중!<br>
       &nbsp;&nbsp;&nbsp;&nbsp;그 문제(비밀 문장 완성)를 풀면 카드를 획득해요<br>
-      3️⃣ 카드를 <b>13장</b> 모두 모으면 비율 탐험 완성! (📖 버튼에서 언제든 확인)
+      3️⃣ 카드를 <b>15장</b> 모두 모으면 비율 탐험 완성! (📖 버튼에서 언제든 확인)
     </div>
     <button class="dexClose" id="introOk">좋아요, 출발! 🚀</button>
   </div>
@@ -137,12 +137,12 @@
 <div id="dexOv">
   <div class="dexCard">
     <h2>📖 비밀 카드 도감</h2>
-    <div class="cnt"><span id="dexN2">0</span> / 13 수집</div>
+    <div class="cnt"><span id="dexN2">0</span> / 15 수집</div>
     <div style="background:#fbf6e8;border:2px solid #e0c98a;border-radius:14px;padding:12px 16px;font-size:16px;font-weight:700;line-height:1.7;margin-bottom:6px">
       🃏 <b>비밀 카드는 이렇게 모아요!</b><br>
       비밀 카드마다 <b>카드 문제</b>가 하나씩 있어요. 탐험 중에 <b>🃏 비밀 카드 문제!</b> 표시와 함께 나타나요.
       낱말 카드로 비밀 문장을 완성하면, 그 문장이 카드가 되어 이 도감에 모여요.<br>
-      🎨 색깔 <b>4장</b> · 🎼 소리 <b>3장</b> · 🗺️ 지도 <b>3장</b> · 🛒 마트 <b>3장</b> = 모두 <b>13장</b>!
+      🎨 색깔 <b>4장</b> · 🎼 소리 <b>3장</b> · 🗺️ 지도 <b>4장</b> · 🛒 마트 <b>4장</b> = 모두 <b>15장</b>!
     </div>
     <div id="dexList"></div>
     <button class="dexClose" id="dexClose">닫기</button>
@@ -225,12 +225,14 @@ const CARDS=[
  {id:'sound0',room:'🎼 소리의 비밀',t:'소리는 <b>떨림</b>이다.'},
  {id:'sound1',room:'🎼 소리의 비밀',t:'화음은 진동수의 간단한 <b>비</b>에서 나온다.'},
  {id:'sound2',room:'🎼 소리의 비밀',t:'음을 만들 때는 <b>라</b>를 기준으로 <b>비율</b>을 계산한다.'},
- {id:'map0',room:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
- {id:'map1',room:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
- {id:'map2',room:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
- {id:'mart0',room:'🛒 마트의 비밀',t:'1개의 값 = 묶음 가격 ÷ <b>개수</b>'},
- {id:'mart1',room:'🛒 마트의 비밀',t:'<b>단위 가격</b>을 비교하면 어느 마트가 싼지 알 수 있다.'},
- {id:'mart2',room:'🛒 마트의 비밀',t:'할인율 20%는 원래 가격을 <b>100</b>으로 볼 때 20만큼 깎는 것이다.'}];
+ {id:'map0',room:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
+ {id:'map1',room:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
+ {id:'map2',room:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
+ {id:'map3',room:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
+ {id:'mart0',room:'🛒 마트의 비밀',t:'<b>단위 가격</b> = 물건 1개의 값 = 묶음 전체 가격 ÷ <b>개수</b>'},
+ {id:'mart1',room:'🛒 마트의 비밀',t:'어떤 물건이 더 싼지 비교하려면 <b>단위 가격</b>을 비교해야 한다.'},
+ {id:'mart2',room:'🛒 마트의 비밀',t:'할인율이 20%이면, 원래 가격에 <b>20</b>을 곱한 뒤 <b>100</b>으로 나눈 것만큼 가격에서 뺀다는 뜻이다.'},
+ {id:'mart3',room:'🛒 마트의 비밀',t:'할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100 — 1,000원짜리는 <b>800</b>원을 내면 된다.'}];
 function getCards(){try{return JSON.parse(localStorage.getItem(uk('rs3_cards'))||'[]');}catch(e){return [];}}
 function renderDex(){
   const got=getCards();
