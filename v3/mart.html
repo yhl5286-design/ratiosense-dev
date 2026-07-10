@@ -60,6 +60,10 @@
   @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
   .dz.shake{animation:shk .45s}
   @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
+  @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
+  .stampb{display:inline-block;animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -99,6 +103,14 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}}
+function confetti(){try{
+  for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
+    s.style.left=(4+Math.random()*92)+'vw';
+    s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
+    s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
 function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
 
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
@@ -207,8 +219,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
     
     `;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('mart');chime(true);
-      fb('','🎊 네 방 모두 완주!','색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — 비율 탐험 대성공! 정말 대단해요!','처음 화면으로',()=>{location.href='index.html';});});
+    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('mart');addCards(['mart0','mart1','mart2']);confetti();setTimeout(confetti,700);chime(true);
+      fb('','🎊 네 방 모두 완주!','<div style="margin-bottom:6px"><span class="stampb" style="font-size:52px">🛒</span></div>🃏 비밀 카드 3장 획득 — <b>13장 모두 모았어요!</b><br>색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — 비율 탐험 대성공!','처음 화면으로',()=>{location.href='index.html';});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};

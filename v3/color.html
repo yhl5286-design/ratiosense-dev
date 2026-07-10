@@ -110,6 +110,10 @@
   @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
   .dz.shake{animation:shk .45s}
   @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
+  @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
+  .stampb{display:inline-block;animation:stampIn .55s cubic-bezier(.2,1.4,.4,1)}
+  @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -155,6 +159,14 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}}
+function confetti(){try{
+  for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
+    s.style.left=(4+Math.random()*92)+'vw';
+    s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
+    s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
 function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
 
 /* ── 색 엔진 ── */
@@ -404,12 +416,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     <div class="sub">낱말 카드를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div class="sumbox"><div class="row" style="line-height:2.6">${h}</div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
+    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['color'+d.i]);chime(true);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
-      fb('',`✅ 비밀 ${d.i+1} 완성!`,full,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});
+      fb('',`✅ 비밀 ${d.i+1} 완성!`,`<div style="margin-bottom:6px"><span class="stampb" style="font-size:46px">🃏</span></div>${full}<br><b style="color:#b3541e">🃏 비밀 카드 획득!</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});
     return;}
   if(d.t==='done'){
-    el.innerHTML=`<div style="font-size:80px">🎉</div>
+    confetti();
+    el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎨</span></div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🎼 소리의 비밀</b>!</div>
     <button class="btn pri" id="go2">다음 방으로 → 🎼</button>`;
