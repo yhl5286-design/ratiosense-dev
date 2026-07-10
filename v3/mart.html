@@ -69,6 +69,16 @@
     background:radial-gradient(#f2d488,#e9c46a 70%);display:flex;align-items:center;justify-content:center;
     box-shadow:0 0 0 4px #c9a227,0 0 0 7px rgba(233,196,106,.35);font-size:200%}
   .cback .bnm{position:absolute;bottom:8%;width:100%;text-align:center;color:#e9c46a;font-weight:800;letter-spacing:2px;font-size:75%}
+  .gcards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;align-items:stretch;margin:8px 0}
+  .gcard{position:relative;width:min(320px,88vw);border-radius:18px;padding:9px;display:inline-block;vertical-align:top;margin:6px;text-align:left;
+    background:linear-gradient(160deg,#e3bf62,#8a6a1e 55%,#d9b455);box-shadow:0 10px 26px rgba(0,0,0,.35);animation:flipin .45s ease both}
+  .gcard .gc-in{background:#20304a;border-radius:12px;overflow:hidden;border:2px solid #5d4310;height:100%;display:flex;flex-direction:column}
+  .gc-art{position:relative;height:148px;flex:none;background:radial-gradient(circle at 50% 26%,#41628c,#233a5e 55%,#16233c);display:flex;align-items:flex-end;justify-content:center}
+  .gc-art svg{width:88%;height:auto;display:block;margin-bottom:2px}
+  .gc-name{background:linear-gradient(#f2d488,#d9a83f);color:#5d4310;font-weight:800;text-align:center;padding:7px 4px;font-size:15px;letter-spacing:.5px;border-top:2px solid #5d4310;border-bottom:2px solid #5d4310;flex:none}
+  .gc-txt{background:linear-gradient(#fffdf4,#f3e9cc);padding:12px 14px;font-size:17px;font-weight:800;line-height:2.15;flex:1;display:flex;align-items:center}
+  .gc-txt .row{font-size:17px;font-weight:800;line-height:2.15}
+  .gc-txt .dz{min-width:64px;min-height:30px;font-size:16.5px;padding:2px 8px}
   .bigcard{position:relative;border:4px solid #c9a227;border-radius:16px;background:linear-gradient(#fffdf4,#fff3d6);
     box-shadow:0 8px 22px rgba(224,160,42,.4);max-width:820px;margin:10px auto;overflow:hidden;animation:flipin .45s ease both;text-align:left}
   .bigcard .pcf-top{font-size:15px}
@@ -153,8 +163,22 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+const TRE_SVG=`<svg viewBox="0 0 220 120">
+  <ellipse cx="110" cy="110" rx="82" ry="9" fill="rgba(0,0,0,.4)"/>
+  <text x="30" y="30" font-size="15" fill="#f2d488">✦</text><text x="186" y="46" font-size="11" fill="#f2d488">✦</text><text x="48" y="66" font-size="9" fill="#fff">✦</text>
+  <rect x="52" y="56" width="116" height="50" rx="8" fill="#8a5a2b" stroke="#4c2f0f" stroke-width="3.5"/>
+  <path d="M52 60 Q52 26 110 26 Q168 26 168 60 Z" fill="#a9713a" stroke="#4c2f0f" stroke-width="3.5"/>
+  <rect x="52" y="54" width="116" height="8" fill="#e9c46a" stroke="#8a6a1e" stroke-width="1.5"/>
+  <rect x="100" y="26" width="20" height="80" fill="#e9c46a" stroke="#8a6a1e" stroke-width="2"/>
+  <rect x="102" y="58" width="16" height="20" rx="4" fill="#f2d488" stroke="#8a6a1e" stroke-width="2"/>
+  <circle cx="110" cy="66" r="3.2" fill="#8a6a1e"/>
+  <circle cx="70" cy="103" r="8" fill="#f2d488" stroke="#c9a227" stroke-width="2"/>
+  <circle cx="85" cy="107" r="7" fill="#e9c46a" stroke="#c9a227" stroke-width="2"/>
+  <polygon points="150,92 160,102 150,112 140,102" fill="#7cc4e8" stroke="#3d7ea6" stroke-width="2"/>
+  <polygon points="170,100 177,107 170,114 163,107" fill="#e87ca8" stroke="#a63d68" stroke-width="2"/>
+</svg>`;
 function cardWin(el,texts,cb){try{
-  const bcs=[...el.querySelectorAll('.bigcard')];
+  const bcs=[...el.querySelectorAll('.gcard')];
   if(!bcs.length){if(cb)cb();return;}
   const wk=document.createElement('div');wk.id='wpk';
   wk.innerHTML='<div class="wpk-back"></div><div class="wpk-front"></div><div class="wpk-label">🃏 카드 지갑</div>';
@@ -293,12 +317,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.innerHTML=`<div style="font-size:80px">🎉</div>
     <div class="q">마트의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="sub"><b>마트의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
-    <div class="bigcard" style="animation-delay:0.00s"><div class="pcf-top">🃏 비밀 카드 문제 1 / 3 — 완성하면 카드 획득!</div><div class="bc-txt"><div class="row">1개의 값 = 묶음 가격 ÷ (<span class="dz" data-a="개수"></span>)</div></div></div><div class="bigcard" style="animation-delay:0.13s"><div class="pcf-top">🃏 비밀 카드 문제 2 / 3 — 완성하면 카드 획득!</div><div class="bc-txt"><div class="row">(<span class="dz" data-a="단위 가격"></span>)을 비교하면 어느 마트가 싼지 알 수 있다.</div></div></div><div class="bigcard" style="animation-delay:0.26s"><div class="pcf-top">🃏 비밀 카드 문제 3 / 3 — 완성하면 카드 획득!</div><div class="bc-txt"><div class="row">할인율 20%는 원래 가격을 (<span class="dz" data-a="100"></span>)으로 볼 때 20만큼 깎는 것이다.</div></div></div>
+    <div class="gcards"><div class="gcard" style="animation-delay:0.00s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 1 / 3</div><div class="gc-txt"><div class="row">1개의 값 = 묶음 가격 ÷ (<span class="dz" data-a="개수"></span>)</div></div></div></div><div class="gcard" style="animation-delay:0.13s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 2 / 3</div><div class="gc-txt"><div class="row">(<span class="dz" data-a="단위 가격"></span>)을 비교하면 어느 마트가 싼지 알 수 있다.</div></div></div></div><div class="gcard" style="animation-delay:0.26s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 3 / 3</div><div class="gc-txt"><div class="row">할인율 20%는 원래 가격을 (<span class="dz" data-a="100"></span>)으로 볼 때 20만큼 깎는 것이다.</div></div></div></div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
     
     `;
     mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('mart');addCards(['mart0','mart1','mart2']);
-      const rows=[...el.querySelectorAll('.bigcard .row')].map(r=>r.textContent.trim());
+      const rows=[...el.querySelectorAll('.gcard .row')].map(r=>r.textContent.trim());
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
       cardWin(el,rows,()=>{confetti();setTimeout(confetti,700);chime(true);
       fb('','🎊 네 방 모두 완주!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🛒</span></div>${rows.map(r=>`<div class="mini-card">🃏 ${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13${tot>=13?' — <u>모두 모았어요!</u>':''}</b><br>비율 탐험 대성공! 정말 대단해요!`,'🔁 모은 카드로 복습하러 →',()=>{location.href='index.html?review=1';});});});
