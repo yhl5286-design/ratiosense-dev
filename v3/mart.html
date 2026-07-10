@@ -204,17 +204,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="sumbox"><div class="row">1개의 값 = 묶음 가격 ÷ (<span class="dz" data-a="개수"></span>)</div><div class="row">(<span class="dz" data-a="단위 가격"></span>)을 비교하면 어느 마트가 싼지 알 수 있다.</div><div class="row">할인율 20%는 원래 가격을 (<span class="dz" data-a="100"></span>)으로 볼 때 20만큼 깎는 것이다.</div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
     
-    <div id="freeQ" style="display:none;margin-top:14px">
-      <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
-      <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
-        style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
-      <button class="btn pri" id="go2">남기고 완성! 🛒</button>
-    </div>`;
+    `;
     mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
-      fb('','✅ 정리 완벽!','낱말이 착착 붙었어요 — 오늘 배운 비밀이 머릿속에 쏙!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});});
-    el.addEventListener('click',e=>{if(e.target&&e.target.id==='go2'){
-      plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
-      fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});
+      fb('','🏆 모두 끝!','낱말이 착착 붙었어요 — 대단해요! 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};

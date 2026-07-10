@@ -338,18 +338,9 @@ hDone=7;
     <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="sub"><b>소리의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div class="sumbox"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
-    <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
-    <div id="freeQ" style="display:none;margin-top:14px">
-      <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
-      <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
-        style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
-      <button class="btn pri" id="go">남기고 완성! 🪕</button>
-    </div>`;
+    <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
-      fb('','✅ 정리 완벽!','낱말이 착착 붙었어요 — 오늘 배운 비밀이 머릿속에 쏙!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});});
-    el.addEventListener('click',e=>{if(e.target&&e.target.id==='go'){
-      plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
-      fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});
+      fb('','🏆 모두 끝!','낱말이 착착 붙었어요 — 대단해요! 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx--;render();plog('nav',{to:idx});}};
