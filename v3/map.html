@@ -106,6 +106,8 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
+
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
 function jga(w){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?'이':'가';}
@@ -294,8 +296,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="sub"><b>지도의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div class="sumbox"><div class="row">지도는 실제를 같은 (<span class="dz" data-a="비율"></span>)로 줄인 것이다.</div><div class="row">축척 1:10,000에서 지도 1cm는 실제 (<span class="dz" data-a="100"></span>)m이다.</div><div class="row">지도 위 도형은 실제와 모양이 같은 (<span class="dz" data-a="닮은"></span>) 도형이다.</div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
-      fb('','🏆 모두 끝!','낱말이 착착 붙었어요 — 대단해요! 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});});
+    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('map');chime(true);
+      fb('','🏆 지도의 비밀 완주!','낱말이 착착 붙었어요 — 마지막 탐험은 <b>🛒 마트의 비밀</b>!','다음 방으로 →',()=>{location.href='mart.html';});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};

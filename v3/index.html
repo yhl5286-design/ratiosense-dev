@@ -12,7 +12,11 @@
   h1{font-size:clamp(30px,4.5vw,44px);margin:0 0 6px}
   .sub{font-size:clamp(18px,2.2vw,22px);color:var(--sub);font-weight:700;margin-bottom:30px}
   .rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
-  a.room{display:block;background:#fff;border:3px solid var(--line);border-radius:24px;padding:30px 18px;text-decoration:none;color:var(--ink);transition:.15s;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+  a.room{display:block;position:relative;background:#fff;border:3px solid var(--line);border-radius:24px;padding:30px 18px;text-decoration:none;color:var(--ink);transition:.15s;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+  .room .badge{position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:50%;background:#f4f1ea;border:2.5px solid var(--line);font-size:18px;font-weight:800;color:var(--sub);display:flex;align-items:center;justify-content:center}
+  .room .donechk{position:absolute;top:12px;right:14px;font-size:24px}
+  .room.next-room{border-color:var(--accent);box-shadow:0 8px 26px rgba(46,158,99,.25)}
+  .room.next-room .badge{background:var(--accent);border-color:var(--accent);color:#fff}
   a.room:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 14px 34px rgba(0,0,0,.13)}
   .room .em{font-size:64px}
   .room .nm{font-size:24px;font-weight:800;margin-top:10px}
@@ -44,13 +48,14 @@
   <h1>🔢 RatioSense <span style="color:#b3541e">v3</span></h1>
   <div class="sub">한 화면에 한 문제씩 — 슬라이드로 떠나는 <b>비의 비밀</b> 탐험!</div>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
+  <div style="margin-bottom:24px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">🚀 탐험 시작!</button></div>
   <div class="rooms">
-    <a class="room" href="color.html"><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
-    <a class="room" href="sound.html"><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
-    <a class="room" href="map.html"><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div></a>
-    <a class="room" href="mart.html"><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div></a>
+    <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
+    <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
+    <a class="room" data-r="map" href="map.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div></a>
+    <a class="room" data-r="mart" href="mart.html"><div class="badge">4</div><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div></a>
   </div>
-  <div class="foot">순서 추천: 색상 → 소리 → 지도 → 마트 · <a href="../">기존 버전(v2)으로</a></div>
+  <div class="foot">탐험 순서: 색깔 → 소리 → 지도 → 마트 — 방이 끝나면 저절로 다음 방으로 이어져요! · <a href="../">기존 버전(v2)으로</a></div>
 </div>
 
 <div id="loginOv" style="display:none">
@@ -101,6 +106,24 @@ $('#guestBtn').onclick=()=>{saveUser('guest');showChip('guest');$('#loginOv').st
 $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');}catch(e){}$('#chip').style.display='none';openLogin();};
 const u=getUser();
 if(u){showChip(u);}else{openLogin();}
+/* ── 탐험 순서·진행 상태 ── */
+const ORDER=['color','sound','map','mart'];
+function getDone(){try{return JSON.parse(localStorage.getItem('rs3_done')||'[]');}catch(e){return [];}}
+function wireStart(){
+  const dn=getDone();
+  const next=ORDER.find(r=>!dn.includes(r));
+  document.querySelectorAll('.room').forEach(a=>{
+    a.classList.remove('next-room');
+    const old=a.querySelector('.donechk'); if(old)old.remove();
+    if(dn.includes(a.dataset.r)){const s=document.createElement('span');s.className='donechk';s.textContent='✅';a.appendChild(s);}
+    if(a.dataset.r===next)a.classList.add('next-room');});
+  const b=$('#startBtn');
+  if(!next){b.textContent='🎊 모두 완주! 다시 탐험하기';
+    b.onclick=()=>{try{localStorage.removeItem('rs3_done');}catch(e){}location.href='color.html';};}
+  else if(dn.length){b.textContent='▶ 이어서 탐험! ('+({color:'🎨 색깔',sound:'🎼 소리',map:'🗺️ 지도',mart:'🛒 마트'})[next]+')';
+    b.onclick=()=>{location.href=next+'.html';};}
+  else{b.textContent='🚀 탐험 시작!';b.onclick=()=>{location.href='color.html';};}}
+wireStart();
 </script>
 </body>
 </html>

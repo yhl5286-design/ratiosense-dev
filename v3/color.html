@@ -155,6 +155,8 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
+
 /* ── 색 엔진 ── */
 const PRIM={빨강:[230,40,55],노랑:[250,215,45],파랑:[45,100,205]};
 function mix(c){const ks=Object.keys(c).filter(k=>c[k]>0),t=ks.reduce((s,k)=>s+c[k],0);if(!t)return[252,250,245];
@@ -409,9 +411,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
   if(d.t==='done'){
     el.innerHTML=`<div style="font-size:80px">🎉</div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다른 방도 탐험해 보세요!</div>
-    <button class="btn pri" id="go2">처음으로 🏠</button>`;
-    $('#go2').onclick=()=>{plog('complete',{});chime(true);location.href='index.html';};
+    <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🎼 소리의 비밀</b>!</div>
+    <button class="btn pri" id="go2">다음 방으로 → 🎼</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='sound.html';};
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
