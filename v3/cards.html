@@ -150,6 +150,8 @@ const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14
 const LOG_TK='ratiosense-2026',LAB='cardsV3';
 let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+try{const dn=JSON.parse(localStorage.getItem('rs3_done:'+(RS3U||'anon'))||'[]');
+  if(window===window.parent&&!['color','sound','map','mart'].every(r=>dn.includes(r))){location.replace('index.html');}}catch(e){}
 function ukey(b){return b+':'+(RS3U||'anon');}
 const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 let SEQ3=0,LQ3=[];

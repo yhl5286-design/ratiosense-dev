@@ -40,6 +40,7 @@
   /* ── 비밀 카드 도감 ── */
   .dex{background:#fff;border:3px solid var(--gold);border-radius:16px;padding:12px 26px;font-size:19px;font-weight:800;cursor:pointer;font-family:inherit;color:var(--ink)}
   .dex:hover{background:#fff6de}
+  .dex.lockbtn{opacity:.5}
   #dexOv{position:fixed;inset:0;background:rgba(38,48,63,.55);display:none;align-items:center;justify-content:center;z-index:60}
   #dexOv.show{display:flex}
   .dexCard{background:#fff;border-radius:26px;padding:28px 30px;width:min(760px,94vw);max-height:86vh;overflow:auto;text-align:left;box-shadow:0 24px 60px rgba(0,0,0,.3)}
@@ -94,7 +95,7 @@
   <div class="sub">한 화면에 한 문제씩 — 슬라이드로 떠나는 <b>비의 비밀</b> 탐험!</div>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div style="margin-bottom:14px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">🚀 탐험 시작!</button></div>
-  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 15</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex" onclick="location.href='cards.html'">🃏 카드 문제 풀기</button></div>
+  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 15</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button></div>
   <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 15장을 모두 모아 보세요!</div>
   <div class="rooms">
     <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
@@ -267,7 +268,17 @@ function openReview(){
   revList=CARDS.filter(c=>got.includes(c.id));
   if(!revList.length)return;
   revI=0;revStage=0;revRender();$('#revOv').classList.add('show');}
+function courseDone(){return ORDER.every(r=>getDone().includes(r));}
+function lockNote(b){b.innerHTML='🔒 네 방 탐험을 모두 마치면 열려요!';
+  setTimeout(()=>{lockAux(true);},1900);}
+function lockAux(reset){const L=!courseDone();
+  const LB={revBtn:'🔁 카드 복습',cqBtn:'🃏 카드 문제 풀기'};
+  Object.keys(LB).forEach(id=>{const b=document.getElementById(id);if(!b)return;
+    b.classList.toggle('lockbtn',L);
+    b.innerHTML=(L?'🔒 ':'')+LB[id];});}
+$('#cqBtn').onclick=()=>{if(!courseDone()){lockNote($('#cqBtn'));return;}location.href='cards.html';};
 $('#revBtn').onclick=()=>{
+  if(!courseDone()){lockNote($('#revBtn'));return;}
   if(!getCards().length){
     $('#dexBtn').textContent='📖 아직 카드가 없어요 — 탐험 먼저!';
     setTimeout(()=>{$('#dexBtn').innerHTML='📖 비밀 카드 <span id="dexN">'+getCards().length+'</span> / 13';},1600);
@@ -278,7 +289,7 @@ $('#revFlip').onclick=()=>revTap();
 $('#revPrev').onclick=()=>{if(revI>0){revI--;revStage=0;revRender();}};
 $('#revNext').onclick=()=>{if(revI<revList.length-1){revI++;revStage=0;revRender();}};
 $('#revClose').onclick=()=>{$('#revOv').classList.remove('show');};
-if(/[?&]review=1/.test(location.search)&&getCards().length){openReview();}
+if(/[?&]review=1/.test(location.search)&&getCards().length&&courseDone()){openReview();}
 /* ── 최초 1회 탐험 안내 ── */
 function maybeIntro(){try{
   if(getUser()&&!localStorage.getItem(uk('rs3_intro')))$('#introOv').style.display='flex';
@@ -292,6 +303,7 @@ if(!ORDER.find(r=>!getDone().includes(r))){
     s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
     s.style.animationDelay=(Math.random()*0.6)+'s';s.style.animationDuration=(1.3+Math.random()*1.3)+'s';
     document.body.appendChild(s);setTimeout(()=>s.remove(),3600);}}
+lockAux();
 </script>
 </body>
 </html>
