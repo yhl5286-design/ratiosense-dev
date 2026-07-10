@@ -271,27 +271,28 @@ function gcd(a,b){return b?gcd(b,a%b):a;}
 function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b;}
 
 /* 순정률 */
-const NOTES=[['도',262,1,1],['레',295,9,8],['미',328,5,4],['파',349,4,3],['솔',393,3,2],['라',437,5,3],['시',491,15,8],['도′',524,2,1]];
+const NOTES=[['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['솔',396,3,2],['라',440,5,3],['시',495,15,8],['도′',528,2,1]];
 const INTV={'1:1':'유니즌','1:2':'옥타브','2:3':'완전5도','3:4':'완전4도','4:5':'장3도','5:6':'단3도','3:5':'장6도','8:9':'장2도','8:15':'장7도'};
 /* 하프 — 화음 단계의 순정률 비 그대로(도:음 = a:b), 길이는 81×a/b */
-const HBASE=81;
-const HP=[{n:'레',a:8,b:9},{n:'미',a:4,b:5},{n:'파',a:3,b:4},{n:'솔',a:2,b:3},{n:'라',a:3,b:5},{n:'시',a:8,b:15},{n:'도′',a:1,b:2}];
+const HBASE=36;
+const HP=[{n:'도',a:5,b:3},{n:'미',a:4,b:3},{n:'파',a:5,b:4},{n:'솔',a:10,b:9},{n:'시',a:8,b:9},{n:'도′',a:5,b:6},{n:'미′',a:2,b:3}]; // 라:음 진동수 비
 const hLen=i=>HBASE*HP[i].a/HP[i].b;
-const hFreq=L=>Math.round(262*HBASE/L);
+const hFreq=L=>Math.round(440*HBASE/L);
 let hDone=0; // 0~7
 function harpHTML(){
-  const items=[{n:'도',L:81,made:true,frac:'1'}].concat(HP.map((p,i)=>({n:p.n,L:hLen(i),made:i<hDone,frac:p.a+':'+p.b})));
+  const items=HP.map((p,i)=>({n:p.n,L:hLen(i),made:i<hDone,frac:p.a+':'+p.b}));
+  items.splice(4,0,{n:'라 ★',L:36,made:true,frac:'★'});
   return `<div class="harp"><div class="hbeam"></div><div class="hrow">`+
     items.map((it,ix)=>`<div class="hcol">${it.made
-      ?`<div class="hs" style="height:${Math.round(it.L*2.4)}px" onclick="pluckT(${hFreq(it.L)});this.classList.remove('pluckA');void this.offsetWidth;this.classList.add('pluckA')"></div><div class="hlab">${it.n}<br><span>${Math.round(it.L*10)/10}cm</span></div>`
-      :`<div class="hs ghost" style="height:${Math.round(it.L*2.4)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
+      ?`<div class="hs" style="height:${Math.round(it.L*3.3)}px" onclick="pluckT(${hFreq(it.L)});this.classList.remove('pluckA');void this.offsetWidth;this.classList.add('pluckA')"></div><div class="hlab">${it.n}<br><span>${Math.round(it.L*10)/10}cm</span></div>`
+      :`<div class="hs ghost" style="height:${Math.round(it.L*3.3)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
   `</div></div>`;}
 
 const DECK=[{t:'intro'},{t:'vib'}];
 const CHORD_SET=[1,2,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
 DECK.push({t:'challenge'},{t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'done'});
-let idx=0,w1env=0,f1=262,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
+let idx=0,w1env=0,f1=264,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
 const GOAL_OPEN={};
 function goalHTML(no,parts){
   // parts: 문자열 배열, '['로 시작하면 빈칸 (예: '[떨림')
@@ -378,12 +379,12 @@ function mountDrag(el,onAll){
   return {};}
 function harpViz(p,exS){
   const W=Math.min(400,Math.round(window.innerWidth*0.42))||400;
-  const unit=Math.round(81/p.b*100)/100;
+  const unit=Math.round(36/p.b*100)/100;
   const segs=(n,cls)=>Array.from({length:n},()=>`<div class="hvseg ${cls}"></div>`).join('');
   return `<div class="hviz">
-    <div class="hvrow"><span class="hvlab">도 줄 <b>81cm</b></span><div class="hvbar" style="width:${W}px">${segs(p.b,'c1')}</div><span class="hvend">${p.b}칸 (한 칸 ${unit}cm)</span></div>
-    <div class="hvrow"><span class="hvlab">${p.n} 줄 <b style="color:#136a3d">${exS}cm</b></span><div class="hvbar" style="width:${Math.round(W*p.a/p.b)}px">${segs(p.a,'c2')}</div><span class="hvend">그중 ${p.a}칸!</span></div>
-    <div class="hvcap">💡 도 줄 <b>전체(81cm)</b>를 똑같이 <b>${p.b}칸</b>으로 나누고(÷${p.b}), 그중 <b>${p.a}칸</b>을 가져오면(×${p.a}) —<br>${p.n} 줄은 도 줄 <b>전체의 ${p.a}/${p.b}</b>이 돼요!</div>
+    <div class="hvrow"><span class="hvlab">라 줄 <b>36cm</b></span><div class="hvbar" style="width:${W}px">${segs(p.b,'c1')}</div><span class="hvend">${p.b}칸 (한 칸 ${unit}cm)</span></div>
+    <div class="hvrow"><span class="hvlab">${p.n} 줄 <b style="color:#136a3d">${exS}cm</b></span><div class="hvbar" style="width:${Math.round(W*p.a/p.b)}px">${segs(p.a,'c2')}</div><span class="hvend">한 칸 × ${p.a} = ${p.a}칸!</span></div>
+    <div class="hvcap">💡 라 줄 <b>전체(36cm)</b>를 똑같이 <b>${p.b}칸</b>으로 나누고(÷${p.b}), 그 한 칸을 <b>${p.a}번</b> 이어 붙이면(×${p.a}) —<br>${p.n} 줄은 라 줄 <b>전체의 ${p.a}/${p.b}</b>이 돼요!</div>
   </div>`;}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
@@ -426,9 +427,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       <div class="dial" id="hzline">&nbsp;</div>
       <div class="choices">${opts.map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('.key').forEach(k=>k.onclick=()=>{const i=+k.dataset.i;const m=NOTES[i];
-      chord(262,m[1],1.4);plog('chord',{n:m[0]});
+      chord(264,m[1],1.4);plog('chord',{n:m[0]});
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);
-      $('#hzline').innerHTML=i===0?`도 혼자: <b>262Hz</b>`:`도 262Hz : ${m[0]} <b>${m[1]}Hz</b> — 도가 <b>${m[3]}번</b> 떨릴 때 ${m[0]}${jz(m[0],'은','는')} <b>${m[2]}번</b> 떨려요`;});
+      $('#hzline').innerHTML=i===0?`도 혼자: <b>264Hz</b>`:`도 262Hz : ${m[0]} <b>${m[1]}Hz</b> — 도가 <b>${m[3]}번</b> 떨릴 때 ${m[0]}${jz(m[0],'은','는')} <b>${m[2]}번</b> 떨려요`;});
     el.querySelectorAll('[data-ok]').forEach(bn=>bn.onclick=()=>{
       if(bn.dataset.ok==='1'){
         success(`도 : ${n[0]} = ${a} : ${b}!`,`도가 <b>${a}번</b> 떨릴 때 ${n[0]}${jz(n[0],'은','는')} <b>${b}번</b> 떨려요${INTV[key]?' — <b>'+INTV[key]+'</b>':''}. ${a*b<=6?'아주 잘 어울리는 화음이에요! 😍':(a*b<=20?'잘 어울리는 화음이에요 😊':'조금 거친 화음이에요 😐')}`);}
@@ -436,46 +437,47 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireGoal(el);return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
     const exS=String(Math.round(ex*100)/100);
-    const bank=[String(p.a),String(p.b),'81','100']
+    const bank=[String(p.a),String(p.b),'440','100']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
-    el.innerHTML=`${d.i===0?goalHTML(3,['음을 만들 때는 ','[도','를 기준으로 ','[비율','을 계산한다.']):''}
-      <div class="q">도 : ${p.n}의 진동수의 비는 <b>${p.a} : ${p.b}</b>.<br>도 줄(<b>81cm</b>)에 어떤 <b>비율(분수)</b>을 곱하면 <b>${p.n} 줄</b>이 될까요?</div>
+    el.innerHTML=`${d.i===0?goalHTML(3,['음을 만들 때는 ','[라','를 기준으로 ','[비율','을 계산한다.']):''}
+      ${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:10px 20px;font-size:17px;font-weight:700;margin-bottom:8px">🎵 실제 음악의 세계 기준음은 <b>라(A4) = 440Hz</b> — 표준 주파수표에서 유일하게 딱 떨어지는 음이라, 악기 조율은 <b>라부터</b> 시작해요!</div>':''}
+      <div class="q">라 : ${p.n}의 진동수의 비는 <b>${p.a} : ${p.b}</b>.<br>라 줄(<b>36cm</b>)에 어떤 <b>비율(분수)</b>을 곱하면 <b>${p.n} 줄</b>이 될까요?</div>
       <div class="sub">하프 공방 ${d.i+1}/7 — 비를 <b>분수(비율)</b>로 바꿔 길이에 곱해요! 계산은 하프가 해 줘요</div>
       ${harpHTML()}
       <div class="eq">
-        <div class="row">① 진동수의 비 — 도 : ${p.n} = <b>${p.a} : ${p.b}</b></div>
-        <div class="row">② 길이의 비율(분수)로 바꾸기 — ${p.n} 줄은 도 줄 <b>전체의 몇 분의 몇</b>일까요?</div>
-        <div class="row">③ ${p.n} 줄의 길이 = <b>81</b> × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <b style="color:#136a3d">${exS} cm</b></div>
+        <div class="row">① 진동수의 비 — 라 : ${p.n} = <b>${p.a} : ${p.b}</b></div>
+        <div class="row">② 길이의 비율(분수)로 바꾸기 — ${p.n} 줄은 라 줄 <b>전체의 몇 분의 몇</b>일까요?</div>
+        <div class="row">③ ${p.n} 줄의 길이 = <b>36</b> × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <b style="color:#136a3d">${exS} cm</b></div>
       </div>
       <div>${harpViz(p,exS)}</div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;
     mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
-      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 도 줄 <b>전체의 ${p.a}/${p.b}</b>!<br>81 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
+      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 라 줄 <b>전체의 ${p.a}/${p.b}</b>!<br>36 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
     wireGoal(el);return;}
   if(d.t==='challenge'){hDone=7;
-    const opts=[['40cm',1,''],['90cm',0,'rev'],['30cm',0,'']].sort(()=>Math.random()-.5);
+    const opts=[['16cm',1,''],['36cm',0,'rev'],['12cm',0,'']].sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">🏆 마지막 도전! — <b>비율</b>로 새 하프 만들기</div>
       <div class="eq" style="text-align:left">
-        <div class="row">하프 공방에서 — <b>솔 줄은 도 줄 전체의 <span style="color:#136a3d">2/3</span></b>이었어요 (81 × 2/3 = 54cm)</div>
-        <div class="row">음의 줄 길이는 언제나 <b>도 줄 전체에 대한 비율</b>로 구해요!</div>
+        <div class="row">하프 공방에서 — <b>미′ 줄은 라 줄 전체의 <span style="color:#136a3d">2/3</span></b>이었어요 (36 × 2/3 = 24cm)</div>
+        <div class="row">음의 줄 길이는 언제나 <b>기준음 라 줄 전체에 대한 비율</b>로 구해요!</div>
       </div>
-      <div class="q" style="margin-top:14px">그렇다면 — 도 줄이 <b>60cm</b>인 <b>작은 하프</b>에서,<br><b>솔</b> 줄은 몇 cm로 잘라야 할까요?</div>
+      <div class="q" style="margin-top:14px">그렇다면 — 라 줄이 <b>24cm</b>인 <b>작은 하프</b>에서,<br><b>미′</b> 줄은 몇 cm로 잘라야 할까요?</div>
       <div class="sub">이번엔 숫자 카드 없이 스스로! 배운 비율(2/3)을 새 하프에 적용해 보세요</div>
       <div class="choices">${opts.map(o=>`<button class="btn" data-ok="${o[1]}" data-k="${o[2]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(bn=>bn.onclick=()=>{
       if(bn.dataset.ok==='1'){plog('challenge',{ok:1});
-        success('40cm! 완벽해요! 🏆',`60 × 2/3 = <b>40cm</b>. 도 줄이 81cm든 60cm든 <b>솔 줄은 언제나 도 줄 전체의 2/3</b> — 비율만 알면 어떤 하프든 만들 수 있어요. 소리 속에서 비를 찾은 이유가 바로 이거예요!`);}
+        success('16cm! 완벽해요! 🏆',`24 × 2/3 = <b>16cm</b>. 라 줄이 36cm든 24cm든 <b>미′ 줄은 언제나 라 줄 전체의 2/3</b> — 비율만 알면 어떤 하프든 만들 수 있어요. 소리 속에서 비를 찾은 이유가 바로 이거예요!`);}
       else if(bn.dataset.k==='rev'){plog('challenge',{ok:0,pick:'rev'});
-        retry(`90cm는 60cm의 3/2배 — 솔 줄이 도 줄보다 길어졌어요!<br>솔 줄은 도 줄 <b>전체의 2/3</b> — 60의 2/3를 구해 보세요.`);}
+        retry(`36cm는 24cm의 3/2배 — 미′ 줄이 라 줄보다 길어졌어요!<br>미′ 줄은 라 줄 <b>전체의 2/3</b> — 24의 2/3를 구해 보세요.`);}
       else{plog('challenge',{ok:0});
-        retry(`솔 줄은 도 줄 <b>전체의 2/3</b> — 60cm의 <b>3분의 2</b>는 몇 cm일까요?`);}});
+        retry(`미′ 줄은 라 줄 <b>전체의 2/3</b> — 24cm의 <b>3분의 2</b>는 몇 cm일까요?`);}});
     return;}
   if(d.t==='ssum'){
     const S3=[
      {t:["소리는 ","이다."],a:["떨림"],x:["비","차이","기울임"]},
      {t:["화음은 진동수의 간단한 ","에서 나온다."],a:["비"],x:["비율","차이","떨림"]},
-     {t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["도","비율"],x:["레","비"]}];
+     {t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["라","비율"],x:["도","비"]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});

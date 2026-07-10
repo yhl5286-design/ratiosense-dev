@@ -243,8 +243,8 @@ function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(39
 
 const OBJS=[
  {em:'🌉',n:'다리',shape:'직사각형',dim:'길이',real:300,cells:3,x:2,y:4},
- {em:'💧',n:'호수',shape:'원',dim:'지름',real:100,cells:1,x:6,y:1.6},
- {em:'🌳',n:'공원',shape:'삼각형',dim:'밑변',real:500,cells:5,x:1,y:5.6}];
+ {em:'💧',n:'호수',shape:'원',dim:'지름',real:100,cells:1,x:6,y:2},
+ {em:'⛰️',n:'산',shape:'삼각형',dim:'밑변',real:500,cells:5,x:1,y:5.6}];
 let placed=0;
 function townMap(f,numIdx,base){f=f||1;const C=(base||64)*f;
   let o=`<div style="position:absolute;left:0;top:${C*3.9}px;width:${C*8}px;height:${C}px;background:linear-gradient(#bcd9f0,#9ec4e4);opacity:.85"></div>`;
@@ -443,9 +443,9 @@ if(d.t==='movie'){placed=3;
           <line class="ray" x1="170" y1="60" x2="240" y2="180"/><line class="ray" x1="250" y1="50" x2="320" y2="170"/><line class="ray" x1="330" y1="46" x2="400" y2="166"/>
           <rect x="60" y="230" width="440" height="14" fill="#d9c08a"/>
           <line x1="300" y1="120" x2="300" y2="232" stroke="#26303f" stroke-width="8"/>
-          <line class="shgrow" x1="300" y1="232" x2="252" y2="232" stroke="#c0392b" stroke-width="8"/>
-          <line x1="300" y1="120" x2="252" y2="232" stroke="#e0a02a" stroke-width="2.5" stroke-dasharray="5 4"/>
-          <path class="fdin" d="M300 160 A44 44 0 0 0 283 165" fill="none" stroke="#c0392b" stroke-width="3"/>
+          <line class="shgrow" x1="300" y1="232" x2="348" y2="232" stroke="#c0392b" stroke-width="8"/>
+          <line x1="300" y1="120" x2="348" y2="232" stroke="#e0a02a" stroke-width="2.5" stroke-dasharray="5 4"/>
+          <path class="fdin" d="M300 160 A44 44 0 0 1 317 165" fill="none" stroke="#c0392b" stroke-width="3"/>
           <text class="fdin" x="316" y="172" font-size="18" font-weight="800" fill="#c0392b">7.2°</text>
           <rect x="356" y="26" width="150" height="30" rx="15" fill="#c0392b"/>
           <text x="431" y="47" text-anchor="middle" font-size="14.5" font-weight="800" fill="#fff">같은 날 같은 시각!</text>
