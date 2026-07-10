@@ -166,6 +166,7 @@ const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14
 const LOG_TK='ratiosense-2026',LAB='soundV3';
 let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+function ukey(b){return b+':'+(RS3U||'anon');}
 const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 let SEQ3=0,LQ3=[];
 function luid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
@@ -217,12 +218,12 @@ function cardWin(el,texts,cb){try{
   },t0);
 }catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
-  const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
+  const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
   const e=document.getElementById('walN');if(e)e.textContent=n;
   if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
 }catch(e){}}
-function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
-  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}walUpd(true);}
+function addCards(ids){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem(ukey('rs3_cards'),JSON.stringify(a));}catch(e){}walUpd(true);}
 walUpd();
 function confetti(){try{
   for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
@@ -230,7 +231,7 @@ function confetti(){try{
     s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
     s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
     document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
-function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
+function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'))||'[]');if(!a.includes(r))a.push(r);localStorage.setItem(ukey('rs3_done'),JSON.stringify(a));}catch(e){}}
 
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
@@ -452,7 +453,7 @@ hDone=7;
     <div class="sumbox"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div></div><div class="sumbox"><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div></div><div class="sumbox"><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('sound');addCards(['sound0','sound1','sound2']);const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>r.textContent.trim());
-      const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
       cardWin(el,rows,()=>{confetti();chime(true);
       fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🎼</span></div>${rows.map(r=>`<div class="mini-card">🃏 ${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>다음 탐험은 <b>🗺️ 지도의 비밀</b>!`,'다음 방으로 →',()=>{location.href='map.html';});});});
     return;}

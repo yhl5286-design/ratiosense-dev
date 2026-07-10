@@ -181,6 +181,7 @@ const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14
 const LOG_TK='ratiosense-2026',LAB='colorV3';
 let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+function ukey(b){return b+':'+(RS3U||'anon');}
 const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 let SEQ3=0,LQ3=[];
 function luid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
@@ -232,12 +233,12 @@ function cardWin(el,texts,cb){try{
   },t0);
 }catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
-  const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
+  const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
   const e=document.getElementById('walN');if(e)e.textContent=n;
   if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
 }catch(e){}}
-function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
-  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}walUpd(true);}
+function addCards(ids){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem(ukey('rs3_cards'),JSON.stringify(a));}catch(e){}walUpd(true);}
 walUpd();
 function confetti(){try{
   for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
@@ -245,7 +246,7 @@ function confetti(){try{
     s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
     s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
     document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
-function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
+function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'))||'[]');if(!a.includes(r))a.push(r);localStorage.setItem(ukey('rs3_done'),JSON.stringify(a));}catch(e){}}
 
 /* ── 색 엔진 ── */
 const PRIM={빨강:[230,40,55],노랑:[250,215,45],파랑:[45,100,205]};
@@ -498,7 +499,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['color'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
-      const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
       cardWin(el,[full],()=>{chime(true);
       fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});});
     return;}

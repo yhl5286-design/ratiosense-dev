@@ -124,6 +124,7 @@ const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14
 const LOG_TK='ratiosense-2026',LAB='martV3';
 let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+function ukey(b){return b+':'+(RS3U||'anon');}
 const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 let SEQ3=0,LQ3=[];
 function luid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
@@ -175,12 +176,12 @@ function cardWin(el,texts,cb){try{
   },t0);
 }catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
-  const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
+  const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
   const e=document.getElementById('walN');if(e)e.textContent=n;
   if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
 }catch(e){}}
-function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
-  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}walUpd(true);}
+function addCards(ids){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem(ukey('rs3_cards'),JSON.stringify(a));}catch(e){}walUpd(true);}
 walUpd();
 function confetti(){try{
   for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
@@ -188,7 +189,7 @@ function confetti(){try{
     s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
     s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
     document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
-function markDone(r){try{const a=JSON.parse(localStorage.getItem('rs3_done')||'[]');if(!a.includes(r))a.push(r);localStorage.setItem('rs3_done',JSON.stringify(a));}catch(e){}}
+function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'))||'[]');if(!a.includes(r))a.push(r);localStorage.setItem(ukey('rs3_done'),JSON.stringify(a));}catch(e){}}
 
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
@@ -300,7 +301,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     `;
     mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('mart');addCards(['mart0','mart1','mart2']);
       const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>r.textContent.trim());
-      const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
       cardWin(el,rows,()=>{confetti();setTimeout(confetti,700);chime(true);
       fb('','🎊 네 방 모두 완주!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🛒</span></div>${rows.map(r=>`<div class="mini-card">🃏 ${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13${tot>=13?' — <u>모두 모았어요!</u>':''}</b><br>비율 탐험 대성공! 정말 대단해요!`,'🔁 모은 카드로 복습하러 →',()=>{location.href='index.html?review=1';});});});
     return;}
