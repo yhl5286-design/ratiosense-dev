@@ -222,6 +222,7 @@ function martScene(em,kid){
     <text x="${gx+108}" y="156" text-anchor="middle" font-size="13" font-weight="800" fill="#6b7683">카트</text>
   </svg></div>`;}
 function cardWin(el,texts,cb){try{
+  try{chime(true);}catch(e){}
   const bcs=[...el.querySelectorAll('.gcard')];
   if(!bcs.length){if(cb)cb();return;}
   const wk=document.createElement('div');wk.id='wpk';
@@ -235,12 +236,10 @@ function cardWin(el,texts,cb){try{
     g.style.left=x0+'px';g.style.top=y0+'px';
     document.body.appendChild(g);
     c.style.opacity='.35';
-    try{tone(660,0,.09);setTimeout(()=>tone(880,0,.09),90);setTimeout(()=>tone(1100,0,.12),180);}catch(e){}
     setTimeout(()=>{g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},80);
     setTimeout(()=>{g.style.transition='transform .35s ease-in, opacity .35s';
       g.style.transform+=' translateY(150px)';g.style.opacity='0';
-      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');
-        try{tone(1320,0,.14);}catch(e){}},330);},700);
+      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');},330);},700);
   }catch(e){}},120+i*560);});
   setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),400);if(cb)cb();},120+bcs.length*560+780);
 }catch(e){if(cb)cb();}}
@@ -376,7 +375,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['mart'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
-      cardWin(el,null,()=>{chime(true);
+      cardWin(el,null,()=>{
       fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<2?'다음 비밀 →':'마지막으로 →',()=>next());});});
     return;}
   if(d.t==='done'){
