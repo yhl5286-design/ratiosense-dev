@@ -119,6 +119,11 @@
     background:radial-gradient(#f2d488,#e9c46a 70%);display:flex;align-items:center;justify-content:center;
     box-shadow:0 0 0 4px #c9a227,0 0 0 7px rgba(233,196,106,.35);font-size:200%}
   .cback .bnm{position:absolute;bottom:8%;width:100%;text-align:center;color:#e9c46a;font-weight:800;letter-spacing:2px;font-size:75%}
+  .bigcard{position:relative;border:4px solid #c9a227;border-radius:16px;background:linear-gradient(#fffdf4,#fff3d6);
+    box-shadow:0 8px 22px rgba(224,160,42,.4);max-width:820px;margin:10px auto;overflow:hidden;animation:flipin .45s ease both;text-align:left}
+  .bigcard .pcf-top{font-size:15px}
+  .bc-txt{padding:12px 22px}
+  .bc-txt .row{font-size:21px;font-weight:800;line-height:2.5}
   .pcards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0 12px}
   .pcard{width:170px;height:230px;perspective:900px;font-size:15px}
   .pcard .pc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s}
@@ -206,31 +211,26 @@ function plog(ev,data){
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
 function cardWin(el,texts,cb){try{
-  const pcs=[...el.querySelectorAll('.pcard')];
-  if(!pcs.length){if(cb)cb();return;}
-  pcs.forEach((p,i)=>{
-    const fr=p.querySelector('.pc-front');
-    if(fr)fr.innerHTML=`<div class="pcf-top">🃏 비밀 카드</div><div class="pcf-txt">${texts[i]||''}</div>`;
-    setTimeout(()=>{p.classList.add('flip');try{tone(620+i*110,0,.09);}catch(e){}},350+i*420);});
-  const t0=350+pcs.length*420+500;
-  setTimeout(()=>{
-    const wk=document.createElement('div');wk.id='wpk';
-    wk.innerHTML='<div class="wpk-back"></div><div class="wpk-front"></div><div class="wpk-label">🃏 카드 지갑</div>';
-    document.body.appendChild(wk);
-    pcs.forEach((p,i)=>{setTimeout(()=>{try{
-      const r=p.getBoundingClientRect(),wr=wk.getBoundingClientRect();
-      const g=p.cloneNode(true);g.classList.add('pfly');
-      g.style.left=(r.left||300)+'px';g.style.top=(r.top||200)+'px';g.style.width=(r.width||170)+'px';g.style.height=(r.height||230)+'px';
-      document.body.appendChild(g);p.style.visibility='hidden';
-      requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-        g.style.transform=`translate(${(wr.left+wr.width/2)-(r.left+r.width/2)}px,${(wr.top+30)-r.top}px) scale(.72)`;});});
-      setTimeout(()=>{g.style.transition='transform .5s ease-in, opacity .5s';
-        g.style.transform+=' translateY(150px)';g.style.opacity='0';
-        setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');
-          try{tone(900,0,.1);}catch(e){}},470);},760);
-    }catch(e){}},i*700);});
-    setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),500);if(cb)cb();},pcs.length*700+1450);
-  },t0);
+  const bcs=[...el.querySelectorAll('.bigcard')];
+  if(!bcs.length){if(cb)cb();return;}
+  const wk=document.createElement('div');wk.id='wpk';
+  wk.innerHTML='<div class="wpk-back"></div><div class="wpk-front"></div><div class="wpk-label">🃏 카드 지갑</div>';
+  document.body.appendChild(wk);
+  bcs.forEach((c,i)=>{setTimeout(()=>{try{
+    const r=c.getBoundingClientRect(),wr=wk.getBoundingClientRect();
+    const g=document.createElement('div');g.className='cback flyback';
+    g.innerHTML='<div class="emb">🃏</div><div class="bnm">비밀 카드</div>';
+    const x0=(r.left+r.width/2)-59||300, y0=(r.top+r.height/2)-81||240;
+    g.style.left=x0+'px';g.style.top=y0+'px';
+    document.body.appendChild(g);
+    c.style.opacity='.35';try{tone(620+i*110,0,.09);}catch(e){}
+    setTimeout(()=>{g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},430);
+    setTimeout(()=>{g.style.transition='transform .5s ease-in, opacity .5s';
+      g.style.transform+=' translateY(150px)';g.style.opacity='0';
+      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');
+        try{tone(900,0,.1);}catch(e){}},470);},1150);
+  }catch(e){}},400+i*750);});
+  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),500);if(cb)cb();},400+bcs.length*750+1500);
 }catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
@@ -492,15 +492,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 색깔의 비밀 ${d.i+1} / 4</div>
-    <div><span class="cardbn">🃏 비밀 카드 문제 ${d.i+1} / 4 — 문장을 완성하면 카드 획득!</span></div>
-    <div class="sub">낱말 카드를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
-    <div class="pcards"><div class="pcard"><div class="pc-in"><div class="pc-face pc-back cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div><div class="pc-face pc-front"></div></div></div></div>
-    <div class="sumbox"><div class="row" style="line-height:2.6">${h}</div></div>
+    <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
+    <div class="bigcard"><div class="pcf-top">🃏 비밀 카드 문제 ${d.i+1} / 4 — 완성하면 카드 획득!</div><div class="bc-txt"><div class="row">${h}</div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['color'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
-      cardWin(el,[full],()=>{chime(true);
+      cardWin(el,null,()=>{chime(true);
       fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});});
     return;}
   if(d.t==='done'){
