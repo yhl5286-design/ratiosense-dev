@@ -163,6 +163,22 @@
   .walBox{background:#fff;border-radius:22px;padding:22px 28px;width:min(640px,94vw);max-height:82vh;overflow:auto;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.3)}
   .flyback.holdfx{animation:holdF 1.05s ease-in-out}
   @keyframes holdF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.06)}}
+  #cbook{position:fixed;inset:0;background:rgba(38,48,63,.5);display:flex;align-items:center;justify-content:center;z-index:110;animation:cbIn .3s ease}
+  @keyframes cbIn{from{opacity:0}to{opacity:1}}
+  #cbook.out{animation:cbOut .3s ease both}
+  @keyframes cbOut{to{opacity:0}}
+  .cb-in{background:linear-gradient(#8a5a2b,#6f4518);border:5px solid #c9a227;border-radius:20px;padding:18px 22px;box-shadow:0 24px 70px rgba(0,0,0,.5)}
+  .cb-title{text-align:center;color:#f2d488;font-weight:800;font-size:20px;letter-spacing:1px;margin-bottom:12px}
+  .cb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;background:#f3e2b4;border-radius:12px;padding:14px;border:2.5px solid #5d4310}
+  .cb-slot{width:86px;height:116px;border-radius:10px;position:relative;background:#1b2c49;border:2.5px solid #33456b;box-shadow:inset 0 3px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+  .cb-slot .cb-q{color:#41547e;font-size:30px;font-weight:800}
+  .cb-slot.has{background:linear-gradient(#fffdf4,#fff3d6);border:3px solid #c9a227;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+  .cb-slot.has .cb-em{font-size:38px}
+  .cb-slot .cb-chk{position:absolute;right:5px;bottom:3px;color:#2e9e63;font-weight:800;font-size:16px}
+  .cb-slot.new{animation:cbGlow 1s ease 2}
+  @keyframes cbGlow{0%,100%{box-shadow:0 0 0 0 rgba(233,196,106,0)}50%{box-shadow:0 0 0 9px rgba(233,196,106,.75)}}
+  .cb-fly{position:fixed;z-index:120;width:86px;height:116px;font-size:15px;transition:transform .6s cubic-bezier(.45,-0.05,.6,.4)}
+  @media (max-height:760px){.cb-slot{width:66px;height:90px}.cb-slot.has .cb-em{font-size:29px}}
   #wal{font-size:18px;font-weight:800;color:#8a6a34;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:6px 16px;white-space:nowrap}
   #wal.pulse{animation:walP .6s}
   @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
@@ -233,24 +249,38 @@ const TRE_SVG=`<svg viewBox="0 0 220 132">
 function cardWin(el,texts,cb){try{
   const bcs=[...el.querySelectorAll('.gcard')];
   if(!bcs.length){if(cb)cb();return;}
-  const wk=document.createElement('div');wk.id='wpk';
-  wk.innerHTML='<div class="wpk-back"></div><div class="wpk-front"></div><div class="wpk-label">🃏 카드 지갑</div>';
-  document.body.appendChild(wk);
-  bcs.forEach((c,i)=>{setTimeout(()=>{try{
-    const r=c.getBoundingClientRect(),wr=wk.getBoundingClientRect();
-    const g=document.createElement('div');g.className='cback flyback holdfx';
-    g.innerHTML='<div class="emb">🃏</div><div class="bnm">비밀 카드</div>';
-    const x0=(r.left+r.width/2)-59||300, y0=(r.top+r.height/2)-81||240;
-    g.style.left=x0+'px';g.style.top=y0+'px';
-    document.body.appendChild(g);
-    c.style.opacity='.35';
-    setTimeout(()=>{g.classList.remove('holdfx');
-      g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},1050);
-    setTimeout(()=>{g.style.transition='transform .35s ease-in, opacity .35s';
-      g.style.transform+=' translateY(150px)';g.style.opacity='0';
-      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');},330);},1700);
-  }catch(e){}},150+i*2150);});
-  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),400);if(cb)cb();},150+bcs.length*2150+900);
+  let got=[];try{got=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');}catch(e){}
+  const fresh=(window.__lastCards||[]);
+  // 컬렉션 판: 새 카드 자리는 비워 두고 시작
+  const bd=document.createElement('div');bd.id='cbook';
+  bd.innerHTML='<div class="cb-in"><div class="cb-title">🃏 내 비밀 카드 모음 — '+got.length+' / '+RC.length+'</div><div class="cb-grid">'+
+    RC.map(c=>{
+      const has=got.includes(c.id)&&!fresh.includes(c.id);
+      return '<div class="cb-slot '+(has?'has':'')+'" data-id="'+c.id+'">'+(has?'<div class="cb-em">'+c.r.split(' ')[0]+'</div><div class="cb-chk">✓</div>':'<div class="cb-q">?</div>')+'</div>';
+    }).join('')+'</div></div>';
+  document.body.appendChild(bd);
+  // 새 카드가 문제 카드 자리에서 자기 칸으로 날아가 꽂힘
+  setTimeout(()=>{try{
+    const src=bcs[0].getBoundingClientRect();
+    fresh.forEach((id,i)=>{setTimeout(()=>{try{
+      const slot=bd.querySelector('.cb-slot[data-id="'+id+'"]');if(!slot)return;
+      const sr=slot.getBoundingClientRect();
+      const g=document.createElement('div');g.className='cback cb-fly';
+      g.innerHTML='<div class="emb">🃏</div>';
+      const x0=(src.left+src.width/2)-43||300, y0=(src.top+src.height/2)-58||220;
+      g.style.left=x0+'px';g.style.top=y0+'px';
+      document.body.appendChild(g);
+      requestAnimationFrame(()=>{requestAnimationFrame(()=>{
+        g.style.transform='translate('+((sr.left+sr.width/2)-(x0+43))+'px,'+((sr.top+sr.height/2)-(y0+58))+'px) scale('+(sr.width/86)+')';});});
+      setTimeout(()=>{g.remove();
+        const rc=RC.find(x=>x.id===id);
+        slot.classList.add('has','new');
+        slot.innerHTML='<div class="cb-em">'+(rc?rc.r.split(' ')[0]:'🃏')+'</div><div class="cb-chk">✓</div>';
+        const tt=bd.querySelector('.cb-title');if(tt)tt.textContent='🃏 내 비밀 카드 모음 — '+got.length+' / '+RC.length;
+      },640);
+    }catch(e){}},i*750);});
+  }catch(e){}},350);
+  setTimeout(()=>{bd.classList.add('out');setTimeout(()=>{bd.remove();if(cb)cb();},330);},350+Math.max(1,(fresh.length||1))*750+1450);
 }catch(e){if(cb)cb();}}
 function clap(){try{
   const a=new Audio('clap.mp3');a.volume=0.9;
@@ -261,7 +291,7 @@ function walUpd(pulse){try{
   const e=document.getElementById('walN');if(e)e.textContent=n;
   if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
 }catch(e){}}
-function addCards(ids){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');
+function addCards(ids){window.__lastCards=ids;try{const a=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');
   ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem(ukey('rs3_cards'),JSON.stringify(a));}catch(e){}walUpd(true);}
 walUpd();
 function confetti(){try{
@@ -533,7 +563,7 @@ const RC=[
  {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
  {id:'map3',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
  {id:'mart0',r:'🛒 마트의 비밀',t:'<b>단위 가격</b> = 물건 1개의 값 = 묶음 전체 가격 ÷ <b>개수</b>'},
- {id:'mart1',r:'🛒 마트의 비밀',t:'어떤 물건이 더 싼지 비교하려면 <b>단위 가격</b>을 비교해야 한다.'},
+ {id:'mart1',r:'🛒 마트의 비밀',t:'두 물건 중 어느 것이 더 싼지 비교하려면 <b>단위 가격</b>을 비교해야 한다.'},
  {id:'mart2',r:'🛒 마트의 비밀',t:'할인율이 20%이면, 원래 가격에 <b>20</b>을 곱한 뒤 <b>100</b>으로 나눈 것만큼 가격에서 뺀다는 뜻이다.'},
  {id:'mart3',r:'🛒 마트의 비밀',t:'할인율 20%인 물건값 = 원래 가격 × 80 ÷ 100 — 1,000원짜리는 <b>800</b>원을 내면 된다.'}];
 (function(){
