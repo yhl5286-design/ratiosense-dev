@@ -195,6 +195,14 @@
   @media (max-height:860px){#stage .slide{zoom:.85}.harp{zoom:.72}}
   @media (max-height:740px){#stage .slide{zoom:.72}}
   @media (max-height:620px){#stage .slide{zoom:.6}}
+  .itvT{margin:10px auto 0;border-collapse:collapse;background:#fff;font-size:16.5px}
+  .itvT th{background:#f3ead8;padding:7px 14px;border-bottom:2.5px solid var(--line);color:#7a6f58}
+  .itvT td{padding:5.5px 14px;border-bottom:1px solid #eee}
+  .itvT tr[data-i]{cursor:pointer}
+  .itvT tr[data-i]:hover td{background:#fdf7e7}
+  .itvT tr.pf td{background:#fff7dd;font-weight:700}
+  .itvT tr.pf:hover td{background:#ffefc2}
+  .itvWrap{display:inline-block;border:3px solid var(--line);border-radius:14px;overflow:hidden}
 </style>
 </head>
 <body>
@@ -311,6 +319,7 @@ function gcd(a,b){return b?gcd(b,a%b):a;}
 function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b;}
 
 /* 순정률 */
+const ITV=['완전1도(같은 음)','장2도','장3도','완전4도','완전5도','장6도','장7도','완전8도(옥타브)'];const PERF=[0,3,4,7];
 const NOTES=[['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['솔',396,3,2],['라',440,5,3],['시',495,15,8],['도′',528,2,1]];
 const INTV={'1:1':'유니즌','1:2':'옥타브','2:3':'완전5도','3:4':'완전4도','4:5':'장3도','5:6':'단3도','3:5':'장6도','8:9':'장2도','8:15':'장7도'};
 /* 하프 — 화음 단계의 순정률 비 그대로(도:음 = a:b), 길이는 81×a/b */
@@ -328,7 +337,7 @@ function harpHTML(){
       :`<div class="hs ghost" style="height:${Math.round(it.L*3.3)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
   `</div></div>`;}
 
-const DECK=[{t:'intro'},{t:'vib'},{t:'harmx'}];
+const DECK=[{t:'intro'},{t:'vib'},{t:'harmx'},{t:'itv'}];
 const CHORD_SET=[1,2,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
 DECK.push({t:'challenge'},{t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'done'});
@@ -360,7 +369,7 @@ function drawStrings(){const cv=$('#hc');if(!cv)return;
   const W=cv.width=cv.clientWidth*2,H=cv.height=340;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
   const yBot=H-16,maxLen=H-34,step=W/8;
   ctx.fillStyle='#6b4a2a';ctx.fillRect(0,yBot,W,H-yBot);
-  NOTES.forEach((n,i)=>{const f=n[1],cx=step*i+step/2,len=maxLen*(262/f),yTop=yBot-len;
+  NOTES.forEach((n,i)=>{const f=n[1],cx=step*i+step/2,len=maxLen*(264/f),yTop=yBot-len;
     const amp=step*0.30*plucks[i],vf=f/45,ph=2*Math.PI*vf*(s1T/60),active=plucks[i]>.03;
     ctx.beginPath();ctx.lineWidth=active?5:3;ctx.strokeStyle=active?'#ffd24a':'#9c8557';
     for(let y=yTop;y<=yBot;y+=2){const dx=amp*Math.sin(Math.PI*(y-yTop)/len)*Math.cos(ph);(y===yTop)?ctx.moveTo(cx+dx,y):ctx.lineTo(cx+dx,y);}
@@ -466,7 +475,7 @@ if(d.t==='harmx'){
       </div></div>
       <div><canvas id="hx" style="width:min(860px,92vw);height:185px;margin-top:10px;background:#fff;border:3px solid var(--line);border-radius:16px"></canvas></div>
       <div class="dial" id="hxInfo" style="line-height:1.6;font-size:19px">★<b>도(264번)</b>의 파동은 <b style="color:#3b6db5">파란색</b> 그래프, 다른 음은 <b style="color:#c0392b">빨간색</b> 그래프입니다.<br>도 음과 다른 음의 <b>비</b>를 알아봅시다.<br>★도 옆에 <b>레</b>부터 <b>높은 도′</b>까지 흰 건반을 하나씩 눌러 보면서 파동 그래프를 살펴보세요.<br>어떤 화음이 잘 어울리나요?</div>
-      <div style="margin-top:10px"><button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>`;
+      <div style="margin-top:10px"><button class="btn pri" onclick="next()">음정을 표로 정리해요 →</button></div>`;
     function rateRatio(a,b){const m=Math.max(a,b);
       if(m<=2)return{s:5,l:'완벽한 어울림'};
       if((a===2&&b===3)||(a===3&&b===2))return{s:5,l:'아주 잘 어울림'};
@@ -504,8 +513,21 @@ if(d.t==='harmx'){
       hxSel=i;hxT0=performance.now();const n=NOTES[i],a=n[3],b=n[2];
       chord(264,n[1],1.5);plog('harmx',{n:n[0]});
       const r=rateRatio(a,b);
-      $('#hxInfo').innerHTML=`도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</span> <b>${r.l}</b>`;});
+      $('#hxInfo').innerHTML=`${n[0]} — <b>${ITV[i]}</b> &nbsp;·&nbsp; 도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</span> <b>${r.l}</b>`;});
     drawHX();return;}
+if(d.t==='itv'){
+    el.innerHTML=`<div class="q">🎼 도와 다른 음 사이 — <b>음정</b>을 비로 정리해요!</div>
+      <div class="sub">줄을 눌러 두 음을 함께 들어 보세요. <b>비가 단순할수록</b> 잘 어울려요!</div>
+      <div class="itvWrap"><table class="itvT">
+        <tr><th>음</th><th>음정 이름</th><th>진동수 비 (도 : 음)</th><th>1초에 떨리는 횟수</th></tr>
+        ${NOTES.map((n,i)=>`<tr class="${PERF.includes(i)?'pf':''}" data-i="${i}"><td>${i===0?'★':''}${n[0]}</td><td>${ITV[i]}</td><td><b style="color:#b3541e">${n[3]} : ${n[2]}</b></td><td>${n[1]}번 (${n[1]}Hz)</td></tr>`).join('')}
+      </table></div>
+      <div class="sub" style="margin-top:10px">💡 노란 줄이 <b>완전음정</b> — 비가 가장 단순해서 <b>가장 잘 어울려요</b>: 옥타브 <b>1:2</b>, 완전5도 <b>2:3</b>, 완전4도 <b>3:4</b>!<br>
+      <span style="font-size:14.5px;color:var(--sub)">기준음 264에 비를 곱하면 진동수가 나와요: 264 × 3/2 = 396(솔), 264 × 9/8 = 297(레) · 여기서는 비가 깔끔한 <b>순정률</b>(도=264Hz)을 써요 — 피아노 표준 조율로는 도 ≈ 261.6Hz예요.</span></div>
+      <div style="margin-top:10px"><button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>`;
+    el.querySelectorAll('tr[data-i]').forEach(r=>r.onclick=()=>{const n=NOTES[+r.dataset.i];
+      if(+r.dataset.i===0)tone(264,0,1.2);else chord(264,n[1],1.4);plog('itv',{n:n[0]});});
+    return;}
   if(d.t==='chord'){
     const n=NOTES[d.i],a=n[3],b=n[2]; // 도:음 = a:b
     const key=`${Math.min(a,b)}:${Math.max(a,b)}`;
@@ -523,7 +545,7 @@ if(d.t==='harmx'){
     el.querySelectorAll('.key').forEach(k=>k.onclick=()=>{const i=+k.dataset.i;const m=NOTES[i];
       chord(264,m[1],1.4);plog('chord',{n:m[0]});
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);
-      $('#hzline').innerHTML=i===0?`도 혼자: <b>264Hz</b>`:`도 262Hz : ${m[0]} <b>${m[1]}Hz</b> — 도가 <b>${m[3]}번</b> 떨릴 때 ${m[0]}${jz(m[0],'은','는')} <b>${m[2]}번</b> 떨려요`;});
+      $('#hzline').innerHTML=i===0?`도 혼자: <b>264Hz</b>`:`도 264Hz : ${m[0]} <b>${m[1]}Hz</b> — 도가 <b>${m[3]}번</b> 떨릴 때 ${m[0]}${jz(m[0],'은','는')} <b>${m[2]}번</b> 떨려요`;});
     el.querySelectorAll('[data-ok]').forEach(bn=>bn.onclick=()=>{
       if(bn.dataset.ok==='1'){
         success(`도 : ${n[0]} = ${a} : ${b}!`,`도가 <b>${a}번</b> 떨릴 때 ${n[0]}${jz(n[0],'은','는')} <b>${b}번</b> 떨려요${INTV[key]?' — <b>'+INTV[key]+'</b>':''}. ${a*b<=6?'아주 잘 어울리는 화음이에요! 😍':(a*b<=20?'잘 어울리는 화음이에요 😊':'조금 거친 화음이에요 😐')}`);}
