@@ -61,6 +61,12 @@
   #ghost{position:fixed;pointer-events:none;z-index:99;opacity:.9}
   .sumbox{background:#fff;border:3px solid var(--line);border-radius:20px;padding:20px 24px;display:inline-block;text-align:left;margin:8px 0;max-width:780px}
   .sumbox .row{font-size:21px;font-weight:800;line-height:2.6}
+  .dz{transition:transform .15s,background .15s}
+  .dz.hov{background:#ffe9a8;transform:scale(1.12);outline:3px dashed var(--gold)}
+  .dz.snap{animation:snapIn .3s}
+  @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
+  .dz.shake{animation:shk .45s}
+  @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -95,46 +101,55 @@ function townMap(f){f=f||1;const C=50*f;
     o+=shape+`<div class="lbl-chip" style="${lb};top:${C*(ob.y-(ob.shape==='삼각형'?1.65:0.62))}px">${ob.em} ${ob.shape} ${ob.n} · ${ob.cells}칸</div>`;});
   return `<div class="mapbox" style="width:${C*8+4}px;height:${C*8+4}px;max-height:min(62vh,${C*8+4}px)">
     <div class="mapgrid" style="background-size:${C}px ${C}px;width:${C*8}px;height:${C*8}px"></div>${o}</div>`;}
-function comicSVG(){return `
-<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
- <svg viewBox="0 0 340 305" style="flex:1;min-width:260px;max-width:400px;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">
-   <text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">컷 1 · 같은 날 정오, 두 도시</text>
-   <circle cx="302" cy="44" r="16" fill="#ffd34d"/>
-   <rect x="42" y="196" width="44" height="56" fill="#8a6a34" rx="4"/><rect x="50" y="204" width="28" height="40" fill="#3c2c14" rx="3"/>
-   <line x1="64" y1="140" x2="64" y2="204" stroke="#e0a02a" stroke-width="3"/>
-   <text x="64" y="272" text-anchor="middle" font-size="13" font-weight="800">시에네 우물</text>
-   <text x="64" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#2e9e63">그림자 0°</text>
-   <line x1="232" y1="158" x2="232" y2="252" stroke="#26303f" stroke-width="6"/>
-   <line x1="232" y1="252" x2="196" y2="252" stroke="#c0392b" stroke-width="6"/>
-   <line x1="232" y1="158" x2="196" y2="252" stroke="#e0a02a" stroke-width="2" stroke-dasharray="4 3"/>
-   <text x="240" y="186" font-size="13.5" font-weight="800" fill="#c0392b">7.2°</text>
-   <text x="232" y="272" text-anchor="middle" font-size="13" font-weight="800">알렉산드리아 막대</text>
-   <text x="232" y="290" text-anchor="middle" font-size="12.5" font-weight="800" fill="#c0392b">그림자 7.2°</text>
-   <rect x="52" y="54" width="216" height="58" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
-   <path d="M150 112 l10 16 l8 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/><rect x="151" y="108" width="16" height="5" fill="#fff"/>
-   <text x="160" y="78" text-anchor="middle" font-size="13.5" font-weight="800">"같은 시각인데</text>
-   <text x="160" y="98" text-anchor="middle" font-size="13.5" font-weight="800">그림자가 다르다고?!"</text>
- </svg>
- <svg viewBox="0 0 340 305" style="flex:1;min-width:260px;max-width:400px;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">
-   <text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">컷 2 · 에라토스테네스의 깨달음</text>
-   <circle cx="110" cy="215" r="68" fill="#bfe0c2" stroke="#7fae84" stroke-width="3"/>
-   <path d="M110 215 L110 147 A68 68 0 0 0 78 155 Z" fill="rgba(224,160,42,.35)"/>
-   <line x1="110" y1="215" x2="110" y2="147" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
-   <line x1="110" y1="215" x2="78" y2="155" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
-   <path d="M78 155 A68 68 0 0 1 110 147" fill="none" stroke="#c0392b" stroke-width="7"/>
-   <text x="100" y="185" font-size="13" font-weight="800" fill="#8a6a34">7.2°</text>
-   <text x="70" y="136" font-size="12.5" font-weight="800" fill="#c0392b">800km</text>
-   <circle cx="110" cy="215" r="4" fill="#26303f"/>
-   <text x="258" y="215" text-anchor="middle" font-size="46">🧔</text>
-   <rect x="150" y="48" width="180" height="118" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
-   <path d="M240 166 l8 18 l10 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/><rect x="241" y="162" width="18" height="5" fill="#fff"/>
-   <text x="240" y="72" text-anchor="middle" font-size="13.5" font-weight="800">"지구가 둥글어서야!</text>
-   <text x="240" y="92" text-anchor="middle" font-size="13.5" font-weight="800">한 바퀴 360°는</text>
-   <text x="240" y="112" text-anchor="middle" font-size="13.5" font-weight="800">7.2°의 딱 50배!"</text>
-   <text x="240" y="142" text-anchor="middle" font-size="15" font-weight="800" fill="#1a5fb4">360 ÷ 7.2 = 50</text>
- </svg>
-</div>`;}
-
+function comicSVG(){
+ const panel=(title,body,caption)=>`
+ <div style="flex:1;min-width:280px;max-width:430px">
+  <svg viewBox="0 0 340 280" style="width:100%;background:#fffdf6;border:2.5px solid #26303f;border-radius:10px">${
+   `<text x="12" y="24" font-size="15" font-weight="800" fill="#26303f">${title}</text>`+body}</svg>
+  <div style="font-size:14.5px;font-weight:700;color:#6b7683;margin-top:3px;text-align:center">${caption}</div>
+ </div>`;
+ const bubble=(x,y,w,h,lines,tailX)=>`
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="12" fill="#fff" stroke="#26303f" stroke-width="2"/>
+  <path d="M${tailX} ${y+h} l9 16 l9 -16 Z" fill="#fff" stroke="#26303f" stroke-width="2"/>
+  <rect x="${tailX+1}" y="${y+h-4}" width="16" height="5" fill="#fff"/>
+  ${lines.map((l,i)=>`<text x="${x+w/2}" y="${y+22+i*20}" text-anchor="middle" font-size="13.5" font-weight="800" fill="#26303f">${l}</text>`).join('')}`;
+ const c1=panel('컷 1 · 궁금한 학자',
+  `<text x="95" y="215" text-anchor="middle" font-size="72">🧔</text>
+   <text x="95" y="245" text-anchor="middle" font-size="14" font-weight="800" fill="#6b7683">에라토스테네스</text>
+   <text x="255" y="220" text-anchor="middle" font-size="40" fill="#8a6a34">❓🌍</text>
+   ${bubble(30,46,280,84,['"지구 한 바퀴는 얼마나 될까?','내가 가진 건','그림자와 거리뿐인데…"'],140)}`,
+  '2200년 전 그리스, 한 학자가 지구의 크기를 궁금해했어요');
+ const c2=panel('컷 2 · 시에네의 우물 (여름 낮 12시)',
+  `<circle cx="300" cy="46" r="17" fill="#ffd34d"/>
+   <line x1="300" y1="66" x2="300" y2="96" stroke="#e0a02a" stroke-width="3"/>
+   <rect x="120" y="170" width="66" height="76" fill="#8a6a34" rx="5"/>
+   <rect x="131" y="180" width="44" height="58" fill="#3c2c14" rx="4"/>
+   <line x1="153" y1="96" x2="153" y2="232" stroke="#e0a02a" stroke-width="4"/>
+   <text x="153" y="265" text-anchor="middle" font-size="13.5" font-weight="800">우물 바닥까지 햇빛이 쏙!</text>
+   ${bubble(30,44,240,64,['"그림자가 하나도 없네?','해가 바로 머리 위라는 뜻!"'],120)}`,
+  '시에네에서는 그림자 0° — 해가 정확히 머리 위!');
+ const c3=panel('컷 3 · 같은 시각, 알렉산드리아',
+  `<rect x="216" y="30" width="112" height="26" rx="13" fill="#c0392b"/>
+   <text x="272" y="48" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">같은 날 같은 시각!</text>
+   <line x1="150" y1="120" x2="150" y2="235" stroke="#26303f" stroke-width="7"/>
+   <line x1="150" y1="235" x2="103" y2="235" stroke="#c0392b" stroke-width="7"/>
+   <line x1="150" y1="120" x2="103" y2="235" stroke="#e0a02a" stroke-width="2.5" stroke-dasharray="5 4"/>
+   <text x="163" y="158" font-size="15" font-weight="800" fill="#c0392b">7.2°</text>
+   <text x="126" y="260" text-anchor="middle" font-size="13.5" font-weight="800">막대의 그림자</text>
+   ${bubble(28,60,180,64,['"여긴 그림자가 생겼어!','재보니 7.2도!"'],100)}`,
+  '북쪽 도시 알렉산드리아에서는 그림자가 7.2° 기울었어요');
+ const c4=panel('컷 4 · 둥근 지구의 깨달음',
+  `<circle cx="105" cy="190" r="62" fill="#bfe0c2" stroke="#7fae84" stroke-width="3"/>
+   <path d="M105 190 L105 128 A62 62 0 0 0 76 135 Z" fill="rgba(224,160,42,.35)"/>
+   <line x1="105" y1="190" x2="105" y2="128" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
+   <line x1="105" y1="190" x2="76" y2="135" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="6 4"/>
+   <path d="M76 135 A62 62 0 0 1 105 128" fill="none" stroke="#c0392b" stroke-width="7"/>
+   <text x="97" y="163" font-size="12.5" font-weight="800" fill="#8a6a34">7.2°</text>
+   <text x="66" y="118" font-size="12.5" font-weight="800" fill="#c0392b">800km</text>
+   <circle cx="105" cy="190" r="4" fill="#26303f"/>
+   ${bubble(150,44,182,120,['"지구가 둥글기 때문이야!','두 도시가 벌어진 각 7.2°는','한 바퀴 360°의 딱 50분의 1!','360 ÷ 7.2 = 50"'],230)}`,
+  '각도가 50분의 1이면, 두 도시 사이 거리도 지구 둘레의 50분의 1!');
+ return `<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">${c1}${c2}${c3}${c4}</div>`;}
 const DECK=[
  {t:'intro'},
  {t:'scale',i:0,opts:[['3칸',1],['30칸',0],['5칸',0]]},
@@ -155,33 +170,44 @@ function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
 function next(){idx=Math.min(idx+1,DECK.length-1);render();}
 function success(t,s,after){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',after||next);}
 function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
-function mountDrag(el){
+function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
-  function place(dz,ch){if(dz.dataset.chip)unplace(dz);
-    dz.textContent=ch.dataset.w;dz.dataset.chip=ch.dataset.c;ch.classList.add('used');
-    dz.classList.remove('okk','bad','sel');if(sel===dz)sel=null;}
-  function unplace(dz){const c=chips.find(x=>x.dataset.c===dz.dataset.chip);
-    if(c)c.classList.remove('used');dz.textContent='';dz.dataset.chip='';dz.classList.remove('okk','bad');}
-  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.dataset.chip){unplace(dz);return;}
+  function allDone(){if(dzs.every(z=>z.classList.contains('okk')))setTimeout(onAll,380);}
+  function judge(dz,ch){
+    if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
+    if(ch.dataset.w===dz.dataset.a){
+      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
+      try{tone(880,0,.09);}catch(e){}
+      setTimeout(()=>dz.classList.remove('snap'),320);
+      if(sel===dz)sel=null;allDone();}
+    else{dz.classList.remove('hov');dz.classList.add('bad','shake');
+      try{tone(180,0,.2);}catch(e){}
+      setTimeout(()=>dz.classList.remove('bad','shake'),480);}}
+  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.classList.contains('okk'))return;
     dzs.forEach(x=>x.classList.remove('sel'));dz.classList.add('sel');sel=dz;};});
   chips.forEach(ch=>{
     ch.onclick=()=>{if(ch.classList.contains('used'))return;
-      const dz=sel&&!sel.dataset.chip?sel:dzs.find(x=>!x.dataset.chip);
-      if(dz)place(dz,ch);};
+      const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
+      if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
       const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
-      document.body.appendChild(g);drag={ch,g};g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
-  document.onpointermove=e=>{if(drag){drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';}};
+      document.body.appendChild(g);drag={ch,g};
+      g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
+  document.onpointermove=e=>{if(!drag)return;
+    drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';
+    dzs.forEach(z=>z.classList.remove('hov'));
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const dz=under&&under.closest?under.closest('.dz'):null;
+    if(dz&&!dz.classList.contains('okk'))dz.classList.add('hov');};
   document.onpointerup=e=>{if(!drag)return;
     const under=document.elementFromPoint(e.clientX,e.clientY);
     const dz=under&&under.closest?under.closest('.dz'):null;
-    if(dz&&!dz.dataset.chip)place(dz,drag.ch);
+    dzs.forEach(z=>z.classList.remove('hov'));
+    if(dz)judge(dz,drag.ch);
     drag.g.remove();drag=null;};
-  return {check(){let all=true;
-    dzs.forEach(dz=>{const ok=!!dz.dataset.chip&&dz.textContent===dz.dataset.a;
-      dz.classList.remove('okk','bad');dz.classList.add(ok?'okk':'bad');if(!ok)all=false;});
-    return all;},vals(){return dzs.map(d2=>d2.textContent);}};}
+  return {};}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🗺️</div>
     <div class="q">지도의 비밀에 온 걸 환영해요!</div>
@@ -217,7 +243,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       b.dataset.ok==='1'?success('맞았어요! 1km!','10cm × 10,000 = 100,000cm = 1,000m = <b>1km</b>.<br>지도 10cm가 실제로는 <b>걸어서 15분</b> 거리예요!')
         :retry('10cm의 <b>10,000배</b>를 구한 뒤, cm → m → km로 단위를 바꿔 보세요.<br>(100cm = 1m, 1,000m = 1km)');});return;}
   if(d.t==='comic'){el.innerHTML=`<div class="q">🌍 2200년 전, 에라토스테네스는<br><b>막대기 하나</b>로 지구를 쟀어요!</div>
-      <div class="sub">그가 쓴 도구는 단 두 가지 — <b>그림자</b>와 <b>거리</b>. 두 컷 만화로 만나요!</div>
+      <div class="sub">그가 쓴 도구는 단 두 가지 — <b>그림자</b>와 <b>거리</b>. 네 컷 만화로 만나요!</div>
       ${comicSVG()}
       <div class="sub" style="margin-top:10px">두 도시 사이의 거리는 <b>800km</b> — 이제 지구 한 바퀴를 구할 수 있어요!</div>
       <button class="btn pri" onclick="next()">비로 계산해 보기! ✏️</button>`;return;}
@@ -240,18 +266,15 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="sub"><b>지도의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div class="sumbox"><div class="row">지도는 실제를 같은 (<span class="dz" data-a="비"></span>)로 줄인 것이다.</div><div class="row">축척 1:10,000에서 지도 1cm는 실제 (<span class="dz" data-a="100"></span>)m이다.</div><div class="row">지도 위 도형은 실제와 모양이 같은 (<span class="dz" data-a="닮은"></span>) 도형이다.</div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
-    <div style="margin-top:10px"><button class="btn pri" id="ck">정리 확인!</button></div>
+    
     <div id="freeQ" style="display:none;margin-top:14px">
       <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
       <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
         style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
       <button class="btn pri" id="go2">남기고 완성! 🌍</button>
     </div>`;
-    const dc=mountDrag(el);
-    $('#ck').onclick=()=>{
-      if(dc.check()){plog('summary',{a:dc.vals()});chime(true);
-        fb('','✅ 정리 완벽!','오늘 배운 비밀이 머릿속에 쏙 정리됐어요!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});}
-      else{chime(false);fb('help','🤔 빨간 칸을 다시!','낱말 카드를 눌러 빼고, 알맞은 자리에 다시 놓아 보세요.','도전!',null);}};
+    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
+      fb('','✅ 정리 완벽!','낱말이 착착 붙었어요 — 오늘 배운 비밀이 머릿속에 쏙!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});});
     el.addEventListener('click',e=>{if(e.target&&e.target.id==='go2'){
       plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
       fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});

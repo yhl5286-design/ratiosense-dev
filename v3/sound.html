@@ -86,6 +86,12 @@
   #ghost{position:fixed;pointer-events:none;z-index:99;opacity:.9}
   .eq{background:#fff;border:3px solid var(--line);border-radius:20px;padding:18px 26px;display:inline-block;text-align:left;margin:8px 0}
   .eq .row{font-size:25px;font-weight:800;line-height:2.5}
+  .dz{transition:transform .15s,background .15s}
+  .dz.hov{background:#ffe9a8;transform:scale(1.12);outline:3px dashed var(--gold)}
+  .dz.snap{animation:snapIn .3s}
+  @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
+  .dz.shake{animation:shk .45s}
+  @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
 </style>
@@ -177,30 +183,41 @@ function loopWave(){s1T++;if(w1env>.001)w1env*=DECAY;for(let i=0;i<8;i++)if(pluc
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
-  function place(dz,ch){if(dz.dataset.chip)unplace(dz);
-    dz.textContent=ch.dataset.w;dz.dataset.chip=ch.dataset.c;ch.classList.add('used');
-    dz.classList.remove('okk','bad','sel');if(sel===dz)sel=null;}
-  function unplace(dz){const c=chips.find(x=>x.dataset.c===dz.dataset.chip);
-    if(c)c.classList.remove('used');dz.textContent='';dz.dataset.chip='';dz.classList.remove('okk','bad');}
-  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.dataset.chip){unplace(dz);return;}
+  function allDone(){if(dzs.every(z=>z.classList.contains('okk')))setTimeout(onAll,380);}
+  function judge(dz,ch){
+    if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
+    if(ch.dataset.w===dz.dataset.a){
+      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
+      try{tone(880,0,.09);}catch(e){}
+      setTimeout(()=>dz.classList.remove('snap'),320);
+      if(sel===dz)sel=null;allDone();}
+    else{dz.classList.remove('hov');dz.classList.add('bad','shake');
+      try{tone(180,0,.2);}catch(e){}
+      setTimeout(()=>dz.classList.remove('bad','shake'),480);}}
+  dzs.forEach(dz=>{dz.onclick=()=>{if(dz.classList.contains('okk'))return;
     dzs.forEach(x=>x.classList.remove('sel'));dz.classList.add('sel');sel=dz;};});
   chips.forEach(ch=>{
     ch.onclick=()=>{if(ch.classList.contains('used'))return;
-      const dz=sel&&!sel.dataset.chip?sel:dzs.find(x=>!x.dataset.chip);
-      if(dz)place(dz,ch);};
+      const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
+      if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
       const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
-      document.body.appendChild(g);drag={ch,g};g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
-  document.onpointermove=e=>{if(drag){drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';}};
+      document.body.appendChild(g);drag={ch,g};
+      g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
+  document.onpointermove=e=>{if(!drag)return;
+    drag.g.style.left=(e.clientX-40)+'px';drag.g.style.top=(e.clientY-24)+'px';
+    dzs.forEach(z=>z.classList.remove('hov'));
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const dz=under&&under.closest?under.closest('.dz'):null;
+    if(dz&&!dz.classList.contains('okk'))dz.classList.add('hov');};
   document.onpointerup=e=>{if(!drag)return;
     const under=document.elementFromPoint(e.clientX,e.clientY);
     const dz=under&&under.closest?under.closest('.dz'):null;
-    if(dz&&!dz.dataset.chip)place(dz,drag.ch);
+    dzs.forEach(z=>z.classList.remove('hov'));
+    if(dz)judge(dz,drag.ch);
     drag.g.remove();drag=null;};
-  return {check(){let all=true;
-    dzs.forEach(dz=>{const ok=!!dz.dataset.chip&&dz.textContent===dz.dataset.a;
-      dz.classList.remove('okk','bad');dz.classList.add(ok?'okk':'bad');if(!ok)all=false;});
-    return all;}};}
+  return {};}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🎼</div>
@@ -265,12 +282,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         <div class="row" style="padding-left:120px">= <span class="dz" data-a="${exS}"></span> cm</div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
-      <div style="margin-top:10px"><button class="btn pri" id="go">🪕 이 길이로 줄 매달기</button></div>`;
-    const dragCtl=mountDrag(el);
-    $('#go').onclick=()=>{
-      if(dragCtl.check()){hDone=d.i+1;pluckT(hFreq(ex));
-        success(`${p.n} 줄 완성! ${exS}cm`,`81 × ${p.a} ÷ ${p.b} = <b>${exS}cm</b> — 진동수 비가 ${p.a} : ${p.b}니까 길이는 <b>거꾸로 ${p.a}/${p.b}</b>! 뜯으면 딱 ${p.n}.`);}
-      else retry(`${p.n}${jz(p.n,'은','는')} 도보다 <b>빨리</b> 떨리니 줄이 더 <b>짧아야</b> 해요.<br>× 뒤에는 <b>도의 떨림 수</b>, ÷ 뒤에는 <b>${p.n}의 떨림 수</b>!`);};
+      `;
+    mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
+      success(`${p.n} 줄 완성! ${exS}cm`,`81 × ${p.a} ÷ ${p.b} = <b>${exS}cm</b> — 진동수 비가 ${p.a} : ${p.b}니까 길이는 <b>거꾸로 ${p.a}/${p.b}</b>! 뜯으면 딱 ${p.n}.`);});
     wireGoal(el);return;}
   if(d.t==='done'){
 hDone=7;
