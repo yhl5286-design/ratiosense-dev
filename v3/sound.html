@@ -468,13 +468,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
-    el.innerHTML=`<div class="q">🎹 화음 탐색 — <b>도와 함께</b> 아무 건반이나 눌러 보세요!</div>
-      <div class="sub">두 소리의 파동이 어디서 <b>만나는지</b>, 얼마나 <b>어울리는지</b> 자유롭게 탐색해요</div>
+    el.innerHTML=`<div class="q">🎹 도와 <b>가장 잘 어울리는 화음</b> 찾기! — 흰 건반을 눌러보세요!</div>
+      <div class="sub">두 소리가 울릴 때 생기는 <b>파동 그래프</b>를 아래에서 살펴보세요.<br>두 소리가 <b>함께 잘 만나면</b> 잘 어울린답니다!</div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===0?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':''}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
       <div><canvas id="hx" style="width:min(860px,92vw);height:185px;margin-top:10px;background:#fff;border:3px solid var(--line);border-radius:16px"></canvas></div>
-      <div class="dial" id="hxInfo" style="line-height:1.6;font-size:19px">★<b>도(264번)</b>의 파동은 <b style="color:#3b6db5">파란색</b> 그래프, 다른 음은 <b style="color:#c0392b">빨간색</b> 그래프입니다.<br>도 음과 다른 음의 <b>비</b>를 알아봅시다.<br>★도 옆에 <b>레</b>부터 <b>높은 도′</b>까지 흰 건반을 하나씩 눌러 보면서 파동 그래프를 살펴보세요.<br>어떤 화음이 잘 어울리나요?</div>
+      <div class="dial" id="hxInfo" style="line-height:1.6;font-size:19px"><b>파동 그래프 이해하기</b> — 소리는 떨림이고, 규칙적인 떨림의 그래프가 생겨요!<br>★<b>도</b>의 그래프는 <b style="color:#3b6db5">파란색</b>, 다른 음의 그래프는 <b style="color:#c0392b">빨간색</b>입니다.</div>
       <div style="margin-top:10px"><button class="btn pri" onclick="next()">음정을 표로 정리해요 →</button></div>`;
     function rateRatio(a,b){const m=Math.max(a,b);
       if(m<=2)return{s:5,l:'완벽한 어울림'};
