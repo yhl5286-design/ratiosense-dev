@@ -102,6 +102,9 @@
   .hvseg.c2{background:#7fae84}
   .hvend{font-size:15px;font-weight:700;color:var(--sub);white-space:nowrap}
   .hvcap{font-size:16.5px;font-weight:700;color:var(--sub);margin-top:8px;line-height:1.65;text-align:left}
+  .vfr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;margin:0 8px}
+  .vfr .dz{min-width:60px;min-height:34px;border-radius:10px}
+  .vfr .fbar{width:100%;min-width:60px;height:3.5px;background:#26303f;margin:4px 0;border-radius:2px}
   .cback{position:relative;border-radius:14px;border:4px solid #c9a227;
     background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 9px,transparent 9px 18px),
       radial-gradient(circle at 50% 40%,#3d5a80 0 30%,#2b4570 62%,#1b2c49 100%);
@@ -284,7 +287,7 @@ function harpHTML(){
 const DECK=[{t:'intro'},{t:'vib'}];
 const CHORD_SET=[1,2,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
-DECK.push({t:'challenge'},{t:'done'});
+DECK.push({t:'challenge'},{t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'done'});
 let idx=0,w1env=0,f1=262,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
 const GOAL_OPEN={};
 function goalHTML(no,parts){
@@ -433,18 +436,19 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     const bank=[String(p.a),String(p.b),'81','100']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${d.i===0?goalHTML(3,['음을 만들 때는 ','[도','를 기준으로 ','[비율','을 계산한다.']):''}
-      <div class="q">도 : ${p.n}의 진동수 비는 <b>${p.a} : ${p.b}</b>입니다.<br>도 줄(<b>81cm</b>)에 무엇을 곱하고 나누면 <b>${p.n} 줄</b>이 될까요?</div>
-      <div class="sub">하프 공방 ${d.i+1}/7 — 비의 두 수를 알맞은 자리에! <b>계산은 하프가 해 줘요</b></div>
+      <div class="q">도 : ${p.n}의 진동수의 비는 <b>${p.a} : ${p.b}</b>.<br>도 줄(<b>81cm</b>)에 어떤 <b>비율(분수)</b>을 곱하면 <b>${p.n} 줄</b>이 될까요?</div>
+      <div class="sub">하프 공방 ${d.i+1}/7 — 비를 <b>분수(비율)</b>로 바꿔 길이에 곱해요! 계산은 하프가 해 줘요</div>
       ${harpHTML()}
       <div class="eq">
-        <div class="row">${p.n} 줄의 길이 = 도 줄의 길이 × <span style="color:#b3541e">도의 떨림 수</span> ÷ <span style="color:#b3541e">${p.n}의 떨림 수</span></div>
-        <div class="row" style="padding-left:120px">= <b>81</b> × <span class="dz" data-a="${p.a}"></span> ÷ <span class="dz" data-a="${p.b}"></span> = <b style="color:#136a3d">${exS} cm</b></div>
+        <div class="row">① 진동수의 비 — 도 : ${p.n} = <b>${p.a} : ${p.b}</b></div>
+        <div class="row">② 길이의 비율(분수)로 바꾸기 — ${p.n} 줄은 도 줄의 <b>몇 분의 몇</b>일까요? 떨림과 길이는 <span style="color:#b3541e"><b>거꾸로</b></span>!</div>
+        <div class="row">③ ${p.n} 줄의 길이 = <b>81</b> × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <b style="color:#136a3d">${exS} cm</b></div>
       </div>
       <div>${harpViz(p,exS)}</div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;
     mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
-      success(`${p.n} 줄 완성! ${exS}cm`,`81 × ${p.a} ÷ ${p.b} = <b>${exS}cm</b> — 진동수 비가 ${p.a} : ${p.b}니까 길이는 <b>거꾸로 ${p.a}/${p.b}</b>! 뜯으면 딱 ${p.n}.`);});
+      success(`${p.n} 줄 완성! ${exS}cm`,`진동수의 비 <b>${p.a} : ${p.b}</b> → 길이의 비율은 거꾸로라서 <b>${p.a}/${p.b}</b> (도의 ${p.a}${jz(String(p.a),'이','가')} 분자!)<br>81 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
     wireGoal(el);return;}
   if(d.t==='challenge'){hDone=7;
     const opts=[['40cm',1,''],['90cm',0,'rev'],['30cm',0,'']].sort(()=>Math.random()-.5);
@@ -465,18 +469,32 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       else{plog('challenge',{ok:0});
         retry(`도와 솔의 진동수 비는 <b>2 : 3</b> — 줄 길이는 거꾸로 <b>3 : 2</b>예요.<br>60cm의 <b>3분의 2</b>는 몇 cm일까요?`);}});
     return;}
-  if(d.t==='done'){
-hDone=7;
-    const WORDS=['떨림','비','도','비율','차이','100'].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div style="font-size:64px">🎉</div>` + harpHTML() + `
-    <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="sub"><b>소리의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
-    <div class="gcards"><div class="gcard" style="animation-delay:0.00s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 1 / 3</div><div class="gc-txt"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div></div></div></div><div class="gcard" style="animation-delay:0.13s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 2 / 3</div><div class="gc-txt"><div class="row">화음은 진동수의 간단한 <span class="dz" data-a="비"></span>에서 나온다.</div></div></div></div><div class="gcard" style="animation-delay:0.26s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 3 / 3</div><div class="gc-txt"><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div></div></div></div>
-    <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('sound');addCards(['sound0','sound1','sound2']);const rows=[...el.querySelectorAll('.gcard .row')].map(r=>r.textContent.trim());
+  if(d.t==='ssum'){
+    const S3=[
+     {t:["소리는 ","이다."],a:["떨림"],x:["비","차이","울림"]},
+     {t:["화음은 진동수의 간단한 ","에서 나온다."],a:["비"],x:["비율","차이","떨림"]},
+     {t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["도","비율"],x:["레","비"]}];
+    const s=S3[d.i];
+    const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
+    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    el.innerHTML=`<div style="font-size:60px">📝</div>
+    <div class="q">우리가 찾은 소리의 비밀 ${d.i+1} / 3</div>
+    <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 3</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['sound'+d.i]);
+      const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
-      cardWin(el,rows,()=>{confetti();chime(true);
-      fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🎼</span></div>${rows.map(r=>`<div class="mini-card">🃏 ${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>다음 탐험은 <b>🗺️ 지도의 비밀</b>!`,'다음 방으로 →',()=>{location.href='map.html';});});});
+      cardWin(el,null,()=>{chime(true);
+      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<2?'다음 비밀 →':'마지막으로 →',()=>next());});});
+    return;}
+  if(d.t==='done'){hDone=7;
+    confetti();
+    el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎼</span></div>` + harpHTML() + `
+    <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
+    <div class="sub">비밀 카드 3장이 지갑에 쏙 — 다음 탐험은 <b>🗺️ 지도의 비밀</b>!</div>
+    <button class="btn pri" id="go2">다음 방으로 → 🗺️</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('sound');chime(true);location.href='map.html';};
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx--;render();plog('nav',{to:idx});}};
