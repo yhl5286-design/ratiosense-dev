@@ -182,7 +182,7 @@ let DECK=[{t:'title'}];
 FAM.forEach((f,fi)=>{for(let k=0;k<2;k++)DECK.push({t:'sense',fi,k});});
 MAKE.forEach((m,i)=>{DECK.push({t:'make',i});DECK.push({t:'concept',i});});
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
-DECK.push({t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'done'});
+DECK.push({t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -388,31 +388,34 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
       v===40?success('맞았어요! 빨강은 전체의 40%!','전체 100mL 중 빨강 40mL — 전체를 100으로 보면 <b>40%</b>. 백분율은 <b>전체를 100으로 볼 때의 비</b>예요!')
             :retry('전체는 40+60 = <b>100mL</b> — 그중 빨강 <b>40mL</b>를 100 기준으로!');};return;}
+  if(d.t==='sum'){
+    const S4=[
+     {t:["","이 달라도 ","가 같다면 같은 색을 만들 수 있다."],a:["양","비"],x:["차이","개수"]},
+     {t:["기준이 되는 양을 ",", 그 기준량을 기준으로 비교할 때의 양을 ","이라 한다."],a:["기준량","비교하는 양"],x:["비율","전체 양"]},
+     {t:["비교하는 양 : 기준량을 분수로 나타내면 ","이 되고 이것이 ","이다."],a:["비교하는 양/기준량","비율"],x:["기준량/비교하는 양","비"]},
+     {t:["백분율은 기준량이 ","일 때의 비율이다."],a:["100"],x:["10","1"]}];
+    const s=S4[d.i];
+    const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
+    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    el.innerHTML=`<div style="font-size:60px">📝</div>
+    <div class="q">우리가 찾은 색깔의 비밀 ${d.i+1} / 4</div>
+    <div class="sub">낱말 카드를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
+    <div class="sumbox"><div class="row" style="line-height:2.6">${h}</div></div>
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
+      const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
+      fb('',`✅ 비밀 ${d.i+1} 완성!`,full,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});
+    return;}
   if(d.t==='done'){
-    const SUM=[
-     {t:["","이 달라도 ","가 같다면 같은 색을 만들 수 있다!"],a:["양","비"]},
-     {t:["기준이 되는 양을 ",", 그 기준량을 기준으로 비교할 때의 양을 ","이라고 하며, "," : ","으로 나타낸다."],a:["기준량","비교하는 양","비교하는 양","기준량"]},
-     {t:["백분율은 기준량을 ","으로 했을 때의 비율을 말한다."],a:["100"]},
-     {t:["비율은 비교하는 양 : 기준량을 ","으로 나타낸 값이다."],a:["비교하는 양/기준량"]}];
-    let rows='',bi=0;
-    SUM.forEach(s=>{let h='<div class="row" style="line-height:2.6">';
-      s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}" data-i="${bi++}"></span>`;});
-      rows+=h+'</div>';});
-    const words=SUM.flatMap(s=>s.a).concat(['차이','10']).sort(()=>Math.random()-.5);
     el.innerHTML=`<div style="font-size:80px">🎉</div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="sub"><b>색깔의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
-    <div class="sumbox">${rows}</div>
-    <div class="bank">${words.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
-    
-    <div id="freeQ" style="display:none;margin-top:14px">
+    <div id="freeQ" style="margin-top:14px">
       <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
       <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
         style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
       <button class="btn pri" id="go2">남기고 완성! 🎨</button>
     </div>`;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
-      fb('','✅ 정리 완벽!','낱말이 착착 붙었어요 — 오늘 배운 비밀이 머릿속에 쏙!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});});
+    $('#rfx').focus();
     el.addEventListener('click',e=>{if(e.target&&e.target.id==='go2'){
       plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
       fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});
