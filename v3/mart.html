@@ -246,6 +246,41 @@ function introScene(){
     ${kid(462,H)}
   </svg></div>`;}
 function sceneBG(type){
+  if(type==='ice'){ // 노란 배너 아이스크림 냉동 쇼케이스
+    let s=`<rect x="10" y="14" width="480" height="206" rx="8" fill="#eef3f8" stroke="#b8cfec" stroke-width="3"/>
+      <rect x="10" y="14" width="480" height="34" rx="8" fill="#ffd34d"/>
+      <text x="30" y="38" font-size="19" font-weight="800" fill="#26303f">아이스크림</text>
+      <text x="150" y="38" font-size="13" font-weight="800" fill="#8a6a34">ICE CREAM</text>
+      <line x1="250" y1="14" x2="250" y2="220" stroke="#b8cfec" stroke-width="4"/>`;
+    const PC=[['#f2b7c6','#d98ba0'],['#9ecbee','#5b93c9'],['#b6d94b','#94b52e'],['#f4d35e','#c9a227'],['#e76f51','#b53a2a'],['#7b6cff','#5546c9']];
+    for(let r=0;r<2;r++){const sy=108+r*54;
+      for(let k=0;k<9;k++){const x=26+k*51,[c1,c2]=PC[(k+r*2)%6];
+        if((k+r)%2){ // 파인트 컵
+          s+=`<rect x="${x}" y="${sy-34}" width="30" height="28" rx="3" fill="#fffdf4" stroke="${c2}" stroke-width="2"/>
+            <rect x="${x-2}" y="${sy-40}" width="34" height="9" rx="4" fill="${c1}" stroke="${c2}" stroke-width="1.5"/>
+            <rect x="${x+5}" y="${sy-24}" width="20" height="10" fill="${c1}"/>`;}
+        else{ // 박스
+          s+=`<rect x="${x}" y="${sy-36}" width="32" height="30" rx="3" fill="${c1}" stroke="${c2}" stroke-width="2"/>
+            <rect x="${x+5}" y="${sy-28}" width="22" height="12" rx="2" fill="#fffdf4" opacity=".85"/>`;}}
+      s+=`<rect x="18" y="${sy-4}" width="464" height="8" rx="2" fill="#fff" stroke="#c7d3de" stroke-width="1.5"/>`;
+      for(let k=0;k<7;k++)s+=`<rect x="${32+k*66}" y="${sy-2}" width="30" height="5" rx="1" fill="#eef2f6" stroke="#c7d3de"/>`;}
+    s+=`<rect x="20" y="196" width="460" height="8" rx="2" fill="#fff" stroke="#c7d3de" stroke-width="1.5"/>`;
+    return s;}
+  if(type==='yogurt'){ // 베이지 배너 유제품 코너(요구르트 멀티팩)
+    let s=`<rect x="10" y="14" width="480" height="206" rx="8" fill="#f6f1e8" stroke="#ddd0b8" stroke-width="3"/>
+      <rect x="10" y="14" width="480" height="34" rx="8" fill="#e8ddc6"/>
+      <text x="30" y="38" font-size="19" font-weight="800" fill="#5d4a2a">유제품</text>
+      <text x="106" y="38" font-size="13" font-weight="800" fill="#9a8560">DAIRY</text>`;
+    const YC=['#fffdf4','#dff0d0','#f7d8de','#dbeafc','#fff0c8'];
+    for(let r=0;r<2;r++){const sy=112+r*52;
+      for(let g=0;g<5;g++){const gxx=26+g*92,c=YC[(g+r)%5];
+        for(let k=0;k<5;k++){const x=gxx+k*16;
+          s+=`<path d="M${x} ${sy-30} q0 -6 6 -6 q6 0 6 6 l1 24 l-14 0 Z" fill="${c}" stroke="#c9bda0" stroke-width="1.2"/>
+            <rect x="${x-1}" y="${sy-38}" width="16" height="6" rx="3" fill="#d94f3d"/>`;}
+        s+=`<rect x="${gxx-3}" y="${sy-18}" width="86" height="9" fill="rgba(46,158,99,.75)"/>`;}
+      s+=`<rect x="18" y="${sy-2}" width="464" height="8" rx="2" fill="#fff" stroke="#d5c9ae" stroke-width="1.5"/>`;
+      for(let k=0;k<7;k++)s+=`<rect x="${32+k*66}" y="${sy}" width="30" height="5" rx="1" fill="#f3ede1" stroke="#d5c9ae"/>`;}
+    return s;}
   if(type==='fruit'){ // 계단식 초록 크레이트 과일 매대
     let s=`<rect x="10" y="14" width="480" height="206" rx="8" fill="#eef6ec" stroke="#cfe3cf" stroke-width="2"/>
       <rect x="22" y="22" width="180" height="30" rx="6" fill="#2e9e63"/>
@@ -441,14 +476,16 @@ const DECK=[
  {t:'mc',kid:0,bem:'🍦',q:'지우가 🍦 <b>5개 묶음에 4,000원</b>인 아이스크림 묶음을 사려고 해요.<br>아이스크림 <b>하나당 가격</b>은 얼마라고 볼 수 있나요?',sub:'묶음 가격을 개수로 나누면 하나의 값! (하나에 얼마?)',
   em:'🍦×5',price:'5개 묶음 4,000원',hint:'4,000 ÷ 5',opts:[['800원',1],['500원',0],['1,000원',0]],
   ok:['맞았어요! 1개 = 800원 🍦','4,000 ÷ 5 = 800 — 묶음 가격 ÷ 개수 = <b>단위 가격</b>!'],no:'5개가 4,000원 — 1개는 나누면?'},
- {t:'shop',kid:1,bem:'🥤',q:'이번엔 현준이가 🥤 <b>요구르트</b>를 담을 차례!<br>어느 마트의 요구르트가 더 쌀까요?',sub:'머릿속으로 1개 값을 나눠 보세요 (어디가 싸? 1/2)',em:'🥤',
-  a:{n:2,p:1800},b:{n:3,p:2400},ansB:true,
-  ok:['맞았어요! 사랑마트가 더 싸요 🥤','1개 값: 고려마트 900원 vs 사랑마트 <b>800원</b> — 단위 가격으로 만들면 비교할 수 있어요!'],
-  no:'두 마트의 <b>1개 값</b>을 각각 나눠 보세요.'},
- {t:'shop',kid:0,bem:'🧃',q:'지우는 🧃 <b>주스</b>도 마시고 싶어요.<br>어느 마트의 주스가 더 쌀까요?',sub:'(어디가 싸? 2/2)',em:'🧃',
-  a:{n:3,p:1500},b:{n:2,p:1200},ansB:false,
-  ok:['맞았어요! 고려마트가 더 싸요 🧃','1개 값: 고려마트 <b>500원</b> vs 사랑마트 600원!'],
-  no:'1개 값을 다시 계산해 보세요.'},
+ {t:'shop',kid:1,bem:'🥤',q:'현준이 앞에 🥤 요구르트가 <b>두 종류</b>!<br><b>고려 요구르트는 3개에 2,100원</b>, <b>사랑 요구르트는 5개에 4,000원</b> — 어떤 제품의 요구르트 <b>1개</b>가 더 싼가요?',sub:'머릿속으로 1개 값을 나눠 보세요 (어디가 싸? 1/2)',em:'🥤',
+  an:'고려 요구르트',bn:'사랑 요구르트',
+  a:{n:3,p:2100},b:{n:5,p:4000},ansB:false,
+  ok:['맞았어요! 고려 요구르트가 더 싸요 🥤','1개 값: 고려 2,100÷3=<b>700원</b> vs 사랑 4,000÷5=800원 — <b>단위 가격</b>으로 비교!'],
+  no:'각 제품의 <b>1개 값</b>을 나눠 보세요 — 2,100÷3과 4,000÷5.'},
+ {t:'shop',kid:0,bem:'🧃',q:'지우는 🧃 <b>주스</b>도 마시고 싶어요 — 주스도 <b>두 종류</b>!<br><b>K주스는 3개에 1,500원</b>, <b>Y주스는 4개에 2,400원</b> — 어떤 주스가 더 쌀까요?',sub:'(어디가 싸? 2/2)',em:'🧃',
+  an:'K주스',bn:'Y주스',
+  a:{n:3,p:1500},b:{n:4,p:2400},ansB:false,
+  ok:['맞았어요! K주스가 더 싸요 🧃','1개 값: K주스 1,500÷3=<b>500원</b> vs Y주스 2,400÷4=600원!'],
+  no:'각 주스의 <b>1개 값</b>을 나눠 보세요 — 1,500÷3과 2,400÷4.'},
  {t:'mc',kid:1,bem:'🥛',q:'현준이가 집은 <b>5,000원</b> 우유가 마침 <span class="sale">40% 할인</span> 중!<br><b>얼마나</b> 깎아 줄까요?',sub:'할인율은 원래 가격을 100으로 볼 때 깎는 부분 (할인 1/3)',
   em:'🥛',price:'5,000원 40%↓',hint:'5000 × 40 ÷ 100',opts:[['2,000원',1],['500원',0],['2,500원',0]],
   ok:['맞았어요! 2,000원 할인','40%란 <b>100 중 40</b> — 5,000 × 40 ÷ 100 = 2,000!'],no:'40%는 100 중 40이에요!'},
@@ -513,7 +550,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     ${introScene()}
     <div class="sub">오늘은 <b>지우</b>와 <b>현준</b>이의 장보기를 도와줘요 — 묶음 가격, 어디가 싼지, 할인까지 <b>마트 속 비율의 비밀</b>!</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
-  if(d.t==='mc'){const SCN={'🍊':'fruit','🍉':'fruit','🍦':'dairy','🥛':'dairy','🥤':'dairy','🧃':'juice'};
+  if(d.t==='mc'){const SCN={'🍊':'fruit','🍉':'fruit','🍦':'ice','🥛':'dairy','🥤':'yogurt','🧃':'juice'};
     el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,SCN[d.bem]||'aisle')}
     <div class="shop"><div class="item">${d.bem==='🍦'?icePack(d.em.includes('5')?5:3,d.price):`<div class="em">${d.em}</div><div>${d.price}</div>`}</div></div>
@@ -521,12 +558,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       b.dataset.ok==='1'?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
   if(d.t==='shop'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
-    ${martScene(d.bem,d.kid,(d.bem==='🥛'||d.bem==='🥤')?'dairy':'juice')}
+    ${martScene(d.bem,d.kid,d.bem==='🥤'?'yogurt':(d.bem==='🥛'?'dairy':'juice'))}
     <div class="shop">
-      <div class="item pick" data-b="0"><div class="em">${d.em}</div><div style="color:var(--sub)">고려마트</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
-      <div class="item pick" data-b="1"><div class="em">${d.em}</div><div style="color:var(--sub)">사랑마트</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="0"><div class="em">${d.em}</div><div style="color:var(--sub)">${d.an||'고려마트'}</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="1"><div class="em">${d.em}</div><div style="color:var(--sub)">${d.bn||'사랑마트'}</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
     </div>
-    <div class="sub">더 싼 마트를 눌러 보세요!</div>`;
+    <div class="sub">더 싼 쪽을 눌러 보세요!</div>`;
     el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
       (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
   if(d.t==='tsum'){
