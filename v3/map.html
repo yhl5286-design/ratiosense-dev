@@ -30,6 +30,19 @@
   .pctbtn.on{border-color:var(--accent);background:#eaf7ef;color:#136a3d}
   .mapbox{position:relative;border:3px solid #cdc6b8;border-radius:14px;background:#eef3e4;margin:10px auto;overflow:auto;max-width:94%}
   .mapgrid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(60,90,140,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(60,90,140,.18) 1px,transparent 1px)}
+  .symtray{margin-top:12px}
+  .symchip{display:inline-block;background:#fff;border:3px solid var(--gold);border-radius:16px;padding:12px 24px;font-size:21px;font-weight:800;cursor:grab;user-select:none;touch-action:none;box-shadow:0 4px 12px rgba(224,160,42,.3);animation:bnPulse 1.6s ease-in-out infinite}
+  .cellnum{position:absolute;width:27px;height:27px;border-radius:50%;background:#c0392b;color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;z-index:6;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .mvbox{background:linear-gradient(#dff0fb,#f6efd9 78%);border:3px solid var(--line);border-radius:16px;display:inline-block;overflow:hidden;max-width:94%}
+  .mvbox svg{display:block;width:min(680px,90vw)}
+  .mvS{opacity:0;transition:opacity .6s}
+  .mvS.on{opacity:1}
+  .ray{stroke:#e0a02a;stroke-width:3;stroke-dasharray:10 8;animation:raymv 1s linear infinite}
+  @keyframes raymv{to{stroke-dashoffset:-36}}
+  .shgrow{transform-origin:300px 232px;transform:scaleX(0);animation:shg 1.8s .6s ease forwards}
+  @keyframes shg{to{transform:scaleX(1)}}
+  .fdin{opacity:0;animation:fdi .8s 1.6s ease forwards}
+  @keyframes fdi{to{opacity:1}}
   .lbl-chip{position:absolute;background:rgba(255,255,255,.94);border:1.5px solid #cdc6b8;border-radius:10px;padding:3px 12px;font-size:17px;font-weight:800;white-space:nowrap;z-index:5}
   .scaleinfo{font-size:19px;font-weight:800;margin-top:8px}
   .scaleinfo .sc{background:#fbf6e8;border:2px solid var(--gold);border-radius:10px;padding:5px 14px;margin-right:10px}
@@ -194,14 +207,15 @@ function cardWin(el,texts,cb){try{
     const x0=(r.left+r.width/2)-59||300, y0=(r.top+r.height/2)-81||240;
     g.style.left=x0+'px';g.style.top=y0+'px';
     document.body.appendChild(g);
-    c.style.opacity='.35';try{tone(620+i*110,0,.09);}catch(e){}
-    setTimeout(()=>{g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},430);
-    setTimeout(()=>{g.style.transition='transform .5s ease-in, opacity .5s';
+    c.style.opacity='.35';
+    try{tone(660,0,.09);setTimeout(()=>tone(880,0,.09),90);setTimeout(()=>tone(1100,0,.12),180);}catch(e){}
+    setTimeout(()=>{g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},80);
+    setTimeout(()=>{g.style.transition='transform .35s ease-in, opacity .35s';
       g.style.transform+=' translateY(150px)';g.style.opacity='0';
       setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');
-        try{tone(900,0,.1);}catch(e){}},470);},1150);
-  }catch(e){}},400+i*750);});
-  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),500);if(cb)cb();},400+bcs.length*750+1500);
+        try{tone(1320,0,.14);}catch(e){}},330);},700);
+  }catch(e){}},120+i*560);});
+  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),400);if(cb)cb();},120+bcs.length*560+780);
 }catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
@@ -230,7 +244,7 @@ const OBJS=[
  {em:'💧',n:'호수',shape:'원',dim:'지름',real:100,cells:1,x:6,y:1.6},
  {em:'🌳',n:'공원',shape:'삼각형',dim:'밑변',real:500,cells:5,x:1,y:5.6}];
 let placed=0;
-function townMap(f){f=f||1;const C=50*f;
+function townMap(f,numIdx,base){f=f||1;const C=(base||64)*f;
   let o=`<div style="position:absolute;left:0;top:${C*3.9}px;width:${C*8}px;height:${C}px;background:linear-gradient(#bcd9f0,#9ec4e4);opacity:.85"></div>`;
   OBJS.forEach((ob,i)=>{if(i>=placed)return;
     let shape='';
@@ -240,8 +254,12 @@ function townMap(f){f=f||1;const C=50*f;
       <div style="position:absolute;left:${C*ob.x}px;top:${C*(ob.y+0.36)}px;width:${C*ob.cells}px;border-bottom:3.5px solid #2e5c2e"></div>`;
     const lb=(ob.x>=4.5)?`right:${Math.max(2,C*(8-ob.x-ob.cells))}px`:`left:${C*ob.x}px`;
     o+=shape+`<div class="lbl-chip" style="${lb};top:${C*(ob.y-(ob.shape==='삼각형'?1.65:0.62))}px">${ob.em} ${ob.shape} ${ob.n} · ${ob.cells}칸</div>`;});
-  return `<div class="mapbox" style="width:${C*8+4}px;height:${C*8+4}px;max-height:min(62vh,${C*8+4}px)">
-    <div class="mapgrid" style="background-size:${C}px ${C}px;width:${C*8}px;height:${C*8}px"></div>${o}</div>`;}
+  if(numIdx!=null&&numIdx<placed){const nb=OBJS[numIdx];
+    for(let k=0;k<nb.cells;k++){
+      const nx=C*(nb.x+k)+C/2, ny=nb.shape==='삼각형'?C*(nb.y-0.15):C*(nb.y+(nb.shape==='원'?0.5:0.4));
+      o+=`<div class="cellnum" style="left:${nx-13.5}px;top:${ny-13.5}px">${k+1}</div>`;}}
+  return `<div class="mapbox" style="width:${C*8+4}px;height:${C*7+4}px;overflow:hidden">
+    <div class="mapgrid" style="background-size:${C}px ${C}px;width:${C*8}px;height:${C*7}px"></div>${o}</div>`;}
 function comicSVG(){
  const panel=(title,body,caption)=>`
  <div style="flex:1;min-width:280px;max-width:430px">
@@ -293,13 +311,15 @@ function comicSVG(){
  return `<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">${c1}${c2}${c3}${c4}</div>`;}
 const DECK=[
  {t:'intro'},
- {t:'scale',i:0,opts:[['3칸',1],['30칸',0],['5칸',0]]},
- {t:'scale',i:1,opts:[['1칸',1],['10칸',0],['2칸',0]]},
- {t:'scale',i:2,opts:[['5칸',1],['50칸',0],['4칸',0]]},
+ {t:'scale',i:0,opts:[['300m',1],['30m',0],['3,000m',0]]},
+ {t:'scale',i:1,opts:[['100m',1],['1,000m',0],['10m',0]]},
+ {t:'scale',i:2,opts:[['500m',1],['50m',0],['5,000m',0]]},
  {t:'zoom'},
  {t:'invar'},
+ {t:'movie'},
  {t:'comic'},
  {t:'prop'},
+ {t:'msum',i:0},{t:'msum',i:1},{t:'msum',i:2},
  {t:'done'}];
 let idx=0,z2=100;
 function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
@@ -354,17 +374,36 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="q">지도의 비밀에 온 걸 환영해요!</div>
     <div class="sub">마을은 너무 커서 종이에 못 그려요. 그래서 약속해요 —<br><b>실제 100m = 지도 1칸</b>. 무엇이든 <b>같은 비(1:10,000)</b>로 줄이는 이 약속이 <b>축척</b>!<br>그래서 지도 위 도형은 실제와 <b>닮은 도형</b>이 돼요.</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
-  if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i;
-    el.innerHTML=`<div class="q">${ob.em} <b>${ob.shape} 모양의 ${ob.n}</b> — ${ob.dim}${jga(ob.dim)} 실제 <b>${ob.real}m</b>라면<br>지도에서 <b>몇 칸</b>일까요?</div>
-      <div class="sub">축척의 비밀 ${d.i+1}/3 — 정답을 맞히면 지도에 그려져요!</div>
-      ${townMap(1)}
+  if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i+(d._on?1:0);
+    if(!d._on){
+      el.innerHTML=`<div class="q">${ob.em} <b>${ob.shape} 모양의 ${ob.n} 기호</b>를 지도에 끌어다 놓아 보세요!</div>
+        <div class="sub">축척의 비밀 ${d.i+1}/3 — 지도에 놓으면 몇 칸을 차지하는지 보여요</div>
+        ${townMap(1)}
+        <div class="scaleinfo"><span class="sc">축척 1 : 10,000</span> 1칸 = 100m</div>
+        <div class="symtray"><span class="symchip" id="sym">${ob.em} ${ob.n} 기호 — 지도로 끌어다 놓기!</span></div>`;
+      const sym=$('#sym');let sdrag=null;
+      const drop=()=>{d._on=true;plog('place',{obj:ob.n});try{tone(760,0,.1);}catch(e){}render();};
+      sym.onclick=drop;
+      sym.onpointerdown=e=>{e.preventDefault();
+        const g=document.createElement('span');g.id='ghost';g.className='symchip';g.textContent=`${ob.em} ${ob.n}`;
+        document.body.appendChild(g);sdrag=g;
+        g.style.position='fixed';g.style.zIndex='99';g.style.pointerEvents='none';
+        g.style.left=(e.clientX-50)+'px';g.style.top=(e.clientY-24)+'px';};
+      document.onpointermove=e=>{if(sdrag){sdrag.style.left=(e.clientX-50)+'px';sdrag.style.top=(e.clientY-24)+'px';}};
+      document.onpointerup=e=>{if(!sdrag)return;
+        const u=document.elementFromPoint(e.clientX,e.clientY);
+        sdrag.remove();sdrag=null;
+        if(u&&u.closest&&u.closest('.mapbox'))drop();};
+      return;}
+    el.innerHTML=`<div class="q">${ob.em} ${ob.n}${jga(ob.n)} 지도에서 <b>몇 칸</b>인지 세어 보세요!<br>1칸 = <b>100m</b>라면, 실제 ${ob.n}의 ${ob.dim}은 얼마일까요?</div>
+      <div class="sub">축척의 비밀 ${d.i+1}/3 — 지도에서 잰 것을 <b>실제 크기</b>로 되돌려요</div>
+      ${townMap(1,d.i)}
       <div class="scaleinfo"><span class="sc">축척 1 : 10,000</span> 1칸 = 100m</div>
-      <div class="hintbox">💡 ${ob.real}m ÷ 100m = ?</div>
       <div class="choices">${d.opts.slice().sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       if(b.dataset.ok==='1'){placed=d.i+1;
-        success(`맞았어요! ${ob.em} ${ob.n} = ${ob.cells}칸`,`${ob.real}m ÷ 100 = <b>${ob.cells}칸</b>.<br>지도 위 ${ob.shape}${jzz(ob.shape)} 실제 ${ob.n}와 <b>모양은 같고 크기만 줄인 닮은 도형</b>이에요!`);}
-      else retry(`100m가 1칸 — <b>${ob.real} ÷ 100</b>을 생각해 보세요.`);});return;}
+        success(`맞았어요! ${ob.cells}칸 × 100m = ${ob.real}m`,`지도에서 <b>${ob.cells}칸</b> → 실제 <b>${ob.real}m</b>!<br>지도 위 ${ob.shape}${jzz(ob.shape)} 실제 ${ob.n}와 <b>모양은 같고 크기만 줄인 닮은 도형</b>이에요.`);}
+      else retry(`빨간 번호로 <b>칸을 세어 보세요</b> — ${ob.cells}칸이에요. 한 칸이 100m라면?`);});return;}
   if(d.t==='zoom'){placed=3;const f=z2/100;
     el.innerHTML=`<div class="q">배율을 눌러 <b>지도를 확대</b>해 보세요!<br><b>200%</b>로 확대하면, 지도 위 다리(3cm)는 <b>몇 cm</b>?</div>
       <div class="sub">모든 길이가 <b>같은 비</b>로 커져요</div>
@@ -377,18 +416,81 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       b.dataset.ok==='1'?success('맞았어요! 6cm','200% = ×2 — 지도 위 길이가 <b>2배</b>! 3cm → <b>6cm</b>.')
         :retry('배율 버튼을 눌러 <b>지도 위 다리 길이</b>가 어떻게 변하는지 관찰해 보세요.');});return;}
   if(d.t==='invar'){
-    el.innerHTML=`<div class="q">축척이 <b>1 : 10,000</b>인 지도에서<br>지도 위 길이 <b>10cm</b>는 실제로 얼마일까요?</div>
+    el.innerHTML=`<div class="q">축척이 <b>1 : 10,000</b>인 지도에서<br>지도 위 길이 <b>10cm</b>는 실제로 <b>몇 cm</b>일까요?</div>
       <div class="sub">진짜 지도에 나오는 문제! — 실제 길이는 지도 길이의 10,000배예요</div>
-      <div class="choices">${[['1km',1],['100m',0],['10km',0]].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
+      <div class="choices">${[['100,000cm',1],['10,000cm',0],['1,000,000cm',0]].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
-      b.dataset.ok==='1'?success('맞았어요! 1km!','10cm × 10,000 = 100,000cm = 1,000m = <b>1km</b>.<br>지도 10cm가 실제로는 <b>걸어서 15분</b> 거리예요!')
-        :retry('10cm의 <b>10,000배</b>를 구한 뒤, cm → m → km로 단위를 바꿔 보세요.<br>(100cm = 1m, 1,000m = 1km)');});return;}
+      b.dataset.ok==='1'?success('맞았어요! 100,000cm!','10cm × 10,000 = <b>100,000cm</b>.<br>100cm = 1m니까 100,000cm = 1,000m = <b>1km</b> — 걸어서 15분 거리예요!')
+        :retry('10cm의 <b>10,000배</b> — 10 뒤에 0이 몇 개 붙을까요?');});return;}
+if(d.t==='movie'){placed=3;
+    el.innerHTML=`<div class="q">🎬 에라토스테네스의 실험 — <b>영상으로 먼저 보기</b></div>
+      <div class="sub" id="mvCap">▶ 재생을 눌러 2200년 전 실험을 관찰해 보세요</div>
+      <div class="mvbox"><svg viewBox="0 0 560 300">
+        <g id="mvS1" class="mvS">
+          <circle cx="280" cy="34" r="20" fill="#ffd34d" stroke="#e0a02a" stroke-width="3"/>
+          <line class="ray" x1="200" y1="60" x2="200" y2="180"/><line class="ray" x1="280" y1="60" x2="280" y2="150"/><line class="ray" x1="360" y1="60" x2="360" y2="180"/>
+          <rect x="60" y="180" width="440" height="60" fill="#d9c08a"/>
+          <rect x="250" y="150" width="24" height="90" fill="#8a6a34"/><rect x="286" y="150" width="24" height="90" fill="#8a6a34"/>
+          <rect x="274" y="160" width="12" height="80" fill="#3c2c14"/>
+          <line class="ray" x1="280" y1="150" x2="280" y2="236"/>
+          <text x="280" y="266" text-anchor="middle" font-size="16" font-weight="800" fill="#26303f">우물 바닥까지 햇빛이 쏙 — 그림자 0°!</text>
+          <text x="120" y="40" font-size="17" font-weight="800" fill="#8a6a34">시에네 · 여름 낮 12시</text>
+        </g>
+        <g id="mvS2" class="mvS">
+          <circle cx="120" cy="40" r="20" fill="#ffd34d" stroke="#e0a02a" stroke-width="3"/>
+          <line class="ray" x1="170" y1="60" x2="240" y2="180"/><line class="ray" x1="250" y1="50" x2="320" y2="170"/><line class="ray" x1="330" y1="46" x2="400" y2="166"/>
+          <rect x="60" y="230" width="440" height="14" fill="#d9c08a"/>
+          <line x1="300" y1="120" x2="300" y2="232" stroke="#26303f" stroke-width="8"/>
+          <line class="shgrow" x1="300" y1="232" x2="252" y2="232" stroke="#c0392b" stroke-width="8"/>
+          <line x1="300" y1="120" x2="252" y2="232" stroke="#e0a02a" stroke-width="2.5" stroke-dasharray="5 4"/>
+          <path class="fdin" d="M300 160 A44 44 0 0 0 283 165" fill="none" stroke="#c0392b" stroke-width="3"/>
+          <text class="fdin" x="316" y="172" font-size="18" font-weight="800" fill="#c0392b">7.2°</text>
+          <rect x="356" y="26" width="150" height="30" rx="15" fill="#c0392b"/>
+          <text x="431" y="47" text-anchor="middle" font-size="14.5" font-weight="800" fill="#fff">같은 날 같은 시각!</text>
+          <text x="120" y="86" font-size="17" font-weight="800" fill="#8a6a34">알렉산드리아</text>
+          <text x="280" y="276" text-anchor="middle" font-size="16" font-weight="800" fill="#26303f">여기는 그림자가 생겼다! 재보니 7.2°</text>
+        </g>
+        <g id="mvS3" class="mvS">
+          <circle cx="200" cy="160" r="100" fill="#bfe0c2" stroke="#7fae84" stroke-width="4"/>
+          <circle cx="200" cy="160" r="5" fill="#26303f"/>
+          <line x1="200" y1="160" x2="200" y2="60" stroke="#8a6a34" stroke-width="3" stroke-dasharray="7 5"/>
+          <line x1="200" y1="160" x2="154" y2="71" stroke="#8a6a34" stroke-width="3" stroke-dasharray="7 5"/>
+          <path d="M154 71 A100 100 0 0 1 200 60" fill="none" stroke="#c0392b" stroke-width="9"/>
+          <text x="205" y="52" font-size="14" font-weight="800" fill="#26303f">시에네</text>
+          <text x="96" y="66" font-size="14" font-weight="800" fill="#26303f">알렉산드리아</text>
+          <text x="176" y="118" font-size="15" font-weight="800" fill="#8a6a34">7.2°</text>
+          <text x="120" y="94" font-size="15" font-weight="800" fill="#c0392b">800km</text>
+          <text class="fdin" x="400" y="130" text-anchor="middle" font-size="22" font-weight="800" fill="#26303f">360° ÷ 7.2° = 50</text>
+          <text class="fdin" x="400" y="164" text-anchor="middle" font-size="17" font-weight="800" fill="#6b7683">각도가 50분의 1이면</text>
+          <text class="fdin" x="400" y="190" text-anchor="middle" font-size="17" font-weight="800" fill="#6b7683">거리도 50분의 1!</text>
+        </g>
+      </svg></div>
+      <div style="margin-top:12px"><button class="btn" id="mvPlay">▶ 재생</button>
+      <button class="btn pri" id="mvNext" style="display:none">요약 만화 보기 →</button></div>`;
+    const CAPS=['① 여름 낮 12시 시에네 — 햇빛이 우물 바닥까지 똑바로! 그림자가 없어요 (0°)',
+      '② 같은 날 같은 시각 알렉산드리아 — 막대에 그림자가 생겼어요. 재보니 7.2°!',
+      '③ 지구가 둥글기 때문! 두 도시의 각도 차이 7.2°는 한 바퀴 360°의 딱 50분의 1'];
+    let playing=false;
+    const show=k=>{[1,2,3].forEach(n=>$('#mvS'+n).classList.toggle('on',n===k));$('#mvCap').innerHTML='<b>'+CAPS[k-1]+'</b>';};
+    $('#mvPlay').onclick=()=>{if(playing)return;playing=true;plog('movie',{});
+      $('#mvPlay').textContent='⏸ 재생 중…';
+      show(1);
+      setTimeout(()=>show(2),4800);
+      setTimeout(()=>show(3),9600);
+      setTimeout(()=>{playing=false;$('#mvPlay').textContent='⏮ 다시 보기';$('#mvNext').style.display='inline-block';},14000);};
+    $('#mvNext').onclick=()=>next();
+    return;}
   if(d.t==='comic'){el.innerHTML=`<div class="q">🌍 2200년 전, 에라토스테네스는<br><b>막대기 하나</b>로 지구를 쟀어요!</div>
-      <div class="sub">그가 쓴 도구는 단 두 가지 — <b>그림자</b>와 <b>거리</b>. 네 컷 만화로 만나요!</div>
+      <div class="sub">방금 본 실험 이야기를 <b>네 컷 만화</b>로 정리했어요 — 만화를 읽고 문제로!</div>
       ${comicSVG()}
       <div class="sub" style="margin-top:10px">두 도시 사이의 거리는 <b>800km</b> — 이제 지구 한 바퀴를 구할 수 있어요!</div>
       <button class="btn pri" onclick="next()">비로 계산해 보기! ✏️</button>`;return;}
-  if(d.t==='prop'){el.innerHTML=`<div class="q">각도가 50배면, 거리도 50배!<br>그럼 <b>지구 둘레</b>는 몇 km?</div>
+  if(d.t==='prop'){el.innerHTML=`<div class="eq" style="text-align:left;max-width:820px">
+        <div class="row">☀️ 시에네의 그림자 각도 : 알렉산드리아의 그림자 각도 = <b>0° : 7.2°</b> → 두 도시의 각도 차이는 <b>7.2°</b></div>
+        <div class="row">🌍 벌어진 각 : 한 바퀴 = <b>7.2° : 360° = 1 : 50</b> — 딱 <b>50분의 1</b>!</div>
+        <div class="row">📏 각도가 1 : 50이면 거리도 <b>1 : 50</b> → 두 도시 사이 800km는 지구 둘레의 50분의 1</div>
+      </div>
+      <div class="q">각도가 50배면, 거리도 50배!<br>그럼 <b>지구 둘레</b>는 몇 km?</div>
       <div class="prop"><table>
         <tr><td class="small">각도의 비</td><td></td><td class="small">거리의 비</td></tr>
         <tr><td>7.2° : 360°</td><td>=</td><td>800km : <span style="color:var(--red)">❓</span></td></tr>
@@ -400,17 +502,32 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       b.dataset.ok==='1'?success('지구를 쟀어요!! 🌍','7.2° : 360° = 800 : <b>40,000</b> — 실제 값 40,075km, 오차 0.2%!<br>막대기 하나와 <b>비</b>만으로 지구를 쟀어요!')
         :retry('각도가 50배니까 거리도 50배 — <b>800 × 50</b>!');});return;}
-  if(d.t==='done'){
-    const WORDS=["비율", "비", "비", "닮은", "차이", "100"].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div style="font-size:80px">🎉</div>
-    <div class="q">지도의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="sub"><b>지도의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
-    <div class="gcards"><div class="gcard" style="animation-delay:0.00s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 1 / 3</div><div class="gc-txt"><div class="row">지도는 실제를 같은 (<span class="dz" data-a="비율"></span>)로 줄인 것이다.</div></div></div></div><div class="gcard" style="animation-delay:0.13s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 2 / 3</div><div class="gc-txt"><div class="row">에라토스테네스는 각도의 비와 거리의 (<span class="dz" data-a="비"></span>)가 같음을 이용해 지구의 둘레를 쟀다.</div></div></div></div><div class="gcard" style="animation-delay:0.26s"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 3 / 3</div><div class="gc-txt"><div class="row">지도에서 잰 두 길이의 비는 실제 두 길이의 (<span class="dz" data-a="비"></span>)와 같다.</div></div></div></div></div>
-    <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('map');addCards(['map0','map1','map2']);const rows=[...el.querySelectorAll('.gcard .row')].map(r=>r.textContent.trim());
+  if(d.t==='msum'){
+    const S3=[
+     {t:["지도는 실제를 같은 ","로 줄인 것이다."],a:["비율"],x:["차이","비","100"]},
+     {t:["에라토스테네스는 각도의 비와 거리의 ","가 같음을 이용해 지구의 둘레를 쟀다."],a:["비"],x:["비율","차이","각도"]},
+     {t:["지도에서 잰 두 길이의 비는 실제 두 길이의 ","와 같다."],a:["비"],x:["비율","닮은","차이"]}];
+    const s=S3[d.i];
+    const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
+    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    el.innerHTML=`<div style="font-size:60px">📝</div>
+    <div class="q">우리가 찾은 지도의 비밀 ${d.i+1} / 3</div>
+    <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 3</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['map'+d.i]);
+      const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
-      cardWin(el,rows,()=>{confetti();chime(true);
-      fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🗺️</span></div>${rows.map(r=>`<div class="mini-card">🃏 ${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>마지막 탐험은 <b>🛒 마트의 비밀</b>!`,'다음 방으로 →',()=>{location.href='mart.html';});});});
+      cardWin(el,null,()=>{chime(true);
+      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<2?'다음 비밀 →':'마지막으로 →',()=>next());});});
+    return;}
+  if(d.t==='done'){placed=3;
+    confetti();
+    el.innerHTML=`<div><span class="stampb" style="font-size:84px">🗺️</span></div>
+    <div class="q">지도의 비밀을 모두 찾아냈군요! 대단해요!</div>
+    <div class="sub">비밀 카드 3장이 지갑에 쏙 — 마지막 탐험은 <b>🛒 마트의 비밀</b>!</div>
+    <button class="btn pri" id="go2">다음 방으로 → 🛒</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('map');chime(true);location.href='mart.html';};
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
