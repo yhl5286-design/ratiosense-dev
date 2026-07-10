@@ -267,7 +267,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <span id="a1">0</span>mL</div>${tubes(p1,[10,25,50])}</div>
       </div>
       <button class="btn ghost" id="clr">🗑 비우기</button>`;
-    const used=d._used||(d._used=[]);
+    const used=f._used||(f._used=[]);  // 색깔(가족) 단위 공유 — 라운드가 달라도 같은 양 재사용 차단
     const upd=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
       const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';
