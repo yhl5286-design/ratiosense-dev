@@ -127,7 +127,34 @@
 
 <script>
 const $=s=>document.querySelector(s);
-function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'colorV3',event:ev,data:data||{}},'*');}catch(e){}}
+/* ── 로그: GAS 직접 전송 (v2와 같은 시트) ── */
+const LOG_EP='https://script.google.com/macros/s/AKfycbzDv0GRvEPIevLXOYmikqToHUQnn1O9TXQOPCOCAe6-9PKyHFho59fa7X8vyK32VFaR/exec';
+const LOG_TK='ratiosense-2026',LAB='colorV3';
+let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
+if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+let SEQ3=0,LQ3=[];
+function luid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function lsend(bea){try{
+  if(!LQ3.length)return;
+  const batch=LQ3.splice(0),body=JSON.stringify({token:LOG_TK,records:batch});
+  if(bea&&navigator.sendBeacon){
+    if(!navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'})))LQ3.unshift(...batch);
+    return;}
+  fetch(LOG_EP,{method:'POST',headers:{'Content-Type':'text/plain'},body})
+    .catch(()=>{LQ3.unshift(...batch);});
+}catch(e){}}
+setInterval(()=>lsend(),5000);
+addEventListener('pagehide',()=>lsend(true));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')lsend(true);});
+function plog(ev,data){
+  try{if(window!==window.parent)parent.postMessage({type:'pilotLog',lab:LAB,event:ev,data:data||{}},'*');}catch(e){}
+  try{if(RS3U==='guest')return;
+    LQ3.push({_t:'events',schemaVersion:'1',sessionId:SESS3,userCode:RS3U,userName:'',seq:++SEQ3,
+      clientTs:new Date().toISOString(),eventId:luid(),tab:LAB,
+      eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
+    if(LQ3.length>=10)lsend();}catch(e){}}
+plog('enter',{ua:navigator.userAgent.slice(0,80)});
 /* ── 색 엔진 ── */
 const PRIM={빨강:[230,40,55],노랑:[250,215,45],파랑:[45,100,205]};
 function mix(c){const ks=Object.keys(c).filter(k=>c[k]>0),t=ks.reduce((s,k)=>s+c[k],0);if(!t)return[252,250,245];

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>RatioSense v3 — 비율 탐험</title>
 <style>
-  :root{--bg:#f4f1ea;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63}
+  :root{--bg:#f4f1ea;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--red:#c0392b}
   *{box-sizing:border-box}
   body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center}
   .wrap{text-align:center;padding:30px 16px;max-width:1000px}
@@ -19,12 +19,31 @@
   .room .ds{font-size:16px;color:var(--sub);font-weight:700;margin-top:6px;line-height:1.6}
   .foot{margin-top:34px;font-size:14px;color:var(--sub)}
   .foot a{color:var(--sub)}
+  /* ── 숫자 로그인 ── */
+  #loginOv{position:fixed;inset:0;background:rgba(38,48,63,.55);display:flex;align-items:center;justify-content:center;z-index:50}
+  .lgCard{background:#fff;border-radius:28px;padding:34px 30px;width:min(420px,92vw);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .lgCard h2{margin:0 0 4px;font-size:28px}
+  .lgCard .hint{color:var(--sub);font-weight:700;font-size:17px;margin-bottom:18px}
+  #numShow{font-size:46px;font-weight:800;letter-spacing:8px;min-height:64px;border-bottom:5px solid var(--gold);margin:0 30px 18px;color:#b3541e}
+  #numShow.empty{color:#d8d2c4;letter-spacing:2px;font-size:24px;line-height:60px}
+  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 10px}
+  .pad button{font-size:30px;font-weight:800;padding:16px 0;border:3px solid var(--line);border-radius:18px;background:#fdfcf8;cursor:pointer;font-family:inherit;touch-action:manipulation}
+  .pad button:active{transform:scale(.94);background:#fff6de;border-color:var(--gold)}
+  .pad .del{color:var(--red)}
+  .pad .go{background:var(--accent);border-color:var(--accent);color:#fff}
+  #lgErr{color:var(--red);font-weight:800;font-size:16px;min-height:24px;margin-top:12px}
+  .guest{margin-top:10px;background:none;border:none;color:var(--sub);font-weight:700;font-size:15px;text-decoration:underline;cursor:pointer;font-family:inherit}
+  /* ── 사용자 칩 ── */
+  #chip{display:none;margin-bottom:22px;font-size:19px;font-weight:800}
+  #chip .no{background:#fff;border:3px solid var(--gold);border-radius:999px;padding:8px 22px;display:inline-block}
+  #chip button{margin-left:10px;background:none;border:none;color:var(--sub);font-weight:700;font-size:15px;text-decoration:underline;cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>🔢 RatioSense <span style="color:#b3541e">v3</span></h1>
   <div class="sub">한 화면에 한 문제씩 — 슬라이드로 떠나는 <b>비의 비밀</b> 탐험!</div>
+  <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div class="rooms">
     <a class="room" href="color.html"><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
     <a class="room" href="sound.html"><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
@@ -33,5 +52,55 @@
   </div>
   <div class="foot">순서 추천: 색상 → 소리 → 지도 → 마트 · <a href="../">기존 버전(v2)으로</a></div>
 </div>
+
+<div id="loginOv" style="display:none">
+  <div class="lgCard">
+    <h2>🙋 내 번호를 눌러 주세요</h2>
+    <div class="hint">선생님이 알려 준 <b>숫자 번호</b>만 누르면 돼요 (예: 601)</div>
+    <div id="numShow" class="empty">번호를 눌러 주세요</div>
+    <div class="pad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button class="del" data-k="del">←</button><button data-k="0">0</button><button class="go" data-k="go">시작!</button>
+    </div>
+    <div id="lgErr"></div>
+    <button class="guest" id="guestBtn">🔎 로그인 없이 둘러보기 (기록 안 남음)</button>
+  </div>
+</div>
+
+<script>
+const LOG_EP='https://script.google.com/macros/s/AKfycbzDv0GRvEPIevLXOYmikqToHUQnn1O9TXQOPCOCAe6-9PKyHFho59fa7X8vyK32VFaR/exec';
+const LOG_TK='ratiosense-2026';
+const $=s=>document.querySelector(s);
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function sendLog(code,ev,data){try{
+  const body=JSON.stringify({token:LOG_TK,records:[{_t:'events',schemaVersion:'1',sessionId:uid(),
+    userCode:code,userName:'',seq:1,clientTs:new Date().toISOString(),eventId:uid(),
+    tab:'hubV3',eventType:'pilot.hubV3.'+ev,payload:JSON.stringify(data||{})}]});
+  if(navigator.sendBeacon)navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'}));
+  else fetch(LOG_EP,{method:'POST',headers:{'Content-Type':'text/plain'},body}).catch(()=>{});
+}catch(e){}}
+let num='';
+function paint(){const s=$('#numShow');
+  if(num){s.textContent=num;s.classList.remove('empty');}
+  else{s.textContent='번호를 눌러 주세요';s.classList.add('empty');}}
+function saveUser(code){try{localStorage.setItem('rs3_user',JSON.stringify({code,ts:Date.now()}));}catch(e){}}
+function getUser(){try{return (JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){return '';}}
+function showChip(code){$('#chipNo').textContent=code;$('#chip').style.display='block';}
+function openLogin(){num='';paint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
+document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{
+  const k=b.dataset.k;
+  if(k==='del'){num=num.slice(0,-1);}
+  else if(k==='go'){
+    if(!/^\d{1,4}$/.test(num)){$('#lgErr').textContent='숫자를 1~4자리로 눌러 주세요!';return;}
+    saveUser(num);showChip(num);$('#loginOv').style.display='none';sendLog(num,'login',{});return;}
+  else{if(num.length<4)num+=k;}
+  $('#lgErr').textContent='';paint();});
+$('#guestBtn').onclick=()=>{saveUser('guest');showChip('guest');$('#loginOv').style.display='none';};
+$('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');}catch(e){}$('#chip').style.display='none';openLogin();};
+const u=getUser();
+if(u){showChip(u);}else{openLogin();}
+</script>
 </body>
 </html>

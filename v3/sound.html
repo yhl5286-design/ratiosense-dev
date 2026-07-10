@@ -103,7 +103,34 @@
 <div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
 <script>
 const $=s=>document.querySelector(s);
-function plog(ev,data){try{parent.postMessage({type:'pilotLog',lab:'soundV3',event:ev,data:data||{}},'*');}catch(e){}}
+/* ── 로그: GAS 직접 전송 (v2와 같은 시트) ── */
+const LOG_EP='https://script.google.com/macros/s/AKfycbzDv0GRvEPIevLXOYmikqToHUQnn1O9TXQOPCOCAe6-9PKyHFho59fa7X8vyK32VFaR/exec';
+const LOG_TK='ratiosense-2026',LAB='soundV3';
+let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
+if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
+const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+let SEQ3=0,LQ3=[];
+function luid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function lsend(bea){try{
+  if(!LQ3.length)return;
+  const batch=LQ3.splice(0),body=JSON.stringify({token:LOG_TK,records:batch});
+  if(bea&&navigator.sendBeacon){
+    if(!navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'})))LQ3.unshift(...batch);
+    return;}
+  fetch(LOG_EP,{method:'POST',headers:{'Content-Type':'text/plain'},body})
+    .catch(()=>{LQ3.unshift(...batch);});
+}catch(e){}}
+setInterval(()=>lsend(),5000);
+addEventListener('pagehide',()=>lsend(true));
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')lsend(true);});
+function plog(ev,data){
+  try{if(window!==window.parent)parent.postMessage({type:'pilotLog',lab:LAB,event:ev,data:data||{}},'*');}catch(e){}
+  try{if(RS3U==='guest')return;
+    LQ3.push({_t:'events',schemaVersion:'1',sessionId:SESS3,userCode:RS3U,userName:'',seq:++SEQ3,
+      clientTs:new Date().toISOString(),eventId:luid(),tab:LAB,
+      eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
+    if(LQ3.length>=10)lsend();}catch(e){}}
+plog('enter',{ua:navigator.userAgent.slice(0,80)});
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
 function chord(fA,fB,d){tone(fA,0,d||1.4);tone(fB,0,d||1.4);}
