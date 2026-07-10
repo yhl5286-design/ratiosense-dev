@@ -110,6 +110,10 @@
   @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
   .dz.shake{animation:shk .45s}
   @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  #wal{font-size:18px;font-weight:800;color:#8a6a34;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:6px 16px;white-space:nowrap}
+  #wal.pulse{animation:walP .6s}
+  @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
+  .mini-card{border:3px solid var(--gold);background:#fffdf4;border-radius:12px;padding:9px 15px;margin:7px auto;font-size:17px;font-weight:800;max-width:520px;text-align:left;animation:stampIn .5s;box-shadow:0 3px 10px rgba(224,160,42,.25)}
   .cardbn{display:inline-block;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:8px 22px;font-size:17.5px;font-weight:800;color:#8a6a34;margin:2px 0 10px;animation:bnPulse 1.6s ease-in-out infinite}
   @keyframes bnPulse{0%,100%{transform:none}50%{transform:scale(1.05)}}
   .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
@@ -125,6 +129,7 @@
   <div class="t">🎨 색깔의 비밀 <span style="color:#b3541e">v3</span></div>
   <div id="pbar"><div id="pfill"></div></div>
   <div id="pnum">1 / 1</div>
+  <div id="wal">🃏 <b id="walN">0</b>/13</div>
 </div>
 <div id="stage"><div class="slide" id="slide"></div></div>
 <button class="nav" id="navL">‹</button>
@@ -161,8 +166,14 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function walUpd(pulse){try{
+  const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
+  const e=document.getElementById('walN');if(e)e.textContent=n;
+  if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
+}catch(e){}}
 function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
-  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}}
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}walUpd(true);}
+walUpd();
 function confetti(){try{
   for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
     s.style.left=(4+Math.random()*92)+'vw';
@@ -421,7 +432,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['color'+d.i]);chime(true);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
-      fb('',`✅ 비밀 ${d.i+1} 완성!`,`<div style="margin-bottom:6px"><span class="stampb" style="font-size:46px">🃏</span></div>${full}<br><b style="color:#b3541e">🃏 비밀 카드 획득!</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
+      fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<3?'다음 비밀 →':'마지막으로 →',()=>next());});
     return;}
   if(d.t==='done'){
     confetti();

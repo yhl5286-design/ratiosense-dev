@@ -60,6 +60,10 @@
   @keyframes snapIn{0%{transform:scale(1.35)}60%{transform:scale(.94)}100%{transform:none}}
   .dz.shake{animation:shk .45s}
   @keyframes shk{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  #wal{font-size:18px;font-weight:800;color:#8a6a34;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:6px 16px;white-space:nowrap}
+  #wal.pulse{animation:walP .6s}
+  @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
+  .mini-card{border:3px solid var(--gold);background:#fffdf4;border-radius:12px;padding:9px 15px;margin:7px auto;font-size:17px;font-weight:800;max-width:520px;text-align:left;animation:stampIn .5s;box-shadow:0 3px 10px rgba(224,160,42,.25)}
   .cardbn{display:inline-block;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:8px 22px;font-size:17.5px;font-weight:800;color:#8a6a34;margin:2px 0 10px;animation:bnPulse 1.6s ease-in-out infinite}
   @keyframes bnPulse{0%,100%{transform:none}50%{transform:scale(1.05)}}
   .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
@@ -71,7 +75,7 @@
 </style>
 </head>
 <body>
-<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🛒 마트의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div></div>
+<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🛒 마트의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/13</div></div>
 <div id="stage"><div class="slide" id="slide"></div></div>
 <button class="nav" id="navL">‹</button><button class="nav" id="navR">›</button>
 <div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
@@ -105,8 +109,14 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
+function walUpd(pulse){try{
+  const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
+  const e=document.getElementById('walN');if(e)e.textContent=n;
+  if(pulse){const w2=document.getElementById('wal');if(w2){w2.classList.remove('pulse');void w2.offsetWidth;w2.classList.add('pulse');}}
+}catch(e){}}
 function addCards(ids){try{const a=JSON.parse(localStorage.getItem('rs3_cards')||'[]');
-  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}}
+  ids.forEach(i=>{if(!a.includes(i))a.push(i);});localStorage.setItem('rs3_cards',JSON.stringify(a));}catch(e){}walUpd(true);}
+walUpd();
 function confetti(){try{
   for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
     s.style.left=(4+Math.random()*92)+'vw';
@@ -223,7 +233,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     
     `;
     mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('mart');addCards(['mart0','mart1','mart2']);confetti();setTimeout(confetti,700);chime(true);
-      fb('','🎊 네 방 모두 완주!','<div style="margin-bottom:6px"><span class="stampb" style="font-size:52px">🛒</span></div>🃏 비밀 카드 3장 획득 — <b>13장 모두 모았어요!</b><br>색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — 비율 탐험 대성공!','처음 화면으로',()=>{location.href='index.html';});});
+      const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>'🃏 '+r.textContent.trim());
+      const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
+      fb('','🎊 네 방 모두 완주!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🛒</span></div>${rows.map(r=>`<div class="mini-card">${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13${tot>=13?' — <u>모두 모았어요!</u>':''}</b><br>비율 탐험 대성공! 정말 대단해요!`,'처음 화면으로',()=>{location.href='index.html';});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
