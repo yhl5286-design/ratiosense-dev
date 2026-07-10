@@ -17,7 +17,7 @@
   #pnum{font-size:19px;font-weight:800;color:var(--sub);white-space:nowrap}
   /* 슬라이드 */
   #stage{position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;overflow:auto}
-  .slide{width:min(960px,94vw);padding:20px 10px 40px;text-align:center;animation:in .35s ease}
+  .slide{width:min(960px,94vw);padding:20px 10px 40px;margin:auto;text-align:center;animation:in .35s ease}
   @keyframes in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
   .q{font-size:clamp(24px,3.4vw,34px);font-weight:800;line-height:1.55;margin:6px 0 8px}
   .q b{color:#b3541e}
@@ -175,6 +175,9 @@
   @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
+  @media (max-height:860px){#stage .slide{zoom:.85}}
+  @media (max-height:740px){#stage .slide{zoom:.72}}
+  @media (max-height:620px){#stage .slide{zoom:.6}}
 </style>
 </head>
 <body>

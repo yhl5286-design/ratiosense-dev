@@ -15,7 +15,7 @@
   #pfill{height:100%;width:0%;background:linear-gradient(90deg,#2e9e63,#5cc98d);transition:width .4s}
   #pnum{font-size:19px;font-weight:800;color:var(--sub)}
   #stage{position:absolute;inset:64px 0 0 0;display:flex;align-items:center;justify-content:center;overflow:auto}
-  .slide{width:min(980px,94vw);padding:20px 10px 40px;text-align:center;animation:in .35s ease both}
+  .slide{width:min(980px,94vw);padding:20px 10px 40px;margin:auto;text-align:center;animation:in .35s ease both}
   @keyframes in{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:none}}
   .q{font-size:clamp(23px,3.2vw,32px);font-weight:800;line-height:1.55;margin:6px 0 8px}
   .q b{color:#b3541e}
@@ -145,6 +145,9 @@
   @keyframes stampIn{0%{transform:scale(3) rotate(-25deg);opacity:0}70%{transform:scale(.92) rotate(3deg);opacity:1}100%{transform:none}}
   .home{display:inline-flex;align-items:center;gap:8px;font-size:21px;font-weight:800;color:var(--ink);text-decoration:none;border:3px solid var(--line);border-radius:14px;padding:9px 18px;background:#fff;white-space:nowrap}
   .home:hover{background:#fbf6e8;border-color:var(--gold)}
+  @media (max-height:860px){#stage .slide{zoom:.85}}
+  @media (max-height:740px){#stage .slide{zoom:.72}}
+  @media (max-height:620px){#stage .slide{zoom:.6}}
 </style>
 </head>
 <body>
