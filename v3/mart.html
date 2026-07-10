@@ -197,7 +197,9 @@ function sceneBG(type){
     const F=[['#f7a325','#e08a12'],['#d94f3d','#b53a2a'],['#b6d94b','#94b52e'],['#f2b7c6','#d98ba0']];
     for(let r=0;r<2;r++)for(let cc=0;cc<4;cc++){
       const x=26+cc*116,y=88+r*62,[c1,c2]=F[(r*4+cc)%4];
-      let m='';for(let k=0;k<8;k++)m+=`<circle cx="${x+12+(k%4)*26+(k>3?13:0)}" cy="${y-6-(k>3?11:0)}" r="11" fill="${c1}" stroke="${c2}" stroke-width="1.5"/>`;
+      let m='';
+      if(r===0&&cc<2){for(let k=0;k<6;k++)m+=`<text x="${x+2+(k%3)*34}" y="${y+4-(k>2?14:0)}" font-size="30">🍌</text>`;}
+      else for(let k=0;k<8;k++)m+=`<circle cx="${x+12+(k%4)*26+(k>3?13:0)}" cy="${y-6-(k>3?11:0)}" r="11" fill="${c1}" stroke="${c2}" stroke-width="1.5"/>`;
       s+=m+`<rect x="${x}" y="${y}" width="106" height="34" rx="3" fill="#2f5d3a" stroke="#24492e" stroke-width="2"/>
         <line x1="${x+6}" y1="${y+10}" x2="${x+100}" y2="${y+10}" stroke="#24492e" stroke-width="2"/>
         <line x1="${x+6}" y1="${y+22}" x2="${x+100}" y2="${y+22}" stroke="#24492e" stroke-width="2"/>
@@ -366,10 +368,7 @@ const won=n=>'₩'.replace('₩','')+n.toLocaleString('ko-KR')+'원';
 
 const DECK=[
  {t:'intro'},
- {t:'mc',kid:0,bem:'🍦',q:'지우가 🍦 <b>아이스크림 묶음</b>을 카트에 담으려 해요.<br>아이스크림 <b>3개 묶음이 1,200원</b> — <b>1개</b>는 얼마일까요?',sub:'가격표엔 묶음 값만 있어요! 계산기 없이 머릿속으로 (하나에 얼마? 1/2)',
-  em:'🍦',price:'3개 묶음 1,200원',hint:'1,200 ÷ 3',opts:[['400원',1],['300원',0],['600원',0]],
-  ok:['맞았어요! 1개 = 400원 🍦','1200÷3=400 — 이게 <b>1개의 값(단위 가격)</b>이에요!'],no:'3개가 1,200원 — 1개는 나누면?'},
- {t:'mc',kid:0,bem:'🍦',q:'아이스크림이 맛있어 보여서 지우는 <b>5개</b>를 담기로 했어요!<br>얼마를 내야 할까요?',sub:'1개 값을 알면 뭐든 구해요! (하나에 얼마? 2/2)',
+ {t:'mc',kid:0,bem:'🍦',q:'지우가 🍦 <b>1개 400원</b>짜리 아이스크림을 <b>5개</b> 담았어요!<br>얼마를 내야 할까요?',sub:'1개 값을 알면 뭐든 구해요! (하나에 얼마?)',
   em:'🍦×5',price:'1개 = 400원',hint:'400 × 5',opts:[['2,000원',1],['1,600원',0],['2,400원',0]],
   ok:['맞았어요! 5개 = 2,000원 🍦','1개 값만 알면 <b>몇 개든</b> 구할 수 있어요 (400×5).'],no:'1개 400원이 5개!'},
  {t:'shop',kid:1,bem:'🥤',q:'이번엔 현준이가 🥤 <b>요구르트</b>를 담을 차례!<br>어느 마트의 요구르트가 더 쌀까요?',sub:'머릿속으로 1개 값을 나눠 보세요 (어디가 싸? 1/2)',em:'🥤',
@@ -386,9 +385,9 @@ const DECK=[
  {t:'mc',kid:0,bem:'🥟',q:'지우가 저녁으로 🥟 <b>만두</b>를 담았어요 — 마침 <b>마감 세일</b>!<br><b>6,000원</b>인데 <span class="sale">30% 할인</span>! <b>얼마를 내면</b> 될까요?',sub:'(할인 2/3)',
   em:'🥟',price:'6,000원 30%↓ 마감 세일',hint:'6000 × 30 ÷ 100 = 1800 → 6000 − 1800',opts:[['4,200원',1],['1,800원',0],['4,800원',0]],
   ok:['맞았어요! 4,200원 🥟','할인 금액 1,800원을 빼면 <b>낼 돈</b>! (6,000 − 1,800)'],no:'30%는 100 중 30 — 6000×30÷100을 먼저 구해 보세요!'},
- {t:'mc',kid:1,bem:'🎒',q:'학용품 코너의 🎒 <b>가방</b>이 <b>5,000원 → 4,000원</b>!<br>현준이는 궁금해요 — 할인율은 <b>몇 %</b>일까요?',sub:'이번엔 반대로! (할인 3/3)',
-  em:'🎒',price:'5,000원 → 4,000원',hint:'깎인 1000 ÷ 5000 × 100',opts:[['20%',1],['25%',0],['15%',0]],
-  ok:['맞았어요! 20% 할인 🎉','1000÷5000×100=20 — <b>원래 가격을 100으로</b> 볼 때 20만큼! 색상 실험실의 100칸과 같은 비밀이죠.'],no:'깎인 돈(1,000원)이 원래 가격의 몇 %인지!'},
+ {t:'mc',kid:1,bem:'🍉',q:'과일 코너에서 🍉 <b>수박 세일</b> 중!<br>원래 <b>12,000원</b>이던 수박을 <b>9,000원</b>에 팔아요 — 할인율은 <b>몇 %</b>일까요?',sub:'이번엔 반대로! (할인 3/3)',
+  em:'🍉',price:'12,000원 → 9,000원',hint:'깎인 3000 ÷ 12000 × 100',opts:[['25%',1],['20%',0],['30%',0]],
+  ok:['맞았어요! 25% 할인 🍉','깎인 3,000원 ÷ 원래 12,000원 × 100 = 25 — <b>원래 가격을 100으로</b> 볼 때 25만큼!'],no:'깎인 돈(3,000원)이 원래 가격 12,000원의 몇 %인지!'},
  {t:'tsum',i:0},{t:'tsum',i:1},{t:'tsum',i:2},{t:'tsum',i:3},{t:'done'}];
 let idx=0;
 function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
@@ -444,7 +443,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     ${martScene('🛒',0,'aisle')}
     <div class="sub">오늘은 <b>지우</b>와 <b>현준</b>이의 장보기를 도와줘요 — 묶음 가격, 어디가 싼지, 할인까지 <b>마트 속 비율의 비밀</b>!</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
-  if(d.t==='mc'){const SCN={'🍊':'fruit','🍦':'dairy','🥛':'dairy','🥤':'dairy','🧃':'juice'};
+  if(d.t==='mc'){const SCN={'🍊':'fruit','🍉':'fruit','🍦':'dairy','🥛':'dairy','🥤':'dairy','🧃':'juice'};
     el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,SCN[d.bem]||'aisle')}
     <div class="shop"><div class="item">${d.bem==='🍦'?icePack(d.em.includes('5')?5:3,d.price):`<div class="em">${d.em}</div><div>${d.price}</div>`}</div></div>
