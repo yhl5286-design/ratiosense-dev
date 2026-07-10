@@ -296,17 +296,15 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireGoal(el);return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
     const exS=String(Math.round(ex*100)/100);
-    const revS=String(Math.round(HBASE*p.b/p.a*100)/100); // 뒤집어 계산한 함정값
-    const bank=[String(HBASE),String(p.a),String(p.b),exS,revS,'100']
+    const bank=[String(p.a),String(p.b),'81','100']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${goalHTML(3,['음을 만들 때는 ','[도','를 기준으로 ','[비율','을 계산한다.'])}
-      <div class="q">도 : ${p.n}의 진동수 비는 <b>${p.a} : ${p.b}</b>입니다.<br>도 줄이 <b>81cm</b>일 때, <b>${p.n}</b>${jz(p.n,'을','를')} 만들려면 몇 cm가 되어야 할까요?</div>
-      <div class="sub">하프 공방 ${d.i+1}/7 — 빨리 떨리는 음일수록 줄은 <b>짧게</b>! 숫자 카드를 끌어와 <b>풀이를 완성</b>하세요</div>
+      <div class="q">도 : ${p.n}의 진동수 비는 <b>${p.a} : ${p.b}</b>입니다.<br>도 줄(<b>81cm</b>)에 무엇을 곱하고 나누면 <b>${p.n} 줄</b>이 될까요?</div>
+      <div class="sub">하프 공방 ${d.i+1}/7 — 비의 두 수를 알맞은 자리에! <b>계산은 하프가 해 줘요</b></div>
       ${harpHTML()}
       <div class="eq">
         <div class="row">${p.n} 줄의 길이 = 도 줄의 길이 × <span style="color:#b3541e">도의 떨림 수</span> ÷ <span style="color:#b3541e">${p.n}의 떨림 수</span></div>
-        <div class="row" style="padding-left:120px">= <span class="dz" data-a="${HBASE}"></span> × <span class="dz" data-a="${p.a}"></span> ÷ <span class="dz" data-a="${p.b}"></span></div>
-        <div class="row" style="padding-left:120px">= <span class="dz" data-a="${exS}"></span> cm</div>
+        <div class="row" style="padding-left:120px">= <b>81</b> × <span class="dz" data-a="${p.a}"></span> ÷ <span class="dz" data-a="${p.b}"></span> = <b style="color:#136a3d">${exS} cm</b></div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;
