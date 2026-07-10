@@ -102,6 +102,35 @@
   .hvseg.c2{background:#7fae84}
   .hvend{font-size:15px;font-weight:700;color:var(--sub);white-space:nowrap}
   .hvcap{font-size:16.5px;font-weight:700;color:var(--sub);margin-top:8px;line-height:1.65;text-align:left}
+  .cback{position:relative;border-radius:14px;border:4px solid #c9a227;
+    background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 9px,transparent 9px 18px),
+      radial-gradient(circle at 50% 40%,#3d5a80 0 30%,#2b4570 62%,#1b2c49 100%);
+    box-shadow:0 8px 22px rgba(0,0,0,.35)}
+  .cback::before{content:'';position:absolute;inset:6px;border:2px solid rgba(233,196,106,.55);border-radius:9px;pointer-events:none}
+  .cback .emb{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:44%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(#f2d488,#e9c46a 70%);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 4px #c9a227,0 0 0 7px rgba(233,196,106,.35);font-size:200%}
+  .cback .bnm{position:absolute;bottom:8%;width:100%;text-align:center;color:#e9c46a;font-weight:800;letter-spacing:2px;font-size:75%}
+  .pcards{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:6px 0 12px}
+  .pcard{width:170px;height:230px;perspective:900px;font-size:15px}
+  .pcard .pc-in{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s}
+  .pcard.flip .pc-in{transform:rotateY(180deg)}
+  .pc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px}
+  .pc-front{transform:rotateY(180deg);border:4px solid #c9a227;background:linear-gradient(#fffdf4,#fff3d6);
+    box-shadow:0 8px 22px rgba(224,160,42,.4);display:flex;flex-direction:column;overflow:hidden}
+  .pcf-top{background:linear-gradient(#e9c46a,#d9a83f);color:#5d4310;font-weight:800;font-size:13.5px;padding:6px;text-align:center;letter-spacing:1px}
+  .pcf-txt{flex:1;display:flex;align-items:center;padding:8px 12px;font-size:13.5px;font-weight:800;line-height:1.6;text-align:left}
+  #wpk{position:fixed;right:26px;top:50%;transform:translateY(-50%);width:200px;height:258px;z-index:101;animation:wpkIn .4s ease both}
+  @keyframes wpkIn{from{transform:translateY(-50%) translateX(240px);opacity:0}to{transform:translateY(-50%);opacity:1}}
+  #wpk .wpk-back{position:absolute;inset:0;border-radius:18px;background:linear-gradient(#8a5a2b,#6f4518);border:4px solid #c9a227;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+  #wpk .wpk-front{position:absolute;left:0;right:0;bottom:0;height:60%;border-radius:12px 12px 18px 18px;
+    background:linear-gradient(#a9713a,#7d5020);border:4px solid #c9a227;border-top:5px solid #e9c46a;z-index:103}
+  #wpk .wpk-label{position:absolute;bottom:16px;width:100%;text-align:center;z-index:104;color:#f2d488;font-weight:800;font-size:16px;letter-spacing:2px}
+  #wpk.bump{animation:wpkBump .45s}
+  @keyframes wpkBump{50%{transform:translateY(-50%) scale(1.12) rotate(-4deg)}}
+  #wpk.wout{animation:wpkOut .45s both}
+  @keyframes wpkOut{to{transform:translateY(-50%) translateX(260px);opacity:0}}
+  .pfly{position:fixed;z-index:102;margin:0;transition:transform .7s cubic-bezier(.45,-0.05,.6,.35)}
   .qcard{display:block;position:relative;border:3.5px solid var(--gold);background:linear-gradient(#fffdf4,#fff3d6);border-radius:18px;padding:16px 22px 16px 52px;margin:10px auto;max-width:780px;box-shadow:0 7px 20px rgba(224,160,42,.3)}
   .qcard::before{content:'🃏';position:absolute;left:14px;top:12px;font-size:24px}
   #walletFx{position:fixed;right:26px;top:50%;font-size:88px;z-index:110;filter:drop-shadow(0 8px 16px rgba(0,0,0,.3));animation:walIn .4s ease both}
@@ -160,26 +189,32 @@ function plog(ev,data){
       eventType:'pilot.'+LAB+'.'+ev,payload:JSON.stringify(data||{})});
     if(LQ3.length>=10)lsend();}catch(e){}}
 plog('enter',{ua:navigator.userAgent.slice(0,80)});
-function flyToWallet(cardEls,cb){try{
-  const wfx=document.createElement('div');wfx.id='walletFx';wfx.textContent='👛';
-  document.body.appendChild(wfx);
+function cardWin(el,texts,cb){try{
+  const pcs=[...el.querySelectorAll('.pcard')];
+  if(!pcs.length){if(cb)cb();return;}
+  pcs.forEach((p,i)=>{
+    const fr=p.querySelector('.pc-front');
+    if(fr)fr.innerHTML=`<div class="pcf-top">🃏 비밀 카드</div><div class="pcf-txt">${texts[i]||''}</div>`;
+    setTimeout(()=>{p.classList.add('flip');try{tone(620+i*110,0,.09);}catch(e){}},350+i*420);});
+  const t0=350+pcs.length*420+500;
   setTimeout(()=>{
-    cardEls.forEach((c,i)=>{setTimeout(()=>{try{
-      const r=c.getBoundingClientRect();
-      const g=c.cloneNode(true);g.classList.add('flycard');
-      g.style.left=r.left+'px';g.style.top=r.top+'px';g.style.width=(r.width||400)+'px';
-      document.body.appendChild(g);
-      const wr=wfx.getBoundingClientRect();
+    const wk=document.createElement('div');wk.id='wpk';
+    wk.innerHTML='<div class="wpk-back"></div><div class="wpk-front"></div><div class="wpk-label">🃏 카드 지갑</div>';
+    document.body.appendChild(wk);
+    pcs.forEach((p,i)=>{setTimeout(()=>{try{
+      const r=p.getBoundingClientRect(),wr=wk.getBoundingClientRect();
+      const g=p.cloneNode(true);g.classList.add('pfly');
+      g.style.left=(r.left||300)+'px';g.style.top=(r.top||200)+'px';g.style.width=(r.width||170)+'px';g.style.height=(r.height||230)+'px';
+      document.body.appendChild(g);p.style.visibility='hidden';
       requestAnimationFrame(()=>{requestAnimationFrame(()=>{
-        g.style.transform=`translate(${(wr.left+wr.width/2)-(r.left+r.width/2)}px,${(wr.top+wr.height/2)-(r.top+r.height/2)}px) scale(.06) rotate(24deg)`;
-        g.style.opacity='.1';});});
-      setTimeout(()=>{g.remove();
-        wfx.classList.remove('bump');void wfx.offsetWidth;wfx.classList.add('bump');
-        try{tone(700+i*140,0,.09);}catch(e){}},620);
-    }catch(e){}},i*280);});
-    setTimeout(()=>{wfx.classList.remove('bump');wfx.classList.add('wout');
-      setTimeout(()=>wfx.remove(),500);if(cb)cb();},cardEls.length*280+950);
-  },380);
+        g.style.transform=`translate(${(wr.left+wr.width/2)-(r.left+r.width/2)}px,${(wr.top+30)-r.top}px) scale(.72)`;});});
+      setTimeout(()=>{g.style.transition='transform .5s ease-in, opacity .5s';
+        g.style.transform+=' translateY(150px)';g.style.opacity='0';
+        setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');
+          try{tone(900,0,.1);}catch(e){}},470);},760);
+    }catch(e){}},i*700);});
+    setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),500);if(cb)cb();},pcs.length*700+1450);
+  },t0);
 }catch(e){if(cb)cb();}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;
@@ -413,12 +448,13 @@ hDone=7;
     <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="sub"><b>소리의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
     <div><span class="cardbn">🃏 비밀 카드 문제 — 3장이 걸려 있어요! 문장을 완성하면 카드 획득!</span></div>
-    <div class="sumbox qcard"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div></div><div class="sumbox qcard"><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div></div><div class="sumbox qcard"><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
+    <div class="pcards"><div class="pcard"><div class="pc-in"><div class="pc-face pc-back cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div><div class="pc-face pc-front"></div></div></div><div class="pcard"><div class="pc-in"><div class="pc-face pc-back cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div><div class="pc-face pc-front"></div></div></div><div class="pcard"><div class="pc-in"><div class="pc-face pc-back cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div><div class="pc-face pc-front"></div></div></div></div>
+    <div class="sumbox"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div></div><div class="sumbox"><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div></div><div class="sumbox"><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
     <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('sound');addCards(['sound0','sound1','sound2']);const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>'🃏 '+r.textContent.trim());
+    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});markDone('sound');addCards(['sound0','sound1','sound2']);const rows=[...el.querySelectorAll('.sumbox .row')].map(r=>r.textContent.trim());
       const tot=(()=>{try{return JSON.parse(localStorage.getItem('rs3_cards')||'[]').length;}catch(e){return 0;}})();
-      flyToWallet([...el.querySelectorAll('.qcard')],()=>{confetti();chime(true);
-      fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🎼</span></div>${rows.map(r=>`<div class="mini-card">${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>다음 탐험은 <b>🗺️ 지도의 비밀</b>!`,'다음 방으로 →',()=>{location.href='map.html';});});});
+      cardWin(el,rows,()=>{confetti();chime(true);
+      fb('','🃏 비밀 카드 3장 획득!',`<div style="margin-bottom:4px"><span class="stampb" style="font-size:48px">🎼</span></div>${rows.map(r=>`<div class="mini-card">🃏 ${r}</div>`).join('')}<b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b><br>다음 탐험은 <b>🗺️ 지도의 비밀</b>!`,'다음 방으로 →',()=>{location.href='map.html';});});});
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx--;render();plog('nav',{to:idx});}};

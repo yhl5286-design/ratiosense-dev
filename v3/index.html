@@ -57,11 +57,26 @@
   .revBox{background:#fff;border-radius:26px;padding:28px 30px;width:min(640px,94vw);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.3)}
   .revBox h2{margin:0 0 2px;font-size:25px}
   .revBox .rcnt{color:var(--sub);font-weight:700;margin-bottom:12px;font-size:17px}
-  #revCard{position:relative;border:3.5px solid var(--gold);background:linear-gradient(#fffdf4,#fff3d6);border-radius:18px;padding:26px 24px 26px 54px;margin:8px 0;min-height:110px;display:flex;align-items:center;font-size:20px;font-weight:800;line-height:1.9;text-align:left;cursor:pointer;box-shadow:0 7px 20px rgba(224,160,42,.3)}
-  #revCard::before{content:'🃏';position:absolute;left:14px;top:12px;font-size:24px}
-  #revCard .rroom{position:absolute;right:14px;top:10px;font-size:15px;color:var(--sub)}
+  .cback{position:relative;border-radius:14px;border:4px solid #c9a227;
+    background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 9px,transparent 9px 18px),
+      radial-gradient(circle at 50% 40%,#3d5a80 0 30%,#2b4570 62%,#1b2c49 100%);
+    box-shadow:0 8px 22px rgba(0,0,0,.35)}
+  .cback::before{content:'';position:absolute;inset:6px;border:2px solid rgba(233,196,106,.55);border-radius:9px;pointer-events:none}
+  .cback .emb{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:44%;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(#f2d488,#e9c46a 70%);display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 4px #c9a227,0 0 0 7px rgba(233,196,106,.35);font-size:200%}
+  .cback .bnm{position:absolute;bottom:8%;width:100%;text-align:center;color:#e9c46a;font-weight:800;letter-spacing:2px;font-size:75%}
+  #revCard{position:relative;width:min(340px,78vw);height:min(440px,56vh);margin:8px auto;cursor:pointer;perspective:1000px;font-size:26px}
+  #revCard .rin{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .55s}
+  #revCard.open .rin{transform:rotateY(180deg)}
+  .rface{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px}
+  .rfront{transform:rotateY(180deg);border:4px solid #c9a227;background:linear-gradient(#fffdf4,#fff3d6);
+    box-shadow:0 8px 22px rgba(224,160,42,.35);display:flex;flex-direction:column;overflow:hidden}
+  .rf-top{background:linear-gradient(#e9c46a,#d9a83f);color:#5d4310;font-weight:800;font-size:16px;padding:8px;text-align:center;letter-spacing:1px}
+  .rf-txt{flex:1;display:flex;align-items:center;padding:12px 20px;font-size:18.5px;font-weight:800;line-height:1.9;text-align:left}
   .rmask{background:var(--gold);color:transparent;border-radius:8px;padding:0 8px;user-select:none;transition:.2s}
-  #revCard.open .rmask{background:#ffe9a8;color:#b3541e}
+  #revCard.reveal .rmask{background:#ffe9a8;color:#b3541e}
+  .dexback{width:96px;height:130px;display:inline-block;vertical-align:middle;margin:6px 8px 6px 0;font-size:12px}
   .rhint{color:var(--sub);font-weight:700;font-size:15.5px;min-height:22px}
   .rnav{display:flex;gap:12px;justify-content:center;align-items:center;margin-top:12px}
   .rnav button{border:3px solid var(--line);background:#fff;border-radius:14px;padding:10px 24px;font-size:20px;font-weight:800;cursor:pointer;font-family:inherit}
@@ -107,7 +122,7 @@
 <div id="revOv">
   <div class="revBox">
     <h2>🔁 비밀 카드 복습</h2>
-    <div class="rcnt"><span id="revIdx">1</span> / <span id="revTot">0</span> — 가려진 낱말을 먼저 떠올려 보고, 카드를 눌러 확인!</div>
+    <div class="rcnt"><span id="revIdx">1</span> / <span id="revTot">0</span> — 카드를 뒤집고, 가려진 낱말을 떠올린 뒤 답을 확인해요!</div>
     <div id="revCard"></div>
     <div class="rhint" id="revHint">🖱️ 카드를 누르면 답이 보여요</div>
     <div class="rnav">
@@ -223,37 +238,42 @@ function renderDex(){
   CARDS.forEach(c=>{
     if(c.room!==cur){cur=c.room;h+=`<div class="dexGrp">${c.room}</div>`;}
     h+=got.includes(c.id)?`<div class="scard">🃏 ${c.t}</div>`
-      :`<div class="scard miss">❓ 아직 찾지 못한 비밀</div>`;});
+      :`<div class="cback dexback"><div class="emb">?</div><div class="bnm">아직 비밀</div></div>`;});
   $('#dexList').innerHTML=h;}
 $('#dexBtn').onclick=()=>{renderDex();$('#dexOv').classList.add('show');};
 $('#dexClose').onclick=()=>{$('#dexOv').classList.remove('show');};
 renderDex();
-/* ── 카드 복습 (핵심 낱말 가리고 회상) ── */
-let revList=[],revI=0,revOpen=false;
+/* ── 카드 복습 (뒷면 → 뒤집기 → 낱말 회상) ── */
+let revList=[],revI=0,revStage=0; // 0 뒷면, 1 앞면(낱말 가림), 2 답 공개
 function revRender(){
   const c=revList[revI];if(!c)return;
   $('#revIdx').textContent=revI+1;$('#revTot').textContent=revList.length;
   const masked=c.t.replace(/<b>(.*?)<\/b>/g,'<span class="rmask">$1</span>');
-  $('#revCard').innerHTML=`<span class="rroom">${c.room}</span><span>${masked}</span>`;
-  $('#revCard').classList.toggle('open',revOpen);
-  $('#revFlip').textContent=revOpen?'답 가리기':'답 보기';
-  $('#revHint').textContent=revOpen?'💡 확인했으면 [다음]으로!':'🖱️ 카드를 누르면 답이 보여요';
+  $('#revCard').innerHTML=`<div class="rin">
+    <div class="rface cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div>
+    <div class="rface rfront"><div class="rf-top">${c.room}</div><div class="rf-txt"><span>${masked}</span></div></div>
+  </div>`;
+  $('#revCard').classList.toggle('open',revStage>=1);
+  $('#revCard').classList.toggle('reveal',revStage===2);
+  $('#revFlip').textContent=revStage===0?'카드 뒤집기':(revStage===1?'답 보기':'답 가리기');
+  $('#revHint').textContent=revStage===0?'🖱️ 카드를 눌러 뒤집어 보세요':(revStage===1?'💭 가려진 낱말을 먼저 떠올려 보고 → 답 보기!':'💡 확인했으면 [다음]으로!');
   $('#revPrev').disabled=revI===0;$('#revNext').disabled=revI===revList.length-1;}
+function revTap(){revStage=revStage===0?1:(revStage===1?2:1);revRender();}
 function openReview(){
   const got=getCards();
   revList=CARDS.filter(c=>got.includes(c.id));
   if(!revList.length)return;
-  revI=0;revOpen=false;revRender();$('#revOv').classList.add('show');}
+  revI=0;revStage=0;revRender();$('#revOv').classList.add('show');}
 $('#revBtn').onclick=()=>{
   if(!getCards().length){
     $('#dexBtn').textContent='📖 아직 카드가 없어요 — 탐험 먼저!';
     setTimeout(()=>{$('#dexBtn').innerHTML='📖 비밀 카드 <span id="dexN">'+getCards().length+'</span> / 13';},1600);
     return;}
   openReview();};
-$('#revCard').onclick=()=>{revOpen=!revOpen;revRender();};
-$('#revFlip').onclick=()=>{revOpen=!revOpen;revRender();};
-$('#revPrev').onclick=()=>{if(revI>0){revI--;revOpen=false;revRender();}};
-$('#revNext').onclick=()=>{if(revI<revList.length-1){revI++;revOpen=false;revRender();}};
+$('#revCard').onclick=()=>revTap();
+$('#revFlip').onclick=()=>revTap();
+$('#revPrev').onclick=()=>{if(revI>0){revI--;revStage=0;revRender();}};
+$('#revNext').onclick=()=>{if(revI<revList.length-1){revI++;revStage=0;revRender();}};
 $('#revClose').onclick=()=>{$('#revOv').classList.remove('show');};
 if(/[?&]review=1/.test(location.search)&&getCards().length){openReview();}
 /* ── 최초 1회 탐험 안내 ── */
