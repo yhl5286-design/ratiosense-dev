@@ -158,6 +158,11 @@
   #walletFx.wout{animation:walOut .45s ease both}
   @keyframes walOut{from{transform:translateY(-50%)}to{transform:translateY(-50%) translateX(170px);opacity:0}}
   .flycard{position:fixed;z-index:105;margin:0;transition:transform .6s cubic-bezier(.5,-0.1,.75,.35),opacity .6s}
+  #walOv{position:fixed;inset:0;background:rgba(38,48,63,.45);display:none;align-items:center;justify-content:center;z-index:115}
+  #walOv.show{display:flex}
+  .walBox{background:#fff;border-radius:22px;padding:22px 28px;width:min(640px,94vw);max-height:82vh;overflow:auto;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .flyback.holdfx{animation:holdF 1.05s ease-in-out}
+  @keyframes holdF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.06)}}
   #wal{font-size:18px;font-weight:800;color:#8a6a34;background:#fff6de;border:2.5px solid var(--gold);border-radius:999px;padding:6px 16px;white-space:nowrap}
   #wal.pulse{animation:walP .6s}
   @keyframes walP{0%{transform:scale(1)}50%{transform:scale(1.3)}100%{transform:none}}
@@ -233,19 +238,28 @@ function cardWin(el,texts,cb){try{
   document.body.appendChild(wk);
   bcs.forEach((c,i)=>{setTimeout(()=>{try{
     const r=c.getBoundingClientRect(),wr=wk.getBoundingClientRect();
-    const g=document.createElement('div');g.className='cback flyback';
+    const g=document.createElement('div');g.className='cback flyback holdfx';
     g.innerHTML='<div class="emb">🃏</div><div class="bnm">비밀 카드</div>';
     const x0=(r.left+r.width/2)-59||300, y0=(r.top+r.height/2)-81||240;
     g.style.left=x0+'px';g.style.top=y0+'px';
     document.body.appendChild(g);
     c.style.opacity='.35';
-    setTimeout(()=>{g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},80);
+    setTimeout(()=>{g.classList.remove('holdfx');
+      g.style.transform=`translate(${(wr.left+wr.width/2)-(x0+59)}px,${(wr.top+30)-y0}px) scale(.68)`;},1050);
     setTimeout(()=>{g.style.transition='transform .35s ease-in, opacity .35s';
       g.style.transform+=' translateY(150px)';g.style.opacity='0';
-      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');},330);},700);
-  }catch(e){}},120+i*560);});
-  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),400);if(cb)cb();},120+bcs.length*560+780);
+      setTimeout(()=>{g.remove();wk.classList.remove('bump');void wk.offsetWidth;wk.classList.add('bump');},330);},1700);
+  }catch(e){}},150+i*2150);});
+  setTimeout(()=>{wk.classList.add('wout');setTimeout(()=>wk.remove(),400);if(cb)cb();},150+bcs.length*2150+900);
 }catch(e){if(cb)cb();}}
+function clap(){try{const c=ac();
+  for(let i=0;i<12;i++){const t0=c.currentTime+i*0.10+Math.random()*0.035;
+    const dur=0.07,buf=c.createBuffer(1,Math.floor(c.sampleRate*dur),c.sampleRate);
+    const dd=buf.getChannelData(0);for(let j=0;j<dd.length;j++)dd[j]=(Math.random()*2-1)*Math.pow(1-j/dd.length,2);
+    const src=c.createBufferSource();src.buffer=buf;
+    const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=900+Math.random()*900;bp.Q.value=.8;
+    const g=c.createGain();g.gain.value=.28;
+    src.connect(bp);bp.connect(g);g.connect(c.destination);src.start(t0);}}catch(e){}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
   const e=document.getElementById('walN');if(e)e.textContent=n;
@@ -484,7 +498,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     const S3=[
      {t:["소리는 ","이다."],a:["떨림"],x:["비","차이","기울임"]},
      {t:["화음은 진동수의 간단한 ","에서 나온다."],a:["비"],x:["비율","차이","떨림"]},
-     {t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["라","비율"],x:["도","비"]}];
+     {t:["음을 만들 때는 ","를 기준으로 ","을 계산한다."],a:["라","비율"],x:["도","덧셈"]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
@@ -500,7 +514,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       fb('',`🃏 비밀 카드 획득!`,`<div style="margin-bottom:4px"><span class="stampb" style="font-size:46px">🃏</span></div><div class="mini-card">${full}</div><b style="color:#b3541e">지갑에 쏙! — 🃏 ${tot} / 13</b>`,d.i<2?'다음 비밀 →':'마지막으로 →',()=>next());});});
     return;}
   if(d.t==='done'){hDone=7;
-    confetti();
+    confetti();clap();
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎼</span></div>` + harpHTML() + `
     <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="sub">비밀 카드 3장이 지갑에 쏙 — 다음 탐험은 <b>🗺️ 지도의 비밀</b>!</div>
@@ -510,6 +524,43 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
 }
 $('#navL').onclick=()=>{if(idx>0){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx--;render();plog('nav',{to:idx});}};
 $('#navR').onclick=()=>{if(idx<DECK.length-1){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx++;render();plog('nav',{to:idx});}};
+const RC=[
+ {id:'color0',r:'🎨 색깔의 비밀',t:'<b>양</b>이 달라도 <b>비</b>가 같다면 같은 색을 만들 수 있다.'},
+ {id:'color1',r:'🎨 색깔의 비밀',t:'기준이 되는 양을 <b>기준량</b>, 그 기준량을 기준으로 비교할 때의 양을 <b>비교하는 양</b>이라 한다.'},
+ {id:'color2',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량을 분수로 나타내면 <b>비교하는 양/기준량</b>이 되고 이것이 <b>비율</b>이다.'},
+ {id:'color3',r:'🎨 색깔의 비밀',t:'백분율은 기준량을 <b>100</b>으로 할 때의 비율이다.'},
+ {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 <b>떨림</b>이다.'},
+ {id:'sound1',r:'🎼 소리의 비밀',t:'화음은 진동수의 간단한 <b>비</b>에서 나온다.'},
+ {id:'sound2',r:'🎼 소리의 비밀',t:'음을 만들 때는 <b>라</b>를 기준으로 <b>비율</b>을 계산한다.'},
+ {id:'map0',r:'🗺️ 지도의 비밀',t:'지도는 실제를 같은 <b>비율</b>로 줄인 것이다.'},
+ {id:'map1',r:'🗺️ 지도의 비밀',t:'에라토스테네스는 각도의 비와 거리의 <b>비</b>가 같음을 이용해 지구의 둘레를 쟀다.'},
+ {id:'map2',r:'🗺️ 지도의 비밀',t:'지도에서 잰 두 길이의 비는 실제 두 길이의 <b>비</b>와 같다.'},
+ {id:'mart0',r:'🛒 마트의 비밀',t:'1개의 값 = 묶음 가격 ÷ <b>개수</b>'},
+ {id:'mart1',r:'🛒 마트의 비밀',t:'<b>단위 가격</b>을 비교하면 어느 마트가 싼지 알 수 있다.'},
+ {id:'mart2',r:'🛒 마트의 비밀',t:'할인율 20%는 원래 가격을 <b>100</b>으로 볼 때 20만큼 깎는 것이다.'}];
+(function(){
+  const o=document.createElement('div');o.id='walOv';
+  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 13</h3>
+    <div id="walList" style="text-align:left"></div>
+    <div style="margin-top:14px"><button class="btn pri" id="walRev">🔁 카드 복습하러 가기</button>
+    <button class="btn" id="walClose">닫기</button></div></div>`;
+  document.body.appendChild(o);
+  function renderWal(){
+    let got=[];try{got=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');}catch(e){}
+    document.getElementById('walN2').textContent=got.length;
+    let h='',cur='',miss='';
+    RC.forEach(c=>{
+      if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
+      h+=got.includes(c.id)
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
+    document.getElementById('walList').innerHTML=h;}
+  const w=document.getElementById('wal');
+  if(w){w.style.cursor='pointer';w.title='카드 지갑 열기';
+    w.onclick=()=>{renderWal();o.classList.add('show');};}
+  document.getElementById('walRev').onclick=()=>{location.href='index.html?review=1';};
+  document.getElementById('walClose').onclick=()=>{o.classList.remove('show');};
+})();
 render();
 </script>
 </body>
