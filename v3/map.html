@@ -227,18 +227,7 @@ function cardWin(el,texts,cb){try{
 }catch(e){if(cb)cb();}}
 function clap(){try{const c=ac();
   const T=2.8, t0=c.currentTime;
-  // ① 군중 배경(여러 사람의 박수가 섞인 웅성거림)
-  const bl=Math.floor(c.sampleRate*T),bed=c.createBuffer(1,bl,c.sampleRate);
-  const bd=bed.getChannelData(0);for(let j=0;j<bl;j++)bd[j]=(Math.random()*2-1);
-  const bs=c.createBufferSource();bs.buffer=bed;
-  const bf=c.createBiquadFilter();bf.type='bandpass';bf.frequency.value=1500;bf.Q.value=.4;
-  const bg=c.createGain();
-  bg.gain.setValueAtTime(0.001,t0);
-  bg.gain.linearRampToValueAtTime(.09,t0+.3);
-  bg.gain.setValueAtTime(.09,t0+T*.55);
-  bg.gain.exponentialRampToValueAtTime(.001,t0+T);
-  bs.connect(bf);bf.connect(bg);bg.connect(c.destination);bs.start(t0);
-  // ② 개별 손뼉을 많이(밀도 높게) — 점점 커졌다가 잦아드는 물결
+  // 개별 손뼉 120개만 — 점점 커졌다가 잦아드는 물결
   for(let i=0;i<120;i++){
     const at=Math.pow(Math.random(),0.85)*T*0.96;
     const dur=0.04+Math.random()*0.03;
