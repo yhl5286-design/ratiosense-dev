@@ -177,13 +177,12 @@ const FAM=[
  {id:'초록',emoji:'🟢',paints:['노랑','파랑'],r:[2,5]}];
 const MAKE=[{r:[2,3],b:200},{r:[1,2],b:100},{r:[2,3],b:40}]; // 빨강:노랑, 기준=빨강
 const R3=[{a:100,b:200,dir:'ab',type:'ratio'},{a:100,b:200,dir:'ab',type:'frac'},
-          {a:100,b:200,dir:'ba',type:'ratio'},{a:100,b:200,dir:'ba',type:'frac'},
-          {a:40,b:60,dir:'ab',type:'ratio'},{a:40,b:60,dir:'ab',type:'frac'}];
+          {a:100,b:200,dir:'ba',type:'ratio'},{a:40,b:60,dir:'ab',type:'ratio'}];
 let DECK=[{t:'title'}];
-FAM.forEach((f,fi)=>{for(let k=0;k<3;k++)DECK.push({t:'sense',fi,k});});
+FAM.forEach((f,fi)=>{for(let k=0;k<2;k++)DECK.push({t:'sense',fi,k});});
 MAKE.forEach((m,i)=>{DECK.push({t:'make',i});DECK.push({t:'concept',i});});
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
-DECK.push({t:'paint',n:10},{t:'paint',n:50},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'done'});
+DECK.push({t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'done'});
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -323,7 +322,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
     el.innerHTML=`<div class="q">${q.type==='ratio'
         ?`'<b>${K} ${kmL}mL에 대한 ${F} ${fmL}mL의 비</b>'는<br>몇 대 몇일까요?`
         :`방금 구한 그 비!<br>'<b>${K}에 대한 ${F}의 비율</b>'을 <b>분수</b>로 나타내면?`}</div>
-      <div class="sub">(비와 비율 ${d.i+1}/6)</div>
+      <div class="sub">(비와 비율 ${d.i+1}/${R3.length})</div>
+      ${g>1?`<div class="sub">💡 두 수를 똑같이 <b>${g}</b>으로 나누면 간단한 비가 돼요!</div>`:''}
       <div style="font-size:21px;font-weight:800;margin:4px 0">주황 액체 — <span style="color:${rgb(PRIM['빨강'])}">빨강 ${q.a}mL</span> + <span style="color:#b3921e">노랑 ${q.b}mL</span></div>
       <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div>
       <div class="choices">${opts.map((o,i)=>`<button class="btn" data-ok="${o[1]}" id="op${i}">${o[0]}</button>`).join('')}</div>`;
@@ -359,7 +359,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
       if(left===0&&!d._fbLock){d._fbLock=true;
         setTimeout(()=>{d._fbLock=false;
           if(r*3===y*2){d._ok=true;success('잘 색칠했어요!',`빨강 ${r}칸 : 노랑 ${y}칸 = <b>2 : 3</b>${n<100?' — 다음은 더 큰 판!':''}`);}
-          else retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>붓으로 다시 칠하거나 🗑 모두 지우기!`);},350);}};
+          else{const diff=needR-r;
+            retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>💡 ${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
     $('#potR').onclick=()=>{brush=d._brush='r';upd();};
     $('#potY').onclick=()=>{brush=d._brush='y';upd();};
     $('#clr').onclick=()=>{cells.fill('');gr.querySelectorAll('.cell').forEach(c=>c.style.background='#edeae2');upd();};

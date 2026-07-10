@@ -157,7 +157,7 @@ function harpHTML(){
   `</div></div>`;}
 
 const DECK=[{t:'intro'},{t:'vib'}];
-for(let i=1;i<=7;i++)DECK.push({t:'chord',i});
+const CHORD_SET=[1,2,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
 DECK.push({t:'done'});
 let idx=0,w1env=0,f1=262,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
@@ -279,7 +279,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     const opts=[[`${a} : ${b}`,1],[`${b} : ${a}`,0],[decoy,0]].sort(()=>Math.random()-.5);
     el.innerHTML=`${goalHTML(2,['화음은 ','[비','다.'])}
       <div class="q">도와 <b>${n[0]}</b>의 진동수의 비는 얼마일까요?</div>
-      <div class="sub">(화음의 비밀 ${d.i}/7) — 건반을 눌러 ★도와 함께 울리는 소리를 들어 보세요!</div>
+      <div class="sub">(화음의 비밀 ${CHORD_SET.indexOf(d.i)+1}/${CHORD_SET.length}) — 건반을 눌러 ★도와 함께 울리는 소리를 들어 보세요!</div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===d.i?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':''}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
@@ -315,32 +315,23 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireGoal(el);return;}
   if(d.t==='done'){
 hDone=7;
+    const WORDS=['떨림','비','도','비율','차이','100'].sort(()=>Math.random()-.5);
     el.innerHTML=`<div style="font-size:64px">🎉</div>` + harpHTML() + `
     <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="sub"><b>소리의 비밀은 무엇인가요?</b> 빈칸에 알맞은 단어를 써서 문장을 완성하세요!</div>
-    <div class="sumbox"><div class="row">소리는 (<input class="sq" data-i="0" autocomplete="off">)이다.</div><div class="row">화음은 (<input class="sq" data-i="1" autocomplete="off">)다.</div><div class="row">음을 만들 때는 (<input class="sq" data-i="2" autocomplete="off">)를 기준으로 (<input class="sq" data-i="3" autocomplete="off">)을 계산한다.</div></div>
-    <div><button class="btn pri" id="ck">정리 확인!</button></div>
+    <div class="sub"><b>소리의 비밀은 무엇인가요?</b> 아래 <b>낱말 카드</b>를 빈칸에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
+    <div class="sumbox"><div class="row">소리는 <span class="dz" data-a="떨림"></span>이다.</div><div class="row">화음은 <span class="dz" data-a="비"></span>다.</div><div class="row">음을 만들 때는 <span class="dz" data-a="도"></span>를 기준으로 <span class="dz" data-a="비율"></span>을 계산한다.</div></div>
+    <div class="bank">${WORDS.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
     <div id="freeQ" style="display:none;margin-top:14px">
       <div class="sub" style="font-size:22px;color:var(--ink)">💭 마지막 질문 — <b>여러분이 생각하는 '비'는 무엇인가요?</b></div>
       <div style="margin:8px 0"><input id="rfx" type="text" maxlength="100"
         style="width:min(560px,90vw);font-size:21px;font-weight:700;border:3px solid var(--line);border-radius:16px;padding:16px;outline:none"></div>
       <button class="btn pri" id="go">남기고 완성! 🪕</button>
     </div>`;
-    const ANS=[["떨림","진동"],["비"],["도"],["비율","비"]];
-    const norm=s=>(s||'').replace(/\s/g,'');
-    $('#ck').onclick=()=>{
-      let all=true;
-      el.querySelectorAll('.sq').forEach(inp=>{
-        const ok=ANS[+inp.dataset.i].some(a=>norm(inp.value).includes(norm(a)));
-        inp.className='sq '+(ok?'okk':'bad');if(!ok)all=false;});
-      if(all){plog('summary',{a:[...el.querySelectorAll('.sq')].map(i=>i.value)});
-        chime(true);fb('','✅ 정리 완벽!','오늘 배운 비밀이 머릿속에 쏙 정리됐어요!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});}
-      else{chime(false);fb('help','🤔 빨간 칸을 다시!','오늘 활동에서 나왔던 말을 떠올려 보세요.','도전!',null);}};
-    $('#go')?null:null;
+    mountDrag(el,()=>{plog('summary',{a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});chime(true);
+      fb('','✅ 정리 완벽!','낱말이 착착 붙었어요 — 오늘 배운 비밀이 머릿속에 쏙!','마지막 질문으로 →',()=>{$('#freeQ').style.display='block';$('#rfx').focus();});});
     el.addEventListener('click',e=>{if(e.target&&e.target.id==='go'){
       plog('reflection',{text:($('#rfx').value||'').slice(0,100)});chime(true);
       fb('','🏆 모두 끝!','대단해요 — 다른 방도 탐험해 보세요!','처음으로',()=>{location.href='index.html';});}});
-    
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx--;render();plog('nav',{to:idx});}};
