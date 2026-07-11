@@ -456,7 +456,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='title'){
     el.innerHTML=`<div style="font-size:90px">🎨</div>
       <div class="q">색깔의 비밀을 찾아봅시다!</div>
-      <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
+      <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='sense'){
     const f=FAM[d.fi],[r0,r1]=f.r,p0=f.paints[0],p1=f.paints[1];
     const tgt=mix({[p0]:r0,[p1]:r1});

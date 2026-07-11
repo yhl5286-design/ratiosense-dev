@@ -474,7 +474,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🎼</div>
     <div class="q">소리의 비밀을 찾아봅시다!</div>
-    <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
+    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='vib'){
     plucks=[0,0,0,0,0,0,0,0];w1env=0;
     el.innerHTML=`<div class="q">건반을 눌러 <b>소리의 떨림</b>을 느껴 보세요!</div>

@@ -605,7 +605,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="q">마트의 비밀을 찾아봅시다!</div>
     ${introScene()}
     <div class="sub"><b>지우</b>와 <b>현준</b>이의 장보기를 도와주세요!</div>
-    <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
+    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='mc'){const SCN={'🍊':'fruit','🍉':'fruit','🍦':'ice','🥛':'dairy','🥤':'yogurt','🧃':'juice'};
     el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,SCN[d.bem]||'aisle')}

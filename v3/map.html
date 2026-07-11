@@ -455,7 +455,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🗺️</div>
     <div class="q">지도의 비밀을 찾아봅시다!</div>
     <div class="sub">마을은 너무 커서 종이에 못 그려요. 그래서 약속해요 —<br><b>실제 100m = 지도 1칸</b>. 무엇이든 <b>같은 비(1:10,000)</b>로 줄이는 이 약속이 <b>축척</b>!<br>그래서 지도 위 도형은 실제와 <b>닮은 도형</b>이 돼요.</div>
-    <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
+    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i+(d._on?1:0);
     if(!d._on){
       el.innerHTML=`<div class="q">${ob.em} <b>${ob.shape} 모양의 ${ob.n} 기호</b>를 지도에 끌어다 놓아 보세요!</div>
