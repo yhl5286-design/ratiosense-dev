@@ -41,12 +41,12 @@
   .harp{background:#241a10;border-radius:16px;padding:16px 12px 12px;display:inline-block}
   .hbeam{height:14px;background:linear-gradient(#d9b26a,#8a6a34);border-radius:7px}
   .hrow{display:flex;justify-content:space-around;align-items:flex-start;gap:6px;padding:0 8px}
-  .hcol{display:flex;flex-direction:column;align-items:center;width:56px}
-  .hs{width:12px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:5px;cursor:pointer;box-shadow:0 0 5px rgba(255,240,200,.4)}
+  .hcol{display:flex;flex-direction:column;align-items:center;width:72px}
+  .hs{width:16px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:5px;cursor:pointer;box-shadow:0 0 5px rgba(255,240,200,.4)}
   .hs.ghost{background:none;border-left:6px dashed #5a4a30;cursor:default;box-shadow:none}
     .hs.pluckA{animation:wig 1.25s ease-out}
   @keyframes wig{8%{transform:translateX(6px)}20%{transform:translateX(-5px)}33%{transform:translateX(4px)}46%{transform:translateX(-3px)}60%{transform:translateX(2px)}75%{transform:translateX(-1px)}100%{transform:none}}
-  .hlab{margin-top:8px;font-size:16px;font-weight:800;color:#f0e9d8;text-align:center;line-height:1.3}
+  .hlab{margin-top:8px;font-size:19px;font-weight:800;color:#f0e9d8;text-align:center;line-height:1.3}
   .hlab span{font-size:14px;color:#cbbfa8}
   .hlab.ghost{color:#6a583a}
   .nf{display:inline-flex;flex-direction:column;align-items:center;gap:6px;margin:8px 0}
@@ -346,17 +346,17 @@ const NOTES=[['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['�
 const INTV={'1:1':'유니즌','1:2':'옥타브','2:3':'완전5도','3:4':'완전4도','4:5':'장3도','5:6':'단3도','3:5':'장6도','8:9':'장2도','8:15':'장7도'};
 /* 하프 — 화음 단계의 순정률 비 그대로(도:음 = a:b), 길이는 81×a/b */
 const HBASE=36;
-const HP=[{n:'도',a:5,b:3},{n:'레',a:3,b:2},{n:'미',a:4,b:3},{n:'파',a:5,b:4},{n:'솔',a:10,b:9},{n:'시',a:8,b:9}]; // 라:음 진동수 비
+const HP=[{n:'시',a:8,b:9},{n:'도',a:5,b:3},{n:'레',a:3,b:2},{n:'미',a:4,b:3},{n:'파',a:5,b:4},{n:'솔',a:10,b:9}]; // 라:음 진동수 비 — 라★ 다음 시부터
 const hLen=i=>HBASE*HP[i].a/HP[i].b;
 const hFreq=L=>Math.round(440*HBASE/L);
 let hDone=0; // 0~7
 function harpHTML(){
   const items=HP.map((p,i)=>({n:p.n,L:hLen(i),made:i<hDone,frac:p.a+':'+p.b}));
-  items.splice(4,0,{n:'라 ★',L:36,made:true,frac:'★'});
+  items.splice(0,0,{n:'라 ★',L:36,made:true,frac:'★'});
   return `<div class="harp"><div class="hbeam"></div><div class="hrow">`+
     items.map((it,ix)=>`<div class="hcol">${it.made
-      ?`<div class="hs" style="height:${Math.round(it.L*3.3)}px" onclick="pluckT(${hFreq(it.L)});this.classList.remove('pluckA');void this.offsetWidth;this.classList.add('pluckA')"></div><div class="hlab">${it.n}<br><span>${Math.round(it.L*10)/10}cm</span></div>`
-      :`<div class="hs ghost" style="height:${Math.round(it.L*3.3)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
+      ?`<div class="hs" style="height:${Math.round(it.L*4.4)}px" onclick="pluckT(${hFreq(it.L)});this.classList.remove('pluckA');void this.offsetWidth;this.classList.add('pluckA')"></div><div class="hlab">${it.n}<br><span>${Math.round(it.L*10)/10}cm</span></div>`
+      :`<div class="hs ghost" style="height:${Math.round(it.L*4.4)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
   `</div></div>`;}
 
 const DECK=[{t:'intro'},{t:'vib'},{t:'harmx'}];
@@ -589,12 +589,11 @@ if(d.t==='chord'){
     const bank=[String(p.a),String(p.b),exS,'440']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:14px 26px;font-size:23px;font-weight:800;margin-bottom:8px;line-height:1.55">🎵 라(A)음은 진동수가 <b>440Hz</b>!<br>표준 주파수 표에서 유일하게 딱 떨어지는 음이라,<br>악기 조율을 할 때 <b>라 음을 기준</b>으로 해요!</div>':''}
-      <div class="q">라 줄이 <b>36cm</b>일 때, <b>${p.n} 줄</b>의 길이는 어떻게 구할까요?</div>
+      <div class="q">라 줄이 <b>36cm</b>일 때, <b>${p.n}</b>${jz(p.n,'은','는')} 몇 cm일까요?</div>
+      <div class="sub" style="font-size:19px">라 : ${p.n} = <b>${p.a} : ${p.b}</b> — 라 길이 36cm에 <b>${p.a}/${p.b}</b>${jz(String(p.b),'을','를')} 곱하면 ${p.n} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b></div>
       ${harpHTML()}
       <div class="eq">
-        <div class="row">① 진동수의 비는 라 : ${p.n} = <b>${p.a} : ${p.b}</b>입니다.</div>
-        <div class="row">② 라 줄의 <b>몇 분의 몇</b>이 ${p.n} 줄일까요? — <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span></div>
-        <div class="row">③ 36 × <span class="vfr"><span>${p.a}</span><span class="fbar"></span><span>${p.b}</span></span> — ${p.n} 줄의 길이는? <span class="dz" data-a="${exS}"></span> cm</div>
+        <div class="row">${p.n} 줄의 길이 = 36 × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <span class="dz" data-a="${exS}"></span> cm</div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;
@@ -640,7 +639,7 @@ const RC=[
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 <b>진동수</b>가 간단한 <b>정수비</b>를 이룰수록 더 잘 어울려 들린다(화음).'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
  {id:'map0',r:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
- {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
+ {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제 거리를 <b>10,000</b>분의 1로 줄인 것이다.'},
  {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
  {id:'map3',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
  {id:'mart0',r:'🛒 마트의 비밀',t:'단위 가격 = 물건 <b>1</b>개의 값<br>= 묶음 전체의 가격 ÷ <b>개수</b>'},

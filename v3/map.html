@@ -599,10 +599,11 @@ if(d.t==='movie'){placed=3;
           <text x="92" y="102" font-size="15" font-weight="800" fill="#c0392b">800km</text>
           <text class="fdin" x="400" y="112" text-anchor="middle" font-size="23" font-weight="800" fill="#26303f">360° ÷ 7.2° = 50</text>
           <text class="fdin" x="400" y="152" text-anchor="middle" font-size="17" font-weight="800" fill="#6b7683">각도가 50분의 1이면 거리도 50분의 1</text>
-          <text class="fdin" x="400" y="200" text-anchor="middle" font-size="23" font-weight="800" fill="#136a3d">800km × 50 = 40,000km!</text>
+          <text class="fdin" x="400" y="200" text-anchor="middle" font-size="23" font-weight="800" fill="#136a3d">800km × 50 = ❓ km</text>
         </g>
       </svg></div>
       <div style="margin-top:12px"><button class="btn" id="mvPlay">▶ 재생</button>
+      <button class="btn" id="mvPause" style="display:none">⏸ 일시정지</button>
       <button class="btn" id="mvSkip" style="display:none">⏭ 건너뛰기</button>
       <button class="btn pri" id="mvNext" style="display:none">요약 만화 보기 →</button></div>`;
     const SC=[
@@ -611,27 +612,35 @@ if(d.t==='movie'){placed=3;
       [3,'그건 해가 머리 위에 있다는 뜻이에요. 그날 시에네에서는 막대를 세워도 그림자가 하나도 생기지 않아요. 0도!'],
       [4,'에라토스테네스는 같은 날 같은 시각, 알렉산드리아에 막대를 세웠어요. 여기에는 그림자가 생겼어요! 각도를 재보니 7.2도.'],
       [5,'같은 햇빛인데 왜 다를까요? 지구가 둥글기 때문이에요! 햇빛은 나란히 내려오지만, 둥근 땅 위의 두 도시는 서 있는 방향이 달라요.'],
-      [6,'7.2도는 한 바퀴 360도의 50분의 1! 그렇다면 두 도시 사이 800킬로미터도 지구 둘레의 50분의 1이겠죠? 800 곱하기 50 — 지구 둘레는 약 4만 킬로미터!']];
-    let playing=false,cur=0,mvTimer=null;
+      [6,'7.2도는 한 바퀴 360도의 50분의 1! 그렇다면 두 도시 사이 800킬로미터도 지구 둘레의 50분의 1이겠죠? 800 곱하기 50 — 지구 둘레는 몇 킬로미터일까요? 이따가 직접 구해 보세요!']];
+    let playing=false,cur=0,paused=false;
+    let tH=null,tFn=null,tRemain=0,tT0=0;
+    function tSet(fn,ms){clearTimeout(tH);tFn=fn;tRemain=ms;tT0=Date.now();tH=setTimeout(fn,ms);}
+    function tPause(){clearTimeout(tH);tRemain=Math.max(0,tRemain-(Date.now()-tT0));}
+    function tResume(){if(tFn)tSet(tFn,tRemain);}
     const show=k=>{for(let n=1;n<=6;n++){const g=$('#mvS'+n);if(g)g.classList.toggle('on',n===k);}};
-    function say(txt,cb){let done=false;const t0=Date.now();
-      const go=()=>{if(done)return;done=true;clearTimeout(mvTimer);
-        const rest=Math.max(0,3800-(Date.now()-t0)); // 음성이 없어도 장면당 최소 3.8초
-        setTimeout(cb,rest);};
-      mvTimer=setTimeout(go,Math.max(5200,txt.length*150));
+    function say(txt,cb){let done=false;
+      const fin=()=>{if(done)return;done=true;if(paused){tFn=cb;tRemain=400;return;}tSet(cb,400);};
+      tSet(fin,Math.max(5200,txt.length*150));
       try{const u=new SpeechSynthesisUtterance(txt);u.lang='ko-KR';u.rate=1.0;
-        u.onend=()=>setTimeout(go,350);u.onerror=go;
+        u.onend=fin;u.onerror=fin;
         speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
-    function mvEnd(){playing=false;try{speechSynthesis.cancel();}catch(e){}clearTimeout(mvTimer);
+    function mvEnd(){playing=false;paused=false;try{speechSynthesis.cancel();}catch(e){}clearTimeout(tH);
       $('#mvPlay').textContent='⏮ 다시 보기';$('#mvPlay').style.display='inline-block';
+      $('#mvPause').style.display='none';$('#mvPause').textContent='⏸ 일시정지';
       $('#mvSkip').style.display='none';$('#mvNext').style.display='inline-block';
       $('#mvCap').innerHTML='<b>끝! 이제 요약 만화와 문제로 정리해요 →</b>';}
     function step(){if(!playing)return;
       if(cur>=SC.length){mvEnd();return;}
       const [k,txt]=SC[cur];show(k);$('#mvCap').innerHTML='<b>'+txt+'</b>';cur++;
       say(txt,step);}
-    $('#mvPlay').onclick=()=>{if(playing)return;playing=true;cur=0;plog('movie',{});
-      $('#mvPlay').style.display='none';$('#mvSkip').style.display='inline-block';step();};
+    $('#mvPlay').onclick=()=>{if(playing)return;playing=true;paused=false;cur=0;plog('movie',{});
+      $('#mvPlay').style.display='none';$('#mvSkip').style.display='inline-block';
+      $('#mvPause').style.display='inline-block';$('#mvPause').textContent='⏸ 일시정지';step();};
+    $('#mvPause').onclick=()=>{if(!playing)return;paused=!paused;
+      $('#mvPause').textContent=paused?'▶ 계속 보기':'⏸ 일시정지';
+      if(paused){try{speechSynthesis.pause();}catch(e){}tPause();}
+      else{try{speechSynthesis.resume();}catch(e){}tResume();}};
     $('#mvSkip').onclick=()=>{show(6);mvEnd();};
     $('#mvNext').onclick=()=>{try{speechSynthesis.cancel();}catch(e){}next();};
     return;}
@@ -666,7 +675,7 @@ if(d.t==='movie'){placed=3;
   if(d.t==='msum'){
     const S3=[
      {t:["지도는 실제 사물을 축척을 이용하여 일정한 ","로 줄여 나타낸 것이다."],a:["비율"],x:["덧셈","거리","차이"]},
-     {t:["축척 1:10,000은 실제를 ","분의 1로 줄인 것이다."],a:["10,000"],x:["100","1,000"]},
+     {t:["축척 1:10,000은 실제 거리를 ","분의 1로 줄인 것이다."],a:["10,000"],x:["100","1,000"]},
      {t:["축척 1:10,000 지도에서 다리가 3cm라면, 실제 다리는 3 × 10,000 = ","cm이다."],a:["30,000"],x:["3,000","300"]},
      {t:["각도의 비 7.2° : 360° = 1 : ",", 두 도시 사이가 800km라면 지구 둘레는 800 × 50 = ","km이다."],a:["50","40,000"],x:["5","4,000"]}];
     const s=S3[d.i];
@@ -702,7 +711,7 @@ const RC=[
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 <b>진동수</b>가 간단한 <b>정수비</b>를 이룰수록 더 잘 어울려 들린다(화음).'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
  {id:'map0',r:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
- {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제를 <b>10,000</b>분의 1로 줄인 것이다.'},
+ {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제 거리를 <b>10,000</b>분의 1로 줄인 것이다.'},
  {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
  {id:'map3',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
  {id:'mart0',r:'🛒 마트의 비밀',t:'단위 가격 = 물건 <b>1</b>개의 값<br>= 묶음 전체의 가격 ÷ <b>개수</b>'},
