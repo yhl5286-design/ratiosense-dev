@@ -170,6 +170,11 @@
   @media (max-height:860px){#stage .slide{zoom:.85}}
   @media (max-height:740px){#stage .slide{zoom:.72}}
   @media (max-height:620px){#stage .slide{zoom:.6}}
+  /* 모바일(폭 기준) 반응형 */
+  @media (max-width:720px){#stage .slide{zoom:.78}}
+  @media (max-width:560px){#stage .slide{zoom:.62}}
+  @media (max-width:430px){#stage .slide{zoom:.52}}
+  .pianoWrap{max-width:100%;overflow-x:auto}
 </style>
 </head>
 <body>
@@ -333,7 +338,7 @@ function comicSVG(k){
    <line x1="153" y1="96" x2="153" y2="232" stroke="#e0a02a" stroke-width="4"/>
    <text x="153" y="265" text-anchor="middle" font-size="13.5" font-weight="800">우물 바닥까지 햇빛이 쏙!</text>
    ${bubble(30,44,240,64,['"그림자가 하나도 없네?','해가 바로 머리 위라는 뜻!"'],120)}`,
-  '시에네에서는 그림자 0° — 해가 정확히 머리 위!');
+  '시에네에서는 그림자 0° — 해가 머리 위!');
  const c3=panel('컷 3 · 같은 시각, 알렉산드리아',
   `<rect x="216" y="30" width="112" height="26" rx="13" fill="#c0392b"/>
    <text x="272" y="48" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">같은 날 같은 시각!</text>
@@ -573,7 +578,7 @@ if(d.t==='movie'){placed=3;
     const SC=[
       [1,'2200년 전, 이집트 알렉산드리아의 큰 도서관. 도서관장 에라토스테네스는 늘 궁금했어요 — 지구 한 바퀴는 도대체 얼마나 될까?'],
       [2,'어느 날, 그는 남쪽 도시 시에네의 신기한 소문을 들었어요. 일 년 중 낮이 가장 긴 날 정오, 깊은 우물 바닥까지 햇빛이 닿는다는 거예요!'],
-      [3,'그건 해가 정확히 머리 위에 있다는 뜻이에요. 그날 시에네에서는 막대를 세워도 그림자가 하나도 생기지 않아요. 0도!'],
+      [3,'그건 해가 머리 위에 있다는 뜻이에요. 그날 시에네에서는 막대를 세워도 그림자가 하나도 생기지 않아요. 0도!'],
       [4,'에라토스테네스는 같은 날 같은 시각, 알렉산드리아에 막대를 세웠어요. 여기에는 그림자가 생겼어요! 각도를 재보니 7.2도.'],
       [5,'같은 햇빛인데 왜 다를까요? 지구가 둥글기 때문이에요! 햇빛은 나란히 내려오지만, 둥근 땅 위의 두 도시는 서 있는 방향이 달라요.'],
       [6,'7.2도는 한 바퀴 360도의 50분의 1! 그렇다면 두 도시 사이 800킬로미터도 지구 둘레의 50분의 1이겠죠? 800 곱하기 50 — 지구 둘레는 약 4만 킬로미터!']];

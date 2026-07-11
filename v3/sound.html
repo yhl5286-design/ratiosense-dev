@@ -203,6 +203,11 @@
   .itvT tr.pf td{background:#fff7dd;font-weight:700}
   .itvT tr.pf:hover td{background:#ffefc2}
   .itvWrap{display:inline-block;border:3px solid var(--line);border-radius:14px;overflow:hidden}
+  /* 모바일(폭 기준) 반응형 */
+  @media (max-width:720px){#stage .slide{zoom:.78}}
+  @media (max-width:560px){#stage .slide{zoom:.62}}
+  @media (max-width:430px){#stage .slide{zoom:.52}}
+  .pianoWrap{max-width:100%;overflow-x:auto}
 </style>
 </head>
 <body>
@@ -462,7 +467,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       <div style="margin-top:10px"><button class="btn pri" onclick="next()">다 들어봤어요 →</button></div>`;
     el.querySelectorAll('.key').forEach(k=>k.onclick=()=>{const i=+k.dataset.i;f1=NOTES[i][1];w1env=1;plucks[i]=1;
       tone(f1,0,SND_DUR);plog('key',{n:NOTES[i][0]});
-      $('#hz').innerHTML=`<b>${NOTES[i][0]}</b> — 1초에 정확히 <b>${NOTES[i][1]}번</b> 떨려요 <span style="color:var(--sub);font-size:22px">(${NOTES[i][1]}Hz)</span>`;
+      $('#hz').innerHTML=`<b>${NOTES[i][0]}</b> — 1초에 <b>${NOTES[i][1]}번</b> 떨려요 <span style="color:var(--sub);font-size:22px">(${NOTES[i][0]}의 진동수 : ${NOTES[i][1]}Hz)</span>`;
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){

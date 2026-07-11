@@ -87,23 +87,38 @@
   #chip{display:none;margin-bottom:22px;font-size:19px;font-weight:800}
   #chip .no{background:#fff;border:3px solid var(--gold);border-radius:999px;padding:8px 22px;display:inline-block}
   #chip button{margin-left:10px;background:none;border:none;color:var(--sub);font-weight:700;font-size:15px;text-decoration:underline;cursor:pointer;font-family:inherit}
+  @media (min-width:1100px){body{zoom:1.3}}
+  .room .nm{font-size:22px}
+  .story{font-size:20px;line-height:1.7}
+  body{overflow-x:hidden}
+  @media (max-width:620px){
+    .wrap{padding:16px 8px;width:100vw;max-width:100vw;box-sizing:border-box}
+    .rooms{grid-template-columns:1fr}
+    .dex{font-size:14px;padding:8px 12px}
+    .wrap h1{font-size:30px}
+    .story{font-size:14px}
+    #startBtn{font-size:21px !important;padding:14px 36px !important}
+    .room .em{font-size:46px}
+    .room .nm{font-size:19px}
+    .rooms{gap:12px}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>🔢 RatioSense <span style="color:#b3541e">v3</span></h1>
-  <div class="sub">한 화면에 한 문제씩 — 슬라이드로 떠나는 <b>비의 비밀</b> 탐험!</div>
+  <div class="sub story">🗝️ 지금부터 <b>1번 방부터 4번 방까지 순서대로 탐험</b>하여 <b>비밀 카드 15장</b>을 모으세요!<br>비밀 카드를 모두 모으면 여러분은 어디서든 <b style="color:#b3541e">'비'를 이용한 마법</b>을 부릴 수 있게 됩니다! ✨</div>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div style="margin-bottom:14px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">🚀 탐험 시작!</button></div>
   <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 15</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button></div>
   <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 15장을 모두 모아 보세요!</div>
   <div class="rooms">
-    <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
-    <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
-    <a class="room" data-r="map" href="map.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div></a>
-    <a class="room" data-r="mart" href="mart.html"><div class="badge">4</div><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div></a>
+    <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">1번 색깔의 비밀 방</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
+    <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">2번 소리의 비밀 방</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
+    <a class="room" data-r="map" href="map.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">3번 지도의 비밀 방</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div></a>
+    <a class="room" data-r="mart" href="mart.html"><div class="badge">4</div><div class="em">🛒</div><div class="nm">4번 마트의 비밀 방</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div></a>
   </div>
-  <div class="foot">탐험 순서: 색깔 → 소리 → 지도 → 마트 — 방이 끝나면 저절로 다음 방으로 이어져요! · <a href="../">기존 버전(v2)으로</a></div>
+  <div class="foot">🚪 탐험 순서: 1번 색깔 → 2번 소리 → 3번 지도 → 4번 마트 — 방이 끝나면 저절로 다음 방으로 이어져요! · <a href="../">기존 버전(v2)으로</a></div>
 </div>
 
 <div id="introOv" style="position:fixed;inset:0;background:rgba(38,48,63,.55);display:none;align-items:center;justify-content:center;z-index:55">
