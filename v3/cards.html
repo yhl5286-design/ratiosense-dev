@@ -162,6 +162,8 @@
   .toastN .ts{font-size:20px;font-weight:700;color:var(--sub);margin-top:8px;line-height:1.55}
   .toastN.out{opacity:0;transition:opacity .35s}
   @keyframes tIn{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
+  .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
 </style>
 </head>
 <body>
@@ -351,6 +353,7 @@ function toastFB(cls,t,s){try{
 }catch(e){}}
 function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,2000);}
 function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
+function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -358,7 +361,7 @@ function mountDrag(el,onAll){
   function judge(dz,ch){
     if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
     if(ch.dataset.w===dz.dataset.a){
-      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.innerHTML=fx(ch.dataset.w);ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
       try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
@@ -373,7 +376,7 @@ function mountDrag(el,onAll){
       const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
       if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
-      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.innerHTML=fx(ch.dataset.w);
       document.body.appendChild(g);drag={ch,g};
       g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
   document.onpointermove=e=>{if(!drag)return;
@@ -392,13 +395,13 @@ function mountDrag(el,onAll){
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='cq'){const c=CQ[d.i];
     const cards=c.a.concat(c.x).sort(()=>Math.random()-.5);
-    let h='';c.t.forEach((seg,j)=>{h+=seg;if(j<c.a.length)h+=`<span class="dz" data-a="${c.a[j]}"></span>`;});
+    let h='';c.t.forEach((seg,j)=>{h+=fx(seg);if(j<c.a.length)h+=`<span class="dz" data-a="${c.a[j]}"></span>`;});
     let owned=false;try{owned=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').includes(c.id);}catch(e){}
     el.innerHTML=`<div style="font-size:50px">${c.em}</div>
     <div class="q">${c.room} — 카드 문제 ${d.i+1} / ${CQ.length}</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 완성하세요!${owned?' &nbsp;<b style="color:#2e9e63">✔ 이미 지갑에 있는 카드</b>':''}</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
-    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,id:c.id});addCards([c.id]);
       const full=c.t.map((seg,j)=>seg+(j<c.a.length?`『${c.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
@@ -432,12 +435,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
      {t:["물건이 10,000원인데 할인율이 20%일 때, 내야 할 가격은 원래 가격 × ","%와 같다.<br>예를 들어 10,000 × 80/100 = ","원을 내면 된다."],a:["80","8,000"],x:["20","2,000"]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
-    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 마트의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
-    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['mart'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
@@ -487,7 +490,7 @@ const RC=[
     RC.forEach(c=>{
       if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
       h+=got.includes(c.id)
-        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${fx(c.t)}</div>`
         :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
     document.getElementById('walList').innerHTML=h;}
   const w=document.getElementById('wal');

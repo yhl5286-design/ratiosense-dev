@@ -224,6 +224,8 @@
   .npad button:active{background:#f3ead8}
   .escDig{display:inline-block;background:linear-gradient(#fff8e1,#ffe9a8);border:3.5px solid #e0a02a;border-radius:16px;padding:10px 24px;font-size:21px;font-weight:800;margin:8px 0}
   .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
+  .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
 </style>
 </head>
 <body>
@@ -422,6 +424,7 @@ function wireNpad(el){el.querySelectorAll('.npad [data-k]').forEach(b=>b.onclick
   else if(k==='clr')inp.value='';
   else inp.value=(inp.value+k).slice(0,6);
   inp.dispatchEvent(new Event('input'));});}
+function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -429,7 +432,7 @@ function mountDrag(el,onAll){
   function judge(dz,ch){
     if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
     if(ch.dataset.w===dz.dataset.a){
-      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.innerHTML=fx(ch.dataset.w);ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
       try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
@@ -444,7 +447,7 @@ function mountDrag(el,onAll){
       const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
       if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
-      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.innerHTML=fx(ch.dataset.w);
       document.body.appendChild(g);drag={ch,g};
       g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
   document.onpointermove=e=>{if(!drag)return;
@@ -566,7 +569,7 @@ if(d.t==='mdemo'){
         <div class="row">기준량 = <span class="dz" data-a="${A}"></span></div>
         <div class="row">비교하는 양 = <span class="dz" data-a="${B}"></span></div>
       </div>
-      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     let numOK=false,dragOK=false;
     const fin=()=>{if(numOK&&dragOK){S._made=ans;plog('make',{i:d.i});
       success('맞았어요! 🎨',`${askC} <b>${ans}mL</b>! 비 ${m.top[0]} : ${m.top[1]}에서 <b>뒤의 ${m.top[1]}이 기준량</b>, <b>앞의 ${m.top[0]}이 비교하는 양</b>입니다!`);}};
@@ -587,12 +590,12 @@ if(d.t==='mdemo'){
       rows:['① 빨강에 대한 노랑의 비 = 200 : 100 = <span class="dz" data-a="2"></span> : <span class="dz" data-a="1"></span>',
             '② 그럼 비율로 나타내면? <span class="dz" data-a="2/1"></span> 이므로 <span class="dz" data-a="2"></span>입니다.'],
       bank:['2','1','2/1','2','1/2'],
-      okS:'노랑 200 : 빨강 100 = <b>2 : 1</b> — 비율은 2/1 = <b>2</b>!'},
+      okS:'노랑 200 : 빨강 100 = <b>2 : 1</b> — 비율은 <span class="fr"><span>2</span><span class="d">1</span></span> = <b>2</b>!'},
      {q:'이 물감은 <b>빨강 100mL</b>와 <b>노랑 200mL</b>를 섞어 만들었습니다.<br><b>노랑에 대한 빨강의 비</b>는 얼마인가요?',
       rows:['① 노랑에 대한 빨강의 비 = 100 : 200 = <span class="dz" data-a="1"></span> : <span class="dz" data-a="2"></span>',
             '② 그럼 비율로 나타내면? <span class="dz" data-a="1/2"></span>입니다.'],
       bank:['1','2','1/2','2/1'],
-      okS:'빨강 100 : 노랑 200 = <b>1 : 2</b> — <b>비교하는 양(빨강)을 기준량(노랑)으로 나눈 것이 비율</b>! 100 ÷ 200 = <b>1/2</b>!'}][d.i];
+      okS:'빨강 100 : 노랑 200 = <b>1 : 2</b> — <b>비교하는 양(빨강)을 기준량(노랑)으로 나눈 것이 비율</b>! 100 ÷ 200 = <b><span class="fr"><span>1</span><span class="d">2</span></span></b>!'}][d.i];
     const bank=W.bank.slice().sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${W.q}</div>
       <div class="sub">숫자 카드를 끌어다 빈칸을 채워요 — <b>비교하는 양을 기준량으로 나눈 것이 비율</b>!</div>
@@ -601,7 +604,7 @@ if(d.t==='mdemo'){
       <div class="eq">
         ${W.rows.map(r=>`<div class="row">${r}</div>`).join('')}
       </div>
-      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('rate',{i:d.i});success('맞아요!',W.okS);});
     return;}
   if(d.t==='paint'){
@@ -686,12 +689,12 @@ if(d.t==='sintro'){
      {t:["비 A : B에서 비율 = ","\u00A0= ",", A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 ","가 된다."],a:["A ÷ B","A/B","A%"],x:["B ÷ A","B%"]}];
     const s=S4[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
-    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 색깔의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
-    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['color'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
@@ -740,7 +743,7 @@ const RC=[
     RC.forEach(c=>{
       if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
       h+=got.includes(c.id)
-        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${fx(c.t)}</div>`
         :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
     document.getElementById('walList').innerHTML=h;}
   const w=document.getElementById('wal');

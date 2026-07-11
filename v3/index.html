@@ -110,6 +110,10 @@
   .escPad{display:grid;grid-template-columns:repeat(3,80px);gap:8px;justify-content:center}
   .escPad button{border:2.5px solid var(--line);background:#fff;border-radius:12px;font-size:22px;font-weight:800;padding:9px 0;cursor:pointer;font-family:inherit}
   .escPad button:active{background:#f3ead8}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
+  .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
+  .cfp{position:fixed;top:-16px;width:12px;height:18px;z-index:120;border-radius:3px;pointer-events:none;animation:cfall linear forwards}
+  @keyframes cfall{to{transform:translateY(108vh) rotate(560deg)}}
 </style>
 </head>
 <body>
@@ -131,12 +135,15 @@
 
 <div id="introOv" style="position:fixed;inset:0;background:rgba(38,48,63,.55);display:none;align-items:center;justify-content:center;z-index:55">
   <div class="dexCard" style="width:min(560px,94vw);text-align:center">
-    <h2>🕵️ '비밀'을 찾아내는 방 탈출 게임!</h2>
-    <div style="text-align:left;font-size:19px;font-weight:700;line-height:2.1;margin:14px 0">
-      <b>1.</b> 네 방을 <b>순서대로</b> 탐험해요.<br>
-      <b>2.</b> 각 방에서 <b>🃏 비밀 카드 문제</b>를 풀어요!<br>
-      <b>3.</b> 비밀카드 <b>16장</b>을 모아 방 <b>비밀번호</b>를 얻어요!<br>
-      <b>4.</b> 비밀번호를 누르고 방에서 <b>탈출</b>해요!
+    <h2>🕵️ 비밀을 찾아 방을 탈출해라!</h2>
+    <div style="text-align:left;font-size:17.5px;font-weight:700;line-height:2;margin:12px 0">
+      <b>1.</b> 색깔의 방 → 소리의 방 → 지도의 방 → 마트의 방 <b>순서대로</b> 탐험해요.<br>
+      <b>2.</b> 각 방에서 열심히 문제를 풀고 공부해요.<br>
+      <b>3.</b> 각 방에서 <b>🃏 비밀카드를 4개씩</b> 모아요.<br>
+      <b>4.</b> 비밀카드 4개를 모으면 각 방의 <b>번호를 하나씩</b> 얻을 수 있어요.<br>
+      <b>5.</b> 4개 방에서 <b>4개의 번호</b>를 순서대로 모아요.<br>
+      <b>6.</b> 그 숫자를 순서대로 누르면 <b>비밀번호</b>가 됩니다.<br>
+      <b>7.</b> 비밀번호를 누르고 방에서 <b>탈출</b>해요!
     </div>
     <button class="dexClose" id="introOk">좋아요, 출발! 🚀</button>
   </div>
@@ -222,6 +229,7 @@ const u=getUser();
 if(u){showChip(u);}else{openLogin();}
 /* ── 탐험 순서·진행 상태 ── */
 const ORDER=['color','sound','map','mart'];
+function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function uk(b){return b+':'+(getUser()||'anon');}
 function getDone(){try{return JSON.parse(localStorage.getItem(uk('rs3_done'))||'[]');}catch(e){return [];}}
 function wireStart(){
@@ -264,7 +272,7 @@ function renderDex(){
   let h='',cur='';
   CARDS.forEach(c=>{
     if(c.room!==cur){cur=c.room;h+=`<div class="dexGrp">${c.room}</div>`;}
-    h+=got.includes(c.id)?`<div class="scard">🃏 ${c.t}</div>`
+    h+=got.includes(c.id)?`<div class="scard">🃏 ${fx(c.t)}</div>`
       :`<div class="cback dexback"><div class="emb">?</div><div class="bnm">아직 비밀</div></div>`;});
   $('#dexList').innerHTML=h;}
 $('#dexBtn').onclick=()=>{renderDex();$('#dexOv').classList.add('show');};
@@ -275,7 +283,7 @@ let revList=[],revI=0,revStage=0; // 0 뒷면, 1 앞면(낱말 가림), 2 답 �
 function revRender(){
   const c=revList[revI];if(!c)return;
   $('#revIdx').textContent=revI+1;$('#revTot').textContent=revList.length;
-  const masked=c.t.replace(/<b>(.*?)<\/b>/g,'<span class="rmask">$1</span>');
+  const masked=fx(c.t).replace(/<b>(.*?)<\/b>/g,'<span class="rmask">$1</span>');
   $('#revCard').innerHTML=`<div class="rin">
     <div class="rface cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div>
     <div class="rface rfront"><div class="rf-top">${c.room}</div><div class="rf-txt"><span>${masked}</span></div></div>
@@ -302,6 +310,14 @@ function lockAux(reset){const L=!courseDone();
 $('#cqBtn').onclick=()=>{if(!courseDone()){lockNote($('#cqBtn'));return;}location.href='cards.html';};
 /* ── 탈출의 문 (황금비 1618) ── */
 const ESC_DIG={color:'1',sound:'6',map:'1',mart:'8'};
+const CLAP_A=(()=>{try{const a=new Audio('clap.mp3');a.preload='auto';a.volume=0.9;a.load&&a.load();return a;}catch(e){return null;}})();
+function clap(){try{if(!CLAP_A)return;CLAP_A.currentTime=0;const pr=CLAP_A.play();if(pr&&pr.catch)pr.catch(()=>{});}catch(e){}}
+function confetti(){try{
+  for(let i=0;i<28;i++){const s=document.createElement('div');s.className='cfp';
+    s.style.left=(4+Math.random()*92)+'vw';
+    s.style.background=['#e76f51','#e9c46a','#2a9d8f','#7b6cff','#e63980','#2e9e63'][i%6];
+    s.style.animationDelay=(Math.random()*0.5)+'s';s.style.animationDuration=(1.2+Math.random()*1.2)+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),3400);}}catch(e){}}
 function escaped(){return localStorage.getItem(uk('rs3_escape'))==='1';}
 function escWin(){
   const o=document.createElement('div');o.id='escWin';
@@ -309,10 +325,21 @@ function escWin(){
   o.innerHTML=`<div class="dexCard" style="text-align:center;width:min(640px,94vw)">
     <div style="font-size:64px">🚪✨</div>
     <h2 style="margin:6px 0">탈출 성공! 축하해요!</h2>
-    <div style="font-size:19px;font-weight:700;line-height:1.9">여러분이 모은 번호는 <b>1, 6, 1, 8</b>.<br>이 숫자를 이으면 <b style="color:#b3541e;font-size:26px">1.618</b>, 바로 <b style="color:#b3541e">황금비</b>예요!<br>꽃잎, 소라 껍데기, 그림과 건축까지…<br><b>세상에서 가장 아름다운 비율</b>이 여러분을 탈출시켰답니다. 🌻🐚</div>
+    <div style="font-size:19px;font-weight:700;line-height:1.9">여러분이 모은 번호는 <b>1, 6, 1, 8</b>.<br>이 숫자를 이으면 <b style="color:#b3541e;font-size:26px">1.618</b>, 바로 <b style="color:#b3541e">황금비</b>예요!</div>
+    <div style="margin:10px 0"><svg viewBox="-6 -6 264 168" style="width:min(320px,80vw)">
+      <rect x="0" y="0" width="156" height="156" fill="#fff8e1" stroke="#c9a227" stroke-width="2.5"/>
+      <rect x="156" y="0" width="96" height="96" fill="#fff3d0" stroke="#c9a227" stroke-width="2.5"/>
+      <rect x="192" y="96" width="60" height="60" fill="#fff8e1" stroke="#c9a227" stroke-width="2.5"/>
+      <rect x="156" y="120" width="36" height="36" fill="#fff3d0" stroke="#c9a227" stroke-width="2.5"/>
+      <rect x="156" y="96" width="24" height="24" fill="#fff8e1" stroke="#c9a227" stroke-width="2.5"/>
+      <path d="M 0 156 A 156 156 0 0 1 156 0 A 96 96 0 0 1 252 96 A 60 60 0 0 1 192 156 A 36 36 0 0 1 156 120 A 24 24 0 0 1 180 96" fill="none" stroke="#b3541e" stroke-width="4.5" stroke-linecap="round"/>
+      <text x="60" y="88" text-anchor="middle" font-size="30">🐚</text><text x="204" y="52" text-anchor="middle" font-size="24">🌻</text>
+    </svg></div>
+    <div style="font-size:16.5px;font-weight:700;color:var(--sub)">🌻 해바라기 씨앗, 🐚 소라 껍데기, 🖼️ 명화와 건축까지…<br><b style="color:#b3541e">세상에서 가장 아름다운 비율</b>이 여러분을 탈출시켰답니다!</div>
     <div style="margin-top:14px;text-align:center"><button class="btn pri" id="escWinX" style="border:none;background:var(--accent);color:#fff;border-radius:14px;padding:12px 34px;font-size:20px;font-weight:800;cursor:pointer;font-family:inherit">🏆 최고예요!</button></div>
   </div>`;
   document.body.appendChild(o);
+  clap();confetti();setTimeout(confetti,700);setTimeout(confetti,1500);
   o.querySelector('#escWinX').onclick=()=>o.remove();
   if(escaped()){const b=$('#escBtn');if(b)b.textContent='🏆 탈출 완료!';}
 }

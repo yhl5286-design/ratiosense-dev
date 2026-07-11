@@ -216,6 +216,8 @@
   #hxTbl tr.rowPop td{animation:rowPop 1.4s ease}
   .escDig{display:inline-block;background:linear-gradient(#fff8e1,#ffe9a8);border:3.5px solid #e0a02a;border-radius:16px;padding:10px 24px;font-size:21px;font-weight:800;margin:8px 0}
   .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
+  .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
 </style>
 </head>
 <body>
@@ -428,6 +430,7 @@ function drawWave(){const cv=$('#wv');if(!cv)return;
   for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*c2*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
 function loopWave(){s1T++;if(w1env>.001)w1env*=DECAY;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=DECAY;drawStrings();drawWave();animReq=requestAnimationFrame(loopWave);}
 
+function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -435,7 +438,7 @@ function mountDrag(el,onAll){
   function judge(dz,ch){
     if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
     if(ch.dataset.w===dz.dataset.a){
-      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.innerHTML=fx(ch.dataset.w);ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
       try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
@@ -450,7 +453,7 @@ function mountDrag(el,onAll){
       const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
       if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
-      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.innerHTML=fx(ch.dataset.w);
       document.body.appendChild(g);drag={ch,g};
       g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
   document.onpointermove=e=>{if(!drag)return;
@@ -591,13 +594,13 @@ if(d.t==='chord'){
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:14px 26px;font-size:23px;font-weight:800;margin-bottom:8px;line-height:1.55">🎵 라(A)음은 진동수가 <b>440Hz</b>!<br>라 음의 주파수가 <b>계산하기 좋게 떨어져서</b> 악기 조율 <b>기준음</b>이 되어요.</div>':''}
       <div class="q">라 줄이 <b>72cm</b>일 때, <b>${p.n}</b> 줄은 몇 cm일까요?</div>
-      <div class="sub" style="font-size:19px">라 : ${p.n} = <b>${p.a} : ${p.b}</b> — 라 길이 72cm에 <b>${p.a}/${p.b}</b>${jz(String(p.b),'을','를')} 곱하면 ${p.n} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b>
+      <div class="sub" style="font-size:19px">라 : ${p.n} = <b>${p.a} : ${p.b}</b> — 라 길이 72cm에 <b>${fx(p.a+'/'+p.b)}</b>${jz(String(p.b),'을','를')} 곱하면 ${p.n} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b>
       &nbsp;<button class="btn" id="hlpBtn" style="font-size:16px;padding:7px 18px;margin:0">❓ 왜 라보다 짧아질까?</button></div>
       ${harpHTML()}
       <div class="eq">
         <div class="row">${p.n} 줄의 길이 = 72 × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <span class="dz" data-a="${exS}"></span> cm</div>
       </div>
-      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>
       <div id="hlpPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
         <div style="background:#fffdf6;border:3.5px solid var(--line);border-radius:20px;padding:18px 28px;max-width:min(680px,94vw);max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center">
           <div class="q" style="font-size:23px;margin:0 0 8px">🎻 <b>높은 소리</b>일수록 줄은 왜 짧아질까?</div>
@@ -619,7 +622,7 @@ if(d.t==='chord'){
     $('#hlpBtn').onclick=()=>{$('#hlpPop').style.display='flex';plog('harphelp',{n:p.n});};
     $('#hlpClose').onclick=()=>{$('#hlpPop').style.display='none';};
     mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
-      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 라 줄 <b>전체의 ${p.a}/${p.b}</b>!<br>72 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
+      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 라 줄 <b>전체의 ${fx(p.a+'/'+p.b)}</b>!<br>72 × ${fx(p.a+'/'+p.b)} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
     wireGoal(el);return;}
   
   if(d.t==='ssum'){
@@ -630,12 +633,12 @@ if(d.t==='chord'){
      {t:["줄이 길수록 ","\u00A0떨려서 소리가 ",".<br>줄이 짧을수록 ","\u00A0떨려서 소리가 ","."],a:["천천히","낮다","빨리","높다"],x:[]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
-    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 소리의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
-    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['sound'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
@@ -684,7 +687,7 @@ const RC=[
     RC.forEach(c=>{
       if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
       h+=got.includes(c.id)
-        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${fx(c.t)}</div>`
         :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
     document.getElementById('walList').innerHTML=h;}
   const w=document.getElementById('wal');

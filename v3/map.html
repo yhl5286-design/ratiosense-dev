@@ -182,6 +182,8 @@
   @keyframes tIn{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
   .escDig{display:inline-block;background:linear-gradient(#fff8e1,#ffe9a8);border:3.5px solid #e0a02a;border-radius:16px;padding:10px 24px;font-size:21px;font-weight:800;margin:8px 0}
   .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
+  .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
 </style>
 </head>
 <body>
@@ -309,8 +311,8 @@ function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
 
 const OBJS=[
  {em:'🌉',n:'다리',shape:'직사각형',dim:'길이',real:300,cells:3,x:3.5,y:3.0,sx:3.5,sy:3.0},
- {em:'💧',n:'호수',shape:'원',dim:'지름',real:100,cells:1,x:6,y:2,sx:4,sy:2},
- {em:'⛰️',n:'산',shape:'삼각형',dim:'밑변',real:500,cells:5,x:1,y:2.2,sx:1,sy:3.4}];
+ {em:'🌳',n:'공원',shape:'원',dim:'지름',real:200,cells:2,x:5.5,y:1.4,sx:4,sy:1.6},
+ {em:'⛰️',n:'산',shape:'삼각형',dim:'밑변',real:500,cells:5,x:1,y:3.4,sx:1,sy:3.4}];
 let placed=0;
 function townMap(f,numIdx,base,only){f=f||1;const C=(base||64)*f;
   let o=`<div style="position:absolute;left:0;top:${C*3.9}px;width:${C*8}px;height:${C}px;background:linear-gradient(#bcd9f0,#9ec4e4);opacity:.85"></div>`;
@@ -321,11 +323,11 @@ function townMap(f,numIdx,base,only){f=f||1;const C=(base||64)*f;
     const [X,Y]=pos(ob);
     let shape='';
     if(ob.shape==='직사각형')shape=`<div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*0.8}px;height:${C*ob.cells}px;background:#9a7b4f;border:3px solid #6d5432;background-image:repeating-linear-gradient(0deg,transparent 0 ${C*0.28}px,rgba(255,255,255,.35) ${C*0.28}px ${C*0.33}px)"></div>`;
-    else if(ob.shape==='원')shape=`<div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*ob.cells}px;height:${C*ob.cells}px;background:radial-gradient(circle at 35% 30%,#9ecbee,#5b93c9);border-radius:50%;border:3px solid #3e6f9e"></div>`;
-    else shape=`<div style="position:absolute;left:${C*X}px;top:${C*(Y-1.1)}px;width:0;height:0;border-left:${C*ob.cells/2}px solid transparent;border-right:${C*ob.cells/2}px solid transparent;border-bottom:${C*1.5}px solid #5e9a5e;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))"></div>
+    else if(ob.shape==='원')shape=`<div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*ob.cells}px;height:${C*ob.cells}px;background:radial-gradient(circle at 35% 30%,#cdeab4,#7fae5a);border-radius:50%;border:3px solid #4a7f4a"></div><div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*ob.cells}px;height:${C*ob.cells}px;display:flex;align-items:center;justify-content:center;font-size:${Math.round(C*ob.cells*0.42)}px">🌳</div>`;
+    else shape=`<div style="position:absolute;left:${C*X}px;top:${C*(Y-2.64)}px;width:0;height:0;border-left:${C*ob.cells/2}px solid transparent;border-right:${C*ob.cells/2}px solid transparent;border-bottom:${C*3}px solid #5e9a5e;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))"></div>
       <div style="position:absolute;left:${C*X}px;top:${C*(Y+0.36)}px;width:${C*ob.cells}px;border-bottom:3.5px solid #2e5c2e"></div>`;
     const lb=(X>=4.5)?`right:${Math.max(2,C*(8-X-ob.cells))}px`:`left:${C*X}px`;
-    o+=shape+`<div class="lbl-chip" style="${lb};top:${C*(Y-(ob.shape==='삼각형'?1.65:0.62))}px">${ob.em} ${ob.shape} ${ob.n} · ${ob.cells}칸</div>`;});
+    o+=shape+`<div class="lbl-chip" style="${lb};top:${C*(Y-(ob.shape==='삼각형'?3.05:0.62))}px">${ob.em} ${ob.shape} ${ob.n} · ${ob.cells}칸</div>`;});
   if(numIdx!=null&&(solo?only.indexOf(numIdx)>=0:numIdx<placed)){const nb=OBJS[numIdx];
     const [X,Y]=pos(nb);
     for(let k=0;k<nb.cells;k++){
@@ -390,9 +392,9 @@ function comicSVG(k){
  return [c1,c2,c3,c4][k||0];}
 const DECK=[
  {t:'intro'},
- {t:'scale',i:0},
- {t:'scale',i:1},
- {t:'scale',i:2},
+ {t:'scale',i:0,opts:[['300m',1],['30m',0],['3,000m',0]]},
+ {t:'scale',i:1,opts:[['200m',1],['20m',0],['2,000m',0]]},
+ {t:'scale',i:2,opts:[['500m',1],['50m',0],['5,000m',0]]},
  {t:'movie'},
  {t:'comic',i:0},{t:'comic',i:1},{t:'comic',i:2},{t:'comic',i:3},
  {t:'prop'},
@@ -414,6 +416,7 @@ function toastFB(cls,t,s){try{
 }catch(e){}}
 function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,2000);}
 function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
+function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -421,7 +424,7 @@ function mountDrag(el,onAll){
   function judge(dz,ch){
     if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
     if(ch.dataset.w===dz.dataset.a){
-      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.innerHTML=fx(ch.dataset.w);ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
       try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
@@ -436,7 +439,7 @@ function mountDrag(el,onAll){
       const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
       if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
-      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.innerHTML=fx(ch.dataset.w);
       document.body.appendChild(g);drag={ch,g};
       g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
   document.onpointermove=e=>{if(!drag)return;
@@ -457,20 +460,19 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="q">지도의 비밀을 찾아봅시다!</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i+1;
-    const tot=(ob.cells*10000).toLocaleString(), rm=String(ob.real);
-    const bank=['10,000','100',tot,rm,'1,000'].sort(()=>Math.random()-.5);
+    const tot=(ob.cells*10000).toLocaleString(), rm=ob.real.toLocaleString();
     el.innerHTML=`<div class="q">${ob.em} ${ob.n}${jga(ob.n)} 지도에서 <b>${ob.cells}칸</b>이라면,<br>실제 ${ob.n}의 ${ob.dim}${(ob.dim==='길이')?'는':'은'} 얼마일까요?</div>
-      <div class="sub">숫자 카드를 끌어와 풀이를 완성하세요!</div>
+      <div class="sub" style="font-size:19px">축척 <b>1 : 10,000</b> — 지도 1cm는 실제 10,000cm. <b>10,000cm = 100m</b>입니다.</div>
       ${townMap(1,d.i,64,[d.i])}
-      <div class="scaleinfo"><span class="sc">축척 1 : 10,000</span> 1칸 = 100m</div>
-      <div class="eq">
-        <div class="row">① 축척 1cm : <span class="dz" data-a="10,000"></span>cm — 10,000cm = <span class="dz" data-a="100"></span>m</div>
-        <div class="row">② ${ob.cells}칸이면 지도에서 ${ob.cells}cm이므로 <span class="dz" data-a="${tot}"></span>cm가 되어 <span class="dz" data-a="${rm}"></span>m가 된다.</div>
+      <div class="eq" style="font-size:23px">
+        <div class="row">1 : 10,000 = ${ob.cells} : <b>${tot}</b></div>
+        <div class="row">${tot}cm = <b style="color:#c0392b">( ? )</b> m</div>
       </div>
-      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('scale',{obj:ob.n});
-      success(`맞았어요! ${ob.cells}칸 = ${rm}m!`,`지도 ${ob.cells}cm × 10,000 = ${tot}cm = <b>${rm}m</b>!<br>지도 위 ${ob.shape}${jzz(ob.shape)} 실제 ${ob.n}와 <b>모양은 같고 크기만 줄인 닮은 도형</b>이에요.`);});
-    return;}
+      <div class="choices">${d.opts.slice().sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
+    el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
+      if(b.dataset.ok==='1'){plog('scale',{obj:ob.n});
+        success(`맞았어요! ${tot}cm = ${rm}m!`,`1 : 10,000 = ${ob.cells} : ${tot} — ${tot}cm는 <b>${rm}m</b>!`);}
+      else retry(`${tot}cm를 m로 바꿔 보세요 — 10,000cm = 100m!`);});return;}
   
   if(d.t==='zoom'){placed=3;const f=z2/100;
     el.innerHTML=`<div class="q">배율을 눌러 <b>지도를 확대</b>해 보세요!<br><b>200%</b>로 확대하면, 지도 위 다리(3cm)는 <b>몇 cm</b>?</div>
@@ -653,12 +655,12 @@ if(d.t==='movie'){placed=3;
      {t:["각도의 비 7.2° : 360° = 1 : ",", 두 도시 사이가 800km라면 지구 둘레는 800 × 50 = ","km이다."],a:["50","40,000"],x:["5","4,000"]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
-    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 지도의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
-    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['map'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
@@ -707,7 +709,7 @@ const RC=[
     RC.forEach(c=>{
       if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
       h+=got.includes(c.id)
-        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${fx(c.t)}</div>`
         :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
     document.getElementById('walList').innerHTML=h;}
   const w=document.getElementById('wal');

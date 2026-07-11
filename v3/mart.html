@@ -166,6 +166,8 @@
   @keyframes tIn{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
   .escDig{display:inline-block;background:linear-gradient(#fff8e1,#ffe9a8);border:3.5px solid #e0a02a;border-radius:16px;padding:10px 24px;font-size:21px;font-weight:800;margin:8px 0}
   .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
+  .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
 </style>
 </head>
 <body>
@@ -543,9 +545,10 @@ const DECK=[
  {t:'mc',kid:1,bem:'🥛',scn:'checkout',q:'이 <b>우유</b>를 할인된 가격으로 살 때,<br>현준이는 <b>얼마를 내면</b> 될까요?',sub:'',
   em:'🥛',price:'5,000원 40%↓',hint:'5000 − 2000',opts:[['3,000원',1],['5,000원',0],['4,000원',0]],
   ok:['맞았어요! 3,000원 🥛','5,000 − 2,000 = <b>3,000원</b> — 원래 가격에서 할인 금액을 빼면 낼 돈!'],no:'원래 가격 5,000원에서 할인 금액 2,000원을 빼 보세요.'},
- {t:'mc',kid:0,bem:'🥟',q:'지우가 🥟 <b>만두</b>를 사려고 해요.<br>마감 세일로 <span class="sale">30% 할인</span> 중이래요.<br>만두 원래 가격이 <b>6,000원</b>이라면, 만두값으로 <b>얼마를 내면</b> 될까요?',sub:'',
-  em:'🥟',price:'6,000원 30%↓ 마감 세일',hint:'할인 금액: 6000 × 30 ÷ 100 → 낼 돈: 6000 − 1800',opts:[['4,200원',1],['1,800원',0],['3,000원',0]],
-  ok:['맞았어요! 4,200원 🥟','할인 금액 = 6,000 × 30 ÷ 100 = <b>1,800원</b> → 6,000 − 1,800 = <b>4,200원</b>!'],no:'먼저 할인 금액(6,000 × 30 ÷ 100)을 구하고, 원래 가격에서 빼 보세요!'},
+ {t:'mc',kid:0,bem:'🥟',q:'지우가 <b>6,000원</b>인 🥟 <b>만두</b>를 사려고 해요.<br>이 만두가 <span class="sale">30% 할인</span> 중입니다.<br><b>얼마나 할인</b>받을 수 있을까요?',sub:'',
+  em:'🥟',price:'6,000원 30%↓ 마감 세일',hint:'6000 × 30 ÷ 100',opts:[['1,800원',1],['2,000원',0],['3,600원',0]],
+  ok:['맞았어요! 1,800원 할인 🥟','6,000 × 30 ÷ 100 = <b>1,800원</b>!'],no:'30%는 100 중 30 — 6,000 × 30 ÷ 100!'},
+ {t:'mpay'},
  {t:'wsale',i:0},{t:'wsale',i:1},{t:'wsale',i:2},
  {t:'tsum',i:0},{t:'tsum',i:1},{t:'tsum',i:2},{t:'tsum',i:3},{t:'done'}];
 let idx=0;
@@ -564,6 +567,7 @@ function toastFB(cls,t,s){try{
 }catch(e){}}
 function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,2000);}
 function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
+function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -571,7 +575,7 @@ function mountDrag(el,onAll){
   function judge(dz,ch){
     if(dz.classList.contains('okk')||ch.classList.contains('used'))return;
     if(ch.dataset.w===dz.dataset.a){
-      dz.textContent=ch.dataset.w;ch.classList.add('used');
+      dz.innerHTML=fx(ch.dataset.w);ch.classList.add('used');
       dz.classList.remove('sel','hov');dz.classList.add('okk','snap');
       try{chime(true);}catch(e){}
       setTimeout(()=>dz.classList.remove('snap'),320);
@@ -586,7 +590,7 @@ function mountDrag(el,onAll){
       const dz=(sel&&!sel.classList.contains('okk'))?sel:dzs.find(x=>!x.classList.contains('okk'));
       if(dz)judge(dz,ch);};
     ch.onpointerdown=e=>{if(ch.classList.contains('used'))return;e.preventDefault();
-      const g=document.createElement('span');g.id='ghost';g.className='chip';g.textContent=ch.dataset.w;
+      const g=document.createElement('span');g.id='ghost';g.className='chip';g.innerHTML=fx(ch.dataset.w);
       document.body.appendChild(g);drag={ch,g};
       g.style.left=(e.clientX-40)+'px';g.style.top=(e.clientY-24)+'px';};});
   document.onpointermove=e=>{if(!drag)return;
@@ -624,6 +628,19 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     `;
     el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
       (b.dataset.b==='1')===d.ansB?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='mpay'){
+    const bank=['1,800','4,200','70','4,200','2,000','30'].sort(()=>Math.random()-.5);
+    el.innerHTML=`<div class="q">이 🥟 <b>만두</b>를 할인된 가격으로 살 때,<br>지우는 <b>얼마를 내면</b> 될까요?</div>
+    <div class="sub">숫자 카드를 빈칸에 끌어와 식을 완성하세요!</div>
+    ${martScene('🥟',0,'aisle')}
+    <div class="eq">
+      <div class="row">① 6,000 − (6,000 × <span class="fr"><span>30</span><span class="d">100</span></span>) = 6,000 − <span class="dz" data-a="1,800"></span> = <span class="dz" data-a="4,200"></span>원</div>
+      <div class="row">② 6,000 × <span class="fr"><span>100 − 30</span><span class="d">100</span></span> = 6,000 × <span class="fr"><span class="dz" data-a="70" style="min-width:54px;min-height:30px"></span><span class="d">100</span></span> = <span class="dz" data-a="4,200"></span>원</div>
+    </div>
+    <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('success',{slide:idx});
+      success('4,200원! 🥟','6,000 − 1,800 = <b>4,200원</b> — 할인 금액을 빼면 낼 돈!');});
+    return;}
   if(d.t==='wsale'){
     const W=[
      {q:'과일 코너에 갔더니 🍉 <b>수박 세일</b> 중이래요!<br>수박의 원래 가격이 <b>12,000원</b>인데 → <b>9,000원</b>.<br><b>얼마만큼 가격이 할인</b>되었나요?',
@@ -633,11 +650,11 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
      {q:'할인 금액 <b>3,000원</b> : 원래 가격 <b>12,000원</b>.<br>할인 금액은 원래 가격의 <b>몇 분의 몇</b>인가요?',
       row:'3,000 ÷ 12,000 = <span class="dz" data-a="1/4"></span>',
       bank:['1/4','1/3','1/2'],
-      okT:'원래 가격의 1/4! 🍉',okS:'3,000원은 12,000원의 <b>1/4</b>이에요!'},
+      okT:'원래 가격의 1/4! 🍉',okS:'3,000원은 12,000원의 <b><span class="fr"><span>1</span><span class="d">4</span></span></b>이에요!'},
      {q:'이 🍉 수박의 <b>할인율</b>은 얼마인가요?',
-      row:'할인율 = 1/4 × <span class="dz" data-a="100"></span> = <span class="dz" data-a="25"></span>%',
+      row:'할인율 = <span class="fr"><span>1</span><span class="d">4</span></span> × <span class="dz" data-a="100"></span> = <span class="dz" data-a="25"></span>%',
       bank:['100','25','75','10'],
-      okT:'수박은 25% 할인! 🍉',okS:'1/4 × 100 = <b>25%</b> — 할인율은 원래 가격을 100으로 볼 때의 비율이에요!'}][d.i];
+      okT:'수박은 25% 할인! 🍉',okS:'<span class="fr"><span>1</span><span class="d">4</span></span> × 100 = <b>25%</b> — 할인율은 원래 가격을 100으로 볼 때의 비율이에요!'}][d.i];
     const bank=W.bank.slice().sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${W.q}</div>
     <div class="sub">숫자 카드를 빈칸에 끌어와 완성하세요!</div>
@@ -645,7 +662,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="eq">
       <div class="row">${W.row}</div>
     </div>
-    <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('success',{slide:idx});success(W.okT,W.okS);});
     return;}
   if(d.t==='tsum'){
@@ -656,12 +673,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
      {t:["물건이 10,000원인데 할인율이 20%일 때, 내야 할 가격은 원래 가격 × ","%와 같다.<br>예를 들어 10,000 × 80/100 = ","원을 내면 된다."],a:["80","8,000"],x:["20","2,000"]}];
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
-    let h='';s.t.forEach((seg,j)=>{h+=seg;if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
+    let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 마트의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
-    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['mart'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
       const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
@@ -710,7 +727,7 @@ const RC=[
     RC.forEach(c=>{
       if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
       h+=got.includes(c.id)
-        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${c.t}</div>`
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${fx(c.t)}</div>`
         :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
     document.getElementById('walList').innerHTML=h;}
   const w=document.getElementById('wal');
