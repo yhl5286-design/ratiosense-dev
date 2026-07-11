@@ -465,8 +465,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         success('맞았어요! 양은 달라도 비는 같아요!',`${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`);}};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
 if(d.t==='mdemo'){
-    el.innerHTML=`<div class="q">🎨 <b>비를 이용한 같은 색 만들기</b> 미션!</div>
-      <div class="sub">목표 색과 <b>같은 비</b>가 되도록 물감 버튼을 눌러 넣으면 성공!<br>예를 들어 — 빨강 : 노랑 = <b>2 : 3</b>인 주황색 만들기!</div>
+    el.innerHTML=`<div class="q">🎨 <b>같은 색 만들기</b> 미션!</div>
+      <div class="sub">목표 색을 만들기 위해 <b>물감 버튼</b>을 누르세요!<br>예를 들어 빨강 : 노랑 = <b>2 : 3</b>의 비라면,<br>빨강 <b>20</b>, 노랑 <b>30</b>이 되게 했어요!</div>
       <div class="paints" style="pointer-events:none;margin:4px 0">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="da0">0</span>mL</div>
           <div class="tubes"><span class="tube" id="dt빨강" style="display:inline-block;position:relative;transition:transform .18s">${tubeSVG('빨강')}<div class="amtl">+10</div><span class="dfing" style="position:absolute;left:46%;top:52%;font-size:34px;opacity:0;transition:opacity .18s">👆</span></span></div></div>
