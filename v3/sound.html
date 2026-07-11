@@ -343,7 +343,7 @@ function harpHTML(){
 const DECK=[{t:'intro'},{t:'vib'},{t:'harmx'}];
 const CHORD_SET=[3,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
-DECK.push({t:'challenge'},{t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'done'});
+DECK.push({t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'done'});
 let idx=0,w1env=0,f1=264,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
 const GOAL_OPEN={};
 function goalHTML(no,parts){
@@ -556,34 +556,18 @@ if(d.t==='chord'){
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:14px 26px;font-size:23px;font-weight:800;margin-bottom:8px;line-height:1.55">🎵 라(A)음은 진동수가 <b>440Hz</b>!<br>표준 주파수 표에서 유일하게 딱 떨어지는 음이라,<br>악기 조율을 할 때 <b>라 음을 기준</b>으로 해요!</div>':''}
       <div class="q">라 줄이 <b>36cm</b>일 때, <b>${p.n} 줄</b>의 길이는 어떻게 구할까요?</div>
-      <div class="sub">하프 공방 ${d.i+1}/7 — 비를 <b>분수(비율)</b>로 바꿔 길이에 곱해요! 계산은 하프가 해 줘요</div>
       ${harpHTML()}
       <div class="eq">
         <div class="row">① 진동수의 비는 라 : ${p.n} = <b>${p.a} : ${p.b}</b>입니다.</div>
         <div class="row">② 라 줄의 <b>몇 분의 몇</b>이 ${p.n} 줄일까요? — <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span></div>
         <div class="row">③ <b>36cm</b>인 라 줄에 위의 분수를 곱하면 <b style="color:#136a3d">${exS}cm</b> — ${p.n} 줄의 길이가 됩니다!</div>
       </div>
-      <div>${harpViz(p,exS)}</div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;
     mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
       success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 라 줄 <b>전체의 ${p.a}/${p.b}</b>!<br>36 × ${p.a}/${p.b} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
     wireGoal(el);return;}
-  if(d.t==='challenge'){hDone=7;
-    const bank=['2','3','16','36','12'].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">🏆 마지막 도전! — <b>새로운 하프</b> 만들기</div>
-      <div class="eq" style="text-align:left">
-        <div class="row">이전 하프 — 라 줄이 <b>36cm</b>였고, 미′ 줄은 라 줄 전체의 <b>2/3</b>인 <b>24cm</b>였어요.</div>
-        <div class="row">이제 <b>라 줄이 24cm</b>인 <b>작은 하프</b>를 만들어요 — <b>미′ 줄</b>은 얼마가 되어야 할까요?</div>
-      </div>
-      <div class="sub">숫자 카드를 끌어와 <b>식을 완성</b>하세요 — 하프가 작아져도 <b>비율은 그대로</b>!</div>
-      <div class="eq">
-        <div class="row">미′ 줄의 길이 = <b>24</b> × <span class="vfr"><span class="dz" data-a="2"></span><span class="fbar"></span><span class="dz" data-a="3"></span></span> = <span class="dz" data-a="16"></span> cm</div>
-      </div>
-      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('challenge',{ok:1});
-      success('16cm! 완벽해요! 🏆',`24 × 2/3 = <b>16cm</b>. 라 줄이 36cm든 24cm든 <b>미′ 줄은 언제나 라 줄 전체의 2/3</b> — 비율만 알면 어떤 하프든 만들 수 있어요!`);});
-    return;}
+  
   if(d.t==='ssum'){
     const S3=[
      {t:["소리는 물체의 ","에서 생겨 ","를 타고 전해진다."],a:["떨림","공기"],x:["크기","빛"]},
