@@ -393,7 +393,7 @@ DECK.push({t:'qintro'});
 MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
 DECK.push({t:'pintro'});
-DECK.push({t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'cellpct'},{t:'pct'},{t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
+DECK.push({t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -645,36 +645,32 @@ if(d.t==='mdemo'){
     gr.querySelectorAll('.cell').forEach((c,i)=>{if(cells[i])c.style.background=cells[i]==='r'?rgb(PRIM['빨강']):rgb(PRIM['노랑']);});
     upd();return;}
   if(d.t==='cells'){
+    const bank=['20','40','60','100','40'].sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">이 <b>100칸</b> 중에 <b>빨강</b>은 몇 칸인가요?</div>
-      <div class="grid">${Array.from({length:100},(_,i)=>`<div class="cell" style="background:${i<40?rgb(PRIM['빨강']):rgb(PRIM['노랑'])}"></div>`).join('')}</div>
-      <div class="numrow"><div class="nf"><input id="inp" type="number" min="0" max="100" placeholder="?"><div class="u">칸</div></div></div>
-      ${npadHTML()}
-      <button class="btn pri" id="go">확인</button>`;
-    wireNpad(el);
-    $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
-      v===40?success('맞았어요! 빨강 40칸!','100칸 중 <b>40칸</b>이 빨강이에요.')
-            :retry('빨간 칸을 세어 보거나, 내가 칠한 수를 떠올려 보세요.');};return;}
-if(d.t==='cellpct'){
-    el.innerHTML=`<div class="q">그렇다면 <b>빨강</b>은 전체에서 <b>몇 %</b>일까요?</div>
-      <div class="grid">${Array.from({length:100},(_,i)=>`<div class="cell" style="background:${i<40?rgb(PRIM['빨강']):rgb(PRIM['노랑'])}"></div>`).join('')}</div>
-      <div class="numrow"><div class="nf"><input id="inp" type="number" min="0" max="100" placeholder="?"><div class="u">%</div></div></div>
-      ${npadHTML()}
-      <button class="btn pri" id="go">확인</button>`;
-    wireNpad(el);
-    $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
-      v===40?success('맞았어요! 빨강은 전체의 40%!','전체 <b>100칸</b> 중 빨강이 <b>40칸</b> — 전체를 100으로 보면 <b>40%</b>예요!')
-            :retry('전체가 <b>100칸</b>이고 빨강이 <b>40칸</b>이면, 100을 기준으로 몇일까요?');};return;}
+      <div class="grid" style="max-width:400px;margin:6px auto">${Array.from({length:100},(_,i)=>`<div class="cell" style="background:${i<40?rgb(PRIM['빨강']):rgb(PRIM['노랑'])}"></div>`).join('')}</div>
+      <div class="eq">
+        <div class="row">① 빨강 = <span class="dz" data-a="40"></span> 칸</div>
+        <div class="row">② 그렇다면 빨강은 전체의 <span class="dz" data-a="40"></span> %</div>
+      </div>
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('cells',{});
+      success('맞았어요! 빨강 40칸 = 40%!','전체 <b>100칸</b> 중 빨강 <b>40칸</b> — 전체를 100으로 보면 <b>40%</b>!');});
+    return;}
+
   if(d.t==='pct'){
     const mixCol=rgb(mix({빨강:40,노랑:60}));
-    el.innerHTML=`<div class="q">빨강 <b>40mL</b>, 노랑 <b>60mL</b>를 넣어<br>주황 물감 <b>100mL</b>를 만들었습니다.<br>이 물감 100mL에서 <b>빨강은 몇 %</b>인가요?</div>
+    const bank=['40','60','50','100'].sort(()=>Math.random()-.5);
+    el.innerHTML=`<div class="q">빨강 <b>40mL</b>, 노랑 <b>60mL</b>를 넣어<br>주황 물감 <b>100mL</b>를 만들었습니다.<br>전체 물감 중 <b>빨강은 몇 %</b>, <b>노랑은 몇 %</b>인가요?</div>
+      <div class="sub">숫자 보기 중에서 골라 끌어다 놓으세요!</div>
       <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div>
-      <div class="numrow"><div class="nf"><input id="inp" type="number" min="0" max="100" placeholder="?"><div class="u">%</div></div></div>
-      ${npadHTML()}
-      <button class="btn pri" id="go">확인</button>`;
-    wireNpad(el);
-    $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
-      v===40?success('맞았어요! 빨강은 전체의 40%!','전체 100mL 중 빨강 40mL — 전체를 100으로 보면 <b>40%</b>. 백분율은 <b>전체를 100으로 볼 때의 비</b>예요!')
-            :retry('전체는 40+60 = <b>100mL</b> — 그중 빨강 <b>40mL</b>를 100 기준으로!');};return;}
+      <div class="eq">
+        <div class="row">빨강 = <span class="dz" data-a="40"></span> %</div>
+        <div class="row">노랑 = <span class="dz" data-a="60"></span> %</div>
+      </div>
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('pct',{});
+      success('맞았어요! 빨강 40%, 노랑 60%!','전체 100mL를 100으로 보면 — 빨강 <b>40%</b>, 노랑 <b>60%</b>!');});
+    return;}
 if(d.t==='sintro'){
     el.innerHTML=`<div style="font-size:72px">🔎</div>
       <div class="q">지금부터 공부했던 내용으로 <b>색깔의 비밀</b>을 찾아봅시다!</div>
