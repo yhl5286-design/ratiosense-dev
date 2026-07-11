@@ -484,12 +484,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       if(a>0&&b>0&&a*r1===b*r0){
         const key=a+':'+b;
         if(used.includes(key)){retry('아까와 <b>같은 양</b>이에요 — 다른 양으로 만들어 보세요!');S.amt={};upd();return;}
-        used.push(key);const g=gcd(a,b);
+        used.push(key);const g=gcd(a,b);chime(true);
         success('맞았어요! 양은 달라도 비는 같아요!',`${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`);}};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
 if(d.t==='mdemo'){
-    el.innerHTML=`<div class="q" style="font-size:36px">🎨 같은 색 만들기!</div>
-      <div class="dial" style="text-align:left;font-size:21px;line-height:1.8;margin-bottom:8px"><b>방법</b><br><b>1)</b> 목표 색을 만들기 위해 <b>몇 대 몇의 비</b>인지 보세요!<br><b>2)</b> 빨강 : 노랑이 <b>2 : 3</b>이라면?<br><b>3)</b> 아래 물감 버튼을 클릭해 빨강 <b>20mL</b>, 노랑 <b>30mL</b>를 비커에 넣어요!</div>
+    el.innerHTML=`<div class="q" style="font-size:36px">🎨 1단계 : 같은 색 만들기!</div>
+      <div class="dial" style="font-size:21px;line-height:1.8;margin-bottom:8px">빨강 : 노랑 = <b>2 : 3</b>의 비가 되도록 <b>물감 버튼</b>을 누르세요!<br>빨강 <b>20mL</b>, 노랑 <b>30mL</b>를 넣었더니 <b>같은 색</b>이 되었죠?</div>
       <div class="paints" style="pointer-events:none;margin:4px 0">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="da0">0</span>mL</div>
           <div class="tubes"><span class="tube" id="dt빨강" style="display:inline-block;position:relative;transition:transform .18s">${tubeSVG('빨강')}<div class="amtl">+10</div><span class="dfing" style="position:absolute;left:46%;top:52%;font-size:34px;opacity:0;transition:opacity .18s">👆</span></span></div></div>
@@ -616,7 +616,7 @@ if(d.t==='mdemo'){
       gr.className='grid'+(brush?' brushing':'');
       if(left===0&&!d._fbLock){d._fbLock=true;
         setTimeout(()=>{d._fbLock=false;
-          if(r*3===y*2){d._ok=true;success('잘 색칠했어요!',`2 : 3 = ${r} : ${y}입니다. 빨강과 노랑 칸을 더해서 ${n}이 되어야 하므로 빨강 <b>${r}칸</b>, 노랑 <b>${y}칸</b>을 색칠해요!`);}
+          if(r*3===y*2){d._ok=true;success(`잘했어요! 2 : 3 = ${r} : ${y}${jz(String(y),'을','를')} 이용해요!`,`${r}칸 + ${y}칸 = ${n}칸이 되도록 빨강 <b>${r}칸</b>, 노랑 <b>${y}칸</b> 색칠!`);}
           else{const diff=needR-r;
             retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>💡 ${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
     $('#potR').onclick=()=>{brush=d._brush='r';upd();};
