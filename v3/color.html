@@ -549,7 +549,7 @@ if(d.t==='mdemo'){
   if(d.t==='make'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,ans=BASE*m.r[1-gi]/m.r[gi];
     const tgt=mix({[m.top[0]]:m.r[0],[m.top[1]]:m.r[1]});
-    const A=m.given+' 물감의 양',B=askC+' 물감의 양';
+    const A=m.top[1]+' 물감의 양',B=m.top[0]+' 물감의 양'; // 비 앞=비교하는 양, 뒤=기준량
     const bank=[A,B].sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
       <div class="pair">
@@ -567,7 +567,7 @@ if(d.t==='mdemo'){
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     let numOK=false,dragOK=false;
     const fin=()=>{if(numOK&&dragOK){S._made=ans;plog('make',{i:d.i});
-      success('맞았어요! 🎨',`${askC} <b>${ans}mL</b>! 그리고 기준이 된 <b>${m.given}이 기준량</b>, 그 기준과 비교하여 양을 구한 <b>${askC}이 비교하는 양</b>입니다!`);}};
+      success('맞았어요! 🎨',`${askC} <b>${ans}mL</b>! 비 ${m.top[0]} : ${m.top[1]}에서 <b>뒤의 ${m.top[1]}이 기준량</b>, <b>앞의 ${m.top[0]}이 비교하는 양</b>입니다!`);}};
     const upd=()=>{const v=Math.max(0,parseInt($('#inp').value||'0',10)||0);
       S.amt={[m.given]:BASE,[askC]:v};
       const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,(BASE+v)/(BASE+ans+60)*92)+'%';};
@@ -590,10 +590,10 @@ if(d.t==='mdemo'){
       rows:['① 노랑에 대한 빨강의 비 = 100 : 200 = <span class="dz" data-a="1"></span> : <span class="dz" data-a="2"></span>',
             '② 그럼 비율로 나타내면? <span class="dz" data-a="1/2"></span>입니다.'],
       bank:['1','2','1/2','2/1'],
-      okS:'빨강 100 : 노랑 200 = <b>1 : 2</b> — 비율은 <b>1/2</b>! 기준량(노랑)이 아래!'}][d.i];
+      okS:'빨강 100 : 노랑 200 = <b>1 : 2</b> — <b>비교하는 양(빨강)을 기준량(노랑)으로 나눈 것이 비율</b>! 100 ÷ 200 = <b>1/2</b>!'}][d.i];
     const bank=W.bank.slice().sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${W.q}</div>
-      <div class="sub">숫자 카드를 끌어다 빈칸을 채워요 — <b>기준량이 뒤(아래)</b>!</div>
+      <div class="sub">숫자 카드를 끌어다 빈칸을 채워요 — <b>비교하는 양을 기준량으로 나눈 것이 비율</b>!</div>
       <div style="font-size:21px;font-weight:800;margin:4px 0">주황 물감 — <span style="color:${rgb(PRIM['빨강'])}">빨강 100mL</span> + <span style="color:#b3921e">노랑 200mL</span></div>
       <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div>
       <div class="eq">
