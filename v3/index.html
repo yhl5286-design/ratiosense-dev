@@ -125,27 +125,32 @@
   <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 16</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button> <button id="escBtn" class="dex" style="border-color:#e0a02a">🔐 탈출 도전</button></div>
   <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 16장을 모두 모아 보세요!</div>
   <div class="rooms">
-    <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">1번 색깔의 비밀 방</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
-    <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">2번 소리의 비밀 방</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
-    <a class="room" data-r="map" href="map.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">3번 지도의 비밀 방</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div></a>
-    <a class="room" data-r="mart" href="mart.html"><div class="badge">4</div><div class="em">🛒</div><div class="nm">4번 마트의 비밀 방</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div></a>
+    <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
+    <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
+    <a class="room" data-r="map" href="map.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div></a>
+    <a class="room" data-r="mart" href="mart.html"><div class="badge">4</div><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div></a>
   </div>
   <div class="foot">🚪 탐험 순서: 1번 색깔 → 2번 소리 → 3번 지도 → 4번 마트 — 방이 끝나면 저절로 다음 방으로 이어져요! · <a href="../">기존 버전(v2)으로</a></div>
 </div>
 
-<div id="introOv" style="position:fixed;inset:0;background:rgba(38,48,63,.55);display:none;align-items:center;justify-content:center;z-index:55">
-  <div class="dexCard" style="width:min(560px,94vw);text-align:center">
-    <h2>🕵️ 비밀을 찾아 방을 탈출해라!</h2>
-    <div style="text-align:left;font-size:17.5px;font-weight:700;line-height:2;margin:12px 0">
-      <b>1.</b> 색깔의 방 → 소리의 방 → 지도의 방 → 마트의 방 <b>순서대로</b> 탐험해요.<br>
-      <b>2.</b> 각 방에서 열심히 문제를 풀고 공부해요.<br>
-      <b>3.</b> 각 방에서 <b>🃏 비밀카드를 4개씩</b> 모아요.<br>
-      <b>4.</b> 비밀카드 4개를 모으면 각 방의 <b>번호를 하나씩</b> 얻을 수 있어요.<br>
-      <b>5.</b> 4개 방에서 <b>4개의 번호</b>를 순서대로 모아요.<br>
-      <b>6.</b> 그 숫자를 순서대로 누르면 <b>비밀번호</b>가 됩니다.<br>
-      <b>7.</b> 비밀번호를 누르고 방에서 <b>탈출</b>해요!
+<div id="introOv" style="position:fixed;inset:0;background:var(--bg);display:none;align-items:flex-start;justify-content:center;z-index:55;overflow:auto">
+  <div class="dexCard" style="width:min(720px,96vw);text-align:left;margin:22px 0;border:3px solid var(--line)">
+    <h2 style="text-align:center;margin:4px 0 2px">친구야, 방 탈출 게임에 온 걸 환영해! 👋</h2>
+    <div style="text-align:center;font-weight:700;color:var(--sub);margin-bottom:12px">더 신나고 재밌는 <b>'비밀번호 탈출 작전'</b>! 잘 듣고 미션을 완수해 봐!</div>
+    <div style="background:#fff8e1;border:3px solid #e0a02a;border-radius:14px;padding:10px 18px;font-weight:800;text-align:center;margin-bottom:12px;font-size:18px">🎮 미션: 4개의 비밀 방을 탈출하라!<br><span style="font-weight:700;font-size:15.5px">[승리 조건] 4개의 방을 순서대로 탈출하고 <b>'마지막 탈출 비밀번호'</b>를 알아내면 탈출 성공!</span></div>
+    <div style="font-size:17px;font-weight:700;line-height:1.95">
+      <b>🏃 [1단계] 방 탐험하기 (순서 엄수!)</b><br>
+      &nbsp;&nbsp;🎨 색깔의 방 → 🎵 소리의 방 → 🗺️ 지도의 방 → 🛒 마트의 방<br>
+      &nbsp;&nbsp;<span style="color:var(--sub)">반드시 이 순서대로 방을 탈출해야 해!</span><br>
+      <b>🧩 [2단계] 방마다 해야 할 일</b><br>
+      &nbsp;&nbsp;· <b>퀴즈 풀기</b> — 각 방의 문제들을 열심히 풀어 정답을 맞혀봐!<br>
+      &nbsp;&nbsp;· <b>카드 줍기</b> — 문제를 맞힐 때마다 🃏 <b>비밀카드</b>를 1장씩! (한 방당 <b>총 4장</b>!)<br>
+      <b>🔑 [3단계] 비밀번호 조합하기</b><br>
+      &nbsp;&nbsp;· 카드 4장을 다 모으면, 그 방의 <b>'비밀 숫자 1개'</b>가 짠! 하고 나타나!<br>
+      &nbsp;&nbsp;· 4개의 방에서 모은 숫자 4개를 <b>방 순서대로</b> 합치면 최종 비밀번호!
     </div>
-    <button class="dexClose" id="introOk">좋아요, 출발! 🚀</button>
+    <div style="text-align:center;font-weight:800;font-size:18px;margin:12px 0 6px">"문제를 풀고, 카드를 모아, 비밀번호를 입력하면 탈출!"<br>자, 그럼 첫 번째 '색깔의 방'부터 출발해 볼까? 🚀</div>
+    <div style="text-align:center"><button class="dexClose" id="introOk">좋아, 출발! 🚀</button></div>
   </div>
 </div>
 
@@ -250,7 +255,7 @@ wireStart();
 /* ── 비밀 카드 도감 ── */
 const CARDS=[
  {id:'color0',room:'🎨 색깔의 비밀',t:'물감의 <b>양</b>이 달라도 <b>비</b>가 같다면 같은 색이 된다.'},
- {id:'color1',room:'🎨 색깔의 비밀',t:'B의 값을 <b>기준</b>으로 비교할 때, A만큼의 <b>비교하는 양</b>이 되는 관계를 <b>A : B</b>의 비로 나타낸다.'},
+ {id:'color1',room:'🎨 색깔의 비밀',t:'B를 <b>기준</b>으로 비교하여 A가 어느 정도인지 나타내는 <b>관계</b>를 A : B의 <b>비</b>라고 한다.'},
  {id:'color2',room:'🎨 색깔의 비밀',t:'"B에 대한 A의 비"에서 "B에 대한"은 B를 <b>1</b>로 놓고 비교할 때의 A의 값을 비교한다는 뜻이다.<br>즉, B가 1이 되려면 B를 B로 나누고, 동시에 A도 <b>B</b>로 나누므로,<br>B에 대한 A의 비율은 A ÷ B, 분수로 <b>A/B</b>가 된다.'},
  {id:'color3',room:'🎨 색깔의 비밀',t:'비 A : B에서 비율 = <b>A ÷ B</b> = <b>A/B</b> — A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 <b>A%</b>가 된다.'},
  {id:'sound0',room:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
