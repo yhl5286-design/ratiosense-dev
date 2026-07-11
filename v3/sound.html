@@ -504,6 +504,7 @@ if(d.t==='harmx'){
         <svg id="hx" viewBox="0 0 680 300" style="width:min(820px,86vw);display:block"></svg>
         <div style="font-size:15px;color:var(--sub);font-weight:700;margin:2px 0 6px"><span style="color:#378ADD">▬▬</span> 도 (파란 물결) &nbsp;&nbsp; <span style="color:#E24B4A">▬▬</span> 누른 음 (빨간 물결)</div>
       </div>
+      <div class="dial" id="hxWave" style="margin-top:8px;font-size:19px;display:none"></div>
       <div class="dial" id="hxInfo" style="line-height:1.7;font-size:21px;text-align:left">각 음마다 <b>물결이 달라요</b> — 도는 <b style="color:#378ADD">파란색</b>, 다른 음은 <b style="color:#E24B4A">빨간색</b>.<br>서로 다른 물결이 만나 <b>어떤 무늬</b>가 반복되어요.<br>그 무늬가 <b>자주 반복될수록</b> 잘 어울리는 화음이 되어요!</div>
       <div style="margin-top:10px"><button class="btn" id="itvBtn">📋 음정을 표로 정리해요</button> <button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>
       <div id="itvPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
@@ -559,7 +560,9 @@ if(d.t==='harmx'){
       if(i===0)tone(264,0,1.2);else chord(264,n[1],1.5);
       plog('harmx',{n:n[0]});drawHX(i);
       const s=starCount(a,b);
-      $('#hxRes').innerHTML=`도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span><br><span style="font-size:16px"><span style="color:#378ADD;font-weight:800">파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요!</span>`;});
+      $('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b><br><span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b><span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;
+      const hw=$('#hxWave');if(hw){hw.style.display='block';
+        hw.innerHTML=`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요!`;}});
     $('#itvBtn').onclick=()=>{$('#itvPop').style.display='flex';plog('itvpop',{});};
     $('#itvClose').onclick=()=>{$('#itvPop').style.display='none';};
     drawHX(-1);return;}
