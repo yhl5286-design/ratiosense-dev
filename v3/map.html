@@ -642,13 +642,9 @@ if(d.t==='movie'){placed=3;
       <div style="margin-top:12px"><button class="btn pri" onclick="next()">${d.i<3?'다음 컷 →':'비로 계산해 보기! ✏️'}</button></div>`;
     return;}
   if(d.t==='prop'){placed=3;
-    el.innerHTML=`<div class="eq" style="text-align:left;max-width:860px">
-        <div class="row">☀️ 시에네의 그림자 각도 : 알렉산드리아의 그림자 각도 = <b>0° : 7.2°</b> → 두 도시의 각도 차이는 <b>7.2°</b></div>
-        <div class="row">🌍 벌어진 각 : 한 바퀴 = <b>7.2° : 360° = 1 : 50</b> — 딱 <b>50분의 1</b>!</div>
-        <div class="row">📏 각도가 1 : 50이면 거리도 <b>1 : 50</b> → 두 도시 사이 800km는 지구 둘레의 50분의 1</div>
-      </div>
-      <div style="display:flex;gap:22px;align-items:center;justify-content:center;flex-wrap:wrap;margin:6px 0">
-        <svg viewBox="0 0 300 292" style="width:min(320px,86vw)">
+    el.innerHTML=`<div class="q">🌍 <b>지구의 둘레 구하기!</b><br>두 도시 그림자 각도의 차이 <b>7.2°</b> : 원 전체 <b>360°</b> = <b>1 : 50</b>이다.<br>두 도시 사이가 <b>800km</b>일 때, 지구는 <b>몇 km</b>일까?</div>
+      <div style="display:flex;justify-content:center;margin:6px 0">
+        <svg viewBox="0 0 300 292" style="width:min(300px,80vw)">
           <circle cx="140" cy="150" r="112" fill="none" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="4 7"/>
           <circle cx="140" cy="150" r="92" fill="#bfe0c2" stroke="#7fae84" stroke-width="4"/>
           <circle cx="140" cy="150" r="4.5" fill="#26303f"/>
@@ -661,18 +657,12 @@ if(d.t==='movie'){placed=3;
           <text x="28" y="80" font-size="13" font-weight="800" fill="#26303f">알렉산드리아</text>
           <text x="140" y="284" text-anchor="middle" font-size="16" font-weight="800" fill="#8a6a34">지구 한 바퀴 = 360° = ❓ km</text>
         </svg>
-        <div class="prop"><table>
-          <tr><td class="small">각도의 비</td><td></td><td class="small">거리의 비</td></tr>
-          <tr><td>7.2° : 360°</td><td>=</td><td>800km : <span style="color:var(--red)">❓</span></td></tr>
-          <tr><td class="x50">↓ ×50</td><td></td><td class="x50">↓ ×50</td></tr>
-          <tr><td>360°</td><td></td><td style="color:var(--red)">❓ km</td></tr>
-        </table></div>
       </div>
-      <div class="q" style="font-size:22px"><b>문제:</b> 각도가 50배면, 거리도 50배! 그럼 <b>지구 둘레</b>는 몇 km일까요?</div>
+      <div class="q" style="font-size:25px">1 : 50 = 800 : <b style="color:#c0392b">(&nbsp;&nbsp;?&nbsp;&nbsp;)</b></div>
       <div class="choices">${[['40,000 km',1],['4,000 km',0],['400,000 km',0]].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
-      b.dataset.ok==='1'?success('지구를 쟀어요!! 🌍','7.2° : 360° = 800 : <b>40,000</b> — 실제 값 40,075km, 오차 0.2%!<br>막대기 하나와 <b>비</b>만으로 지구를 쟀어요!')
-        :retry('각도가 <b>50배</b>가 되면 거리도 <b>50배</b> — 800km의 50배를 구해 보세요.');});return;}
+      b.dataset.ok==='1'?success('지구를 쟀어요!! 🌍','1 : 50 = 800 : <b>40,000</b> — 실제 값 40,075km, 오차 0.2%!')
+        :retry('1 : 50 = 800 : ( ) — 800의 <b>50배</b>를 구해 보세요.');});return;}
   if(d.t==='msum'){
     const S3=[
      {t:["지도는 실제 사물을 축척을 이용하여 일정한 ","로 줄여 나타낸 것이다."],a:["비율"],x:["덧셈","거리","차이"]},
