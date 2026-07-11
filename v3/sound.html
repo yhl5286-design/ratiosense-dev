@@ -505,19 +505,13 @@ if(d.t==='harmx'){
         <div style="font-size:15px;color:var(--sub);font-weight:700;margin:2px 0 6px"><span style="color:#378ADD">▬▬</span> 도 (파란 물결) &nbsp;&nbsp; <span style="color:#E24B4A">▬▬</span> 누른 음 (빨간 물결)</div>
       </div>
       <div class="dial" id="hxWave" style="margin-top:8px;font-size:19px;display:none"></div>
-      <div class="dial" id="hxInfo" style="line-height:1.7;font-size:21px;text-align:left">각 음마다 <b>물결이 달라요</b> — 도는 <b style="color:#378ADD">파란색</b>, 다른 음은 <b style="color:#E24B4A">빨간색</b>.<br>서로 다른 물결이 만나 <b>어떤 무늬</b>가 반복되어요.<br>그 무늬가 <b>자주 반복될수록</b> 잘 어울리는 화음이 되어요!</div>
-      <div style="margin-top:10px"><button class="btn" id="itvBtn">📋 음정을 표로 정리해요</button> <button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>
-      <div id="itvPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
-        <div style="background:#fffdf6;border:3.5px solid var(--line);border-radius:20px;padding:16px 26px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)">
-          <div class="q" style="font-size:21px;margin:0 0 2px">🎼 도와 다른 음 사이 — <b>음정</b>을 비로 정리해요!</div>
-          <div class="itvWrap"><table class="itvT">
-            <tr><th>음</th><th>음정</th><th>진동수 비 (도 : 음)</th></tr>
-            ${NOTES.map((m,i)=>`<tr class="${PERF.includes(i)?'pf':''}" data-i="${i}"><td>${i===0?'★':''}${m[0]}</td><td>${ITV[i]}</td><td><b style="color:#b3541e">${m[3]} : ${m[2]}</b></td></tr>`).join('')}
-          </table></div>
-          <div class="dial" style="margin-top:12px;font-size:20px">💡 <b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>비가 간단할수록</b> 두 소리가 <b>더 잘 어울려요</b>!</div>
-          <div style="margin-top:10px;text-align:center"><button class="btn pri" id="itvClose">닫기</button></div>
-        </div>
-      </div>`;
+      <div class="dial" id="hxInfo" style="line-height:1.7;font-size:21px">각 음의 <b>서로 다른 물결</b>이 만나 <b>새 무늬</b>가 생겨요!<br>새 무늬가 <b>자주 반복될수록</b> 잘 어울려요!</div>
+      <div class="itvWrap" style="margin-top:12px"><table class="itvT" id="hxTbl" style="font-size:17.5px">
+        <tr><th>음</th><th>음정</th><th>진동수 비 (도 : 음)</th></tr>
+        ${NOTES.map((m,i)=>`<tr id="hxr${i}" class="${PERF.includes(i)?'pf':''}" style="opacity:.22"><td>${i===0?'★':''}${m[0]}</td><td class="c1">?</td><td class="c2">?</td></tr>`).join('')}
+      </table></div>
+      <div class="dial" id="hxDone" style="display:none;margin-top:10px;font-size:20px">🎉 <b>음정 표 완성!</b> — 💡 <b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>비가 간단할수록</b> 두 소리가 <b>더 잘 어울려요</b>!</div>
+      <div style="margin-top:10px"><button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>`;
     function starCount(a,b){const s=a+b;return s<=5?5:(s<=7?4:(s<=9?3:(s<=17?2:1)));}
     const VERD=['','잘 안 어울려요','조금 어울려요','제법 어울려요','잘 어울려요','아주 잘 어울려요!'];
     function drawHX(sel){
@@ -562,9 +556,11 @@ if(d.t==='harmx'){
       const s=starCount(a,b);
       $('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b><br><span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b><span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;
       const hw=$('#hxWave');if(hw){hw.style.display='block';
-        hw.innerHTML=`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요!`;}});
-    $('#itvBtn').onclick=()=>{$('#itvPop').style.display='flex';plog('itvpop',{});};
-    $('#itvClose').onclick=()=>{$('#itvPop').style.display='none';};
+        hw.innerHTML=`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요!`;}
+      const tr=$('#hxr'+i);if(tr){tr.style.opacity='1';
+        tr.querySelector('.c1').textContent=ITV[i];
+        tr.querySelector('.c2').innerHTML=`<b style="color:#b3541e">${a} : ${b}</b>`;}
+      if(i===7){const hd=$('#hxDone');if(hd)hd.style.display='block';plog('itvdone',{});}});
     drawHX(-1);return;}
 if(d.t==='chord'){
     const n=NOTES[d.i],a=n[3],b=n[2]; // 도:음 = a:b
