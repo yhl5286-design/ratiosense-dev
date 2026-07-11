@@ -368,6 +368,7 @@ function harpHTML(){
 
 const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harmx',ni:__i});DECK.push({t:'itv2'});
 const CHORD_SET=[3,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
+DECK.push({t:'strlen'});
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
 DECK.push({t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'ssum',i:3},{t:'done'});
 let idx=0,w1env=0,f1=264,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
@@ -588,6 +589,29 @@ if(d.t==='chord'){
         success(`도 : ${n[0]} = ${a} : ${b}!`,`도가 <b>${a}번</b> 떨릴 때 ${n[0]}${jz(n[0],'은','는')} <b>${b}번</b> 떨려요${INTV[key]?' — <b>'+INTV[key]+'</b>':''}. ${a*b<=6?'아주 잘 어울리는 화음이에요! 😍':(a*b<=20?'잘 어울리는 화음이에요 😊':'조금 거친 화음이에요 😐')}`);}
       else retry(`<b>${n[0]}</b> 건반(노란 테두리)을 눌러 도와 함께 들어 보세요 — 떨림 횟수 안내가 힌트예요!`);});
     wireGoal(el);return;}
+  if(d.t==='strlen'){
+    el.innerHTML=`<div class="q">🎻 <b>줄의 길이와 소리</b> — 줄을 길게, 짧게 조절해 보세요!</div>
+      <div class="sub" style="font-size:20px">줄이 <b>길수록</b> 천천히 떨려 <b>낮은 소리</b>, <b>짧을수록</b> 빨리 떨려 <b>높은 소리</b>!</div>
+      <div class="harp" style="padding:14px 60px 10px"><div class="hbeam"></div>
+        <div style="display:flex;justify-content:center;align-items:flex-start"><div class="hs" id="slStr" style="height:252px"></div></div>
+      </div>
+      <div class="dial" id="slInfo" style="font-size:22px;margin-top:10px">길이 <b>72cm</b> — 1초에 <b>440번</b> 떨려요 <span style="color:var(--sub)">(기준 라 ★)</span></div>
+      <div style="margin:12px 0"><span style="font-weight:800;color:var(--sub)">짧게 ←</span>
+        <input type="range" id="slR" min="24" max="96" value="72" step="1" style="width:min(380px,70vw);accent-color:#e0a02a;vertical-align:middle">
+        <span style="font-weight:800;color:var(--sub)">→ 길게</span></div>
+      <button class="btn" id="slPlay">♪ 줄 뜯기</button>
+      <button class="btn pri" onclick="next()">하프 공방으로 →</button>`;
+    const pluck=()=>{const L=+$('#slR').value;pluckT(Math.round(440*72/L));
+      const s=$('#slStr');if(s){s.classList.remove('pluckA');void s.offsetWidth;s.classList.add('pluckA');}};
+    const upd=()=>{const L=+$('#slR').value,f=Math.round(440*72/L);
+      $('#slStr').style.height=Math.round(L*3.5)+'px';
+      const tag=L===72?'(기준 라 ★)':(L<50?'(아주 높은 소리!)':(L<72?'(높은 소리!)':(L>84?'(아주 낮은 소리!)':'(낮은 소리!)')));
+      $('#slInfo').innerHTML=`길이 <b>${L}cm</b> — 1초에 <b>${f}번</b> 떨려요 <span style="color:var(--sub)">${tag}</span>`;};
+    let lastP=0;
+    $('#slR').oninput=()=>{upd();const now=Date.now();
+      if(now-lastP>200){lastP=now;pluck();}};
+    $('#slPlay').onclick=()=>{plog('strlen',{L:+$('#slR').value});pluck();};
+    upd();return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
     const exS=String(Math.round(ex*100)/100);
     const bank=[String(p.a),String(p.b),exS,'440']
