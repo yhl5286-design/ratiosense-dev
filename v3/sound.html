@@ -470,16 +470,17 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
-    el.innerHTML=`<div class="q">🎹 도와 <b>가장 잘 어울리는 화음</b> 찾기! — 흰 건반을 눌러보세요!</div>
-      <div class="sub">두 물결이 만드는 무늬가 <b>얼마나 빨리 다시 처음으로 돌아오는지</b> 살펴보세요!<br>💡 무늬가 <b>빨리 반복</b>될수록(비의 숫자가 작을수록) 더 잘 어울려요!</div>
+    el.innerHTML=`<div class="q">🎹 도와 <b>가장 잘 어울리는 화음</b> 찾기!</div>
+      <div class="sub" style="font-size:20px">흰 건반을 눌러보세요!</div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===0?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':''}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
+      <div class="dial" id="hxRes" style="margin-top:10px;font-size:19px">건반을 눌러 보세요!</div>
       <div style="display:inline-block;background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 12px 4px;margin-top:10px;max-width:92vw">
         <svg id="hx" viewBox="0 0 680 300" style="width:min(820px,86vw);display:block"></svg>
         <div style="font-size:15px;color:var(--sub);font-weight:700;margin:2px 0 6px"><span style="color:#378ADD">▬▬</span> 도 (파란 물결) &nbsp;&nbsp; <span style="color:#E24B4A">▬▬</span> 누른 음 (빨간 물결)</div>
       </div>
-      <div class="dial" id="hxInfo" style="line-height:1.6;font-size:18px">건반을 누르면 도(파란 물결)와 누른 음(빨간 물결)이 함께 나타나요!</div>
+      <div class="dial" id="hxInfo" style="line-height:1.7;font-size:21px;text-align:left">각 음마다 <b>물결이 달라요</b> — 도는 <b style="color:#378ADD">파란색</b>, 다른 음은 <b style="color:#E24B4A">빨간색</b>.<br>서로 다른 물결이 만나 <b>어떤 무늬</b>가 반복되어요.<br>그 무늬가 <b>자주 반복될수록</b> 잘 어울리는 화음이 되어요!</div>
       <div style="margin-top:10px"><button class="btn" id="itvBtn">📋 음정을 표로 정리해요</button> <button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>
       <div id="itvPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
         <div style="background:#fffdf6;border:3.5px solid var(--line);border-radius:20px;padding:16px 26px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)">
@@ -534,7 +535,7 @@ if(d.t==='harmx'){
       if(i===0)tone(264,0,1.2);else chord(264,n[1],1.5);
       plog('harmx',{n:n[0]});drawHX(i);
       const s=starCount(a,b);
-      $('#hxInfo').innerHTML=`<span style="color:#378ADD;font-weight:800">파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요! &nbsp; 도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;});
+      $('#hxRes').innerHTML=`도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span><br><span style="font-size:16px"><span style="color:#378ADD;font-weight:800">파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요!</span>`;});
     $('#itvBtn').onclick=()=>{$('#itvPop').style.display='flex';plog('itvpop',{});};
     $('#itvClose').onclick=()=>{$('#itvPop').style.display='none';};
     drawHX(-1);return;}
