@@ -183,7 +183,7 @@
 </style>
 </head>
 <body>
-<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🗺️ 지도의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/15</div></div>
+<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🗺️ 지도의 비밀 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/16</div></div>
 <div id="stage"><div class="slide" id="slide"></div></div>
 <button class="nav" id="navL">‹</button><button class="nav" id="navR">›</button>
 <div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
@@ -306,7 +306,7 @@ function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
 
 
 const OBJS=[
- {em:'🌉',n:'다리',shape:'직사각형',dim:'길이',real:300,cells:3,x:2,y:4,sx:2,sy:4},
+ {em:'🌉',n:'다리',shape:'직사각형',dim:'길이',real:300,cells:3,x:3.5,y:3.0,sx:3.5,sy:3.0},
  {em:'💧',n:'호수',shape:'원',dim:'지름',real:100,cells:1,x:6,y:2,sx:4,sy:2},
  {em:'⛰️',n:'산',shape:'삼각형',dim:'밑변',real:500,cells:5,x:1,y:2.2,sx:1,sy:3.4}];
 let placed=0;
@@ -318,7 +318,7 @@ function townMap(f,numIdx,base,only){f=f||1;const C=(base||64)*f;
     if(solo?only.indexOf(i)<0:i>=placed)return;
     const [X,Y]=pos(ob);
     let shape='';
-    if(ob.shape==='직사각형')shape=`<div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*ob.cells}px;height:${C*0.8}px;background:#9a7b4f;border:3px solid #6d5432;background-image:repeating-linear-gradient(90deg,transparent 0 ${C*0.28}px,rgba(255,255,255,.35) ${C*0.28}px ${C*0.33}px)"></div>`;
+    if(ob.shape==='직사각형')shape=`<div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*0.8}px;height:${C*ob.cells}px;background:#9a7b4f;border:3px solid #6d5432;background-image:repeating-linear-gradient(0deg,transparent 0 ${C*0.28}px,rgba(255,255,255,.35) ${C*0.28}px ${C*0.33}px)"></div>`;
     else if(ob.shape==='원')shape=`<div style="position:absolute;left:${C*X}px;top:${C*Y}px;width:${C*ob.cells}px;height:${C*ob.cells}px;background:radial-gradient(circle at 35% 30%,#9ecbee,#5b93c9);border-radius:50%;border:3px solid #3e6f9e"></div>`;
     else shape=`<div style="position:absolute;left:${C*X}px;top:${C*(Y-1.1)}px;width:0;height:0;border-left:${C*ob.cells/2}px solid transparent;border-right:${C*ob.cells/2}px solid transparent;border-bottom:${C*1.5}px solid #5e9a5e;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))"></div>
       <div style="position:absolute;left:${C*X}px;top:${C*(Y+0.36)}px;width:${C*ob.cells}px;border-bottom:3.5px solid #2e5c2e"></div>`;
@@ -327,7 +327,8 @@ function townMap(f,numIdx,base,only){f=f||1;const C=(base||64)*f;
   if(numIdx!=null&&(solo?only.indexOf(numIdx)>=0:numIdx<placed)){const nb=OBJS[numIdx];
     const [X,Y]=pos(nb);
     for(let k=0;k<nb.cells;k++){
-      const nx=C*(X+k)+C/2, ny=nb.shape==='삼각형'?C*(Y-0.15):C*(Y+(nb.shape==='원'?0.5:0.4));
+      const nx=nb.shape==='직사각형'?C*X+C*0.4:C*(X+k)+C/2;
+      const ny=nb.shape==='직사각형'?C*(Y+k)+C/2:(nb.shape==='삼각형'?C*(Y-0.15):C*(Y+(nb.shape==='원'?0.5:0.4)));
       o+=`<div class="cellnum" style="left:${nx-13.5}px;top:${ny-13.5}px">${k+1}</div>`;}}
   return `<div class="mapbox" style="width:${C*8+4}px;height:${C*7+4}px;overflow:hidden">
     <div class="mapgrid" style="background-size:${C}px ${C}px;width:${C*8}px;height:${C*7}px"></div>${o}</div>`;}
@@ -454,7 +455,6 @@ function mountDrag(el,onAll){
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🗺️</div>
     <div class="q">지도의 비밀을 찾아봅시다!</div>
-    <div class="sub">마을은 너무 커서 종이에 못 그려요. 그래서 약속해요 —<br><b>실제 100m = 지도 1칸</b>. 무엇이든 <b>같은 비(1:10,000)</b>로 줄이는 이 약속이 <b>축척</b>!<br>그래서 지도 위 도형은 실제와 <b>닮은 도형</b>이 돼요.</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i+(d._on?1:0);
     if(!d._on){
@@ -607,9 +607,9 @@ if(d.t==='movie'){placed=3;
       <button class="btn" id="mvSkip" style="display:none">⏭ 건너뛰기</button>
       <button class="btn pri" id="mvNext" style="display:none">요약 만화 보기 →</button></div>`;
     const SC=[
-      [1,'2200년 전, 이집트 알렉산드리아의 큰 도서관. 도서관장 에라토스테네스는 늘 궁금했어요 — 지구 한 바퀴는 도대체 얼마나 될까?'],
-      [2,'어느 날, 그는 남쪽 도시 시에네의 신기한 소문을 들었어요. 일 년 중 낮이 가장 긴 날 정오, 깊은 우물 바닥까지 햇빛이 닿는다는 거예요!'],
-      [3,'그건 해가 머리 위에 있다는 뜻이에요. 그날 시에네에서는 막대를 세워도 그림자가 하나도 생기지 않아요. 0도!'],
+      [1,'2200년 전, 이집트의 알렉산드리아에 큰 도서관이 있었어요. 이 큰 도서관을 운영하던 도서관장 에라토스테네스는 늘 궁금했어요. 지구는 도대체 얼마나 클까?'],
+      [2,'어느 날, 그는 남쪽 도시 시에네의 신기한 소문을 들었어요. 일년 중 낮이 가장 긴 하지 낮 12시에, 깊은 우물 바닥까지 햇빛이 닿는다는 거예요!'],
+      [3,'그건 해가 물체의 바로 위에 있다는 뜻이에요. 그날 시에네에서는 막대를 세워도 그림자가 하나도 생기지 않아요. 그림자가 없어 각도는 0도인 것이죠!'],
       [4,'에라토스테네스는 같은 날 같은 시각, 알렉산드리아에 막대를 세웠어요. 여기에는 그림자가 생겼어요! 각도를 재보니 7.2도.'],
       [5,'같은 햇빛인데 왜 다를까요? 지구가 둥글기 때문이에요! 햇빛은 나란히 내려오지만, 둥근 땅 위의 두 도시는 서 있는 방향이 달라요.'],
       [6,'7.2도는 한 바퀴 360도의 50분의 1! 그렇다면 두 도시 사이 800킬로미터도 지구 둘레의 50분의 1이겠죠? 800 곱하기 50 — 지구 둘레는 몇 킬로미터일까요? 이따가 직접 구해 보세요!']];
@@ -710,6 +710,7 @@ const RC=[
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 <b>진동수</b>가 간단한 <b>정수비</b>를 이룰수록 더 잘 어울려 들린다(화음).'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
+ {id:'sound3',r:'🎼 소리의 비밀',t:'라 줄이 72cm일 때, 미′ 줄은 72 × <b>2/3</b> = <b>48</b>cm이다.'},
  {id:'map0',r:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
  {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제 거리를 <b>10,000</b>분의 1로 줄인 것이다.'},
  {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
@@ -720,7 +721,7 @@ const RC=[
  {id:'mart3',r:'🛒 마트의 비밀',t:'할인율이 20%인 물건을 살 때, 원래 가격에 (100 − <b>20</b>)/100을 곱하면 된다.<br>예를 들어 10,000원인 물건이 20% 할인이라면 <b>0.8</b>을 곱한 <b>8,000</b>원을 낸다.'}];
 (function(){
   const o=document.createElement('div');o.id='walOv';
-  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 15</h3>
+  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 16</h3>
     <div id="walList" style="text-align:left"></div>
     <div style="margin-top:14px"><button class="btn pri" id="walRev">🔁 카드 복습하러 가기</button>
     <button class="btn" id="walClose">닫기</button></div></div>`;

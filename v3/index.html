@@ -107,11 +107,11 @@
 <body>
 <div class="wrap">
   <h1>RatioSense</h1>
-  <div class="sub story">🗝️ <b>1번부터 4번 방까지 탐험</b>하며 <b>비밀 카드 15장</b>을 모으세요!<br>이 탐험이 끝나면 여러분은 <b style="color:#b3541e">비 감각</b>을 얻을 수 있어요! ✨</div>
+  <div class="sub story">🗝️ <b>1번부터 4번 방까지 탐험</b>하며 <b>비밀 카드 16장</b>을 모으세요!<br>이 탐험이 끝나면 여러분은 <b style="color:#b3541e">비 감각</b>을 얻을 수 있어요! ✨</div>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div style="margin-bottom:14px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">🚀 탐험 시작!</button></div>
-  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 15</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button></div>
-  <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 15장을 모두 모아 보세요!</div>
+  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 16</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button></div>
+  <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 16장을 모두 모아 보세요!</div>
   <div class="rooms">
     <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">1번 색깔의 비밀 방</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
     <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">2번 소리의 비밀 방</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
@@ -127,7 +127,7 @@
     <div style="text-align:left;font-size:19px;font-weight:700;line-height:2.1;margin:14px 0">
       <b>1.</b> 네 방을 <b>순서대로</b> 탐험해요.<br>
       <b>2.</b> 탐험 중 <b>🃏 비밀 카드 문제</b>를 풀어 카드를 얻어요!<br>
-      <b>3.</b> 비밀카드 <b>15장</b>을 모두 얻으면 이 모험이 끝납니다.
+      <b>3.</b> 비밀카드 <b>16장</b>을 모두 얻으면 이 모험이 끝납니다.
     </div>
     <button class="dexClose" id="introOk">좋아요, 출발! 🚀</button>
   </div>
@@ -151,12 +151,12 @@
 <div id="dexOv">
   <div class="dexCard">
     <h2>📖 비밀 카드 도감</h2>
-    <div class="cnt"><span id="dexN2">0</span> / 15 수집</div>
+    <div class="cnt"><span id="dexN2">0</span> / 16 수집</div>
     <div style="background:#fbf6e8;border:2px solid #e0c98a;border-radius:14px;padding:12px 16px;font-size:16px;font-weight:700;line-height:1.7;margin-bottom:6px">
       🃏 <b>비밀 카드는 이렇게 모아요!</b><br>
       비밀 카드마다 <b>카드 문제</b>가 하나씩 있어요. 탐험 중에 <b>🃏 비밀 카드 문제!</b> 표시와 함께 나타나요.
       낱말 카드로 비밀 문장을 완성하면, 그 문장이 카드가 되어 이 도감에 모여요.<br>
-      🎨 색깔 <b>4장</b> · 🎼 소리 <b>3장</b> · 🗺️ 지도 <b>4장</b> · 🛒 마트 <b>4장</b> = 모두 <b>15장</b>!
+      🎨 색깔 <b>4장</b> · 🎼 소리 <b>4장</b> · 🗺️ 지도 <b>4장</b> · 🛒 마트 <b>4장</b> = 모두 <b>16장</b>!
     </div>
     <div id="dexList"></div>
     <button class="dexClose" id="dexClose">닫기</button>
@@ -239,6 +239,7 @@ const CARDS=[
  {id:'sound0',room:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
  {id:'sound1',room:'🎼 소리의 비밀',t:'두 소리의 <b>진동수</b>가 간단한 <b>정수비</b>를 이룰수록 더 잘 어울려 들린다(화음).'},
  {id:'sound2',room:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
+ {id:'sound3',room:'🎼 소리의 비밀',t:'라 줄이 72cm일 때, 미′ 줄은 72 × <b>2/3</b> = <b>48</b>cm이다.'},
  {id:'map0',room:'🗺️ 지도의 비밀',t:'지도는 실제 사물을 축척을 이용하여 일정한 <b>비율</b>로 줄여 나타낸 것이다.'},
  {id:'map1',room:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제 거리를 <b>10,000</b>분의 1로 줄인 것이다.'},
  {id:'map2',room:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
