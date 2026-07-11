@@ -164,6 +164,8 @@
   .toastN .ts{font-size:20px;font-weight:700;color:var(--sub);margin-top:8px;line-height:1.55}
   .toastN.out{opacity:0;transition:opacity .35s}
   @keyframes tIn{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  .escDig{display:inline-block;background:linear-gradient(#fff8e1,#ffe9a8);border:3.5px solid #e0a02a;border-radius:16px;padding:10px 24px;font-size:21px;font-weight:800;margin:8px 0}
+  .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
 </style>
 </head>
 <body>
@@ -669,16 +671,17 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     confetti();setTimeout(confetti,700);clap();
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎊</span></div>
     <div class="q">네 방 모두 완주! 비율 탐험 대성공!</div>
+    <div class="escDig">🔓 4번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">8</span> 획득!</div>
     <div class="sub">색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — <b>비밀 카드 16장</b>도 모두 모았나요?</div>
-    <button class="btn pri" id="go2">🔁 모은 카드로 복습하러 →</button>`;
-    $('#go2').onclick=()=>{plog('complete',{});markDone('mart');chime(true);location.href='index.html?review=1';};
+    <button class="btn pri" id="go2">🔐 탈출의 문으로 →</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('mart');chime(true);location.href='index.html?escape=1';};
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
 $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
 const RC=[
  {id:'color0',r:'🎨 색깔의 비밀',t:'<b>양</b>이 달라도 <b>비</b>가 같다면 같은 색을 만들 수 있다.'},
- {id:'color1',r:'🎨 색깔의 비밀',t:'기준이 되는 양을 <b>기준량</b>, 그 기준량을 기준으로 비교할 때의 양을 <b>비교하는 양</b>이라 한다.'},
+ {id:'color1',r:'🎨 색깔의 비밀',t:'두 양의 크기를 <b>비교</b>할 때, <b>기준</b>이 되는 양을 기준량이라 하고, 기준량과 비교하는 양을 <b>비교하는 양</b>이라고 한다.'},
  {id:'color2',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량을 분수로 나타내면 <b>비교하는 양/기준량</b>이 되고 이것이 <b>비율</b>이다.'},
  {id:'color3',r:'🎨 색깔의 비밀',t:'백분율은 기준량을 <b>100</b>으로 할 때의 비율이다.'},
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},

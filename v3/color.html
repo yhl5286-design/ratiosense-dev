@@ -222,6 +222,8 @@
   .npad{display:grid;grid-template-columns:repeat(3,76px);gap:8px;justify-content:center;margin-top:10px}
   .npad button{border:2.5px solid var(--line);background:#fff;border-radius:14px;font-size:24px;font-weight:800;padding:10px 0;cursor:pointer;font-family:inherit}
   .npad button:active{background:#f3ead8}
+  .escDig{display:inline-block;background:linear-gradient(#fff8e1,#ffe9a8);border:3.5px solid #e0a02a;border-radius:16px;padding:10px 24px;font-size:21px;font-weight:800;margin:8px 0}
+  .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
 </style>
 </head>
 <body>
@@ -679,7 +681,7 @@ if(d.t==='sintro'){
   if(d.t==='sum'){
     const S4=[
      {t:["","이 달라도 ","가 같다면 같은 색을 만들 수 있다."],a:["양","비"],x:["차이","개수"]},
-     {t:["기준이 되는 양을 ",", 그 기준량을 기준으로 비교할 때의 양을 ","이라 한다."],a:["기준량","비교하는 양"],x:["비율","전체 양"]},
+     {t:["두 양의 크기를 ","할 때, ","이 되는 양을 기준량이라 하고, 기준량과 비교하는 양을 ","이라고 한다."],a:["비교","기준","비교하는 양"],x:["계산","전체"]},
      {t:["비교하는 양 : 기준량을 분수로 나타내면 ","이 되고 이것이 ","이다."],a:["비교하는 양/기준량","비율"],x:["기준량/비교하는 양","비"]},
      {t:["백분율은 기준량을 ","으로 할 때의 비율이다."],a:["100"],x:["10","1"]}];
     const s=S4[d.i];
@@ -699,6 +701,7 @@ if(d.t==='sintro'){
     confetti();clap();
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎨</span></div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
+    <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span> 획득!</div>
     <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🎼 소리의 비밀</b>!</div>
     <button class="btn pri" id="go2">다음 방으로 → 🎼</button>`;
     $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='sound.html';};
@@ -708,7 +711,7 @@ $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
 $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
 const RC=[
  {id:'color0',r:'🎨 색깔의 비밀',t:'<b>양</b>이 달라도 <b>비</b>가 같다면 같은 색을 만들 수 있다.'},
- {id:'color1',r:'🎨 색깔의 비밀',t:'기준이 되는 양을 <b>기준량</b>, 그 기준량을 기준으로 비교할 때의 양을 <b>비교하는 양</b>이라 한다.'},
+ {id:'color1',r:'🎨 색깔의 비밀',t:'두 양의 크기를 <b>비교</b>할 때, <b>기준</b>이 되는 양을 기준량이라 하고, 기준량과 비교하는 양을 <b>비교하는 양</b>이라고 한다.'},
  {id:'color2',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량을 분수로 나타내면 <b>비교하는 양/기준량</b>이 되고 이것이 <b>비율</b>이다.'},
  {id:'color3',r:'🎨 색깔의 비밀',t:'백분율은 기준량을 <b>100</b>으로 할 때의 비율이다.'},
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
