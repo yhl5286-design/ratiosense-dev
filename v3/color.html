@@ -26,8 +26,8 @@
   .pair{display:flex;gap:46px;justify-content:center;align-items:flex-end;margin:14px 0;flex-wrap:wrap}
   .recbox{background:#fff;border:3px solid var(--line);border-radius:16px;padding:12px 18px;min-width:210px;text-align:left;align-self:center}
   .recbox .rt{font-size:15.5px;color:var(--sub);font-weight:800;margin-bottom:6px}
-  .recbox .rr{display:flex;align-items:center;gap:8px;font-size:18.5px;font-weight:800;margin:7px 0;white-space:nowrap}
-  .recbox .sw2{width:15px;height:15px;border-radius:4px;flex:none}
+  .recbox .rr{display:flex;align-items:center;gap:10px;font-size:28px;font-weight:800;margin:10px 0;white-space:nowrap}
+  .recbox .sw2{width:24px;height:24px;border-radius:6px;flex:none}
   .recbox .bar{height:12px;border-radius:6px;transition:width .25s}
   .bk{width:150px;height:190px;border:5px solid #26303f;border-top-width:3px;border-radius:0 0 26px 26px;position:relative;overflow:hidden;background:#fbfaf6}
   .bk .fill{position:absolute;bottom:0;left:0;right:0;height:0%;transition:height .25s,background .25s}
@@ -437,8 +437,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     const f=FAM[d.fi],[r0,r1]=f.r,p0=f.paints[0],p1=f.paints[1];
     const tgt=mix({[p0]:r0,[p1]:r1});
     const N=['첫','두','세','네','다섯','여섯'][d.fi*2+d.k];
-    const qs=[`${f.emoji} <b>${N}번째 미션. ${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기!</b><br>${p0} 물감과 ${p1} 물감을 이용하여 ${p0} : ${p1}이 <b>${r0} : ${r1}</b>이 되도록 만들어요!`,
-              `${f.emoji} <b>${N}번째 미션. ${p0} : ${p1} = ${r0} : ${r1}인 같은 ${f.id}색을 다른 양으로 만들기!</b><br>${p0} 물감과 ${p1} 물감을 각각 얼마나 넣을까요?`][d.k];
+    const qs=[`<b>${N}번째 미션 "${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기"</b><br>${p0} 물감과 ${p1} 물감을 이용하여<br>${p0} : ${p1}이 <b>${r0} : ${r1}</b>이 되도록 만들어요!`,
+              `<b>${N}번째 미션 "${p0} : ${p1} = ${r0} : ${r1}인 같은 ${f.id}색을 다른 양으로 만들기"</b><br>${p0} 물감과 ${p1} 물감을 각각 얼마나 넣을까요?`][d.k];
     el.innerHTML=`<div class="q">${qs}</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <span id="a0">0</span>mL</div>${tubes(p0,[5,10,25,50])}</div>
@@ -447,16 +447,15 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       <div class="pair">
         <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
         <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">Ⓑ 내가 만든 색</div></div>
-        <div class="recbox"><div class="rt">📋 Ⓑ 비커 기록 — 무엇이 얼마?</div><div id="recT"></div></div>
+        <div class="recbox"><div id="recT"></div></div>
       </div>
       <button class="btn ghost" id="clr">🗑 비우기</button>`;
     const used=f._used||(f._used=[]);  // 색깔(가족) 단위 공유 — 라운드가 달라도 같은 양 재사용 차단
     const upd=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
       const rt=$('#recT');if(rt)rt.innerHTML=`
-        <div class="rr"><span class="sw2" style="background:${rgb(PRIM[p0])}"></span>${p0} <b>${a}mL</b><span class="bar" style="background:${rgb(PRIM[p0])};width:${Math.min(92,a*0.55)}px"></span></div>
-        <div class="rr"><span class="sw2" style="background:${rgb(PRIM[p1])}"></span>${p1} <b>${b}mL</b><span class="bar" style="background:${rgb(PRIM[p1])};width:${Math.min(92,b*0.55)}px"></span></div>
-        <div class="rr" style="border-top:2.5px solid var(--line);padding-top:7px">합계 <b>${tot}mL</b></div>`;
+        <div class="rr"><span class="sw2" style="background:${rgb(PRIM[p0])}"></span>${p0} <b>${a}mL</b></div>
+        <div class="rr"><span class="sw2" style="background:${rgb(PRIM[p1])}"></span>${p1} <b>${b}mL</b></div>`;
       const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';
       if(a>0&&b>0&&a*r1===b*r0){
         const key=a+':'+b;
@@ -519,7 +518,7 @@ if(d.t==='mdemo'){
   if(d.t==='make'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,ans=BASE*m.r[1-gi]/m.r[gi];
     const tgt=mix({[m.top[0]]:m.r[0],[m.top[1]]:m.r[1]});
-    el.innerHTML=`<div class="q">(${m.top[0]} 물감의 양) : (${m.top[1]} 물감의 양) = <b>${m.r[0]} : ${m.r[1]}</b>이 되도록<br>${m.cn}${jz(m.cn,'을','를')} 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
+    el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
       <div class="sub">아래에 숫자를 직접 입력하세요.</div>
       <div class="pair">
         <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
