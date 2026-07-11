@@ -11,7 +11,7 @@
   .wrap{text-align:center;padding:30px 16px;max-width:1000px}
   h1{font-size:clamp(30px,4.5vw,44px);margin:0 0 6px}
   .sub{font-size:clamp(18px,2.2vw,22px);color:var(--sub);font-weight:700;margin-bottom:30px}
-  .rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+  .rooms{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:760px;margin:0 auto}
   a.room{display:block;position:relative;background:#fff;border:3px solid var(--line);border-radius:24px;padding:30px 18px;text-decoration:none;color:var(--ink);transition:.15s;box-shadow:0 6px 20px rgba(0,0,0,.06)}
   .room .badge{position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:50%;background:#f4f1ea;border:2.5px solid var(--line);font-size:18px;font-weight:800;color:var(--sub);display:flex;align-items:center;justify-content:center}
   .room .donechk{position:absolute;top:12px;right:14px;font-size:24px}
@@ -106,8 +106,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>🔢 RatioSense <span style="color:#b3541e">v3</span></h1>
-  <div class="sub story">🗝️ 지금부터 <b>1번 방부터 4번 방까지 순서대로 탐험</b>하여 <b>비밀 카드 15장</b>을 모으세요!<br>비밀 카드를 모두 모으면 여러분은 어디서든 <b style="color:#b3541e">'비'를 이용한 마법</b>을 부릴 수 있게 됩니다! ✨</div>
+  <h1>RatioSense</h1>
+  <div class="sub story">🗝️ <b>1번부터 4번 방까지 탐험</b>하며 <b>비밀 카드 15장</b>을 모으세요!<br>이 탐험이 끝나면 여러분은 <b style="color:#b3541e">비 감각</b>을 얻을 수 있어요! ✨</div>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div style="margin-bottom:14px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">🚀 탐험 시작!</button></div>
   <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 15</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button></div>
