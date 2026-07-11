@@ -374,8 +374,8 @@ const FAM=[
  {id:'자주',emoji:'🍇',paints:['빨강','파랑'],r:[2,1]},
  {id:'초록',emoji:'🟢',paints:['노랑','파랑'],r:[2,5]}];
 const MAKE=[
+ {top:['파랑','노랑'],r:[1,2],given:'파랑',gv:30,cn:'초록'},
  {top:['노랑','빨강'],r:[3,2],given:'빨강',gv:20,cn:'주황'},
- {top:['파랑','노랑'],r:[1,2],given:'노랑',gv:60,cn:'초록'},
  {top:['파랑','빨강'],r:[5,4],given:'빨강',gv:24,cn:'보라'}]; // top[0]:top[1]=r, given이 기준, cn=만드는 색
 const R3=[
  {base:'빨강',comp:'노랑',bm:100,cm:200,res:'2'},
@@ -386,7 +386,7 @@ DECK.push({t:'qintro'});
 MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
 DECK.push({t:'pintro'});
-DECK.push({t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'cellpct'},{t:'pct'},{t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
+DECK.push({t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'cellpct'},{t:'pct'},{t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -603,10 +603,10 @@ if(d.t==='mdemo'){
     mountDrag(el,()=>{plog('rate',{i:d.i});success('맞아요!',W.okS);});
     return;}
   if(d.t==='paint'){
-    const n=d.n, needR=n*2/5, needY=n*3/5, cols=(n===10?5:10);
+    const n=d.n, needR=n*2/5, needY=n*3/5, cols=(n<=10?5:10);
     if(!d._cells||d._cells.length!==n)d._cells=Array(n).fill('');
     const cells=d._cells;let brush=d._brush||null;
-    el.innerHTML=`<div class="q">${n===10?'먼저 <b>10칸</b>으로 연습!':(n===50?'이번엔 <b>50칸</b>!':'<b>100칸</b>으로 나타내기 도전!')}<br>빨강 : 노랑 = <b>2 : 3</b>이 되려면 빨강은 <b>몇 칸</b>, 노랑은 <b>몇 칸</b> 색칠해야 할까요?</div>
+    el.innerHTML=`<div class="q">${n===5?'먼저 <b>5칸</b>으로 연습!':(n===10?'이번엔 <b>10칸</b>!':'<b>100칸</b>으로 나타내기 도전!')}<br>빨강 : 노랑 = <b>2 : 3</b>이 되려면 빨강은 <b>몇 칸</b>, 노랑은 <b>몇 칸</b> 색칠해야 할까요?</div>
       <div class="sub"><b>1.</b> 물감 버튼 누르기 &nbsp;→&nbsp; <b>2.</b> 칸을 누르거나 드래그하여 색칠하기</div>
       <div class="pots">
         <button class="pot" id="potR"><span class="sw" style="background:${rgb(PRIM['빨강'])}"></span>빨강 물감</button>
@@ -614,7 +614,7 @@ if(d.t==='mdemo'){
         <button class="btn ghost" id="clr">🗑 모두 지우기</button>
       </div>
       <div class="cnt" id="cnt"></div>
-      <div class="grid" id="gr" style="grid-template-columns:repeat(${cols},1fr);max-width:${n===10?420:560}px">
+      <div class="grid" id="gr" style="grid-template-columns:repeat(${cols},1fr);max-width:${n<=10?420:560}px">
         ${Array.from({length:n},(_,i)=>`<div class="cell" data-i="${i}" style="${n===10?'border:1.5px solid #ddd8ca;':''}"></div>`).join('')}
       </div>`;
     const gr=$('#gr');
