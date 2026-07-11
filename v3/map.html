@@ -410,9 +410,9 @@ function toastFB(cls,t,s){try{
   document.querySelectorAll('.toastN').forEach(x=>x.remove());
   const d=document.createElement('div');d.className='toastN '+cls;
   d.innerHTML='<b>'+t+'</b>'+(s?'<div class="ts">'+s+'</div>':'');
-  document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2300);
+  document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2600);
 }catch(e){}}
-function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,800);}
+function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,2000);}
 function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
