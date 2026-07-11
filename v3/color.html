@@ -537,7 +537,7 @@ if(d.t==='mdemo'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,cv=BASE*m.r[1-gi]/m.r[gi];
     const A=m.given+' 물감의 양',B=askC+' 물감의 양';
     const bank=[A,B].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>이 되도록 <b>${m.given} ${BASE}mL를 기준으로</b> ${askC} 물감을 <b>${cv}mL</b> 넣었어요.<br>이때 <b>기준량</b>은 무엇이고, <b>비교하는 양</b>은 무엇인가요?</div>
+    el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>이 되도록 <b>${m.given} 물감 ${BASE}mL를 기준으로</b> ${askC} 물감을 <b>${cv}mL</b> 넣었어요.<br>이때 <b>기준량</b>은 무엇이고, <b>비교하는 양</b>은 무엇인가요?</div>
       <div class="sub">낱말 카드를 알맞은 빈칸에 끌어다 놓아(또는 눌러서) 완성하세요!</div>
       <div class="eq">
         <div class="row">기준량 = <span class="dz" data-a="${A}"></span></div>
