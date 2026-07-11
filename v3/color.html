@@ -362,7 +362,7 @@ const R3=[
 let DECK=[{t:'title'},{t:'mdemo'}];
 FAM.forEach((f,fi)=>{for(let k=0;k<2;k++)DECK.push({t:'sense',fi,k});});
 DECK.push({t:'qintro'});
-MAKE.forEach((m,i)=>{DECK.push({t:'make',i});DECK.push({t:'concept',i});});
+MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
 DECK.push({t:'pintro'});
 DECK.push({t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'cellpct'},{t:'pct'},{t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
@@ -506,7 +506,7 @@ if(d.t==='mdemo'){
   if(d.t==='qintro'){
     el.innerHTML=`<div style="font-size:72px">📝</div>
       <div class="q">지금부터는 <b>색 만들기 퀴즈</b>를 시작합니다!</div>
-      <div class="sub">지금까지 기른 비의 감각으로 <b>Quiz 1 ~ 8</b>을 풀어 봐요!</div>
+      <div class="sub">지금까지 기른 비의 감각으로 <b>Quiz 1 ~ 5</b>를 풀어 봐요!</div>
       <button class="btn pri" onclick="next()">퀴즈 시작! →</button>`;
     return;}
   if(d.t==='pintro'){
@@ -518,48 +518,57 @@ if(d.t==='mdemo'){
   if(d.t==='make'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,ans=BASE*m.r[1-gi]/m.r[gi];
     const tgt=mix({[m.top[0]]:m.r[0],[m.top[1]]:m.r[1]});
+    const A=m.given+' 물감의 양',B=askC+' 물감의 양';
+    const bank=[A,B].sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
-      <div class="sub">아래에 숫자를 직접 입력하세요.</div>
       <div class="pair">
         <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
         <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">Ⓑ 내가 만든 색</div></div>
       </div>
       <div class="numrow"><div class="nf"><input id="inp" type="number" inputmode="numeric" min="0" placeholder="?"><div class="u" style="color:${rgb(PRIM[askC])}">● ${askC} mL</div></div></div>
-      <button class="btn pri" id="go">답 제출!</button>`;
-    const upd=()=>{const v=Math.max(0,parseInt($('#inp').value||'0',10)||0);
-      S.amt={[m.given]:BASE,[askC]:v};
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,(BASE+v)/(BASE+ans+60)*92)+'%';};
-    $('#inp').oninput=upd;upd();
-    $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
-      if(v===ans){S._made=v;success('맞았어요! 🎨',`${m.top[0]} : ${m.top[1]} = ${m.r[0]} : ${m.r[1]} — ${m.given} ${BASE}mL, ${askC} <b>${v}mL</b>!`);}
-      else retry(`${m.given}이 <b>${BASE}mL</b>일 때, ${askC}이 몇 mL여야 ${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>이 될까요?`);};return;}
-  if(d.t==='concept'){
-    const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,cv=BASE*m.r[1-gi]/m.r[gi];
-    const A=m.given+' 물감의 양',B=askC+' 물감의 양';
-    const bank=[A,B].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>이 되도록 <b>${m.given} 물감 ${BASE}mL를 기준으로</b> ${askC} 물감을 <b>${cv}mL</b> 넣었어요.<br>이때 <b>기준량</b>은 무엇이고, <b>비교하는 양</b>은 무엇인가요?</div>
-      <div class="sub">낱말 카드를 알맞은 빈칸에 끌어다 놓아(또는 눌러서) 완성하세요!</div>
+      <button class="btn pri" id="go">답 제출!</button>
+      <div class="q" style="font-size:22px;margin-top:14px">이때 <b>기준량</b>은 무엇이고, <b>비교하는 양</b>은 무엇인가요?</div>
       <div class="eq">
         <div class="row">기준량 = <span class="dz" data-a="${A}"></span></div>
         <div class="row">비교하는 양 = <span class="dz" data-a="${B}"></span></div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('concept',{i:d.i});
-      success('맞아요!',`비를 계산할 때 <b>기준이 된 ${m.given}이 기준량</b>, 그 기준과 비교하여 양을 구한 <b>${askC}이 비교하는 양</b>입니다.`);});
+    let numOK=false,dragOK=false;
+    const fin=()=>{if(numOK&&dragOK){S._made=ans;plog('make',{i:d.i});
+      success('맞았어요! 🎨',`${askC} <b>${ans}mL</b>! 그리고 기준이 된 <b>${m.given}이 기준량</b>, 그 기준과 비교하여 양을 구한 <b>${askC}이 비교하는 양</b>입니다!`);}};
+    const upd=()=>{const v=Math.max(0,parseInt($('#inp').value||'0',10)||0);
+      S.amt={[m.given]:BASE,[askC]:v};
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,(BASE+v)/(BASE+ans+60)*92)+'%';};
+    $('#inp').oninput=upd;upd();
+    $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
+      if(v===ans){if(!numOK){numOK=true;chime(true);$('#go').textContent='✓ 정답!';$('#go').style.borderColor='#2e9e63';$('#go').style.color='#2e9e63';$('#inp').disabled=true;}fin();}
+      else retry(`${m.given}이 <b>${BASE}mL</b>일 때, ${askC}이 몇 mL여야 ${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>이 될까요?`);};
+    mountDrag(el,()=>{dragOK=true;fin();});
     return;}
+  
   if(d.t==='rate'){
-    const q=R3[d.i];
     const mixCol=rgb(mix({빨강:100,노랑:200}));
-    const bank=[String(q.cm),String(q.bm),q.res,(q.res==='2'?'1/2':'2')]
-      .filter((v,i,a)=>a.indexOf(v)===i).sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">이 주황은 <b>빨강 100mL</b>와 <b>노랑 200mL</b>로 만들었습니다.<br><b>${q.base}에 대한 ${q.comp}의 비율</b>은 얼마인가요?</div>
-      <div class="sub">숫자 카드를 끌어다 괄호를 채워요 — <b>기준량이 아래(나누는 수)</b>!</div>
-      <div style="font-size:21px;font-weight:800;margin:4px 0">주황 액체 — <span style="color:${rgb(PRIM['빨강'])}">빨강 100mL</span> + <span style="color:#b3921e">노랑 200mL</span></div>
+    const W=[
+     {q:'이 물감은 <b>빨강 100mL</b>와 <b>노랑 200mL</b>를 섞어 만들었습니다.<br><b>빨강에 대한 노랑의 비</b>는 얼마인가요?',
+      rows:['① 빨강에 대한 노랑의 비 = 200 : 100 = <span class="dz" data-a="2"></span> : <span class="dz" data-a="1"></span>',
+            '② 그럼 비율로 나타내면? <span class="dz" data-a="2/1"></span> 이므로 <span class="dz" data-a="2"></span>입니다.'],
+      bank:['2','1','2/1','2','1/2'],
+      okS:'노랑 200 : 빨강 100 = <b>2 : 1</b> — 비율은 2/1 = <b>2</b>!'},
+     {q:'이 물감은 <b>빨강 100mL</b>와 <b>노랑 200mL</b>를 섞어 만들었습니다.<br><b>노랑에 대한 빨강의 비</b>는 얼마인가요?',
+      rows:['① 노랑에 대한 빨강의 비 = 100 : 200 = <span class="dz" data-a="1"></span> : <span class="dz" data-a="2"></span>',
+            '② 그럼 비율로 나타내면? <span class="dz" data-a="1/2"></span>입니다.'],
+      bank:['1','2','1/2','2/1'],
+      okS:'빨강 100 : 노랑 200 = <b>1 : 2</b> — 비율은 <b>1/2</b>! 기준량(노랑)이 아래!'}][d.i];
+    const bank=W.bank.slice().sort(()=>Math.random()-.5);
+    el.innerHTML=`<div class="q">${W.q}</div>
+      <div class="sub">숫자 카드를 끌어다 빈칸을 채워요 — <b>기준량이 뒤(아래)</b>!</div>
+      <div style="font-size:21px;font-weight:800;margin:4px 0">주황 물감 — <span style="color:${rgb(PRIM['빨강'])}">빨강 100mL</span> + <span style="color:#b3921e">노랑 200mL</span></div>
       <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div>
-      <div class="eq"><div class="row">( <span class="dz" data-a="${q.cm}"></span>mL / <span class="dz" data-a="${q.bm}"></span>mL )이므로 ( <span class="dz" data-a="${q.res}"></span> )입니다.</div></div>
+      <div class="eq">
+        ${W.rows.map(r=>`<div class="row">${r}</div>`).join('')}
+      </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('rate',{i:d.i});
-      success('맞아요!',`${q.base}에 대한 ${q.comp}의 비율 = ${q.comp} ${q.cm}mL ÷ ${q.base} ${q.bm}mL = <b>${q.res}</b><br>기준량(${q.base})이 아래, 비교하는 양(${q.comp})이 위!`);});
+    mountDrag(el,()=>{plog('rate',{i:d.i});success('맞아요!',W.okS);});
     return;}
   if(d.t==='paint'){
     const n=d.n, needR=n*2/5, needY=n*3/5, cols=(n===10?5:10);
