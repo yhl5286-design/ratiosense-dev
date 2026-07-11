@@ -293,9 +293,10 @@ function cardWin(el,texts,cb){try{
   }catch(e){}},350);
   setTimeout(()=>{bd.classList.add('out');setTimeout(()=>{bd.remove();if(cb)cb();},330);},350+Math.max(1,(fresh.length||1))*750+1450);
 }catch(e){if(cb)cb();}}
+const CLAP_A=(()=>{try{const a=new Audio('clap.mp3');a.preload='auto';a.volume=0.9;a.load&&a.load();return a;}catch(e){return null;}})();
 function clap(){try{
-  const a=new Audio('clap.mp3');a.volume=0.9;
-  const p=a.play();if(p&&p.catch)p.catch(()=>{});
+  if(!CLAP_A)return;CLAP_A.currentTime=0;
+  const p=CLAP_A.play();if(p&&p.catch)p.catch(()=>{});
 }catch(e){}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
@@ -470,12 +471,15 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
     el.innerHTML=`<div class="q">🎹 도와 <b>가장 잘 어울리는 화음</b> 찾기! — 흰 건반을 눌러보세요!</div>
-      <div class="sub">두 소리가 울릴 때 생기는 <b>파동 그래프</b>를 아래에서 살펴보세요.<br>두 소리가 <b>함께 잘 만나면</b> 잘 어울린답니다!</div>
+      <div class="sub">두 물결이 만드는 무늬가 <b>얼마나 빨리 다시 처음으로 돌아오는지</b> 살펴보세요!<br>💡 무늬가 <b>빨리 반복</b>될수록(비의 숫자가 작을수록) 더 잘 어울려요!</div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===0?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':''}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
-      <div><canvas id="hx" style="width:min(860px,92vw);height:185px;margin-top:10px;background:#fff;border:3px solid var(--line);border-radius:16px"></canvas></div>
-      <div class="dial" id="hxInfo" style="line-height:1.6;font-size:18px;text-align:left">소리는 <b>떨림</b>이에요.<br>이 떨림이 <b>일정하게 반복</b>되면, 그래프로 그렸을 때 <b>규칙적인 물결 모양</b>이 나타나요!<br>★ <b>도</b>는 <b style="color:#3b6db5">파란색</b>, 다른 음은 <b style="color:#c0392b">빨간색</b>으로 그렸어요.<br>두 그래프를 겹쳐 보면 <b>어떤 음이 더 빠르게 떨리는지</b> 비교할 수 있어요!</div>
+      <div style="display:inline-block;background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 12px 4px;margin-top:10px;max-width:92vw">
+        <svg id="hx" viewBox="0 0 680 300" style="width:min(820px,86vw);display:block"></svg>
+        <div style="font-size:15px;color:var(--sub);font-weight:700;margin:2px 0 6px"><span style="color:#378ADD">▬▬</span> 도 (파란 물결) &nbsp;&nbsp; <span style="color:#E24B4A">▬▬</span> 누른 음 (빨간 물결)</div>
+      </div>
+      <div class="dial" id="hxInfo" style="line-height:1.6;font-size:18px">건반을 누르면 도(파란 물결)와 누른 음(빨간 물결)이 함께 나타나요!</div>
       <div style="margin-top:10px"><button class="btn" id="itvBtn">📋 음정을 표로 정리해요</button> <button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>
       <div id="itvPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
         <div style="background:#fffdf6;border:3.5px solid var(--line);border-radius:20px;padding:16px 26px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)">
@@ -484,51 +488,56 @@ if(d.t==='harmx'){
             <tr><th>음</th><th>음정</th><th>진동수 비 (도 : 음)</th></tr>
             ${NOTES.map((m,i)=>`<tr class="${PERF.includes(i)?'pf':''}" data-i="${i}"><td>${i===0?'★':''}${m[0]}</td><td>${ITV[i]}</td><td><b style="color:#b3541e">${m[3]} : ${m[2]}</b></td></tr>`).join('')}
           </table></div>
-          <div class="dial" style="margin-top:12px;font-size:20px">💡 <b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>간단한 비</b>일 때 <b>완전 음정</b>이고, 잘 어울리는 화음이 되어요!</div>
+          <div class="dial" style="margin-top:12px;font-size:20px">💡 <b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>비가 간단할수록</b> 두 소리가 <b>더 잘 어울려요</b>!</div>
           <div style="margin-top:10px;text-align:center"><button class="btn pri" id="itvClose">닫기</button></div>
         </div>
       </div>`;
-    function rateRatio(a,b){const m=Math.max(a,b);
-      if(m<=2)return{s:5,l:'완벽한 어울림'};
-      if((a===2&&b===3)||(a===3&&b===2))return{s:5,l:'아주 잘 어울림'};
-      if(m<=6)return{s:4,l:'잘 어울림'};
-      if(m<=10)return{s:3,l:'보통'};
-      if(m<=16)return{s:2,l:'약한 어울림'};
-      return{s:1,l:'잘 안 어울림'};}
-    let hxSel=-1,hxT0=0;
-    function drawHX(){
-      const cv=$('#hx');if(!cv)return;
-      const W=cv.width=cv.clientWidth*2,H=cv.height=370;const ctx=cv.getContext('2d');
-      ctx.clearRect(0,0,W,H);const mid=H/2,amp=H*0.3;
-      ctx.strokeStyle='#eee';ctx.lineWidth=2;ctx.setLineDash([6,6]);
-      ctx.beginPath();ctx.moveTo(0,mid);ctx.lineTo(W,mid);ctx.stroke();ctx.setLineDash([]);
-      if(hxSel<0){ctx.fillStyle='#a89f8d';ctx.font='bold 30px sans-serif';ctx.textAlign='center';
-        ctx.fillText('건반을 누르면 도와 함께 두 파동이 나타나요!',W/2,mid-16);
-        animReq=requestAnimationFrame(drawHX);return;}
-      const n=NOTES[hxSel],a=n[3],b=n[2];
-      const cyc=a+Math.min(a,3), pw=a/cyc*W;
-      const ph=((performance.now()-hxT0)/900)*2*Math.PI;
-      ctx.fillStyle='rgba(123,108,255,.08)';ctx.fillRect(0,12,pw,H-52);
-      ctx.strokeStyle='rgba(123,108,255,.5)';ctx.setLineDash([9,8]);ctx.lineWidth=3;
-      ctx.beginPath();ctx.moveTo(pw,12);ctx.lineTo(pw,H-40);ctx.stroke();ctx.setLineDash([]);
-      ctx.font='bold 27px sans-serif';ctx.textAlign='center';ctx.fillStyle='#7b6cff';
-      ctx.fillText('⚡ 만남!',Math.max(60,Math.min(W-70,pw)),40);
-      ctx.font='bold 24px sans-serif';ctx.fillStyle='#8a8577';
-      ctx.fillText(`도 ${a}번 = ${n[0]} ${b}번`,Math.max(110,Math.min(W-130,pw)),H-14);
-      [[1,'#3b6db5'],[b/a,'#c0392b']].forEach(p=>{
-        ctx.beginPath();ctx.lineWidth=4.5;ctx.strokeStyle=p[1];
-        for(let x=0;x<=W;x+=2){const tt=x/W*cyc*2*Math.PI*p[0]-ph*p[0];const y=mid-amp*Math.sin(tt);x?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();});
-      animReq=requestAnimationFrame(drawHX);}
+    function starCount(a,b){const s=a+b;return s<=5?5:(s<=7?4:(s<=9?3:(s<=17?2:1)));}
+    const VERD=['','잘 안 어울려요','조금 어울려요','제법 어울려요','잘 어울려요','아주 잘 어울려요!'];
+    function drawHX(sel){
+      const svg=$('#hx');if(!svg)return;
+      if(sel<0){svg.innerHTML='<text x="340" y="150" text-anchor="middle" font-size="21" font-weight="700" fill="#a89f8d">건반을 누르면 두 물결이 나타나요!</text>';return;}
+      const nb=NOTES[sel][3],nr=NOTES[sel][2],nm=NOTES[sel][0];
+      const W=680,padL=50,padR=30,top=54,bottom=220;
+      const midY=(top+bottom)/2,amp=(bottom-top)/2-8,plotW=W-padL-padR;
+      const bandW=plotW*0.42,bx0=padL,bx1=padL+bandW;
+      const P=[];
+      P.push(`<rect x="${bx0}" y="${top-8}" width="${bandW}" height="${bottom-top+16}" rx="8" fill="#FFF7E6"/>`);
+      const bw=bandW/nb,rw=bandW/nr;
+      P.push(`<rect x="${bx0}" y="${top-8}" width="${bw.toFixed(1)}" height="${(midY-top+8).toFixed(1)}" fill="#378ADD" opacity="0.07"/>`);
+      P.push(`<rect x="${bx0}" y="${midY}" width="${rw.toFixed(1)}" height="${(bottom-midY+8).toFixed(1)}" fill="#E24B4A" opacity="0.07"/>`);
+      P.push(`<text x="${(bx0+bw/2).toFixed(1)}" y="${top+2}" text-anchor="middle" font-size="12" fill="#0C447C">도 한 번</text>`);
+      P.push(`<text x="${(bx0+rw/2).toFixed(1)}" y="${bottom+6}" text-anchor="middle" font-size="12" fill="#A32D2D">${nm} 한 번</text>`);
+      P.push(`<line x1="${bx0}" y1="${top-8}" x2="${bx0}" y2="${bottom+8}" stroke="#BA7517" stroke-width="1.5" stroke-dasharray="4 4"/>`);
+      P.push(`<line x1="${bx1}" y1="${top-8}" x2="${bx1}" y2="${bottom+8}" stroke="#BA7517" stroke-width="2"/>`);
+      P.push(`<text x="${bx1+6}" y="${top+2}" font-size="13" font-weight="700" fill="#BA7517">↺ 다시 처음으로!</text>`);
+      P.push(`<text x="${(bx0+bx1)/2}" y="${bottom+34}" text-anchor="middle" font-size="14" fill="#BA7517">여기까지가 한 묶음 (무늬가 한 바퀴)</text>`);
+      P.push(`<line x1="${padL}" y1="${midY}" x2="${W-padR}" y2="${midY}" stroke="#D3D1C7" stroke-width="1"/>`);
+      function wp(cyc,col,wd,toEnd){
+        const endX=toEnd?(W-padR):bx1,span=endX-padL;let dd='';
+        for(let px=0;px<=span;px++){const x=padL+px,tt=px/bandW;
+          const y=midY-amp*Math.sin(2*Math.PI*cyc*tt);
+          dd+=(px===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';}
+        return `<path d="${dd}" fill="none" stroke="${col}" stroke-width="${wd}" stroke-linecap="round"/>`;}
+      P.push(`<g opacity="0.25">`+wp(nb,'#378ADD',2,true)+wp(nr,'#E24B4A',2,true)+`</g>`);
+      P.push(wp(nb,'#378ADD',3,false)+wp(nr,'#E24B4A',3,false));
+      function pk(cyc,col,above){let g='';
+        for(let k=1;k<=cyc;k++){const x=padL+(k-0.25)/cyc*bandW;
+          const cy=above?(midY-amp+14):(midY+amp-14);
+          g+=`<circle cx="${x.toFixed(1)}" cy="${cy.toFixed(1)}" r="10" fill="${col}"/><text x="${x.toFixed(1)}" y="${(cy+4).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">${k}</text>`;}
+        return g;}
+      P.push(pk(nb,'#378ADD',true)+pk(nr,'#E24B4A',false));
+      svg.innerHTML=P.join('');}
     el.querySelectorAll('.key').forEach(k=>k.onclick=()=>{const i=+k.dataset.i;
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);
-      if(i===0){tone(264,0,1.2);return;}
-      hxSel=i;hxT0=performance.now();const n=NOTES[i],a=n[3],b=n[2];
-      chord(264,n[1],1.5);plog('harmx',{n:n[0]});
-      const r=rateRatio(a,b);
-      $('#hxInfo').innerHTML=`${n[0]} — <b>${ITV[i]}</b> &nbsp;·&nbsp; 도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</span> <b>${r.l}</b>`;});
+      const n=NOTES[i],a=n[3],b=n[2];
+      if(i===0)tone(264,0,1.2);else chord(264,n[1],1.5);
+      plog('harmx',{n:n[0]});drawHX(i);
+      const s=starCount(a,b);
+      $('#hxInfo').innerHTML=`<span style="color:#378ADD;font-weight:800">파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">빨간 물결 ${b}번</span>마다 무늬가 <b>딱 반복</b>돼요! &nbsp; 도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;});
     $('#itvBtn').onclick=()=>{$('#itvPop').style.display='flex';plog('itvpop',{});};
     $('#itvClose').onclick=()=>{$('#itvPop').style.display='none';};
-    drawHX();return;}
+    drawHX(-1);return;}
 if(d.t==='chord'){
     const n=NOTES[d.i],a=n[3],b=n[2]; // 도:음 = a:b
     const key=`${Math.min(a,b)}:${Math.max(a,b)}`;
@@ -552,7 +561,7 @@ if(d.t==='chord'){
     wireGoal(el);return;}
   if(d.t==='harp'){const p=HP[d.i],ex=hLen(d.i);hDone=d.i;
     const exS=String(Math.round(ex*100)/100);
-    const bank=[String(p.a),String(p.b),'440','100']
+    const bank=[String(p.a),String(p.b),exS,'440']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
     el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:14px 26px;font-size:23px;font-weight:800;margin-bottom:8px;line-height:1.55">🎵 라(A)음은 진동수가 <b>440Hz</b>!<br>표준 주파수 표에서 유일하게 딱 떨어지는 음이라,<br>악기 조율을 할 때 <b>라 음을 기준</b>으로 해요!</div>':''}
       <div class="q">라 줄이 <b>36cm</b>일 때, <b>${p.n} 줄</b>의 길이는 어떻게 구할까요?</div>
@@ -560,7 +569,7 @@ if(d.t==='chord'){
       <div class="eq">
         <div class="row">① 진동수의 비는 라 : ${p.n} = <b>${p.a} : ${p.b}</b>입니다.</div>
         <div class="row">② 라 줄의 <b>몇 분의 몇</b>이 ${p.n} 줄일까요? — <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span></div>
-        <div class="row">③ <b>36cm</b>인 라 줄에 위의 분수를 곱하면 <b style="color:#136a3d">${exS}cm</b> — ${p.n} 줄의 길이가 됩니다!</div>
+        <div class="row">③ 36 × ${p.a}/${p.b} — ${p.n} 줄의 길이는? <span class="dz" data-a="${exS}"></span> cm</div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;

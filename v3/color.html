@@ -311,9 +311,10 @@ function cardWin(el,texts,cb){try{
   }catch(e){}},350);
   setTimeout(()=>{bd.classList.add('out');setTimeout(()=>{bd.remove();if(cb)cb();},330);},350+Math.max(1,(fresh.length||1))*750+1450);
 }catch(e){if(cb)cb();}}
+const CLAP_A=(()=>{try{const a=new Audio('clap.mp3');a.preload='auto';a.volume=0.9;a.load&&a.load();return a;}catch(e){return null;}})();
 function clap(){try{
-  const a=new Audio('clap.mp3');a.volume=0.9;
-  const p=a.play();if(p&&p.catch)p.catch(()=>{});
+  if(!CLAP_A)return;CLAP_A.currentTime=0;
+  const p=CLAP_A.play();if(p&&p.catch)p.catch(()=>{});
 }catch(e){}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
@@ -435,9 +436,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='sense'){
     const f=FAM[d.fi],[r0,r1]=f.r,p0=f.paints[0],p1=f.paints[1];
     const tgt=mix({[p0]:r0,[p1]:r1});
-    const N=['첫','두','세','네','다섯','여섯'][d.fi*2+d.k];
-    const qs=[`${f.emoji} <b>${N} 번째 미션 — ${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기!</b><br>${p0} 물감과 ${p1} 물감을 이용하여 ${p0} : ${p1}이 <b>${r0} : ${r1}</b>이 되도록 만들어요!`,
-              `${f.emoji} <b>${N} 번째 미션 — 같은 비로 같은 색 만들기, 양은 다르게!</b><br>${p0} : ${p1} = <b>${r0} : ${r1}</b>인 같은 ${f.id}색을 <b>다른 양</b>으로 만들어 봅시다.`][d.k];
+    const N=d.fi*2+d.k+1;
+    const qs=[`${f.emoji} <b>미션 ${N} : ${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기!</b><br>${p0} 물감과 ${p1} 물감을 이용하여 ${p0} : ${p1}이 <b>${r0} : ${r1}</b>이 되도록 만들어요!`,
+              `${f.emoji} <b>미션 ${N} : ${p0} : ${p1} = ${r0} : ${r1}인 같은 ${f.id}색을 다른 양으로 만들기!</b><br>${p0} 물감과 ${p1} 물감을 각각 얼마나 넣을까요?`][d.k];
     el.innerHTML=`<div class="q">${qs}</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <span id="a0">0</span>mL</div>${tubes(p0,[5,10,25,50])}</div>

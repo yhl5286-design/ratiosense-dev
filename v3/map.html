@@ -260,9 +260,10 @@ function cardWin(el,texts,cb){try{
   }catch(e){}},350);
   setTimeout(()=>{bd.classList.add('out');setTimeout(()=>{bd.remove();if(cb)cb();},330);},350+Math.max(1,(fresh.length||1))*750+1450);
 }catch(e){if(cb)cb();}}
+const CLAP_A=(()=>{try{const a=new Audio('clap.mp3');a.preload='auto';a.volume=0.9;a.load&&a.load();return a;}catch(e){return null;}})();
 function clap(){try{
-  const a=new Audio('clap.mp3');a.volume=0.9;
-  const p=a.play();if(p&&p.catch)p.catch(()=>{});
+  if(!CLAP_A)return;CLAP_A.currentTime=0;
+  const p=CLAP_A.play();if(p&&p.catch)p.catch(()=>{});
 }catch(e){}}
 function walUpd(pulse){try{
   const n=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;
