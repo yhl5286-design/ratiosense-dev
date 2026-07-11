@@ -421,7 +421,6 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');S={amt:{}};
               `${p0} : ${p1} = <b>${r0} : ${r1}</b><br>같은 ${f.id}을 <b>다른 양</b>으로 만들어 봅시다`,
               `${p0} : ${p1} = <b>${r0} : ${r1}</b><br><b>또 다른 양</b>으로 한 번 더!`][d.k];
     el.innerHTML=`<div class="q">${qs}</div>
-      <div class="sub">${f.id} 만들기 ${d.k+1}번째 <span class="prog-chips" style="display:inline-flex;vertical-align:middle">${[0,1,2].map(i=>`<span class="c ${i<d.k?'on':''}"></span>`).join('')}</span></div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <span id="a0">0</span>mL</div>${tubes(p0,[5,10,25,50])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <span id="a1">0</span>mL</div>${tubes(p1,[5,10,25,50])}</div>
