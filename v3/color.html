@@ -461,7 +461,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
 if(d.t==='mdemo'){
     el.innerHTML=`<div class="q">🎨 <b>비율을 이용하여 같은 색 만들기</b> 미션 시작!</div>
-      <div class="sub">목표 색과 <b>같은 비</b>가 되도록 물감을 넣으면 성공!<br>예시 시연 — 빨강 : 노랑 = <b>1 : 2</b>인 주황색 만들기</div>
+      <div class="sub">목표 색과 <b>같은 비</b>가 되도록 물감 버튼을 눌러 넣으면 성공!<br>예시 시연 — 빨강 : 노랑 = <b>1 : 2</b>인 주황색 만들기</div>
+      <div class="paints" style="pointer-events:none;margin:4px 0">
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="da0">0</span>mL</div>
+          <div class="tubes"><span class="tube" id="dt빨강" style="display:inline-block;position:relative;transition:transform .18s">${tubeSVG('빨강')}<div class="amtl">+10</div><span class="dfing" style="position:absolute;left:46%;top:52%;font-size:34px;opacity:0;transition:opacity .18s">👆</span></span></div></div>
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="da1">0</span>mL</div>
+          <div class="tubes"><span class="tube" id="dt노랑" style="display:inline-block;position:relative;transition:transform .18s">${tubeSVG('노랑')}<div class="amtl">+10</div><span class="dfing" style="position:absolute;left:46%;top:52%;font-size:34px;opacity:0;transition:opacity .18s">👆</span></span></div></div>
+      </div>
       <div class="pair">
         <div><div class="bk"><div class="fill full" style="background:${rgb(mix({빨강:1,노랑:2}))}"></div></div><div class="bklab">Ⓐ 목표</div></div>
         <div><div class="bk"><div class="fill" id="dmy" style="height:0%"></div></div><div class="bklab">Ⓑ 시연</div></div>
@@ -471,16 +477,25 @@ if(d.t==='mdemo'){
     const steps=[{c:'빨강',v:10},{c:'노랑',v:10},{c:'노랑',v:10}];
     let si=0,amt={};
     const box=el;
+    function press(c){const b=box.querySelector('#dt'+c);if(!b)return;
+      const f=b.querySelector('.dfing');
+      b.style.transform='scale(.85)';if(f)f.style.opacity='1';
+      setTimeout(()=>{b.style.transform='scale(1)';if(f)f.style.opacity='0';},380);}
     (function tick(){
       if(!box.isConnected)return;
-      if(si<steps.length){const s=steps[si++];amt[s.c]=(amt[s.c]||0)+s.v;
-        const tot=(amt['빨강']||0)+(amt['노랑']||0);
-        const my=$('#dmy');if(my){my.style.background=rgb(mix(amt));my.style.height=Math.min(80,tot/40*70)+'%';}
-        const st=$('#dstat');if(st)st.innerHTML=`<b style="color:${rgb(PRIM[s.c])}">${s.c} 물감 +${s.v}mL!</b> &nbsp; 빨강 <b>${amt['빨강']||0}</b> : 노랑 <b>${amt['노랑']||0}</b>`;
-        setTimeout(tick,1000);}
+      if(si<steps.length){const s=steps[si++];
+        press(s.c);
+        setTimeout(()=>{if(!box.isConnected)return;
+          amt[s.c]=(amt[s.c]||0)+s.v;
+          const tot=(amt['빨강']||0)+(amt['노랑']||0);
+          const a0=$('#da0'),a1=$('#da1');if(a0)a0.textContent=amt['빨강']||0;if(a1)a1.textContent=amt['노랑']||0;
+          const my=$('#dmy');if(my){my.style.background=rgb(mix(amt));my.style.height=Math.min(80,tot/40*70)+'%';}
+          const st=$('#dstat');if(st)st.innerHTML=`<b style="color:${rgb(PRIM[s.c])}">${s.c} 물감 +${s.v}mL!</b> &nbsp; 빨강 <b>${amt['빨강']||0}</b> : 노랑 <b>${amt['노랑']||0}</b>`;
+          setTimeout(tick,700);},420);}
       else{const st=$('#dstat');if(st)st.innerHTML=`빨강 10 : 노랑 20 = <b>1 : 2</b> — 목표와 같은 색 완성! ✨`;
         si=0;amt={};
         setTimeout(()=>{if(!box.isConnected)return;const my=$('#dmy');if(my)my.style.height='0%';
+          const a0=$('#da0'),a1=$('#da1');if(a0)a0.textContent='0';if(a1)a1.textContent='0';
           const st2=$('#dstat');if(st2)st2.textContent='다시 한 번 시연할게요…';setTimeout(tick,900);},2400);}
     })();
     return;}
