@@ -324,6 +324,19 @@ function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.
 function chord(fA,fB,d){tone(fA,0,d||1.4);tone(fB,0,d||1.4);}
 function pluckT(f,w){[[f,.2],[f*2,.06],[f*3,.03]].forEach(([ff,v])=>{try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=ff;o.connect(g);g.connect(c.destination);const t0=c.currentTime+(w||0);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.008);g.gain.exponentialRampToValueAtTime(.001,t0+1.3);o.start(t0);o.stop(t0+1.35);}catch(e){}});}
 function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
+function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();o.type='sine';
+  o.frequency.setValueAtTime(420,t0);o.frequency.exponentialRampToValueAtTime(920,t0+0.22);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(0.22,t0+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+0.5);
+  o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+0.55);
+  const o2=c.createOscillator(),g2=c.createGain();o2.type='sine';
+  o2.frequency.setValueAtTime(1240,t0+0.3);
+  g2.gain.setValueAtTime(0.0001,t0+0.3);g2.gain.linearRampToValueAtTime(0.16,t0+0.34);
+  g2.gain.exponentialRampToValueAtTime(0.0001,t0+0.62);
+  o2.connect(g2);g2.connect(c.destination);o2.start(t0+0.3);o2.stop(t0+0.66);
+}catch(e){}}
+
 function gcd(a,b){return b?gcd(b,a%b):a;}
 function jz(w,a,b){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?a:b;}
 
@@ -461,7 +474,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🎼</div>
     <div class="q">소리의 비밀을 찾아봅시다!</div>
-    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
+    <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
   if(d.t==='vib'){
     plucks=[0,0,0,0,0,0,0,0];w1env=0;
     el.innerHTML=`<div class="q">건반을 눌러 <b>소리의 떨림</b>을 느껴 보세요!</div>

@@ -505,6 +505,19 @@ function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
 function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
+function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();o.type='sine';
+  o.frequency.setValueAtTime(420,t0);o.frequency.exponentialRampToValueAtTime(920,t0+0.22);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(0.22,t0+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+0.5);
+  o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+0.55);
+  const o2=c.createOscillator(),g2=c.createGain();o2.type='sine';
+  o2.frequency.setValueAtTime(1240,t0+0.3);
+  g2.gain.setValueAtTime(0.0001,t0+0.3);g2.gain.linearRampToValueAtTime(0.16,t0+0.34);
+  g2.gain.exponentialRampToValueAtTime(0.0001,t0+0.62);
+  o2.connect(g2);g2.connect(c.destination);o2.start(t0+0.3);o2.stop(t0+0.66);
+}catch(e){}}
+
 const won=n=>'₩'.replace('₩','')+n.toLocaleString('ko-KR')+'원';
 
 const DECK=[
@@ -592,7 +605,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="q">마트의 비밀을 찾아봅시다!</div>
     ${introScene()}
     <div class="sub"><b>지우</b>와 <b>현준</b>이의 장보기를 도와주세요!</div>
-    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
+    <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
   if(d.t==='mc'){const SCN={'🍊':'fruit','🍉':'fruit','🍦':'ice','🥛':'dairy','🥤':'yogurt','🧃':'juice'};
     el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,SCN[d.bem]||'aisle')}

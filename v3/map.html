@@ -291,6 +291,19 @@ function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.
 function jga(w){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?'이':'가';}
 function jzz(w){const c=w.charCodeAt(w.length-1);return ((c-0xAC00)%28>0)?'은':'는';}
 function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
+function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
+  const o=c.createOscillator(),g=c.createGain();o.type='sine';
+  o.frequency.setValueAtTime(420,t0);o.frequency.exponentialRampToValueAtTime(920,t0+0.22);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(0.22,t0+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+0.5);
+  o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+0.55);
+  const o2=c.createOscillator(),g2=c.createGain();o2.type='sine';
+  o2.frequency.setValueAtTime(1240,t0+0.3);
+  g2.gain.setValueAtTime(0.0001,t0+0.3);g2.gain.linearRampToValueAtTime(0.16,t0+0.34);
+  g2.gain.exponentialRampToValueAtTime(0.0001,t0+0.62);
+  o2.connect(g2);g2.connect(c.destination);o2.start(t0+0.3);o2.stop(t0+0.66);
+}catch(e){}}
+
 
 const OBJS=[
  {em:'🌉',n:'다리',shape:'직사각형',dim:'길이',real:300,cells:3,x:2,y:4,sx:2,sy:4},
@@ -437,7 +450,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🗺️</div>
     <div class="q">지도의 비밀을 찾아봅시다!</div>
     <div class="sub">마을은 너무 커서 종이에 못 그려요. 그래서 약속해요 —<br><b>실제 100m = 지도 1칸</b>. 무엇이든 <b>같은 비(1:10,000)</b>로 줄이는 이 약속이 <b>축척</b>!<br>그래서 지도 위 도형은 실제와 <b>닮은 도형</b>이 돼요.</div>
-    <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
+    <button class="btn pri" onclick="qmark();next()">시작하기 →</button>`;return;}
   if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i+(d._on?1:0);
     if(!d._on){
       el.innerHTML=`<div class="q">${ob.em} <b>${ob.shape} 모양의 ${ob.n} 기호</b>를 지도에 끌어다 놓아 보세요!</div>
