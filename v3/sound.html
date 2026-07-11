@@ -206,6 +206,11 @@
   @media (max-width:560px){#stage .slide{zoom:.62}}
   @media (max-width:430px){#stage .slide{zoom:.52}}
   .pianoWrap{max-width:100%;overflow-x:auto}
+  .toastN{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:#fff;border:3px solid #2e9e63;border-radius:16px;padding:12px 26px;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,.18);font-weight:800;font-size:20px;text-align:center;max-width:88vw;animation:tIn .25s ease}
+  .toastN.help{border-color:#e0a02a}
+  .toastN .ts{font-size:16px;font-weight:700;color:var(--sub);margin-top:4px}
+  .toastN.out{opacity:0;transition:opacity .35s}
+  @keyframes tIn{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
@@ -328,7 +333,7 @@ const NOTES=[['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['�
 const INTV={'1:1':'유니즌','1:2':'옥타브','2:3':'완전5도','3:4':'완전4도','4:5':'장3도','5:6':'단3도','3:5':'장6도','8:9':'장2도','8:15':'장7도'};
 /* 하프 — 화음 단계의 순정률 비 그대로(도:음 = a:b), 길이는 81×a/b */
 const HBASE=36;
-const HP=[{n:'도',a:5,b:3},{n:'미',a:4,b:3},{n:'파',a:5,b:4},{n:'솔',a:10,b:9},{n:'시',a:8,b:9},{n:'도′',a:5,b:6},{n:'미′',a:2,b:3}]; // 라:음 진동수 비
+const HP=[{n:'도',a:5,b:3},{n:'레',a:3,b:2},{n:'미',a:4,b:3},{n:'파',a:5,b:4},{n:'솔',a:10,b:9},{n:'시',a:8,b:9}]; // 라:음 진동수 비
 const hLen=i=>HBASE*HP[i].a/HP[i].b;
 const hFreq=L=>Math.round(440*HBASE/L);
 let hDone=0; // 0~7
@@ -366,8 +371,14 @@ function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
   $('#fbA').innerHTML=`<button class="btn pri" id="fbBtn">${btnText}</button>`;
   $('#fbBtn').onclick=()=>{b.className='';if(after)after();};}
 function next(){if(animReq){cancelAnimationFrame(animReq);animReq=null;}idx=Math.min(idx+1,DECK.length-1);render();}
-function success(t,s,after){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',after||next);}
-function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
+function toastFB(cls,t,s){try{
+  document.querySelectorAll('.toastN').forEach(x=>x.remove());
+  const d=document.createElement('div');d.className='toastN '+cls;
+  d.innerHTML='<b>'+t+'</b>'+(s?'<div class="ts">'+s+'</div>':'');
+  document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2300);
+}catch(e){}}
+function success(t,s,after){chime(true);plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,800);}
+function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
 
 function drawStrings(){const cv=$('#hc');if(!cv)return;
   const W=cv.width=cv.clientWidth*2,H=cv.height=340;const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
@@ -449,7 +460,7 @@ function harpViz(p,exS){
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(animReq){cancelAnimationFrame(animReq);animReq=null;}
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🎼</div>
-    <div class="q">소리의 비밀에 온 걸 환영해요!</div>
+    <div class="q">소리의 비밀을 찾아봅시다!</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='vib'){
     plucks=[0,0,0,0,0,0,0,0];w1env=0;
@@ -570,7 +581,7 @@ if(d.t==='chord'){
       <div class="eq">
         <div class="row">① 진동수의 비는 라 : ${p.n} = <b>${p.a} : ${p.b}</b>입니다.</div>
         <div class="row">② 라 줄의 <b>몇 분의 몇</b>이 ${p.n} 줄일까요? — <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span></div>
-        <div class="row">③ 36 × ${p.a}/${p.b} — ${p.n} 줄의 길이는? <span class="dz" data-a="${exS}"></span> cm</div>
+        <div class="row">③ 36 × <span class="vfr"><span>${p.a}</span><span class="fbar"></span><span>${p.b}</span></span> — ${p.n} 줄의 길이는? <span class="dz" data-a="${exS}"></span> cm</div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>
       `;

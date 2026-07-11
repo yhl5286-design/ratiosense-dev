@@ -214,6 +214,11 @@
   .pianoWrap{max-width:100%;overflow-x:auto}
   .eq{display:inline-block;background:#fff;border:3px solid var(--line);border-radius:16px;padding:12px 28px;text-align:left;font-size:22px;font-weight:800;margin:8px 0}
   .eq .row{margin:9px 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .toastN{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:#fff;border:3px solid #2e9e63;border-radius:16px;padding:12px 26px;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,.18);font-weight:800;font-size:20px;text-align:center;max-width:88vw;animation:tIn .25s ease}
+  .toastN.help{border-color:#e0a02a}
+  .toastN .ts{font-size:16px;font-weight:700;color:var(--sub);margin-top:4px}
+  .toastN.out{opacity:0;transition:opacity .35s}
+  @keyframes tIn{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
@@ -377,13 +382,19 @@ function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
   $('#fbA').innerHTML=`<button class="btn pri" id="fbBtn">${btnText}</button>`;
   $('#fbBtn').onclick=()=>{b.className='';if(after)after();};}
 function next(){idx=Math.min(idx+1,DECK.length-1);render();}
-function success(t,s){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',next);}
-function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
+function toastFB(cls,t,s){try{
+  document.querySelectorAll('.toastN').forEach(x=>x.remove());
+  const d=document.createElement('div');d.className='toastN '+cls;
+  d.innerHTML='<b>'+t+'</b>'+(s?'<div class="ts">'+s+'</div>':'');
+  document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2300);
+}catch(e){}}
+function success(t,s,after){chime(true);plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,800);}
+function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
 /* ── 튜브 ── */
 function tubeSVG(c){return `<svg viewBox="0 0 60 118"><rect x="20" y="2" width="20" height="15" rx="3" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/><rect x="24" y="17" width="12" height="6" fill="#d8d4c9"/><path d="M14 27 L46 27 L50 108 Q50 114 44 114 L16 114 Q10 114 10 108 Z" fill="#fdfcf8" stroke="#b9b4a8" stroke-width="2"/><rect x="12" y="46" width="36" height="26" rx="4" fill="${rgb(PRIM[c])}"/><text x="30" y="98" text-anchor="middle" font-size="13" font-weight="800" fill="#6b7683">${c}</text></svg>`;}
 function tubes(color,vals,cb){return `<div class="tubes">`+vals.map(v=>
   `<button class="tube" data-c="${color}" data-v="${v}"><div>${tubeSVG(color)}</div><div class="amtl">+${v}</div></button>`).join('')+`</div>
-  <div class="minus">${[10,50].map(v=>`<button class="mb" data-c="${color}" data-m="${v}">−${v}</button>`).join('')}</div>`;}
+  <div class="minus">${[5,10].map(v=>`<button class="mb" data-c="${color}" data-m="${v}">−${v}</button>`).join('')}</div>`;}
 function wireTubes(el,cb){el.querySelectorAll('.tube').forEach(b=>b.onclick=()=>{const c=b.dataset.c;S.amt[c]=(S.amt[c]||0)+(+b.dataset.v);cb();});
   el.querySelectorAll('.mb').forEach(b=>b.onclick=()=>{const c=b.dataset.c;S.amt[c]=Math.max(0,(S.amt[c]||0)-(+b.dataset.m));cb();});}
 /* ── 슬라이드 렌더러 ── */
@@ -431,18 +442,18 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     setTimeout(()=>{const s=$('#slide');if(s&&!s.querySelector('.qzb'))s.insertAdjacentHTML('afterbegin',`<div class="qzb">Quiz ${qn}</div>`);},0);}S={amt:{}};
   if(d.t==='title'){
     el.innerHTML=`<div style="font-size:90px">🎨</div>
-      <div class="q">색깔의 비밀에 온 걸 환영해요!</div>
+      <div class="q">색깔의 비밀을 찾아봅시다!</div>
       <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='sense'){
     const f=FAM[d.fi],[r0,r1]=f.r,p0=f.paints[0],p1=f.paints[1];
     const tgt=mix({[p0]:r0,[p1]:r1});
     const N=['첫','두','세','네','다섯','여섯'][d.fi*2+d.k];
-    const qs=[`<b>${N}번째 미션 "${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기"</b><br>${p0} 물감과 ${p1} 물감을 이용하여<br>${p0} : ${p1}이 <b>${r0} : ${r1}</b>이 되도록 만들어요!`,
-              `<b>${N}번째 미션 "${p0} : ${p1} = ${r0} : ${r1}인 같은 ${f.id}색을 다른 양으로 만들기"</b><br>${p0} 물감과 ${p1} 물감을 각각 얼마나 넣을까요?`][d.k];
+    const qs=[`<b>${N}번째 미션</b><br><b>"${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기"</b><br>${p0} 물감과 ${p1} 물감을 이용하여<br>${p0} : ${p1}이 <b>${r0} : ${r1}</b>이 되도록 만들어요!`,
+              `<b>${N}번째 미션</b><br><b>"${p0} : ${p1} = ${r0} : ${r1}인 같은 ${f.id}색을 다른 양으로 만들기"</b><br>${p0} 물감과 ${p1} 물감을 각각 얼마나 넣을까요?`][d.k];
     el.innerHTML=`<div class="q">${qs}</div>
       <div class="paints">
-        <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <span id="a0">0</span>mL</div>${tubes(p0,[5,10,25,50])}</div>
-        <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <span id="a1">0</span>mL</div>${tubes(p1,[5,10,25,50])}</div>
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <span id="a0">0</span>mL</div>${tubes(p0,[5,10])}</div>
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <span id="a1">0</span>mL</div>${tubes(p1,[5,10])}</div>
       </div>
       <div class="pair">
         <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
@@ -594,7 +605,7 @@ if(d.t==='mdemo'){
       gr.className='grid'+(brush?' brushing':'');
       if(left===0&&!d._fbLock){d._fbLock=true;
         setTimeout(()=>{d._fbLock=false;
-          if(r*3===y*2){d._ok=true;success('잘 색칠했어요!',`빨강 ${r}칸 : 노랑 ${y}칸 = <b>2 : 3</b>${n<100?' — 다음은 더 큰 판!':''}`);}
+          if(r*3===y*2){d._ok=true;success('잘 색칠했어요!',`2 : 3 = ${r} : ${y}입니다. 빨강과 노랑 칸을 더해서 ${n}이 되어야 하므로 빨강 <b>${r}칸</b>, 노랑 <b>${y}칸</b>을 색칠해요!`);}
           else{const diff=needR-r;
             retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>💡 ${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
     $('#potR').onclick=()=>{brush=d._brush='r';upd();};

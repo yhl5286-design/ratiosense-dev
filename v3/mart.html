@@ -159,6 +159,11 @@
   @media (max-width:560px){#stage .slide{zoom:.62}}
   @media (max-width:430px){#stage .slide{zoom:.52}}
   .pianoWrap{max-width:100%;overflow-x:auto}
+  .toastN{position:fixed;top:72px;left:50%;transform:translateX(-50%);background:#fff;border:3px solid #2e9e63;border-radius:16px;padding:12px 26px;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,.18);font-weight:800;font-size:20px;text-align:center;max-width:88vw;animation:tIn .25s ease}
+  .toastN.help{border-color:#e0a02a}
+  .toastN .ts{font-size:16px;font-weight:700;color:var(--sub);margin-top:4px}
+  .toastN.out{opacity:0;transition:opacity .35s}
+  @keyframes tIn{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
@@ -536,8 +541,14 @@ function fb(cls,t,s,btnText,after){const b=$('#fb');b.className='show '+cls;
   $('#fbA').innerHTML=`<button class="btn pri" id="fbBtn">${btnText}</button>`;
   $('#fbBtn').onclick=()=>{b.className='';if(after)after();};}
 function next(){idx=Math.min(idx+1,DECK.length-1);render();}
-function success(t,s){chime(true);plog('success',{slide:idx});fb('','✅ '+t,s,'다음 →',next);}
-function retry(s){chime(false);plog('retry',{slide:idx});fb('help','🤔 다시 한번!',s,'도전!',null);}
+function toastFB(cls,t,s){try{
+  document.querySelectorAll('.toastN').forEach(x=>x.remove());
+  const d=document.createElement('div');d.className='toastN '+cls;
+  d.innerHTML='<b>'+t+'</b>'+(s?'<div class="ts">'+s+'</div>':'');
+  document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2300);
+}catch(e){}}
+function success(t,s,after){chime(true);plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,800);}
+function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -578,7 +589,7 @@ function mountDrag(el,onAll){
   return {};}
 function render(){prog();const d=DECK[idx];const el=$('#slide');
   if(d.t==='intro'){el.innerHTML=`<div style="font-size:90px">🛒</div>
-    <div class="q">마트의 비밀에 온 걸 환영해요!</div>
+    <div class="q">마트의 비밀을 찾아봅시다!</div>
     ${introScene()}
     <div class="sub"><b>지우</b>와 <b>현준</b>이의 장보기를 도와주세요!</div>
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
