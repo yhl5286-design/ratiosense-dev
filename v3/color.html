@@ -29,7 +29,7 @@
   .recbox .rr{display:flex;align-items:center;gap:10px;font-size:28px;font-weight:800;margin:10px 0;white-space:nowrap}
   .recbox .sw2{width:24px;height:24px;border-radius:6px;flex:none}
   .recbox .bar{height:12px;border-radius:6px;transition:width .25s}
-  .bk{width:150px;height:190px;border:5px solid #26303f;border-top-width:3px;border-radius:0 0 26px 26px;position:relative;overflow:hidden;background:#fbfaf6}
+  .bk{width:108px;height:138px;border:5px solid #26303f;border-top-width:3px;border-radius:0 0 26px 26px;position:relative;overflow:hidden;background:#fbfaf6}
   .bk .fill{position:absolute;bottom:0;left:0;right:0;height:0%;transition:height .25s,background .25s}
   .bk .fill.full{height:92%}
   .bklab{font-size:20px;font-weight:800;margin-top:10px}
@@ -226,6 +226,9 @@
   .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
   .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
+  .tube svg{transition:transform .18s}
+  .tube.squz svg{transform:scaleY(.8) translateY(6px)}
+  .pdrop{position:fixed;width:18px;height:24px;border-radius:50% 50% 62% 62%;z-index:70;pointer-events:none;transition:transform .45s cubic-bezier(.55,0,.9,.55),opacity .5s}
 </style>
 </head>
 <body>
@@ -415,7 +418,17 @@ function tubeSVG(c){return `<svg viewBox="0 0 60 118"><rect x="20" y="2" width="
 function tubes(color,vals,cb){return `<div class="tubes">`+vals.map(v=>
   `<button class="tube" data-c="${color}" data-v="${v}"><div>${tubeSVG(color)}</div><div class="amtl">+${v}</div></button>`).join('')+`</div>
   <div class="minus">${[5,10].map(v=>`<button class="mb" data-c="${color}" data-m="${v}">−${v}</button>`).join('')}</div>`;}
-function wireTubes(el,cb){el.querySelectorAll('.tube').forEach(b=>b.onclick=()=>{const c=b.dataset.c;S.amt[c]=(S.amt[c]||0)+(+b.dataset.v);cb();});
+function wireTubes(el,cb){el.querySelectorAll('.tube').forEach(b=>b.onclick=()=>{const c=b.dataset.c;
+    S.amt[c]=(S.amt[c]||0)+(+b.dataset.v);
+    b.classList.add('squz');setTimeout(()=>b.classList.remove('squz'),280);
+    try{const r=b.getBoundingClientRect(),tg=el.querySelector('#my');
+      if(tg){const tr=tg.getBoundingClientRect();
+        const dp=document.createElement('div');dp.className='pdrop';dp.style.background=rgb(PRIM[c]);
+        dp.style.left=(r.left+r.width/2-9)+'px';dp.style.top=(r.bottom-34)+'px';
+        document.body.appendChild(dp);
+        requestAnimationFrame(()=>{dp.style.transform=`translate(${(tr.left+tr.width/2)-(r.left+r.width/2)}px,${(tr.top+tr.height*0.55)-(r.bottom-34)}px) scale(.65)`;dp.style.opacity='.2';});
+        setTimeout(()=>dp.remove(),520);}}catch(e){}
+    cb();});
   el.querySelectorAll('.mb').forEach(b=>b.onclick=()=>{const c=b.dataset.c;S.amt[c]=Math.max(0,(S.amt[c]||0)-(+b.dataset.m));cb();});}
 /* ── 슬라이드 렌더러 ── */
 function npadHTML(){return `<div class="npad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}</button>`).join('')}<button data-k="back">⌫</button><button data-k="0">0</button><button data-k="clr">C</button></div>`;}
@@ -554,33 +567,20 @@ if(d.t==='mdemo'){
   if(d.t==='make'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,ans=BASE*m.r[1-gi]/m.r[gi];
     const tgt=mix({[m.top[0]]:m.r[0],[m.top[1]]:m.r[1]});
-    const A=m.top[1]+' 물감의 양',B=m.top[0]+' 물감의 양'; // 비 앞=비교하는 양, 뒤=기준량
-    const bank=[A,B].sort(()=>Math.random()-.5);
+    const cand=[...new Set([ans,BASE,ans*2,Math.max(5,Math.round(ans/2))])].slice(0,4);
+    const bank=cand.map(String).sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
+      <div class="sub">알맞은 숫자 카드를 빈칸에 끌어다 놓으세요!</div>
       <div class="pair">
         <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
         <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">Ⓑ 내가 만든 색</div></div>
       </div>
-      <div class="numrow"><div class="nf"><input id="inp" type="number" inputmode="numeric" min="0" placeholder="?"><div class="u" style="color:${rgb(PRIM[askC])}">● ${askC} mL</div></div></div>
-      ${npadHTML()}
-      <button class="btn pri" id="go">답 제출!</button>
-      <div class="q" style="font-size:22px;margin-top:14px">이때 <b>기준량</b>은 무엇이고, <b>비교하는 양</b>은 무엇인가요?</div>
-      <div class="eq">
-        <div class="row">기준량 = <span class="dz" data-a="${A}"></span></div>
-        <div class="row">비교하는 양 = <span class="dz" data-a="${B}"></span></div>
-      </div>
-      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
-    let numOK=false,dragOK=false;
-    const fin=()=>{if(numOK&&dragOK){S._made=ans;plog('make',{i:d.i});
-      success('맞았어요! 🎨',`${askC} <b>${ans}mL</b>! 비 ${m.top[0]} : ${m.top[1]}에서 <b>뒤의 ${m.top[1]}이 기준량</b>, <b>앞의 ${m.top[0]}이 비교하는 양</b>입니다!`);}};
-    const upd=()=>{const v=Math.max(0,parseInt($('#inp').value||'0',10)||0);
-      S.amt={[m.given]:BASE,[askC]:v};
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,(BASE+v)/(BASE+ans+60)*92)+'%';};
-    $('#inp').oninput=upd;upd();
-    $('#go').onclick=()=>{const v=parseInt($('#inp').value||'0',10);
-      if(v===ans){if(!numOK){numOK=true;chime(true);$('#go').textContent='✓ 정답!';$('#go').style.borderColor='#2e9e63';$('#go').style.color='#2e9e63';$('#inp').disabled=true;}fin();}
-      else retry(`${m.given}이 <b>${BASE}mL</b>일 때, ${askC}이 몇 mL여야 ${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>이 될까요?`);};
-    wireNpad(el);mountDrag(el,()=>{dragOK=true;fin();});
+      <div class="eq"><div class="row">${askC} 물감의 양 = <span class="dz" data-a="${ans}"></span> mL</div></div>
+      <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{S.amt={[m.given]:BASE,[askC]:ans};
+      const my=$('#my');if(my){my.style.background=rgb(mix(S.amt));my.style.height='70%';}
+      chime(true);plog('make',{i:d.i});
+      success('맞았어요! 🎨',`${m.top[0]} : ${m.top[1]} = ${m.r[0]} : ${m.r[1]} — ${m.given} ${BASE}mL에 ${askC} <b>${ans}mL</b>!`);});
     return;}
   
   if(d.t==='rate'){
