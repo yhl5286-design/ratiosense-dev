@@ -195,11 +195,9 @@
   @media (max-height:860px){#stage .slide{zoom:.85}.harp{zoom:.72}}
   @media (max-height:740px){#stage .slide{zoom:.72}}
   @media (max-height:620px){#stage .slide{zoom:.6}}
-  .itvT{margin:10px auto 0;border-collapse:collapse;background:#fff;font-size:16.5px}
-  .itvT th{background:#f3ead8;padding:7px 14px;border-bottom:2.5px solid var(--line);color:#7a6f58}
-  .itvT td{padding:5.5px 14px;border-bottom:1px solid #eee}
-  .itvT tr[data-i]{cursor:pointer}
-  .itvT tr[data-i]:hover td{background:#fdf7e7}
+  .itvT{margin:10px auto 0;border-collapse:collapse;background:#fff;font-size:21px}
+  .itvT th{background:#f3ead8;padding:11px 24px;border-bottom:2.5px solid var(--line);color:#7a6f58}
+  .itvT td{padding:9px 24px;border-bottom:1px solid #eee}
   .itvT tr.pf td{background:#fff7dd;font-weight:700}
   .itvT tr.pf:hover td{background:#ffefc2}
   .itvWrap{display:inline-block;border:3px solid var(--line);border-radius:14px;overflow:hidden}
@@ -482,12 +480,11 @@ if(d.t==='harmx'){
       <div id="itvPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
         <div style="background:#fffdf6;border:3.5px solid var(--line);border-radius:20px;padding:16px 26px;max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35)">
           <div class="q" style="font-size:21px;margin:0 0 2px">🎼 도와 다른 음 사이 — <b>음정</b>을 비로 정리해요!</div>
-          <div class="sub" style="margin-bottom:6px">줄을 눌러 두 음을 함께 들어 보세요!</div>
           <div class="itvWrap"><table class="itvT">
             <tr><th>음</th><th>음정</th><th>진동수 비 (도 : 음)</th></tr>
             ${NOTES.map((m,i)=>`<tr class="${PERF.includes(i)?'pf':''}" data-i="${i}"><td>${i===0?'★':''}${m[0]}</td><td>${ITV[i]}</td><td><b style="color:#b3541e">${m[3]} : ${m[2]}</b></td></tr>`).join('')}
           </table></div>
-          <div class="dial" style="margin-top:12px;font-size:20px">💡 <b>가장 간단한 비</b>일 때 <b>완전음정</b>이라고 해요 — 옥타브 <b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼요!</div>
+          <div class="dial" style="margin-top:12px;font-size:20px">💡 <b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>간단한 비</b>일 때 <b>완전 음정</b>이고, 잘 어울리는 화음이 되어요!</div>
           <div style="margin-top:10px;text-align:center"><button class="btn pri" id="itvClose">닫기</button></div>
         </div>
       </div>`;
@@ -531,8 +528,6 @@ if(d.t==='harmx'){
       $('#hxInfo').innerHTML=`${n[0]} — <b>${ITV[i]}</b> &nbsp;·&nbsp; 도 <b>264</b>번 : ${n[0]} <b>${n[1]}</b>번 = <b style="color:#b3541e">${a} : ${b}</b> &nbsp; <span style="color:#e0a02a">${'★'.repeat(r.s)}${'☆'.repeat(5-r.s)}</span> <b>${r.l}</b>`;});
     $('#itvBtn').onclick=()=>{$('#itvPop').style.display='flex';plog('itvpop',{});};
     $('#itvClose').onclick=()=>{$('#itvPop').style.display='none';};
-    el.querySelectorAll('tr[data-i]').forEach(r=>r.onclick=()=>{const m=NOTES[+r.dataset.i];
-      if(+r.dataset.i===0)tone(264,0,1.2);else chord(264,m[1],1.4);plog('itv',{n:m[0]});});
     drawHX();return;}
 if(d.t==='chord'){
     const n=NOTES[d.i],a=n[3],b=n[2]; // 도:음 = a:b
@@ -540,8 +535,7 @@ if(d.t==='chord'){
     // 보기: 정답, 뒤집힌 비, 다른 비 1개
     const decoy=(a===2&&b===3)?'3 : 4':'2 : 3';
     const opts=[[`${a} : ${b}`,1],[`${b} : ${a}`,0],[decoy,0]].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q"><b>도</b>의 진동수 : <b>${n[0]}</b>의 진동수 = <b style="color:#b3541e">(&nbsp;&nbsp;) : (&nbsp;&nbsp;)</b> 일까요?</div>
-      <div class="sub">(화음의 비밀 ${CHORD_SET.indexOf(d.i)+1}/${CHORD_SET.length}) — 건반을 눌러 ★도와 함께 울리는 소리를 들어 보세요!</div>
+    el.innerHTML=`<div class="q"><b>${n[0]}</b>${jz(n[0],'을','를')} 눌러보세요.<br><b>도</b>의 진동수 : <b>${n[0]}</b>의 진동수 = <b style="color:#b3541e">(&nbsp;&nbsp;) : (&nbsp;&nbsp;)</b> 일까요?</div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===d.i?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':''}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
