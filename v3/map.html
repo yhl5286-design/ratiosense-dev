@@ -395,6 +395,7 @@ const DECK=[
  {t:'scale',i:0,opts:[['300m',1],['30m',0],['3,000m',0]]},
  {t:'scale',i:1,opts:[['200m',1],['20m',0],['2,000m',0]]},
  {t:'scale',i:2,opts:[['500m',1],['50m',0],['5,000m',0]]},
+ {t:'movie'},
  {t:'comic',i:0},{t:'comic',i:1},{t:'comic',i:2},{t:'comic',i:3},
  {t:'prop'},
  {t:'msum',i:0},{t:'msum',i:1},{t:'msum',i:2},{t:'msum',i:3},
@@ -486,6 +487,14 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         :retry('배율 버튼을 눌러 <b>지도 위 다리 길이</b>가 어떻게 변하는지 관찰해 보세요.');});return;}
   
 
+  if(d.t==='movie'){placed=3;
+    el.innerHTML=`<div class="q">🎬 에라토스테네스의 실험</div>
+      <div class="sub">▶ 재생을 누르고 <b>소리를 켜 주세요</b> — 또렷한 자막과 함께 나와요! (일시정지 자유)</div>
+      <video id="mv" src="eratos.mp4" controls playsinline preload="metadata" style="width:min(860px,92vw);border-radius:16px;border:3px solid var(--line);background:#000"></video>
+      <div style="margin-top:12px"><button class="btn pri" id="mvNext">요약 만화 보기 →</button></div>`;
+    const v=$('#mv');if(v)v.onended=()=>{plog('movie',{done:1});};
+    $('#mvNext').onclick=()=>{const v2=$('#mv');if(v2)try{v2.pause();}catch(e){}plog('movie',{skip:1});next();};
+    return;}
   if(d.t==='comic'){placed=3;
     el.innerHTML=`<div class="q">📖 요약 만화 ${d.i+1} / 4</div>
       ${d.i===0?'<div class="sub">에라토스테네스의 실험을 네 컷 만화로 한 컷씩 살펴봐요!</div>':''}
