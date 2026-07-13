@@ -226,6 +226,7 @@
   .escDig .dgt{display:inline-block;background:#26303f;color:#ffd34d;border-radius:10px;padding:2px 16px;font-size:32px;vertical-align:middle;margin-left:6px}
   .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:-0.45em;line-height:1.15;font-size:.72em;margin:0 3px;font-weight:800}
   .fr .d{border-top:2.5px solid currentColor;padding-top:1px}
+  .chip .fr,.dz .fr{font-size:1em}
   .tube svg{transition:transform .18s}
   .tube.squz svg{transform:scaleY(.8) translateY(6px)}
   .pdrop{position:fixed;width:18px;height:24px;border-radius:50% 50% 62% 62%;z-index:70;pointer-events:none;transition:transform .45s cubic-bezier(.55,0,.9,.55),opacity .5s}
@@ -586,25 +587,22 @@ if(d.t==='mdemo'){
   if(d.t==='rate'){
     const W=[
      {q:'빨강 <b>100mL</b>가 있고, 노랑 <b>200mL</b>가 있습니다.<br>이때, <b style="color:#c0392b">빨강에 대한 노랑의 비</b>는 얼마인가요?',
-      cap:'<b style="color:#c0392b">빨강 100mL가 기준</b> — 노랑 200mL는 빨강의 <b>2배</b>!',
       rows:['① 빨강에 대한 노랑의 비 = 200 : 100 = <span class="dz" data-a="2"></span> : <span class="dz" data-a="1"></span>',
             '② 1번에서의 비를 비율로 나타내면? <span class="dz" data-a="2/1"></span>입니다.'],
       bank:['2','1','2/1','1/2'],
       okS:'빨강에 대한 노랑의 비는 <b>빨강을 기준</b>으로 노랑의 양을 계산해요. 빨강이 100일 때 노랑이 200 — 즉 <b>200 : 100 = 2 : 1</b>! 비율로 나타내면 <span class="fr"><span>2</span><span class="d">1</span></span>, <b>2</b>와 같아요!'},
      {q:'빨강 <b>100mL</b>가 있고, 노랑 <b>200mL</b>가 있습니다.<br>이때, <b style="color:#c0392b">노랑에 대한 빨강의 비</b>는 얼마인가요?',
-      cap:'<b style="color:#b3921e">노랑 200mL가 기준</b> — 빨강 100mL는 노랑의 <b>1/2</b>!',
       rows:['① 노랑에 대한 빨강의 비 = 100 : 200 = <span class="dz" data-a="1"></span> : <span class="dz" data-a="2"></span>',
             '② 1번에서의 비를 비율로 나타내면? <span class="dz" data-a="1/2"></span>입니다.'],
       bank:['1','2','1/2','2/1'],
       okS:'노랑에 대한 빨강의 비는 <b>노랑을 기준</b>으로 빨강이 얼마나 되는지 계산해요. 노랑이 200일 때 빨강은 100 — 즉 <b>100 : 200 = 1 : 2</b>! 비율로 나타내면 <span class="fr"><span>1</span><span class="d">2</span></span>, <span class="fr"><span>5</span><span class="d">10</span></span>, <b>0.5</b>와 같아요!'}][d.i];
     const bank=W.bank.slice().sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">${W.q}</div>
-      <div class="sub">숫자 카드를 끌어다 빈칸을 채워요 — <b>비교하는 양을 기준량으로 나눈 것이 비율</b>!</div>
+    el.innerHTML=`<div class="sub">알맞은 숫자를 빈칸에 끌어와 채우거나 순서대로 클릭해요.</div>
+      <div class="q">${W.q}</div>
       <div class="pair">
         <div><div class="bk"><div class="fill" style="height:35%;background:${rgb(PRIM['빨강'])}"></div></div><div class="bklab">빨강 <b>100mL</b></div></div>
         <div><div class="bk"><div class="fill" style="height:70%;background:${rgb(PRIM['노랑'])}"></div></div><div class="bklab">노랑 <b>200mL</b></div></div>
       </div>
-      <div style="font-size:20px;font-weight:800;margin:6px 0">${fx(W.cap)}</div>
       <div class="eq">
         ${W.rows.map(r=>`<div class="row">${r}</div>`).join('')}
       </div>
@@ -684,8 +682,8 @@ if(d.t==='sintro'){
     const S4=[
      {t:["두 물감의 ","이 달라도 두 물감의 ","가 같다면 같은 색이 된다."],a:["양","비"],x:["차이","개수"]},
      {t:["비교하는 양 : 기준량 사이에는 보이지 않는 ","이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 ","이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 ","이다."],a:["곱셈","2배","2/1"],x:["덧셈","1/2"]},
-     {t:["지민이는 \"빨강 2컵, 파랑 3컵\"을 섞을 때와 \"빨강 4컵, 파랑 6컵\"을 섞을 때 같은 색이 나온다고 말했다. 왜 같은 색이 나오는지 비율을 사용하여 설명하세요.<br>2 : 3의 비율도 ","이고, 4 : 6의 비율도 ","이기 때문이다.<br>각 물감의 양은 ","로 늘었지만 두 물감의 ","은 같기 때문에 색이 같다."],a:["2/3","2/3","2배","비율"],x:["3/2","3배"]},
-     {t:["호연이는 노랑 물감과 파랑 물감을 섞어 초록색을 만들었고, 이때 전체 물감 10컵 중 노랑 물감은 20%, 파랑 물감은 80%라고 한다. 각 물감은 몇 컵씩 넣을까?<br>10컵의 20%는 ","이고 80%는 ","이므로,<br>노랑 물감은 ","컵, 파랑 물감은 ","컵이다."],a:["2","8","2","8"],x:["4","6"]}];
+     {t:["지민이는 \"빨강 2컵, 파랑 3컵\"을 섞을 때와 \"빨강 4컵, 파랑 6컵\"을 섞을 때 같은 색이 나온다고 말했다.<br>그 이유는 2 : 3의 비율도 ","이고, 4 : 6의 비율도 ","이기 때문이다.<br>각 물감의 양은 ","로 늘었지만 두 물감의 ","은 같기 때문에 색이 같다."],a:["2/3","2/3","2배","비율"],x:["3/2","3배"]},
+     {t:["호연이는 전체 물감 50컵 중에 노랑 물감 40%, 파랑 물감 60%를 섞어 초록색을 만들었다.<br>이때 50컵의 40%는 20이므로 노랑 물감은 ","컵이고,<br>50의 60%는 ","이므로 파랑 물감은 ","컵이다."],a:["20","30","30"],x:["10","40"]}];
     const s=S4[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
@@ -699,7 +697,17 @@ if(d.t==='sintro'){
       cardWin(el,null,()=>next());});
     return;}
   if(d.t==='done'){
-    confetti();clap();
+    const _need=['color0','color1','color2','color3'];let _have=[];
+    try{_have=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');}catch(e){}
+    const _got=_need.filter(c=>_have.includes(c)).length;
+    if(_got<4){
+      el.innerHTML=`<div style="font-size:64px">\uD83D\uDD12</div>
+      <div class="q">아직 탈출할 수 없어요!</div>
+      <div class="sub">이 방의 비밀카드를 <b>${_got} / 4</b>장 모았어요.<br>비밀카드 문제 4개를 <b>모두 맞혀야</b> 이 방을 탈출하고 비밀번호 숫자를 얻을 수 있어요!</div>
+      <button class="btn pri" id="goSum">비밀카드 문제 풀러 가기 →</button>`;
+      const _b=$('#goSum');if(_b)_b.onclick=()=>{const si=DECK.findIndex(x=>x.t==='sum');if(si>=0)idx=si;render();};
+      return;}
+        confetti();clap();
     el.innerHTML=`<div><span class="stampb" style="font-size:64px">🎨</span></div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span>을 얻었어요!</div>
@@ -713,8 +721,8 @@ $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx}
 const RC=[
  {id:'color0',r:'🎨 색깔의 비밀',t:'두 물감의 <b>양</b>이 달라도 두 물감의 <b>비</b>가 같다면 같은 색이 된다.'},
  {id:'color1',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량 사이에는 보이지 않는 <b>곱셈</b>이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 <b>2배</b>이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 <b>2/1</b>이다.'},
- {id:'color2',r:'🎨 색깔의 비밀',t:'지민이는 "빨강 2컵, 파랑 3컵"을 섞을 때와 "빨강 4컵, 파랑 6컵"을 섞을 때 같은 색이 나온다고 말했다.<br>2 : 3의 비율도 <b>2/3</b>이고, 4 : 6의 비율도 <b>2/3</b>이기 때문이다.<br>각 물감의 양은 <b>2배</b>로 늘었지만 두 물감의 <b>비율</b>은 같기 때문에 색이 같다.'},
- {id:'color3',r:'🎨 색깔의 비밀',t:'호연이는 노랑 물감과 파랑 물감을 섞어 초록색을 만들었고, 이때 전체 물감 10컵 중 노랑 물감은 20%, 파랑 물감은 80%라고 한다.<br>10컵의 20%는 <b>2</b>이고 80%는 <b>8</b>이므로, 노랑 물감은 <b>2</b>컵, 파랑 물감은 <b>8</b>컵이다.'},
+ {id:'color2',r:'🎨 색깔의 비밀',t:'지민이는 "빨강 2컵, 파랑 3컵"을 섞을 때와 "빨강 4컵, 파랑 6컵"을 섞을 때 같은 색이 나온다고 말했다.<br>그 이유는 2 : 3의 비율도 <b>2/3</b>이고, 4 : 6의 비율도 <b>2/3</b>이기 때문이다.<br>각 물감의 양은 <b>2배</b>로 늘었지만 두 물감의 <b>비율</b>은 같기 때문에 색이 같다.'},
+ {id:'color3',r:'🎨 색깔의 비밀',t:'호연이는 전체 물감 50컵 중에 노랑 물감 40%, 파랑 물감 60%를 섞어 초록색을 만들었다.<br>이때 50컵의 40%는 20이므로 노랑 물감은 <b>20</b>컵이고, 50의 60%는 <b>30</b>이므로 파랑 물감은 <b>30</b>컵이다.'},
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 진동수가 <b>간단한</b> 비를 이룰수록 화음이 더 잘 어울린다.'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
