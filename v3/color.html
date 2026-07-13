@@ -580,7 +580,7 @@ if(d.t==='mdemo'){
     mountDrag(el,()=>{S.amt={[m.given]:BASE,[askC]:ans};
       const my=$('#my');if(my){my.style.background=rgb(mix(S.amt));my.style.height='70%';}
       chime(true);plog('make',{i:d.i});
-      success('맞았어요!',`${m.top[0]} : ${m.top[1]} = ${m.r[0]} : ${m.r[1]} — ${m.given} ${BASE}mL에 ${askC} <b>${ans}mL</b>!`);});
+      setTimeout(()=>success('맞았어요!',`${m.top[0]} : ${m.top[1]} = ${m.r[0]} : ${m.r[1]} — ${m.given} ${BASE}mL에 ${askC} <b>${ans}mL</b>!`),3000);});
     return;}
   
   if(d.t==='rate'){
