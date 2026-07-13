@@ -45,6 +45,9 @@
   .hs{width:16px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:5px;cursor:pointer;box-shadow:0 0 5px rgba(255,240,200,.4)}
   .hs.ghost{background:none;border-left:6px dashed #5a4a30;cursor:default;box-shadow:none}
     .hs.pluckA{animation:wig 1.25s ease-out}
+  .hstr{height:14px;background:linear-gradient(#fff6dd,#c9b98a);border-radius:5px;box-shadow:0 0 5px rgba(255,240,200,.4)}
+  .hstr.pluckH{animation:hwig 1.2s ease-out}
+  @keyframes hwig{0%{transform:scaleY(2.6)}25%{transform:scaleY(.4)}50%{transform:scaleY(1.9)}75%{transform:scaleY(.6)}100%{transform:scaleY(1)}}
   @keyframes wig{8%{transform:translateX(6px)}20%{transform:translateX(-5px)}33%{transform:translateX(4px)}46%{transform:translateX(-3px)}60%{transform:translateX(2px)}75%{transform:translateX(-1px)}100%{transform:none}}
   .hlab{margin-top:8px;font-size:19px;font-weight:800;color:#f0e9d8;text-align:center;line-height:1.3}
   .hlab span{font-size:14px;color:#cbbfa8}
@@ -329,8 +332,8 @@ function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'
 
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
-function chord(fA,fB,d){tone(fA,0,d||1.4);tone(fB,0,d||1.4);}
-function pluckT(f,w){[[f,.2],[f*2,.06],[f*3,.03]].forEach(([ff,v])=>{try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=ff;o.connect(g);g.connect(c.destination);const t0=c.currentTime+(w||0);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.008);g.gain.exponentialRampToValueAtTime(.001,t0+1.3);o.start(t0);o.stop(t0+1.35);}catch(e){}});}
+function chord(fA,fB,d){const du=d||1.8;try{const c=ac();[[fA,'sine',.18],[fB,'triangle',.15]].forEach(([f,ty,v])=>{const o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(v,c.currentTime+.03);g.gain.setValueAtTime(v,c.currentTime+du*.55);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+du);o.start(c.currentTime);o.stop(c.currentTime+du+.05);});}catch(e){}}
+function pluckT(f,w){[[f,.3,2.4],[f*2,.13,1.7],[f*3,.06,1.2],[f*4,.03,.9],[f*5,.015,.6]].forEach(([ff,v,du])=>{try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=ff;o.connect(g);g.connect(c.destination);const t0=c.currentTime+(w||0);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.005);g.gain.exponentialRampToValueAtTime(.001,t0+du);o.start(t0);o.stop(t0+du+.05);}catch(e){}});}
 function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
 function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
   const o=c.createOscillator(),g=c.createGain();o.type='sine';
@@ -528,7 +531,8 @@ if(d.t==='harmx'){
       const W=680,padL=50,padR=30,top=54,bottom=220;
       const midY=(top+bottom)/2,amp=(bottom-top)/2-8,plotW=W-padL-padR;
       const bandW=plotW*0.42,bx0=padL,bx1=padL+bandW;
-      const ph=((performance.now()-ph0)/1300)*2*Math.PI;
+      const _CYC=5200,_HOLD=1500,_t=performance.now()-ph0,_per=_CYC+_HOLD,_k=Math.floor(_t/_per),_r=Math.min((_t-_k*_per)/_CYC,1);
+      const ph=(_k+_r)*2*Math.PI;
       const P=[];
       P.push(`<rect x="${bx0}" y="${top-8}" width="${bandW}" height="${bottom-top+16}" rx="8" fill="#FFF7E6"/>`);
       P.push(`<line x1="${bx0}" y1="${top-8}" x2="${bx0}" y2="${bottom+8}" stroke="#BA7517" stroke-width="1.5" stroke-dasharray="4 4"/>`);
@@ -593,8 +597,9 @@ if(d.t==='chord'){
   if(d.t==='strlen'){
     el.innerHTML=`<div class="q"><b>줄의 길이와 소리</b> — 줄을 길게, 짧게 조절해 보세요!</div>
       <div class="sub" style="font-size:20px">줄이 <b>길수록</b> 천천히 떨려 <b>낮은 소리</b>, <b>짧을수록</b> 빨리 떨려 <b>높은 소리</b>!</div>
-      <div class="harp" style="padding:14px 60px 10px"><div class="hbeam"></div>
-        <div style="display:flex;justify-content:center;align-items:flex-start"><div class="hs" id="slStr" style="height:252px"></div></div>
+      <div style="display:flex;align-items:center;justify-content:center;margin-top:12px;min-height:80px">
+        <div style="width:16px;height:64px;background:linear-gradient(#d9b26a,#8a6a34);border-radius:8px;flex:none"></div>
+        <div id="slStr" class="hstr" style="width:432px;max-width:68vw"></div>
       </div>
       <div class="dial" id="slInfo" style="font-size:22px;margin-top:10px">길이 <b>72cm</b> — 1초에 <b>440번</b> 떨려요 <span style="color:var(--sub)">(기준 라 ★)</span></div>
       <div style="margin:12px 0"><span style="font-weight:800;color:var(--sub)">짧게 ←</span>
@@ -603,9 +608,9 @@ if(d.t==='chord'){
       <button class="btn" id="slPlay">♪ 줄 뜯기</button>
       <button class="btn pri" onclick="next()">하프 공방으로 →</button>`;
     const pluck=()=>{const L=+$('#slR').value;pluckT(Math.round(440*72/L));
-      const s=$('#slStr');if(s){s.classList.remove('pluckA');void s.offsetWidth;s.classList.add('pluckA');}};
+      const s=$('#slStr');if(s){s.classList.remove('pluckH');void s.offsetWidth;s.classList.add('pluckH');}};
     const upd=()=>{const L=+$('#slR').value,f=Math.round(440*72/L);
-      $('#slStr').style.height=Math.round(L*3.5)+'px';
+      $('#slStr').style.width=Math.round(L*6)+'px';
       const tag=L===72?'(기준 라 ★)':(L<50?'(아주 높은 소리!)':(L<72?'(높은 소리!)':(L>84?'(아주 낮은 소리!)':'(낮은 소리!)')));
       $('#slInfo').innerHTML=`길이 <b>${L}cm</b> — 1초에 <b>${f}번</b> 떨려요 <span style="color:var(--sub)">${tag}</span>`;};
     let lastP=0;
