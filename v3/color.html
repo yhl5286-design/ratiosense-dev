@@ -584,23 +584,27 @@ if(d.t==='mdemo'){
     return;}
   
   if(d.t==='rate'){
-    const mixCol=rgb(mix({빨강:100,노랑:200}));
     const W=[
-     {q:'이 물감은 빨강 100mL와 노랑 200mL를 섞어 만들었습니다.<br><b style="color:#c0392b">빨강에 대한 노랑의 비</b>는 얼마인가요?',
+     {q:'빨강 <b>100mL</b>가 있고, 노랑 <b>200mL</b>가 있습니다.<br>이때, <b style="color:#c0392b">빨강에 대한 노랑의 비</b>는 얼마인가요?',
+      cap:'<b style="color:#c0392b">빨강 100mL가 기준</b> — 노랑 200mL는 빨강의 <b>2배</b>!',
       rows:['① 빨강에 대한 노랑의 비 = 200 : 100 = <span class="dz" data-a="2"></span> : <span class="dz" data-a="1"></span>',
-            '② 그럼 비율로 나타내면? <span class="dz" data-a="2/1"></span> 이므로 <span class="dz" data-a="2"></span>입니다.'],
-      bank:['2','1','2/1','2','1/2'],
-      okS:'노랑 200 : 빨강 100 = <b>2 : 1</b> — 비율은 <span class="fr"><span>2</span><span class="d">1</span></span> = <b>2</b>!'},
-     {q:'이 물감은 빨강 100mL와 노랑 200mL를 섞어 만들었습니다.<br><b style="color:#c0392b">노랑에 대한 빨강의 비</b>는 얼마인가요?',
+            '② 1번에서의 비를 비율로 나타내면? <span class="dz" data-a="2/1"></span>입니다.'],
+      bank:['2','1','2/1','1/2'],
+      okS:'빨강에 대한 노랑의 비는 <b>빨강을 기준</b>으로 노랑의 양을 계산해요. 빨강이 100일 때 노랑이 200 — 즉 <b>200 : 100 = 2 : 1</b>! 비율로 나타내면 <span class="fr"><span>2</span><span class="d">1</span></span>, <b>2</b>와 같아요!'},
+     {q:'빨강 <b>100mL</b>가 있고, 노랑 <b>200mL</b>가 있습니다.<br>이때, <b style="color:#c0392b">노랑에 대한 빨강의 비</b>는 얼마인가요?',
+      cap:'<b style="color:#b3921e">노랑 200mL가 기준</b> — 빨강 100mL는 노랑의 <b>1/2</b>!',
       rows:['① 노랑에 대한 빨강의 비 = 100 : 200 = <span class="dz" data-a="1"></span> : <span class="dz" data-a="2"></span>',
-            '② 그럼 비율로 나타내면? <span class="dz" data-a="1/2"></span>입니다.'],
+            '② 1번에서의 비를 비율로 나타내면? <span class="dz" data-a="1/2"></span>입니다.'],
       bank:['1','2','1/2','2/1'],
-      okS:'빨강 100 : 노랑 200 = <b>1 : 2</b> — <b>비교하는 양(빨강)을 기준량(노랑)으로 나눈 것이 비율</b>! 100 ÷ 200 = <b><span class="fr"><span>1</span><span class="d">2</span></span></b>!'}][d.i];
+      okS:'노랑에 대한 빨강의 비는 <b>노랑을 기준</b>으로 빨강이 얼마나 되는지 계산해요. 노랑이 200일 때 빨강은 100 — 즉 <b>100 : 200 = 1 : 2</b>! 비율로 나타내면 <span class="fr"><span>1</span><span class="d">2</span></span>, <span class="fr"><span>5</span><span class="d">10</span></span>, <b>0.5</b>와 같아요!'}][d.i];
     const bank=W.bank.slice().sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${W.q}</div>
       <div class="sub">숫자 카드를 끌어다 빈칸을 채워요 — <b>비교하는 양을 기준량으로 나눈 것이 비율</b>!</div>
-      <div style="font-size:21px;font-weight:800;margin:4px 0">주황 물감 — <span style="color:${rgb(PRIM['빨강'])}">빨강 100mL</span> + <span style="color:#b3921e">노랑 200mL</span></div>
-      <div class="liquid"><div class="mf" style="background:${mixCol}"></div></div>
+      <div class="pair">
+        <div><div class="bk"><div class="fill" style="height:35%;background:${rgb(PRIM['빨강'])}"></div></div><div class="bklab">빨강 <b>100mL</b></div></div>
+        <div><div class="bk"><div class="fill" style="height:70%;background:${rgb(PRIM['노랑'])}"></div></div><div class="bklab">노랑 <b>200mL</b></div></div>
+      </div>
+      <div style="font-size:20px;font-weight:800;margin:6px 0">${fx(W.cap)}</div>
       <div class="eq">
         ${W.rows.map(r=>`<div class="row">${r}</div>`).join('')}
       </div>
@@ -672,13 +676,13 @@ if(d.t==='mdemo'){
       success('맞았어요! 빨강 40%, 노랑 60%!','전체 100mL를 100으로 보면 — 빨강 <b>40%</b>, 노랑 <b>60%</b>!');});
     return;}
 if(d.t==='sintro'){
-    el.innerHTML=`<div class="q">지금부터 공부했던 내용으로 <b>색깔의 비밀</b>을 찾아봅시다!</div>
-      <div class="sub">낱말 카드로 빈칸을 채우면 <b>비밀 카드</b>를 얻어요!</div>
+    el.innerHTML=`<div class="q">지금까지 공부한 내용을 기억하고,<br><b>색깔의 비밀</b>을 찾아봅시다!</div>
+      <div class="sub">빈칸을 채우며 <b>비밀카드 문제</b>를 푸세요!</div>
       <button class="btn pri" onclick="next()">비밀 찾으러 가기 →</button>`;
     return;}
   if(d.t==='sum'){
     const S4=[
-     {t:["물감의 ","이 달라도 ","가 같다면 같은 색이 된다."],a:["양","비"],x:["차이","개수"]},
+     {t:["두 물감의 ","이 달라도 두 물감의 ","가 같다면 같은 색이 된다."],a:["양","비"],x:["차이","개수"]},
      {t:["B를 ","으로 비교하여 A가 어느 정도인지 나타내는 ","를 A : B의 ","라고 한다."],a:["기준","관계","비"],x:["비율","비교"]},
      {t:["\"B에 대한 A의 비\"는 B를 ","으로 놓고 비교했을 때, 상대적인 A의 양을 나타낸다는 뜻이다.<br>이때 비를 비율로 나타내면 A를 B로 나눈 값, ",", 즉 ","가 된다."],a:["기준","A ÷ B","A/B"],x:["비교","B ÷ A"]},
      {t:["비 A : B에서 비율 = ","\u00A0= ",", A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 ","가 된다."],a:["A ÷ B","A/B","A%"],x:["B ÷ A","B%"]}];
@@ -707,7 +711,7 @@ if(d.t==='sintro'){
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
 $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
 const RC=[
- {id:'color0',r:'🎨 색깔의 비밀',t:'물감의 <b>양</b>이 달라도 <b>비</b>가 같다면 같은 색이 된다.'},
+ {id:'color0',r:'🎨 색깔의 비밀',t:'두 물감의 <b>양</b>이 달라도 두 물감의 <b>비</b>가 같다면 같은 색이 된다.'},
  {id:'color1',r:'🎨 색깔의 비밀',t:'B를 <b>기준</b>으로 비교하여 A가 어느 정도인지 나타내는 <b>관계</b>를 A : B의 <b>비</b>라고 한다.'},
  {id:'color2',r:'🎨 색깔의 비밀',t:'"B에 대한 A의 비"는 B를 <b>기준</b>으로 놓고 비교했을 때, 상대적인 A의 양을 나타낸다는 뜻이다.<br>이때 비를 비율로 나타내면 A를 B로 나눈 값, <b>A ÷ B</b>, 즉 <b>A/B</b>가 된다.'},
  {id:'color3',r:'🎨 색깔의 비밀',t:'비 A : B에서 비율 = <b>A ÷ B</b> = <b>A/B</b> — A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 <b>A%</b>가 된다.'},
