@@ -488,7 +488,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
   
 
   if(d.t==='movie'){placed=3;
-    el.innerHTML=`<div class="q">🎬 에라토스테네스의 실험</div>
+    el.innerHTML=`<div class="q">에라토스테네스의 실험</div>
       <div class="sub">▶ 재생을 누르고 <b>소리를 켜 주세요</b> — 또렷한 자막과 함께 나와요! (일시정지 자유)</div>
       <video id="mv" src="eratos.mp4" controls playsinline preload="metadata" style="width:min(860px,92vw);border-radius:16px;border:3px solid var(--line);background:#000"></video>
       <div style="margin-top:12px"><button class="btn pri" id="mvNext">요약 만화 보기 →</button></div>`;
@@ -496,13 +496,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     $('#mvNext').onclick=()=>{const v2=$('#mv');if(v2)try{v2.pause();}catch(e){}plog('movie',{skip:1});next();};
     return;}
   if(d.t==='comic'){placed=3;
-    el.innerHTML=`<div class="q">📖 요약 만화 ${d.i+1} / 4</div>
+    el.innerHTML=`<div class="q">요약 만화 ${d.i+1} / 4</div>
       ${d.i===0?'<div class="sub">에라토스테네스의 실험을 네 컷 만화로 한 컷씩 살펴봐요!</div>':''}
       <div style="display:flex;justify-content:center">${comicSVG(d.i)}</div>
       <div style="margin-top:12px"><button class="btn pri" onclick="next()">${d.i<3?'다음 컷 →':'비로 계산해 보기! ✏️'}</button></div>`;
     return;}
   if(d.t==='prop'){placed=3;
-    el.innerHTML=`<div class="q">🌍 <b>지구의 둘레 구하기!</b><br>두 도시 그림자 각도의 차이 <b>7.2°</b> : 원 전체 <b>360°</b> = <b>1 : 50</b>이다.<br>두 도시 사이가 <b>800km</b>일 때, 지구는 <b>몇 km</b>일까?</div>
+    el.innerHTML=`<div class="q"><b>지구의 둘레 구하기!</b><br>두 도시 그림자 각도의 차이 <b>7.2°</b> : 원 전체 <b>360°</b> = <b>1 : 50</b>이다.<br>두 도시 사이가 <b>800km</b>일 때, 지구는 <b>몇 km</b>일까?</div>
       <div style="display:flex;justify-content:center;margin:6px 0">
         <svg viewBox="0 0 300 292" style="width:min(300px,80vw)">
           <circle cx="140" cy="150" r="112" fill="none" stroke="#8a6a34" stroke-width="2.5" stroke-dasharray="4 7"/>
@@ -546,7 +546,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     confetti();clap();
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🗺️</span></div>
     <div class="q">지도의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="escDig">🔓 3번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span> 획득!</div>
+    <div class="escDig">🔓 3번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span>을 얻었어요!</div>
     <div class="sub">비밀 카드 4장이 지갑에 쏙 — 마지막 탐험은 <b>🛒 마트의 비밀</b>!</div>
     <button class="btn pri" id="go2">다음 방으로 → 🛒</button>`;
     $('#go2').onclick=()=>{plog('complete',{});markDone('map');chime(true);location.href='mart.html';};

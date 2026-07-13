@@ -229,6 +229,7 @@
   .tube svg{transition:transform .18s}
   .tube.squz svg{transform:scaleY(.8) translateY(6px)}
   .pdrop{position:fixed;width:18px;height:24px;border-radius:50% 50% 62% 62%;z-index:70;pointer-events:none;transition:transform .45s cubic-bezier(.55,0,.9,.55),opacity .5s}
+  .csw{width:112px;height:112px;border-radius:50%;border:4px solid #26303f;margin:0 auto 6px;box-shadow:inset 0 -10px 16px rgba(0,0,0,.14), 0 4px 10px rgba(0,0,0,.18)}
 </style>
 </head>
 <body>
@@ -377,9 +378,9 @@ function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
 
 /* ── 덱 구성 ── */
 const FAM=[
- {id:'주황',emoji:'🟠',paints:['빨강','노랑'],r:[1,2]},
+ {id:'주황',emoji:'🟠',paints:['빨강','노랑'],r:[1,1]},
  {id:'자주',emoji:'🍇',paints:['빨강','파랑'],r:[2,1]},
- {id:'초록',emoji:'🟢',paints:['노랑','파랑'],r:[2,5]}];
+ {id:'초록',emoji:'🟢',paints:['노랑','파랑'],r:[2,3]}];
 const MAKE=[
  {top:['파랑','노랑'],r:[1,2],given:'파랑',gv:30,cn:'초록'},
  {top:['노랑','빨강'],r:[3,2],given:'빨강',gv:20,cn:'주황'},
@@ -485,6 +486,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       <div class="q">색깔의 비밀을 찾아봅시다!</div>
       <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='sense'){
+    S.amt={};
     const f=FAM[d.fi],[r0,r1]=f.r,p0=f.paints[0],p1=f.paints[1];
     const tgt=mix({[p0]:r0,[p1]:r1});
     const N=d.fi*2+d.k+1;
@@ -496,11 +498,11 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p1])}">${p1} <span id="a1">0</span>mL</div>${tubes(p1,[5,10])}</div>
       </div>
       <div class="pair">
-        <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
-        <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">Ⓑ 내가 만든 색</div></div>
+        <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div>
+        <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내가 만든 색 (비커)</div></div>
         <div class="recbox"><div id="recT"></div></div>
       </div>
-      <button class="btn ghost" id="clr">🗑 비우기</button>`;
+      <button class="btn ghost" id="clr">비우기</button>`;
     const used=f._used||(f._used=[]);  // 색깔(가족) 단위 공유 — 라운드가 달라도 같은 양 재사용 차단
     const upd=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
@@ -524,10 +526,10 @@ if(d.t==='mdemo'){
           <div class="tubes"><span class="tube" id="dt노랑" style="display:inline-block;position:relative;transition:transform .18s">${tubeSVG('노랑')}<div class="amtl">+10</div><span class="dfing" style="position:absolute;left:46%;top:52%;font-size:34px;opacity:0;transition:opacity .18s">👆</span></span></div></div>
       </div>
       <div class="pair">
-        <div><div class="bk"><div class="fill full" style="background:${rgb(mix({빨강:2,노랑:3}))}"></div></div><div class="bklab">Ⓐ 목표</div></div>
-        <div><div class="bk"><div class="fill" id="dmy" style="height:0%"></div></div><div class="bklab">Ⓑ 시연</div></div>
+        <div><div class="csw" style="background:${rgb(mix({빨강:2,노랑:3}))}"></div><div class="bklab">목표 색</div></div>
+        <div><div class="bk"><div class="fill" id="dmy" style="height:0%"></div></div><div class="bklab">예시 (비커)</div></div>
       </div>
-      <div class="dial" id="dstat" style="font-size:23px">시연을 시작할게요…</div>
+      <div class="dial" id="dstat" style="font-size:23px">예시를 보여줄게요…</div>
       <div style="margin-top:10px"><button class="btn pri" onclick="next()">미션 하러 가기 →</button></div>`;
     const steps=[{c:'빨강',v:10},{c:'빨강',v:10},{c:'노랑',v:10},{c:'노랑',v:10},{c:'노랑',v:10}];
     let si=0,amt={};
@@ -551,7 +553,7 @@ if(d.t==='mdemo'){
         si=0;amt={};
         setTimeout(()=>{if(!box.isConnected)return;const my=$('#dmy');if(my)my.style.height='0%';
           const a0=$('#da0'),a1=$('#da1');if(a0)a0.textContent='0';if(a1)a1.textContent='0';
-          const st2=$('#dstat');if(st2)st2.textContent='다시 한 번 시연할게요…';setTimeout(tick,900);},2400);}
+          const st2=$('#dstat');if(st2)st2.textContent='다시 한 번 예시를 보여줄게요…';setTimeout(tick,900);},2400);}
     })();
     return;}
   if(d.t==='qintro'){
@@ -559,8 +561,7 @@ if(d.t==='mdemo'){
       <button class="btn pri" onclick="next()">퀴즈 시작! →</button>`;
     return;}
   if(d.t==='pintro'){
-    el.innerHTML=`<div style="font-size:72px">🖌️</div>
-      <div class="q"><b>3단계 : 색칠하며 비 익히기!</b></div>
+    el.innerHTML=`<div class="q"><b>3단계 : 색칠하며 비 익히기!</b></div>
       <div class="sub">여러분이 직접 칸을 클릭하여 <b>비</b>를 나타내 봅시다!</div>
       <button class="btn pri" onclick="next()">시작! →</button>`;
     return;}
@@ -572,15 +573,15 @@ if(d.t==='mdemo'){
     el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
       <div class="sub">알맞은 숫자 카드를 빈칸에 끌어다 놓으세요!</div>
       <div class="pair">
-        <div><div class="bk"><div class="fill full" style="background:${rgb(tgt)}"></div></div><div class="bklab">Ⓐ 목표</div></div>
-        <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">Ⓑ 내가 만든 색</div></div>
+        <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div>
+        <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내가 만든 색 (비커)</div></div>
       </div>
       <div class="eq"><div class="row">${askC} 물감의 양 = <span class="dz" data-a="${ans}"></span> mL</div></div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{S.amt={[m.given]:BASE,[askC]:ans};
       const my=$('#my');if(my){my.style.background=rgb(mix(S.amt));my.style.height='70%';}
       chime(true);plog('make',{i:d.i});
-      success('맞았어요! 🎨',`${m.top[0]} : ${m.top[1]} = ${m.r[0]} : ${m.r[1]} — ${m.given} ${BASE}mL에 ${askC} <b>${ans}mL</b>!`);});
+      success('맞았어요!',`${m.top[0]} : ${m.top[1]} = ${m.r[0]} : ${m.r[1]} — ${m.given} ${BASE}mL에 ${askC} <b>${ans}mL</b>!`);});
     return;}
   
   if(d.t==='rate'){
@@ -609,14 +610,14 @@ if(d.t==='mdemo'){
     return;}
   if(d.t==='paint'){
     const n=d.n, needR=n*2/5, needY=n*3/5, cols=(n<=10?5:10);
-    if(!d._cells||d._cells.length!==n)d._cells=Array(n).fill('');
-    const cells=d._cells;let brush=d._brush||null;
+    d._cells=Array(n).fill('');d._brush=null;
+    const cells=d._cells;let brush=null;
     el.innerHTML=`<div class="q">${n===5?'먼저 <b>5칸</b>으로 연습!':(n===10?'이번엔 <b>10칸</b>!':'<b>100칸</b>으로 나타내기 도전!')}<br>빨강 : 노랑 = <b>2 : 3</b>이 되려면 빨강은 <b>몇 칸</b>, 노랑은 <b>몇 칸</b> 색칠해야 할까요?</div>
       <div class="sub"><b>1.</b> 물감 버튼 누르기 &nbsp;→&nbsp; <b>2.</b> 칸을 누르거나 드래그하여 색칠하기</div>
       <div class="pots">
         <button class="pot" id="potR"><span class="sw" style="background:${rgb(PRIM['빨강'])}"></span>빨강 물감</button>
         <button class="pot" id="potY"><span class="sw" style="background:${rgb(PRIM['노랑'])}"></span>노랑 물감</button>
-        <button class="btn ghost" id="clr">🗑 모두 지우기</button>
+        <button class="btn ghost" id="clr">모두 지우기</button>
       </div>
       <div class="cnt" id="cnt"></div>
       <div class="grid" id="gr" style="grid-template-columns:repeat(${cols},1fr);max-width:${n<=10?420:560}px">
@@ -633,7 +634,7 @@ if(d.t==='mdemo'){
         setTimeout(()=>{d._fbLock=false;
           if(r*3===y*2){d._ok=true;success(`잘했어요! 2 : 3 = ${r} : ${y}${jz(String(y),'을','를')} 이용해요!`,`${r}칸 + ${y}칸 = ${n}칸이 되도록 빨강 <b>${r}칸</b>, 노랑 <b>${y}칸</b> 색칠!`);}
           else{const diff=needR-r;
-            retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>💡 ${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
+            retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
     $('#potR').onclick=()=>{brush=d._brush='r';upd();};
     $('#potY').onclick=()=>{brush=d._brush='y';upd();};
     $('#clr').onclick=()=>{cells.fill('');gr.querySelectorAll('.cell').forEach(c=>c.style.background='#edeae2');upd();};
@@ -672,8 +673,7 @@ if(d.t==='mdemo'){
       success('맞았어요! 빨강 40%, 노랑 60%!','전체 100mL를 100으로 보면 — 빨강 <b>40%</b>, 노랑 <b>60%</b>!');});
     return;}
 if(d.t==='sintro'){
-    el.innerHTML=`<div style="font-size:72px">🔎</div>
-      <div class="q">지금부터 공부했던 내용으로 <b>색깔의 비밀</b>을 찾아봅시다!</div>
+    el.innerHTML=`<div class="q">지금부터 공부했던 내용으로 <b>색깔의 비밀</b>을 찾아봅시다!</div>
       <div class="sub">낱말 카드로 빈칸을 채우면 <b>비밀 카드</b>를 얻어요!</div>
       <button class="btn pri" onclick="next()">비밀 찾으러 가기 →</button>`;
     return;}
@@ -698,9 +698,9 @@ if(d.t==='sintro'){
     return;}
   if(d.t==='done'){
     confetti();clap();
-    el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎨</span></div>
+    el.innerHTML=`<div><span class="stampb" style="font-size:64px">🎨</span></div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span> 획득!</div>
+    <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span>을 얻었어요!</div>
     <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🎼 소리의 비밀</b>!</div>
     <button class="btn pri" id="go2">다음 방으로 → 🎼</button>`;
     $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='sound.html';};
