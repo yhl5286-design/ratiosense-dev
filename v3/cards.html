@@ -107,7 +107,7 @@
   @keyframes wpkOut{to{transform:translateY(-50%) translateX(260px);opacity:0}}
   .pfly{position:fixed;z-index:102;margin:0;transition:transform .7s cubic-bezier(.45,-0.05,.6,.35)}
   .qcard{display:block;position:relative;border:3.5px solid var(--gold);background:linear-gradient(#fffdf4,#fff3d6);border-radius:18px;padding:16px 22px 16px 52px;margin:10px auto;max-width:780px;box-shadow:0 7px 20px rgba(224,160,42,.3)}
-  .qcard::before{content:'🃏';position:absolute;left:14px;top:12px;font-size:24px}
+  .qcard::before{content:'';position:absolute;left:14px;top:12px;font-size:24px}
   #walletFx{position:fixed;right:26px;top:50%;font-size:88px;z-index:110;filter:drop-shadow(0 8px 16px rgba(0,0,0,.3));animation:walIn .4s ease both}
   @keyframes walIn{from{transform:translateY(-50%) translateX(150px);opacity:0}to{transform:translateY(-50%);opacity:1}}
   #walletFx.bump{animation:walBump .45s ease both}
@@ -167,7 +167,7 @@
 </style>
 </head>
 <body>
-<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">🃏 비밀 카드 문제집 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal">🃏 <b id="walN">0</b>/16</div></div>
+<div id="top"><a class="home" href="index.html">🏠 홈</a><div class="t">비밀 카드 문제집 <span style="color:#b3541e">v3</span></div><div id="pbar"><div id="pfill"></div></div><div id="pnum"></div><div id="wal"><b id="walN">0</b>/16</div></div>
 <div id="stage"><div class="slide" id="slide"></div></div>
 <button class="nav" id="navL">‹</button><button class="nav" id="navR">›</button>
 <div id="fb"><div class="in"><div id="fbT"></div><div id="fbS"></div><div id="fbA"></div></div></div>
@@ -264,7 +264,7 @@ function cardWin(el,texts,cb){try{
   const fresh=(window.__lastCards||[]);
   // 컬렉션 판: 새 카드 자리는 비워 두고 시작
   const bd=document.createElement('div');bd.id='cbook';
-  bd.innerHTML='<div class="cb-in"><div class="cb-title">🃏 내 비밀 카드 모음 — '+got.length+' / '+RC.length+'</div><div class="cb-grid">'+
+  bd.innerHTML='<div class="cb-in"><div class="cb-title">내 비밀 카드 모음 — '+got.length+' / '+RC.length+'</div><div class="cb-grid">'+
     RC.map(c=>{
       const has=got.includes(c.id)&&!fresh.includes(c.id);
       return '<div class="cb-slot '+(has?'has':'')+'" data-id="'+c.id+'">'+(has?'<div class="cb-em">'+c.r.split(' ')[0]+'</div><div class="cb-chk">✓</div>':'<div class="cb-q">?</div>')+'</div>';
@@ -277,7 +277,7 @@ function cardWin(el,texts,cb){try{
       const slot=bd.querySelector('.cb-slot[data-id="'+id+'"]');if(!slot)return;
       const sr=slot.getBoundingClientRect();
       const g=document.createElement('div');g.className='cback cb-fly';
-      g.innerHTML='<div class="emb">🃏</div>';
+      g.innerHTML='<div class="emb"></div>';
       const x0=(src.left+src.width/2)-43||300, y0=(src.top+src.height/2)-58||220;
       g.style.left=x0+'px';g.style.top=y0+'px';
       document.body.appendChild(g);
@@ -286,8 +286,8 @@ function cardWin(el,texts,cb){try{
       setTimeout(()=>{g.remove();
         const rc=RC.find(x=>x.id===id);
         slot.classList.add('has','new');
-        slot.innerHTML='<div class="cb-em">'+(rc?rc.r.split(' ')[0]:'🃏')+'</div><div class="cb-chk">✓</div>';
-        const tt=bd.querySelector('.cb-title');if(tt)tt.textContent='🃏 내 비밀 카드 모음 — '+got.length+' / '+RC.length;
+        slot.innerHTML='<div class="cb-em">'+(rc?rc.r.split(' ')[0]:'')+'</div><div class="cb-chk">✓</div>';
+        const tt=bd.querySelector('.cb-title');if(tt)tt.textContent='내 비밀 카드 모음 — '+got.length+' / '+RC.length;
       },640);
     }catch(e){}},i*750);});
   }catch(e){}},350);
@@ -321,9 +321,9 @@ const won=n=>'₩'.replace('₩','')+n.toLocaleString('ko-KR')+'원';
 
 const CQ=[
  {id:'color0',em:'🎨',room:'색깔의 비밀',t:["물감의 ","이 달라도 ","가 같다면 같은 색이 된다."],a:["양","비"],x:["차이","개수"]},
- {id:'color1',em:'🎨',room:'색깔의 비밀',t:["B를 ","으로 비교하여 A가 어느 정도인지 나타내는 ","를 A : B의 ","라고 한다."],a:["기준","관계","비"],x:["비율","비교"]},
- {id:'color2',em:'🎨',room:'색깔의 비밀',t:["\"B에 대한 A의 비\"는 B를 ","으로 놓고 비교했을 때, 상대적인 A의 양을 나타낸다는 뜻이다.<br>이때 비를 비율로 나타내면 A를 B로 나눈 값, ",", 즉 ","가 된다."],a:["기준","A ÷ B","A/B"],x:["비교","B ÷ A"]},
- {id:'color3',em:'🎨',room:'색깔의 비밀',t:["비 A : B에서 비율 = ","\u00A0= ",", A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 ","가 된다."],a:["A ÷ B","A/B","A%"],x:["B ÷ A","B%"]},
+ {id:'color1',em:'🎨',room:'색깔의 비밀',t:["비교하는 양 : 기준량 사이에는 보이지 않는 ","이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 ","이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 ","이다."],a:["곱셈","2배","2/1"],x:["덧셈","1/2"]},
+ {id:'color2',em:'🎨',room:'색깔의 비밀',t:["기준량(10)을 기준으로 비율이 몇 배(2)가 되는 지를 비교한 값이 비교하는 양(",")이다.<br>기준량이 100일 때 비교하는 양은 200이 되므로, 백분율은 ","이다."],a:["20","200%"],x:["12","20%"]},
+ {id:'color3',em:'🎨',room:'색깔의 비밀',t:["기준량(100)을 기준으로 비율이 몇 배(1/2)가 되는 지를 비교한 값이 비교하는 양(",")이다.<br>기준량이 100일 때 비교하는 양은 50이 되므로, 백분율은 ","이다."],a:["50","50%"],x:["200","5%"]},
  {id:'sound0',em:'🎼',room:'소리의 비밀',t:["소리는 물체의 ","에서 생겨 ","를 타고 전해진다."],a:["떨림","공기"],x:["크기","빛"]},
  {id:'sound1',em:'🎼',room:'소리의 비밀',t:["두 소리의 진동수가 ","\u00A0비를 이룰수록 화음이 더 잘 어울린다."],a:["간단한"],x:["복잡한","큰"]},
  {id:'sound2',em:'🎼',room:'소리의 비밀',t:["악기의 음 높이를 맞출 때는 ","\u00A0음 440Hz를 기준으로 다른 음들의 진동수 ","를 계산하여 정한다."],a:["라","비"],x:["도","차이"]},
@@ -400,7 +400,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.innerHTML=`<div style="font-size:50px">${c.em}</div>
     <div class="q">${c.room} — 카드 문제 ${d.i+1} / ${CQ.length}</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 완성하세요!${owned?' &nbsp;<b style="color:#2e9e63">✔ 이미 지갑에 있는 카드</b>':''}</div>
-    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">비밀 카드 문제</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,id:c.id});addCards([c.id]);
       const full=c.t.map((seg,j)=>seg+(j<c.a.length?`『${c.a[j]}』`:'')).join('');
@@ -439,7 +439,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.innerHTML=`<div style="font-size:60px">📝</div>
     <div class="q">우리가 찾은 마트의 비밀 ${d.i+1} / 4</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
-    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['mart'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
@@ -448,7 +448,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     return;}
   if(d.t==='done'){
     confetti();clap();
-    el.innerHTML=`<div><span class="stampb" style="font-size:84px">🃏</span></div>
+    el.innerHTML=`<div><span class="stampb" style="font-size:84px"></span></div>
     <div class="q">카드 문제 16개를 모두 풀었어요! 대단해요!</div>
     <div class="sub">지갑을 눌러 모은 카드를 확인하거나, 복습으로 넘어가요!</div>
     <button class="btn pri" id="go2">🔁 카드 복습하러 →</button>
@@ -461,9 +461,9 @@ $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
 $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx});}};
 const RC=[
  {id:'color0',r:'🎨 색깔의 비밀',t:'두 물감의 <b>양</b>이 달라도 두 물감의 <b>비</b>가 같다면 같은 색이 된다.'},
- {id:'color1',r:'🎨 색깔의 비밀',t:'B를 <b>기준</b>으로 비교하여 A가 어느 정도인지 나타내는 <b>관계</b>를 A : B의 <b>비</b>라고 한다.'},
- {id:'color2',r:'🎨 색깔의 비밀',t:'"B에 대한 A의 비"는 B를 <b>기준</b>으로 놓고 비교했을 때, 상대적인 A의 양을 나타낸다는 뜻이다.<br>이때 비를 비율로 나타내면 A를 B로 나눈 값, <b>A ÷ B</b>, 즉 <b>A/B</b>가 된다.'},
- {id:'color3',r:'🎨 색깔의 비밀',t:'비 A : B에서 비율 = <b>A ÷ B</b> = <b>A/B</b> — A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 <b>A%</b>가 된다.'},
+ {id:'color1',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량 사이에는 보이지 않는 <b>곱셈</b>이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 <b>2배</b>이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 <b>2/1</b>이다.'},
+ {id:'color2',r:'🎨 색깔의 비밀',t:'기준량(10)을 기준으로 비율이 몇 배(2)가 되는 지를 비교한 값이 비교하는 양(<b>20</b>)이다.<br>기준량이 100일 때 비교하는 양은 200이 되므로, 백분율은 <b>200%</b>이다.'},
+ {id:'color3',r:'🎨 색깔의 비밀',t:'기준량(100)을 기준으로 비율이 몇 배(1/2)가 되는 지를 비교한 값이 비교하는 양(<b>50</b>)이다.<br>기준량이 100일 때 비교하는 양은 50이 되므로, 백분율은 <b>50%</b>이다.'},
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 진동수가 <b>간단한</b> 비를 이룰수록 화음이 더 잘 어울린다.'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
@@ -478,7 +478,7 @@ const RC=[
  {id:'mart3',r:'🛒 마트의 비밀',t:'물건이 10,000원인데 할인율이 20%일 때, 내야 할 가격은 원래 가격 × <b>80</b>%와 같다.<br>예를 들어 10,000 × 80/100 = <b>8,000</b>원을 내면 된다.'}];
 (function(){
   const o=document.createElement('div');o.id='walOv';
-  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">🃏 내 카드 지갑 — <span id="walN2">0</span> / 16</h3>
+  o.innerHTML=`<div class="walBox"><h3 style="margin:0 0 10px;font-size:23px">내 카드 지갑 — <span id="walN2">0</span> / 16</h3>
     <div id="walList" style="text-align:left"></div>
     <div style="margin-top:14px"><button class="btn pri" id="walRev">🔁 카드 복습하러 가기</button>
     <button class="btn" id="walClose">닫기</button></div></div>`;
@@ -490,7 +490,7 @@ const RC=[
     RC.forEach(c=>{
       if(c.r!==cur){cur=c.r;h+=`<div style="font-weight:800;font-size:18px;margin:10px 0 4px">${c.r}</div>`;}
       h+=got.includes(c.id)
-        ?`<div class="mini-card" style="margin:5px 0;max-width:none">🃏 ${fx(c.t)}</div>`
+        ?`<div class="mini-card" style="margin:5px 0;max-width:none">${fx(c.t)}</div>`
         :`<div class="cback" style="display:inline-block;width:62px;height:86px;margin:4px 6px 4px 0;font-size:9px;vertical-align:middle"><div class="emb">?</div></div>`;});
     document.getElementById('walList').innerHTML=h;}
   const w=document.getElementById('wal');

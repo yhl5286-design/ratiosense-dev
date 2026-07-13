@@ -121,8 +121,8 @@
   <h1>RatioSense</h1>
   <div id="chip"><span class="no">🙋 <span id="chipNo"></span>번</span><button id="chgBtn">번호 바꾸기</button></div>
   <div style="margin-bottom:14px"><button id="startBtn" style="background:var(--accent);color:#fff;border:none;border-radius:20px;padding:20px 54px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 24px rgba(46,158,99,.35)">탐험 시작!</button></div>
-  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 16</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">🃏 카드 문제 풀기</button> <button id="escBtn" class="dex" style="border-color:#e0a02a">🔐 탈출 도전</button></div>
-  <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)">🃏 표시가 붙은 <b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 16장을 모두 모아 보세요!</div>
+  <div style="margin-bottom:6px"><button id="dexBtn" class="dex">📖 비밀 카드 <span id="dexN">0</span> / 16</button> <button id="revBtn" class="dex">🔁 카드 복습</button> <button id="cqBtn" class="dex">카드 문제 풀기</button> <button id="escBtn" class="dex" style="border-color:#e0a02a">🔐 탈출 도전</button></div>
+  <div style="margin-bottom:22px;font-size:16px;font-weight:700;color:var(--sub)"><b>비밀 카드 문제</b>를 풀면 카드를 얻어요 — 16장을 모두 모아 보세요!</div>
   <div class="rooms">
     <a class="room" data-r="color" href="color.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">물감을 섞어 만드는<br>같은 비, 같은 색</div></a>
     <a class="room" data-r="sound" href="sound.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
@@ -166,8 +166,8 @@
     <h2>📖 비밀 카드 도감</h2>
     <div class="cnt"><span id="dexN2">0</span> / 16 수집</div>
     <div style="background:#fbf6e8;border:2px solid #e0c98a;border-radius:14px;padding:12px 16px;font-size:16px;font-weight:700;line-height:1.7;margin-bottom:6px">
-      🃏 <b>비밀 카드는 이렇게 모아요!</b><br>
-      비밀 카드마다 <b>카드 문제</b>가 하나씩 있어요. 탐험 중에 <b>🃏 비밀 카드 문제!</b> 표시와 함께 나타나요.
+      <b>비밀 카드는 이렇게 모아요!</b><br>
+      비밀 카드마다 <b>카드 문제</b>가 하나씩 있어요. 탐험 중에 <b>비밀 카드 문제!</b> 표시와 함께 나타나요.
       낱말 카드로 비밀 문장을 완성하면, 그 문장이 카드가 되어 이 도감에 모여요.<br>
       🎨 색깔 <b>4장</b> · 🎼 소리 <b>4장</b> · 🗺️ 지도 <b>4장</b> · 🛒 마트 <b>4장</b> = 모두 <b>16장</b>!
     </div>
@@ -247,9 +247,9 @@ wireStart();
 /* ── 비밀 카드 도감 ── */
 const CARDS=[
  {id:'color0',room:'🎨 색깔의 비밀',t:'두 물감의 <b>양</b>이 달라도 두 물감의 <b>비</b>가 같다면 같은 색이 된다.'},
- {id:'color1',room:'🎨 색깔의 비밀',t:'B를 <b>기준</b>으로 비교하여 A가 어느 정도인지 나타내는 <b>관계</b>를 A : B의 <b>비</b>라고 한다.'},
- {id:'color2',room:'🎨 색깔의 비밀',t:'"B에 대한 A의 비"는 B를 <b>기준</b>으로 놓고 비교했을 때, 상대적인 A의 양을 나타낸다는 뜻이다.<br>이때 비를 비율로 나타내면 A를 B로 나눈 값, <b>A ÷ B</b>, 즉 <b>A/B</b>가 된다.'},
- {id:'color3',room:'🎨 색깔의 비밀',t:'비 A : B에서 비율 = <b>A ÷ B</b> = <b>A/B</b> — A를 B로 나눈 값이 된다.<br>이때 기준량 B가 100일 경우 비교하는 양 A는 <b>A%</b>가 된다.'},
+ {id:'color1',room:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량 사이에는 보이지 않는 <b>곱셈</b>이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 <b>2배</b>이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 <b>2/1</b>이다.'},
+ {id:'color2',room:'🎨 색깔의 비밀',t:'기준량(10)을 기준으로 비율이 몇 배(2)가 되는 지를 비교한 값이 비교하는 양(<b>20</b>)이다.<br>기준량이 100일 때 비교하는 양은 200이 되므로, 백분율은 <b>200%</b>이다.'},
+ {id:'color3',room:'🎨 색깔의 비밀',t:'기준량(100)을 기준으로 비율이 몇 배(1/2)가 되는 지를 비교한 값이 비교하는 양(<b>50</b>)이다.<br>기준량이 100일 때 비교하는 양은 50이 되므로, 백분율은 <b>50%</b>이다.'},
  {id:'sound0',room:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
  {id:'sound1',room:'🎼 소리의 비밀',t:'두 소리의 진동수가 <b>간단한</b> 비를 이룰수록 화음이 더 잘 어울린다.'},
  {id:'sound2',room:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
@@ -269,7 +269,7 @@ function renderDex(){
   let h='',cur='';
   CARDS.forEach(c=>{
     if(c.room!==cur){cur=c.room;h+=`<div class="dexGrp">${c.room}</div>`;}
-    h+=got.includes(c.id)?`<div class="scard">🃏 ${fx(c.t)}</div>`
+    h+=got.includes(c.id)?`<div class="scard">${fx(c.t)}</div>`
       :`<div class="cback dexback"><div class="emb">?</div><div class="bnm">아직 비밀</div></div>`;});
   $('#dexList').innerHTML=h;}
 $('#dexBtn').onclick=()=>{renderDex();$('#dexOv').classList.add('show');};
@@ -282,7 +282,7 @@ function revRender(){
   $('#revIdx').textContent=revI+1;$('#revTot').textContent=revList.length;
   const masked=fx(c.t).replace(/<b>(.*?)<\/b>/g,'<span class="rmask">$1</span>');
   $('#revCard').innerHTML=`<div class="rin">
-    <div class="rface cback"><div class="emb">🃏</div><div class="bnm">비밀 카드</div></div>
+    <div class="rface cback"><div class="emb"></div><div class="bnm">비밀 카드</div></div>
     <div class="rface rfront"><div class="rf-top">${c.room}</div><div class="rf-txt"><span>${masked}</span></div></div>
   </div>`;
   $('#revCard').classList.toggle('open',revStage>=1);
@@ -300,7 +300,7 @@ function courseDone(){return ORDER.every(r=>getDone().includes(r));}
 function lockNote(b){b.innerHTML='🔒 네 방 탐험을 모두 마치면 열려요!';
   setTimeout(()=>{lockAux(true);},1900);}
 function lockAux(reset){const L=!courseDone();
-  const LB={revBtn:'🔁 카드 복습',cqBtn:'🃏 카드 문제 풀기'};
+  const LB={revBtn:'🔁 카드 복습',cqBtn:'카드 문제 풀기'};
   Object.keys(LB).forEach(id=>{const b=document.getElementById(id);if(!b)return;
     b.classList.toggle('lockbtn',L);
     b.innerHTML=(L?'🔒 ':'')+LB[id];});}
