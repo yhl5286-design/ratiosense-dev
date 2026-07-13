@@ -392,9 +392,9 @@ function comicSVG(k){
  return [c1,c2,c3,c4][k||0];}
 const DECK=[
  {t:'intro'},
- {t:'scale',i:0,opts:[['300m',1],['30m',0],['3,000m',0]]},
- {t:'scale',i:1,opts:[['200m',1],['20m',0],['2,000m',0]]},
- {t:'scale',i:2,opts:[['500m',1],['50m',0],['5,000m',0]]},
+ {t:'scale',i:0,opts:[['300m',1],['400m',0],['3cm',0]]},
+ {t:'scale',i:1,opts:[['200m',1],['300m',0],['2cm',0]]},
+ {t:'scale',i:2,opts:[['500m',1],['400m',0],['5cm',0]]},
  {t:'movie'},
  {t:'comic',i:0},{t:'comic',i:1},{t:'comic',i:2},{t:'comic',i:3},
  {t:'prop'},
@@ -461,18 +461,14 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='scale'){const ob=OBJS[d.i];placed=d.i+1;
     const tot=(ob.cells*10000).toLocaleString(), rm=ob.real.toLocaleString();
-    el.innerHTML=`<div class="q">${ob.em} ${ob.n}${jga(ob.n)} 지도에서 <b>${ob.cells}칸</b>이라면,<br>실제 ${ob.n}의 ${ob.dim}${(ob.dim==='길이')?'는':'은'} 얼마일까요?</div>
-      <div class="sub" style="font-size:19px">축척 <b>1 : 10,000</b> — 지도 1cm는 실제 10,000cm. <b>10,000cm = 100m</b>입니다.</div>
+    el.innerHTML=`<div class="q">${ob.em} ${ob.n}${jga(ob.n)} 지도에서 <b>${ob.cells}칸, ${ob.cells}cm</b>라면,<br>실제 ${ob.n}의 ${ob.dim}${(ob.dim==='길이')?'는':'은'} 얼마일까요?</div>
       ${townMap(1,d.i,64,[d.i])}
-      <div class="eq" style="font-size:23px">
-        <div class="row">1 : 10,000 = ${ob.cells} : <b>${tot}</b></div>
-        <div class="row">${tot}cm = <b style="color:#c0392b">( ? )</b> m</div>
-      </div>
+      <div class="sub" style="font-size:19px;margin-top:8px">지도에서의 <b>1cm</b>는 실제로는 <b>10,000cm</b>이고, 이는 <b>100m</b>입니다.</div>
       <div class="choices">${d.opts.slice().sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       if(b.dataset.ok==='1'){plog('scale',{obj:ob.n});
-        success(`맞았어요! ${tot}cm = ${rm}m!`,`1 : 10,000 = ${ob.cells} : ${tot} — ${tot}cm는 <b>${rm}m</b>!`);}
-      else retry(`${tot}cm를 m로 바꿔 보세요 — 10,000cm = 100m!`);});return;}
+        success(`맞았어요! ${tot}cm = ${rm}m!`,`지도 ${ob.cells}cm × 10,000 = ${tot}cm = <b>${rm}m</b>!`);}
+      else retry(`지도 ${ob.cells}cm는 실제 몇 cm일지 생각해 보세요 — 1cm는 10,000cm(=100m)!`);});return;}
   
   if(d.t==='zoom'){placed=3;const f=z2/100;
     el.innerHTML=`<div class="q">배율을 눌러 <b>지도를 확대</b>해 보세요!<br><b>200%</b>로 확대하면, 지도 위 다리(3cm)는 <b>몇 cm</b>?</div>
@@ -556,8 +552,8 @@ $('#navR').onclick=()=>{if(idx<DECK.length-1){idx++;render();plog('nav',{to:idx}
 const RC=[
  {id:'color0',r:'🎨 색깔의 비밀',t:'두 물감의 <b>양</b>이 달라도 두 물감의 <b>비</b>가 같다면 같은 색이 된다.'},
  {id:'color1',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량 사이에는 보이지 않는 <b>곱셈</b>이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 <b>2배</b>이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 <b>2/1</b>이다.'},
- {id:'color2',r:'🎨 색깔의 비밀',t:'기준량(10)을 기준으로 비율이 몇 배(2)가 되는 지를 비교한 값이 비교하는 양(<b>20</b>)이다.<br>기준량이 100일 때 비교하는 양은 200이 되므로, 백분율은 <b>200%</b>이다.'},
- {id:'color3',r:'🎨 색깔의 비밀',t:'기준량(100)을 기준으로 비율이 몇 배(1/2)가 되는 지를 비교한 값이 비교하는 양(<b>50</b>)이다.<br>기준량이 100일 때 비교하는 양은 50이 되므로, 백분율은 <b>50%</b>이다.'},
+ {id:'color2',r:'🎨 색깔의 비밀',t:'지민이는 "빨강 2컵, 파랑 3컵"을 섞을 때와 "빨강 4컵, 파랑 6컵"을 섞을 때 같은 색이 나온다고 말했습니다.<br>2 : 3의 비율도 <b>2/3</b>이고, 4 : 6의 비율도 <b>2/3</b>이다.<br>각 물감의 양은 <b>2배</b>로 늘었지만 두 물감의 <b>비율</b>은 같기 때문에 색이 같다.'},
+ {id:'color3',r:'🎨 색깔의 비밀',t:'호연이는 노랑 물감과 파랑 물감을 섞어 초록색을 만들었습니다.<br>전체 물감 10컵 중 노랑 물감이 20%, 파랑 물감이 80%이므로,<br>노랑 물감은 <b>2</b>컵, 파랑 물감은 <b>8</b>컵이다.'},
  {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 진동수가 <b>간단한</b> 비를 이룰수록 화음이 더 잘 어울린다.'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
