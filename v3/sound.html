@@ -431,7 +431,7 @@ function drawWave(){const cv=$('#wv');if(!cv)return;
   for(let x=0;x<=L;x++){const y=mid-amp*Math.sin((x-shift)/L*c2*2*Math.PI);x?ctx.lineTo(pad+x,y):ctx.moveTo(pad+x,y);}ctx.stroke();}
 function loopWave(){s1T++;if(w1env>.001)w1env*=DECAY;for(let i=0;i<8;i++)if(plucks[i]>.001)plucks[i]*=DECAY;drawStrings();drawWave();animReq=requestAnimationFrame(loopWave);}
 
-function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
+function fx(s){return String(s).replace(/([0-9][0-9,]*)\/([0-9][0-9,]*)/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){
   let sel=null,drag=null;
   const dzs=[...el.querySelectorAll('.dz')],chips=[...el.querySelectorAll('.chip')];
@@ -658,8 +658,7 @@ if(d.t==='chord'){
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
-    el.innerHTML=`<div style="font-size:60px">📝</div>
-    <div class="q">우리가 찾은 소리의 비밀 ${d.i+1} / 4</div>
+    el.innerHTML=`<div class="q">${['첫','두','세','네'][d.i]} 번째 소리의 비밀</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
     <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">🃏 비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;

@@ -233,7 +233,7 @@ const u=getUser();
 if(u){showChip(u);}else{openLogin();}
 /* ── 탐험 순서·진행 상태 ── */
 const ORDER=['color','sound','map','mart'];
-function fx(s){return String(s).replace(/([0-9][0-9,]*|[A-Z])\/([0-9][0-9,]*|[A-Z])/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
+function fx(s){return String(s).replace(/([0-9][0-9,]*)\/([0-9][0-9,]*)/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function uk(b){return b+':'+(getUser()||'anon');}
 function getDone(){try{return JSON.parse(localStorage.getItem(uk('rs3_done'))||'[]');}catch(e){return [];}}
 function wireStart(){
