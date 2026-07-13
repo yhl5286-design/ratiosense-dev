@@ -249,7 +249,7 @@ const $=s=>document.querySelector(s);
 /* ── 로그: GAS 직접 전송 (v2와 같은 시트) ── */
 const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
 const LOG_TK='ratiosense-2026',LAB='colorV3';
-let RS3U='990';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
+let RS3U='990';
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
 function ukey(b){return b+':'+(RS3U||'anon');}
 const SESS3='x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
