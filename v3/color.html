@@ -454,7 +454,8 @@ function mountDrag(el,onAll){
       if(sel===dz)sel=null;allDone();}
     else{dz.classList.remove('hov');dz.classList.add('bad','shake');
       try{tone(180,0,.2);}catch(e){}
-      setTimeout(()=>dz.classList.remove('bad','shake'),480);}}
+      setTimeout(()=>dz.classList.remove('bad','shake'),480);
+      if(el._onWrong)try{el._onWrong(ch,dz);}catch(e){}}}
   dzs.forEach(dz=>{dz.onclick=()=>{if(dz.classList.contains('okk'))return;
     dzs.forEach(x=>x.classList.remove('sel'));dz.classList.add('sel');sel=dz;};});
   chips.forEach(ch=>{
@@ -478,7 +479,7 @@ function mountDrag(el,onAll){
     if(dz)judge(dz,drag.ch);
     drag.g.remove();drag=null;};
   return {};}
-function render(){prog();const d=DECK[idx];const el=$('#slide');
+function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null;
   const QTYPES=['make','concept','rate'];
   if(QTYPES.includes(d.t)){const qn=DECK.slice(0,idx+1).filter(x=>QTYPES.includes(x.t)).length;
     setTimeout(()=>{const s=$('#slide');if(s&&!s.querySelector('.qzb'))s.insertAdjacentHTML('afterbegin',`<div class="qzb">Quiz ${qn}</div>`);},0);}S={amt:{}};
@@ -573,11 +574,12 @@ if(d.t==='mdemo'){
     const bank=cand.map(String).sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
       <div class="sub">알맞은 숫자 카드를 빈칸에 끌어다 놓으세요!</div>
-      <div class="pair">
+      <div class="pair">         <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div>
         <div><div class="bk"><div class="fill" id="my" style="height:${Math.round(BASE/(BASE+ans)*70)}%;background:${rgb(mix({[m.given]:1}))}"></div></div><div class="bklab">비커 — ${m.given} <b>${BASE}mL</b> 들어 있음</div></div>
       </div>
       <div class="eq"><div class="row">${askC} 물감의 양 = <span class="dz" data-a="${ans}"></span> mL</div></div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
+    el._onWrong=(ch)=>{const v=parseInt(ch.dataset.w);if(isNaN(v))return;const my=$('#my');if(my){my.style.background=rgb(mix({[m.given]:BASE,[askC]:v}));my.style.height='70%';}retry(`${askC} <b>${v}mL</b>를 넣으면 이런 색이 돼요 — <b>목표 색과 비교</b>해 보세요!`);};
     mountDrag(el,()=>{S.amt={[m.given]:BASE,[askC]:ans};
       const my=$('#my');if(my){my.style.background=rgb(mix(S.amt));my.style.height='70%';}
       plog('make',{i:d.i});
