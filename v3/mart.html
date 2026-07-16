@@ -530,6 +530,8 @@ const DECK=[
  {t:'mc',kid:0,bem:'🍦',q:'지우가 <b>5개에 4,000원</b>인 아이스크림 묶음을 사려고 해요.<br>이때 아이스크림 <b>한 개당 가격</b>은 얼마인가요?',sub:'',
   em:'🍦×5',price:'5개 묶음 4,000원',hint:'4,000 ÷ 5',opts:[['800원',1],['500원',0],['1,000원',0]],
   ok:['맞았어요! 1개 = 800원','4,000 ÷ 5 = 800 — 묶음 가격 ÷ 개수 = <b>단위 가격</b>!'],no:'5개가 4,000원 — 1개는 나누면?'},
+ {t:'recomp'},
+ {t:'bundle'},
  {t:'shop',kid:1,bem:'🥤',q:'고려 요구르트는 <b>3개에 2,100원</b>,<br>사랑 요구르트는 <b>5개에 4,000원</b>이에요.<br>어떤 제품의 요구르트 <b>1개</b>가 더 싼가요?',sub:'',em:'🥤',
   an:'고려 요구르트',bn:'사랑 요구르트',
   a:{n:3,p:2100},b:{n:5,p:4000},ansB:false,
@@ -620,6 +622,47 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="choices">${d.opts.slice().sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       b.dataset.ok==='1'?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
+  if(d.t==='recomp'){
+    const bank=['4','3,200','2,400','5'].sort(()=>Math.random()-.5);
+    el.innerHTML=`<div class="q">아이스크림 <b>1개가 800원</b>인 것을 알아냈어요!<br>그럼 이 아이스크림 <b>4개</b>를 사려면 얼마가 필요할까요?</div>
+    <div class="sub">나눠서 구한 <b>한 개의 값(단위 가격)</b>을 이용해 거꾸로 계산해요 — 숫자 카드를 빈칸에 끌어오세요!</div>
+    ${martScene('🍦',0,'ice')}
+    <div class="eq"><div class="row">800원 × <span class="dz" data-a="4"></span>개 = <span class="dz" data-a="3,200"></span>원</div></div>
+    <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('success',{slide:idx});
+      success('맞았어요! 단위 가격으로 다시 묶었어요!','1개 800원 × 4개 = <b>3,200원</b> — 나눠서(÷) 구한 단위 가격을 <b>곱해서(×) 되돌리면</b> 묶음 가격!');});
+    return;}
+  if(d.t==='bundle'){
+    el.innerHTML=`<div class="q">이번엔 <b>직접 묶음을 만들어</b> 봐요!<br>낱개 아이스크림(1개 800원)을 끌어서 <b>4개들이 묶음</b>을 만들어 주세요.</div>
+    <div class="sub">낱개를 상자로 끌어다 놓아요(눌러도 이동). 상자 속 것을 누르면 다시 꺼낼 수 있어요.</div>
+    <div id="shelf" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0">${Array.from({length:6},(_,k)=>`<span class="unitic" data-k="${k}" style="font-size:44px;cursor:grab;user-select:none;touch-action:none">🍦</span>`).join('')}</div>
+    <div id="bbox" style="margin:0 auto;max-width:340px;min-height:96px;border:4px dashed var(--gold);border-radius:20px;background:#fffbef;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px"><span id="bhint" style="color:var(--sub);font-size:18px">묶음 상자 (0/4개)</span></div>
+    <div id="bq" style="display:none;margin-top:14px;text-align:center"><div class="q" style="font-size:22px">내가 만든 <b>4개들이 묶음</b>의 가격표는?</div>
+    <div class="choices">${[['3,200원','1'],['2,400원','0'],['4,000원','0']].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div></div>`;
+    const box=el.querySelector('#bbox'), hint=el.querySelector('#bhint'), bq=el.querySelector('#bq'), shelf=el.querySelector('#shelf');
+    const cnt=()=>box.querySelectorAll('.unitic').length;
+    const upd=()=>{const n=cnt();hint.textContent=`묶음 상자 (${n}/4개)`;hint.style.display=n>=4?'none':'';
+      if(n===4){try{chime(true);}catch(e){}bq.style.display='block';plog('bundle4',{slide:idx});}
+      else bq.style.display='none';};
+    function toBox(u){if(cnt()>=4){retry('묶음에는 <b>4개까지만</b> 담을 수 있어요!');return;}box.appendChild(u);upd();}
+    function toShelf(u){shelf.appendChild(u);upd();}
+    let suppress=false;
+    el.addEventListener('click',e=>{if(suppress){suppress=false;return;}
+      const u=e.target.closest('.unitic');if(!u)return;
+      (u.parentElement===box)?toShelf(u):toBox(u);});
+    el.addEventListener('pointerdown',e=>{const u=e.target.closest('.unitic');if(!u)return;e.preventDefault();
+      const g=document.createElement('span');g.id='ghost';g.textContent='🍦';g.style.fontSize='44px';document.body.appendChild(g);
+      let moved=false;
+      const mv=ev=>{moved=true;g.style.left=(ev.clientX-20)+'px';g.style.top=(ev.clientY-30)+'px';};
+      document.onpointermove=mv;
+      document.onpointerup=ev=>{document.onpointermove=null;document.onpointerup=null;g.remove();
+        if(moved){suppress=true;
+          const under=document.elementFromPoint(ev.clientX,ev.clientY);
+          if(under&&under.closest&&under.closest('#bbox')&&u.parentElement!==box)toBox(u);
+          else if(under&&under.closest&&under.closest('#shelf')&&u.parentElement===box)toShelf(u);}};});
+    bq.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
+      b.dataset.ok==='1'?success('맞았어요! 내가 만든 묶음이에요!','낱개 4개를 <b>하나의 묶음(단위)</b>으로 묶으면 800 × 4 = <b>3,200원</b>. 묶었다가 다시 풀 수도 있어요 — 이것이 <b>단위화</b>!'):retry('1개 800원짜리를 <b>4개</b> 묶었어요 — 800 × 4는?');});
+    return;}
   if(d.t==='shop'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,d.scn||(d.bem==='🥤'?'yogurt':(d.bem==='🥛'?'dairy':'juice')))}
     <div class="shop">
