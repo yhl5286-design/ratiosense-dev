@@ -373,10 +373,11 @@ function comicSVG(k){
    <line x1="292" y1="96" x2="240" y2="223" stroke="#ffd34d" stroke-width="3.5" opacity=".8"/>
    <line x1="322" y1="130" x2="276" y2="242" stroke="#ffd34d" stroke-width="3.5" opacity=".8"/>
    <line x1="150" y1="120" x2="150" y2="235" stroke="#8a5a2b" stroke-width="7"/>
-   <line x1="150" y1="235" x2="103" y2="235" stroke="#111111" stroke-width="7"/>
-   <line x1="150" y1="120" x2="103" y2="235" stroke="#e0a02a" stroke-width="2.5" stroke-dasharray="5 4"/>
-   <text x="163" y="158" font-size="15" font-weight="800" fill="#c0392b">7.2°</text>
-   <text x="126" y="260" text-anchor="middle" font-size="13.5" font-weight="800">막대의 그림자</text>
+   <line x1="150" y1="235" x2="135" y2="235" stroke="#111111" stroke-width="7"/>
+   <line x1="150" y1="120" x2="135" y2="235" stroke="#e0a02a" stroke-width="2.5" stroke-dasharray="5 4"/>
+   <path d="M150 190 A70 70 0 0 0 141 189" fill="none" stroke="#c0392b" stroke-width="3"/>
+   <text x="158" y="182" font-size="15" font-weight="800" fill="#c0392b">7.2°</text>
+   <text x="130" y="260" text-anchor="middle" font-size="13.5" font-weight="800">막대의 그림자 (조금만 생겼어요!)</text>
    ${bubble(28,60,180,64,['"여긴 그림자가 생겼어!','재보니 7.2도!"'],100)}`,
   '북쪽 도시 알렉산드리아에서는 그림자가 7.2° 기울었어요');
  const c4=panel('컷 4 · 둥근 지구의 깨달음',
@@ -486,8 +487,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
 
   if(d.t==='movie'){placed=3;
     el.innerHTML=`<div class="q">에라토스테네스의 실험</div>
-      <div class="sub">▶ 재생을 누르고 <b>소리를 켜 주세요</b> — 또렷한 자막과 함께 나와요! (일시정지 자유)</div>
-      <video id="mv" src="eratos.mp4" controls playsinline preload="metadata" style="width:min(860px,92vw);border-radius:16px;border:3px solid var(--line);background:#000"></video>
+      <div class="sub">영상을 집중해서 잘 보면 <b>중요한 문제</b>가 나와요 — <b>끝까지 집중해서</b> 시청해 보세요!</div>
+      <video id="mv" src="eratos.mp4?v=2" controls playsinline preload="metadata" style="width:min(860px,92vw);border-radius:16px;border:3px solid var(--line);background:#000"></video>
       <div style="margin-top:12px"><button class="btn pri" id="mvNext">요약 만화 보기 →</button></div>`;
     const v=$('#mv');if(v)v.onended=()=>{plog('movie',{done:1});};
     $('#mvNext').onclick=()=>{const v2=$('#mv');if(v2)try{v2.pause();}catch(e){}plog('movie',{skip:1});next();};
@@ -516,9 +517,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         </svg>
       </div>
       <div class="q" style="font-size:25px">1 : 50 = 800 : <b style="color:#c0392b">(&nbsp;&nbsp;?&nbsp;&nbsp;)</b></div>
-      <div class="choices">${[['40,000 km',1],['4,000 km',0],['400,000 km',0]].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
+      <div class="choices">${[['40,000 km',1],['36,000 km',0],['72,000 km',0]].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`;
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
-      b.dataset.ok==='1'?success('지구를 쟀어요!! 🌍','1 : 50 = 800 : <b>40,000</b> — 실제 값 40,075km, 오차 0.2%!')
+      b.dataset.ok==='1'?success('지구는 거의 40,000km — 맞아요! 🌍','실제 지구의 둘레는 <b>40,075km</b>라고 해요. 오차가 단 <b>0.2%</b>!<br>그림자와 거리 재기로 <b>비</b>를 계산해 구한 지구 둘레가 실제와 거의 차이가 나지 않아요. 정말 대단하죠?')
         :retry('1 : 50 = 800 : ( ) — 800의 <b>50배</b>를 구해 보세요.');});return;}
   if(d.t==='msum'){
     const S3=[

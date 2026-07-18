@@ -333,6 +333,15 @@ function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'
 let AC;const ac=()=>AC||(AC=new(window.AudioContext||window.webkitAudioContext)());
 function tone(f,w,d){try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime+w);g.gain.linearRampToValueAtTime(.15,c.currentTime+w+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+w+d);o.start(c.currentTime+w);o.stop(c.currentTime+w+d);}catch(e){}}
 function chord(fA,fB,d){const du=d||1.8;try{const c=ac();[[fA,'sine',.18],[fB,'triangle',.15]].forEach(([f,ty,v])=>{const o=c.createOscillator(),g=c.createGain();o.type=ty;o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(v,c.currentTime+.03);g.gain.setValueAtTime(v,c.currentTime+du*.55);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+du);o.start(c.currentTime);o.stop(c.currentTime+du+.05);});}catch(e){}}
+function strPluck(f){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
+  const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=Math.min(7000,f*7);lp.Q.value=.6;lp.connect(c.destination);
+  [[1,.5],[2,.24],[3,.12],[4,.07],[5,.04],[6,.024],[7,.014]].forEach(([m,v])=>{
+    const du=Math.max(.5,2.6/Math.sqrt(m));
+    [[1,1],[1.004,.55]].forEach(([dt,vv])=>{
+      const o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f*m*dt;
+      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v*vv,t0+.004);
+      g.gain.exponentialRampToValueAtTime(.0008,t0+du);
+      o.connect(g);g.connect(lp);o.start(t0);o.stop(t0+du+.1);});});}catch(e){}}
 function pluckT(f,w){[[f,.3,2.4],[f*2,.13,1.7],[f*3,.06,1.2],[f*4,.03,.9],[f*5,.015,.6]].forEach(([ff,v,du])=>{try{const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=ff;o.connect(g);g.connect(c.destination);const t0=c.currentTime+(w||0);g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.005);g.gain.exponentialRampToValueAtTime(.001,t0+du);o.start(t0);o.stop(t0+du+.05);}catch(e){}});}
 function chime(ok){ok?(tone(523,0,.2),tone(659,.2,.2),tone(784,.4,.42)):(tone(392,0,.16),tone(349,.16,.2));}
 function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
@@ -502,16 +511,20 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         </div>
       </div>
       <div class="dial" id="hz" style="font-size:30px;padding:16px 30px;margin-top:14px">건반을 눌러 보세요</div>
-      <div style="margin-top:10px"><button class="btn pri" onclick="next()">다 들어봤어요 →</button></div>`;
+      <div style="margin-top:10px"><button class="btn pri" id="vibNext" style="opacity:.45;cursor:not-allowed">다 들어봤어요 (0 / 8) →</button></div>`;
+    const vibHit=new Set();
+    const vibBtn=$('#vibNext');
+    vibBtn.onclick=()=>{if(vibHit.size<NOTES.length){retry('아직 안 눌러 본 건반이 있어요 — 여덟 건반을 모두 눌러 소리를 들어 보세요!');return;}next();};
     el.querySelectorAll('.key').forEach(k=>k.onclick=()=>{const i=+k.dataset.i;f1=NOTES[i][1];w1env=1;plucks[i]=1;
+      vibHit.add(i);if(vibHit.size>=NOTES.length){vibBtn.style.opacity='1';vibBtn.style.cursor='pointer';vibBtn.textContent='다 들어봤어요 →';}else{vibBtn.textContent='다 들어봤어요 ('+vibHit.size+' / 8) →';}
       tone(f1,0,SND_DUR);plog('key',{n:NOTES[i][0]});
       $('#hz').innerHTML=`<b>${NOTES[i][0]}</b> — 1초에 <b>${NOTES[i][1]}번</b> 떨려요 <span style="color:var(--sub);font-size:22px">(${NOTES[i][0]}의 진동수 : ${NOTES[i][1]}Hz)</span>`;
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
     const tn=NOTES[d.ni];
-    el.innerHTML=`<div class="q">도와 <b>${tn[0]}</b>${jz(tn[0],'이','가')} 함께 울리면 <b>어떤 느낌</b>일까?</div>
-      <div class="sub" style="font-size:23px"><b style="color:#c0392b">${tn[0]}</b>${jz(tn[0],'을','를')} 눌러 도와 함께 들어 보세요! <span style="font-size:15px;color:var(--sub)">(미션 ${d.ni} / 7)</span></div>
+    el.innerHTML=`<div class="q">도와 <b>${tn[0]}</b>의 어울림은 어떤가요?</div>
+      <div class="sub" style="font-size:21px">건반을 차례대로 누르면서 아래 내용을 확인하고, 질문에 답해 보세요! <span style="font-size:15px;color:var(--sub)">(미션 ${d.ni} / 7)</span></div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===0?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':(i===d.ni?'border-color:#c0392b;box-shadow:0 0 0 3px #f5c9c4, inset 0 -7px 0 rgba(0,0,0,.10);':'')}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
@@ -741,11 +754,11 @@ if(d.t==='chord'){
       </div>
       <div class="dial" id="slInfo" style="font-size:22px;margin-top:10px">길이 <b>72cm</b> — 1초에 <b>440번</b> 떨려요 <span style="color:var(--sub)">(기준 라 ★)</span></div>
       <div style="margin:12px 0"><span style="font-weight:800;color:var(--sub)">짧게 ←</span>
-        <input type="range" id="slR" min="24" max="96" value="72" step="1" style="width:min(380px,70vw);accent-color:#e0a02a;vertical-align:middle">
+        <input type="range" id="slR" min="20" max="110" value="72" step="1" style="width:min(380px,70vw);accent-color:#e0a02a;vertical-align:middle">
         <span style="font-weight:800;color:var(--sub)">→ 길게</span></div>
       <button class="btn" id="slPlay">♪ 줄 뜯기</button>
       <button class="btn pri" onclick="next()">하프 공방으로 →</button>`;
-    const pluck=()=>{const L=+$('#slR').value;pluckT(Math.round(440*72/L));
+    const pluck=()=>{const L=+$('#slR').value;strPluck(Math.round(440*72/L));
       const s=$('#slStr');if(s){s.classList.remove('pluckH');void s.offsetWidth;s.classList.add('pluckH');}};
     const upd=()=>{const L=+$('#slR').value,f=Math.round(440*72/L);
       $('#slStr').style.width=Math.round(L*6)+'px';
@@ -795,7 +808,7 @@ if(d.t==='chord'){
   
   if(d.t==='ssum'){
     const S3=[
-     {t:["소리는 물체의 ","에서 생겨 ","를 타고 전해진다."],a:["떨림","공기"],x:["크기","빛"]},
+     {t:["두 음의 진동수의 비가 더 ","\u00A0비일수록 더 잘 어울린다."],a:["간단한"],x:["복잡한"]},
      {t:["두 소리의 진동수가 ","\u00A0비를 이룰수록 화음이 더 잘 어울린다."],a:["간단한"],x:["복잡한","큰"]},
      {t:["악기의 음 높이를 맞출 때는 ","\u00A0음 440Hz를 기준으로 다른 음들의 진동수 ","를 계산하여 정한다."],a:["라","비"],x:["도","차이"]},
      {t:["줄이 ","\u00A0빠르게 떨려 높은 소리가 난다.<br>줄의 길이와 음 높이의 관계는 서로 ","이다."],a:["짧을수록","반대"],x:["길수록","비례"]}];
@@ -838,7 +851,7 @@ const RC=[
  {id:'color1',r:'🎨 색깔의 비밀',t:'비교하는 양 : 기준량 사이에는 보이지 않는 <b>곱셈</b>이 숨어 있다.<br>A : B = 2 : 1이라면, A는 B가 2개 있는 것과 같다. A는 B의 <b>2배</b>이다.<br>비율은 비교하는 양을 기준량으로 나눈 값이므로 <b>2/1</b>이다.'},
  {id:'color2',r:'🎨 색깔의 비밀',t:'지민이는 "빨강 2컵, 파랑 3컵"을 섞을 때와 "빨강 4컵, 파랑 6컵"을 섞을 때 같은 색이 나온다고 말했다.<br>그 이유는 2 : 3의 비율도 <b>2/3</b>이고, 4 : 6의 비율도 <b>2/3</b>이기 때문이다.<br>각 물감의 양은 <b>2배</b>로 늘었지만 두 물감의 <b>비율</b>은 같기 때문에 색이 같다.'},
  {id:'color3',r:'🎨 색깔의 비밀',t:'호연이는 전체 물감 50컵 중에 노랑 물감 40%, 파랑 물감 60%를 섞어 초록색을 만들었다.<br>이때 50컵의 40%는 20이므로 노랑 물감은 <b>20</b>컵이고, 50의 60%는 <b>30</b>이므로 파랑 물감은 <b>30</b>컵이다.'},
- {id:'sound0',r:'🎼 소리의 비밀',t:'소리는 물체의 <b>떨림</b>에서 생겨 <b>공기</b>를 타고 전해진다.'},
+ {id:'sound0',r:'🎼 소리의 비밀',t:'두 음의 진동수의 비가 더 <b>간단한</b> 비일수록 더 잘 어울린다.'},
  {id:'sound1',r:'🎼 소리의 비밀',t:'두 소리의 진동수가 <b>간단한</b> 비를 이룰수록 화음이 더 잘 어울린다.'},
  {id:'sound2',r:'🎼 소리의 비밀',t:'악기의 음 높이를 맞출 때는 <b>라</b> 음 440Hz를 기준으로 다른 음들의 진동수 <b>비</b>를 계산하여 정한다.'},
  {id:'sound3',r:'🎼 소리의 비밀',t:'줄이 <b>짧을수록</b> 빠르게 떨려 높은 소리가 난다.<br>줄의 길이와 음 높이의 관계는 서로 <b>반대</b>이다.'},

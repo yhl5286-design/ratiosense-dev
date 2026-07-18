@@ -414,6 +414,7 @@ function juiceBox(c,label){
     <rect x="19" y="36" width="26" height="20" rx="4" fill="#fffdf4"/>
     <text x="32" y="50" text-anchor="middle" font-size="8.5" font-weight="800" fill="${c}">${label}</text>
   </svg>`;}
+function iceBar(){return `<svg viewBox="0 0 34 64" style="width:30px;display:inline-block;vertical-align:middle"><rect x="4" y="4" width="26" height="40" rx="9" fill="#f2b7c6" stroke="rgba(0,0,0,.2)" stroke-width="1.5"/><rect x="14" y="44" width="6" height="16" rx="3" fill="#d9b98a"/></svg>`;}
 function icePack(n,label){ // 아이스크림 멀티팩 묶음 + 가격표
   const cols=['#f2b7c6','#b6d94b','#f4d35e','#9ecbee','#e76f51'];
   let bars='';
@@ -530,8 +531,8 @@ const DECK=[
  {t:'mc',kid:0,bem:'🍦',q:'지우가 <b>5개에 4,000원</b>인 아이스크림 묶음을 사려고 해요.<br>이때 아이스크림 <b>한 개당 가격</b>은 얼마인가요?',sub:'',
   em:'🍦×5',price:'5개 묶음 4,000원',hint:'4,000 ÷ 5',opts:[['800원',1],['500원',0],['1,000원',0]],
   ok:['맞았어요! 1개 = 800원','4,000 ÷ 5 = 800 — 묶음 가격 ÷ 개수 = <b>단위 가격</b>!'],no:'5개가 4,000원 — 1개는 나누면?'},
- {t:'recomp'},
  {t:'bundle'},
+ {t:'recomp'},
  {t:'shop',kid:1,bem:'🥤',q:'고려 요구르트는 <b>3개에 2,100원</b>,<br>사랑 요구르트는 <b>5개에 4,000원</b>이에요.<br>어떤 제품의 요구르트 <b>1개</b>가 더 싼가요?',sub:'',em:'🥤',
   an:'고려 요구르트',bn:'사랑 요구르트',
   a:{n:3,p:2100},b:{n:5,p:4000},ansB:false,
@@ -542,6 +543,11 @@ const DECK=[
   a:{n:3,p:1500},b:{n:4,p:2400},ansB:false,
   ok:['맞았어요! 사과주스가 더 싸요','1개 값: 사과주스 1,500÷3=<b>500원</b> vs 오렌지주스 2,400÷4=600원!'],
   no:'각 주스의 <b>1개 값</b>을 나눠 보세요 — 1,500÷3과 2,400÷4.'},
+ {t:'shop',kid:1,bem:'🍪',scn:'aisle',u:'g',q:'이번엔 <b>과자</b>예요! 소금과자는 <b>100g에 2,000원</b>,<br>별과자는 <b>150g에 2,700원</b>이에요.<br><b>1g당 가격</b>이 더 싼 과자는 어느 것일까요?',sub:'',em:'🍪',
+  an:'소금과자',bn:'별과자',
+  a:{n:100,p:2000},b:{n:150,p:2700},ansB:true,
+  ok:['맞았어요! 별과자가 더 싸요','1g당 가격: 소금과자 2,000÷100=<b>20원</b> vs 별과자 2,700÷150=<b>18원</b>!<br>개수가 아니어도 <b>1g처럼 단위</b>를 기준으로 비교하면 돼요!'],
+  no:'각 과자의 <b>1g 값</b>을 나눠 보세요 — 2,000÷100과 2,700÷150.'},
  {t:'mc',kid:1,bem:'🥛',q:'현준이가 고른 <b>우유</b>는 원래 <b>5,000원</b>이에요.<br>이 우유는 오늘 <span class="sale">40% 할인</span> 중이래요.<br><b>얼마나 할인</b>받을 수 있을까요?',sub:'',
   em:'🥛',price:'5,000원 40%↓',hint:'5000 × 40 ÷ 100',opts:[['2,000원 할인',1],['1,500원 할인',0],['2,500원 할인',0]],
   ok:['맞았어요! 2,000원 할인','40%란 <b>100 중 40</b> — 5,000 × 40 ÷ 100 = 2,000!'],no:'40%는 100 중 40이에요!'},
@@ -623,35 +629,36 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
       b.dataset.ok==='1'?success(d.ok[0],d.ok[1]):retry(d.no);});return;}
   if(d.t==='recomp'){
-    const bank=['4','3,200','2,400','5'].sort(()=>Math.random()-.5);
-    el.innerHTML=`<div class="q">아이스크림 <b>1개가 800원</b>인 것을 알아냈어요!<br>그럼 이 아이스크림 <b>4개</b>를 사려면 얼마가 필요할까요?</div>
+    const bank=['10','8,000','4','3,200'].sort(()=>Math.random()-.5);
+    el.innerHTML=`<div class="q">묶음보다 <b>훨씬 많이</b> 필요할 때도 있어요!<br>바 아이스크림(1개 800원) <b>10개</b>를 사려면 얼마가 필요할까요?</div>
     <div class="sub">나눠서 구한 <b>한 개의 값(단위 가격)</b>을 이용해 거꾸로 계산해요 — 숫자 카드를 빈칸에 끌어오세요!</div>
     ${martScene('🍦',0,'ice')}
-    <div class="eq"><div class="row">800원 × <span class="dz" data-a="4"></span>개 = <span class="dz" data-a="3,200"></span>원</div></div>
+    <div style="display:flex;gap:3px;justify-content:center;margin:6px 0;flex-wrap:wrap">${Array.from({length:10},()=>iceBar()).join('')}</div>
+    <div class="eq"><div class="row">800원 × <span class="dz" data-a="10"></span>개 = <span class="dz" data-a="8,000"></span>원</div></div>
     <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('success',{slide:idx});
-      success('맞았어요! 단위 가격으로 다시 묶었어요!','1개 800원 × 4개 = <b>3,200원</b> — 나눠서(÷) 구한 단위 가격을 <b>곱해서(×) 되돌리면</b> 묶음 가격!');});
+      success('맞았어요! 단위 가격이 있으면 얼마든지!','1개 800원 × 10개 = <b>8,000원</b> — 나눠서(÷) 구한 단위 가격을 <b>곱하면(×)</b> 아무리 많아도 가격을 알 수 있어요!');});
     return;}
   if(d.t==='bundle'){
-    el.innerHTML=`<div class="q">이번엔 <b>직접 묶음을 만들어</b> 봐요!<br>낱개 아이스크림(1개 800원)을 끌어서 <b>4개들이 묶음</b>을 만들어 주세요.</div>
+    el.innerHTML=`<div class="q">이번엔 <b>직접 묶음을 만들어</b> 봐요!<br>낱개 바 아이스크림(1개 800원)을 끌어서 <b>3개들이 묶음</b>을 만들어 주세요.</div>
     <div class="sub">낱개를 상자로 끌어다 놓아요(눌러도 이동). 상자 속 것을 누르면 다시 꺼낼 수 있어요.</div>
-    <div id="shelf" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0">${Array.from({length:6},(_,k)=>`<span class="unitic" data-k="${k}" style="font-size:44px;cursor:grab;user-select:none;touch-action:none">🍦</span>`).join('')}</div>
-    <div id="bbox" style="margin:0 auto;max-width:340px;min-height:96px;border:4px dashed var(--gold);border-radius:20px;background:#fffbef;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px"><span id="bhint" style="color:var(--sub);font-size:18px">묶음 상자 (0/4개)</span></div>
-    <div id="bq" style="display:none;margin-top:14px;text-align:center"><div class="q" style="font-size:22px">내가 만든 <b>4개들이 묶음</b>의 가격표는?</div>
-    <div class="choices">${[['3,200원','1'],['2,400원','0'],['4,000원','0']].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div></div>`;
+    <div id="shelf" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0">${Array.from({length:6},(_,k)=>`<span class="unitic" data-k="${k}" style="cursor:grab;user-select:none;touch-action:none;display:inline-block">${iceBar()}</span>`).join('')}</div>
+    <div id="bbox" style="margin:0 auto;max-width:340px;min-height:96px;border:4px dashed var(--gold);border-radius:20px;background:#fffbef;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px"><span id="bhint" style="color:var(--sub);font-size:18px">묶음 상자 (0/3개)</span></div>
+    <div id="bq" style="display:none;margin-top:14px;text-align:center"><div class="q" style="font-size:22px"><b>3개씩 묶으면</b> 얼마일까요?</div>
+    <div class="choices">${[['2,400원','1'],['3,200원','0'],['1,600원','0']].sort(()=>Math.random()-.5).map(o=>`<button class="btn" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div></div>`;
     const box=el.querySelector('#bbox'), hint=el.querySelector('#bhint'), bq=el.querySelector('#bq'), shelf=el.querySelector('#shelf');
     const cnt=()=>box.querySelectorAll('.unitic').length;
-    const upd=()=>{const n=cnt();hint.textContent=`묶음 상자 (${n}/4개)`;hint.style.display=n>=4?'none':'';
-      if(n===4){try{chime(true);}catch(e){}bq.style.display='block';plog('bundle4',{slide:idx});}
+    const upd=()=>{const n=cnt();hint.textContent=`묶음 상자 (${n}/3개)`;hint.style.display=n>=3?'none':'';
+      if(n===3){try{chime(true);}catch(e){}bq.style.display='block';plog('bundle3',{slide:idx});}
       else bq.style.display='none';};
-    function toBox(u){if(cnt()>=4){retry('묶음에는 <b>4개까지만</b> 담을 수 있어요!');return;}box.appendChild(u);upd();}
+    function toBox(u){if(cnt()>=3){retry('묶음에는 <b>3개까지만</b> 담을 수 있어요!');return;}box.appendChild(u);upd();}
     function toShelf(u){shelf.appendChild(u);upd();}
     let suppress=false;
     el.addEventListener('click',e=>{if(suppress){suppress=false;return;}
       const u=e.target.closest('.unitic');if(!u)return;
       (u.parentElement===box)?toShelf(u):toBox(u);});
     el.addEventListener('pointerdown',e=>{const u=e.target.closest('.unitic');if(!u)return;e.preventDefault();
-      const g=document.createElement('span');g.id='ghost';g.textContent='🍦';g.style.fontSize='44px';document.body.appendChild(g);
+      const g=document.createElement('span');g.id='ghost';g.innerHTML=iceBar();document.body.appendChild(g);
       let moved=false;
       const mv=ev=>{moved=true;g.style.left=(ev.clientX-20)+'px';g.style.top=(ev.clientY-30)+'px';};
       document.onpointermove=mv;
@@ -661,13 +668,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
           if(under&&under.closest&&under.closest('#bbox')&&u.parentElement!==box)toBox(u);
           else if(under&&under.closest&&under.closest('#shelf')&&u.parentElement===box)toShelf(u);}};});
     bq.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>{
-      b.dataset.ok==='1'?success('맞았어요! 내가 만든 묶음이에요!','낱개 4개를 <b>하나의 묶음(단위)</b>으로 묶으면 800 × 4 = <b>3,200원</b>. 묶었다가 다시 풀 수도 있어요 — 이것이 <b>단위화</b>!'):retry('1개 800원짜리를 <b>4개</b> 묶었어요 — 800 × 4는?');});
+      b.dataset.ok==='1'?success('맞았어요! 내가 만든 묶음이에요!','낱개 3개를 <b>하나의 묶음(단위)</b>으로 묶으면 800 × 3 = <b>2,400원</b>. 묶었다가 다시 풀 수도 있어요 — 이것이 <b>단위화</b>!'):retry('1개 800원짜리를 <b>3개</b> 묶었어요 — 800 × 3은?');});
     return;}
   if(d.t==='shop'){el.innerHTML=`<div class="q">${d.q}</div><div class="sub">${d.sub}</div>
     ${martScene(d.bem,d.kid,d.scn||(d.bem==='🥤'?'yogurt':(d.bem==='🥛'?'dairy':'juice')))}
     <div class="shop">
-      <div class="item pick" data-b="0">${d.ai||`<div class="em">${d.em}</div>`}<div style="color:var(--sub)">${d.an||'고려마트'}</div><div>${d.a.n}개 ${d.a.p.toLocaleString()}원</div></div>
-      <div class="item pick" data-b="1">${d.bi||`<div class="em">${d.em}</div>`}<div style="color:var(--sub)">${d.bn||'사랑마트'}</div><div>${d.b.n}개 ${d.b.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="0">${d.ai||`<div class="em">${d.em}</div>`}<div style="color:var(--sub)">${d.an||'고려마트'}</div><div>${d.a.n}${d.u||'개'} ${d.a.p.toLocaleString()}원</div></div>
+      <div class="item pick" data-b="1">${d.bi||`<div class="em">${d.em}</div>`}<div style="color:var(--sub)">${d.bn||'사랑마트'}</div><div>${d.b.n}${d.u||'개'} ${d.b.p.toLocaleString()}원</div></div>
     </div>
     `;
     el.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
@@ -711,7 +718,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     return;}
   if(d.t==='tsum'){
     const S3=[
-     {t:["단위 가격 = 물건 ","개의 값<br>= 묶음 전체의 가격 ÷ ",""],a:["1","개수"],x:["100","전체 가격"]},
+     {t:["어떤 물건이 정말 더 싼지 비교하려면 물건 ","당 가격, 물건 ","당 가격처럼 ","를 기준으로 비교해야 한다."],a:["1개","1g","단위"],x:["10개","100g"]},
      {t:["두 물건 중 어느 것이 더 싼지 비교하려면 ","을 비교해야 한다."],a:["단위 가격"],x:["할인율","전체 가격","포장 크기"]},
      {t:["할인율이 20%라면, 원래 가격에서 원래 가격에 ","/","을 곱한 만큼을 뺀 만큼 내야 한다.<br>반값(50%) 할인은 ","\u00A0= ","를 곱하는 것과 같다."],a:["20","100","1/2","0.5"],x:["80","10","2/1"]},
      {t:["물건이 10,000원인데 할인율이 20%일 때, 내야 할 가격은 원래 가격 × ","%와 같다.<br>예를 들어 10,000 × 80/100 = 10,000 × "," = ","원을 내면 된다."],a:["80","0.8","8,000"],x:["20","0.2","2,000"]}];
@@ -762,7 +769,7 @@ const RC=[
  {id:'map1',r:'🗺️ 지도의 비밀',t:'축척 1:10,000은 실제 거리를 <b>10,000</b>분의 1로 줄인 것이다.'},
  {id:'map2',r:'🗺️ 지도의 비밀',t:'축척 1:10,000 지도에서 다리 3cm의 실제 길이는 3 × 10,000 = <b>30,000</b>cm이다.'},
  {id:'map3',r:'🗺️ 지도의 비밀',t:'각도의 비 7.2° : 360° = 1 : <b>50</b> — 두 도시 사이 800km면 지구 둘레는 <b>40,000</b>km이다.'},
- {id:'mart0',r:'🛒 마트의 비밀',t:'단위 가격 = 물건 <b>1</b>개의 값<br>= 묶음 전체의 가격 ÷ <b>개수</b>'},
+ {id:'mart0',r:'🛒 마트의 비밀',t:'어떤 물건이 정말 더 싼지 비교하려면 물건 <b>1개</b>당 가격, 물건 <b>1g</b>당 가격처럼 <b>단위</b>를 기준으로 비교해야 한다.'},
  {id:'mart1',r:'🛒 마트의 비밀',t:'두 물건 중 어느 것이 더 싼지 비교하려면 <b>단위 가격</b>을 비교해야 한다.'},
  {id:'mart2',r:'🛒 마트의 비밀',t:'할인율이 20%라면, 원래 가격에서 원래 가격에 <b>20</b>/<b>100</b>을 곱한 만큼을 뺀 만큼 내야 한다.<br>반값(50%) 할인은 <b>1/2</b> = <b>0.5</b>를 곱하는 것과 같다.'},
  {id:'mart3',r:'🛒 마트의 비밀',t:'물건이 10,000원인데 할인율이 20%일 때, 내야 할 가격은 원래 가격 × <b>80</b>%와 같다.<br>예를 들어 10,000 × 80/100 = 10,000 × <b>0.8</b> = <b>8,000</b>원을 내면 된다.'}];
