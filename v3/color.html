@@ -391,6 +391,7 @@ const R3=[
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 let DECK=[{t:'title'},{t:'mdemo'}];
 FAM.forEach((f,fi)=>{for(let k=0;k<2;k++)DECK.push({t:'sense',fi,k});});
+DECK.push({t:'disc'},{t:'disc2'},{t:'disc3'});
 DECK.push({t:'qintro'});
 MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
@@ -518,6 +519,59 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
         used.push(key);const g=gcd(a,b);chime(true);
         success('맞았어요! 양은 달라도 비는 같아요!',`${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`);}};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
+  if(d.t==='disc'){
+    const tgt=mix({빨강:2,노랑:1});
+    el.innerHTML=`<div class="q" style="font-size:34px">🔍 <b>색 탐정 미션</b></div>
+      <div class="dial" style="font-size:21px;line-height:1.7">여기 <b>진한 주황색</b>이 있어요. 이 색을 <b>똑같이</b> 만들어야 해요.<br>그런데 아무 정보가 없네요! <b>무엇을 알아야</b> 이 색을 만들 수 있을까요?</div>
+      <div class="pair"><div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div></div>
+      <div class="sub" style="margin-top:8px">알아야 할 것을 골라 보세요!</div>
+      <div class="bank">
+        <span class="chip" data-q="r">빨강을 몇 mL 넣는지</span>
+        <span class="chip" data-q="y">노랑을 몇 mL 넣는지</span>
+        <span class="chip" data-q="ratio">빨강과 노랑을 몇 대 몇으로 섞는지</span>
+      </div>`;
+    el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const q=c.dataset.q;plog('disc_q',{pick:q});
+      if(q==='ratio'){chime(true);success('바로 그거예요!','양이 얼마든 <b>비</b>만 알면 이 색을 만들 수 있어요.<br>이제 그 비를 직접 찾아봐요!');}
+      else{retry((q==='r'?'빨강':'노랑')+'의 양<b>만</b> 알면… 다른 물감을 얼마나 넣을지 알 수 있을까요?<br>색이 더 많이 필요할 때는요?');}});
+    return;}
+  if(d.t==='disc2'){
+    const tgt=mix({빨강:2,노랑:1});
+    const found=d.found||(d.found=[]);
+    el.innerHTML=`<div class="q" style="font-size:25px">🔍 목표 색이 되는 <b>비를 찾아보세요!</b><br><span style="font-size:19px">물감을 넣으면 비커 색이 변해요. <b>서로 다른 양</b>으로 <b>2번</b> 성공하면 비밀이 풀려요!</span></div>
+      <div class="paints">
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
+      </div>
+      <div class="pair">
+        <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div>
+        <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내가 만든 색 (비커)</div></div>
+        <div class="recbox"><div class="bklab">성공 기록판</div><div id="board" style="font-size:18px;font-weight:800"></div></div>
+      </div>
+      <button class="btn ghost" id="clr">비우기</button>`;
+    const board=()=>{const b=$('#board');if(b)b.innerHTML=found.map(f=>`빨강 ${f[0]} : 노랑 ${f[1]}`).join('<br>')||'아직 없음';};
+    const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
+      $('#a0').textContent=a;$('#a1').textContent=b;
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';
+      if(a>0&&b>0){plog('disc_try',{a,b,ok:a===2*b});
+        if(a===2*b){const key=a+':'+b;
+          if(found.some(f=>f[0]+':'+f[1]===key)){retry('아까와 <b>같은 양</b>이에요 — 다른 양으로도 되는지 확인해 봐요!');S.amt={};upd();return;}
+          found.push([a,b]);board();
+          if(found.length>=2){const g=gcd(found[0][0],found[0][1]);chime(true);
+            success('비밀이 풀렸어요!',found.map(f=>`빨강 ${f[0]} : 노랑 ${f[1]}`).join(' , ')+`<br>모두 <b>${found[0][0]/g} : ${found[0][1]/g}</b> — 양이 달라도 <b>비가 같으면 같은 색</b>!`);}
+          else{chime(true);toastFB('ok','✅ 첫 번째 성공!','이제 <b>다른 양</b>으로 한 번 더 같은 색을 만들어 봐요!');S.amt={};upd();}
+        }}};
+    wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};board();upd();return;}
+  if(d.t==='disc3'){
+    el.innerHTML=`<div class="q">🔍 마지막 미션! <b>친구에게 설명</b>해 주세요.</div>
+      <div class="sub">친구도 이 색을 만들 수 있게, 알맞은 카드를 빈칸에 놓아 설명을 완성하세요!</div>
+      <div class="eq" style="font-size:23px;line-height:2">
+        <div class="row">"빨강과 노랑을 <span class="dz" data-a="2"></span> : <span class="dz" data-a="1"></span>${'로'} 섞으면 돼."</div>
+        <div class="row">"양이 달라도 <span class="dz" data-a="비"></span>가 같으면 <b>같은 색</b>이 나와!"</div>
+      </div>
+      <div class="bank">${['2','1','비','양','3'].sort(()=>Math.random()-.5).map(w=>`<span class="chip" data-w="${w}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('disc_explain',{});
+      success('완벽한 설명이에요!','<b>비</b>를 알면, 얼마든지 많이도 적게도 같은 색을 만들 수 있어요!');});
+    return;}
 if(d.t==='mdemo'){
     el.innerHTML=`<div class="q" style="font-size:36px">🎨 1단계 : 같은 색 만들기!</div>
       <div class="dial" style="font-size:21px;line-height:1.8;margin-bottom:8px">빨강 : 노랑 = <b>2 : 3</b>의 비가 되도록 <b>물감 버튼</b>을 누르세요!<br>빨강 <b>20mL</b>, 노랑 <b>30mL</b>를 넣었더니 <b>같은 색</b>이 되었죠?</div>
