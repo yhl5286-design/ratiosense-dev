@@ -825,21 +825,15 @@ if(d.t==='sintro'){
       cardWin(el,null,()=>next());});
     return;}
   if(d.t==='done'){
-    const _need=['color0','color1','color2','color3'];let _have=[];
-    try{_have=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');}catch(e){}
-    const _got=_need.filter(c=>_have.includes(c)).length;
-    if(_got<4){
-      el.innerHTML=`<div style="font-size:64px">\uD83D\uDD12</div>
-      <div class="q">아직 탈출할 수 없어요!</div>
-      <div class="sub">이 방의 비밀카드를 <b>${_got} / 4</b>장 모았어요.<br>비밀카드 문제 4개를 <b>모두 맞혀야</b> 이 방을 탈출하고 비밀번호 숫자를 얻을 수 있어요!</div>
-      <button class="btn pri" id="goSum">비밀카드 문제 풀러 가기 →</button>`;
-      const _b=$('#goSum');if(_b)_b.onclick=()=>{const si=DECK.findIndex(x=>x.t==='sum');if(si>=0)idx=si;render();};
-      return;}
         confetti();clap();
-    el.innerHTML=`<div><span class="stampb" style="font-size:64px">📝</span></div>
-    <div class="q">평가를 모두 마쳤어요! 참 잘했어요!</div>
-    <div class="sub">일곱 문제를 전부 통과했어요 — 이제 진짜 <b>비 감각의 달인</b>!</div>
+    el.innerHTML=`<div class="q">🎉 모든 탐험 완성!</div>
+    <div style="display:inline-block;background:#3b2f24;padding:14px;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.35)">
+      <img src="scream.jpg?v=2" alt="뭉크가 완성한 그림" id="fimg" style="max-width:min(260px,75vw);display:block;border-radius:2px;opacity:0;transition:opacity 1.8s">
+    </div>
+    <div class="dial" style="margin-top:12px;font-size:20px;line-height:1.7;max-width:780px"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "연구원, 드디어 <b>모든 탐험을 완성</b>했구나!<br>네가 찾아 준 <b>비의 비밀</b> 덕분에 잃어버린 노을빛 주황을 되찾고, 이 그림도 완성할 수 있었어.<br>색도, 소리도, 지도도, 마트도 — 세상 어디에나 <b>비</b>가 숨어 있다는 걸 이제 너도 알겠지?<br><b>정말 고마워, 나의 색깔 연구원!</b> 🎨"</div>
+    <div class="sub" style="margin-top:8px">일곱 문제를 전부 통과했어요 — 이제 진짜 <b>비 감각의 달인</b>!</div>
     <button class="btn pri" id="go2">탐험 지도로 돌아가기 →</button>`;
+    setTimeout(()=>{const f=$('#fimg');if(f)f.style.opacity='1';},80);
     $('#go2').onclick=()=>{plog('complete',{});markDone('eval');chime(true);location.href='index.html?escape=1';};
     return;}
 }
