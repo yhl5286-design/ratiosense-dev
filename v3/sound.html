@@ -372,6 +372,7 @@ function harpHTML(){
 
 const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harmx',ni:__i});DECK.push({t:'itv2'});
 const CHORD_SET=[3,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
+DECK.push({t:'polyi'},{t:'poly'});
 DECK.push({t:'strlen'});
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
 DECK.push({t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'ssum',i:3},{t:'done'});
@@ -508,8 +509,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
     const tn=NOTES[d.ni];
-    el.innerHTML=`<div class="q">도와 <b>가장 잘 어울리는 화음</b> 찾기!</div>
-      <div class="sub" style="font-size:23px"><b style="color:#c0392b">${tn[0]}</b>${jz(tn[0],'을','를')} 눌러보세요! <span style="font-size:15px;color:var(--sub)">(${d.ni} / 7)</span></div>
+    el.innerHTML=`<div class="q">도와 <b>${tn[0]}</b>${jz(tn[0],'이','가')} 함께 울리면 <b>어떤 느낌</b>일까?</div>
+      <div class="sub" style="font-size:23px"><b style="color:#c0392b">${tn[0]}</b>${jz(tn[0],'을','를')} 눌러 도와 함께 들어 보세요! <span style="font-size:15px;color:var(--sub)">(미션 ${d.ni} / 7)</span></div>
       <div class="pianoWrap"><div class="piano">${NOTES.map((m,i)=>`<div class="key ${i===0?'base':''}" data-i="${i}" style="${i===0?'border-color:var(--gold);box-shadow:0 0 0 3px #f3dfae, inset 0 -7px 0 rgba(0,0,0,.10);':(i===d.ni?'border-color:#c0392b;box-shadow:0 0 0 3px #f5c9c4, inset 0 -7px 0 rgba(0,0,0,.10);':'')}">${m[0]}${i===0?'<br>★':''}</div>`).join('')}
         ${[0,1,3,4,5].map(i=>`<div class="bkey" style="left:${i*80+55}px"></div>`).join('')}
       </div></div>
@@ -519,9 +520,23 @@ if(d.t==='harmx'){
         <div style="font-size:15px;color:var(--sub);font-weight:700;margin:2px 0 6px"><span style="color:#378ADD">▬▬</span> 도 (파란 물결) &nbsp;&nbsp; <span style="color:#E24B4A">▬▬</span> 누른 음 (빨간 물결)</div>
       </div>
       <div class="dial" id="hxWave" style="margin-top:8px;font-size:19px;display:none"></div>
-      <div class="dial" id="hxInfo" style="line-height:1.7;font-size:20px">무늬가 <b>자주 반복될수록</b> 잘 어울려요!</div>`;
-    function starCount(a,b){const s=a+b;return s<=5?5:(s<=7?4:(s<=9?3:(s<=17?2:1)));}
-    const VERD=['','잘 안 어울려요 😖','조금 어울려요 😕','제법 어울려요 🙂','잘 어울려요 😊','아주 잘 어울려요! 😆'];
+      <div id="ratePan" style="display:none;max-width:760px;margin:10px auto 0;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 16px;text-align:left">
+        <div style="font-weight:800;font-size:19px">① 도와 ${tn[0]}의 어울림 — 내 귀에는 <b>5점 만점에 몇 점</b>?</div>
+        <div id="starRow" style="font-size:36px;cursor:pointer;letter-spacing:8px;margin:4px 0;color:#e0a02a">${[1,2,3,4,5].map(s=>`<span class="st" data-s="${s}" style="opacity:.3">★</span>`).join('')}</div>
+        <div id="q2" style="display:none">
+          <div style="font-weight:800;font-size:19px;margin-top:8px">② 함께 울릴 때 <b>어떤 느낌</b>이었나요? (여러 개 골라도 좋아요)</div>
+          <div class="bank" style="justify-content:flex-start;margin-top:4px">${['부드러워요','맑아요','하나처럼 들려요','울렁울렁해요','거칠어요','부딪혀요'].map(f=>`<span class="chip fchip" data-f="${f}" style="font-size:16px">${f}</span>`).join('')}</div>
+          <input id="feelT" placeholder="내 말로 한 줄 적어도 좋아요 (선택)" style="width:95%;font-size:16px;font-family:inherit;border:2px solid var(--line);border-radius:10px;padding:8px;margin-top:8px">
+          <div style="margin-top:8px"><button class="btn pri" id="q2go">느낌 제출! →</button></div>
+        </div>
+        <div id="q3" style="display:none">
+          <div style="font-weight:800;font-size:19px;margin-top:8px">③ 왜 그렇게 들릴까요? <b>그래프의 노란 띠(한 묶음)</b>를 보고 골라 보세요!</div>
+          <div class="bank" style="justify-content:flex-start;margin-top:4px">
+            <span class="chip gchip" data-g="s" style="font-size:16px">두 물결이 자주 딱딱 만나서, 무늬가 짧게 반복돼요</span>
+            <span class="chip gchip" data-g="c" style="font-size:16px">두 물결이 좀처럼 안 만나서, 무늬가 길고 복잡해요</span>
+          </div>
+        </div>
+      </div>`;
     let cur=-1,ph0=performance.now();
     function drawHX(){
       const svg=$('#hx');if(!svg)return;
@@ -558,12 +573,63 @@ if(d.t==='harmx'){
       if(i===0)tone(264,0,2);else chord(264,n[1],2);
       plog('harmx',{n:n[0],tgt:tn[0]});
       cur=i;ph0=performance.now();
-      const s=starCount(a,b);
-      $('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b><br><span style="color:#e0a02a">${'★'.repeat(s)}${'☆'.repeat(5-s)}</span> <b>${VERD[s]}</b><span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;
+      $('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;
       const hw=$('#hxWave');if(hw){hw.style.display='block';
         hw.innerHTML=`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 <b>반복되는 무늬</b>가 생겨요!`;}
-      if(i===d.ni&&!d._ok){d._ok=true;setTimeout(next,2800);}});
+      if(i===d.ni){const rp=$('#ratePan');if(rp)rp.style.display='block';}});
+    let stars=0;const feels=new Set();
+    el.querySelectorAll('.st').forEach(s=>s.onclick=()=>{stars=+s.dataset.s;
+      el.querySelectorAll('.st').forEach(x=>x.style.opacity=(+x.dataset.s<=stars)?'1':'.3');
+      plog('harmx_rate',{n:tn[0],stars});const q2=$('#q2');if(q2)q2.style.display='block';});
+    el.querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{const f=c.dataset.f;
+      if(feels.has(f)){feels.delete(f);c.classList.remove('used');}else{feels.add(f);c.classList.add('used');}});
+    $('#q2go').onclick=()=>{const txt=($('#feelT').value||'').trim();
+      if(!feels.size&&!txt){retry('느낌을 하나라도 고르거나 적어 봐요!');return;}
+      plog('harmx_feel',{n:tn[0],feels:[...feels],text:txt.slice(0,120)});chime(true);
+      const q3=$('#q3');if(q3)q3.style.display='block';};
+    const simple=(tn[3]*tn[2])<=20;
+    el.querySelectorAll('.gchip').forEach(c=>c.onclick=()=>{const g=c.dataset.g;const match=(g==='s')===simple;
+      plog('harmx_graph',{n:tn[0],pick:g,match});
+      if(match){chime(true);success('그래프와 딱 맞는 관찰!',`도 : ${tn[0]} = <b>${tn[3]} : ${tn[2]}</b> — ${simple?'간단한 비라서 무늬가 <b>자주 반복</b>되고, 그래서 어울리게 들려요!':'큰 수의 비라서 무늬가 <b>길고 복잡</b>해지고, 그래서 거칠게 들려요!'}`);}
+      else{retry('그래프의 노란 띠(한 묶음)를 다시 봐요 — 무늬가 짧게 자주 반복되나요, 길게 이어지나요?');}});
     drawHX();return;}
+  if(d.t==='polyi'){
+    el.innerHTML=`<div class="q">🥁 <b>리듬에도 비가 숨어 있어요!</b></div>
+      <div class="sub" style="font-size:20px">북은 <b>2박마다</b>, 방울은 <b>3박마다</b> 울려요.<br>두 리듬을 <b>함께</b> 연주하면 어떤 일이 생길까요?</div>
+      <button class="btn pri" onclick="next()">리듬 실험실로! →</button>`;return;}
+  if(d.t==='poly'){
+    const N=12;
+    el.innerHTML=`<div class="q" style="font-size:23px">🥁 북(2박)과 🔔 방울(3박)을 함께 연주해요!</div>
+      <div class="sub">▶ 재생을 눌러 들어 보고, 🥁와 🔔이 <b>같이 울리는 칸</b>을 아래 줄에서 모두 눌러 보세요!</div>
+      <div style="display:inline-block;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 16px;max-width:94vw;overflow-x:auto">
+        <div style="font-weight:800;text-align:left">🥁 북 — 2박마다</div>
+        <div style="white-space:nowrap">${Array.from({length:N},(_,i)=>`<span class="pc" data-i="${i+1}" style="display:inline-block;width:38px;height:38px;line-height:38px;margin:2px;border-radius:8px;border:2px solid #d3d1c7;background:${(i+1)%2===0?'#f8e0d2':'#fdfcf8'};font-weight:800">${(i+1)%2===0?'🥁':''}</span>`).join('')}</div>
+        <div style="font-weight:800;text-align:left;margin-top:4px">🔔 방울 — 3박마다</div>
+        <div style="white-space:nowrap">${Array.from({length:N},(_,i)=>`<span style="display:inline-block;width:38px;height:38px;line-height:38px;margin:2px;border-radius:8px;border:2px solid #d3d1c7;background:${(i+1)%3===0?'#def0e2':'#fdfcf8'};font-weight:800">${(i+1)%3===0?'🔔':''}</span>`).join('')}</div>
+        <div style="font-weight:800;text-align:left;margin-top:4px">🎯 함께 울리는 칸은?</div>
+        <div style="white-space:nowrap">${Array.from({length:N},(_,i)=>`<span class="qc" data-i="${i+1}" style="display:inline-block;width:38px;height:38px;line-height:38px;margin:2px;border-radius:8px;border:2px dashed #b9b4a8;background:#fdfcf8;cursor:pointer;font-weight:800">${i+1}</span>`).join('')}</div>
+      </div>
+      <div style="margin-top:8px"><button class="btn pri" id="playB">▶ 재생</button></div>
+      <div class="dial" id="pMsg" style="margin-top:8px;font-size:19px">먼저 들어 보세요!</div>`;
+    let playing=false;
+    $('#playB').onclick=()=>{if(playing)return;playing=true;plog('poly_play',{});
+      for(let b=1;b<=N;b++){const t=(b-1)*0.4;
+        if(b%2===0)tone(160,t,.18);
+        if(b%3===0)tone(880,t,.18);}
+      let b=1;const iv=setInterval(()=>{
+        document.querySelectorAll('.pc').forEach(c=>c.style.outline=(+c.dataset.i===b)?'3px solid #e0a02a':'none');
+        b++;if(b>N){clearInterval(iv);playing=false;document.querySelectorAll('.pc').forEach(c=>c.style.outline='none');
+          const m=$('#pMsg');if(m)m.innerHTML='잘 들었나요? 🥁와 🔔이 <b>같은 순간</b>에 울린 칸을 눌러 보세요!';}},400);};
+    const sel=new Set();
+    el.querySelectorAll('.qc').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;
+      if(sel.has(i)){sel.delete(i);c.style.background='#fdfcf8';c.style.borderStyle='dashed';}
+      else{sel.add(i);c.style.background='#f3dfae';c.style.borderStyle='solid';}
+      const want=[6,12];
+      if(want.every(x=>sel.has(x))&&sel.size===2){plog('poly_ok',{});chime(true);
+        success('찾았다! 6박과 12박!','북(2박)과 방울(3박)은 <b>6박마다</b> 다시 만나요.<br>2와 3의 비가 만드는 <b>리듬의 비밀</b> — 2×3=6!');}
+      else if(sel.size>=2){plog('poly_try',{sel:[...sel]});
+        retry('다시 들어 봐요 — 🥁 줄과 🔔 줄이 <b>둘 다 채워진 칸</b>은 어디인가요?');}});
+    return;}
   if(d.t==='itv2'){
     el.innerHTML=`<div class="q"><b>음정 표 완성!</b> — 도부터 도′까지 다 들어봤어요!</div>
       <div class="itvWrap" style="margin-top:8px"><table class="itvT">
