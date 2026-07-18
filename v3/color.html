@@ -661,13 +661,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       <div class="pair">
         <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div>
         <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내 비커</div></div>
-        <div class="recbox"><div style="border:3px solid #b3541e;border-radius:12px;background:#fff;padding:8px 14px;margin-bottom:8px;text-align:left"><div style="font-size:14px;color:var(--sub);font-weight:800">🧪 지금 비커에</div><div id="mmR" style="font-size:21px;font-weight:800;white-space:nowrap">빨강 0mL</div><div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="hypo" style="visibility:hidden;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div></div><div class="bklab">📋 실험 기록장</div><div id="board" style="font-size:16px;font-weight:800;text-align:left"></div></div>
+        <div class="recbox"><div style="border:3px solid #b3541e;border-radius:12px;background:#fff;padding:8px 14px;margin-bottom:8px;text-align:left"><div style="font-size:14px;color:var(--sub);font-weight:800">🧪 지금 비커에</div><div id="mmR" style="font-size:21px;font-weight:800;white-space:nowrap">빨강 0mL</div><div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="hypo" style="visibility:hidden;white-space:nowrap;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div></div><div class="bklab">📋 실험 기록장</div><div id="board" style="font-size:16px;font-weight:800;text-align:left"></div></div>
       </div>
       <div style="margin-top:8px"><button class="btn pri" id="run">🧪 실험하기!</button> <button class="btn ghost" id="clr">비우기</button></div>`;
     const board=()=>{const b=$('#board');if(b)b.innerHTML=EXP.log.slice(-5).map(l=>`${l.ok?'⭕':'❌'} 빨강 ${l.a} : 노랑 ${l.b}`).join('<br>')||'아직 없음';};
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설(빨강 '+EXP.hypo+' 노랑)과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='📔 수첩의 비 2 : 3과 일치!';}mh.style.visibility=on?'visible':'hidden';mh.innerHTML=on?txt:'&nbsp;';}};
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설(빨강 '+EXP.hypo+' 노랑)과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='📔 수첩의 비 2 : 3과 일치!';}mh.textContent=txt;mh.style.visibility=on?'visible':'hidden';}};
     $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0;
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣고 실험해야죠!');return;}
       const ok=a*EXPR[1]===b*EXPR[0];EXP.log.push({a,b,ok});board();plog('exp_run',{a,b,ok});
@@ -700,13 +700,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       <div class="pair">
         <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div>
         <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내 비커</div></div>
-        <div class="recbox"><div style="border:3px solid #b3541e;border-radius:12px;background:#fff;padding:8px 14px;margin-bottom:8px;text-align:left"><div style="font-size:14px;color:var(--sub);font-weight:800">🧪 지금 비커에</div><div id="mmR" style="font-size:21px;font-weight:800;white-space:nowrap">빨강 0mL</div><div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="note" style="visibility:hidden;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div></div><div class="bklab">📋 실험 기록장</div><div id="board" style="font-size:16px;font-weight:800;text-align:left"></div></div>
+        <div class="recbox"><div style="border:3px solid #b3541e;border-radius:12px;background:#fff;padding:8px 14px;margin-bottom:8px;text-align:left"><div style="font-size:14px;color:var(--sub);font-weight:800">🧪 지금 비커에</div><div id="mmR" style="font-size:21px;font-weight:800;white-space:nowrap">빨강 0mL</div><div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="note" style="visibility:hidden;white-space:nowrap;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div></div><div class="bklab">📋 실험 기록장</div><div id="board" style="font-size:16px;font-weight:800;text-align:left"></div></div>
       </div>
       <div style="margin-top:8px"><button class="btn pri" id="run">🧪 실험하기!</button> <button class="btn ghost" id="clr">비우기</button></div>`;
     const board=()=>{const b=$('#board');if(b)b.innerHTML=EXP.found.map(f=>`⭕ 빨강 ${f[0]} : 노랑 ${f[1]}`).join('<br>')||'아직 없음';};
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설(빨강 '+EXP.hypo+' 노랑)과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='📔 수첩의 비 2 : 3과 일치!';}mh.style.visibility=on?'visible':'hidden';mh.innerHTML=on?txt:'&nbsp;';}};
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설(빨강 '+EXP.hypo+' 노랑)과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='📔 수첩의 비 2 : 3과 일치!';}mh.textContent=txt;mh.style.visibility=on?'visible':'hidden';}};
     $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0;
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣고 실험해야죠!');return;}
       const ok=a*EXPR[1]===b*EXPR[0];EXP.log.push({a,b,ok});plog('exp_run',{a,b,ok,stage:2});
@@ -732,7 +732,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
           <div style="border:3px solid #b3541e;border-radius:12px;background:#fff;padding:8px 14px;margin-bottom:8px;text-align:left">
             <div style="font-size:14px;color:var(--sub);font-weight:800">🧪 지금 비커에</div>
             <div id="mmR" style="font-size:21px;font-weight:800;white-space:nowrap">빨강 0mL</div>
-            <div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="note" style="visibility:hidden;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div>
+            <div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="note" style="visibility:hidden;white-space:nowrap;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div>
             <div id="mmT" style="font-size:16px;font-weight:800;color:var(--sub)">전체 0 / 100mL</div>
           </div>
         </div>
@@ -746,7 +746,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       const mr=$('#mmR'),my2=$('#mmY'),mt=$('#mmT');
       if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';
       if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';
-      if(mt)mt.innerHTML='전체 <b>'+tot+'</b> / 100mL';const mh=$('#mmH');if(mh){const on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];mh.style.visibility=on?'visible':'hidden';mh.innerHTML=on?'📔 수첩의 비 2 : 3과 일치!':'&nbsp;';}};
+      if(mt)mt.innerHTML='전체 <b>'+tot+'</b> / 100mL';const mh=$('#mmH');if(mh){const on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];mh.textContent='📔 수첩의 비 2 : 3과 일치!';mh.style.visibility=on?'visible':'hidden';}};
     $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣어야죠!');return;}
       const okR=a*EXPR[1]===b*EXPR[0];plog('mural',{a,b,ok:okR&&tot>=100});
