@@ -691,8 +691,8 @@ if(d.t==='mdemo'){
     const avg=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
     const avgC=`rgb(${avg[0]},${avg[1]},${avg[2]})`;
     el.innerHTML=`<style>@keyframes rtspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}</style>
-      <div style="font-size:52px">👩‍🎨</div>
-      <div class="q" style="font-size:27px">점묘 화가 티티의 비밀</div>
+      <div><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #8b857a;box-shadow:0 6px 18px rgba(0,0,0,.25)"><div style="font-size:15px;font-weight:800;color:#6b7683;margin-top:4px">점묘 화가 시냐크</div></div>
+      <div class="q" style="font-size:27px">점묘 화가 시냐크의 비밀</div>
       <div class="dial" style="font-size:19px;line-height:1.6">"난 뭉크와 달리 <b>물감을 섞지 않아!</b> 순색 <b>점만 콕콕</b> 찍지.<br><b>멀리서 보면</b> 점들이 눈에서 섞여 <b>하나의 색</b>으로 보인단다!"</div>
       <div style="display:flex;gap:30px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
         <div>
@@ -725,8 +725,8 @@ if(d.t==='mdemo'){
       </div>
       <div style="margin-top:10px"><button class="btn pri" onclick="next()">신기해요! 다음 →</button></div>`;
     const w=$('#dotWrap');
-    $('#farB').onclick=()=>{w.style.filter='blur(9px)';w.style.transform='scale(.34)';$('#farOv').style.opacity='.92';
-      $('#dotMsg').innerHTML='정말 <b>주황</b>으로 보여요! 뭉크의 노을빛 주황처럼요.';plog('dot_far',{});};
+    $('#farB').onclick=()=>{w.style.filter='blur(6px)';w.style.transform='scale(.42)';$('#farOv').style.opacity='.5';
+      $('#dotMsg').innerHTML='빨강·노랑 점이 눈에서 어우러져 <b>주황빛</b>으로 보여요!';plog('dot_far',{});};
     $('#nearB').onclick=()=>{w.style.filter='none';w.style.transform='none';$('#farOv').style.opacity='0';
       $('#dotMsg').textContent='점이 빨강과 노랑으로 따로 보여요.';};
     let spin=false;
@@ -740,7 +740,7 @@ if(d.t==='mdemo'){
   if(d.t==='dot1'){
     const p1=PRIM['빨강'],p2=PRIM['노랑'];
     const avg21=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
-    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7">👩‍🎨 "네가 뭉크의 <b>노을빛 주황</b> 비(2 : 3)를 찾아냈다며?<br>이번엔 <b>점 5개</b>로 그 색을 만들어 줘! 빨강 점과 노랑 점을 <b>몇 개씩</b> 찍어야 할까?"</div>
+    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7"><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "네가 뭉크의 <b>노을빛 주황</b> 비(2 : 3)를 찾아냈다며?<br>이번엔 <b>점 5개</b>로 그 색을 만들어 줘! 빨강 점과 노랑 점을 <b>몇 개씩</b> 찍어야 할까?"</div>
       <div class="pair" style="margin:8px 0">
         <div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">목표 — 멀리서 본 노을빛 주황</div></div>
         <div><div id="dgrid">${Array.from({length:5},(_,i)=>`<span class="dcell" data-i="${i}" style="width:46px;height:46px;border-radius:50%;display:inline-block;margin:4px;border:3px dashed #b9b4a8;background:#fdfcf8;cursor:pointer;vertical-align:middle"></span>`).join('')}</div>
@@ -764,11 +764,11 @@ if(d.t==='mdemo'){
   if(d.t==='dot2'){
     const p1=PRIM['빨강'],p2=PRIM['노랑'];
     const avg21=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
-    el.innerHTML=`<div class="q">🧑‍🎨 물감 화가 vs 👩‍🎨 점묘 화가</div>
+    el.innerHTML=`<div class="q"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> 물감 화가 vs <img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> 점묘 화가</div>
       <div class="sub">두 화가의 방법을 비교하고, 알맞은 카드로 비밀을 완성하세요!</div>
       <div class="pair" style="margin:8px 0">
         <div><div class="csw" style="background:${rgb(mix({빨강:2,노랑:3}))}"></div><div class="bklab">뭉크 — 물감 빨강 20mL : 노랑 30mL</div></div>
-        <div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">티티 — 점 빨강 2개 : 노랑 3개</div></div>
+        <div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">시냐크 — 점 빨강 2개 : 노랑 3개</div></div>
       </div>
       <div class="eq" style="font-size:22px;line-height:2">
         <div class="row">물감 20 : 30도, 점 2 : 3도 — 간단히 하면 모두 <span class="dz" data-a="2"></span> : <span class="dz" data-a="3"></span>!</div>
