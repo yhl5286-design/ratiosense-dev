@@ -408,7 +408,7 @@ function toastFB(cls,t,s){try{
   d.innerHTML='<b>'+t+'</b>'+(s?'<div class="ts">'+s+'</div>':'');
   document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2600);
 }catch(e){}}
-function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,2000);}
+function success(t,s,after){plog('success',{slide:idx});fb('ok','✅ '+t,s||'','다음 →',after||next);}
 function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
 /* ── 튜브 ── */
 function tubeSVG(c){return `<svg viewBox="0 0 60 118"><rect x="20" y="2" width="20" height="15" rx="3" fill="#e9e6df" stroke="#b9b4a8" stroke-width="1.5"/><rect x="24" y="17" width="12" height="6" fill="#d8d4c9"/><path d="M14 27 L46 27 L50 108 Q50 114 44 114 L16 114 Q10 114 10 108 Z" fill="#fdfcf8" stroke="#b9b4a8" stroke-width="2"/><rect x="12" y="46" width="36" height="26" rx="4" fill="${rgb(PRIM[c])}"/><text x="30" y="98" text-anchor="middle" font-size="13" font-weight="800" fill="#6b7683">${c}</text></svg>`;}

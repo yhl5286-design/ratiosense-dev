@@ -568,7 +568,7 @@ function toastFB(cls,t,s){try{
   d.innerHTML='<b>'+t+'</b>'+(s?'<div class="ts">'+s+'</div>':'');
   document.body.appendChild(d);setTimeout(()=>{d.classList.add('out');setTimeout(()=>d.remove(),380);},2600);
 }catch(e){}}
-function success(t,s,after){plog('success',{slide:idx});toastFB('ok','✅ '+t,s);setTimeout(after||next,2000);}
+function success(t,s,after){plog('success',{slide:idx});fb('ok','✅ '+t,s||'','다음 →',after||next);}
 function retry(s){chime(false);plog('retry',{slide:idx});toastFB('help','🤔 다시 한번!',s);}
 function fx(s){return String(s).replace(/([0-9][0-9,]*)\/([0-9][0-9,]*)/g,'<span class="fr"><span>$1</span><span class="d">$2</span></span>');}
 function mountDrag(el,onAll){

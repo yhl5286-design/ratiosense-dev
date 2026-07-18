@@ -244,7 +244,7 @@ function wireStart(){
     if(a.dataset.r===next)a.classList.add('next-room');});
   const b=$('#startBtn');
   if(!next){b.textContent='🎊 모두 완주! 다시 탐험하기';
-    b.onclick=()=>{try{localStorage.removeItem(uk('rs3_done'));}catch(e){}location.href='color.html';};}
+    b.onclick=()=>{try{localStorage.removeItem(uk('rs3_done'));localStorage.removeItem(uk('rs3_cards'));}catch(e){}location.href='color.html';};}
   else if(dn.length){b.textContent='▶ 이어서 탐험! ('+({color:'🎨 색깔',ratio:'🖌️ 비율',sound:'🎼 소리',map:'🗺️ 지도',mart:'🛒 마트',eval:'📝 평가'})[next]+')';
     b.onclick=()=>{location.href=next+'.html';};}
   else{b.textContent='탐험 시작!';b.onclick=()=>{location.href='color.html';};}}
