@@ -370,6 +370,7 @@ function harpHTML(){
       :`<div class="hs ghost" style="height:${Math.round(it.L*3.6)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
   `</div></div>`;}
 
+const RATES={};
 const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harmx',ni:__i});DECK.push({t:'grp'},{t:'itv2'});
 
 DECK.push({t:'polyi'},{t:'poly'});
@@ -580,7 +581,7 @@ if(d.t==='harmx'){
     let stars=0;const feels=new Set();
     el.querySelectorAll('.st').forEach(s=>s.onclick=()=>{stars=+s.dataset.s;
       el.querySelectorAll('.st').forEach(x=>x.style.opacity=(+x.dataset.s<=stars)?'1':'.3');
-      plog('harmx_rate',{n:tn[0],stars});const q2=$('#q2');if(q2)q2.style.display='block';});
+      RATES[tn[0]]=stars;plog('harmx_rate',{n:tn[0],stars});const q2=$('#q2');if(q2)q2.style.display='block';});
     el.querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{const f=c.dataset.f;
       if(feels.has(f)){feels.delete(f);c.classList.remove('used');}else{feels.add(f);c.classList.add('used');}});
     $('#q2go').onclick=()=>{const txt=($('#feelT').value||'').trim();
@@ -631,39 +632,75 @@ if(d.t==='harmx'){
         retry('다시 들어 봐요 — 🥁 줄과 🔔 줄이 <b>둘 다 채워진 칸</b>은 어디인가요?');}});
     return;}
   if(d.t==='grp'){
-    const G=[
-      {no:'(1)',pairs:[0,3,4,7],label:'도와 도 · 도와 파 · 도와 솔 · 도와 도′'},
-      {no:'(2)',pairs:[2,5],label:'도와 미 · 도와 라'},
-      {no:'(3)',pairs:[1,6],label:'도와 레 · 도와 시'}];
-    d._heard=d._heard||[false,false,false];
-    el.innerHTML=`<div class="q" style="font-size:26px">어울렸던 음정끼리 <b>모아서 다시</b> 들어 봐요!</div>
-      <div class="sub">세 모음을 <b>(1)→(2)→(3) 순서대로</b> 들어 보고, 가장 듣기 좋았던 모음을 골라 주세요!</div>
-      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-        ${G.map((g,gi)=>`<div style="background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 16px;min-width:210px">
-          <div style="font-weight:800;font-size:20px">${g.no} 모음</div>
-          <div class="sub" style="font-size:15px;margin:4px 0">${g.label}</div>
-          <button class="btn pri gplay" data-g="${gi}" style="font-size:16px;padding:9px 14px">▶ 들어보기</button>
-          <div id="ghrd${gi}" style="font-size:14px;font-weight:800;color:#2e9e63;min-height:18px;margin-top:4px">${d._heard[gi]?'✔ 들었어요':''}</div>
-        </div>`).join('')}
-      </div>
-      <div id="gq" style="display:${d._heard.every(x=>x)?'block':'none'};margin-top:14px">
-        <div class="dial" style="font-size:20px">어떤 모음이 <b>가장 듣기 좋았나요?</b></div>
-        <div class="bank" style="margin-top:8px">${G.map((g,gi)=>`<span class="chip gpick" data-g="${gi}">${g.no} 모음</span>`).join('')}</div>
-      </div>`;
-    let playing=false;
-    el.querySelectorAll('.gplay').forEach(b=>b.onclick=()=>{if(playing)return;playing=true;
-      const gi=+b.dataset.g;plog('grp_listen',{g:gi+1});
-      b.textContent='🎵 재생 중…';
-      const ps=G[gi].pairs;
-      ps.forEach((ni,k)=>{setTimeout(()=>chord(264,NOTES[ni][1],1.0),k*1200);});
-      setTimeout(()=>{playing=false;b.textContent='▶ 들어보기';d._heard[gi]=true;
-        const h=$('#ghrd'+gi);if(h)h.textContent='✔ 들었어요';
-        if(d._heard.every(x=>x)){const q=$('#gq');if(q)q.style.display='block';}},ps.length*1200+200);});
-    const FB=['많은 사람들이 그렇게 느껴요! (1) 모음은 진동수 비가 <b>1:1, 3:4, 2:3, 1:2</b> — 가장 <b>간단한 비</b>라서 <b>완전음정</b>이라고 불러요!',
-      '좋은 귀예요! (2) 모음은 <b>4:5, 3:5</b> — 꽤 간단한 비라 부드럽게 어울려요. 많은 사람들은 비가 더 간단한 (1) 모음을 최고로 꼽는답니다.',
-      '독특한 귀를 가졌네요! (3) 모음은 <b>8:9, 8:15</b> — 큰 수의 비라서 대부분의 사람들에게는 조금 거칠게 들려요. (1) 모음과 한 번 더 비교해 들어 봐도 좋아요!'];
-    el.querySelectorAll('.gpick').forEach(c=>c.onclick=()=>{const gi=+c.dataset.g;plog('grp_pick',{g:gi+1});
-      success('내 귀의 선택: '+G[gi].no+' 모음!',FB[gi]+'<br>이제 <b>음정 표</b>로 정리해 봐요!');});
+    const NM=[1,2,3,4,5,6,7].map(i=>NOTES[i][0]);   // 레~도′
+    const RT={};NM.forEach(n=>{const i=NOTES.findIndex(x=>x[0]===n);RT[n]={f:NOTES[i][1],a:NOTES[i][3],b:NOTES[i][2]};});
+    function starStr(v){return '★'.repeat(v)+'☆'.repeat(5-v);}
+    function chipHTML(n,withRatio){const r=RT[n];
+      return `<span class="chip rchip" data-n="${n}" style="font-size:17px">${n} <span style="color:#e0a02a">${starStr(RATES[n]||0)}</span>${withRatio?` <span style="font-size:13px;color:#b3541e">(${r.a} : ${r.b})</span>`:''}</span>`;}
+    function wireListen(){el.querySelectorAll('.rchip').forEach(c=>c.onclick=()=>{const n=c.dataset.n;chord(264,RT[n].f,1.0);plog('rooms_listen',{n});});}
+    function rooms(){const hi=NM.filter(n=>(RATES[n]||0)>=4),md=NM.filter(n=>RATES[n]===3),lo=NM.filter(n=>(RATES[n]||0)>=1&&(RATES[n]||0)<=2);return {hi,md,lo};}
+    function roomBox(t,arr,withRatio){return `<div style="background:#fff;border:3px solid var(--line);border-radius:14px;padding:10px 14px;min-width:190px">
+      <div style="font-weight:800;font-size:18px">${t}</div>
+      <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center">${arr.length?arr.map(n=>chipHTML(n,withRatio)).join(''):'<span class="sub" style="font-size:14px">(없음)</span>'}</div></div>`;}
+    function stage1(){
+      const miss=NM.filter(n=>!RATES[n]);
+      if(miss.length){
+        el.innerHTML=`<div class="q" style="font-size:24px">잠깐! 아직 별점을 안 준 음이 있어요</div>
+          <div class="sub">각 음을 눌러 도와 함께 들어 보고, 별점을 매겨 주세요! (정답은 없어요 — 내 귀가 기준!)</div>
+          <div style="max-width:560px;margin:10px auto;text-align:left">${miss.map(n=>`
+            <div style="background:#fff;border:3px solid var(--line);border-radius:12px;padding:8px 14px;margin:6px 0;display:flex;align-items:center;gap:10px">
+              <button class="btn pri mrl" data-n="${n}" style="font-size:15px;padding:7px 12px">▶ 도+${n}</button>
+              <span style="font-size:24px;letter-spacing:4px;color:#e0a02a" class="mrs" data-n="${n}">${[1,2,3,4,5].map(v=>`<span class="ms" data-n="${n}" data-v="${v}" style="opacity:.3;cursor:pointer">★</span>`).join('')}</span>
+            </div>`).join('')}</div>`;
+        el.querySelectorAll('.mrl').forEach(b=>b.onclick=()=>{const n=b.dataset.n;chord(264,RT[n].f,1.0);});
+        el.querySelectorAll('.ms').forEach(st=>st.onclick=()=>{const n=st.dataset.n,v=+st.dataset.v;
+          RATES[n]=v;plog('harmx_rate',{n,stars:v,late:1});
+          el.querySelectorAll('.ms[data-n="'+n+'"]').forEach(x=>x.style.opacity=(+x.dataset.v<=v)?'1':'.3');
+          if(NM.every(x=>RATES[x]))setTimeout(stage1,600);});
+        return;}
+      el.innerHTML=`<div class="q" style="font-size:24px">내가 매긴 별점을 모아 봤어요!</div>
+        <div style="max-width:620px;margin:8px auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${NM.map(n=>chipHTML(n,false)).join('')}</div>
+        <div class="dial" style="font-size:20px;line-height:1.7;max-width:760px;margin:10px auto">🤔 별을 <b>비슷하게 준 음들끼리</b> 모아 보면,<br>같은 방에 <b>어떤 음들</b>이 모이게 될까요?</div>
+        <div style="margin-top:8px"><button class="btn pri" id="buildB">⭐ 내 별점으로 방 만들기!</button></div>`;
+      wireListen();
+      $('#buildB').onclick=()=>{plog('rooms_build',{r:RATES});stage2();};}
+    function stage2(){
+      const {hi,md,lo}=rooms();
+      el.innerHTML=`<div class="q" style="font-size:24px">별점이 <b>방</b>을 만들었어요!</div>
+        <div class="sub">내 별점대로 음들이 모였어요. 음을 누르면 다시 들어볼 수 있어요!</div>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+          ${roomBox('⭐ 높은 방 (4~5점)',hi,false)}
+          ${roomBox('🙂 보통 방 (3점)',md,false)}
+          ${roomBox('😖 낮은 방 (1~2점)',lo,false)}
+        </div>
+        <div class="dial" style="font-size:20px;line-height:1.7;max-width:780px;margin:12px auto">🔍 <b>가장 높은 별을 받은 방</b>의 음들에는 어떤 <b>공통점</b>이 있을까요?</div>
+        <div class="bank" style="margin-top:6px">
+          <span class="chip cq" data-k="ratio">도와 진동수의 비가 <b>간단한 수</b>다</span>
+          <span class="chip cq" data-k="high">모두 <b>높은 음</b>이다</span>
+          <span class="chip cq" data-k="far">건반에서 도와 <b>멀리</b> 있다</span>
+        </div>`;
+      wireListen();
+      el.querySelectorAll('.cq').forEach(c=>c.onclick=()=>{const k=c.dataset.k;plog('rooms_common',{pick:k});
+        if(k==='ratio'){chime(true);stage3();}
+        else if(k==='high'){retry('도′(높음)도 레(낮음)도 있는지 확인해 봐요 — 음의 높이만으로는 설명이 안 돼요!');}
+        else{retry('파와 솔은 도에서 멀지 않은데도 잘 어울려요 — 거리로는 설명이 안 돼요!');}});}
+    function stage3(){
+      const {hi,md,lo}=rooms();
+      el.innerHTML=`<div class="q" style="font-size:23px">✅ 발견! <b>비가 간단할수록 잘 어울려요</b></div>
+        <div class="sub">이제 각 음의 <b>진동수 비</b>를 열어 봤어요 — 내 방과 비교해 보세요!</div>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+          ${roomBox('⭐ 높은 방',hi,true)}
+          ${roomBox('🙂 보통 방',md,true)}
+          ${roomBox('😖 낮은 방',lo,true)}
+        </div>
+        <div style="max-width:720px;margin:12px auto 0;background:#fbf6e8;border:2px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:15.5px;font-weight:700;line-height:1.7;text-align:left">
+          🎼 <b>실제 음악에서는 이렇게 묶어요</b> — 완전음정: 파(3:4)·솔(2:3)·도′(1:2) / 잘 어울리는 음정: 미(4:5)·라(3:5) / 거친 음정: 레(8:9)·시(8:15)<br>
+          내 방과 비슷한가요, 다른가요? <b>사람마다 조금씩 다를 수 있어요</b> — 그것도 소중한 내 귀의 감각!
+        </div>
+        <div style="margin-top:10px"><button class="btn pri" id="cmpB">음정 표로 정리하기 →</button></div>`;
+      wireListen();
+      $('#cmpB').onclick=()=>{plog('rooms_compare',{});next();};}
+    stage1();
     return;}
   if(d.t==='itv2'){
     el.innerHTML=`<div class="q"><b>음정 표 완성!</b> — 도부터 도′까지 다 들어봤어요!</div>
