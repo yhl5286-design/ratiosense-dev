@@ -743,6 +743,16 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
         </div>
       </div>
       <div style="margin-top:8px"><button class="btn pri" id="run">🖌️ 벽화 물감 완성!</button> <button class="btn ghost" id="clr">비우기</button></div>
+      <div id="mres" style="display:none;margin:10px auto 0">
+        <div style="display:inline-block">
+          <div style="width:120px;height:170px;border:4px solid #8b857a;border-top:2px dashed #b9b4a8;border-radius:0 0 16px 16px;position:relative;background:#fdfcf8;overflow:hidden;margin:0 auto">
+            <div id="mresF" style="position:absolute;bottom:0;left:0;width:100%;height:0%;background:${rgb(tgt)};transition:height 1.4s"></div>
+            <div style="position:absolute;left:2px;bottom:calc(50% - 1px);width:10px;border-top:2px solid #b9b4a8"></div>
+            <div style="position:absolute;left:4px;bottom:calc(50% + 3px);font-size:11px;font-weight:800;color:#8b857a">100</div>
+          </div>
+          <div id="mresL" style="font-size:18px;font-weight:800;margin-top:6px"></div>
+        </div>
+      </div>
       <div id="wall" style="display:none;width:min(560px,90vw);height:100px;border:4px solid #8b857a;border-radius:10px;margin:10px auto 0;background:#eee;overflow:hidden"><div id="wallF" style="width:0%;height:100%;background:${rgb(tgt)};transition:width 1.6s"></div></div>`;
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
@@ -757,8 +767,12 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       const okR=a*EXPR[1]===b*EXPR[0];plog('mural',{a,b,ok:okR&&tot>=100});
       if(!okR){retry('색이 목표와 달라요 — 수첩의 비 <b>2 : 3</b>을 지키고 있나요?');return;}
       if(tot<100){retry('색은 완벽해요! 그런데 벽화엔 부족해요 — <b>전체 100mL가 넘도록</b> 같은 비로 더 많이!');return;}
-      chime(true);const w=$('#wall');if(w){w.style.display='block';setTimeout(()=>{const f=$('#wallF');if(f)f.style.width='100%';},60);}
-      setTimeout(()=>success('벽화 완성! 🖼️',`빨강 <b>${a}</b> : 노랑 <b>${b}</b> — 양을 늘려도 <b>2 : 3</b>이면 똑같은 노을빛!<br>이게 바로 비의 힘이에요!`),1400);};
+      chime(true);
+      const mres=$('#mres');if(mres){mres.style.display='block';
+        $('#mresL').innerHTML='🧪 노을빛 주황 <b>'+tot+'mL</b> 완성!';
+        setTimeout(()=>{const f=$('#mresF');if(f)f.style.height=Math.min(100,tot/200*100)+'%';},60);}
+      const w=$('#wall');if(w){w.style.display='block';setTimeout(()=>{const f=$('#wallF');if(f)f.style.width='100%';},60);}
+      setTimeout(()=>success('벽화 물감 완성! 🖼️',`빨강 <b>${a}</b>mL + 노랑 <b>${b}</b>mL = 모두 <b>${tot}mL</b>!<br>${a} : ${b} = <b>2 : 3</b> — 양을 늘려도 비가 같으면 똑같은 노을빛이에요!`),2000);};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
   if(d.t==='st5'){
     const g=gcd(EXPR[0],EXPR[1]),r0=EXPR[0]/g,r1=EXPR[1]/g;
