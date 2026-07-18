@@ -826,14 +826,10 @@ if(d.t==='sintro'){
     return;}
   if(d.t==='done'){
         confetti();clap();
-    el.innerHTML=`<div class="q">🎉 모든 탐험 완성!</div>
-    <div style="display:inline-block;background:#3b2f24;padding:14px;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.35)">
-      <img src="scream.jpg?v=2" alt="뭉크가 완성한 그림" id="fimg" style="max-width:min(260px,75vw);display:block;border-radius:2px;opacity:0;transition:opacity 1.8s">
-    </div>
-    <div class="dial" style="margin-top:12px;font-size:20px;line-height:1.7;max-width:780px"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "연구원, 드디어 <b>모든 탐험을 완성</b>했구나!<br>네가 찾아 준 <b>비의 비밀</b> 덕분에 잃어버린 노을빛 주황을 되찾고, 이 그림도 완성할 수 있었어.<br>색도, 소리도, 지도도, 마트도 — 세상 어디에나 <b>비</b>가 숨어 있다는 걸 이제 너도 알겠지?<br><b>정말 고마워, 나의 색깔 연구원!</b> 🎨"</div>
-    <div class="sub" style="margin-top:8px">일곱 문제를 전부 통과했어요 — 이제 진짜 <b>비 감각의 달인</b>!</div>
+    el.innerHTML=`<div><span class="stampb" style="font-size:64px">📝</span></div>
+    <div class="q">평가를 모두 마쳤어요! 참 잘했어요!</div>
+    <div class="sub">문제를 전부 통과했어요 — 이제 진짜 <b>비 감각의 달인</b>!</div>
     <button class="btn pri" id="go2">탐험 지도로 돌아가기 →</button>`;
-    setTimeout(()=>{const f=$('#fimg');if(f)f.style.opacity='1';},80);
     $('#go2').onclick=()=>{plog('complete',{});markDone('eval');chime(true);location.href='index.html?escape=1';};
     return;}
 }
