@@ -571,12 +571,13 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       s0a:{say:'"그렇지? 그럼 확인해 보자. 빨강을 <b>둘 다 20mL</b> 넣은 비커 두 개야!"'+demo1+'"어?! 빨강이 <b>똑같이 20mL</b>인데… <b>색이 완전히 다르잖아?</b> 내 생각이 틀렸나 봐…"',
           ch:[['노랑의 양에 따라 색이 달라지네!','end']]},
       s0b:{say:'"음? 왜 부족하다는 거야?"',
-          ch:[['노랑을 얼마나 넣는지도 알아야 해','s0c'],['빨강 양이 같아도 색이 다를 수 있어','s0c']]},
+          ch:[['섞는 순서도 알아야 하니까','no'],['노랑을 얼마나 넣는지도 알아야 하니까','s0c']]},
       s0c:{say:'"정말? 확인해 보자. 빨강을 <b>둘 다 20mL</b> 넣은 비커 두 개야!"'+demo1+'"우와, 네 말이 맞았어! 빨강이 같아도 <b>노랑이 다르면 색이 달라</b>지는구나!"',
           ch:[['그러니까 두 물감 모두 봐야 해!','end']]}};
     let curK=null;const hist=[];
     window._slideBack=()=>{if(hist.length){show(hist.pop(),true);return true;}return false;};
     function show(k,isBack){
+      if(k==='no'){retry('아까 함께 확인했잖아요 — 물감은 다 섞이면 <b>순서와 상관없이</b> 똑같아져요! 다른 이유를 생각해 봐요.');return;}
       if(k==='end'){chime(true);success('밝혀졌다!','<b>빨강만으로는 부족해</b> — 두 물감의 양을 <b>모두</b> 알아야 해요!');return;}
       if(!isBack&&curK)hist.push(curK);
       curK=k;plog('exp_peer',{step:'d3_'+k});
