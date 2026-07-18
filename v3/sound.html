@@ -376,7 +376,7 @@ const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harm
 DECK.push({t:'polyi'},{t:'poly'});
 DECK.push({t:'strlen'});
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
-DECK.push({t:'ssum',i:0},{t:'ssum',i:1},{t:'ssum',i:2},{t:'ssum',i:3},{t:'done'});
+DECK.push({t:'ssum',i:0},{t:'done'});
 let idx=0,w1env=0,f1=264,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
 const GOAL_OPEN={};
 function goalHTML(no,parts){
@@ -802,9 +802,9 @@ if(d.t==='chord'){
     const s=S3[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
-    el.innerHTML=`<div class="q">${['첫','두','세','네'][d.i]} 번째 소리의 비밀</div>
+    el.innerHTML=`<div class="q">소리의 비밀</div>
     <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
-    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">비밀 카드 문제</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['sound'+d.i]);
       const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
@@ -812,13 +812,13 @@ if(d.t==='chord'){
       cardWin(el,null,()=>next());});
     return;}
   if(d.t==='done'){hDone=7;
-    const _need=['sound0','sound1','sound2','sound3'];let _have=[];
+    const _need=['sound0'];let _have=[];
     try{_have=JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]');}catch(e){}
     const _got=_need.filter(c=>_have.includes(c)).length;
-    if(_got<4){
+    if(_got<1){
       el.innerHTML=`<div style="font-size:64px">\uD83D\uDD12</div>
       <div class="q">아직 탈출할 수 없어요!</div>
-      <div class="sub">이 방의 비밀카드를 <b>${_got} / 4</b>장 모았어요.<br>비밀카드 문제 4개를 <b>모두 맞혀야</b> 이 방을 탈출하고 비밀번호 숫자를 얻을 수 있어요!</div>
+      <div class="sub">아직 이 방의 <b>비밀카드 문제</b>를 풀지 않았어요.<br>비밀카드 문제를 <b>맞혀야</b> 이 방을 탈출하고 비밀번호 숫자를 얻을 수 있어요!</div>
       <button class="btn pri" id="goSum">비밀카드 문제 풀러 가기 →</button>`;
       const _b=$('#goSum');if(_b)_b.onclick=()=>{const si=DECK.findIndex(x=>x.t==='ssum');if(si>=0)idx=si;render();};
       return;}

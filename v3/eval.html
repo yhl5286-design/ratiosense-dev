@@ -391,7 +391,7 @@ const R3=[
  {base:'빨강',comp:'노랑',bm:100,cm:200,res:'2'},
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,1];const EXP={hypo:null,found:[],log:[]};
-let DECK=[{t:'title'},{t:'sense',fi:0,k:0,n:1},{t:'sense',fi:1,k:0,n:2},{t:'sense',fi:1,k:1,n:3},{t:'sense',fi:2,k:0,n:4},{t:'sense',fi:2,k:1,n:5},{t:'sense',fi:3,k:0,n:6},{t:'sense',fi:3,k:1,n:7},{t:'done'}];
+let DECK=[{t:'title'},{t:'sense',fi:0,k:0,n:1},{t:'sense',fi:1,k:0,n:2},{t:'sense',fi:1,k:1,n:3},{t:'sense',fi:2,k:0,n:4},{t:'sense',fi:2,k:1,n:5},{t:'sense',fi:3,k:0,n:6},{t:'sense',fi:3,k:1,n:7},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'}];
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -482,7 +482,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='title'){
     el.innerHTML=`<div style="font-size:90px">📝</div>
       <div class="q">평가의 방 — 배운 실력을 확인해요!</div>
-      <div class="sub">색 만들기 문제 <b>7개</b>를 풀어 보세요. 목표 비대로 물감을 섞으면 통과!</div>
+      <div class="sub">문제 <b>10개</b>를 풀어 보세요. 모두 맞히면 통과!</div>
       <button class="btn pri" onclick="next()">평가 시작! →</button>`;return;}
   if(d.t==='sense'){
     S.amt={};
@@ -815,14 +815,12 @@ if(d.t==='sintro'){
     const s=S4[d.i];
     const cards=s.a.concat(s.x).sort(()=>Math.random()-.5);
     let h='';s.t.forEach((seg,j)=>{h+=fx(seg);if(j<s.a.length)h+=`<span class="dz" data-a="${s.a[j]}"></span>`;});
-    el.innerHTML=`<div class="q">${['첫','두','세','네'][d.i]} 번째 색깔의 비밀</div>
-    <div class="sub">낱말 카드를 <b>카드 속 빈칸</b>에 끌어다 놓아(또는 눌러서) 비밀 카드를 완성하세요!</div>
-    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">비밀 카드 문제 ${d.i+1} / 4</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
+    el.innerHTML=`<div class="q">문제 ${d.i+7}</div>
+    <div class="sub">낱말 카드를 <b>빈칸</b>에 끌어다 놓아(또는 눌러서) 문장을 완성하세요!</div>
+    <div class="gcard"><div class="gc-in"><div class="gc-art">${TRE_SVG}</div><div class="gc-name">문장 완성 문제</div><div class="gc-txt"><div class="row">${h}</div></div></div></div>
     <div class="bank">${cards.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('summary',{no:d.i+1,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});addCards(['color'+d.i]);
-      const full=s.t.map((seg,j)=>seg+(j<s.a.length?`『${s.a[j]}』`:'')).join('');
-      const tot=(()=>{try{return JSON.parse(localStorage.getItem(ukey('rs3_cards'))||'[]').length;}catch(e){return 0;}})();
-      cardWin(el,null,()=>next());});
+    mountDrag(el,()=>{plog('summary',{no:d.i+7,a:[...el.querySelectorAll('.dz')].map(z=>z.textContent)});
+      success('통과!','문장을 완성했어요! 다음으로 가요!');});
     return;}
   if(d.t==='done'){
         confetti();clap();
