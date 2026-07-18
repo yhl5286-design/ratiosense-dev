@@ -390,7 +390,7 @@ const R3=[
  {base:'빨강',comp:'노랑',bm:100,cm:200,res:'2'},
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,3];const EXP={hypo:null,found:[],log:[]};
-function rogHTML(t){return `<div style="font-size:48px">🤖 <span style="font-size:22px;color:#6b7683">동료 연구원 로기</span></div><div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">${t}</div>`;}
+function rogHTML(t){return `<div style="font-size:48px">🤖 <span style="font-size:22px;color:#6b7683">비와 비율 학습 도우미 레시오</span></div><div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">${t}</div>`;}
 let DECK=[{t:'title'},{t:'st0'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'e1'},{t:'e2'},{t:'e3'},{t:'mural'},{t:'st5'}];
 DECK.push({t:'qintro'});
 MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
@@ -539,27 +539,27 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       else{plog('exp_start',{});next();}};
     return;}
   if(d.t==='d1'){
-    el.innerHTML=rogHTML('"연구원! 실험을 시작하기 전에 <b>네 생각</b>부터 듣고 싶어.<br>뭉크의 색을 다시 만들려면 <b>무엇을 알아내야</b> 할까? 자유롭게 적어 줘!"')+
+    el.innerHTML=rogHTML('"연구원님! 실험을 시작하기 전에 <b>연구원님의 생각</b>부터 듣고 싶어요.<br>뭉크의 색을 다시 만들려면 <b>무엇을 알아내야</b> 할까요? 자유롭게 적어 주세요!"')+
       `<textarea id="ideaT" placeholder="예) 물감을 얼마나 넣는지 알아야 할 것 같아요" style="width:min(560px,90vw);height:88px;font-size:19px;font-family:inherit;border:3px solid var(--line);border-radius:12px;padding:10px;resize:none"></textarea>
       <div style="margin-top:10px"><button class="btn pri" id="ideaGo">내 생각 제출!</button> <button class="btn ghost" id="ideaSkip">아직 잘 모르겠어요</button></div>`;
     $('#ideaGo').onclick=()=>{const v=($('#ideaT').value||'').trim();
-      if(!v){retry('한 줄이라도 좋아요 — 네 생각을 적어 봐요!');return;}
+      if(!v){retry('한 줄이라도 좋아요 — 연구원님의 생각을 적어 봐요!');return;}
       plog('exp_idea',{text:v.slice(0,200)});chime(true);
-      success('💡 좋은 생각이 접수됐어!','이제 로기와 하나씩 확인해 봐요!');};
+      success('💡 좋은 생각이 접수됐어요!','이제 레시오와 하나씩 확인해 봐요!');};
     $('#ideaSkip').onclick=()=>{plog('exp_idea',{text:''});next();};
     return;}
   if(d.t==='d2'){
     const M=[
-     ['물감의 종류','종류는 이미 알아 — 빨강과 노랑! 그런데 종류가 같으면 언제나 같은 색일까? 다른 것도 살펴보자.',0],
-     ['섞는 순서','물감은 다 섞이고 나면 순서와 상관없이 똑같아져. 순서는 아니야!',0],
-     ['붓의 크기','붓은 칠할 때 이야기지, 색을 만들 때는 상관없어!',0],
+     ['물감의 종류','종류는 이미 알고 있어요 — 빨강과 노랑! 그런데 종류가 같으면 언제나 같은 색일까요? 다른 것도 살펴봐요.',0],
+     ['섞는 순서','물감은 다 섞이고 나면 순서와 상관없이 똑같아져요. 순서는 아니에요!',0],
+     ['붓의 크기','붓은 칠할 때 이야기죠. 색을 만들 때는 상관없어요!',0],
      ['각 물감의 양',null,1]];
-    el.innerHTML=rogHTML('"하나씩 차근차근 따져 보자.<br>이 색을 결정하는 데 <b>영향을 주는 것</b>은 뭘까? 아닌 것 같은 것도 눌러서 확인해 봐!"')+
+    el.innerHTML=rogHTML('"하나씩 차근차근 따져 봐요.<br>이 색을 결정하는 데 <b>영향을 주는 것</b>은 무엇일까요? 아닌 것 같은 것도 눌러서 확인해 보세요!"')+
       `<div class="bank" style="margin-top:12px">${M.map((m,i)=>`<span class="chip" data-i="${i}">${m[0]}</span>`).join('')}</div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const m=M[+c.dataset.i];
       plog('exp_pick',{step:'d2',pick:m[0]});
-      if(m[2]){chime(true);c.classList.add('used');success('✅ 각 물감의 양!','색을 결정하는 열쇠를 찾았어!');}
-      else{c.classList.add('used');toastFB('help','🤖 로기',m[1]);}});
+      if(m[2]){chime(true);c.classList.add('used');success('✅ 각 물감의 양!','색을 결정하는 열쇠를 찾았어요!');}
+      else{c.classList.add('used');toastFB('help','🤖 레시오',m[1]);}});
     return;}
   if(d.t==='d3'){
     const demo1=`<div class="pair" style="margin:10px 0">
@@ -567,21 +567,21 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
         <div><div class="bk" style="height:110px"><div class="fill" style="height:60%;background:${rgb(mix({빨강:20,노랑:60}))}"></div></div><div class="bklab">빨강 20 : 노랑 60</div></div>
       </div>`;
     const SUB={
-      s0:{say:'"그럼 내가 계산해 봤는데, 간단해!<br>화가 아저씨가 <b>빨강을 몇 mL</b> 넣었는지만 알아내면 끝이야!"',
+      s0:{say:'"제가 계산해 봤는데요, 간단해요!<br>화가님이 <b>빨강을 몇 mL</b> 넣었는지만 알아내면 끝이에요!"',
           ch:[['그래, 그거면 충분해!','s0a'],['아니야, 그것만으론 부족해!','s0b']]},
-      s0a:{demo:1,say:'"그렇지? 그럼 직접 실험해 보자! 여기 <b>빨강 20mL</b>씩 담긴 비커 두 개가 있어.<br>노랑을 <b>서로 다르게</b> 부어 봐!"',
-          after:'"어?! 빨강이 <b>똑같이 20mL</b>인데… <b>색이 완전히 다르잖아?</b> 내 생각이 틀렸나 봐…"',
+      s0a:{demo:1,say:'"그렇죠? 그럼 직접 실험해 봐요! 여기 <b>빨강 20mL</b>씩 담긴 비커 두 개가 있어요.<br>노랑을 <b>서로 다르게</b> 부어 보세요!"',
+          after:'"어?! 빨강이 <b>똑같이 20mL</b>인데… <b>색이 완전히 다르네요?</b> 제 생각이 틀렸나 봐요…"',
           ch:[['노랑의 양에 따라 색이 달라지네!','end']]},
-      s0b:{say:'"음? 왜 부족하다는 거야?"',
+      s0b:{say:'"네? 왜 부족하다는 건가요?"',
           ch:[['섞는 순서도 알아야 하니까','no'],['노랑을 얼마나 넣는지도 알아야 하니까','s0c']]},
-      s0c:{demo:1,say:'"정말? 그럼 직접 실험해 보자! 여기 <b>빨강 20mL</b>씩 담긴 비커 두 개가 있어.<br>노랑을 <b>서로 다르게</b> 부어 봐!"',
-          after:'"우와, 네 말이 맞았어! 빨강이 같아도 <b>노랑이 다르면 색이 달라</b>지는구나!"',
+      s0c:{demo:1,say:'"정말요? 그럼 직접 실험해 봐요! 여기 <b>빨강 20mL</b>씩 담긴 비커 두 개가 있어요.<br>노랑을 <b>서로 다르게</b> 부어 보세요!"',
+          after:'"우와, 연구원님 말이 맞았어요! 빨강이 같아도 <b>노랑이 다르면 색이 달라</b>지는군요!"',
           ch:[['그러니까 두 물감 모두 봐야 해!','end']]}};
     let curK=null;const hist=[];
     window._slideBack=()=>{if(hist.length){show(hist.pop(),true);return true;}return false;};
     function show(k,isBack){
       if(k==='no'){retry('아까 함께 확인했잖아요 — 물감은 다 섞이면 <b>순서와 상관없이</b> 똑같아져요! 다른 이유를 생각해 봐요.');return;}
-      if(k==='end'){chime(true);success('밝혀졌다!','<b>빨강만으로는 부족해</b> — 두 물감의 양을 <b>모두</b> 알아야 해요!');return;}
+      if(k==='end'){chime(true);success('밝혀졌어요!','<b>빨강만으로는 부족해</b> — 두 물감의 양을 <b>모두</b> 알아야 해요!');return;}
       if(!isBack&&curK)hist.push(curK);
       curK=k;plog('exp_peer',{step:'d3_'+k});
       const s=SUB[k];
@@ -603,15 +603,15 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     show('s0');
     return;}
   if(d.t==='d4'){
-    el.innerHTML=rogHTML('"결론! <b>빨강과 노랑을 각각 얼마나 넣는지</b>가 이 색의 열쇠야.<br>그런데 얼마나 넣어야 뭉크의 색이 될까?<br>그건 말로는 알 수 없어 —<br><b>실험</b>으로 알아내자, 연구원!"')+
+    el.innerHTML=rogHTML('"결론! <b>빨강과 노랑을 각각 얼마나 넣는지</b>가 이 색의 열쇠예요.<br>그런데 얼마나 넣어야 뭉크의 색이 될까요?<br>그건 말로는 알 수 없어요 —<br><b>실험</b>으로 알아내 봐요, 연구원님!"')+
       `<div class="bank" style="margin-top:12px"><span class="chip" id="goExp">좋아, 실험하러 가자! 🧪</span></div>`;
     $('#goExp').onclick=()=>{plog('exp_peer',{step:'d4_go'});chime(true);
-      success('연구 계획 완성! 🕵️','알아낼 것: <b>빨강과 노랑을 각각 얼마나 넣는지!</b><br>무작정 붓지 말고 — 실험 전에 <b>가설</b>부터 세우자!');};
+      success('연구 계획 완성! 🕵️','알아낼 것: <b>빨강과 노랑을 각각 얼마나 넣는지!</b><br>무작정 붓지 말고 — 실험 전에 <b>가설</b>부터 세워 봐요!');};
     return;}
 
   if(d.t==='e1'){
     const f0=EXP.found[0]||[20,30];
-    el.innerHTML=rogHTML(`"실험 대성공! 그럼 이제 수첩에 <b>「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」</b>라고 적어 두면 완벽하지?"`)+
+    el.innerHTML=rogHTML(`"실험 대성공! 그럼 이제 수첩에 <b>「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」</b>라고 적어 두면 완벽하겠죠?"`)+
       `<div class="bank" style="margin-top:12px"><span class="chip" data-n="a">좋아, 그렇게 적자!</span><span class="chip" data-n="b">잠깐! 다른 양으로도 됐잖아?</span></div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{plog('exp_peer',{step:'e1_'+c.dataset.n});chime(true);
       success('음, 잠깐만…','다른 양으로도 같은 색이 됐었죠 — 숫자 하나로는 못 적겠어요!');});
@@ -619,29 +619,29 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='e2'){
     const f0=EXP.found[0]||[20,30],f1=EXP.found[1]||[40,60];
     const M=[
-     ['두 양의 합',`확인! ${f0[0]}+${f0[1]}=<b>${f0[0]+f0[1]}</b>인데 ${f1[0]}+${f1[1]}=<b>${f1[0]+f1[1]}</b>… 합은 달라졌는데 색은 같아! 합은 아니야.`,0],
-     ['두 양의 차',`확인! ${f0[0]}−${f0[1]}=<b>${f0[0]-f0[1]}</b>인데 ${f1[0]}−${f1[1]}=<b>${f1[0]-f1[1]}</b>… 차이도 달라졌는데 색은 같잖아?! 차이로는 설명이 안 돼!`,0],
+     ['두 양의 합',`확인! ${f0[0]}+${f0[1]}=<b>${f0[0]+f0[1]}</b>인데 ${f1[0]}+${f1[1]}=<b>${f1[0]+f1[1]}</b>… 합은 달라졌는데 색은 같아요! 합은 아니에요.`,0],
+     ['두 양의 차',`확인! ${f0[0]}−${f0[1]}=<b>${f0[0]-f0[1]}</b>인데 ${f1[0]}−${f1[1]}=<b>${f1[0]-f1[1]}</b>… 차이도 달라졌는데 색은 같네요?! 차이로는 설명이 안 돼요!`,0],
      ['한쪽이 다른 쪽의 몇 배인지',null,1]];
-    el.innerHTML=rogHTML(`"<b>빨강 ${f0[0]} : 노랑 ${f0[1]}</b>도, <b>빨강 ${f1[0]} : 노랑 ${f1[1]}</b>도 같은 색!<br>양이 달라도 같은 색이라면, 두 실험에는 <b>변하지 않는 무언가</b>가 숨어 있는 거야. 뭘까? 궁금한 것부터 눌러 확인해 봐!"`)+
+    el.innerHTML=rogHTML(`"<b>빨강 ${f0[0]} : 노랑 ${f0[1]}</b>도, <b>빨강 ${f1[0]} : 노랑 ${f1[1]}</b>도 같은 색!<br>양이 달라도 같은 색이라면, 두 실험에는 <b>변하지 않는 무언가</b>가 숨어 있는 거예요. 무엇일까요? 궁금한 것부터 눌러 확인해 보세요!"`)+
       `<div class="bank" style="margin-top:12px">${M.map((m,i)=>`<span class="chip" data-i="${i}">${m[0]}</span>`).join('')}</div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const m=M[+c.dataset.i];
       plog('exp_pick',{step:'e2',pick:m[0]});
-      if(m[2]){chime(true);c.classList.add('used');success('✅ 몇 배인지!','바로 그거야 — 확인해 보자!');}
-      else{c.classList.add('used');toastFB('help','🤖 로기',m[1]);}});
+      if(m[2]){chime(true);c.classList.add('used');success('✅ 몇 배인지!','바로 그거예요 — 확인해 봐요!');}
+      else{c.classList.add('used');toastFB('help','🤖 레시오',m[1]);}});
     return;}
   if(d.t==='e3'){
     const f0=EXP.found[0]||[20,30],f1=EXP.found[1]||[40,60];
-    el.innerHTML=rogHTML(`"빨강 ${f0[0]} : 노랑 ${f0[1]}을 간단히 하면 <b>2 : 3</b>, 빨강 ${f1[0]} : 노랑 ${f1[1]}도 간단히 하면 <b>2 : 3</b> — 언제나 똑같아!<br>중요한 건 양이 아니라 <b>몇 대 몇</b>, 즉 <b>비</b>였어! 수첩에는 뭐라고 적어야 할까?"`)+
+    el.innerHTML=rogHTML(`"빨강 ${f0[0]} : 노랑 ${f0[1]}을 간단히 하면 <b>2 : 3</b>, 빨강 ${f1[0]} : 노랑 ${f1[1]}도 간단히 하면 <b>2 : 3</b> — 언제나 똑같아요!<br>중요한 건 양이 아니라 <b>몇 대 몇</b>, 즉 <b>비</b>였네요! 수첩에는 뭐라고 적어야 할까요?"`)+
       `<div class="bank" style="margin-top:12px"><span class="chip" data-n="bad">「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」라고 적자</span><span class="chip" data-n="win">「빨강 : 노랑 = 2 : 3」이라고 적자!</span></div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const n=c.dataset.n;plog('exp_peer',{step:'e3_'+n});
-      if(n==='win'){chime(true);success('비밀 노트 완성! 📔','수첩에 적었다: <b>빨강 : 노랑 = 2 : 3</b><br>양이 얼마든 이 <b>비</b>만 지키면 언제나 노을빛 주황!');}
+      if(n==='win'){chime(true);success('비밀 노트 완성! 📔','수첩에 적었어요: <b>빨강 : 노랑 = 2 : 3</b><br>양이 얼마든 이 <b>비</b>만 지키면 언제나 노을빛 주황!');}
       else retry('그 숫자만 적으면, 벽화처럼 많이 만들 때는 못 쓰잖아요!');});
     return;}
 
   if(d.t==='st2'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
-    el.innerHTML=`<div style="font-size:48px">🤖 <span style="font-size:22px;color:#6b7683">동료 연구원 로기</span></div>
-      <div class="dial" style="font-size:22px;line-height:1.7">"진짜 과학자는 실험 전에 <b>가설</b>을 세우지!<br>이 노을빛 주황… 빨강과 노랑의 비가 <b>얼마일 것 같아?</b>"</div>
+    el.innerHTML=`<div style="font-size:48px">🤖 <span style="font-size:22px;color:#6b7683">비와 비율 학습 도우미 레시오</span></div>
+      <div class="dial" style="font-size:22px;line-height:1.7">"진짜 과학자는 실험 전에 <b>가설</b>을 세운답니다!<br>이 노을빛 주황… 빨강과 노랑의 비가 <b>얼마일 것 같나요?</b>"</div>
       <div class="pair" style="margin:8px 0"><div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색</div></div></div>
       <div class="sub" style="margin-top:4px">💡 좋은 가설은 마음대로 찍는 게 아니라 <b>관찰에 근거</b>해요.<br>목표 색을 잘 보세요 — 빨강에 가까워 보이나요, 노랑에 가까워 보이나요?</div>
       <div class="bank" style="margin-top:12px">
@@ -688,7 +688,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     function buildHrv(){
       const failed=EXP.failed||[];
       const opts=[['1','1'],['2','1'],['2','3'],['1','2']].filter(h=>!failed.includes(h[0]+' : '+h[1]));
-      hvEl.innerHTML='<div style="font-weight:800;font-size:18px">🤖 "새 가설을 골라 보자! <span style=\'color:var(--sub);font-size:15px\'>(틀린 가설은 지웠어)</span>"</div><div class="bank" style="margin-top:6px">'+opts.map(h=>'<span class="chip hrv" data-h="'+h[0]+' : '+h[1]+'" style="font-size:16px">빨강 '+h[0]+' : 노랑 '+h[1]+'</span>').join('')+'</div>';
+      hvEl.innerHTML='<div style="font-weight:800;font-size:18px">🤖 "새 가설을 골라 보세요! <span style=\'color:var(--sub);font-size:15px\'>(틀린 가설은 지워 두었어요)</span>"</div><div class="bank" style="margin-top:6px">'+opts.map(h=>'<span class="chip hrv" data-h="'+h[0]+' : '+h[1]+'" style="font-size:16px">빨강 '+h[0]+' : 노랑 '+h[1]+'</span>').join('')+'</div>';
       hvEl.querySelectorAll('.hrv').forEach(c=>c.onclick=()=>{EXP.hypo=c.dataset.h;plog('exp_hypo_rev',{pick:EXP.hypo});
         const lb=$('#hypoLbl');if(lb)lb.innerHTML='빨강 '+EXP.hypo+' 노랑';
         hvEl.style.display='none';
@@ -721,7 +721,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       if(EXP.found.some(f=>f[0]+':'+f[1]===key)){retry('그 양은 <b>이미 실험</b>했어요 — 새로운 양으로 도전!');S.amt={};upd();return;}
       EXP.found.push([a,b]);board();
       if(EXP.found.length>=3){chime(true);
-        success('실험 대성공!',EXP.found.map(f=>`빨강 ${f[0]} : 노랑 ${f[1]}`).join(' , ')+'<br>서로 <b>다른 양</b>인데 전부 같은 색이라니… 로기가 뭔가 발견했대요!');}
+        success('실험 대성공!',EXP.found.map(f=>`빨강 ${f[0]} : 노랑 ${f[1]}`).join(' , ')+'<br>서로 <b>다른 양</b>인데 전부 같은 색이라니… 레시오가 뭔가 발견했대요!');}
       else{chime(true);toastFB('ok','✅ 성공!','좋아요! <b>또 다른 양</b>으로 한 번 더!');S.amt={};upd();}};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};board();upd();return;}
   if(d.t==='mural'){
@@ -891,8 +891,14 @@ if(d.t==='mdemo'){
     el.innerHTML=`<style>@keyframes rtspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}</style>
       <div><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #8b857a;box-shadow:0 6px 18px rgba(0,0,0,.25)"><div style="font-size:15px;font-weight:800;color:#6b7683;margin-top:4px">점묘 화가 시냐크</div></div>
       <div class="q" style="font-size:27px">점묘 화가 시냐크의 비밀</div>
-      <div class="dial" style="font-size:19px;line-height:1.6">"난 뭉크와 달리 <b>물감을 섞지 않아!</b> 순색 <b>점만 콕콕</b> 찍지.<br><b>멀리서 보면</b> 점들이 눈에서 섞여 <b>하나의 색</b>으로 보인단다!"</div>
+      <div class="dial" style="font-size:19px;line-height:1.6">"나는 <b>점을 찍어 색을 만드는</b> 화가 시냐크야. 지금 「<b>양산을 든 여인</b>」을 그리는 중인데… 보다시피 <b>주황색 부분이 텅 비었어!</b><br>나는 뭉크와 달리 물감을 섞지 않아 — 순색 <b>점만 콕콕</b> 찍지. 멀리서 보면 점들이 눈에서 섞여 <b>하나의 색</b>으로 보이거든!"</div>
       <div style="display:flex;gap:30px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
+        <div>
+          <div style="display:inline-block;background:#3b2f24;padding:10px;border-radius:6px;box-shadow:0 8px 22px rgba(0,0,0,.3)">
+            <img src="signac_incomplete.jpg" alt="양산을 든 여인 (미완성)" style="max-width:150px;display:block;border-radius:2px">
+          </div>
+          <div class="sub" style="font-size:14px;margin-top:5px">「양산을 든 여인」<br><b>주황이 빠진 미완성!</b></div>
+        </div>
         <div>
           <div style="position:relative;display:inline-block">
             <div id="dotWrap" style="background:#fff;border:3px solid var(--line);border-radius:14px;padding:14px;transition:filter .8s, transform .8s;width:180px">${dots}</div>
@@ -937,7 +943,7 @@ if(d.t==='mdemo'){
   if(d.t==='dot1'){
     const p1=PRIM['빨강'],p2=PRIM['노랑'];
     const avg21=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
-    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7"><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "네가 뭉크의 <b>노을빛 주황</b> 비(2 : 3)를 찾아냈다며?<br>이번엔 <b>점 5개</b>로 그 색을 만들어 줘! 빨강 점과 노랑 점을 <b>몇 개씩</b> 찍어야 할까?"</div>
+    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7"><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "네가 뭉크의 주황 비 <b>빨강 : 노랑 = 2 : 3</b>을 찾아냈다며? 내 그림의 주황도 <b>같은 비</b>야!<br>나는 물감 대신 <b>점의 개수</b>로 비를 만들어야 해 — <b>점 5개</b>로 만들어 줘! 빨강 점과 노랑 점을 몇 개씩 찍어야 할까?"</div>
       <div class="pair" style="margin:8px 0">
         <div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">목표 — 멀리서 본 노을빛 주황</div></div>
         <div><div id="dgrid">${Array.from({length:5},(_,i)=>`<span class="dcell" data-i="${i}" style="width:46px;height:46px;border-radius:50%;display:inline-block;margin:4px;border:3px dashed #b9b4a8;background:#fdfcf8;cursor:pointer;vertical-align:middle"></span>`).join('')}</div>
@@ -996,8 +1002,14 @@ if(d.t==='mdemo'){
         <div class="row">방법이 달라도 <span class="dz" data-a="비"></span>가 같으면 같은 색으로 보여요!</div>
       </div>
       <div class="bank">${['2','3','비','4','양'].sort(()=>Math.random()-.5).map(w=>`<span class="chip" data-w="${w}">${w}</span>`).join('')}</div>`;
-    mountDrag(el,()=>{plog('dot_transfer',{});
-      success('연속과 이산의 비밀 완성!','물감의 <b>양</b>도, 점의 <b>개수</b>도 — <b>비</b>가 같으면 같은 색!');});
+    mountDrag(el,()=>{plog('dot_transfer',{});confetti();chime(true);
+      el.innerHTML=`<div class="q">🖼️ 시냐크가 「양산을 든 여인」을 완성했어요!</div>
+        <div style="display:inline-block;background:#3b2f24;padding:14px;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.35)">
+          <img src="signac_painting.jpg" alt="양산을 든 여인 (완성)" id="simg" style="max-width:min(280px,78vw);display:block;border-radius:2px;opacity:0;transition:opacity 1.8s">
+        </div>
+        <div class="dial" style="margin-top:12px;font-size:20px;line-height:1.7;max-width:760px"><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "고마워, 연구원! 네 덕분에 <b>2 : 3</b>의 비로 주황 점을 콕콕 찍어 그림을 완성했어.<br>물감의 <b>양</b>이든 점의 <b>개수</b>든 — <b>비가 같으면 같은 색</b>이라는 걸 너와 함께 확인했구나!"</div>
+        <div style="margin-top:10px"><button class="btn pri" onclick="next()">색깔의 비밀 찾으러 가기! →</button></div>`;
+      setTimeout(()=>{const m=$('#simg');if(m)m.style.opacity='1';},80);});
     return;}
   if(d.t==='pintro'){
     el.innerHTML=`<div class="q"><b>점묘 화가와 색칠하며 비 익히기!</b></div><!--pintro-->
