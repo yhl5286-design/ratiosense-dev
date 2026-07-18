@@ -630,7 +630,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     show('b0');
     return;}
   if(d.t==='st2'){
-    el.innerHTML=`<div style="font-size:52px">🧑‍🎨</div>
+    el.innerHTML=`<div style="font-size:48px">🤖 <span style="font-size:22px;color:#6b7683">동료 연구원 로기</span></div>
       <div class="dial" style="font-size:22px;line-height:1.7">"진짜 과학자는 실험 전에 <b>가설</b>을 세우지!<br>이 노을빛 주황… 빨강과 노랑의 비가 <b>얼마일 것 같아?</b>"</div>
       <div class="bank" style="margin-top:14px">
         ${[['1','1'],['2','1'],['1','2'],['3','1']].map(h=>`<span class="chip" data-h="${h[0]} : ${h[1]}">빨강 ${h[0]} : 노랑 ${h[1]}</span>`).join('')}
