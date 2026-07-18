@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RatioSense v3 — 색깔의 비밀</title>
+<title>RatioSense v3 — 비율 학습방</title>
 <style>
   :root{--bg:#f4f1ea;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--red:#c0392b}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -235,7 +235,7 @@
 </head>
 <body>
 <div id="top"><a class="home" href="index.html">🏠 홈</a>
-  <div class="t">🎨 색깔의 비밀 <span style="color:#b3541e">v3</span></div>
+  <div class="t">🖌️ 비율 학습방 <span style="color:#b3541e">v3</span></div>
   <div id="pbar"><div id="pfill"></div></div>
   <div id="pnum">1 / 1</div>
   <div id="wal"><b id="walN">0</b>/16</div>
@@ -249,7 +249,7 @@
 const $=s=>document.querySelector(s);
 /* ── 로그: GAS 직접 전송 (v2와 같은 시트) ── */
 const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
-const LOG_TK='ratiosense-2026',LAB='colorV3';
+const LOG_TK='ratiosense-2026',LAB='ratioV3';
 let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
 function ukey(b){return b+':'+(RS3U||'anon');}
@@ -390,11 +390,7 @@ const R3=[
  {base:'빨강',comp:'노랑',bm:100,cm:200,res:'2'},
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,1];const EXP={hypo:null,found:[],log:[]};
-let DECK=[{t:'title'},{t:'st0'},{t:'st1'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'st5'}];
-DECK.push({t:'qintro'});
-MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
-R3.forEach((q,i)=>DECK.push({t:'rate',i}));
-DECK.push({t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
+let DECK=[{t:'title'},{t:'pintro'},{t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'done'}];
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -483,8 +479,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(QTYPES.includes(d.t)){const qn=DECK.slice(0,idx+1).filter(x=>QTYPES.includes(x.t)).length;
     setTimeout(()=>{const s=$('#slide');if(s&&!s.querySelector('.qzb'))s.insertAdjacentHTML('afterbegin',`<div class="qzb">Quiz ${qn}</div>`);},0);}S={amt:{}};
   if(d.t==='title'){
-    el.innerHTML=`<div style="font-size:90px">🎨</div>
-      <div class="q">색깔의 비밀을 찾아봅시다!</div>
+    el.innerHTML=`<div style="font-size:90px">🖌️</div>
+      <div class="q">비율 학습방 — 색칠하며 비율과 백분율을 배워요!</div>
       <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
   if(d.t==='sense'){
     S.amt={};
@@ -689,7 +685,7 @@ if(d.t==='mdemo'){
       <button class="btn pri" onclick="next()">퀴즈 시작! →</button>`;
     return;}
   if(d.t==='pintro'){
-    el.innerHTML=`<div class="q"><b>3단계 : 색칠하며 비 익히기!</b></div>
+    el.innerHTML=`<div class="q"><b>색칠하며 비 익히기!</b></div>
       <div class="sub">여러분이 직접 칸을 클릭하여 <b>비</b>를 나타내 봅시다!</div>
       <button class="btn pri" onclick="next()">시작! →</button>`;
     return;}
@@ -838,12 +834,11 @@ if(d.t==='sintro'){
       const _b=$('#goSum');if(_b)_b.onclick=()=>{const si=DECK.findIndex(x=>x.t==='sum');if(si>=0)idx=si;render();};
       return;}
         confetti();clap();
-    el.innerHTML=`<div><span class="stampb" style="font-size:64px">🎨</span></div>
-    <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span>을 얻었어요!</div>
-    <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🖌️ 비율 학습방</b>!</div>
-    <button class="btn pri" id="go2">다음 방으로 → 🖌️</button>`;
-    $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='ratio.html';};
+    el.innerHTML=`<div><span class="stampb" style="font-size:64px">🖌️</span></div>
+    <div class="q">비율 학습방을 모두 마쳤어요! 대단해요!</div>
+    <div class="sub">비율과 백분율까지 쏙 — 다음 탐험은 <b>🎼 소리의 비밀</b>!</div>
+    <button class="btn pri" id="go2">다음 방으로 → 🎼</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('ratio');chime(true);location.href='sound.html';};
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};

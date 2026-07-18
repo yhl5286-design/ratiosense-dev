@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RatioSense v3 — 색깔의 비밀</title>
+<title>RatioSense v3 — 평가의 방</title>
 <style>
   :root{--bg:#f4f1ea;--ink:#26303f;--sub:#6b7683;--line:#e6e1d6;--accent:#2e9e63;--gold:#e0a02a;--red:#c0392b}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -235,7 +235,7 @@
 </head>
 <body>
 <div id="top"><a class="home" href="index.html">🏠 홈</a>
-  <div class="t">🎨 색깔의 비밀 <span style="color:#b3541e">v3</span></div>
+  <div class="t">📝 평가의 방 <span style="color:#b3541e">v3</span></div>
   <div id="pbar"><div id="pfill"></div></div>
   <div id="pnum">1 / 1</div>
   <div id="wal"><b id="walN">0</b>/16</div>
@@ -249,7 +249,7 @@
 const $=s=>document.querySelector(s);
 /* ── 로그: GAS 직접 전송 (v2와 같은 시트) ── */
 const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
-const LOG_TK='ratiosense-2026',LAB='colorV3';
+const LOG_TK='ratiosense-2026',LAB='evalV3';
 let RS3U='';try{RS3U=(JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){}
 if(!RS3U&&window===window.parent){try{location.replace('index.html');}catch(e){}}
 function ukey(b){return b+':'+(RS3U||'anon');}
@@ -379,6 +379,7 @@ function qmark(){try{const c=ac();c.resume&&c.resume();const t0=c.currentTime;
 
 /* ── 덱 구성 ── */
 const FAM=[
+ {id:'진한 주황',emoji:'🌇',paints:['빨강','노랑'],r:[2,3]},
  {id:'주황',emoji:'🟠',paints:['빨강','노랑'],r:[1,1]},
  {id:'자주',emoji:'🍇',paints:['빨강','파랑'],r:[2,1]},
  {id:'초록',emoji:'🟢',paints:['노랑','파랑'],r:[2,3]}];
@@ -390,11 +391,7 @@ const R3=[
  {base:'빨강',comp:'노랑',bm:100,cm:200,res:'2'},
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,1];const EXP={hypo:null,found:[],log:[]};
-let DECK=[{t:'title'},{t:'st0'},{t:'st1'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'st5'}];
-DECK.push({t:'qintro'});
-MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
-R3.forEach((q,i)=>DECK.push({t:'rate',i}));
-DECK.push({t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
+let DECK=[{t:'title'},{t:'sense',fi:0,k:0,n:1},{t:'sense',fi:1,k:0,n:2},{t:'sense',fi:1,k:1,n:3},{t:'sense',fi:2,k:0,n:4},{t:'sense',fi:2,k:1,n:5},{t:'sense',fi:3,k:0,n:6},{t:'sense',fi:3,k:1,n:7},{t:'done'}];
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -483,16 +480,17 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(QTYPES.includes(d.t)){const qn=DECK.slice(0,idx+1).filter(x=>QTYPES.includes(x.t)).length;
     setTimeout(()=>{const s=$('#slide');if(s&&!s.querySelector('.qzb'))s.insertAdjacentHTML('afterbegin',`<div class="qzb">Quiz ${qn}</div>`);},0);}S={amt:{}};
   if(d.t==='title'){
-    el.innerHTML=`<div style="font-size:90px">🎨</div>
-      <div class="q">색깔의 비밀을 찾아봅시다!</div>
-      <button class="btn pri" onclick="next()">시작하기 →</button>`;return;}
+    el.innerHTML=`<div style="font-size:90px">📝</div>
+      <div class="q">평가의 방 — 배운 실력을 확인해요!</div>
+      <div class="sub">색 만들기 문제 <b>7개</b>를 풀어 보세요. 목표 비대로 물감을 섞으면 통과!</div>
+      <button class="btn pri" onclick="next()">평가 시작! →</button>`;return;}
   if(d.t==='sense'){
     S.amt={};
     const f=FAM[d.fi],[r0,r1]=f.r,p0=f.paints[0],p1=f.paints[1];
     const tgt=mix({[p0]:r0,[p1]:r1});
-    const N=d.fi*2+d.k+1;
-    const qs=[`<b>미션 ${N}</b><br><b>"${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기"</b><br>${p0}과 ${p1}을 ${r0} : ${r1}${String(r1)==='1'?'이':'가'} 되도록 섞어 ${f.id}색을 만들어 보세요!`,
-              `<b>미션 ${N}</b><br><b>"같은 ${f.id}색을 다른 양으로 만들기"</b><br>${p0} : ${p1} = ${r0} : ${r1}${String(r1)==='1'?'은':'는'} 그대로! 물감의 양을 바꿔도 같은 색이 나올까요?`][d.k];
+    const N=d.n;
+    const qs=[`<b>문제 ${N}</b><br><b>"${p0} : ${p1} = ${r0} : ${r1}인 ${f.id}색 만들기"</b><br>${p0}과 ${p1}을 ${r0} : ${r1}${String(r1)==='1'?'이':'가'} 되도록 섞어 ${f.id}색을 만들어 보세요!`,
+              `<b>문제 ${N}</b><br><b>"같은 ${f.id}색을 다른 양으로 만들기"</b><br>${p0} : ${p1} = ${r0} : ${r1}${String(r1)==='1'?'은':'는'} 그대로! 물감의 양을 바꿔도 같은 색이 나올까요?`][d.k];
     el.innerHTML=`<div class="q">${qs}</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM[p0])}">${p0} <span id="a0">0</span>mL</div>${tubes(p0,[5,10])}</div>
@@ -838,12 +836,11 @@ if(d.t==='sintro'){
       const _b=$('#goSum');if(_b)_b.onclick=()=>{const si=DECK.findIndex(x=>x.t==='sum');if(si>=0)idx=si;render();};
       return;}
         confetti();clap();
-    el.innerHTML=`<div><span class="stampb" style="font-size:64px">🎨</span></div>
-    <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
-    <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span>을 얻었어요!</div>
-    <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🖌️ 비율 학습방</b>!</div>
-    <button class="btn pri" id="go2">다음 방으로 → 🖌️</button>`;
-    $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='ratio.html';};
+    el.innerHTML=`<div><span class="stampb" style="font-size:64px">📝</span></div>
+    <div class="q">평가를 모두 마쳤어요! 참 잘했어요!</div>
+    <div class="sub">일곱 문제를 전부 통과했어요 — 이제 진짜 <b>비 감각의 달인</b>!</div>
+    <button class="btn pri" id="go2">탐험 지도로 돌아가기 →</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('eval');chime(true);location.href='index.html?escape=1';};
     return;}
 }
 $('#navL').onclick=()=>{if(idx>0){idx--;render();plog('nav',{to:idx});}};
