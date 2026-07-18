@@ -395,6 +395,7 @@ let DECK=[{t:'title'},{t:'st0'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t
 DECK.push({t:'qintro'});
 MAKE.forEach((m,i)=>DECK.push({t:'make',i}));
 R3.forEach((q,i)=>DECK.push({t:'rate',i}));
+DECK.push({t:'dot0'},{t:'dot1'},{t:'pintro'},{t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'dot2'});
 DECK.push({t:'sintro'},{t:'sum',i:0},{t:'sum',i:1},{t:'sum',i:2},{t:'sum',i:3},{t:'done'});
 let idx=0, S={};
 /* ── 프레임워크 ── */
@@ -836,11 +837,6 @@ if(d.t==='mdemo'){
     el.innerHTML=`<div class="q" style="font-size:36px"><b>1단계 : 색 만들기 퀴즈 풀기!</b></div>
       <button class="btn pri" onclick="next()">퀴즈 시작! →</button>`;
     return;}
-  if(d.t==='pintro'){
-    el.innerHTML=`<div class="q"><b>3단계 : 색칠하며 비 익히기!</b></div>
-      <div class="sub">여러분이 직접 칸을 클릭하여 <b>비</b>를 나타내 봅시다!</div>
-      <button class="btn pri" onclick="next()">시작! →</button>`;
-    return;}
   if(d.t==='make'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,ans=BASE*m.r[1-gi]/m.r[gi];
     const tgt=mix({[m.top[0]]:m.r[0],[m.top[1]]:m.r[1]});
@@ -886,6 +882,128 @@ if(d.t==='mdemo'){
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('rate',{i:d.i});success('맞아요!',W.okS);});
     return;}
+  if(d.t==='dot0'){
+    const seq=['빨','노','노','빨','노','노','빨','노','빨','노'];
+    const dots=seq.map(c=>`<span style="width:34px;height:34px;border-radius:50%;display:inline-block;margin:3px;background:${rgb(PRIM[c==='빨'?'빨강':'노랑'])}"></span>`).join('');
+    const p1=PRIM['빨강'],p2=PRIM['노랑'];
+    const avg=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
+    const avgC=`rgb(${avg[0]},${avg[1]},${avg[2]})`;
+    el.innerHTML=`<style>@keyframes rtspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}</style>
+      <div><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #8b857a;box-shadow:0 6px 18px rgba(0,0,0,.25)"><div style="font-size:15px;font-weight:800;color:#6b7683;margin-top:4px">점묘 화가 시냐크</div></div>
+      <div class="q" style="font-size:27px">점묘 화가 시냐크의 비밀</div>
+      <div class="dial" style="font-size:19px;line-height:1.6">"난 뭉크와 달리 <b>물감을 섞지 않아!</b> 순색 <b>점만 콕콕</b> 찍지.<br><b>멀리서 보면</b> 점들이 눈에서 섞여 <b>하나의 색</b>으로 보인단다!"</div>
+      <div style="display:flex;gap:30px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-top:8px">
+        <div>
+          <div style="position:relative;display:inline-block">
+            <div id="dotWrap" style="background:#fff;border:3px solid var(--line);border-radius:14px;padding:14px;transition:filter .8s, transform .8s;width:180px">${dots}</div>
+            <div id="farOv" style="position:absolute;inset:0;border-radius:14px;background:${avgC};opacity:0;transition:opacity .9s;pointer-events:none"></div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn ghost" id="nearB">👁️ 가까이</button>
+            <button class="btn pri" id="farB">🖼️ 멀리서 보기</button>
+          </div>
+          <div class="sub" id="dotMsg" style="margin-top:6px">점이 빨강과 노랑으로 따로 보여요.</div>
+        </div>
+        <div>
+          <div style="position:relative;display:inline-block;width:150px;height:150px">
+            <div id="ndisc" style="width:150px;height:150px;border-radius:50%;border:4px solid #8b857a;background:conic-gradient(${rgb(p1)} 0 144deg, ${rgb(p2)} 144deg 360deg)"></div>
+            <div id="ndOv" style="position:absolute;inset:0;border-radius:50%;background:${avgC};opacity:0;transition:opacity 1.1s;pointer-events:none"></div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn pri" id="spinB">🌀 색팽이 돌리기</button>
+            <button class="btn ghost" id="stopB">⏹ 멈추기</button>
+          </div>
+          <div class="sub" id="ndMsg" style="margin-top:6px">빨강 2칸 : 노랑 3칸 색팽이예요.</div>
+        </div>
+      </div>
+      <div style="max-width:720px;margin:12px auto 0;background:#fbf6e8;border:2px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:700;line-height:1.6;text-align:left">
+        💡 <b>알아 두기</b> — 실제 점 그림에는 <b>더 복잡한 원리</b>가 숨어 있어요.<br>
+        물감을 섞은 색과 점으로 보이는 색이 똑같지는 않지만, <b>비를 계산하는 원리</b>는 똑같이 적용돼요!
+      </div>
+      <div style="margin-top:10px"><button class="btn pri" onclick="next()">신기해요! 다음 →</button></div>`;
+    const w=$('#dotWrap');
+    $('#farB').onclick=()=>{w.style.filter='blur(6px)';w.style.transform='scale(.42)';$('#farOv').style.opacity='.5';
+      $('#dotMsg').innerHTML='빨강·노랑 점이 눈에서 어우러져 <b>주황빛</b>으로 보여요!';plog('dot_far',{});};
+    $('#nearB').onclick=()=>{w.style.filter='none';w.style.transform='none';$('#farOv').style.opacity='0';
+      $('#dotMsg').textContent='점이 빨강과 노랑으로 따로 보여요.';};
+    let spin=false;
+    $('#spinB').onclick=()=>{if(spin)return;spin=true;
+      $('#ndisc').style.animation='rtspin .09s linear infinite';
+      setTimeout(()=>{if(spin){const o=$('#ndOv');if(o)o.style.opacity='.85';}},550);
+      $('#ndMsg').innerHTML='빙글빙글 — 두 색이 <b>주황 하나</b>로 보여요! (잔상 착시)';plog('dot_spin',{});};
+    $('#stopB').onclick=()=>{spin=false;$('#ndisc').style.animation='none';const o=$('#ndOv');if(o)o.style.opacity='0';
+      $('#ndMsg').textContent='빨강 2칸 : 노랑 3칸 색팽이예요.';};
+    return;}
+  if(d.t==='dot1'){
+    const p1=PRIM['빨강'],p2=PRIM['노랑'];
+    const avg21=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
+    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7"><img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "네가 뭉크의 <b>노을빛 주황</b> 비(2 : 3)를 찾아냈다며?<br>이번엔 <b>점 5개</b>로 그 색을 만들어 줘! 빨강 점과 노랑 점을 <b>몇 개씩</b> 찍어야 할까?"</div>
+      <div class="pair" style="margin:8px 0">
+        <div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">목표 — 멀리서 본 노을빛 주황</div></div>
+        <div><div id="dgrid">${Array.from({length:5},(_,i)=>`<span class="dcell" data-i="${i}" style="width:46px;height:46px;border-radius:50%;display:inline-block;margin:4px;border:3px dashed #b9b4a8;background:#fdfcf8;cursor:pointer;vertical-align:middle"></span>`).join('')}</div>
+        <div class="bklab">점 캔버스 — 물감을 고르고, 점을 눌러 찍어요</div></div>
+      </div>
+      <div style="margin:6px 0">
+        <button id="palR" style="font-family:inherit;font-weight:800;font-size:17px;padding:9px 16px;border-radius:12px;cursor:pointer;background:#fff;border:4px solid #8b857a">🔴 빨강</button>
+        <button id="palY" style="font-family:inherit;font-weight:800;font-size:17px;padding:9px 16px;border-radius:12px;cursor:pointer;background:#fff;border:4px solid #e6e1d6">🟡 노랑</button>
+        <span class="sub" style="font-size:15px">(같은 색을 또 누르면 지워져요)</span>
+      </div>
+      <div class="sub" id="dcnt">빨강 0개 · 노랑 0개</div>
+      <div style="margin-top:6px"><button class="btn pri" id="farB">🖼️ 멀리서 보기(확인)</button></div>
+      <div id="dres" style="margin-top:8px"></div>`;
+    const st=Array(5).fill(0);let sel=1;
+    const palUpd=()=>{const R=$('#palR'),Y=$('#palY');
+      if(R)R.style.border=sel===1?'4px solid #8b857a':'4px solid #e6e1d6';
+      if(Y)Y.style.border=sel===2?'4px solid #8b857a':'4px solid #e6e1d6';};
+    const upd=()=>{el.querySelectorAll('.dcell').forEach((c,i)=>{c.style.background=st[i]===1?rgb(p1):st[i]===2?rgb(p2):'#fdfcf8';c.style.borderStyle=st[i]?'solid':'dashed';c.style.borderColor=st[i]?'#8b857a':'#b9b4a8';});
+      const r=st.filter(x=>x===1).length,y=st.filter(x=>x===2).length;$('#dcnt').innerHTML=`빨강 <b>${r}</b>개 · 노랑 <b>${y}</b>개`;};
+    el.querySelectorAll('.dcell').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;st[i]=(st[i]===sel)?0:sel;plog('dot_paint',{i,c:sel});upd();});
+    $('#palR').onclick=()=>{sel=1;palUpd();};
+    $('#palY').onclick=()=>{sel=2;palUpd();};
+    palUpd();
+    $('#farB').onclick=()=>{const r=st.filter(x=>x===1).length,y=st.filter(x=>x===2).length;
+      if(r+y<5){retry('아직 빈 점이 있어요 — 다섯 개를 모두 채우고 확인해요!');return;}
+      const avg=[0,1,2].map(k=>Math.round((p1[k]*r+p2[k]*y)/5));
+      $('#dres').innerHTML=`<div class="pair"><div><div class="csw" style="background:rgb(${avg[0]},${avg[1]},${avg[2]})"></div><div class="bklab">멀리서 본 내 점들</div></div><div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">목표 색</div></div></div>`;
+      plog('dot_try',{r,y,ok:r*3===y*2});
+      if(r*3===y*2){chime(true);success('똑같아요! 점으로도 노을빛 주황!',`빨강 <b>${r}</b>개 : 노랑 <b>${y}</b>개 = <b>2 : 3</b> — 물감의 비와 <b>같은 비</b>예요!`);}
+      else{retry('멀리서 본 내 점들과 목표 색을 <b>비교</b>해 봐요 — 어떤 점이 더 많아야 할까요, 적어야 할까요?');}};
+    upd();return;}
+  if(d.t==='dot2'){
+    const p1=PRIM['빨강'],p2=PRIM['노랑'];
+    const avg21=[0,1,2].map(k=>Math.round((p1[k]*2+p2[k]*3)/5));
+    el.innerHTML=`<div class="q"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> 물감 화가 vs <img src="signac.jpg" alt="점묘 화가 시냐크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> 점묘 화가</div>
+      <div class="sub">두 화가의 방법을 비교하고, 알맞은 카드로 비밀을 완성하세요!</div>
+      <div style="display:flex;gap:36px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin:10px 0">
+        <div>
+          <div style="display:flex;gap:8px;align-items:flex-end;justify-content:center">
+            <div><div class="bk" style="height:110px;width:54px"><div class="fill" style="height:36%;background:${rgb(PRIM['빨강'])}"></div></div><div class="bklab">빨강 20mL</div></div>
+            <div><div class="bk" style="height:110px;width:54px"><div class="fill" style="height:54%;background:${rgb(PRIM['노랑'])}"></div></div><div class="bklab">노랑 30mL</div></div>
+            <div style="font-size:26px;font-weight:800;align-self:center">→</div>
+            <div><div class="bk" style="height:110px;width:54px"><div class="fill" style="height:90%;background:${rgb(mix({빨강:2,노랑:3}))}"></div></div><div class="bklab">다 섞은 주황 50mL</div></div>
+          </div>
+          <div class="bklab" style="margin-top:6px;font-weight:800">뭉크 — 물감을 섞어서!</div>
+        </div>
+        <div>
+          <div style="display:inline-block;background:#fff;border:3px solid var(--line);border-radius:12px;padding:8px">
+            <div style="width:172px;line-height:0;filter:blur(0.7px)">${Array.from({length:50},(_,i)=>`<span style="display:inline-block;width:15px;height:15px;border-radius:50%;margin:1px;background:${['r','y','y','r','y'][i%5]==='r'?rgb(PRIM['빨강']):rgb(PRIM['노랑'])}"></span>`).join('')}</div>
+          </div>
+          <div class="bklab" style="margin-top:6px;font-weight:800">시냐크 — 점 빨강 20개 : 노랑 30개!</div>
+        </div>
+      </div>
+      <div class="eq" style="font-size:22px;line-height:2">
+        <div class="row">물감 20 : 30도, 점 20 : 30도 — 간단히 하면 모두 <span class="dz" data-a="2"></span> : <span class="dz" data-a="3"></span>!</div>
+        <div class="row">방법이 달라도 <span class="dz" data-a="비"></span>가 같으면 같은 색으로 보여요!</div>
+      </div>
+      <div class="bank">${['2','3','비','4','양'].sort(()=>Math.random()-.5).map(w=>`<span class="chip" data-w="${w}">${w}</span>`).join('')}</div>`;
+    mountDrag(el,()=>{plog('dot_transfer',{});
+      success('연속과 이산의 비밀 완성!','물감의 <b>양</b>도, 점의 <b>개수</b>도 — <b>비</b>가 같으면 같은 색!');});
+    return;}
+  if(d.t==='pintro'){
+    el.innerHTML=`<div class="q"><b>점묘 화가와 색칠하며 비 익히기!</b></div><!--pintro-->
+      <div class="sub">여러분이 직접 칸을 클릭하여 <b>비</b>를 나타내 봅시다!</div>
+      <button class="btn pri" onclick="next()">시작! →</button>`;
+    return;}
   if(d.t==='paint'){
     const n=d.n, needR=n*2/5, needY=n*3/5, cols=(n<=10?5:10);
     d._cells=Array(n).fill('');d._brush=null;
@@ -897,22 +1015,36 @@ if(d.t==='mdemo'){
         <button class="pot" id="potY"><span class="sw" style="background:${rgb(PRIM['노랑'])}"></span>노랑 물감</button>
         <button class="btn ghost" id="clr">모두 지우기</button>
       </div>
+      ${n===100?`<div style="margin:2px 0 4px">
+        <button class="pot on" id="bs1">🖌️ 작은 붓 (1칸씩)</button>
+        <button class="pot" id="bs10">🖌️ 큰 붓 (한 줄 10칸!)</button>
+      </div>`:''}
       <div class="cnt" id="cnt"></div>
       <div class="grid" id="gr" style="grid-template-columns:repeat(${cols},1fr);max-width:${n<=10?420:350}px">
         ${Array.from({length:n},(_,i)=>`<div class="cell" data-i="${i}" style="${n===10?'border:1.5px solid #ddd8ca;':''}"></div>`).join('')}
       </div>`;
     const gr=$('#gr');
-    const paintIt=(cell)=>{if(!brush)return;const i=+cell.dataset.i;cells[i]=brush;
-      cell.style.background=brush==='r'?rgb(PRIM['빨강']):rgb(PRIM['노랑']);upd();};
+    let bsize=1;
+    const fillCell=(k)=>{cells[k]=brush;const cc=gr.querySelector('.cell[data-i="'+k+'"]');
+      if(cc)cc.style.background=brush==='r'?rgb(PRIM['빨강']):rgb(PRIM['노랑']);};
+    const paintIt=(cell)=>{if(!brush)return;const i=+cell.dataset.i;
+      if(bsize===10){const r0=Math.floor(i/10)*10;for(let k=r0;k<r0+10;k++)fillCell(k);}
+      else fillCell(i);
+      upd();};
     const upd=()=>{const r=cells.filter(c=>c==='r').length,y=cells.filter(c=>c==='y').length,left=n-r-y;
       $('#cnt').innerHTML=`<span style="color:${rgb(PRIM['빨강'])}">빨강 ${r}칸</span> · <span style="color:#b3921e">노랑 ${y}칸</span> · 남은 ${left}칸`;
       $('#potR').className='pot'+(brush==='r'?' on':'');$('#potY').className='pot'+(brush==='y'?' on':'');
+      const b1=$('#bs1'),b10=$('#bs10');
+      if(b1)b1.className='pot'+(bsize===1?' on':'');if(b10)b10.className='pot'+(bsize===10?' on':'');
       gr.className='grid'+(brush?' brushing':'');
       if(left===0&&!d._fbLock){d._fbLock=true;
         setTimeout(()=>{d._fbLock=false;
           if(r*3===y*2){d._ok=true;success(n===5?'잘했어요! 2 : 3으로 2칸씩, 3칸씩 칠해요!':`잘했어요! 2 : 3 = ${r} : ${y}${jz(String(y),'을','를')} 이용해요!`,`${r}칸 + ${y}칸 = ${n}칸이 되도록 빨강 <b>${r}칸</b>, 노랑 <b>${y}칸</b> 색칠!`);}
           else{const diff=needR-r;
             retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
+    const b1=$('#bs1'),b10=$('#bs10');
+    if(b1)b1.onclick=()=>{bsize=1;plog('brush',{size:1});upd();};
+    if(b10)b10.onclick=()=>{bsize=10;plog('brush',{size:10});upd();};
     $('#potR').onclick=()=>{brush=d._brush='r';upd();};
     $('#potY').onclick=()=>{brush=d._brush='y';upd();};
     $('#clr').onclick=()=>{cells.fill('');gr.querySelectorAll('.cell').forEach(c=>c.style.background='#edeae2');upd();};
@@ -989,9 +1121,9 @@ if(d.t==='sintro'){
     el.innerHTML=`<div><span class="stampb" style="font-size:64px">🎨</span></div>
     <div class="q">색깔의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="escDig">🔓 1번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">1</span>을 얻었어요!</div>
-    <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🖌️ 비율 학습방</b>!</div>
-    <button class="btn pri" id="go2">다음 방으로 → 🖌️</button>`;
-    $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='ratio.html';};
+    <div class="sub">네 가지 비밀이 머릿속에 쏙 — 다음 탐험은 <b>🎼 소리의 비밀</b>!</div>
+    <button class="btn pri" id="go2">다음 방으로 → 🎼</button>`;
+    $('#go2').onclick=()=>{plog('complete',{});markDone('color');chime(true);location.href='sound.html';};
     return;}
 }
 $('#navL').onclick=()=>{if(window._slideBack&&window._slideBack())return;if(idx>0){idx--;render();plog('nav',{to:idx});}};
