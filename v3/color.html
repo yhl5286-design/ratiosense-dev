@@ -649,7 +649,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       <div class="sub" style="margin-top:10px">정답이 아니어도 괜찮아요 — 실험으로 확인할 거니까요!</div>`;
     const OBS={'1 : 1':'두 색이 <b>비슷하게</b> 들어갔다고 관찰했군요.','2 : 1':'<b>빨강이 더 많다</b>고 관찰했군요.','2 : 3':'<b>노랑이 조금 더 많다</b>고 관찰했군요.','1 : 2':'<b>노랑이 두 배</b>라고 관찰했군요.'};
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{EXP.hypo=c.dataset.h;plog('exp_hypo',{pick:EXP.hypo});
-      chime(true);success('가설 완성!','내 가설: <b>빨강 '+EXP.hypo+' 노랑</b><br>'+(OBS[EXP.hypo]||'')+' 목표 색을 보고 세운 <b>근거 있는 가설</b>이에요!<br>이제 실험실에서 확인해 봐요! 🧪');});
+      success('가설 완성!','내 가설: <b>빨강 '+EXP.hypo+' 노랑</b><br>'+(OBS[EXP.hypo]||'')+' 목표 색을 보고 세운 <b>근거 있는 가설</b>이에요!<br>이제 실험실에서 확인해 봐요! 🧪');});
     return;}
   if(d.t==='st3'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
@@ -690,7 +690,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       hvEl.innerHTML='<div style="font-weight:800;font-size:18px">🤖 "새 가설을 골라 보자! <span style=\'color:var(--sub);font-size:15px\'>(틀린 가설은 지웠어)</span>"</div><div class="bank" style="margin-top:6px">'+opts.map(h=>'<span class="chip hrv" data-h="'+h[0]+' : '+h[1]+'" style="font-size:16px">빨강 '+h[0]+' : 노랑 '+h[1]+'</span>').join('')+'</div>';
       hvEl.querySelectorAll('.hrv').forEach(c=>c.onclick=()=>{EXP.hypo=c.dataset.h;plog('exp_hypo_rev',{pick:EXP.hypo});
         const lb=$('#hypoLbl');if(lb)lb.innerHTML='빨강 '+EXP.hypo+' 노랑';
-        hvEl.style.display='none';chime(true);
+        hvEl.style.display='none';
         toastFB('ok','🔬 새 가설: 빨강 '+EXP.hypo+' 노랑','이제 이 가설로 실험해 봐요!');S.amt={};upd();});}
     buildHrv();
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};board();upd();return;}
