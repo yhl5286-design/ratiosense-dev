@@ -654,7 +654,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     return;}
   if(d.t==='st3'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
-    el.innerHTML=`<div class="q" style="font-size:23px">🧪 <b>실험 1</b> — 물감을 넣고 <b>[실험하기]</b>를 눌러 색을 확인해요!<br><span style="font-size:18px">가설(<span id="hypoLbl">빨강 ${EXP.hypo||'?'} 노랑</span>)이 맞을까요? 목표 색이 될 때까지 실험!</span></div>
+    el.innerHTML=`<div class="q" style="font-size:23px">🧪 <b>실험 1</b> — 물감을 넣고 <b>[실험하기]</b>를 눌러 색을 확인해요!</div>
+      <div style="display:inline-block;background:#fff6de;border:3px solid var(--gold);border-radius:14px;padding:8px 26px;font-size:25px;font-weight:800;margin:4px 0">🔬 내 가설: <span id="hypoLbl" style="color:#b3541e">빨강 ${EXP.hypo||'?'} 노랑</span></div>
+      <div class="sub" style="font-size:16px">이 가설이 맞을까요? 목표 색이 될 때까지 실험!</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
