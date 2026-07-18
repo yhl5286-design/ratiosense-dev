@@ -718,7 +718,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='st4'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
     const first=EXP.found[0]||[20,30];
-    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7">🧑‍🎨 "고마워! 그런데 벽화를 칠하려면 물감이 <b>훨씬 많이</b> 필요해.<br>빨강 ${first[0]} : 노랑 ${first[1]} 말고, <b>서로 다른 양으로 2번 더</b> 같은 색을 만들어 줄래?"</div>
+    el.innerHTML=`<div class="dial" style="font-size:20px;line-height:1.7"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "고마워! 그런데 벽화를 칠하려면 물감이 <b>훨씬 많이</b> 필요해.<br>빨강 ${first[0]} : 노랑 ${first[1]} 말고, <b>서로 다른 양으로 2번 더</b> 같은 색을 만들어 줄래?"</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
@@ -797,7 +797,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
   if(d.t==='st5'){
     const g=gcd(EXPR[0],EXPR[1]),r0=EXPR[0]/g,r1=EXPR[1]/g;
-    el.innerHTML=`<div style="font-size:52px">🧑‍🎨</div>
+    el.innerHTML=`<div><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #8b857a"><div style="font-size:14px;font-weight:800;color:#6b7683;margin-top:3px">화가 뭉크</div></div>
       <div class="dial" style="font-size:21px;line-height:1.7">"드디어 비밀을 찾았어! 이제 잊어버리지 않게 <b>레시피 카드</b>로 만들어 줘!"</div>
       <div class="eq" style="font-size:23px;line-height:2">
         <div class="row">📇 노을빛 주황 레시피 : 빨강과 노랑을 <span class="dz" data-a="${r0}"></span> : <span class="dz" data-a="${r1}"></span>${'로'} 섞는다.</div>
