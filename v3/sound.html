@@ -370,8 +370,8 @@ function harpHTML(){
       :`<div class="hs ghost" style="height:${Math.round(it.L*3.6)}px"></div><div class="hlab ghost">?<br><span>${it.frac}</span></div>`}</div>`).join('')+
   `</div></div>`;}
 
-const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harmx',ni:__i});DECK.push({t:'itv2'});
-const CHORD_SET=[3,4,7];CHORD_SET.forEach(i=>DECK.push({t:'chord',i}));
+const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harmx',ni:__i});DECK.push({t:'grp'},{t:'itv2'});
+
 DECK.push({t:'polyi'},{t:'poly'});
 DECK.push({t:'strlen'});
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
@@ -576,7 +576,7 @@ if(d.t==='harmx'){
       $('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;
       const hw=$('#hxWave');if(hw){hw.style.display='block';
         hw.innerHTML=`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 <b>반복되는 무늬</b>가 생겨요!`;}
-      if(i===d.ni){const rp=$('#ratePan');if(rp)rp.style.display='block';}});
+      const rp=$('#ratePan');if(rp)rp.style.display=(i===d.ni)?'block':'none';});
     let stars=0;const feels=new Set();
     el.querySelectorAll('.st').forEach(s=>s.onclick=()=>{stars=+s.dataset.s;
       el.querySelectorAll('.st').forEach(x=>x.style.opacity=(+x.dataset.s<=stars)?'1':'.3');
@@ -630,6 +630,41 @@ if(d.t==='harmx'){
       else if(sel.size>=2){plog('poly_try',{sel:[...sel]});
         retry('다시 들어 봐요 — 🥁 줄과 🔔 줄이 <b>둘 다 채워진 칸</b>은 어디인가요?');}});
     return;}
+  if(d.t==='grp'){
+    const G=[
+      {no:'(1)',pairs:[0,3,4,7],label:'도와 도 · 도와 파 · 도와 솔 · 도와 도′'},
+      {no:'(2)',pairs:[2,5],label:'도와 미 · 도와 라'},
+      {no:'(3)',pairs:[1,6],label:'도와 레 · 도와 시'}];
+    d._heard=d._heard||[false,false,false];
+    el.innerHTML=`<div class="q" style="font-size:26px">어울렸던 음정끼리 <b>모아서 다시</b> 들어 봐요!</div>
+      <div class="sub">세 모음을 <b>(1)→(2)→(3) 순서대로</b> 들어 보고, 가장 듣기 좋았던 모음을 골라 주세요!</div>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+        ${G.map((g,gi)=>`<div style="background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 16px;min-width:210px">
+          <div style="font-weight:800;font-size:20px">${g.no} 모음</div>
+          <div class="sub" style="font-size:15px;margin:4px 0">${g.label}</div>
+          <button class="btn pri gplay" data-g="${gi}" style="font-size:16px;padding:9px 14px">▶ 들어보기</button>
+          <div id="ghrd${gi}" style="font-size:14px;font-weight:800;color:#2e9e63;min-height:18px;margin-top:4px">${d._heard[gi]?'✔ 들었어요':''}</div>
+        </div>`).join('')}
+      </div>
+      <div id="gq" style="display:${d._heard.every(x=>x)?'block':'none'};margin-top:14px">
+        <div class="dial" style="font-size:20px">어떤 모음이 <b>가장 듣기 좋았나요?</b></div>
+        <div class="bank" style="margin-top:8px">${G.map((g,gi)=>`<span class="chip gpick" data-g="${gi}">${g.no} 모음</span>`).join('')}</div>
+      </div>`;
+    let playing=false;
+    el.querySelectorAll('.gplay').forEach(b=>b.onclick=()=>{if(playing)return;playing=true;
+      const gi=+b.dataset.g;plog('grp_listen',{g:gi+1});
+      b.textContent='🎵 재생 중…';
+      const ps=G[gi].pairs;
+      ps.forEach((ni,k)=>{setTimeout(()=>chord(264,NOTES[ni][1],1.0),k*1200);});
+      setTimeout(()=>{playing=false;b.textContent='▶ 들어보기';d._heard[gi]=true;
+        const h=$('#ghrd'+gi);if(h)h.textContent='✔ 들었어요';
+        if(d._heard.every(x=>x)){const q=$('#gq');if(q)q.style.display='block';}},ps.length*1200+200);});
+    const FB=['많은 사람들이 그렇게 느껴요! (1) 모음은 진동수 비가 <b>1:1, 3:4, 2:3, 1:2</b> — 가장 <b>간단한 비</b>라서 <b>완전음정</b>이라고 불러요!',
+      '좋은 귀예요! (2) 모음은 <b>4:5, 3:5</b> — 꽤 간단한 비라 부드럽게 어울려요. 많은 사람들은 비가 더 간단한 (1) 모음을 최고로 꼽는답니다.',
+      '독특한 귀를 가졌네요! (3) 모음은 <b>8:9, 8:15</b> — 큰 수의 비라서 대부분의 사람들에게는 조금 거칠게 들려요. (1) 모음과 한 번 더 비교해 들어 봐도 좋아요!'];
+    el.querySelectorAll('.gpick').forEach(c=>c.onclick=()=>{const gi=+c.dataset.g;plog('grp_pick',{g:gi+1});
+      success('내 귀의 선택: '+G[gi].no+' 모음!',FB[gi]+'<br>이제 <b>음정 표</b>로 정리해 봐요!');});
+    return;}
   if(d.t==='itv2'){
     el.innerHTML=`<div class="q"><b>음정 표 완성!</b> — 도부터 도′까지 다 들어봤어요!</div>
       <div class="itvWrap" style="margin-top:8px"><table class="itvT">
@@ -637,7 +672,7 @@ if(d.t==='harmx'){
         ${NOTES.map((m,i)=>`<tr class="${PERF.includes(i)?'pf':''}"><td>${i===0?'★':''}${m[0]}</td><td>${ITV[i]}</td><td><b style="color:#b3541e">${m[3]} : ${m[2]}</b></td></tr>`).join('')}
       </table></div>
       <div class="dial" style="margin-top:12px;font-size:20px"><b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>비가 간단할수록</b> 두 소리가 <b>더 잘 어울려요</b>!</div>
-      <div style="margin-top:10px"><button class="btn pri" onclick="next()">화음 문제 풀러 가기 →</button></div>`;
+      <div style="margin-top:10px"><button class="btn pri" onclick="next()">리듬의 비밀로 →</button></div>`;
     return;}
 if(d.t==='chord'){
     const n=NOTES[d.i],a=n[3],b=n[2]; // 도:음 = a:b
