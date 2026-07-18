@@ -719,9 +719,8 @@ if(d.t==='mdemo'){
         </div>
       </div>
       <div style="max-width:720px;margin:12px auto 0;background:#fbf6e8;border:2px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:700;line-height:1.6;text-align:left">
-        💡 <b>알아 두기</b> — 실제 점묘 그림에서는 점의 크기와 배치, 색끼리의 대비 같은 <b>더 복잡한 원리</b>도 함께 작용해요.
-        그리고 물감을 섞어 만든 색과, 점이 눈에서 섞여 보이는 색이 <b>항상 완전히 똑같지는 않답니다</b>.
-        여기서는 <b>"두 색의 비가 색의 느낌을 결정한다"</b>는 원리를 경험할 수 있도록 간단히 나타낸 거예요!
+        💡 <b>알아 두기</b> — 실제 점 그림에는 <b>더 복잡한 원리</b>가 숨어 있어요.<br>
+        물감을 섞은 색과 점으로 보이는 색이 똑같지는 않지만, <b>비를 계산하는 원리</b>는 똑같이 적용돼요!
       </div>
       <div style="margin-top:10px"><button class="btn pri" onclick="next()">신기해요! 다음 →</button></div>`;
     const w=$('#dotWrap');
@@ -744,15 +743,26 @@ if(d.t==='mdemo'){
       <div class="pair" style="margin:8px 0">
         <div><div class="csw" style="background:rgb(${avg21[0]},${avg21[1]},${avg21[2]})"></div><div class="bklab">목표 — 멀리서 본 노을빛 주황</div></div>
         <div><div id="dgrid">${Array.from({length:5},(_,i)=>`<span class="dcell" data-i="${i}" style="width:46px;height:46px;border-radius:50%;display:inline-block;margin:4px;border:3px dashed #b9b4a8;background:#fdfcf8;cursor:pointer;vertical-align:middle"></span>`).join('')}</div>
-        <div class="bklab">점 캔버스 — 점을 눌러 색을 바꿔요 (빈칸→빨강→노랑)</div></div>
+        <div class="bklab">점 캔버스 — 물감을 고르고, 점을 눌러 찍어요</div></div>
+      </div>
+      <div style="margin:6px 0">
+        <button id="palR" style="font-family:inherit;font-weight:800;font-size:17px;padding:9px 16px;border-radius:12px;cursor:pointer;background:#fff;border:4px solid #8b857a">🔴 빨강</button>
+        <button id="palY" style="font-family:inherit;font-weight:800;font-size:17px;padding:9px 16px;border-radius:12px;cursor:pointer;background:#fff;border:4px solid #e6e1d6">🟡 노랑</button>
+        <span class="sub" style="font-size:15px">(같은 색을 또 누르면 지워져요)</span>
       </div>
       <div class="sub" id="dcnt">빨강 0개 · 노랑 0개</div>
       <div style="margin-top:6px"><button class="btn pri" id="farB">🖼️ 멀리서 보기(확인)</button></div>
       <div id="dres" style="margin-top:8px"></div>`;
-    const st=Array(5).fill(0);
+    const st=Array(5).fill(0);let sel=1;
+    const palUpd=()=>{const R=$('#palR'),Y=$('#palY');
+      if(R)R.style.border=sel===1?'4px solid #8b857a':'4px solid #e6e1d6';
+      if(Y)Y.style.border=sel===2?'4px solid #8b857a':'4px solid #e6e1d6';};
     const upd=()=>{el.querySelectorAll('.dcell').forEach((c,i)=>{c.style.background=st[i]===1?rgb(p1):st[i]===2?rgb(p2):'#fdfcf8';c.style.borderStyle=st[i]?'solid':'dashed';c.style.borderColor=st[i]?'#8b857a':'#b9b4a8';});
       const r=st.filter(x=>x===1).length,y=st.filter(x=>x===2).length;$('#dcnt').innerHTML=`빨강 <b>${r}</b>개 · 노랑 <b>${y}</b>개`;};
-    el.querySelectorAll('.dcell').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;st[i]=(st[i]+1)%3;upd();});
+    el.querySelectorAll('.dcell').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;st[i]=(st[i]===sel)?0:sel;plog('dot_paint',{i,c:sel});upd();});
+    $('#palR').onclick=()=>{sel=1;palUpd();};
+    $('#palY').onclick=()=>{sel=2;palUpd();};
+    palUpd();
     $('#farB').onclick=()=>{const r=st.filter(x=>x===1).length,y=st.filter(x=>x===2).length;
       if(r+y<5){retry('아직 빈 점이 있어요 — 다섯 개를 모두 채우고 확인해요!');return;}
       const avg=[0,1,2].map(k=>Math.round((p1[k]*r+p2[k]*y)/5));
@@ -839,22 +849,36 @@ if(d.t==='mdemo'){
         <button class="pot" id="potY"><span class="sw" style="background:${rgb(PRIM['노랑'])}"></span>노랑 물감</button>
         <button class="btn ghost" id="clr">모두 지우기</button>
       </div>
+      ${n===100?`<div style="margin:2px 0 4px">
+        <button class="pot on" id="bs1">🖌️ 작은 붓 (1칸씩)</button>
+        <button class="pot" id="bs10">🖌️ 큰 붓 (한 줄 10칸!)</button>
+      </div>`:''}
       <div class="cnt" id="cnt"></div>
       <div class="grid" id="gr" style="grid-template-columns:repeat(${cols},1fr);max-width:${n<=10?420:350}px">
         ${Array.from({length:n},(_,i)=>`<div class="cell" data-i="${i}" style="${n===10?'border:1.5px solid #ddd8ca;':''}"></div>`).join('')}
       </div>`;
     const gr=$('#gr');
-    const paintIt=(cell)=>{if(!brush)return;const i=+cell.dataset.i;cells[i]=brush;
-      cell.style.background=brush==='r'?rgb(PRIM['빨강']):rgb(PRIM['노랑']);upd();};
+    let bsize=1;
+    const fillCell=(k)=>{cells[k]=brush;const cc=gr.querySelector('.cell[data-i="'+k+'"]');
+      if(cc)cc.style.background=brush==='r'?rgb(PRIM['빨강']):rgb(PRIM['노랑']);};
+    const paintIt=(cell)=>{if(!brush)return;const i=+cell.dataset.i;
+      if(bsize===10){const r0=Math.floor(i/10)*10;for(let k=r0;k<r0+10;k++)fillCell(k);}
+      else fillCell(i);
+      upd();};
     const upd=()=>{const r=cells.filter(c=>c==='r').length,y=cells.filter(c=>c==='y').length,left=n-r-y;
       $('#cnt').innerHTML=`<span style="color:${rgb(PRIM['빨강'])}">빨강 ${r}칸</span> · <span style="color:#b3921e">노랑 ${y}칸</span> · 남은 ${left}칸`;
       $('#potR').className='pot'+(brush==='r'?' on':'');$('#potY').className='pot'+(brush==='y'?' on':'');
+      const b1=$('#bs1'),b10=$('#bs10');
+      if(b1)b1.className='pot'+(bsize===1?' on':'');if(b10)b10.className='pot'+(bsize===10?' on':'');
       gr.className='grid'+(brush?' brushing':'');
       if(left===0&&!d._fbLock){d._fbLock=true;
         setTimeout(()=>{d._fbLock=false;
           if(r*3===y*2){d._ok=true;success(n===5?'잘했어요! 2 : 3으로 2칸씩, 3칸씩 칠해요!':`잘했어요! 2 : 3 = ${r} : ${y}${jz(String(y),'을','를')} 이용해요!`,`${r}칸 + ${y}칸 = ${n}칸이 되도록 빨강 <b>${r}칸</b>, 노랑 <b>${y}칸</b> 색칠!`);}
           else{const diff=needR-r;
             retry(`${n}칸을 다 칠했지만 빨강 ${r} : 노랑 ${y} — <b>2 : 3</b>이 아니에요.<br>${diff>0?`노랑 <b>${diff}칸</b>을 빨강으로 바꿔 보세요!`:`빨강 <b>${-diff}칸</b>을 노랑으로 바꿔 보세요!`}`);}},350);}};
+    const b1=$('#bs1'),b10=$('#bs10');
+    if(b1)b1.onclick=()=>{bsize=1;plog('brush',{size:1});upd();};
+    if(b10)b10.onclick=()=>{bsize=10;plog('brush',{size:10});upd();};
     $('#potR').onclick=()=>{brush=d._brush='r';upd();};
     $('#potY').onclick=()=>{brush=d._brush='y';upd();};
     $('#clr').onclick=()=>{cells.fill('');gr.querySelectorAll('.cell').forEach(c=>c.style.background='#edeae2');upd();};
