@@ -391,10 +391,10 @@ const R3=[
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,5];const EXP={hypo:null,found:[],log:[]};
 let TTSON=true;
-const AUD={'170git9':1,'17h03sm':1,'1emros4':1,'1h0q09f':1,'1i3dsba':1,'1mn8cpv':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1qz7h36':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'7vasfn':1,'ar4vex':1,'cplf41':1,'g517m4':1,'h9g9em':1,'i1wkhr':1,'mrg9v4':1,'ofjb6u':1,'olenh1':1,'rt6m0g':1,'su37m1':1,'t8y5qb':1,'wtllpm':1,'zivy1r':1};
+const AUD={'170git9':1,'17h03sm':1,'1emros4':1,'1gfxr0z':1,'1h0q09f':1,'1i3dsba':1,'1mn8cpv':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'7vasfn':1,'ar4vex':1,'cplf41':1,'g517m4':1,'h9g9em':1,'i1wkhr':1,'mrg9v4':1,'ofjb6u':1,'olenh1':1,'rt6m0g':1,'su37m1':1,'t8y5qb':1,'wtllpm':1,'zivy1r':1};
 function _ttsKey(str){let h=5381;for(let i=0;i<str.length;i++){h=((h*33)^str.charCodeAt(i))>>>0;}return h.toString(36);}
 function speak(t,who){try{if(!TTSON)return;
-  const txt=String(t).replace(/<[^>]*>/g,' ').replace(/[「」『』—]/g,' ').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim();
+  const txt=String(t).replace(/<[^>]*>/g,' ').replace(/mL/g,' 밀리리터 ').replace(/[「」『』—]/g,' ').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim();
   if(!txt)return;
   try{if(window._aud){window._aud.pause();window._aud=null;}}catch(e){}
   try{speechSynthesis.cancel();}catch(e){}
@@ -408,7 +408,15 @@ function speak(t,who){try{if(!TTSON)return;
   else if(who==='signac'){u.pitch=0.78;u.rate=0.95;}
   else if(who==='narr'){u.pitch=0.95;u.rate=1.0;}
   else{u.pitch=0.95;u.rate=0.98;}
-  speechSynthesis.speak(u);}catch(e){}}
+  window._lastU=u;speechSynthesis.speak(u);}catch(e){}}
+function speakChain(list){let i=0;
+  function nx(){if(i>=list.length)return;
+    const it=list[i++];speak(it[0],it[1]);
+    const a=window._aud;
+    if(a){a.onended=nx;a.onerror=nx;}
+    else if(window._lastU){window._lastU.onend=nx;}
+    else setTimeout(nx,2500);}
+  nx();}
 function _pickVoices(){try{const vs=speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().indexOf('ko')===0);
   if(!vs.length)return null;
   const nat=vs.find(v=>/natural|neural/i.test(v.name))||vs.find(v=>/google/i.test(v.name))||vs[0];
@@ -418,7 +426,7 @@ function _pickVoices(){try{const vs=speechSynthesis.getVoices().filter(v=>v.lang
 try{speechSynthesis.onvoiceschanged=function(){window._vcs=_pickVoices();};}catch(e){}
 function hypAmt(h){const p=String(h).split(' : ');return '빨강 '+(p[0]*10)+'mL : 노랑 '+(p[1]*10)+'mL';}
 function rogHTML(t,say){speak(say||t,'ratio');return `<div style="font-size:48px">🧑‍🔬 <span style="font-size:22px;color:#6b7683">색을 비율로 섞는 과학자 먼셀</span></div><div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">${t}</div>`;}
-let DECK=[{t:'title'},{t:'st0'},{t:'st0b'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'e1'},{t:'e2'},{t:'addtrap'},{t:'e3'},{t:'thanks'},{t:'wpr'},{t:'mural'},{t:'st5'}];
+let DECK=[{t:'title'},{t:'st0'},{t:'st0b'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'addtrap'},{t:'e1'},{t:'e2'},{t:'e3'},{t:'thanks'},{t:'wpr'},{t:'mural'},{t:'st5'}];
 DECK.push({t:'dot0'},{t:'dot1'},{t:'dot1b'},{t:'pintro'},{t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'dot2'});
 DECK.push({t:'reflect'},{t:'sintro'},{t:'sum',i:0},{t:'done'});
 let idx=0, S={};
@@ -676,7 +684,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       plog('addtrap',{a,b});
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣어 봐요!');return;}
       if(a===50&&b===80){chime(true);
-        success('색이 달라요! 조수의 주장은 틀렸어요 🔍','빨강 50 : 노랑 80은 목표 색이 <b>아니에요</b>.<br>같은 수를 <b>더하면(+30)</b> 색이 변해요 —<br>색을 지키는 건 <b>같은 수를 곱하는 것(×몇 배)</b>이었죠!');return;}
+        success('색이 달라요! 조수의 주장은 틀렸어요 🔍','빨강 50 : 노랑 80은 목표 색이 <b>아니에요</b> — 같은 수를 <b>더하면(+30)</b> 색이 변하는군요!<br>그런데 우리 실험(20:50, 40:100…)은 왜 <b>전부 같은 색</b>이었을까요?<br>지금까지의 실험을 <b>정리하며</b> 비밀을 찾아봐요!');return;}
       if(a*EXPR[1]===b*EXPR[0]){retry('그 양은 목표 색이 맞아요! 지금은 <b>조수의 주장</b>(빨강 50mL : 노랑 80mL)이 맞는지 확인하는 중이에요.');return;}
       retry('조수의 주장대로 <b>빨강 50mL, 노랑 80mL</b>를 만들어 확인해 봐요!');};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
@@ -857,9 +865,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       </div>
       <div style="margin-top:8px"><button class="btn pri" id="run">🧪 만들어 보기!</button> <button class="btn ghost" id="clr">비우기</button>
       <button class="btn" id="wprNext" style="opacity:.45;cursor:not-allowed">뭉크의 부탁 들으러 가기 →</button></div>`;
-    speak('며칠 뒤, 뭉크가 다시 찾아왔어요.','narr');
-    setTimeout(()=>speak('이번에는 더 많은 양이 필요해! 이 그림을 더 큰 벽화에 그리기로 했거든. 어떻게 만드는지 알려 줄래?','munch'),1800);
-    setTimeout(()=>speak('이렇게 만들면 돼요. 빨강 20 밀리리터 대 노랑 50 밀리리터의 두 배인, 빨강 40 밀리리터 대 노랑 100 밀리리터도 똑같은 색이에요! 조수 연구원님이 직접 만들어 뭉크에게 보여 드리세요. 자유롭게 더 많은 양으로 연습해 봐요! 두 배 말고 1.5배도 될까요? 도전해 봐요!','ratio'),7200);
+    speakChain([['며칠 뒤, 뭉크가 다시 찾아왔어요.','narr'],
+      ['이번에는 더 많은 양이 필요해! 이 그림을 더 큰 벽화에 그리기로 했거든. 어떻게 만드는지 알려 줄래?','munch'],
+      ['이렇게 만들면 돼요. 빨강 20 밀리리터 대 노랑 50 밀리리터의 두 배인, 빨강 40 밀리리터 대 노랑 100 밀리리터도 똑같은 색이에요! 조수 연구원님이 직접 만들어 뭉크에게 보여 드리세요. 자유롭게 더 많은 양으로 연습해 봐요! 두 배 말고 1.5배도 될까요? 도전해 봐요!','ratio']]);
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
       const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/220*92)+'%';};
