@@ -352,9 +352,9 @@ function markDone(r){try{const a=JSON.parse(localStorage.getItem(ukey('rs3_done'
 /* ── 색 엔진 ── */
 const PRIM={빨강:[230,40,55],노랑:[250,215,45],파랑:[45,100,205]};
 function mix(c){const ks=Object.keys(c).filter(k=>c[k]>0),t=ks.reduce((s,k)=>s+c[k],0);if(!t)return[252,250,245];
-  let o=[1,1,1];for(const k of ks){const w=c[k]/t,p=PRIM[k];for(let i=0;i<3;i++)o[i]*=Math.pow(Math.max(p[i]/255,.02),w);}
-  let out=o.map(v=>Math.round(v*255));
-  if(ks.length===2&&ks.includes('노랑')&&ks.includes('파랑')){out[1]=Math.min(255,Math.round(out[1]*1.35+18));out[2]=Math.round(out[2]*0.88);}
+  let o=[0,0,0];for(const k of ks){const w=c[k]/t,p=PRIM[k];for(let i=0;i<3;i++)o[i]+=p[i]*w;}
+  let out=o.map(v=>Math.round(v));
+  if(ks.length===2&&ks.includes('노랑')&&ks.includes('파랑')){out[0]=Math.round(out[0]*0.4);out[1]=Math.min(255,Math.round(out[1]*1.15));out[2]=Math.round(out[2]*0.6);}
   return out;}
 const rgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
 function gcd(a,b){return b?gcd(b,a%b):a;}
