@@ -697,24 +697,24 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       window._slideBack=null;
       const av=Q.filter(q=>alive(q).length>0);
       el.innerHTML=head()+`
-        <div class="dial" style="font-size:22px;line-height:1.7">"진짜 과학자는 실험 전에 <b>가설</b>을 세운답니다!<br><b>목표 색을 잘 보세요</b> — 어느 색이 더 많이 들어갔을까요?"</div>`
+        <div class="dial" style="font-size:21px;line-height:1.7">"과학자는 실험 전에 <b>가설</b>을 세워요.<br><b>가설</b>이란, <b>어떤 것이 맞을 거라고 예상하는 과학자의 생각</b>이에요.<br>우리도 가설을 세워 봐요 — 목표색을 잘 보세요. <b>빨강과 노랑 중 어떤 것이 많을까요?</b>"</div>`
         +swatch()+`
         <div class="bank" style="margin-top:12px">${av.map(q=>`<span class="chip qA" data-k="${q.k}" style="font-size:18px">${q.icon} ${q.lbl}</span>`).join('')}</div>
         <div class="sub" style="margin-top:10px">💡 좋은 가설은 마음대로 찍는 게 아니라 <b>관찰에 근거</b>해요!</div>`;
-      speak('진짜 과학자는 실험 전에 가설을 세운답니다! 목표 색을 잘 보세요. 어느 색이 더 많이 들어갔을까요?','ratio');
+      speak('과학자는 실험 전에 가설을 세워요. 가설이란, 어떤 것이 맞을 거라고 예상하는 과학자의 생각이에요. 우리도 가설을 세워 봐요. 목표색을 잘 보세요. 빨강과 노랑 중 어떤 것이 많을까요?','ratio');
       el.querySelectorAll('.qA').forEach(c=>c.onclick=()=>{const q=Q.find(x=>x.k===c.dataset.k);
         plog('exp_hypo_obs',{pick:q.k});stepB(q);});}
     function stepB(q){
       const av=alive(q);
       el.innerHTML=head()+`
-        <div class="dial" style="font-size:22px;line-height:1.7">"<b>${q.obs}</b>고 관찰했군요! 그럼 <b>어느 정도</b>일까요?<br>관찰에 맞는 <b>비</b>를 골라 보세요!"</div>`
+        <div class="dial" style="font-size:22px;line-height:1.7">"<b>${q.obs}</b>고 예상했군요! 그럼 <b>얼마나 더 많을까요?</b><br>내 예상(가설)에 맞는 것을 골라 보세요!"</div>`
         +swatch()+`
         <div class="bank" style="margin-top:12px">
           ${av.map(o=>`<span class="chip hB" data-h="${o[0]} : ${o[1]}" style="font-size:18px">빨강 ${o[0]*10}mL : 노랑 ${o[1]*10}mL <span style="font-size:14px;color:var(--sub)">(${o[2]})</span></span>`).join('')}
           <span class="chip" id="hBack" style="font-size:18px">↩ 다시 관찰할래요</span>
         </div>
         <div class="sub" style="margin-top:10px">정답이 아니어도 괜찮아요 — 실험으로 확인하고, 틀린 가설은 지워 나가요!</div>`;
-      speak(q.obs+'고 관찰했군요! 그럼 어느 정도일까요? 관찰에 맞는 비를 골라 보세요!','ratio');
+      speak(q.obs+'고 예상했군요! 그럼 얼마나 더 많을까요? 내 예상, 가설에 맞는 것을 골라 보세요!','ratio');
       el.querySelectorAll('.hB').forEach(c=>c.onclick=()=>{const h=c.dataset.h;EXP.hypo=h;plog('exp_hypo',{pick:h});
         success('가설 완성!','내 관찰: <b>'+q.obs+'</b>!<br>내 가설: <b>'+hypAmt(h)+'</b><br>이제 실험실에서 확인해 봐요! 🧪');});
       $('#hBack').onclick=()=>stepA();
