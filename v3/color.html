@@ -391,7 +391,7 @@ const R3=[
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,5];const EXP={hypo:null,found:[],log:[]};
 let TTSON=true;
-const AUD={'170git9':1,'1cm3dgv':1,'1emros4':1,'1g5sgpu':1,'1h0q09f':1,'1h1ehdo':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'a0a4c6':1,'cxz4z8':1,'g517m4':1,'i1wkhr':1,'jlh3xg':1,'k3fqm6':1,'wtllpm':1,'zk7z1p':1};
+const AUD={'170git9':1,'17h03sm':1,'1emros4':1,'1h0q09f':1,'1i3dsba':1,'1mn8cpv':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1qz7h36':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'7vasfn':1,'ar4vex':1,'g517m4':1,'h9g9em':1,'i1wkhr':1,'mrg9v4':1,'ofjb6u':1,'t8y5qb':1,'wtllpm':1};
 function _ttsKey(str){let h=5381;for(let i=0;i<str.length;i++){h=((h*33)^str.charCodeAt(i))>>>0;}return h.toString(36);}
 function speak(t,who){try{if(!TTSON)return;
   const txt=String(t).replace(/<[^>]*>/g,' ').replace(/[「」『』—]/g,' ').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim();
@@ -418,9 +418,9 @@ function _pickVoices(){try{const vs=speechSynthesis.getVoices().filter(v=>v.lang
 try{speechSynthesis.onvoiceschanged=function(){window._vcs=_pickVoices();};}catch(e){}
 function hypAmt(h){const p=String(h).split(' : ');return '빨강 '+(p[0]*10)+'mL : 노랑 '+(p[1]*10)+'mL';}
 function rogHTML(t){speak(t,'ratio');return `<div style="font-size:48px">🧑‍🔬 <span style="font-size:22px;color:#6b7683">색을 비율로 섞는 과학자 먼셀</span></div><div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">${t}</div>`;}
-let DECK=[{t:'title'},{t:'st0'},{t:'st0b'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t:'st3'},{t:'thanks'},{t:'wpr'},{t:'mural'},{t:'e1'},{t:'e2'},{t:'e3'},{t:'st5'}];
+let DECK=[{t:'title'},{t:'st0'},{t:'st0b'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'e1'},{t:'e2'},{t:'addtrap'},{t:'e3'},{t:'thanks'},{t:'wpr'},{t:'mural'},{t:'st5'}];
 DECK.push({t:'dot0'},{t:'dot1'},{t:'dot1b'},{t:'pintro'},{t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'dot2'});
-DECK.push({t:'sintro'},{t:'sum',i:0},{t:'done'});
+DECK.push({t:'reflect'},{t:'sintro'},{t:'sum',i:0},{t:'done'});
 let idx=0, S={};
 /* ── 프레임워크 ── */
 function prog(){
@@ -559,7 +559,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     const lines=[
       '내가 그렸던 <b>이 노을색</b>을 <b>어떻게 만들었는지 잊어버렸어.</b><br><b>같은 색을 다시 만들어야 하는데…</b>',
       '<b>주황은 빨강과 노랑을 섞어</b> 만든다는 건 기억나. 그런데 이 색은 보통 주황이랑 좀 달라…',
-      '네가 <b>색깔 연구원</b>이라고 들었는데…<br><b>실험을 통해</b> 내가 만든 <b>주황색을 다시 찾아 줄 수 있겠니?</b>'];
+      '그래서 <b>색을 연구하는 과학자 먼셀</b>에게 부탁하기로 했어.<br>너도 먼셀의 <b>조수 연구원</b>이 되어, 실험으로 이 색을 <b>함께 찾아 줄 수 있겠니?</b>'];
     let li=0;
     setTimeout(()=>speak(lines[0],'munch'),300);
     el.innerHTML=`<div><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:4px solid #8b857a;box-shadow:0 6px 18px rgba(0,0,0,.25)"><div style="font-size:15px;font-weight:800;color:#6b7683;margin-top:4px">화가 뭉크</div></div>
@@ -575,7 +575,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     const _tg=mix({빨강:EXPR[0],노랑:EXPR[1]});
     const sw=`<div class="pair" style="margin:6px 0"><div><div class="csw" style="background:${rgb(_tg)};border-radius:50%"></div><div class="bklab">목표색 — 화가의 노을빛 주황</div></div></div>`;
     function d1ask(){
-      el.innerHTML=rogHTML('"목표는 바로 이 색입니다.<br>먼저, <b>물감의 종류</b>는 어떤 것이 필요할까요?"')+sw+
+      el.innerHTML=rogHTML('"조수 연구원님, 목표는 바로 이 색입니다.<br>먼저, <b>물감의 종류</b>는 어떤 것이 필요할까요?"')+sw+
         `<div class="bank" style="margin-top:10px">
           <span class="chip dk" data-k="ry">빨강과 노랑</span>
           <span class="chip dk" data-k="rb">빨강과 파랑</span>
@@ -592,8 +592,8 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       el.querySelectorAll('.da').forEach(c=>c.onclick=()=>{const k=c.dataset.k;plog('exp_idea',{step:'amt',pick:k});
         if(k==='exp'){chime(true);success('바로 그거예요! 💡','종류는 알지만 <b>양</b>은 아직 몰라요.<br>그래서 <b>실험</b>이 필요합니다 — 함께 알아내 봐요!');}
         else retry('정말 그럴까요? 양이 달라지면 색이 어떻게 변하는지 <b>실험으로 확인</b>해야 해요 — 다시 골라 봐요!');});}
-    el.innerHTML=rogHTML('"안녕하세요. 저는 <b>색을 비율로 섞어 만드는 것</b>을 실험하는 <b>과학자 먼셀</b>입니다.<br>당신을 도와 <b>화가 뭉크가 찾는 색</b>을 만들어 보려고 왔습니다.<br>저와 함께 찾아보실까요?"')+
-      `<div class="bank" style="margin-top:12px"><span class="chip" id="hiB">좋아요, 함께 찾아요! 🧑‍🔬</span></div>`;
+    el.innerHTML=rogHTML('"안녕하세요. 저는 <b>색을 비율로 섞어 만드는 것</b>을 실험하는 <b>과학자 먼셀</b>입니다.<br><b>뭉크 화가님이 잃어버린 색</b>을 찾아 달라는 부탁을 받았어요.<br>제 실험을 도와줄 <b>조수 연구원</b>이 되어 주시겠어요?"')+
+      `<div class="bank" style="margin-top:12px"><span class="chip" id="hiB">네! 조수 연구원이 될게요 🧑‍🔬</span></div>`;
     $('#hiB').onclick=()=>{plog('ratio_hello',{});d1ask();};
     return;}
   if(d.t==='d2'){
@@ -623,7 +623,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       s0b:{say:'"네? 왜 부족하다는 건가요?"',
           ch:[['섞는 순서도 알아야 하니까','no'],['노랑을 얼마나 넣는지도 알아야 하니까','s0c']]},
       s0c:{demo:1,say:'"정말요? 그럼 직접 실험해 봐요! 여기 <b>빨강 20mL</b>씩 담긴 비커 두 개가 있어요.<br>노랑을 <b>서로 다르게</b> 부어 보세요!"',
-          after:'"우와, 연구원님 말이 맞았어요! 빨강이 같아도 <b>노랑이 다르면 색이 달라</b>지는군요!"',
+          after:'"우와, 조수 연구원님 말이 맞았어요! 빨강이 같아도 <b>노랑이 다르면 색이 달라</b>지는군요!"',
           ch:[['그러니까 두 물감 모두 봐야 해!','end']]}};
     let curK=null;const hist=[];
     window._slideBack=()=>{if(hist.length){show(hist.pop(),true);return true;}return false;};
@@ -651,12 +651,43 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     show('s0');
     return;}
   if(d.t==='d4'){
-    el.innerHTML=rogHTML('"결론! <b>빨강과 노랑을 각각 얼마나 넣는지</b>가 이 색의 열쇠예요.<br>그런데 얼마나 넣어야 뭉크의 색이 될까요?<br>그건 말로는 알 수 없어요 —<br><b>실험</b>으로 알아내 봐요, 연구원님!"')+
+    el.innerHTML=rogHTML('"결론! <b>빨강과 노랑을 각각 얼마나 넣는지</b>가 이 색의 열쇠예요.<br>그런데 얼마나 넣어야 뭉크의 색이 될까요?<br>그건 말로는 알 수 없어요 —<br><b>실험</b>으로 알아내 봐요, 조수 연구원님!"')+
       `<div class="bank" style="margin-top:12px"><span class="chip" id="goExp">좋아, 실험하러 가자! 🧪</span></div>`;
     $('#goExp').onclick=()=>{plog('exp_peer',{step:'d4_go'});chime(true);
       success('연구 계획 완성! 🕵️','알아낼 것: <b>빨강과 노랑을 각각 얼마나 넣는지!</b><br>무작정 붓지 말고 — 실험 전에 <b>가설</b>부터 세워 봐요!');};
     return;}
 
+  if(d.t==='addtrap'){
+    const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
+    el.innerHTML=rogHTML('"잠깐! 뭉크의 조수가 이런 주장을 했대요 —<br>「빨강 20mL : 노랑 50mL에 <b>각각 30mL씩 더하면</b>(빨강 50mL : 노랑 80mL) 같은 색이 된다!」<br>정말일까요? <b>직접 만들어 확인</b>해 봐요!"')+`
+      <div class="paints">
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
+        <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
+      </div>
+      <div class="pair">
+        <div><div class="csw" style="background:${rgb(tgt)}"></div><div class="bklab">목표 색 (뭉크의 노을빛)</div></div>
+        <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내 비커</div></div>
+      </div>
+      <div style="margin-top:8px"><button class="btn pri" id="run">🧪 확인하기!</button> <button class="btn ghost" id="clr">비우기</button></div>`;
+    const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
+      $('#a0').textContent=a;$('#a1').textContent=b;
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';};
+    $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0;
+      plog('addtrap',{a,b});
+      if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣어 봐요!');return;}
+      if(a===50&&b===80){chime(true);
+        success('색이 달라요! 조수의 주장은 틀렸어요 🔍','빨강 50 : 노랑 80은 목표 색이 <b>아니에요</b>.<br>같은 수를 <b>더하면(+30)</b> 색이 변해요 —<br>색을 지키는 건 <b>같은 수를 곱하는 것(×몇 배)</b>이었죠!');return;}
+      if(a*EXPR[1]===b*EXPR[0]){retry('그 양은 목표 색이 맞아요! 지금은 <b>조수의 주장</b>(빨강 50mL : 노랑 80mL)이 맞는지 확인하는 중이에요.');return;}
+      retry('조수의 주장대로 <b>빨강 50mL, 노랑 80mL</b>를 만들어 확인해 봐요!');};
+    wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
+  if(d.t==='reflect'){
+    el.innerHTML=rogHTML('"조수 연구원님, 비밀카드를 풀기 전에 —<br><b>양이 달라도 같은 색이 되는 이유</b>를 연구원님의 말로 적어 주세요!"')+`
+      <textarea id="refT" placeholder="예) 빨강과 노랑을 몇 배로 늘려도 …" style="width:min(560px,90vw);height:80px;font-size:19px;font-family:inherit;border:3px solid var(--line);border-radius:12px;padding:10px;resize:none"></textarea>
+      <div style="margin-top:10px"><button class="btn pri" id="refGo">제출! →</button></div>`;
+    $('#refGo').onclick=()=>{const v=($('#refT').value||'').trim();
+      if(!v){retry('한 줄이면 충분해요 — 연구원님의 말로 적어 봐요!');return;}
+      plog('reflect',{room:'color',text:v.slice(0,300)});chime(true);next();};
+    return;}
   if(d.t==='e1'){
     const f0=EXP.found[0]||[20,50];
     el.innerHTML=rogHTML(`"실험 대성공! 그럼 이제 수첩에 <b>「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」</b>라고 적어 두면 완벽하겠죠?"`)+
@@ -745,7 +776,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     const board=()=>{const b=$('#board');if(b)b.innerHTML=EXP.log.slice(-5).map(l=>`${l.ok?'⭕':'❌'} 빨강 ${l.a} : 노랑 ${l.b}`).join('<br>')||'아직 없음';};
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설('+hypAmt(EXP.hypo)+')과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='📔 수첩의 비 2 : 5와 일치!';}mh.textContent=txt;mh.style.visibility=on?'visible':'hidden';}};
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설('+hypAmt(EXP.hypo)+')과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='✨ 목표 색과 일치!';}mh.textContent=txt;mh.style.visibility=on?'visible':'hidden';}};
     $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0;
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣고 실험해야죠!');return;}
       const ok=a*EXPR[1]===b*EXPR[0];EXP.log.push({a,b,ok});board();plog('exp_run',{a,b,ok});
@@ -775,7 +806,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='st4'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
     const first=EXP.found[0]||[20,50];
-    el.innerHTML=rogHTML(`"완벽한 노을빛이에요, 연구원님! 그런데 궁금한 게 생겼어요 — <b>이 색을 다른 양으로도 만들 수는 없을까요?</b><br>잠깐 생각해 보고, 지난 실험의 빨강 ${first[0]} : 노랑 ${first[1]} 말고 <b>서로 다른 양으로 2번</b> 같은 색을 만들어 보세요!"`)+`
+    el.innerHTML=rogHTML(`"완벽한 노을빛이에요, 조수 연구원님! 그런데 궁금한 게 생겼어요 — <b>이 색을 다른 양으로도 만들 수는 없을까요?</b><br>잠깐 생각해 보고, 지난 실험의 빨강 ${first[0]} : 노랑 ${first[1]} 말고 <b>서로 다른 양으로 2번</b> 같은 색을 만들어 보세요!"`)+`
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
@@ -789,7 +820,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     const board=()=>{const b=$('#board');if(b)b.innerHTML=EXP.found.map(f=>`⭕ 빨강 ${f[0]} : 노랑 ${f[1]}`).join('<br>')||'아직 없음';};
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설('+hypAmt(EXP.hypo)+')과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='📔 수첩의 비 2 : 5와 일치!';}mh.textContent=txt;mh.style.visibility=on?'visible':'hidden';}};
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';const sw=c=>'<span style="display:inline-block;width:15px;height:15px;border-radius:50%;vertical-align:-2px;margin-right:4px;background:'+rgb(PRIM[c])+'"></span>';const mr=$('#mmR'),my2=$('#mmY');if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';const mh=$('#mmH');if(mh){let on=false,txt='';if(mh.dataset.m==='hypo'&&EXP.hypo){const hp=EXP.hypo.split(' : ');on=a>0&&b>0&&a*(+hp[1])===b*(+hp[0]);txt='🔬 내 가설('+hypAmt(EXP.hypo)+')과 일치!';}else{on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];txt='✨ 목표 색과 일치!';}mh.textContent=txt;mh.style.visibility=on?'visible':'hidden';}};
     $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0;
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣고 실험해야죠!');return;}
       const ok=a*EXPR[1]===b*EXPR[0];EXP.log.push({a,b,ok});plog('exp_run',{a,b,ok,stage:2});
@@ -802,9 +833,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       else{chime(true);toastFB('ok','✅ 성공!','좋아요! <b>또 다른 양</b>으로 한 번 더!');S.amt={};upd();}};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};board();upd();return;}
   if(d.t==='thanks'){
-    speak('찾았다! 바로 이 색이야! 색을 찾아줘서 정말 고마워! 네 덕분에 절규를 완성했어!','munch');
+    speak('찾았다! 바로 이 색이야! 먼셀 박사와 조수 연구원, 정말 고마워! 너희 덕분에 절규를 완성했어!','munch');
     el.innerHTML=`<div><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:4px solid #8b857a;box-shadow:0 6px 18px rgba(0,0,0,.25)"><div style="font-size:15px;font-weight:800;color:#6b7683;margin-top:4px">화가 뭉크</div></div>
-      <div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">"찾았다! 바로 이 색이야! <b>색을 찾아줘서 정말 고마워!</b><br>네 덕분에 「<b>절규</b>」를 완성했어!"</div>
+      <div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">"찾았다! 바로 이 색이야!<br><b>먼셀 박사와 조수 연구원, 정말 고마워!</b><br>너희 덕분에 「<b>절규</b>」를 완성했어!"</div>
       <div style="display:inline-block;background:#3b2f24;padding:10px;border-radius:6px;box-shadow:0 8px 22px rgba(0,0,0,.3)"><img src="scream.jpg?v=2" alt="완성된 절규" style="max-width:190px;display:block;border-radius:2px"></div>
       <div class="sub" style="font-size:14px;margin-top:4px">에드바르 뭉크, 「절규」 — 노을빛 하늘까지 완성!</div>
       <div style="margin-top:10px"><button class="btn pri" onclick="plog('thanks',{});next()">다음 →</button></div>`;
@@ -815,7 +846,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     el.innerHTML=`<div class="sub" style="font-size:16px;font-weight:800">— 며칠 뒤, 뭉크가 다시 찾아왔어요 —</div>
       <div class="dial" style="font-size:20px;line-height:1.7;max-width:820px;margin:6px auto"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "이번에는 <b>더 많은 양</b>이 필요해!<br><b>이 그림을 더 큰 벽화에 그리기로 했거든.</b> 어떻게 만드는지 알려 줄래?"</div>
       <div style="font-size:48px">🧑‍🔬 <span style="font-size:22px;color:#6b7683">색을 비율로 섞는 과학자 먼셀</span></div>
-      <div class="dial" style="font-size:19px;line-height:1.7;max-width:820px;margin:6px auto">"이렇게 만들면 돼요 — 빨강 20mL : 노랑 50mL의 <b>두 배</b>인 <b>빨강 40mL : 노랑 100mL</b>도 똑같은 색이에요!<br>뭉크에게 보여 줄 수 있게, <b>자유롭게 더 많은 양</b>으로 만들어 보며 연습해 봐요!"</div>
+      <div class="dial" style="font-size:19px;line-height:1.7;max-width:820px;margin:6px auto">"이렇게 만들면 돼요 — 빨강 20mL : 노랑 50mL의 <b>두 배</b>인 <b>빨강 40mL : 노랑 100mL</b>도 똑같은 색이에요!<br>조수 연구원님이 직접 만들어 뭉크에게 보여 드리세요 — <b>자유롭게 더 많은 양</b>으로 연습해 봐요!<br>도전! 두 배 말고 <b>1.5배</b>(빨강 30mL : 노랑 75mL)도 될까요?"</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
@@ -828,7 +859,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       <button class="btn" id="wprNext" style="opacity:.45;cursor:not-allowed">뭉크의 부탁 들으러 가기 →</button></div>`;
     speak('며칠 뒤, 뭉크가 다시 찾아왔어요.','narr');
     setTimeout(()=>speak('이번에는 더 많은 양이 필요해! 이 그림을 더 큰 벽화에 그리기로 했거든. 어떻게 만드는지 알려 줄래?','munch'),1800);
-    setTimeout(()=>speak('이렇게 만들면 돼요. 빨강 20 밀리리터 대 노랑 50 밀리리터의 두 배인, 빨강 40 밀리리터 대 노랑 100 밀리리터도 똑같은 색이에요! 뭉크에게 보여 줄 수 있게, 자유롭게 더 많은 양으로 만들어 보며 연습해 봐요!','ratio'),7200);
+    setTimeout(()=>speak('이렇게 만들면 돼요. 빨강 20 밀리리터 대 노랑 50 밀리리터의 두 배인, 빨강 40 밀리리터 대 노랑 100 밀리리터도 똑같은 색이에요! 조수 연구원님이 직접 만들어 뭉크에게 보여 드리세요. 자유롭게 더 많은 양으로 연습해 봐요! 두 배 말고 1.5배도 될까요? 도전해 봐요!','ratio'),7200);
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
       const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/220*92)+'%';};
@@ -845,7 +876,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='mural'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
     el.innerHTML=`<div class="q" style="font-size:26px">뭉크의 새로운 문제</div>
-      <div class="dial" style="font-size:20px;line-height:1.7;max-width:820px;margin:6px auto"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "잘 아는구나! 그럼 부탁할게 — 벽화에는 <b>빨강과 노랑을 더해서 210mL</b>의 주황색이 필요해!<br>메모의 비 <b>빨강 2 : 노랑 5</b>를 꼭 지켜서 만들어 줄래?"</div>
+      <div class="dial" style="font-size:20px;line-height:1.7;max-width:820px;margin:6px auto"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "잘 아는구나! 그럼 부탁할게 — 벽화에는 <b>빨강과 노랑을 더해서 210mL</b>의 주황색이 필요해!<br>네가 수첩에 적어 준 <b>빨강 2 : 노랑 5</b>를 꼭 지켜서 만들어 줄래?"</div>
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
@@ -858,7 +889,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
             <div style="font-size:14px;color:var(--sub);font-weight:800">🧪 지금 비커에</div>
             <div id="mmR" style="font-size:21px;font-weight:800;white-space:nowrap">빨강 0mL</div>
             <div id="mmY" style="font-size:21px;font-weight:800;white-space:nowrap">노랑 0mL</div><div id="mmH" data-m="note" style="visibility:hidden;white-space:nowrap;min-height:20px;font-size:15px;font-weight:800;color:#2e9e63;margin-top:2px">&nbsp;</div>
-            <div id="mmT" style="font-size:16px;font-weight:800;color:var(--sub)">전체 0 / 100mL</div>
+            <div id="mmT" style="font-size:16px;font-weight:800;color:var(--sub)">전체 0 / 210mL</div>
           </div>
         </div>
       </div>
@@ -874,7 +905,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
         </div>
       </div>
       <div id="wall" style="display:none;width:min(560px,90vw);height:100px;border:4px solid #8b857a;border-radius:10px;margin:10px auto 0;background:#eee;overflow:hidden"><div id="wallF" style="width:0%;height:100%;background:${rgb(tgt)};transition:width 1.6s"></div></div>`;
-    speak('잘 아는구나! 그럼 부탁할게. 벽화에는 빨강과 노랑을 더해서 210 밀리리터의 주황색이 필요해! 메모의 비, 빨강 2 대 노랑 5를 꼭 지켜서 만들어 줄래?','munch');
+    speak('잘 아는구나! 그럼 부탁할게. 벽화에는 빨강과 노랑을 더해서 210 밀리리터의 주황색이 필요해! 네가 수첩에 적어 준 비, 빨강 2 대 노랑 5를 꼭 지켜서 만들어 줄래?','munch');
     const upd=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
       const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/220*92)+'%';
@@ -882,11 +913,11 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       const mr=$('#mmR'),my2=$('#mmY'),mt=$('#mmT');
       if(mr)mr.innerHTML=sw('빨강')+'빨강 <b>'+a+'</b>mL';
       if(my2)my2.innerHTML=sw('노랑')+'노랑 <b>'+b+'</b>mL';
-      if(mt)mt.innerHTML='전체 <b>'+tot+'</b> / 210mL';const mh=$('#mmH');if(mh){const on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];mh.textContent='📝 뭉크의 메모 2 : 5와 일치!';mh.style.visibility=on?'visible':'hidden';}};
+      if(mt)mt.innerHTML='전체 <b>'+tot+'</b> / 210mL';const mh=$('#mmH');if(mh){const on=a>0&&b>0&&a*EXPR[1]===b*EXPR[0];mh.textContent='📔 내 수첩의 비 2 : 5와 일치!';mh.style.visibility=on?'visible':'hidden';}};
     $('#run').onclick=()=>{const a=S.amt['빨강']||0,b=S.amt['노랑']||0,tot=a+b;
       if(!(a>0&&b>0)){retry('빨강과 노랑을 <b>둘 다</b> 넣어야죠!');return;}
       const okR=a*EXPR[1]===b*EXPR[0];plog('mural',{a,b,ok:okR&&tot===210});
-      if(!okR){retry('색이 목표와 달라요 — 뭉크의 메모 <b>2 : 5</b>를 지키고 있나요?');return;}
+      if(!okR){retry('색이 목표와 달라요 — 수첩의 비 <b>2 : 5</b>를 지키고 있나요?');return;}
       if(tot!==210){retry(tot<210?('색은 완벽해요! 그런데 지금은 '+tot+'mL — 전체가 <b>정확히 210mL</b>가 되어야 해요!'):('앗, '+tot+'mL — <b>210mL</b>를 넘었어요! 조금 덜어 내고 다시 만들어 봐요!'));return;}
       chime(true);
       if(EXP.found.length<2)EXP.found.push([a,b]);
@@ -911,9 +942,9 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
         <div style="display:inline-block;background:#3b2f24;padding:14px;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,.35)">
           <img src="scream.jpg?v=2" alt="뭉크가 완성한 그림" id="mimg" style="max-width:min(280px,78vw);display:block;border-radius:2px;opacity:0;transition:opacity 1.8s">
         </div>
-        <div class="dial" style="margin-top:12px;font-size:20px;line-height:1.7;max-width:760px"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "고마워, 연구원!<br>네가 찾아 준 <b>노을빛 주황</b>으로 하늘을 칠했더니 드디어 완성됐어!<br>이제 <b>색깔의 비밀</b>을 본격적으로 배우러 가 볼까?"</div>
+        <div class="dial" style="margin-top:12px;font-size:20px;line-height:1.7;max-width:760px"><img src="munch.jpg?v=4" alt="화가 뭉크" style="width:34px;height:34px;border-radius:50%;object-fit:cover;vertical-align:-10px;margin-right:5px;border:2px solid #8b857a"> "고마워, 먼셀 연구소의 조수 연구원!<br>너희가 찾아 준 <b>노을빛 주황</b> 덕분에 걱정이 사라졌어!<br>이제 <b>색깔의 비밀</b>을 본격적으로 배우러 가 볼까?"</div>
         <div style="margin-top:10px"><button class="btn pri" onclick="next()">1단계로 출발! →</button></div>`;
-      speak('고마워, 연구원! 이 레시피만 있으면 언제든 이 노을빛을 만들 수 있어. 덕분에 큰 벽화까지 완성했어! 이제 색깔의 비밀을 본격적으로 배우러 가 볼까?','munch');
+      speak('고마워, 먼셀 연구소의 조수 연구원! 이 레시피만 있으면 언제든 이 노을빛을 만들 수 있어. 덕분에 큰 벽화까지 완성했어! 이제 색깔의 비밀을 본격적으로 배우러 가 볼까?','munch');
       setTimeout(()=>{const m=$('#mimg');if(m)m.style.opacity='1';},80);});
     return;}
 if(d.t==='mdemo'){

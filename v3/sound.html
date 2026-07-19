@@ -366,7 +366,7 @@ const NOTES=[['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['�
 const INTV={'1:1':'유니즌','1:2':'옥타브','2:3':'완전5도','3:4':'완전4도','4:5':'장3도','5:6':'단3도','3:5':'장6도','8:9':'장2도','8:15':'장7도'};
 /* 하프 — 화음 단계의 순정률 비 그대로(도:음 = a:b), 길이는 81×a/b */
 const HBASE=72;
-const HP=[{n:'시',a:8,b:9},{n:'도′',a:5,b:6},{n:'레′',a:3,b:4},{n:'미′',a:2,b:3},{n:'파′',a:5,b:8},{n:'솔′',a:5,b:9}]; // 라:음 진동수 비 — 라보다 점점 높은 음
+const HP=[{n:'시',a:8,b:9},{n:'도′',a:5,b:6},{n:'미′',a:2,b:3},{n:'파′',a:5,b:8},{n:'솔′',a:5,b:9}]; // 라:음 진동수 비 — 라보다 점점 높은 음
 const hLen=i=>HBASE*HP[i].a/HP[i].b;
 const hFreq=L=>Math.round(440*HBASE/L);
 let hDone=0; // 0~7
@@ -385,7 +385,7 @@ const DECK=[{t:'intro'},{t:'vib'}];for(let __i=1;__i<=7;__i++)DECK.push({t:'harm
 DECK.push({t:'polyi'},{t:'poly'});
 DECK.push({t:'strlen'});
 HP.forEach((p,i)=>DECK.push({t:'harp',i}));
-DECK.push({t:'ssum',i:0},{t:'done'});
+DECK.push({t:'reflect'},{t:'ssum',i:0},{t:'done'});
 let idx=0,w1env=0,f1=264,s1T=0,animReq=null,plucks=[0,0,0,0,0,0,0,0];
 const GOAL_OPEN={};
 function goalHTML(no,parts){
@@ -522,6 +522,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
+    window._hxRev=false;
     const tn=NOTES[d.ni];
     el.innerHTML=`<div class="q">도와 <b>${tn[0]}</b>의 어울림은 어떤가요?</div>
       <div class="sub" style="font-size:21px">건반을 차례대로 누르면서 아래 내용을 확인하고, 질문에 답해 보세요! <span style="font-size:15px;color:var(--sub)">(미션 ${d.ni} / 7)</span></div>
@@ -561,7 +562,7 @@ if(d.t==='harmx'){
       P.push(`<line x1="${bx1}" y1="${top-8}" x2="${bx1}" y2="${bottom+8}" stroke="#BA7517" stroke-width="2"/>`);
       P.push(`<text x="${bx1+6}" y="${top+2}" font-size="13" font-weight="700" fill="#BA7517">↺ 다시 처음으로!</text>`);
       P.push(`<text x="${(bx0+bx1)/2}" y="${bottom+34}" text-anchor="middle" font-size="14" fill="#BA7517">여기까지가 한 묶음 (무늬가 한 바퀴)</text>`);
-      P.push(`<text x="${(bx0+bx1)/2}" y="${top+2}" text-anchor="middle" font-size="14" font-weight="800" fill="#8a8577">도 ${nb}번 = ${nm} ${nr}번</text>`);
+      P.push(`<text x="${(bx0+bx1)/2}" y="${top+2}" text-anchor="middle" font-size="14" font-weight="800" fill="#8a8577">${window._hxRev?`도 ${nb}번 = ${nm} ${nr}번`:`한 묶음(무늬 한 바퀴)`}</text>`);
       P.push(`<line x1="${padL}" y1="${midY}" x2="${W-padR}" y2="${midY}" stroke="#D3D1C7" stroke-width="1"/>`);
       function wp(cyc,col,wd){
         let dd='';const span=W-padL-padR;
@@ -580,9 +581,10 @@ if(d.t==='harmx'){
       if(i===0)tone(264,0,2);else chord(264,n[1],2);
       plog('harmx',{n:n[0],tgt:tn[0]});
       cur=i;ph0=performance.now();
-      $('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;
+      if(window._hxRev){$('#hxRes').innerHTML=`도 : ${n[0]} = <b>264Hz : ${n[1]}Hz</b> = <b style="color:#b3541e">${a} : ${b}</b> <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;}
+      else{$('#hxRes').innerHTML=`도와 <b>${n[0]}</b>${jz(n[0],'이','가')} 함께 울려요 — 아래 <b>물결 무늬</b>를 관찰해 보세요! <span style="color:var(--sub);font-size:15px">(${ITV[i]})</span>`;}
       const hw=$('#hxWave');if(hw){hw.style.display='block';
-        hw.innerHTML=`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 <b>반복되는 무늬</b>가 생겨요!`;}
+        hw.innerHTML=window._hxRev?`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 <b>반복되는 무늬</b>가 생겨요!`:`두 물결이 만드는 <b>무늬</b>가 얼마나 자주 반복되나요? 잘 보고 별점을 매겨 봐요!`;}
       const rp=$('#ratePan');if(rp)rp.style.display=(i===d.ni)?'block':'none';});
     let stars=0;const feels=new Set();
     el.querySelectorAll('.st').forEach(s=>s.onclick=()=>{stars=+s.dataset.s;
@@ -592,8 +594,8 @@ if(d.t==='harmx'){
       if(feels.has(f)){feels.delete(f);c.classList.remove('used');}else{feels.add(f);c.classList.add('used');}});
     $('#q2go').onclick=()=>{const txt=($('#feelT').value||'').trim();
       if(!feels.size&&!txt){retry('느낌을 하나라도 고르거나 적어 봐요!');return;}
-      plog('harmx_feel',{n:tn[0],feels:[...feels],text:txt.slice(0,120)});chime(true);
-      success('별점과 느낌 저장 완료! ⭐','도와 '+tn[0]+'의 어울림 점수를 기록했어요 — 다음 음도 들어 봐요!');};
+      plog('harmx_feel',{n:tn[0],feels:[...feels],text:txt.slice(0,120)});chime(true);window._hxRev=true;
+      success('별점과 느낌 저장 완료! ⭐','이제 <b>숫자</b>가 열렸어요! 건반을 다시 눌러 <b>진동수의 비</b>를 확인해 보고, 다음 음으로 가요!');};
     drawHX();return;}
   if(d.t==='polyi'){
     el.innerHTML=`<div class="q">🥁 <b>리듬에도 비가 숨어 있어요!</b></div>
@@ -777,15 +779,27 @@ if(d.t==='chord'){
     const exS=String(Math.round(ex*100)/100);
     const bank=[String(p.a),String(p.b),exS,'440']
       .filter((v,i,arr)=>arr.indexOf(v)===i).sort(()=>Math.random()-.5);
-    el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:14px 26px;font-size:23px;font-weight:800;margin-bottom:8px;line-height:1.55">라(A)음은 진동수가 <b>440Hz</b>!<br>라 음의 주파수가 <b>계산하기 좋게 떨어져서</b> 악기 조율 <b>기준음</b>이 되어요.</div>':''}
+    el.innerHTML=`${d.i===0?'<div style="display:inline-block;background:#fbf6e8;border:2.5px solid #e0c98a;border-radius:14px;padding:14px 26px;font-size:23px;font-weight:800;margin-bottom:8px;line-height:1.55">라(A)음은 진동수가 <b>440Hz</b>!<br>라 음(440Hz)은 <b>세계가 함께 약속한</b> 악기 조율 <b>기준음</b>이에요.</div>':''}
       <div class="q">라 줄이 <b>72cm</b>일 때, <b>${p.n}</b> 줄은 몇 cm일까요?</div>
-      <div class="sub" style="font-size:19px">라 : ${p.n} = <b>${p.a} : ${p.b}</b> — 라 길이 72cm에 <b>${fx(p.a+'/'+p.b)}</b>${jz(String(p.b),'을','를')} 곱하면 ${p.n} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b>
+      <div id="tunePan" style="max-width:720px;margin:8px auto;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 16px">
+        <div style="font-weight:800;font-size:19px">① 먼저 <b>귀로</b> 찾아 봐요! 목표 소리를 듣고, 줄 길이를 움직여 같은 소리를 찾으세요.</div>
+        <div style="margin:8px 0"><button class="btn" id="tGoal" style="font-size:16px;padding:8px 16px">🔊 목표 소리(${p.n}) 듣기</button>
+          <button class="btn" id="tPluck" style="font-size:16px;padding:8px 16px">♪ 내 줄 뜯기</button></div>
+        <div><span style="font-weight:800;color:var(--sub)">짧게 ←</span>
+          <input type="range" id="tSl" min="36" max="72" value="72" step="0.5" style="width:min(360px,64vw);accent-color:#e0a02a;vertical-align:middle">
+          <span style="font-weight:800;color:var(--sub)">→ 길게</span>
+          <span id="tLen" style="font-weight:800;margin-left:8px">72cm</span></div>
+        <div class="sub" id="tHint" style="font-size:15px;margin-top:4px">뜯어 보고 목표 소리와 비교해 보세요!</div>
+      </div>
+      <div id="calcPan" style="display:none">
+      <div class="sub" style="font-size:19px">② 이제 <b>계산으로 확인</b>! 라 : ${p.n} = <b>${p.a} : ${p.b}</b> — 라 길이 72cm에 <b>${fx(p.a+'/'+p.b)}</b>${jz(String(p.b),'을','를')} 곱하면 ${p.n} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b>
       &nbsp;<button class="btn" id="hlpBtn" style="font-size:16px;padding:7px 18px;margin:0">❓ 왜 라보다 짧아질까?</button></div>
       ${harpHTML()}
       <div class="eq">
         <div class="row">${p.n} 줄의 길이 = 72 × <span class="vfr"><span class="dz" data-a="${p.a}"></span><span class="fbar"></span><span class="dz" data-a="${p.b}"></span></span> = <span class="dz" data-a="${exS}"></span> cm</div>
       </div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>
+      </div>
       <div id="hlpPop" style="display:none;position:fixed;inset:0;background:rgba(38,48,63,.45);z-index:95;align-items:center;justify-content:center">
         <div style="background:#fffdf6;border:3.5px solid var(--line);border-radius:20px;padding:18px 28px;max-width:min(680px,94vw);max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center">
           <div class="q" style="font-size:23px;margin:0 0 8px">🎻 <b>높은 소리</b>일수록 줄은 왜 짧아질까?</div>
@@ -797,7 +811,7 @@ if(d.t==='chord'){
             <div style="background:#fff;border:2.5px solid var(--line);border-radius:12px;padding:10px 18px"><div style="font-size:14px;color:var(--sub);font-weight:700">떨리는 빠르기 (진동수)</div><div style="font-size:24px;font-weight:800">라 : ${p.n} = ${p.a} : ${p.b}</div></div>
             <div style="background:#fff;border:2.5px solid var(--line);border-radius:12px;padding:10px 18px"><div style="font-size:14px;color:var(--sub);font-weight:700">줄의 길이</div><div style="font-size:24px;font-weight:800;color:#BA7517">라 : ${p.n} = ${p.b} : ${p.a}</div></div>
           </div>
-          <div style="font-size:16px;color:var(--sub);font-weight:700">↑ 두 비는 숫자가 <b style="color:#BA7517">뒤집혀</b> 있어요 (반비례!)</div>
+          <div style="font-size:16px;color:var(--sub);font-weight:700">↑ 두 비는 숫자가 <b style="color:#BA7517">뒤집혀</b> 있어요 (거꾸로 관계)</div>
           <div style="background:#EAF6F1;border:2.5px solid #1D9E75;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:18px;font-weight:700">${p.n}${jz(p.n,'은','는')} 라보다 <b style="color:#1D9E75">높은 소리</b>예요. 높은 소리는 빨리 떨리니까 줄은 더 <b style="color:#1D9E75">짧아야</b> 해요.<br>그래서 답도 72보다 <b style="color:#1D9E75">작은</b> 값이 나와요!</div>
           <div style="font-size:21px;font-weight:800">${p.n} 줄의 길이 = 72 × <span class="vfr" style="font-size:18px"><span>${p.a}</span><span class="fbar"></span><span>${p.b}</span></span> = <b style="color:#c0392b">?</b> cm</div>
           <div style="margin-top:12px"><button class="btn pri" id="hlpClose">닫기</button></div>
@@ -806,10 +820,30 @@ if(d.t==='chord'){
       `;
     $('#hlpBtn').onclick=()=>{$('#hlpPop').style.display='flex';plog('harphelp',{n:p.n});};
     $('#hlpClose').onclick=()=>{$('#hlpPop').style.display='none';};
+    const tSl=$('#tSl');
+    const tUpd=()=>{$('#tLen').textContent=(+tSl.value).toFixed(1).replace(/\.0$/,'')+'cm';};
+    tSl.oninput=tUpd;
+    $('#tGoal').onclick=()=>{pluckT(Math.round(440*p.b/p.a));plog('harp_goal',{n:p.n});};
+    $('#tPluck').onclick=()=>{const L=+tSl.value;pluckT(Math.round(440*72/L));plog('harp_tune',{n:p.n,L});
+      const diff=L-ex;
+      if(Math.abs(diff)<=1.5){chime(true);
+        $('#tHint').innerHTML='🎯 <b>귀로 찾았어요!</b> 약 <b>'+L+'cm</b> — 이제 계산으로 확인해 봐요!';
+        $('#calcPan').style.display='block';}
+      else $('#tHint').innerHTML=diff>0?'목표보다 소리가 <b>낮아요</b> — 줄을 <b>더 짧게</b>!':'목표보다 소리가 <b>높아요</b> — 줄을 <b>더 길게</b>!';};
     mountDrag(el,()=>{hDone=d.i+1;pluckT(hFreq(ex));
-      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 라 줄 <b>전체의 ${fx(p.a+'/'+p.b)}</b>!<br>72 × ${fx(p.a+'/'+p.b)} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`);});
+      const bridge=(p.n==='미′')?'<br>💡 2 : 3 — 색깔의 방에서 <b>빨강 2칸 : 노랑 3칸</b>으로 칠했던 바로 그 비예요!':'';
+      success(`${p.n} 줄 완성! ${exS}cm`,`${p.n} 줄은 라 줄 <b>전체의 ${fx(p.a+'/'+p.b)}</b>!<br>72 × ${fx(p.a+'/'+p.b)} = <b>${exS}cm</b> — 뜯으면 딱 ${p.n}!`+bridge);});
     wireGoal(el);return;}
   
+  if(d.t==='reflect'){
+    el.innerHTML=`<div class="q">📝 내 말로 정리!</div>
+      <div class="sub" style="font-size:20px"><b>잘 어울리는 소리의 비밀</b>을 내 말로 한 줄 적어 보세요!</div>
+      <textarea id="refT" placeholder="예) 진동수의 비가 …" style="width:min(560px,90vw);height:80px;font-size:19px;font-family:inherit;border:3px solid var(--line);border-radius:12px;padding:10px;resize:none"></textarea>
+      <div style="margin-top:10px"><button class="btn pri" id="refGo">제출! →</button></div>`;
+    $('#refGo').onclick=()=>{const v=($('#refT').value||'').trim();
+      if(!v){retry('한 줄이면 충분해요 — 내 말로 적어 봐요!');return;}
+      plog('reflect',{room:'sound',text:v.slice(0,300)});chime(true);next();};
+    return;}
   if(d.t==='ssum'){
     const S3=[
      {t:["두 음의 진동수의 비가 더 ","\u00A0비일수록 더 잘 어울린다."],a:["간단한"],x:["복잡한"]},
@@ -843,7 +877,7 @@ if(d.t==='chord'){
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎼</span></div>` + harpHTML() + `
     <div class="q">소리의 비밀을 모두 찾아냈군요! 대단해요!</div>
     <div class="escDig">🔓 2번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">6</span>을 얻었어요!</div>
-    <div class="sub">비밀 카드 4장이 지갑에 쏙 — 다음 탐험은 <b>🗺️ 지도의 비밀</b>!</div>
+    <div class="sub">이 방의 비밀 카드가 지갑에 쏙 — 다음 탐험은 <b>🗺️ 지도의 비밀</b>!</div>
     <button class="btn pri" id="go2">다음 방으로 → 🗺️</button>`;
     $('#go2').onclick=()=>{plog('complete',{});markDone('sound');chime(true);location.href='map.html';};
     return;}

@@ -483,7 +483,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='title'){
     el.innerHTML=`<div style="font-size:90px">📝</div>
       <div class="q">평가의 방 — 배운 실력을 확인해요!</div>
-      <div class="sub">문제 <b>10개</b>를 풀어 보세요. 모두 맞히면 통과!</div>
+      <div class="sub">지금까지 배운 실력으로 <b>여러 가지 문제</b>를 차례로 풀어 보세요!</div>
       <button class="btn pri" onclick="next()">평가 시작! →</button>`;return;}
   if(d.t==='sense'){
     S.amt={};
@@ -502,19 +502,22 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
         <div><div class="bk"><div class="fill" id="my"></div></div><div class="bklab">내가 만든 색 (비커)</div></div>
         <div class="recbox"><div id="recT"></div></div>
       </div>
-      <button class="btn ghost" id="clr">비우기</button>`;
+      <div style="margin-top:8px"><button class="btn pri" id="doneB">🎨 완성!</button> <button class="btn ghost" id="clr">비우기</button></div>`;
     const used=f._used||(f._used=[]);  // 색깔(가족) 단위 공유 — 라운드가 달라도 같은 양 재사용 차단
     const upd=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0,tot=a+b;
       $('#a0').textContent=a;$('#a1').textContent=b;
       const rt=$('#recT');if(rt)rt.innerHTML=`
         <div class="rr"><span class="sw2" style="background:${rgb(PRIM[p0])}"></span>${p0} <b>${a}mL</b></div>
         <div class="rr"><span class="sw2" style="background:${rgb(PRIM[p1])}"></span>${p1} <b>${b}mL</b></div>`;
-      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';
-      if(a>0&&b>0&&a*r1===b*r0){
-        const key=a+':'+b;
-        if(used.includes(key)){retry('아까와 <b>같은 양</b>이에요 — 다른 양으로 만들어 보세요!');S.amt={};upd();return;}
-        used.push(key);const g=gcd(a,b);chime(true);
-        success('맞았어요! 양은 달라도 비는 같아요!',`${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`);}};
+      const my=$('#my');my.style.background=rgb(mix(S.amt));my.style.height=Math.min(92,tot/170*92)+'%';};
+    $('#doneB').onclick=()=>{const a=S.amt[p0]||0,b=S.amt[p1]||0;
+      plog('sense_try',{n:N,a,b});
+      if(!(a>0&&b>0)){retry(p0+'과 '+p1+'을 <b>둘 다</b> 넣고 완성을 눌러요!');return;}
+      if(!(a*r1===b*r0)){retry('아직 목표 색이 아니에요 — <b>'+r0+' : '+r1+'의 비</b>를 다시 생각해 봐요!');return;}
+      const key=a+':'+b;
+      if(used.includes(key)){retry('아까와 <b>같은 양</b>이에요 — 다른 양으로 만들어 보세요!');S.amt={};upd();return;}
+      used.push(key);const g=gcd(a,b);chime(true);
+      success('맞았어요! 양은 달라도 비는 같아요!',`${p0} ${a} : ${p1} ${b} = <b>${a/g} : ${b/g}</b>`);};
     wireTubes(el,upd);$('#clr').onclick=()=>{S.amt={};upd();};upd();return;}
   /* ── 탐색 단계: 화가의 잃어버린 색 ── */
   if(d.t==='st0'){
@@ -641,10 +644,10 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
       </div>
       <div class="bank">${[String(r0),String(r1),'비','양','3'].sort(()=>Math.random()-.5).map(w=>`<span class="chip" data-w="${w}">${w}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('exp_recipe',{});confetti();
-      fb('ok','🖼️ 화가 뭉크가 그림을 완성했어요!','"고마워, 연구원! 네 덕분에 노을빛 주황을 되찾았어.<br>이제 <b>색깔의 비밀</b>을 본격적으로 배우러 가 볼까?"','1단계로 출발! →',next);});
+      fb('ok','🖼️ 화가 뭉크가 그림을 완성했어요!','"고마워, 연구원! 네 덕분에 노을빛 주황을 되찾았어.<br>이제 <b>색깔의 비밀</b>을 본격적으로 배우러 가 볼까?"','다음 문제로! →',next);});
     return;}
 if(d.t==='mdemo'){
-    el.innerHTML=`<div class="q" style="font-size:36px">🎨 1단계 : 같은 색 만들기!</div>
+    el.innerHTML=`<div class="q" style="font-size:36px">🎨 같은 색 만들기!</div>
       <div class="dial" style="font-size:21px;line-height:1.8;margin-bottom:8px">빨강 : 노랑 = <b>2 : 3</b>의 비가 되도록 <b>물감 버튼</b>을 누르세요!<br>빨강 <b>20mL</b>, 노랑 <b>30mL</b>를 넣었더니 <b>같은 색</b>이 되었죠?</div>
       <div class="paints" style="pointer-events:none;margin:4px 0">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="da0">0</span>mL</div>
@@ -684,7 +687,7 @@ if(d.t==='mdemo'){
     })();
     return;}
   if(d.t==='qintro'){
-    el.innerHTML=`<div class="q" style="font-size:36px"><b>1단계 : 색 만들기 퀴즈 풀기!</b></div>
+    el.innerHTML=`<div class="q" style="font-size:36px"><b>비 실력 확인 문제!</b></div>
       <button class="btn pri" onclick="next()">퀴즈 시작! →</button>`;
     return;}
   if(d.t==='pintro'){
@@ -695,7 +698,8 @@ if(d.t==='mdemo'){
   if(d.t==='make'){
     const m=MAKE[d.i],gi=m.top.indexOf(m.given),askC=m.top[1-gi],BASE=m.gv,ans=BASE*m.r[1-gi]/m.r[gi];
     const tgt=mix({[m.top[0]]:m.r[0],[m.top[1]]:m.r[1]});
-    const cand=[...new Set([ans,BASE,ans*2,Math.max(5,Math.round(ans/2))])].slice(0,4);
+    const addv=BASE+(m.r[1-gi]-m.r[gi]);
+    const cand=[...new Set([ans,addv,BASE,ans*2,Math.max(5,Math.round(ans/2))])].filter(v=>v>0).slice(0,5);
     const bank=cand.map(String).sort(()=>Math.random()-.5);
     el.innerHTML=`<div class="q">${m.top[0]} : ${m.top[1]} = <b>${m.r[0]} : ${m.r[1]}</b>가 되는 ${m.cn}색을 만들려고 해요.<br>${m.given}이 <b>${BASE}mL</b> 들어 있다면, ${askC}은 <b>몇 mL</b> 넣어야 할까요?</div>
       <div class="sub">알맞은 숫자 카드를 빈칸에 끌어다 놓으세요!</div>
@@ -704,7 +708,11 @@ if(d.t==='mdemo'){
       </div>
       <div class="eq"><div class="row">${askC} 물감의 양 = <span class="dz" data-a="${ans}"></span> mL</div></div>
       <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${w}</span>`).join('')}</div>`;
-    el._onWrong=(ch)=>{const v=parseInt(ch.dataset.w);if(isNaN(v))return;const my=$('#my');if(my){my.style.background=rgb(mix({[m.given]:BASE,[askC]:v}));my.style.height='70%';}retry(`${askC} <b>${v}mL</b>를 넣으면 이런 색이 돼요 — <b>목표 색과 비교</b>해 보세요!`);};
+    el._onWrong=(ch)=>{const v=parseInt(ch.dataset.w);if(isNaN(v))return;const my=$('#my');if(my){my.style.background=rgb(mix({[m.given]:BASE,[askC]:v}));my.style.height='70%';}
+      const wt=(v===addv)?'additive':(v===ans*2?'double':(v===BASE?'same':'half'));
+      plog('make_wrong',{i:d.i,v,type:wt});
+      if(v===addv){retry(`${m.given}보다 <b>${m.r[1-gi]-m.r[gi]}만큼만 더</b> 넣었네요 — 그건 <b>더하기</b> 생각!<br>${m.r[gi]}가 ${m.r[1-gi]}${jz(String(m.r[1-gi]),'이','가')} 되려면 <b>몇 배</b>일까요? 색을 비교해 보세요!`);return;}
+      retry(`${askC} <b>${v}mL</b>를 넣으면 이런 색이 돼요 — <b>목표 색과 비교</b>해 보세요!`);};
     mountDrag(el,()=>{S.amt={[m.given]:BASE,[askC]:ans};
       const my=$('#my');if(my){my.style.background=rgb(mix(S.amt));my.style.height='70%';}
       plog('make',{i:d.i});

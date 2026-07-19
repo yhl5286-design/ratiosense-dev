@@ -559,7 +559,7 @@ const DECK=[
   ok:['맞았어요! 1,800원 할인','6,000 × 30 ÷ 100 = <b>1,800원</b>!'],no:'30%는 100 중 30 — 6,000 × 30 ÷ 100!'},
  {t:'mpay'},
  {t:'wsale',i:0},{t:'wsale',i:1},{t:'wsale',i:2},
- {t:'tsum',i:0},{t:'done'}];
+ {t:'reflect'},{t:'tsum',i:0},{t:'done'}];
 let idx=0;
 function prog(){$('#pfill').style.width=(idx/(DECK.length-1)*100)+'%';$('#pnum').textContent=(idx+1)+' / '+DECK.length;
   $('#navL').className='nav'+(idx<=0?' off':'');$('#navR').className='nav'+(idx>=DECK.length-1?' off':'');}
@@ -716,6 +716,15 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     <div class="bank">${bank.map((w,i)=>`<span class="chip" data-w="${w}" data-c="${i}">${fx(w)}</span>`).join('')}</div>`;
     mountDrag(el,()=>{plog('success',{slide:idx});success(W.okT,W.okS);});
     return;}
+  if(d.t==='reflect'){
+    el.innerHTML=`<div class="q">📝 내 말로 정리!</div>
+      <div class="sub" style="font-size:20px"><b>묶어서 세면(단위 가격) 편리한 이유</b>을 내 말로 한 줄 적어 보세요!</div>
+      <textarea id="refT" placeholder="예) 1개의 값을 알면 …" style="width:min(560px,90vw);height:80px;font-size:19px;font-family:inherit;border:3px solid var(--line);border-radius:12px;padding:10px;resize:none"></textarea>
+      <div style="margin-top:10px"><button class="btn pri" id="refGo">제출! →</button></div>`;
+    $('#refGo').onclick=()=>{const v=($('#refT').value||'').trim();
+      if(!v){retry('한 줄이면 충분해요 — 내 말로 적어 봐요!');return;}
+      plog('reflect',{room:'mart',text:v.slice(0,300)});chime(true);next();};
+    return;}
   if(d.t==='tsum'){
     const S3=[
      {t:["어떤 물건이 정말 더 싼지 비교하려면 물건 ","당 가격, 물건 ","당 가격처럼 ","를 기준으로 비교해야 한다."],a:["1개","1g","단위"],x:["10개","100g"]},
@@ -749,7 +758,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
     el.innerHTML=`<div><span class="stampb" style="font-size:84px">🎊</span></div>
     <div class="q">네 방 모두 완주! 비율 탐험 대성공!</div>
     <div class="escDig">🔓 4번 방 탈출 성공! 비밀번호 숫자 <span class="dgt">8</span>을 얻었어요!</div>
-    <div class="sub">색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — <b>비밀 카드 16장</b>도 모두 모았나요?</div>
+    <div class="sub">색깔·소리·지도·마트의 비밀을 전부 찾아냈어요 — <b>비밀 카드 4장</b>도 모두 모았나요?</div>
     <button class="btn pri" id="go2">🔐 탈출의 문으로 →</button>`;
     $('#go2').onclick=()=>{plog('complete',{});markDone('mart');chime(true);location.href='eval.html';};
     return;}
