@@ -543,13 +543,6 @@ if(d.t==='harmx'){
           <input id="feelT" placeholder="내 말로 한 줄 적어도 좋아요 (선택)" style="width:95%;font-size:16px;font-family:inherit;border:2px solid var(--line);border-radius:10px;padding:8px;margin-top:8px">
           <div style="margin-top:8px"><button class="btn pri" id="q2go">느낌 제출! →</button></div>
         </div>
-        <div id="q3" style="display:none">
-          <div style="font-weight:800;font-size:19px;margin-top:8px">③ 왜 그렇게 들릴까요? <b>그래프의 노란 띠(한 묶음)</b>를 보고 골라 보세요!</div>
-          <div class="bank" style="justify-content:flex-start;margin-top:4px">
-            <span class="chip gchip" data-g="s" style="font-size:16px">두 물결이 자주 딱딱 만나서, 무늬가 짧게 반복돼요</span>
-            <span class="chip gchip" data-g="c" style="font-size:16px">두 물결이 좀처럼 안 만나서, 무늬가 길고 복잡해요</span>
-          </div>
-        </div>
       </div>`;
     let cur=-1,ph0=performance.now();
     function drawHX(){
@@ -600,12 +593,7 @@ if(d.t==='harmx'){
     $('#q2go').onclick=()=>{const txt=($('#feelT').value||'').trim();
       if(!feels.size&&!txt){retry('느낌을 하나라도 고르거나 적어 봐요!');return;}
       plog('harmx_feel',{n:tn[0],feels:[...feels],text:txt.slice(0,120)});chime(true);
-      const q3=$('#q3');if(q3)q3.style.display='block';};
-    const simple=(tn[3]*tn[2])<=20;
-    el.querySelectorAll('.gchip').forEach(c=>c.onclick=()=>{const g=c.dataset.g;const match=(g==='s')===simple;
-      plog('harmx_graph',{n:tn[0],pick:g,match});
-      if(match){chime(true);success('그래프와 딱 맞는 관찰!',`도 : ${tn[0]} = <b>${tn[3]} : ${tn[2]}</b> — ${simple?'간단한 비라서 무늬가 <b>자주 반복</b>되고, 그래서 어울리게 들려요!':'큰 수의 비라서 무늬가 <b>길고 복잡</b>해지고, 그래서 거칠게 들려요!'}`);}
-      else{retry('그래프의 노란 띠(한 묶음)를 다시 봐요 — 무늬가 짧게 자주 반복되나요, 길게 이어지나요?');}});
+      success('별점과 느낌 저장 완료! ⭐','도와 '+tn[0]+'의 어울림 점수를 기록했어요 — 다음 음도 들어 봐요!');};
     drawHX();return;}
   if(d.t==='polyi'){
     el.innerHTML=`<div class="q">🥁 <b>리듬에도 비가 숨어 있어요!</b></div>
@@ -677,22 +665,38 @@ if(d.t==='harmx'){
         <div style="margin-top:8px"><button class="btn pri" id="buildB">⭐ 내 별점으로 방 만들기!</button></div>`;
       wireListen();
       $('#buildB').onclick=()=>{plog('rooms_build',{r:RATES});stage2();};}
+    function waveHTML(n){const i=NOTES.findIndex(x=>x[0]===n);const nb=NOTES[i][3],nr=NOTES[i][2];
+      const W=560,padL=40,padR=20,top=34,bottom=150,midY=(top+bottom)/2,amp=(bottom-top)/2-6;
+      const bandW=(W-padL-padR)*0.42,bx0=padL,bx1=padL+bandW;
+      function wp(cyc,col){let dd='';const span=W-padL-padR;
+        for(let px=0;px<=span;px+=2){const x=padL+px,tt=px/bandW;
+          const y=midY-amp*Math.sin(2*Math.PI*cyc*tt);
+          dd+=(px===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';}
+        return '<path d="'+dd+'" fill="none" stroke="'+col+'" stroke-width="2.5" stroke-linecap="round"/>';}
+      return '<svg viewBox="0 0 560 190" style="width:min(560px,88vw);display:block;margin:0 auto">'
+        +'<rect x="'+bx0+'" y="'+(top-6)+'" width="'+bandW+'" height="'+(bottom-top+12)+'" rx="8" fill="#FFF7E6"/>'
+        +'<line x1="'+bx1+'" y1="'+(top-6)+'" x2="'+bx1+'" y2="'+(bottom+6)+'" stroke="#BA7517" stroke-width="2"/>'
+        +'<text x="'+((bx0+bx1)/2)+'" y="'+(top-14)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#8a8577">도 '+nb+'번 = '+n+' '+nr+'번</text>'
+        +wp(nb,'#378ADD')+wp(nr,'#E24B4A')
+        +'<text x="'+((bx0+bx1)/2)+'" y="'+(bottom+30)+'" text-anchor="middle" font-size="13" fill="#BA7517">노란 띠까지가 무늬 한 바퀴(한 묶음)예요</text></svg>';}
     function stage2(){
       const {hi,md,lo}=rooms();
       el.innerHTML=`<div class="q" style="font-size:24px">별점이 <b>방</b>을 만들었어요!</div>
-        <div class="sub">내 별점대로 음들이 모였어요. 음을 누르면 다시 들어볼 수 있어요!</div>
+        <div class="sub">내 별점대로 음들이 모였어요. 음을 누르면 <b>다시 들으면서 그래프</b>도 볼 수 있어요!</div>
         <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:10px">
           ${roomBox('⭐ 높은 방 (4~5점)',hi,false)}
           ${roomBox('🙂 보통 방 (3점)',md,false)}
           ${roomBox('😖 낮은 방 (1~2점)',lo,false)}
         </div>
-        <div class="dial" style="font-size:20px;line-height:1.7;max-width:780px;margin:12px auto">🔍 <b>가장 높은 별을 받은 방</b>의 음들에는 어떤 <b>공통점</b>이 있을까요?</div>
-        <div class="bank" style="margin-top:6px">
-          <span class="chip cq" data-k="ratio">도와 진동수의 비가 <b>간단한 수</b>다</span>
-          <span class="chip cq" data-k="high">모두 <b>높은 음</b>이다</span>
-          <span class="chip cq" data-k="far">건반에서 도와 <b>멀리</b> 있다</span>
+        <div class="dial" style="font-size:20px;line-height:1.7;max-width:800px;margin:12px auto">🔍 <b>어떤 음들이 잘 어울리게 들리나요?</b> 그 이유는 무엇일까요?<br>음을 눌러 <b>그래프를 다시 보면서</b> 대답해 볼까요?</div>
+        <div id="grpWave" style="background:#fff;border:3px solid var(--line);border-radius:14px;padding:8px;max-width:600px;margin:0 auto"><div class="sub" style="font-size:15px;padding:20px 0">방의 음을 누르면 도와 함께 울리는 <b>물결 그래프</b>가 나와요</div></div>
+        <div class="bank" style="margin-top:10px">
+          <span class="chip cq" data-k="ratio">도와 진동수의 비가 <b>간단한 수</b>라서, 무늬가 <b>짧게 자주 반복</b>된다</span>
+          <span class="chip cq" data-k="high">모두 <b>높은 음</b>이라서 잘 어울린다</span>
+          <span class="chip cq" data-k="far">건반에서 도와 <b>멀리</b> 있어서 잘 어울린다</span>
         </div>`;
       wireListen();
+      el.querySelectorAll('.rchip').forEach(c=>{const orig=c.onclick;c.onclick=()=>{if(orig)orig();const w=$('#grpWave');if(w)w.innerHTML=waveHTML(c.dataset.n);};});
       el.querySelectorAll('.cq').forEach(c=>c.onclick=()=>{const k=c.dataset.k;plog('rooms_common',{pick:k});
         if(k==='ratio'){chime(true);stage3();}
         else if(k==='high'){retry('도′(높음)도 레(낮음)도 있는지 확인해 봐요 — 음의 높이만으로는 설명이 안 돼요!');}

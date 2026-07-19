@@ -391,18 +391,24 @@ const R3=[
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,5];const EXP={hypo:null,found:[],log:[]};
 let TTSON=true;
+const AUD={'170git9':1,'1cm3dgv':1,'1emros4':1,'1g5sgpu':1,'1h0q09f':1,'1h1ehdo':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'a0a4c6':1,'cxz4z8':1,'g517m4':1,'i1wkhr':1,'jlh3xg':1,'k3fqm6':1,'wtllpm':1,'zk7z1p':1};
+function _ttsKey(str){let h=5381;for(let i=0;i<str.length;i++){h=((h*33)^str.charCodeAt(i))>>>0;}return h.toString(36);}
 function speak(t,who){try{if(!TTSON)return;
   const txt=String(t).replace(/<[^>]*>/g,' ').replace(/[「」『』—]/g,' ').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim();
   if(!txt)return;
+  try{if(window._aud){window._aud.pause();window._aud=null;}}catch(e){}
+  try{speechSynthesis.cancel();}catch(e){}
+  const key=_ttsKey((who||'ratio')+'|'+txt);
+  if(typeof AUD!=='undefined'&&AUD[key]){const a=new Audio('tts/'+key+'.mp3');window._aud=a;a.play().catch(function(){});return;}
   if(!window._vcs)window._vcs=_pickVoices();
   const u=new SpeechSynthesisUtterance(txt);u.lang='ko-KR';
   const V=window._vcs;
   if(V)u.voice=(who==='munch')?(V.male||V.nat):V.nat;
-  if(who==='munch'){u.pitch=(V&&V.male)?0.95:0.72;u.rate=0.92;}
-  else if(who==='signac'){u.pitch=0.9;u.rate=0.97;}
-  else if(who==='narr'){u.pitch=1.0;u.rate=1.0;}
-  else{u.pitch=1.1;u.rate=1.0;}
-  speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}}
+  if(who==='munch'){u.pitch=(V&&V.male)?0.8:0.6;u.rate=0.9;}
+  else if(who==='signac'){u.pitch=0.78;u.rate=0.95;}
+  else if(who==='narr'){u.pitch=0.95;u.rate=1.0;}
+  else{u.pitch=0.95;u.rate=0.98;}
+  speechSynthesis.speak(u);}catch(e){}}
 function _pickVoices(){try{const vs=speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.toLowerCase().indexOf('ko')===0);
   if(!vs.length)return null;
   const nat=vs.find(v=>/natural|neural/i.test(v.name))||vs.find(v=>/google/i.test(v.name))||vs[0];
@@ -596,7 +602,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
      ['섞는 순서','물감은 다 섞이고 나면 순서와 상관없이 똑같아져요. 순서는 아니에요!',0],
      ['붓의 크기','붓은 칠할 때 이야기죠. 색을 만들 때는 상관없어요!',0],
      ['각 물감의 양',null,1]];
-    el.innerHTML=rogHTML('"하나씩 차근차근 따져 봐요.<br>이 색을 결정하는 데 <b>영향을 주는 것</b>은 무엇일까요? 아닌 것 같은 것도 눌러서 확인해 보세요!"')+
+    el.innerHTML=rogHTML('"이 색을 결정하는 데 <b>영향을 주는 것</b>은 무엇일까요? 아닌 것 같은 것도 눌러서 확인해 보세요!"')+
       `<div class="bank" style="margin-top:12px">${M.map((m,i)=>`<span class="chip" data-i="${i}">${m[0]}</span>`).join('')}</div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const m=M[+c.dataset.i];
       plog('exp_pick',{step:'d2',pick:m[0]});
