@@ -391,7 +391,7 @@ const R3=[
  {base:'노랑',comp:'빨강',bm:200,cm:100,res:'1/2'}];
 const EXPR=[2,5];const EXP={hypo:null,found:[],log:[]};
 let TTSON=true;
-const AUD={'170git9':1,'17h03sm':1,'1emros4':1,'1h0q09f':1,'1i3dsba':1,'1mn8cpv':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1qz7h36':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'7vasfn':1,'ar4vex':1,'g517m4':1,'h9g9em':1,'i1wkhr':1,'mrg9v4':1,'ofjb6u':1,'t8y5qb':1,'wtllpm':1};
+const AUD={'170git9':1,'17h03sm':1,'1emros4':1,'1h0q09f':1,'1i3dsba':1,'1mn8cpv':1,'1n61g9a':1,'1oq07h7':1,'1qst20e':1,'1qz7h36':1,'1uz10el':1,'1vvt1kv':1,'4jbp82':1,'71mzcg':1,'7vasfn':1,'ar4vex':1,'cplf41':1,'g517m4':1,'h9g9em':1,'i1wkhr':1,'mrg9v4':1,'ofjb6u':1,'olenh1':1,'rt6m0g':1,'su37m1':1,'t8y5qb':1,'wtllpm':1,'zivy1r':1};
 function _ttsKey(str){let h=5381;for(let i=0;i<str.length;i++){h=((h*33)^str.charCodeAt(i))>>>0;}return h.toString(36);}
 function speak(t,who){try{if(!TTSON)return;
   const txt=String(t).replace(/<[^>]*>/g,' ').replace(/[「」『』—]/g,' ').replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu,'').replace(/\s+/g,' ').trim();
@@ -417,7 +417,7 @@ function _pickVoices(){try{const vs=speechSynthesis.getVoices().filter(v=>v.lang
   return {nat:nat,rob:rob,male:male};}catch(e){return null;}}
 try{speechSynthesis.onvoiceschanged=function(){window._vcs=_pickVoices();};}catch(e){}
 function hypAmt(h){const p=String(h).split(' : ');return '빨강 '+(p[0]*10)+'mL : 노랑 '+(p[1]*10)+'mL';}
-function rogHTML(t){speak(t,'ratio');return `<div style="font-size:48px">🧑‍🔬 <span style="font-size:22px;color:#6b7683">색을 비율로 섞는 과학자 먼셀</span></div><div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">${t}</div>`;}
+function rogHTML(t,say){speak(say||t,'ratio');return `<div style="font-size:48px">🧑‍🔬 <span style="font-size:22px;color:#6b7683">색을 비율로 섞는 과학자 먼셀</span></div><div class="dial" style="font-size:21px;line-height:1.7;max-width:820px;margin:8px auto">${t}</div>`;}
 let DECK=[{t:'title'},{t:'st0'},{t:'st0b'},{t:'d1'},{t:'d2'},{t:'d3'},{t:'d4'},{t:'st2'},{t:'st3'},{t:'st4'},{t:'e1'},{t:'e2'},{t:'addtrap'},{t:'e3'},{t:'thanks'},{t:'wpr'},{t:'mural'},{t:'st5'}];
 DECK.push({t:'dot0'},{t:'dot1'},{t:'dot1b'},{t:'pintro'},{t:'paint',n:5},{t:'paint',n:10},{t:'paint',n:100},{t:'cells'},{t:'pct'},{t:'dot2'});
 DECK.push({t:'reflect'},{t:'sintro'},{t:'sum',i:0},{t:'done'});
@@ -690,7 +690,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     return;}
   if(d.t==='e1'){
     const f0=EXP.found[0]||[20,50];
-    el.innerHTML=rogHTML(`"실험 대성공! 그럼 이제 수첩에 <b>「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」</b>라고 적어 두면 완벽하겠죠?"`)+
+    el.innerHTML=rogHTML(`"실험 대성공! 그럼 이제 수첩에 <b>「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」</b>라고 적어 두면 완벽하겠죠?"`,'실험 대성공! 그럼 이제 수첩에 첫 실험의 빨강과 노랑 양을 그대로 적어 두면 완벽하겠죠?')+
       `<div class="bank" style="margin-top:12px"><span class="chip" data-n="a">좋아, 그렇게 적자!</span><span class="chip" data-n="b">잠깐! 다른 양으로도 됐잖아?</span></div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{plog('exp_peer',{step:'e1_'+c.dataset.n});chime(true);
       success('음, 잠깐만…','다른 양으로도 같은 색이 됐었죠 — 숫자 하나로는 못 적겠어요!');});
@@ -701,7 +701,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
      ['두 양의 합',`확인! ${f0[0]}+${f0[1]}=<b>${f0[0]+f0[1]}</b>인데 ${f1[0]}+${f1[1]}=<b>${f1[0]+f1[1]}</b>… 합은 달라졌는데 색은 같아요! 합은 아니에요.`,0],
      ['두 양의 차',`확인! ${f0[1]}−${f0[0]}=<b>${f0[1]-f0[0]}</b>인데 ${f1[1]}−${f1[0]}=<b>${f1[1]-f1[0]}</b>… 차이도 달라졌는데 색은 같네요?! 차이로는 설명이 안 돼요!`,0],
      ['한쪽이 다른 쪽의 몇 배인지',null,1]];
-    el.innerHTML=rogHTML(`"<b>빨강 ${f0[0]} : 노랑 ${f0[1]}</b>도, <b>빨강 ${f1[0]} : 노랑 ${f1[1]}</b>도 같은 색!<br>양이 달라도 같은 색이라면, 두 실험에는 <b>변하지 않는 무언가</b>가 숨어 있는 거예요. 무엇일까요? 궁금한 것부터 눌러 확인해 보세요!"`)+
+    el.innerHTML=rogHTML(`"<b>빨강 ${f0[0]} : 노랑 ${f0[1]}</b>도, <b>빨강 ${f1[0]} : 노랑 ${f1[1]}</b>도 같은 색!<br>양이 달라도 같은 색이라면, 두 실험에는 <b>변하지 않는 무언가</b>가 숨어 있는 거예요. 무엇일까요? 궁금한 것부터 눌러 확인해 보세요!"`,'서로 다른 양인데 전부 같은 색! 그렇다면 두 실험에는 변하지 않는 무언가가 숨어 있는 거예요. 무엇일까요? 궁금한 것부터 눌러 확인해 보세요!')+
       `<div class="bank" style="margin-top:12px">${M.map((m,i)=>`<span class="chip" data-i="${i}">${m[0]}</span>`).join('')}</div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const m=M[+c.dataset.i];
       plog('exp_pick',{step:'e2',pick:m[0]});
@@ -710,7 +710,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
     return;}
   if(d.t==='e3'){
     const f0=EXP.found[0]||[20,50],f1=EXP.found[1]||[40,100];
-    el.innerHTML=rogHTML(`"빨강 ${f0[0]} : 노랑 ${f0[1]}을 간단히 하면 <b>2 : 5</b>, 빨강 ${f1[0]} : 노랑 ${f1[1]}도 간단히 하면 <b>2 : 5</b> — 언제나 똑같아요!<br>중요한 건 양이 아니라 <b>몇 대 몇</b>, 즉 <b>비</b>였네요! 수첩에는 뭐라고 적어야 할까요?"`)+
+    el.innerHTML=rogHTML(`"빨강 ${f0[0]} : 노랑 ${f0[1]}을 간단히 하면 <b>2 : 5</b>, 빨강 ${f1[0]} : 노랑 ${f1[1]}도 간단히 하면 <b>2 : 5</b> — 언제나 똑같아요!<br>중요한 건 양이 아니라 <b>몇 대 몇</b>, 즉 <b>비</b>였네요! 수첩에는 뭐라고 적어야 할까요?"`,'모든 실험을 간단히 하면 언제나 2 대 5로 똑같아요! 중요한 건 양이 아니라 몇 대 몇, 즉 비였네요! 수첩에는 뭐라고 적어야 할까요?')+
       `<div class="bank" style="margin-top:12px"><span class="chip" data-n="bad">「빨강 ${f0[0]}mL, 노랑 ${f0[1]}mL」라고 적자</span><span class="chip" data-n="win">「빨강 : 노랑 = 2 : 5」라고 적자!</span></div>`;
     el.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const n=c.dataset.n;plog('exp_peer',{step:'e3_'+n});
       if(n==='win'){chime(true);success('비밀 노트 완성! 📔','수첩에 적었어요: <b>빨강 : 노랑 = 2 : 5</b><br>양이 얼마든 이 <b>비</b>만 지키면 언제나 노을빛 주황!');}
@@ -751,7 +751,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
           <span class="chip" id="hBack" style="font-size:18px">↩ 다시 관찰할래요</span>
         </div>
         <div class="sub" style="margin-top:10px">정답이 아니어도 괜찮아요 — 실험으로 확인하고, 틀린 가설은 지워 나가요!</div>`;
-      speak(q.obs+'고 예상했군요! 그럼 얼마나 더 많을까요? 내 예상, 가설에 맞는 것을 골라 보세요!','ratio');
+      speak('좋은 예상이에요! 그럼 얼마나 더 많을까요? 내 예상, 가설에 맞는 것을 골라 보세요!','ratio');
       el.querySelectorAll('.hB').forEach(c=>c.onclick=()=>{const h=c.dataset.h;EXP.hypo=h;plog('exp_hypo',{pick:h});
         success('가설 완성!','내 관찰: <b>'+q.obs+'</b>!<br>내 가설: <b>'+hypAmt(h)+'</b><br>이제 실험실에서 확인해 봐요! 🧪');});
       $('#hBack').onclick=()=>stepA();
@@ -806,7 +806,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');el._onWrong=null
   if(d.t==='st4'){
     const tgt=mix({빨강:EXPR[0],노랑:EXPR[1]});
     const first=EXP.found[0]||[20,50];
-    el.innerHTML=rogHTML(`"완벽한 노을빛이에요, 조수 연구원님! 그런데 궁금한 게 생겼어요 — <b>이 색을 다른 양으로도 만들 수는 없을까요?</b><br>잠깐 생각해 보고, 지난 실험의 빨강 ${first[0]} : 노랑 ${first[1]} 말고 <b>서로 다른 양으로 2번</b> 같은 색을 만들어 보세요!"`)+`
+    el.innerHTML=rogHTML(`"완벽한 노을빛이에요, 조수 연구원님! 그런데 궁금한 게 생겼어요 — <b>이 색을 다른 양으로도 만들 수는 없을까요?</b><br>잠깐 생각해 보고, 지난 실험의 빨강 ${first[0]} : 노랑 ${first[1]} 말고 <b>서로 다른 양으로 2번</b> 같은 색을 만들어 보세요!"`,'완벽한 노을빛이에요, 조수 연구원님! 그런데 궁금한 게 생겼어요. 이 색을 다른 양으로도 만들 수는 없을까요? 잠깐 생각해 보고, 지난 실험과 서로 다른 양으로 두 번, 같은 색을 만들어 보세요!')+`
       <div class="paints">
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['빨강'])}">빨강 <span id="a0">0</span>mL</div>${tubes('빨강',[5,10])}</div>
         <div class="pcol"><div class="nm" style="color:${rgb(PRIM['노랑'])}">노랑 <span id="a1">0</span>mL</div>${tubes('노랑',[5,10])}</div>
