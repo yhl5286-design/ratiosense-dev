@@ -511,6 +511,7 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
         </div>
       </div>
       <div class="dial" id="hz" style="font-size:30px;padding:16px 30px;margin-top:14px">건반을 눌러 보세요</div>
+      <div id="vibWave" style="margin-top:8px"></div>
       <div style="margin-top:10px"><button class="btn pri" id="vibNext" style="opacity:.45;cursor:not-allowed">다 들어봤어요 (0 / 8) →</button></div>`;
     const vibHit=new Set();
     const vibBtn=$('#vibNext');
@@ -519,6 +520,14 @@ function render(){prog();const d=DECK[idx];const el=$('#slide');
       vibHit.add(i);if(vibHit.size>=NOTES.length){vibBtn.style.opacity='1';vibBtn.style.cursor='pointer';vibBtn.textContent='다 들어봤어요 →';}else{vibBtn.textContent='다 들어봤어요 ('+vibHit.size+' / 8) →';}
       tone(f1,0,SND_DUR);plog('key',{n:NOTES[i][0]});
       $('#hz').innerHTML=`<b>${NOTES[i][0]}</b> — 1초에 <b>${NOTES[i][1]}번</b> 떨려요 <span style="color:var(--sub);font-size:22px">(${NOTES[i][0]}의 진동수 : ${NOTES[i][1]}Hz)</span>`;
+      (function(){const W=560,padL=16,padR=16,top=16,bottom=104,midY=(top+bottom)/2,amp=(bottom-top)/2-6;
+        const cyc=NOTES[i][1]/264*4;let dd='';const span=W-padL-padR;
+        for(let px=0;px<=span;px+=2){const x=padL+px;const y=midY-amp*Math.sin(2*Math.PI*cyc*px/span);dd+=(px===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';}
+        $('#vibWave').innerHTML='<div style="display:inline-block;background:#fff;border:3px solid var(--line);border-radius:12px;padding:6px 10px">'
+          +'<svg viewBox="0 0 560 120" style="width:min(560px,86vw);display:block">'
+          +'<line x1="16" y1="'+midY+'" x2="'+(W-16)+'" y2="'+midY+'" stroke="#D3D1C7" stroke-width="1"/>'
+          +'<path d="'+dd+'" fill="none" stroke="#378ADD" stroke-width="3" stroke-linecap="round"/>'
+          +'<text x="'+(W/2)+'" y="116" text-anchor="middle" font-size="13" font-weight="700" fill="#8a8577">'+NOTES[i][0]+'의 떨림 모양 — 높은 음일수록 물결이 촘촘해요</text></svg></div>';})();
       k.classList.add('play');setTimeout(()=>k.classList.remove('play'),180);});
     wireGoal(el);loopWave();return;}
 if(d.t==='harmx'){
@@ -536,14 +545,8 @@ if(d.t==='harmx'){
       </div>
       <div class="dial" id="hxWave" style="margin-top:8px;font-size:19px;display:none"></div>
       <div id="ratePan" style="display:none;max-width:760px;margin:10px auto 0;background:#fff;border:3px solid var(--line);border-radius:14px;padding:12px 16px;text-align:left">
-        <div style="font-weight:800;font-size:19px">① 도와 ${tn[0]}의 어울림 — 내 귀에는 <b>5점 만점에 몇 점</b>?</div>
+        <div style="font-weight:800;font-size:19px">도와 ${tn[0]}의 어울림 — 내 귀에는 <b>5점 만점에 몇 점</b>?</div>
         <div id="starRow" style="font-size:36px;cursor:pointer;letter-spacing:8px;margin:4px 0;color:#e0a02a">${[1,2,3,4,5].map(s=>`<span class="st" data-s="${s}" style="opacity:.3">★</span>`).join('')}</div>
-        <div id="q2" style="display:none">
-          <div style="font-weight:800;font-size:19px;margin-top:8px">② 함께 울릴 때 <b>어떤 느낌</b>이었나요? (여러 개 골라도 좋아요)</div>
-          <div class="bank" style="justify-content:flex-start;margin-top:4px">${['부드러워요','맑아요','하나처럼 들려요','울렁울렁해요','거칠어요','부딪혀요'].map(f=>`<span class="chip fchip" data-f="${f}" style="font-size:16px">${f}</span>`).join('')}</div>
-          <input id="feelT" placeholder="내 말로 한 줄 적어도 좋아요 (선택)" style="width:95%;font-size:16px;font-family:inherit;border:2px solid var(--line);border-radius:10px;padding:8px;margin-top:8px">
-          <div style="margin-top:8px"><button class="btn pri" id="q2go">느낌 제출! →</button></div>
-        </div>
       </div>`;
     let cur=-1,ph0=performance.now();
     function drawHX(){
@@ -586,16 +589,11 @@ if(d.t==='harmx'){
       const hw=$('#hxWave');if(hw){hw.style.display='block';
         hw.innerHTML=window._hxRev?`<span style="color:#378ADD;font-weight:800">(도)파란 물결 ${a}번</span> + <span style="color:#E24B4A;font-weight:800">(${n[0]})빨간 물결 ${b}번</span>마다 <b>반복되는 무늬</b>가 생겨요!`:`두 물결이 만드는 <b>무늬</b>가 얼마나 자주 반복되나요? 잘 보고 별점을 매겨 봐요!`;}
       const rp=$('#ratePan');if(rp)rp.style.display=(i===d.ni)?'block':'none';});
-    let stars=0;const feels=new Set();
-    el.querySelectorAll('.st').forEach(s=>s.onclick=()=>{stars=+s.dataset.s;
+    let stars=0;
+    el.querySelectorAll('.st').forEach(sN=>sN.onclick=()=>{stars=+sN.dataset.s;
       el.querySelectorAll('.st').forEach(x=>x.style.opacity=(+x.dataset.s<=stars)?'1':'.3');
-      RATES[tn[0]]=stars;plog('harmx_rate',{n:tn[0],stars});const q2=$('#q2');if(q2)q2.style.display='block';});
-    el.querySelectorAll('.fchip').forEach(c=>c.onclick=()=>{const f=c.dataset.f;
-      if(feels.has(f)){feels.delete(f);c.classList.remove('used');}else{feels.add(f);c.classList.add('used');}});
-    $('#q2go').onclick=()=>{const txt=($('#feelT').value||'').trim();
-      if(!feels.size&&!txt){retry('느낌을 하나라도 고르거나 적어 봐요!');return;}
-      plog('harmx_feel',{n:tn[0],feels:[...feels],text:txt.slice(0,120)});chime(true);window._hxRev=true;
-      success('별점과 느낌 저장 완료! ⭐','이제 <b>숫자</b>가 열렸어요! 건반을 다시 눌러 <b>진동수의 비</b>를 확인해 보고, 다음 음으로 가요!');};
+      RATES[tn[0]]=stars;plog('harmx_rate',{n:tn[0],stars});chime(true);window._hxRev=true;
+      success('별점 저장 완료! ⭐','이제 <b>숫자</b>가 열렸어요! 건반을 다시 눌러 <b>진동수의 비</b>를 확인해 보고, 다음 음으로 가요!');});
     drawHX();return;}
   if(d.t==='polyi'){
     el.innerHTML=`<div class="q">🥁 <b>리듬에도 비가 숨어 있어요!</b></div>
@@ -713,8 +711,9 @@ if(d.t==='harmx'){
           ${roomBox('😖 낮은 방',lo,true)}
         </div>
         <div style="max-width:720px;margin:12px auto 0;background:#fbf6e8;border:2px solid #e0c98a;border-radius:12px;padding:10px 14px;font-size:15.5px;font-weight:700;line-height:1.7;text-align:left">
-          🎼 <b>실제 음악에서는 이렇게 묶어요</b> — 완전음정: 파(3:4)·솔(2:3)·도′(1:2) / 잘 어울리는 음정: 미(4:5)·라(3:5) / 거친 음정: 레(8:9)·시(8:15)<br>
-          내 방과 비슷한가요, 다른가요? <b>사람마다 조금씩 다를 수 있어요</b> — 그것도 소중한 내 귀의 감각!
+          🎼 실제 음악에서는 <b>파(3:4)·솔(2:3)·도′(1:2)</b>을 잘 어울리는 음정으로 보고, <b>완전 음정</b>이라고 해요.<br>
+          <b>미(4:5)·라(3:5)</b>도 잘 어울리는 느낌이죠? 반면에 <b>레(8:9)·시(8:15)</b>는 잘 어울리지 않아요.<br>
+          여러분의 느낌도 이와 비슷했나요? <b>사람마다 조금씩은 다를 수 있어요!</b>
         </div>
         <div style="margin-top:10px"><button class="btn pri" id="cmpB">음정 표로 정리하기 →</button></div>`;
       wireListen();
