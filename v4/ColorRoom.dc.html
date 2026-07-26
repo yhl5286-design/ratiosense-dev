@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
+<script src="tts/manifest.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;800&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Jua","Gothic A1","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:400;background:#f5ead8;color:#201e1d;overscroll-behavior:none;font-variant-numeric:tabular-nums}
+a{color:#8c491a;text-decoration:none}
+a:hover{color:#c67139}
+button{font-family:inherit}
+:focus-visible{outline:3px solid #c67139;outline-offset:3px}
+::selection{background:#ffe1d0}
+@keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes rsSpin{to{transform:rotate(360deg)}}
+@keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
+@keyframes rsTilt{0%{transform:none}35%{transform:rotate(-58deg) translate(6px,-14px)}70%{transform:rotate(-58deg) translate(6px,-14px)}100%{transform:none}}
+@keyframes rsStream{0%{opacity:0;transform:scaleY(0)}20%{opacity:1;transform:scaleY(1)}80%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1)}}
+@keyframes rsGlow{0%,100%{box-shadow:0 0 0 7px #ccdbb2}50%{box-shadow:0 0 0 11px #ccdbb2}}
+</style>
+</helmet>
+
+<div style="height:100dvh;display:flex;flex-direction:column;background:#f5ead8">
+
+  <header style="flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f9f4ed;border-bottom:2px solid #dcd3c4">
+    <a href="index.html" aria-label="홈으로" style="flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:20px">🏠</a>
+    <div style="flex:none;font-family:'Jua',sans-serif;font-size:19px;letter-spacing:-.2px">색깔의 비밀</div>
+    <div style="flex:1;min-width:36px;height:12px;border-radius:999px;background:#eee7db;overflow:hidden">
+      <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,#c67139,#f6a06b);transition:width .4s ease"></div>
+    </div>
+    <div style="flex:none;font-size:13px;font-weight:800;color:#645c50;white-space:nowrap">{{stepLabel}}</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-family:'Jua',sans-serif;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
+    <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">{{audioIcon}}</button>
+    <button onClick="{{openVoices}}" aria-label="목소리 고르기" title="캐릭터 목소리 고르기" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">🎙️</button>
+  </header>
+
+  <main style="flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:12px;padding:12px;align-content:stretch;align-items:stretch;justify-content:center">
+
+    <aside style="flex:1 1 292px;min-width:0;max-width:400px;min-height:0;max-height:calc(100dvh - 168px);background:#f9f4ed;border:2.5px solid #dcd3c4;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:11px;box-shadow:0 6px 18px rgba(32,30,29,.06)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div style="width:56px;height:56px;flex:none">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{false}}">
+          <div style="width:56px;height:56px;border-radius:999px;border:3px solid #f6a06b;background:#ffe1d0;flex:none;display:flex;align-items:center;justify-content:center;font-size:27px">{{coachEmoji}}</div>
+        </sc-if>
+        <div style="min-width:0">
+          <div style="font-family:'Jua',sans-serif;font-size:16px;line-height:1.3">{{coachName}}</div>
+          <div style="font-size:12.5px;font-weight:700;color:#645c50">{{coachRole}}</div>
+        </div>
+        <button onClick="{{replay}}" aria-label="다시 듣기" style="margin-left:auto;flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:18px;cursor:pointer">🔁</button>
+      </div>
+      <p style="margin:0;font-size:19.5px;line-height:1.7;font-weight:400;text-wrap:pretty;white-space:pre-line;flex:1 1 auto;min-height:0;overflow:auto">{{coachText}}</p>
+      <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+        <div style="font-family:'Jua',sans-serif;font-size:18px;color:#8c491a;background:#fff2eb;border-radius:16px;padding:10px 14px;line-height:1.5">{{coachHi}}</div>
+      </sc-if>
+
+    </aside>
+
+    <section style="flex:3 1 460px;min-width:0;min-height:0;max-height:calc(100dvh - 168px);display:flex;flex-direction:column;align-items:center;gap:0;overflow:auto">
+
+      <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:11px;animation:rsUp .35s ease">
+          <sc-if value="{{artEl}}" hint-placeholder-val="{{false}}">
+            <div style="background:#2e2b25;padding:11px;border-radius:10px;box-shadow:0 14px 32px rgba(32,30,29,.3)">{{artEl}}</div>
+          </sc-if>
+          <sc-if value="{{artCap}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">{{artCap}}</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showSwatch}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:7px;margin-bottom:12px;flex:none">
+          <div style="width:min(126px,29vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}};box-shadow:inset 0 -12px 20px rgba(0,0,0,.13),0 6px 16px rgba(32,30,29,.2)"></div>
+          <div style="font-size:14px;font-weight:800;color:#645c50">목표 색 · 노을빛 주황</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isChips}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;min-height:0">
+        <div style="display:flex;flex-wrap:wrap;gap:11px;justify-content:center;max-width:760px;animation:rsUp .3s ease;flex:none">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+            <button onClick="{{c.pick}}" style="min-height:60px;padding:14px 24px;border-radius:999px;border:3px solid {{c.bd}};background:{{c.bg}};color:{{c.fg}};font-family:'Jua',sans-serif;font-size:18.5px;cursor:pointer;max-width:100%;text-align:left;line-height:1.4">{{c.t}}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{obsMine}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;gap:18px;align-items:flex-end;justify-content:center;animation:rsPop .35s ease">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:min(100px,23vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{obsMine}};box-shadow:inset 0 -10px 18px rgba(0,0,0,.13)"></div>
+              <div style="font-size:13.5px;font-weight:800;color:#8c491a">내 예상</div>
+            </div>
+            <div style="font-family:'Jua',sans-serif;font-size:22px;color:#645c50;padding-bottom:26px">vs</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:min(100px,23vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}};box-shadow:inset 0 -10px 18px rgba(0,0,0,.13)"></div>
+              <div style="font-size:13.5px;font-weight:800;color:#645c50">목표 색</div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{chipHint}}" hint-placeholder-val="{{false}}">
+          <div style="font-size:15px;font-weight:700;color:#645c50;text-align:center;max-width:620px;flex:none">{{chipHint}}</div>
+        </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+        <div onPointerDown="{{padDown}}" onPointerMove="{{padMove}}" onPointerUp="{{padUp}}" onPointerCancel="{{padUp}}" style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;touch-action:none">
+
+          <div style="flex:1;min-height:0;display:flex;gap:12px;justify-content:center;align-items:stretch;flex-wrap:nowrap;width:100%">
+          <div style="display:flex;gap:6px;justify-content:center;align-items:stretch;min-height:0">
+            <sc-for list="{{paints}}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;order:{{p.order}};min-height:0">
+                <div style="font-family:'Jua',sans-serif;font-size:17px;color:{{p.ink}};flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">{{p.name}} {{p.amt}}mL</div>
+                <div onPointerDown="{{p.down}}" role="slider" aria-label="{{p.name}} 물감 양" aria-valuenow="{{p.amt}}" style="position:relative;flex:1;min-height:130px;width:min(20vw,84px);border-radius:16px;border:3.5px solid #c0b6a5;background:#f9f4ed;overflow:hidden;cursor:ns-resize;touch-action:none;box-shadow:inset 0 3px 8px rgba(32,30,29,.08)">
+                  <div style="position:absolute;left:0;right:0;bottom:0;height:{{p.pct}}%;background:{{p.color}};transition:height .07s linear"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:{{p.pct}}%;height:5px;background:rgba(255,255,255,.9);opacity:{{p.handleOp}}"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:calc({{p.pct}}% - 13px);display:flex;justify-content:center;pointer-events:none;opacity:{{p.handleOp}}">
+                    <div style="width:40px;height:22px;border-radius:999px;background:#f9f4ed;border:2.5px solid #201e1d;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">⇅</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;flex:none;align-items:center">
+                  <button onClick="{{p.minus}}" aria-label="{{p.name}} 5mL 줄이기" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:21px;color:#8c491a;cursor:pointer;padding:0">−</button>
+                  <button onClick="{{p.plus}}" aria-label="{{p.name}} 5mL 늘리기" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-family:'Jua',sans-serif;font-size:21px;color:#8c491a;cursor:pointer;padding:0">＋</button>
+                </div>
+              </div>
+            </sc-for>
+
+            <div style="order:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:0">
+              <div style="font-size:11.5px;font-weight:800;color:#645c50;flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">mL</div>
+              <div style="position:relative;flex:1;min-height:130px;width:42px;border-left:3px solid #c0b6a5;border-right:3px solid #c0b6a5">
+                <sc-for list="{{ruler}}" as="t" hint-placeholder-count="6">
+                  <div style="position:absolute;left:0;right:0;bottom:{{t.at}}%;height:0;display:flex;align-items:center;justify-content:center">
+                    <div style="position:absolute;left:0;width:{{t.len}}px;height:{{t.th}}px;background:{{t.col}}"></div>
+                    <div style="position:absolute;right:0;width:{{t.len}}px;height:{{t.th}}px;background:{{t.col}}"></div>
+                    <div style="font-size:10.5px;font-weight:800;color:#474238;line-height:1;background:#f5ead8;padding:0 2px;display:{{t.show}}">{{t.n}}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="height:46px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#645c50;text-align:center;line-height:1.25;width:60px">한 번에<br>5mL</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:stretch;width:186px;flex:none">
+            <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-family:'Jua',sans-serif;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
+            <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:16px;color:#645c50;cursor:pointer">비우기</button>
+            <sc-if value="{{canChangeHypo}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{openHypo}}" style="min-height:48px;padding:11px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:15.5px;color:#8c491a;cursor:pointer">🔬 가설 바꾸기</button>
+            </sc-if>
+          </div>
+          </div>
+
+          <div style="flex:none;display:flex;gap:10px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;background:#f9f4ed;border:2px solid #dcd3c4;border-radius:20px;padding:8px 12px">
+            <div style="font-size:11.5px;font-weight:800;color:#645c50;flex:none;white-space:nowrap">내 비커</div>
+            <div style="position:relative;width:44px;height:58px;margin-right:8px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 15px 15px;overflow:hidden;background:#f9f4ed;box-shadow:{{beakerRing}};transition:box-shadow .25s;flex:none">
+              <div style="position:absolute;left:0;right:0;bottom:0;height:{{myPct}}%;background:{{myColor}};transition:height .18s,background .18s"></div>
+            </div>
+            <div style="font-family:'Jua',sans-serif;font-size:15.5px;color:#8c491a;flex:none;white-space:nowrap">{{simpleRatio}}</div>
+            <sc-if value="{{labLog}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-wrap:nowrap;gap:5px;align-items:center;flex:none">
+                <div style="font-size:11.5px;font-weight:800;color:#645c50">📓</div>
+                <sc-for list="{{labLog}}" as="l" hint-placeholder-count="0">
+                  <div style="font-size:12.5px;font-weight:800;padding:4px 9px;border-radius:999px;background:{{l.bg}};color:{{l.fg}};border:2px solid {{l.bd}}">{{l.t}}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isDemo}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;animation:rsUp .3s ease;width:100%">
+          <div style="display:flex;gap:min(7vw,44px);justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{demos}}" as="d" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:9px">
+                <div style="position:relative;width:min(112px,26vw);height:min(25vh,146px)">
+                  <sc-if value="{{d.streaming}}" hint-placeholder-val="{{false}}">
+                    <div style="position:absolute;left:50%;top:-58px;width:13px;height:64px;margin-left:-6px;background:linear-gradient(to bottom,rgba(250,215,45,.35),rgb(250,215,45));border-radius:999px;transform-origin:top;animation:rsStream .75s ease"></div>
+                  </sc-if>
+                  <div style="position:absolute;inset:0;border:6px solid #201e1d;border-top-width:3px;border-radius:0 0 26px 26px;overflow:hidden;background:#f9f4ed">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{d.pct}}%;background:{{d.color}};transition:height .75s ease,background .75s ease"></div>
+                  </div>
+                </div>
+                <div style="font-family:'Jua',sans-serif;font-size:16px">{{d.label}}</div>
+                <div style="font-size:13px;font-weight:800;color:#645c50">노랑 비커 {{d.left}}개 남음</div>
+                <div style="display:flex;gap:7px;align-items:flex-end;min-height:70px">
+                  <sc-for list="{{d.cups}}" as="cup" hint-placeholder-count="1">
+                    <button onClick="{{cup.pour}}" aria-label="노랑 20mL 붓기" style="width:40px;height:{{cup.h}}px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 12px 12px;background:#f9f4ed;cursor:{{cup.cur}};padding:0;position:relative;overflow:hidden;opacity:{{cup.op}};animation:{{cup.anim}};transform-origin:bottom right">
+                      <div style="position:absolute;left:0;right:0;bottom:0;height:{{cup.fill}}%;background:rgb(250,215,45)"></div>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#645c50;text-align:center;max-width:560px;line-height:1.55">작은 비커(노랑 20mL)를 <b>눌러</b> 큰 비커에 부어요. 두 비커 모두 빨강은 20mL로 똑같아요!</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isDots}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease">
+          <div style="display:flex;gap:10px">
+            <sc-for list="{{dotPal}}" as="q" hint-placeholder-count="2">
+              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 22px;border-radius:999px;border:4px solid {{q.bd}};background:#f9f4ed;font-family:'Jua',sans-serif;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:420px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:24px;padding:16px">
+            <sc-for list="{{dots}}" as="dd" hint-placeholder-count="7">
+              <button onClick="{{dd.tap}}" aria-label="점" style="width:min(15vw,58px);aspect-ratio:1;border-radius:999px;border:3px {{dd.bs}} {{dd.bd}};background:{{dd.bg}};cursor:pointer;padding:0"></button>
+            </sc-for>
+          </div>
+          <div style="font-family:'Jua',sans-serif;font-size:18px;color:#645c50">빨강 {{dotR}}개 · 노랑 {{dotY}}개</div>
+          <sc-if value="{{dotMix}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;animation:rsPop .4s ease">
+              <div style="width:96px;height:96px;border-radius:999px;border:4px solid #201e1d;background:{{dotMix}};filter:blur(1px)"></div>
+              <div style="font-size:13.5px;font-weight:800;color:#645c50">멀리서 본 내 점</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isGrid}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;flex:none">
+            <sc-for list="{{pots}}" as="q" hint-placeholder-count="2">
+              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:4px solid {{q.bd}};background:{{q.bg}};font-family:'Jua',sans-serif;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
+            </sc-for>
+            <button onClick="{{gridClear}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:16px;color:#645c50;cursor:pointer">모두 지우기</button>
+          </div>
+          <sc-if value="{{showBrush}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:10px;align-items:center">
+              <sc-for list="{{brushes}}" as="b" hint-placeholder-count="2">
+                <button onClick="{{b.pick}}" style="min-height:56px;padding:10px 18px;border-radius:999px;border:4px solid {{b.bd}};background:{{b.bg}};font-family:'Jua',sans-serif;font-size:15.5px;color:#8c491a;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="font-size:{{b.ic}}px;line-height:1">🖌️</span>{{b.name}}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="font-family:'Jua',sans-serif;font-size:17px;color:#645c50;flex:none">{{gridCount}}</div>
+          <div onPointerDown="{{gridDown}}" onPointerUp="{{gridUp}}" onPointerCancel="{{gridUp}}" style="flex:none;display:grid;grid-template-columns:repeat({{gridCols}},minmax(0,1fr));grid-template-rows:repeat({{gridRows}},minmax(0,1fr));gap:{{gridGap}}px;width:{{gridW}}px;height:{{gridH}}px;max-width:96%;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:10px;touch-action:none">
+            <sc-for list="{{cells}}" as="c" hint-placeholder-count="5">
+              <div onPointerEnter="{{c.over}}" onPointerDown="{{c.tap}}" style="min-width:0;min-height:0;border-radius:{{gridRad}}px;background:{{c.bg}};cursor:pointer"></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <sc-if value="{{blankArt}}" hint-placeholder-val="{{false}}">
+            <div style="flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);gap:2px;aspect-ratio:1;width:auto;max-width:min(90%,240px);background:#f9f4ed;border:3px solid #dcd3c4;border-radius:16px;padding:8px">
+              <sc-for list="{{blankArt}}" as="c" hint-placeholder-count="0">
+                <div style="min-width:0;min-height:0;border-radius:2px;background:{{c.bg}}"></div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div data-card-panel="1" style="flex:none;background:#f9f4ed;border:3.5px solid #f6a06b;border-radius:24px;padding:15px 20px;max-width:720px;width:min(96%,720px);box-shadow:0 8px 22px rgba(246,160,107,.25)">
+            <sc-if value="{{cardTitle}}" hint-placeholder-val="{{false}}">
+              <div style="font-family:'Jua',sans-serif;font-size:20px;color:#8c491a;margin-bottom:8px">{{cardTitle}}</div>
+            </sc-if>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+              <div style="font-size:19px;font-weight:700;line-height:2.3;text-wrap:pretty">
+                <sc-for list="{{r.tokens}}" as="tk" hint-placeholder-count="3">
+                  <span data-blank="{{tk.key}}" onClick="{{tk.tap}}" style="display:{{tk.disp}};min-width:{{tk.minw}};min-height:{{tk.minh}};padding:{{tk.pad}};margin:{{tk.mar}};border-radius:{{tk.rad}};border-bottom:{{tk.bb}};background:{{tk.bg}};color:{{tk.fg}};text-align:center;vertical-align:middle;cursor:{{tk.cur}};outline:{{tk.out}};font-family:{{tk.ff}}">{{tk.t}}</span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
+            <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
+              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:15px;animation:rsPop .5s ease">
+          <div style="font-size:72px;line-height:1">🎨</div>
+          <div style="display:flex;align-items:center;gap:12px;background:#f9f4ed;border:4px solid #f6a06b;border-radius:24px;padding:15px 26px">
+            <span style="font-family:'Jua',sans-serif;font-size:19px;color:#8c491a">🔓 비밀번호 숫자</span>
+            <span style="font-family:'Jua',sans-serif;font-size:38px;background:#201e1d;color:#ffc6a5;border-radius:14px;padding:4px 22px;line-height:1.2">1</span>
+          </div>
+          <a href="SoundRoom.dc.html" onClick="{{goNext}}" style="min-height:64px;display:flex;align-items:center;padding:18px 36px;border-radius:999px;background:#c67139;color:#f9f4ed;font-family:'Jua',sans-serif;font-size:21px;box-shadow:0 8px 20px rgba(198,113,57,.35)">🎼 다음 방으로 →</a>
+        </div>
+      </sc-if>
+
+    </section>
+  </main>
+
+  <footer style="flex:none;display:flex;align-items:center;gap:10px;padding:9px 14px;background:#f9f4ed;border-top:2px solid #dcd3c4">
+    <button onClick="{{prev}}" aria-label="이전" style="min-height:54px;padding:13px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:17px;color:#645c50;cursor:pointer;opacity:{{prevOp}}">← 이전</button>
+    <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+      <sc-if value="{{liveBadge}}" hint-placeholder-val="{{false}}">
+        <div style="font-family:'Jua',sans-serif;font-size:15.5px;line-height:1.35;padding:9px 16px;border-radius:999px;background:{{liveBg}};color:{{liveFg}};border:3px solid {{liveBd}};animation:rsPop .3s ease;text-align:center">{{liveBadge}}</div>
+      </sc-if>
+      <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+        <div style="text-align:center;font-size:14px;font-weight:700;color:#645c50">{{footHint}}</div>
+      </sc-if>
+    </div>
+    <button onClick="{{primary}}" style="min-height:54px;padding:13px 30px;border-radius:999px;border:none;background:{{primaryBg}};color:#f9f4ed;font-family:'Jua',sans-serif;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">{{primaryLabel}}</button>
+  </footer>
+
+  <sc-if value="{{voicePanel}}" hint-placeholder-val="{{false}}">
+    <div onClick="{{closeVoices}}" style="position:fixed;inset:0;z-index:80;background:rgba(32,30,29,.5);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div onClick="{{stopProp}}" style="width:min(96vw,620px);max-height:88dvh;background:#f9f4ed;border:4px solid #f6a06b;border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(32,30,29,.34);min-height:0">
+        <div style="display:flex;align-items:center;gap:10px;flex:none">
+          <div style="font-size:20px;color:#8c491a">🎙️ 캐릭터 목소리</div>
+          <button onClick="{{closeVoices}}" aria-label="닫기" style="margin-left:auto;width:44px;height:44px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:17px;cursor:pointer">✕</button>
+        </div>
+        <sc-if value="{{noMaleVoice}}" hint-placeholder-val="{{false}}">
+          <div style="flex:none;font-size:14px;color:#8c491a;background:#ffe1d0;border:2.5px solid #f6a06b;border-radius:16px;padding:11px 13px;line-height:1.6">이 기기에는 한국어 <b>남성</b> 목소리가 없어요(설치된 {{voiceCount}}개 모두 여성). 남자 목소리는 미리 만든 음성 파일이 있어야 나옵니다 — <b>tts</b> 폴더의 안내를 봐 주세요.</div>
+        </sc-if>
+        <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{voiceRows}}" as="r" hint-placeholder-count="4">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff2eb;border:2px solid #ffe1d0;border-radius:18px;padding:10px 12px">
+            <div style="min-width:118px">
+              <div style="font-size:16px;color:#201e1d">{{r.name}}</div>
+              <div style="font-size:12px;color:#645c50">{{r.tone}}</div>
+            </div>
+            <select onChange="{{r.change}}" aria-label="{{r.name}} 목소리" style="flex:1 1 200px;min-width:0;min-height:46px;font-family:inherit;font-size:15px;border:3px solid #dcd3c4;border-radius:999px;padding:8px 12px;background:#f9f4ed;color:#201e1d">
+              <sc-for list="{{r.opts}}" as="o" hint-placeholder-count="2">
+                <option value="{{o.v}}" selected="{{o.sel}}">{{o.t}}</option>
+              </sc-for>
+            </select>
+            <button onClick="{{r.test}}" style="min-height:46px;padding:10px 16px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-size:15px;color:#8c491a;cursor:pointer">▶ 들어보기</button>
+          </div>
+        </sc-for>
+        </div>
+        <button onClick="{{closeVoices}}" style="flex:none;min-height:52px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:18px;cursor:pointer">다 골랐어요</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{hypoOpts}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;inset:0;z-index:70;background:rgba(32,30,29,.44);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div style="width:min(96vw,600px);max-height:86dvh;overflow:auto;background:#f0fae1;border:4px solid #ccdbb2;border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;box-shadow:0 20px 50px rgba(32,30,29,.34)">
+        <div style="font-family:'Jua',sans-serif;font-size:19px;color:#56633f;text-align:center">🔬 새 가설을 골라 봐요</div>
+        <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">틀린 가설은 목록에서 지워 뒀어요</div>
+        <div style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center">
+          <sc-for list="{{hypoOpts}}" as="h" hint-placeholder-count="3">
+            <button onClick="{{h.pick}}" style="min-height:54px;padding:12px 19px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:16.5px;color:#8c491a;cursor:pointer">{{h.t}}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{closeHypo}}" style="min-height:48px;padding:11px 22px;border-radius:999px;border:3px solid #ccdbb2;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:15.5px;color:#56633f;cursor:pointer">그대로 두기</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+      <div style="background:#f9f4ed;border:4px solid {{toastBd}};border-radius:24px;padding:17px 21px;box-shadow:0 16px 44px rgba(32,30,29,.28);display:flex;gap:13px;align-items:flex-start">
+        <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
+        <div style="min-width:0">
+          <div style="font-family:'Jua',sans-serif;font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:#474238;margin-top:4px">{{toastBody}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{closeToast}}" aria-label="닫기" style="margin-left:auto;flex:none;width:40px;height:40px;border-radius:999px;border:2px solid #dcd3c4;background:#f9f4ed;font-size:16px;cursor:pointer">✕</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  PRIM = { '빨강':[230,40,55], '노랑':[250,215,45] };
+  MAX = 250;
+  TGT = [2,5];
+  LOG_EP = 'https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
+  LOG_TK = 'ratiosense-2026';
+  LAB = 'colorV3';
+
+  state = {
+    i: 0, amt: { '빨강':0, '노랑':0 }, found: [], hypo: null, obs: null,
+    picks: {}, solved: {}, dots: [0,0,0,0,0,0,0], dotSel: 1, dotMix: null,
+    cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
+    toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
+    labLog: [], wallDone: 0, failed: [], hypoPick: false,
+    voiceMap: {}, voicePanel: false
+  };
+
+  get STEPS() {
+    return [
+      { k:'story', who:'munch', art:'scream_incomplete.jpg', artAlt:'미완성 그림',
+        artCap:'하늘 노을 부분이 비어 있어요',
+        lines:['안녕! 나는 화가 뭉크야. 오늘까지 이 그림을 끝내야 해.',
+               '그런데 하늘의 노을색을 어떻게 만들었는지 잊어버렸어.',
+               '색 과학자 먼셀에게 부탁했어. 너도 보조연구원이 되어 줄래?'],
+        btn:'좋아요, 도울게요!' },
+      { k:'story', who:'munsell', swatch:true,
+        lines:['반가워. 나는 색을 비율로 섞는 과학자 먼셀이야.',
+               '우리가 찾을 것은 바로 이 노을빛 주황이야.'],
+        hi:'실험으로 함께 찾아보자.', btn:'실험 준비!' },
+      { k:'chips', who:'munsell', need:2,
+        say:'색을 정하는 것은 무엇일까? 두 가지를 찾아봐. 아닌 것도 눌러서 확인해도 좋아.',
+        hint:'아닌 것 같은 것도 눌러 보세요 · 다시 눌러도 괜찮아요',
+        chips:[ {t:'물감의 종류', ok:1, fb:'어떤 물감을 쓰는지가 색을 정해.'},
+                {t:'섞는 순서', ok:0, fb:'다 섞이고 나면 순서는 상관없어.'},
+                {t:'붓의 크기', ok:0, fb:'붓은 칠할 때 이야기야.'},
+                {t:'각 물감의 양', ok:1, fb:'얼마나 넣는지도 색을 정해.'} ] },
+      { k:'chips', who:'munsell', need:1, swatch:true,
+        say:'그럼 어떤 물감이 필요할까? 목표색을 잘 봐.',
+        chips:[ {t:'빨강 + 노랑', ok:1, fb:'맞아. 이 두 가지야.'},
+                {t:'빨강 + 파랑', ok:0, fb:'이 색에 파랑 기운이 보이니?'},
+                {t:'노랑 + 파랑', ok:0, fb:'이 색에 파랑 기운이 보이니?'} ] },
+      { k:'chips', who:'munsell', need:1,
+        say:'종류는 알았어. 그럼 양은 얼마나 넣어야 할까?',
+        chips:[ {t:'실험으로 알아내야 해요', ok:1, fb:'바로 그거야. 실험이 필요해.'},
+                {t:'아무 양이나 괜찮아요', ok:0, fb:'정말 그럴까? 실험으로 확인해 보자.'},
+                {t:'많이 넣을수록 좋아요', ok:0, fb:'정말 그럴까? 실험으로 확인해 보자.'} ] },
+      { k:'demo', who:'munsell',
+        say:'빨강을 똑같이 20 밀리리터씩 넣은 비커 두 개야. 작은 노랑 비커를 눌러서 부어 봐. 왼쪽은 한 개, 오른쪽은 세 개야.',
+        btn:'알겠어요!' },
+      { k:'chips', who:'munsell', need:1, mark:'obs',
+        say:'과학자는 실험 전에 가설을 세워. 목표색을 봐. 빨강과 노랑 중 어떤 것이 더 많을까?',
+        hint:'좋은 가설은 찍는 게 아니라 관찰에서 나와요 · 다시 골라도 괜찮아요',
+        chips:[ {t:'🔴 빨강이 더 많아 보여요', v:'r', ok:1, fb:'빨강이 많으면 이렇게 진하고 붉은 주황이 돼. 옆의 목표색과 나란히 두고 봐. 목표색이 더 붉니?'},
+                {t:'🟡 노랑이 더 많아 보여요', v:'y', ok:1, fb:'노랑이 많으면 이렇게 밝고 환한 주황이 돼. 목표색과 닮았니, 아니면 목표색이 더 붉니?'},
+                {t:'🟠 둘이 비슷해 보여요', v:'s', ok:1, fb:'반반이면 딱 중간 주황이야. 목표색은 이것보다 노랗니, 붉니?'} ] },
+      { k:'chips', who:'munsell', need:1, swatch:true, mark:'hypo',
+        say:'좋아. 그럼 얼마나 더 많을까? 네 예상에 맞는 것을 골라 봐.',
+        hint:'틀려도 괜찮아요 — 실험으로 확인하면 그것도 발견이에요' },
+      { k:'lab', mode:'find', who:'munsell', run:'실험하기',
+        say:'네 가설대로 물감을 넣고 실험하기를 눌러 봐. 목표색이 나올 때까지 도전!',
+        hi:'막대를 끌거나 ＋5mL 버튼을 눌러요' },
+      { k:'lab', mode:'more', who:'munsell', run:'실험하기',
+        say:'완벽해. 그런데 이 색을 다른 양으로도 만들 수 있을까? 서로 다른 양으로 두 번 더 만들어 봐.',
+        hi:'두 손가락으로 벌려 보세요' },
+      { k:'lab', mode:'trap', who:'munsell', run:'확인하기',
+        say:'뭉크의 조수가 그랬대. 빨강 20 노랑 50에 각각 30씩 더해도 같은 색이라고. 정말일까? 빨강 50 노랑 80을 만들어 확인해 보자.',
+        hi:'빨강 50 · 노랑 80' },
+      { k:'chips', who:'munsell', need:1,
+        say:'양이 달라도 전부 같은 색이었어. 변하지 않은 것은 무엇일까?',
+        chips:[ {t:'두 양의 합', ok:0, fb:'20+50은 70, 40+100은 140. 합은 달라졌어.'},
+                {t:'두 양의 차', ok:0, fb:'30과 60. 차이도 달라졌어.'},
+                {t:'한쪽이 다른 쪽의 몇 배인지', ok:1, fb:'바로 그거야.'} ] },
+      { k:'chips', who:'munsell', need:1,
+        say:'모두 간단히 하면 언제나 2 대 5야. 수첩에는 뭐라고 적을까?',
+        chips:[ {t:'빨강 : 노랑 = 2 : 5', ok:1, fb:'양이 얼마든 이 비만 지키면 돼.'},
+                {t:'빨강 20mL, 노랑 50mL', ok:0, fb:'그러면 더 많이 만들 때 못 쓰잖아.'} ] },
+      { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
+        lines:['찾았다! 바로 이 색이야!', '너희 덕분에 그림을 완성했어. 정말 고마워!'],
+        btn:'다음 →' },
+      { k:'lab', mode:'wall', who:'munsell', run:'만들어 보기',
+        say:'며칠 뒤 뭉크가 더 큰 벽화를 그린대. 더 많은 양이 필요해. 두 손가락으로 벌려서 비를 그대로 크게 만들어 봐.',
+        hi:'2 : 5를 지키면서 크게!' },
+      { k:'blank', id:'recipe', who:'munch',
+        say:'드디어 비밀을 찾았어! 잊어버리지 않게 레시피 카드로 만들어 줘.' },
+      { k:'story', who:'signac', art:'signacx_exhibit.png', artCrop:1, artCap:'점만 찍어 완성한 점묘화',
+        lines:['나는 점을 찍어 색을 만드는 화가 시냐크야.',
+               '나는 물감을 섞지 않아. 순색 점만 콕콕 찍지.',
+               '멀리서 보면 점들이 눈에서 섞여 하나의 색이 돼!'],
+        btn:'신기해요!' },
+      { k:'dots', who:'signac',
+        say:'내 그림 「양산을 든 여인」의 하늘에 주황을 넣고 싶어. 그런데 나는 물감을 섞지 않으니 점으로 주황을 만들어야 해. 점 일곱 개로 만들어 줘. 빨강과 노랑을 몇 개씩 찍을까?',
+        hi:'점 7개 · 빨강 : 노랑 = 2 : 5' },
+      { k:'grid', n:5, who:'signac',
+        say:'이번엔 새로운 주황이야. 빨강 대 노랑이 2 대 3! 다섯 칸으로 나타내 봐.',
+        hi:'빨강 : 노랑 = 2 : 3' },
+      { k:'grid', n:10, who:'signac', say:'좋아! 이번엔 열 칸이야.', hi:'빨강 : 노랑 = 2 : 3' },
+      { k:'grid', n:100, who:'signac', say:'마지막! 백 칸에 도전해 봐. 큰 붓을 쓰면 한 줄씩 칠할 수 있어.', hi:'빨강 : 노랑 = 2 : 3' },
+      { k:'story', who:'signac', art:'signac_painting.jpg', artCap:'「양산을 든 여인」 완성!',
+        lines:['고마워! 점을 이만큼 많이 찍었더니 드디어 완성이야.',
+               '점의 개수가 늘어나도 빨강과 노랑의 비는 그대로였지!'],
+        btn:'다음 →' },
+      { k:'blank', id:'cells', who:'munsell', say:'백 칸 중 빨강이 마흔 칸이야. 전체에 대한 빨강의 비율은 얼마일까?' },
+      { k:'blank', id:'pct', who:'munsell', say:'빨강 40, 노랑 60을 넣어 주황 100 밀리리터를 만들었어. 각각 몇 퍼센트일까?' },
+      { k:'blank', id:'secret', who:'narrator', say:'이제 색깔의 비밀을 찾는 카드예요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
+      { k:'finish', who:'narrator', say:'색깔의 비밀을 모두 찾아냈어요. 정말 대단해요!', hi:'비밀번호 숫자 1을 얻었어요' }
+    ];
+  }
+
+  WHO = {
+    /* 젊은 남자(뭉크) → 중년남자1(먼셀, 가장 낮고 차분) → 중년남자2(시냐크, 밝고 빠름) */
+    /* pitchF = 남성 음성이 없는 기기용 값. 0.4처럼 과하게 낮추면 기계음이 되므로
+       0.78~0.94 범위에서 속도·호흡으로 캐릭터를 구분한다. */
+    munch:    { name:'화가 뭉크', role:'그림을 완성하려는 화가', img:'munch.jpg', tone:'젊은 남자',
+                male:1, slot:0, pitch:1.02, pitchF:0.92, rate:1.10, gap:190 },
+    munsell:  { name:'과학자 먼셀', role:'색을 비율로 섞는 연구자', img:'munsell_base.png', tone:'중년 남자 1 · 낮고 차분',
+                male:1, slot:1, pitch:0.68, pitchF:0.78, rate:0.96, gap:240 },
+    signac:   { name:'화가 시냐크', role:'점을 찍어 색을 만드는 화가', img:'signacx_painter.png', tone:'중년 남자 2 · 밝고 경쾌',
+                male:1, slot:2, pitch:0.86, pitchF:0.86, rate:1.22, gap:110 },
+    narrator: { name:'안내', role:'문제를 읽어 주는 목소리', emoji:'📣', tone:'여성 내레이션',
+                male:0, slot:0, pitch:1.18, pitchF:1.18, rate:1.06, gap:150 }
+  };
+
+  HYPOS = {
+    r: [['10','1','빨강이 훨씬 많음'], ['3','2','빨강이 조금 많음']],
+    y: [['1','10','노랑이 훨씬 많음'], ['2','5','노랑이 두 배 반쯤']],
+    s: [['1','1','둘이 비슷함']]
+  };
+
+  BLANKS = {
+    recipe: { rows:[
+        ['노을빛 주황 레시피 · 빨강과 노랑을 ', {a:'2'}, ' : ', {a:'5'}, ' 로 섞는다.'],
+        ['양이 달라도 ', {a:'비'}, ' 가 같으면 같은 색이 된다!'] ],
+      bank:['2','5','비','양','3'] },
+    cells: { art:true, rows:[
+        ['전체의 ', {a:'40'}, ' %'],
+        ['분수로 나타내면 ', {a:'40/100'}],
+        ['소수로 나타내면 ', {a:'0.4'}] ],
+      bank:['40','40/100','0.4','60','0.6'] },
+    pct: { rows:[
+        ['빨강은 전체의 ', {a:'40'}, ' %'],
+        ['노랑은 전체의 ', {a:'60'}, ' %'] ],
+      bank:['40','60','50','100'] },
+    secret: { card:true, title:'🃏 색깔의 비밀 카드', rows:[
+        ['두 물감의 ', {a:'양'}, ' 이 달라도'],
+        ['두 물감의 ', {a:'비'}, ' 가 같다면 같은 색이 된다.'] ],
+      bank:['양','비','차이','개수'] }
+  };
+
+  mix(a) {
+    const ks = Object.keys(a).filter(k => a[k] > 0);
+    const t = ks.reduce((s,k) => s + a[k], 0);
+    if (!t) return [252,250,245];
+    const o = [0,0,0];
+    ks.forEach(k => { const w = a[k]/t, p = this.PRIM[k]; for (let i=0;i<3;i++) o[i] += p[i]*w; });
+    return o.map(v => Math.round(v));
+  }
+  rgb(a) { return 'rgb(' + a[0] + ',' + a[1] + ',' + a[2] + ')'; }
+  gcd(a,b) { return b ? this.gcd(b, a%b) : a; }
+
+  ac() {
+    if (!this._ac) {
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      this._ac = new C();
+      this._bus = this._ac.createGain(); this._bus.gain.value = 0.5;
+      const comp = this._ac.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.ratio.value = 6;
+      this._bus.connect(comp); comp.connect(this._ac.destination);
+    }
+    if (this._ac.state === 'suspended') this._ac.resume();
+    return this._ac;
+  }
+  sfx(kind) {
+    if (this.state.audio === 'mute') return;
+    const now = performance.now();
+    if (now - (this._lastSfx||0) < 60) return;
+    this._lastSfx = now;
+    const c = this.ac(); if (!c) return;
+    const t = c.currentTime, duck = this._speaking ? 0.35 : 1;
+    const n = (f, at, dur, vol, type) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t+at);
+      g.gain.setValueAtTime(0.0001, t+at);
+      g.gain.linearRampToValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+0.02);
+      g.gain.setValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+at+dur);
+      o.connect(g); g.connect(this._bus); o.start(t+at); o.stop(t+at+dur+0.05);
+    };
+    if (kind === 'tap') n(720, 0, 0.09, 0.08);
+    else if (kind === 'pour') n(260 + Math.random()*90, 0, 0.07, 0.05, 'triangle');
+    /* 정답: 4음이 부드럽게 이어 올라가는 "딩동댕" */
+    else if (kind === 'ok') {
+      [[523.25,0,0.30],[659.25,0.105,0.30],[783.99,0.21,0.34],[1046.5,0.315,0.62]]
+        .forEach((s,i) => { n(s[0], s[1], s[2], 0.115 - i*0.008, 'sine'); n(s[0]*2, s[1], s[2]*0.7, 0.026, 'sine'); });
+    }
+    else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
+    else if (kind === 'card') { [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i) => n(f, i*0.085, 0.5, 0.1 - i*0.008)); }
+    else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+  }
+
+  ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+
+  /* 캐릭터별로 서로 다른 voice를 명시적으로 매핑 */
+  voicePool() {
+    if (this._pool !== undefined) return this._pool;
+    let vs = [];
+    try { vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().indexOf('ko') === 0); } catch(e) {}
+    if (!vs.length) { this._pool = null; return null; }
+    const FEM = /여성|female|woman|heami|해미|sunhi|선히|yuna|유나|jiyoon|지윤|seoyeon|서연|nari|나리|google\s*한국|hyeju|혜주|jimin|지민/i;
+    const MALE = /injoon|인준|hyunsu|현수|jinho|진호|minsu|민수|bongjin|봉진|gookmin|국민|\bman\b|\bmale\b|남성/i;
+    const named = vs.filter(v => MALE.test(v.name));
+    const unknown = vs.filter(v => named.indexOf(v) < 0 && !FEM.test(v.name));
+    const female = vs.filter(v => named.indexOf(v) < 0 && unknown.indexOf(v) < 0);
+    const male = named.concat(unknown);
+    const assign = {};
+    ['munch','munsell','signac'].forEach((k, idx) => {
+      assign[k] = male.length ? male[idx % male.length] : (female[0] || vs[0]);
+    });
+    assign.narrator = female[0] || (male.length > 1 ? male[male.length-1] : (male[0] || vs[0]));
+    /* 교사가 지정한 목소리가 있으면 그것을 우선한다 */
+    const pick = this.state.voiceMap || {};
+    Object.keys(pick).forEach(k => {
+      const v = vs.find(x => x.name === pick[k]);
+      if (v) assign[k] = v;
+    });
+    this._pool = { all: vs, male, female, assign };
+    return this._pool;
+  }
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut+1).trim());
+        s = s.slice(cut+1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
+  stopVoice() {
+    this._vtok = (this._vtok||0) + 1;
+    this._speaking = false;
+    try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
+    try { speechSynthesis.cancel(); } catch(e) {}
+  }
+  speak(text, who) {
+    this.stopVoice();
+    if (this.state.audio !== 'full') return;
+    const raw = (text === null || text === undefined) ? '' :
+      (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
+    const txt = raw
+      .replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu, '')
+      .replace(/mL/g, ' 밀리리터 ').replace(/\s+/g, ' ').trim();
+    if (!txt || txt === '[object Object]') return;
+    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    const man = window.RS_TTS;
+    if (man && man[key]) {
+      try {
+        const a = new Audio('tts/' + key + '.mp3');
+        a.volume = 0.95; this._mp3 = a; this._speaking = true;
+        a.onended = () => { this._speaking = false; };
+        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
+        return;
+      } catch(e) {}
+    }
+    this._speakSynth(txt, who);
+  }
+  _speakSynth(txt, who) {
+    if (!('speechSynthesis' in window)) return;
+    const parts = this.chunks(txt);
+    const tok = this._vtok;
+    const cfg = this.WHO[who] || this.WHO.narrator;
+    const pool = this.voicePool();
+    const v = pool ? pool.assign[who] : null;
+    /* 배정된 voice가 성별과 어긋나면 pitch/rate만으로 구분되도록 폴백 */
+    const isMale = !!(pool && v && pool.male.indexOf(v) >= 0);
+    let pitch = (cfg.male && !isMale) ? cfg.pitchF : cfg.pitch;
+    if (!cfg.male && isMale) pitch = 1.5;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      const u = new SpeechSynthesisUtterance(parts[i]);
+      u.lang = 'ko-KR';
+      if (v) u.voice = v;
+      u.pitch = Math.max(0.1, Math.min(2, pitch));
+      u.rate = Math.max(0.5, Math.min(2, cfg.rate || 1.05));
+      u.volume = 1;
+      let advanced = false;
+      const go = () => { if (advanced || tok !== this._vtok) return; advanced = true; setTimeout(() => step(i+1), cfg.gap || 150); };
+      u.onend = go; u.onerror = go;
+      try { speechSynthesis.speak(u); } catch(e) { go(); }
+    };
+    step(0);
+  }
+
+  plog(ev, data) {
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    try {
+      if (this._user === 'guest') return;
+      this._q = this._q || [];
+      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+        seq: ++this._seq, clientTs:new Date().toISOString(),
+        eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+      if (this._q.length >= 10) this.flush();
+    } catch(e) {}
+  }
+  flush(beacon) {
+    try {
+      if (!this._q || !this._q.length) return;
+      const batch = this._q.splice(0);
+      const body = JSON.stringify({ token:this.LOG_TK, records:batch });
+      if (beacon && navigator.sendBeacon) {
+        if (!navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' }))) this._q.unshift.apply(this._q, batch);
+        return;
+      }
+      fetch(this.LOG_EP, { method:'POST', headers:{ 'Content-Type':'text/plain' }, body }).catch(() => { this._q.unshift.apply(this._q, batch); });
+    } catch(e) {}
+  }
+  ukey(b) { return b + ':' + (this._user || 'anon'); }
+
+  componentDidMount() {
+    this._seq = 0;
+    this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    let audio = 'full';
+    try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
+    let cards = 0;
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    let voiceMap = {};
+    try { voiceMap = JSON.parse(localStorage.getItem('rs3_voices') || '{}') || {}; } catch(e) {}
+    this.setState({ audio, cards, voiceMap });
+    try { speechSynthesis.onvoiceschanged = () => { this._pool = undefined; }; } catch(e) {}
+    this._flushT = setInterval(() => this.flush(), 5000);
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    document.addEventListener('visibilitychange', this._hide);
+    this._pageHide = () => this.flush(true);
+    addEventListener('pagehide', this._pageHide);
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+    this._ptUp = (e) => { if (this._pts) { this._pts.delete(e.pointerId); if (this._pts.size === 0) { this._pinched = false; this._pinch0 = null; } } };
+    addEventListener('pointerup', this._ptUp, true);
+    addEventListener('pointercancel', this._ptUp, true);
+    this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
+    setTimeout(() => this.sayStep(0), 500);
+  }
+  componentWillUnmount() {
+    clearInterval(this._flushT); clearInterval(this._wd);
+    document.removeEventListener('visibilitychange', this._hide);
+    removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerup', this._ptUp, true);
+    removeEventListener('pointercancel', this._ptUp, true);
+    clearTimeout(this._tT); clearTimeout(this._autoT); clearTimeout(this._pourT);
+    this.stopVoice(); this.flush(true);
+  }
+
+  sayStep(i) {
+    const s = this.STEPS[i];
+    if (!s) return;
+    this.speak(s.k === 'story' ? s.lines.join(' ') : s.say, s.who);
+  }
+
+  toast(icon, title, body, kind) {
+    this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    clearTimeout(this._tT);
+    this.setState({ toast: { icon, title, body, kind } });
+    this._tT = setTimeout(() => this.setState({ toast: null }), 4200);
+  }
+
+  go(d) {
+    const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
+    if (n === this.state.i) return;
+    this.stopVoice();
+    clearTimeout(this._tT); clearTimeout(this._autoT);
+    this._wasHit = false;
+    this._pts = new Map(); this._pinched = false; this._pinch0 = null;
+    this.setState({ i:n, toast:null, amt:{ '빨강':0, '노랑':0 }, labLog:[], found: n === 9 ? this.state.found : [],
+      cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null });
+    this.plog('nav', { to:n });
+    setTimeout(() => this.sayStep(n), 380);
+  }
+
+  markSolved() {
+    const s = Object.assign({}, this.state.solved);
+    s[this.state.i] = true;
+    this.setState({ solved: s });
+  }
+  autoNext(ms) {
+    clearTimeout(this._autoT);
+    this._autoT = setTimeout(() => this.go(1), ms || 2300);
+  }
+
+  confetti() {
+    try {
+      for (let i=0;i<26;i++) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:-16px;width:11px;height:17px;border-radius:3px;z-index:200;pointer-events:none;animation:rsFall linear forwards';
+        d.style.left = (4 + Math.random()*92) + 'vw';
+        d.style.background = ['#c67139','#f6a06b','#7a8a5e','#d67f48','#8c491a','#ccdbb2'][i%6];
+        d.style.animationDelay = (Math.random()*0.5) + 's';
+        d.style.animationDuration = (1.3 + Math.random()*1.1) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 3200);
+      }
+    } catch(e) {}
+  }
+
+  /* 카드가 도감(헤더 배지)으로 날아가 꽂히는 연출 */
+  flyCard() {
+    try {
+      const src = document.querySelector('[data-card-panel]');
+      const dst = document.querySelector('[data-cards-badge]');
+      if (!src || !dst) return;
+      const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.textContent = '🃏';
+      el.style.cssText = 'position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:104px;height:142px;border-radius:16px;border:4px solid #f6a06b;background:#f9f4ed;box-shadow:0 16px 40px rgba(32,30,29,.34);font-size:46px';
+      el.style.left = (a.left + a.width/2 - 52) + 'px';
+      el.style.top = (a.top + a.height/2 - 71) + 'px';
+      document.body.appendChild(el);
+      const dx = (b.left + b.width/2) - (a.left + a.width/2);
+      const dy = (b.top + b.height/2) - (a.top + a.height/2);
+      const anim = el.animate([
+        { transform:'translate(0,0) scale(1) rotate(0deg)', opacity:1 },
+        { transform:'translate(' + (dx*0.45) + 'px,' + (dy*0.45 - 70) + 'px) scale(.72) rotate(-14deg)', opacity:1, offset:0.55 },
+        { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.12) rotate(8deg)', opacity:.25 }
+      ], { duration: 1150, easing:'cubic-bezier(.5,.05,.35,1)' });
+      anim.onfinish = () => {
+        el.remove();
+        try {
+          dst.animate([{ transform:'scale(1)' }, { transform:'scale(1.34)' }, { transform:'scale(1)' }], { duration:520, easing:'ease-out' });
+        } catch(e) {}
+      };
+    } catch(e) {}
+  }
+
+  setAmt(name, v) {
+    const amt = Object.assign({}, this.state.amt);
+    amt[name] = Math.max(0, Math.min(this.MAX, Math.round(v/5)*5));
+    if (amt[name] !== this.state.amt[name]) {
+      this.sfx('pour'); this.setState({ amt });
+      this.hitCue(amt['빨강'], amt['노랑']);
+    }
+  }
+  colDown(name) {
+    return (e) => {
+      const el = e.currentTarget;
+      try { el.setPointerCapture(e.pointerId); } catch(err) {}
+      this.padDown(e);
+      if (this._pts.size >= 2) return;
+      const r = el.getBoundingClientRect();
+      const apply = (cy) => { if (this._pts.size >= 2 || this._pinched) return; this.setAmt(name, (r.bottom - cy) / r.height * this.MAX); };
+      apply(e.clientY);
+      const mv = (ev) => apply(ev.clientY);
+      const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
+      el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    };
+  }
+  padDown(e) {
+    this._pts = this._pts || new Map();
+    if (this._pts.has(e.pointerId)) return;
+    this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    if (this._pts.size === 2) {
+      const p = Array.from(this._pts.values());
+      this._pinch0 = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+      this._base = Object.assign({}, this.state.amt);
+      this._pinched = true;
+    }
+  }
+  padMove(e) {
+    if (!this._pts || !this._pts.has(e.pointerId)) return;
+    this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    if (this._pts.size === 2 && this._pinch0 && this._base) {
+      const p = Array.from(this._pts.values());
+      const d = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
+      const b0 = this._base['빨강'] || 0, y0 = this._base['노랑'] || 0;
+      const cap = Math.min(b0 ? this.MAX / b0 : 99, y0 ? this.MAX / y0 : 99);
+      const k = Math.max(0.2, Math.min(cap, d / this._pinch0));
+      const na = Math.round(b0 * k / 5) * 5;
+      const nb = Math.round(y0 * k / 5) * 5;
+      if (na !== this.state.amt['빨강'] || nb !== this.state.amt['노랑']) {
+        this.sfx('pour');
+        this.setState({ amt: { '빨강': na, '노랑': nb } });
+        this.hitCue(na, nb);
+      }
+    }
+  }
+  padUp(e) {
+    if (this._pts) this._pts.delete(e.pointerId);
+    this._pinch0 = null;
+    if (!this._pts || this._pts.size === 0) this._pinched = false;
+  }
+
+  goalMet(a, b) {
+    const st = this.STEPS[this.state.i];
+    if (!st || st.k !== 'lab') return false;
+    if (!(a > 0 && b > 0)) return false;
+    const ratio = a * this.TGT[1] === b * this.TGT[0];
+    if (st.mode === 'trap') return a === 50 && b === 80;
+    if (st.mode === 'find') return ratio && this.state.labLog.length > 0;
+    return ratio;
+  }
+  hitCue(a, b) {
+    const t = this.goalMet(a, b);
+    if (t && !this._wasHit) { this._lastSfx = 0; this.sfx('ok'); }
+    this._wasHit = t;
+  }
+
+  runLab() {
+    const st = this.STEPS[this.state.i];
+    const a = this.state.amt['빨강'], b = this.state.amt['노랑'];
+    if (!(a > 0 && b > 0)) { this.toast('🤔', '둘 다 넣어야 해요', '빨강과 노랑을 모두 넣고 실험해요.'); return; }
+    const ok = a * this.TGT[1] === b * this.TGT[0];
+    const g = this.gcd(a,b);
+    this.plog('lab', { mode:st.mode, a, b, ok });
+    this.setState({ labLog: this.state.labLog.concat([{ a, b, ok }]).slice(-6) });
+
+    if (st.mode === 'trap') {
+      if (a === 50 && b === 80) {
+        this.markSolved();
+        this.toast('🔍', '조수의 말은 틀렸어요!', '같은 수를 더하면(+30) 색이 변해요. 곱해야 같은 색!', 'ok');
+        return;
+      }
+      this.toast('🤔', '빨강 50 · 노랑 80으로 맞춰요', '조수의 주장을 직접 확인해 봐요.');
+      return;
+    }
+    if (!ok) {
+      const tr = (a/g) + ':' + (b/g);
+      if (st.mode === 'find' && this.state.hypo && tr === this.state.hypo) {
+        const failed = this.state.failed.slice();
+        if (failed.indexOf(this.state.hypo) < 0) failed.push(this.state.hypo);
+        this.plog('hypo_fail', { hypo: this.state.hypo });
+        this.setState({ failed, hypoPick: true });
+        this.toast('🔬', '가설이 틀렸다는 걸 알아냈어요!', '틀린 가설을 지우는 것도 중요한 발견이에요. 아래에서 새 가설을 골라 봐요.', 'ok');
+        return;
+      }
+      const more = a * this.TGT[1] > b * this.TGT[0] ? '노랑' : '빨강';
+      this.toast('🤔', '아직 목표 색이 아니에요', more + '을(를) 더 넣어 볼까요? 내 색과 목표 색을 비교해요.');
+      return;
+    }
+    if (st.mode === 'find') {
+      const hit = this.state.hypo === (a/g) + ':' + (b/g);
+      this.setState({ found: [[a,b]] });
+      this.markSolved();
+      this.toast('✅', '찾았다! 목표 색이에요',
+        (this.state.hypo ? (hit ? '가설이 딱 맞았어요 — 진짜 과학자! ' : '가설과는 달랐지만 실험으로 확인했어요. ') : '') +
+        '빨강 ' + a + ' : 노랑 ' + b, 'ok');
+      return;
+    }
+    if (st.mode === 'more') {
+      const key = a + ':' + b;
+      if (this.state.found.some(f => f[0]+':'+f[1] === key)) { this.toast('🤔', '이미 실험한 양이에요', '새로운 양으로 도전!'); return; }
+      const found = this.state.found.concat([[a,b]]);
+      this.setState({ found, amt:{ '빨강':0, '노랑':0 } });
+      if (found.length >= 3) {
+        this.markSolved(); this.confetti();
+        this.toast('🎉', '실험 대성공!', '서로 다른 양인데 전부 같은 색! 곧 다음으로 넘어가요.', 'ok');
+        this.autoNext(2600);
+      } else {
+        this.toast('✅', '성공!', '또 다른 양으로 한 번 더! (' + found.length + '/3)', 'ok');
+      }
+      return;
+    }
+    if (st.mode === 'wall') {
+      this.setState({ wallDone: this.state.wallDone + 1 });
+      this.markSolved();
+      this.toast('✅', '같은 색이에요!', a + ' : ' + b + ' 도 간단히 하면 ' + (a/g) + ' : ' + (b/g) + ' — 완벽해요!', 'ok');
+      return;
+    }
+  }
+  clearLab() { this.sfx('tap'); this._wasHit = false; this.setState({ amt: { '빨강':0, '노랑':0 } }); }
+
+  pourCup(side) {
+    if (this.state.pouring) return;
+    const max = side === 'a' ? 1 : 3;
+    if (this.state.demoP[side] >= max) return;
+    this.sfx('pour');
+    this.setState({ pouring: side });
+    clearTimeout(this._pourT);
+    this._pourT = setTimeout(() => {
+      const p = Object.assign({}, this.state.demoP);
+      p[side] = p[side] + 1;
+      this.setState({ demoP: p, pouring: null });
+      if (p.a >= 1 && p.b >= 3) {
+        this.markSolved();
+        this.plog('demo', { done:1 });
+        setTimeout(() => this.toast('😮', '빨강은 똑같이 20mL인데!', '노랑 비커가 1개일 때와 3개일 때 색이 완전히 달라요. 두 물감의 양을 모두 봐야 해요!', 'ok'), 450);
+      }
+    }, 780);
+  }
+
+  dotTap(i) {
+    return () => {
+      const d = this.state.dots.slice();
+      d[i] = (d[i] === this.state.dotSel) ? 0 : this.state.dotSel;
+      this.sfx('tap');
+      this.setState({ dots: d, dotMix: null });
+      const r = d.filter(x => x === 1).length, y = d.filter(x => x === 2).length;
+      if (r + y === 7) {
+        clearTimeout(this._dotT);
+        this._dotT = setTimeout(() => this.dotCheck(), 420);
+      }
+    };
+  }
+  dotCheck() {
+    const d = this.state.dots;
+    const r = d.filter(x => x === 1).length, y = d.filter(x => x === 2).length;
+    if (r + y < 7) return;
+    const p1 = this.PRIM['빨강'], p2 = this.PRIM['노랑'];
+    const avg = [0,1,2].map(k => Math.round((p1[k]*r + p2[k]*y)/7));
+    this.setState({ dotMix: this.rgb(avg) });
+    this.plog('dots', { r, y, ok: r*5 === y*2 });
+    if (r*5 === y*2) { this.markSolved(); this.toast('✅', '점으로도 노을빛 주황!', '빨강 ' + r + ' : 노랑 ' + y + ' = 2 : 5 — 물감과 같은 비예요!', 'ok'); }
+    else { this.toast('🤔', '아직 그 주황이 아니에요', '빨강 ' + r + ' : 노랑 ' + y + ' 이에요. 어떤 점이 더 많아야 할까요?'); }
+  }
+
+  gridCells() {
+    const n = this.STEPS[this.state.i].n;
+    if (this.state.cells.length !== n) return new Array(n).fill('');
+    return this.state.cells;
+  }
+  paintCell(i) {
+    const n = this.STEPS[this.state.i].n;
+    const cells = this.gridCells().slice();
+    if (this.state.bsize === 10 && n === 100) {
+      const r0 = Math.floor(i/10)*10;
+      for (let k=r0;k<r0+10;k++) cells[k] = this.state.pot;
+    } else cells[i] = this.state.pot;
+    this.sfx('pour');
+    this.setState({ cells });
+    const r = cells.filter(c => c === 'r').length, y = cells.filter(c => c === 'y').length;
+    if (r + y === n && !this._gLock) {
+      this._gLock = true;
+      setTimeout(() => {
+        this._gLock = false;
+        this.plog('grid', { n, r, y, ok: r*3 === y*2 });
+        if (r*3 === y*2) { this.markSolved(); this.toast('✅', '잘했어요!', '빨강 ' + r + '칸 · 노랑 ' + y + '칸 = 2 : 3!', 'ok'); }
+        else {
+          const diff = Math.round(n*2/5) - r;
+          this.toast('🤔', '2 : 3이 아니에요', diff > 0 ? ('노랑 ' + diff + '칸을 빨강으로 바꿔 봐요.') : ('빨강 ' + (-diff) + '칸을 노랑으로 바꿔 봐요.'));
+        }
+      }, 320);
+    }
+  }
+
+  blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
+  blankKeys() {
+    const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
+    def.rows.forEach((row, ri) => row.forEach((tk, ti) => { if (typeof tk === 'object') keys.push({ key: id+'-'+ri+'-'+ti, a: tk.a }); }));
+    return keys;
+  }
+  place(word) {
+    const keys = this.blankKeys();
+    const blanks = Object.assign({}, this.state.blanks);
+    let target = this.state.selBlank && !blanks[this.state.selBlank]
+      ? keys.find(k => k.key === this.state.selBlank)
+      : keys.find(k => !blanks[k.key]);
+    if (!target) return;
+    if (target.a !== word && !this.state.selBlank) {
+      const other = keys.find(k => !blanks[k.key] && k.a === word);
+      if (other) target = other;
+    }
+    if (target.a === word) {
+      blanks[target.key] = word;
+      const used = Object.assign({}, this.state.used);
+      const uk = this.STEPS[this.state.i].id + '|' + word;
+      used[uk] = (used[uk] || 0) + 1;
+      this.sfx('ok');
+      this.setState({ blanks, used, selBlank: null });
+      if (keys.every(k => blanks[k.key])) {
+        setTimeout(() => {
+          const id = this.STEPS[this.state.i].id;
+          this.plog('blank', { id });
+          this.markSolved();
+          if (id === 'secret') {
+            this.sfx('card'); this.flyCard();
+            let got = [];
+            try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+            if (got.indexOf('color0') < 0) { got.push('color0'); try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {} }
+            setTimeout(() => {
+              this.setState({ cards: got.length });
+              this.confetti();
+              this.toast('🃏', '비밀 카드를 도감에 모았어요!', '색깔의 비밀 카드 획득 · 비밀번호 숫자는 1이에요.', 'ok');
+              this.speak('비밀 카드를 도감에 모았어요. 색깔의 비밀 비밀번호 숫자는 1이에요.', 'narrator');
+            }, 1150);
+          } else {
+            this.confetti();
+            this.toast('✅', '완성!', '아주 잘했어요.', 'ok');
+          }
+        }, 320);
+      }
+    } else {
+      this.sfx('oops');
+      this.toast('🤔', '다시 한번!', '다른 카드를 놓아 볼까요?');
+    }
+  }
+  chipDown(word) {
+    return (e) => {
+      if (e.button === 1 || e.button === 2) return;
+      const src = e.currentTarget;
+      const g = document.createElement('div');
+      g.textContent = word;
+      g.style.cssText = "position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;color:#8c491a;opacity:.94;font-family:'Jua',sans-serif;transform:translate(-50%,-50%)";
+      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+      document.body.appendChild(g);
+      let moved = false;
+      const mv = (ev) => { moved = true; g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
+      const up = (ev) => {
+        document.removeEventListener('pointermove', mv);
+        document.removeEventListener('pointerup', up);
+        g.remove();
+        if (!moved) return;
+        const el = document.elementFromPoint(ev.clientX, ev.clientY);
+        const slot = el && el.closest ? el.closest('[data-blank]') : null;
+        if (slot && slot.getAttribute('data-blank')) {
+          this.setState({ selBlank: slot.getAttribute('data-blank') });
+          setTimeout(() => this.place(word), 0);
+        }
+      };
+      document.addEventListener('pointermove', mv);
+      document.addEventListener('pointerup', up);
+      try { src.releasePointerCapture(e.pointerId); } catch(err) {}
+    };
+  }
+
+  setVoice(who, name) {
+    const vm = Object.assign({}, this.state.voiceMap);
+    if (name) vm[who] = name; else delete vm[who];
+    try { localStorage.setItem('rs3_voices', JSON.stringify(vm)); } catch(e) {}
+    this._pool = undefined;
+    this.setState({ voiceMap: vm });
+    setTimeout(() => this.speak(this.WHO[who].name + '이야. ' + (who === 'narrator' ? '문제를 읽어 줄게요.' : '반가워!'), who), 60);
+  }
+
+  cycleAudio() {
+    const order = ['full','sfx','mute'];
+    const next = order[(order.indexOf(this.state.audio) + 1) % 3];
+    if (next !== 'full') this.stopVoice();
+    try { localStorage.setItem('rs3_audio', next); } catch(e) {}
+    this.setState({ audio: next });
+    if (next === 'full') setTimeout(() => this.sayStep(this.state.i), 150);
+    else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
+  }
+
+  renderVals() {
+    const S = this.state, st = this.STEPS[S.i], who = this.WHO[st.who] || this.WHO.narrator;
+    const tgt = this.rgb(this.mix({ '빨강': this.TGT[0], '노랑': this.TGT[1] }));
+    const a = S.amt['빨강'], b = S.amt['노랑'];
+    const g = (a > 0 && b > 0) ? this.gcd(a,b) : 0;
+    const solved = !!S.solved[S.i];
+    const isLab = st.k === 'lab';
+
+    const v = {
+      pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
+      stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
+      cards: S.cards,
+      audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
+      audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
+      cycleAudio: () => this.cycleAudio(),
+      stopProp: (e) => e.stopPropagation(),
+      openVoices: () => { this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
+      closeVoices: () => { this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
+      voicePanel: S.voicePanel,
+      voiceRows: S.voicePanel ? (() => {
+        const pool = this.voicePool();
+        const list = pool ? pool.all : [];
+        return ['munch','munsell','signac','narrator'].map(k => {
+          const w = this.WHO[k];
+          const cur = S.voiceMap[k] || ((pool && pool.assign[k]) ? pool.assign[k].name : '');
+          return {
+            key: k, name: w.name, tone: w.tone,
+            img: w.img || '', emoji: w.emoji || '',
+            cur,
+            opts: list.map(v => ({ v: v.name, t: v.name.replace(/\s*-\s*Korean.*$/i, '').replace(/\(Korean\)/i, '').trim(), sel: v.name === cur })),
+            change: (e) => this.setVoice(k, e.target.value),
+            test: () => this.speak(k === 'narrator' ? '문제를 읽어 줄게요.' : (w.name + '이야. 반가워!'), k)
+          };
+        });
+      })() : null,
+      voiceCount: (() => { const p = this.voicePool(); return p ? p.all.length : 0; })(),
+      noMaleVoice: (() => { const p = this.voicePool(); return !!(p && p.male.length === 0); })(),
+      mp3Count: (() => { try { return Object.keys(window.RS_TTS || {}).length; } catch(e) { return 0; } })(),
+      coachImgEl: who.img ? React.createElement('img', { src: who.img, alt: '', key: who.img,
+        style: { width:'56px', height:'56px', borderRadius:'999px', objectFit:'cover', border:'3px solid #dcd3c4', background:'#f9f4ed', display:'block' } }) : null,
+      artEl: st.art ? React.createElement('img', { src: st.art, alt: st.artCap || '', key: st.art,
+        style: st.artCrop
+          ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
+          : { display:'block', maxWidth:'min(320px,70vw)', maxHeight:'38vh', borderRadius:'3px' } }) : null,
+      coachEmoji: who.emoji || '',
+      coachName: who.name, coachRole: who.role,
+      coachText: st.k === 'story' ? st.lines.join('\n') : (st.say || ''),
+      coachHi: (st.k === 'lab' && st.mode === 'find') ? '' : (st.hi || ''),
+      hypoText: (isLab && st.mode === 'find' && S.hypo)
+        ? (S.hypo.split(':')[0] + ' : ' + S.hypo.split(':')[1]) : '',
+      replay: () => this.sayStep(S.i),
+      tgtColor: tgt,
+      showSwatch: !!st.swatch,
+      isStory: st.k === 'story', isChips: st.k === 'chips', isLab,
+      isDemo: st.k === 'demo', isDots: st.k === 'dots', isGrid: st.k === 'grid',
+      isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      artCap: st.artCap || '',
+      prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
+      toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
+      toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
+      toastBd: S.toast && S.toast.kind === 'ok' ? '#ccdbb2' : '#f6a06b',
+      closeToast: () => this.setState({ toast: null }),
+      goNext: () => { this.plog('complete', {}); try { const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done'))||'[]'); if (d.indexOf('color') < 0) { d.push('color'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); } } catch(e) {} }
+    };
+
+    if (st.k === 'chips') {
+      let list = st.chips || [];
+      if (st.mark === 'hypo') {
+        list = (this.HYPOS[S.obs] || this.HYPOS.y).map(o =>
+          ({ t: '빨강 ' + (o[0]*10) + 'mL : 노랑 ' + (o[1]*10) + 'mL · ' + o[2], v: o[0]+':'+o[1], ok:1 }));
+      }
+      const picked = S.picks[S.i] || [];
+      const needed = st.need || 1;
+      v.chips = list.map((c, ci) => {
+        const done = picked.indexOf(ci) >= 0;
+        const good = c.ok && done;
+        const chosen = (st.mark === 'obs' && S.obs === c.v) || (st.mark === 'hypo' && S.hypo === c.v);
+        return {
+          t: c.t,
+          bd: chosen ? '#8c491a' : (good ? '#ccdbb2' : '#f6a06b'),
+          bg: chosen ? '#ffe1d0' : (good ? '#f0fae1' : '#f9f4ed'),
+          fg: good && !chosen ? '#56633f' : '#8c491a',
+          pick: () => {
+            const p = picked.indexOf(ci) >= 0 ? picked : picked.concat([ci]);
+            const picks = Object.assign({}, S.picks); picks[S.i] = p;
+            const ns = { picks };
+            if (st.mark === 'obs') ns.obs = c.v;
+            if (st.mark === 'hypo') { ns.hypo = c.v; ns.failed = []; }
+            this.setState(ns);
+            this.plog('pick', { step: S.i, t: c.t, ok: !!c.ok });
+            if (c.ok) {
+              const okCount = p.filter(x => list[x] && list[x].ok).length;
+              if (okCount >= needed) { this.markSolved(); this.toast('✅', c.t, c.fb || '', 'ok'); }
+              else this.toast('✅', c.t, (c.fb || '') + ' 하나 더 찾아봐요!', 'ok');
+            } else this.toast('💡', '먼셀의 힌트', c.fb || '');
+          }
+        };
+      });
+      v.chipHint = st.hint || '';
+      if (st.mark === 'obs' && S.obs) {
+        const PV = { r:{ '빨강':3, '노랑':2 }, y:{ '빨강':2, '노랑':5 }, s:{ '빨강':1, '노랑':1 } };
+        v.obsMine = this.rgb(this.mix(PV[S.obs] || PV.s));
+      } else v.obsMine = null;
+    }
+
+    if (isLab) {
+      v.myColor = this.rgb(this.mix(S.amt));
+      v.myPct = Math.min(94, (a + b) / 320 * 94);
+      v.redAmt = a; v.yelAmt = b;
+      v.simpleRatio = g ? ('간단히 하면 ' + (a/g) + ' : ' + (b/g)) : '';
+      v.runLabel = st.run || '실험하기';
+      v.runLab = () => this.runLab();
+      v.clearLab = () => this.clearLab();
+      v.padDown = (e) => this.padDown(e); v.padMove = (e) => this.padMove(e); v.padUp = (e) => this.padUp(e);
+      v.paints = ['빨강','노랑'].map((nm, idx) => ({
+        name: nm, amt: S.amt[nm], ink: nm === '빨강' ? '#8c491a' : '#56633f',
+        color: this.rgb(this.PRIM[nm]),
+        order: idx === 0 ? 0 : 2,
+        pct: S.amt[nm] / this.MAX * 100,
+        handleOp: S.amt[nm] > 0 ? 1 : 0,
+        down: this.colDown(nm),
+        plus: () => this.setAmt(nm, S.amt[nm] + 5),
+        minus: () => this.setAmt(nm, S.amt[nm] - 5)
+      }));
+      /* 눈금선은 10mL마다, 숫자 라벨은 50mL마다 (초등 가독성 확보) */
+      const ticks = [];
+      for (let m = 10; m <= this.MAX; m += 10) {
+        const big = m % 50 === 0;
+        ticks.push({ n: m, at: m / this.MAX * 100, len: big ? 13 : 7,
+          th: big ? 2 : 1, col: big ? '#a19786' : '#c0b6a5',
+          show: big ? 'block' : 'none' });
+      }
+      v.ruler = ticks;
+      const goal = this.goalMet(a, b);
+      const hypoHit = !!(S.hypo && g && ((a/g) + ':' + (b/g)) === S.hypo);
+      const goalMsg = st.mode === 'trap' ? '✅ 조수가 말한 양이에요! ' + (st.run || '확인하기') + '를 눌러요'
+                    : '✨ 목표 색과 똑같아요! ' + (st.run || '실험하기') + '를 눌러요';
+      v.beakerRing = goal ? '0 0 0 7px #ccdbb2, 0 0 22px rgba(143,160,115,.55)' : (hypoHit ? '0 0 0 7px #ffc6a5' : 'none');
+      v.liveBadge = goal ? goalMsg : (hypoHit ? '🔬 내 가설과 똑같은 비예요! ' + (st.run || '실험하기') + '로 확인해요' : '');
+      v.liveBg = goal ? '#f0fae1' : '#fff2eb';
+      v.liveFg = goal ? '#56633f' : '#8c491a';
+      v.liveBd = goal ? '#ccdbb2' : '#f6a06b';
+      const allH = [];
+      Object.keys(this.HYPOS).forEach(k => this.HYPOS[k].forEach(o => allH.push(o)));
+      v.canChangeHypo = st.mode === 'find' && !!S.hypo && !S.hypoPick && !solved;
+      v.openHypo = () => { this.sfx('tap'); this.setState({ hypoPick: true }); };
+      v.closeHypo = () => { this.sfx('tap'); this.setState({ hypoPick: false }); };
+      v.hypoOpts = (st.mode === 'find' && S.hypoPick)
+        ? allH.filter(o => S.failed.indexOf(o[0] + ':' + o[1]) < 0).map(o => ({
+            t: '빨강 ' + (o[0]*10) + 'mL : 노랑 ' + (o[1]*10) + 'mL · ' + o[2],
+            pick: () => {
+              this.sfx('ok');
+              this.setState({ hypo: o[0] + ':' + o[1], hypoPick: false, amt: { '빨강':0, '노랑':0 } });
+              this.plog('hypo_rev', { pick: o[0] + ':' + o[1] });
+              this.toast('🔬', '새 가설을 세웠어요', '빨강 ' + (o[0]*10) + 'mL : 노랑 ' + (o[1]*10) + 'mL — 이제 실험해 봐요!', 'ok');
+            }
+          }))
+        : null;
+      v.labLog = S.labLog.length ? S.labLog.map(l => ({
+        t: (l.ok ? '⭕ ' : '❌ ') + l.a + ':' + l.b,
+        bg: l.ok ? '#f0fae1' : '#fff2eb', fg: l.ok ? '#56633f' : '#8c491a',
+        bd: l.ok ? '#ccdbb2' : '#ffc6a5'
+      })) : null;
+    }
+
+    if (st.k === 'demo') {
+      const mk = (side, cups) => {
+        const poured = S.demoP[side], yellow = poured * 20;
+        return {
+          pct: 24 + poured * 19,
+          color: this.rgb(this.mix(yellow ? { '빨강':20, '노랑':yellow } : { '빨강':20 })),
+          label: yellow ? ('빨강 20 : 노랑 ' + yellow) : '빨강 20 (노랑 0)',
+          left: cups - poured,
+          streaming: S.pouring === side,
+          cups: new Array(cups).fill(0).map((_, ci) => ({
+            h: 56, fill: ci < poured ? 0 : 74,
+            op: ci < poured ? 0.35 : 1,
+            cur: ci < poured ? 'default' : 'pointer',
+            anim: (S.pouring === side && ci === poured) ? 'rsTilt .78s ease' : 'none',
+            pour: () => this.pourCup(side)
+          }))
+        };
+      };
+      v.demos = [ mk('a', 1), mk('b', 3) ];
+    }
+
+    if (st.k === 'dots') {
+      const p1 = this.PRIM['빨강'], p2 = this.PRIM['노랑'];
+      v.dotPal = [
+        { name:'빨강', color:this.rgb(p1), bd: S.dotSel === 1 ? '#201e1d' : '#dcd3c4', pick: () => { this.sfx('tap'); this.setState({ dotSel:1 }); } },
+        { name:'노랑', color:this.rgb(p2), bd: S.dotSel === 2 ? '#201e1d' : '#dcd3c4', pick: () => { this.sfx('tap'); this.setState({ dotSel:2 }); } }
+      ];
+      v.dots = S.dots.map((d, i) => ({
+        bg: d === 1 ? this.rgb(p1) : (d === 2 ? this.rgb(p2) : '#f9f4ed'),
+        bd: d ? '#a19786' : '#c0b6a5', bs: d ? 'solid' : 'dashed',
+        tap: this.dotTap(i)
+      }));
+      v.dotR = S.dots.filter(x => x === 1).length;
+      v.dotY = S.dots.filter(x => x === 2).length;
+      v.dotMix = S.dotMix;
+    }
+
+    if (st.k === 'grid') {
+      const n = st.n, cells = this.gridCells();
+      /* 칸 크기를 먼저 정하고 격자 크기를 픽셀로 확정한다(파생 크기를 쓰면 flex/aspect-ratio가
+         서로 충돌해 칸이 찌그러진다). 100칸은 10×10 백판 모형과 '큰 붓 = 한 줄'을 지키려면
+         칸이 44px 이상이어야 하므로 이 활동만 세로 스크롤을 허용한다. */
+      const cell = n === 100 ? 46 : 62;
+      const gap = n === 100 ? 3 : 6;
+      const chrome = 26;
+      v.gridCols = n <= 10 ? 5 : 10;
+      v.gridRows = Math.ceil(n / v.gridCols);
+      v.gridGap = gap;
+      v.gridW = v.gridCols * cell + (v.gridCols - 1) * gap + chrome;
+      v.gridH = v.gridRows * cell + (v.gridRows - 1) * gap + chrome;
+      v.gridRad = n === 100 ? 4 : 8;
+      v.showBrush = n === 100;
+      v.brushes = [
+        { name:'작은 붓 (1칸)', ic:17, bd: S.bsize === 1 ? '#201e1d' : '#dcd3c4', bg: S.bsize === 1 ? '#ffe1d0' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ bsize:1 }); } },
+        { name:'큰 붓 (10칸)', ic:32, bd: S.bsize === 10 ? '#201e1d' : '#dcd3c4', bg: S.bsize === 10 ? '#ffe1d0' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ bsize:10 }); } }
+      ];
+      v.pots = [
+        { name:'빨강 물감', color:this.rgb(this.PRIM['빨강']), bd: S.pot === 'r' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'r' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'r' }); } },
+        { name:'노랑 물감', color:this.rgb(this.PRIM['노랑']), bd: S.pot === 'y' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'y' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'y' }); } }
+      ];
+      const r = cells.filter(c => c === 'r').length, y = cells.filter(c => c === 'y').length;
+      v.gridCount = '빨강 ' + r + '칸 · 노랑 ' + y + '칸 · 남은 ' + (n - r - y) + '칸';
+      v.cells = cells.map((c, i) => ({
+        bg: c === 'r' ? this.rgb(this.PRIM['빨강']) : (c === 'y' ? this.rgb(this.PRIM['노랑']) : '#eee7db'),
+        tap: () => { this._gdown = true; this.paintCell(i); },
+        over: () => { if (this._gdown) this.paintCell(i); }
+      }));
+      v.gridDown = () => { this._gdown = true; };
+      v.gridUp = () => { this._gdown = false; };
+      v.gridClear = () => { this.sfx('tap'); this.setState({ cells: new Array(n).fill('') }); };
+    }
+
+    if (st.k === 'blank') {
+      const def = this.blankDef();
+      v.cardTitle = def.title || '';
+      v.rows = def.rows.map((row, ri) => ({
+        tokens: row.map((tk, ti) => {
+          if (typeof tk === 'string')
+            return { t: tk, key:'', disp:'inline', minw:'0', minh:'0', pad:'0', mar:'0', rad:'0', bb:'none', bg:'transparent', fg:'#201e1d', cur:'default', out:'none', ff:'inherit' };
+          const key = st.id + '-' + ri + '-' + ti, filled = S.blanks[key], sel = S.selBlank === key;
+          return {
+            t: filled || '', key, disp:'inline-block', minw:'86px', minh:'40px',
+            pad:'2px 12px', mar:'0 4px', rad:'12px 12px 0 0',
+            bb: '4px solid ' + (filled ? '#7a8a5e' : '#f6a06b'),
+            bg: filled ? '#f0fae1' : (sel ? '#ffc6a5' : '#ffe1d0'),
+            fg: filled ? '#56633f' : '#8c491a', cur:'pointer',
+            out: sel ? '3px dashed #8c491a' : 'none',
+            ff: "'Jua',sans-serif",
+            tap: () => { if (!filled) { this.sfx('tap'); this.setState({ selBlank: key }); } }
+          };
+        })
+      }));
+      const seen = {};
+      v.bank = def.bank.map((w) => {
+        seen[w] = (seen[w] || 0) + 1;
+        const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
+        return { t: w, vis: hidden ? 'hidden' : 'visible', tap: () => this.place(w), down: this.chipDown(w) };
+      });
+      v.blankArt = def.art
+        ? new Array(100).fill(0).map((_, i) => ({ bg: i < 40 ? this.rgb(this.PRIM['빨강']) : this.rgb(this.PRIM['노랑']) }))
+        : null;
+    }
+
+    const needsSolve = ['chips','lab','demo','dots','grid','blank'].indexOf(st.k) >= 0;
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finish' ? '처음으로' : '다음 →');
+    v.primaryBg = (!needsSolve || solved) ? '#c67139' : '#c0b6a5';
+    v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
+    v.primary = () => {
+      if (st.k === 'finish') { this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null }); return; }
+      if (needsSolve && !solved) { this.sfx('oops'); this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return; }
+      this.sfx('tap'); this.go(1);
+    };
+    return v;
+  }
+}
+
+</script>
+</body>
+</html>

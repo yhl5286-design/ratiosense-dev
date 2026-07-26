@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
+<script src="tts/manifest.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;800&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+/* 한글 가독성: 본문·강조는 실제 400~800 웨이트가 있는 Gothic A1로.
+   Jua는 단일 굵기(400) 디스플레이 글꼴이라 제목류에만 쓰고 절대 bold를 걸지 않는다(가짜 볼드로 획이 겹쳐 뭉개짐). */
+body{font-family:"Gothic A1","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:400;background:var(--color-bg);color:var(--color-text);overscroll-behavior:none;font-variant-numeric:tabular-nums}
+b,strong{font-weight:800}
+/* 빈칸 토큰은 Jua — 부모의 굵은 웨이트를 물려받아 겹쳐 그려지지 않게 400 고정 */
+[data-blank]{font-weight:400}
+/* 방 상자 제목: Caprasimo(라틴 전용) 대신 한글 디스플레이 스택으로 */
+.card-title{font-family:'Jua','Gothic A1',sans-serif;font-weight:400}
+a{color:var(--color-accent-700);text-decoration:none}
+a:hover{color:var(--color-accent)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--color-accent);outline-offset:3px}
+::selection{background:var(--color-accent-200)}
+@keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
+/* 페이지 전용 도우미 클래스 — 전부 디자인 시스템 토큰으로만 구성 */
+.rs-round{flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid var(--color-neutral-300);background:var(--color-neutral-100);font-size:19px;cursor:pointer;color:var(--color-accent-700)}
+.rs-round:hover{background:var(--color-neutral-200)}
+.rs-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:13px 28px;border-radius:999px;border:none;background:var(--color-accent);color:var(--color-neutral-100);font-family:'Jua',sans-serif;font-size:19px;cursor:pointer;box-shadow:var(--shadow-md);text-decoration:none}
+.rs-pill:hover{background:var(--color-accent-600)}
+.rs-pill:active{background:var(--color-accent-700)}
+.rs-pill2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:11px 20px;border-radius:999px;border:3px solid var(--color-neutral-300);background:var(--color-neutral-100);color:var(--color-accent-700);font-family:'Jua',sans-serif;font-size:16px;cursor:pointer}
+.rs-pill2:hover{background:var(--color-neutral-200)}
+.rs-chip{border:3px solid var(--color-accent-400);background:var(--color-neutral-100);border-radius:999px;padding:10px 18px;font-family:'Jua',sans-serif;font-size:17px;color:var(--color-accent-700);cursor:pointer;touch-action:manipulation;line-height:1.4}
+.rs-chip:hover{background:var(--color-accent-100)}
+.rs-dial{font-family:'Gothic A1','Apple SD Gothic Neo',sans-serif;font-weight:700;font-size:19px;color:var(--color-text);line-height:1.6}
+.rs-star{border:none;background:transparent;font-size:34px;line-height:1;cursor:pointer;color:var(--color-accent-500);padding:2px}
+.rs-panel{background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-3)}
+.rs-rpi{background:var(--color-neutral-100);border:2px solid var(--color-accent-2-200);border-radius:999px;padding:4px 12px;font-size:15px;font-weight:700}
+/* 건반 호버 시 손가락 아이콘 — 호버 가능한 기기(마우스)에서만, 터치에서는 나타나지 않음 */
+.rs-finger{position:absolute;inset:0 0 34px 0;display:flex;align-items:center;justify-content:center;font-size:34px;opacity:0;pointer-events:none;transition:opacity .15s ease}
+@media (hover:hover){button:hover>.rs-finger{opacity:1}}
+</style>
+</helmet>
+
+<div style="height:100dvh;display:flex;flex-direction:column;background:var(--color-bg)">
+
+  <header style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
+    <a href="index.html" aria-label="홈으로" class="rs-round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    </a>
+    <div style="flex:none;font-family:'Jua',sans-serif;font-size:19px">소리의 비밀</div>
+    <div style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+      <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
+    </div>
+    <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-family:'Jua',sans-serif;font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
+    <button onClick="{{openVoices}}" aria-label="목소리 고르기" title="캐릭터 목소리 고르기" class="rs-round">🎙️</button>
+  </header>
+
+  <main style="flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:12px;padding:12px;align-content:stretch;align-items:stretch;justify-content:center">
+
+    <aside style="flex:1 1 292px;min-width:0;max-width:400px;min-height:0;max-height:calc(100dvh - 168px);background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);display:flex;flex-direction:column;gap:11px;box-shadow:var(--shadow-sm)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:56px;height:56px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);flex:none;display:flex;align-items:center;justify-content:center;font-size:27px">{{coachEmoji}}</div>
+        <div style="min-width:0">
+          <div style="font-family:'Jua',sans-serif;font-size:16px;line-height:1.3">{{coachName}}</div>
+          <div style="font-size:12.5px;font-weight:700;color:var(--color-neutral-700)">{{coachRole}}</div>
+        </div>
+        <button onClick="{{replay}}" aria-label="다시 듣기" class="rs-round" style="margin-left:auto">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+      <p style="margin:0;font-size:19.5px;line-height:1.7;font-weight:500;text-wrap:pretty;white-space:pre-line;flex:1 1 auto;min-height:0;overflow:auto">{{coachText}}</p>
+      <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+        <div style="font-family:'Jua',sans-serif;font-size:18px;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:var(--radius-md);padding:10px 14px;line-height:1.5">{{coachHi}}</div>
+      </sc-if>
+    </aside>
+
+    <section style="flex:3 1 460px;min-width:0;min-height:0;max-height:calc(100dvh - 168px);display:flex;flex-direction:column;align-items:center;gap:12px;overflow:auto">
+
+      <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
+          <div style="font-size:96px;line-height:1">{{storyEmoji}}</div>
+          <sc-if value="{{storyCap}}" hint-placeholder-val="{{false}}">
+            <div style="font-family:'Jua',sans-serif;font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:560px;line-height:1.6">{{storyCap}}</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{showPiano}}" hint-placeholder-val="{{false}}">
+        <div style="flex:none;max-width:100%;overflow-x:auto;display:flex;flex-direction:column;align-items:center;gap:0;padding:0 4px">
+          <sc-if value="{{stringsEl}}" hint-placeholder-val="{{false}}">
+            <div style="width:634px;flex:none;background:var(--color-neutral-900);border-radius:var(--radius-md) var(--radius-md) 0 0;overflow:hidden;box-shadow:var(--shadow-md)">{{stringsEl}}</div>
+          </sc-if>
+          <div style="position:relative;display:flex;gap:6px;width:634px;flex:none;padding-bottom:5px">
+            <sc-for list="{{keys}}" as="k" hint-placeholder-count="8">
+              <button onClick="{{k.tap}}" aria-label="{{k.label}} 건반" style="position:relative;width:74px;height:150px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px;padding:0 0 12px;background:{{k.bg}};border:3px solid {{k.bd}};border-top:none;border-radius:0 0 12px 12px;cursor:pointer;font-family:'Jua',sans-serif;font-size:22px;color:var(--color-text);box-shadow:{{k.sh}};transform:{{k.tf}}">
+                <span>{{k.label}}</span>
+                <sc-if value="{{k.star}}" hint-placeholder-val="{{false}}"><span style="font-size:14px;color:var(--color-accent-2-700)">★</span></sc-if>
+                <sc-if value="{{k.sub}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;line-height:1.2;color:var(--color-accent-700);font-family:'Gothic A1',sans-serif;font-weight:800;white-space:nowrap">{{k.sub}}</span></sc-if>
+                <span class="rs-finger" style="display:{{k.fingerD}}">👆</span>
+              </button>
+            </sc-for>
+            <sc-for list="{{bkeys}}" as="b" hint-placeholder-count="5">
+              <div style="position:absolute;top:0;left:{{b.left}}px;width:44px;height:92px;background:linear-gradient(var(--color-neutral-800),var(--color-neutral-900));border-radius:0 0 8px 8px;z-index:2;pointer-events:none;box-shadow:var(--shadow-md)"></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isVib}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;flex:none">
+          <div class="rs-dial" style="font-size:22px;text-align:center">{{vibHz}}</div>
+          <sc-if value="{{vibWaveEl}}" hint-placeholder-val="{{false}}">
+            <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:6px 10px">{{vibWaveEl}}</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isHarmx}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;flex:none">
+          <div class="rs-dial" style="text-align:center;max-width:720px">{{hxRes}}<sc-if value="{{hxRatio}}" hint-placeholder-val="{{false}}"><span style="color:var(--color-accent-700)"> = {{hxRatio}}</span></sc-if><sc-if value="{{hxItv}}" hint-placeholder-val="{{false}}"><span style="font-size:14px;color:var(--color-neutral-600);font-family:'Gothic A1',sans-serif;font-weight:700"> ({{hxItv}})</span></sc-if></div>
+          <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:10px 12px 4px;max-width:92vw">
+            {{hxSvgEl}}
+            <div style="font-size:14px;font-weight:700;color:var(--color-neutral-600);margin:2px 0 6px"><span style="color:var(--color-accent-2-600)">▬▬</span> 도 &nbsp;&nbsp; <span style="color:var(--color-accent-600)">▬▬</span> 누른 음</div>
+          </div>
+          <sc-if value="{{hxWaveMsg}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:660px">{{hxWaveMsg}}</div>
+          </sc-if>
+          <sc-if value="{{showRate}}" hint-placeholder-val="{{false}}">
+            <div style="background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);max-width:720px;width:min(96%,720px);text-align:left;box-shadow:var(--shadow-sm);animation:rsPop .35s ease">
+              <div style="font-family:'Jua',sans-serif;font-size:19px">도와 {{hxName}}의 어울림 — 내 귀에는 <span style="color:var(--color-accent-700)">5점 만점에 몇 점</span>?</div>
+              <div style="display:flex;gap:4px;margin-top:4px">
+                <sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
+                  <button onClick="{{s.tap}}" aria-label="{{s.n}}점" class="rs-star" style="opacity:{{s.op}}">★</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isRooms}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
+
+          <sc-if value="{{roomStage === 'miss'}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);width:min(96%,560px)">
+              <sc-for list="{{missRows}}" as="m" hint-placeholder-count="3">
+                <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);display:flex;align-items:center;gap:var(--space-3)">
+                  <button onClick="{{m.play}}" class="rs-pill" style="min-height:44px;font-size:15px;padding:7px 14px">▶ 도+{{m.n}}</button>
+                  <div style="display:flex;gap:2px">
+                    <sc-for list="{{m.stars}}" as="s" hint-placeholder-count="5">
+                      <button onClick="{{s.tap}}" aria-label="{{m.n}} {{s.n}}점" class="rs-star" style="font-size:26px;opacity:{{s.op}}">★</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{roomStage === 'collect'}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:640px">
+              <sc-for list="{{rateChips}}" as="c" hint-placeholder-count="7">
+                <button onClick="{{c.tap}}" class="rs-chip" style="font-size:16px;padding:8px 16px">{{c.n}} <span style="color:var(--color-accent-500)">{{c.starsStr}}</span></button>
+              </sc-for>
+            </div>
+            <div class="rs-dial" style="text-align:center;max-width:640px">🤔 별을 <b>비슷하게 준 음들끼리</b> 모아 보면,<br>같은 방에 <b>어떤 음들</b>이 모이게 될까요?</div>
+            <button onClick="{{buildRooms}}" class="rs-pill">⭐ 내 별점으로 방 만들기!</button>
+          </sc-if>
+
+          <sc-if value="{{roomBoxes}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+              <sc-for list="{{roomBoxes}}" as="rb" hint-placeholder-count="3">
+                <div class="card elev-sm" style="min-width:190px;align-items:center;background:var(--color-neutral-100)">
+                  <div class="card-title">{{rb.title}}</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center">
+                    <sc-if value="{{rb.empty}}" hint-placeholder-val="{{false}}"><span style="font-size:13px;color:var(--color-neutral-600);font-weight:700">(없음)</span></sc-if>
+                    <sc-for list="{{rb.chips}}" as="c" hint-placeholder-count="2">
+                      <button onClick="{{c.tap}}" class="rs-chip" style="font-size:15px;padding:6px 12px">{{c.n}} <span style="color:var(--color-accent-500);font-size:12px">{{c.starsStr}}</span><sc-if value="{{c.ratio}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;color:var(--color-accent-700)"> ({{c.ratio}})</span></sc-if></button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{roomStage === 'rooms'}}" hint-placeholder-val="{{false}}">
+            <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2);max-width:600px;width:min(96%,600px);text-align:center">
+              <sc-if value="{{grpWaveEl}}" hint-placeholder-val="{{false}}">{{grpWaveEl}}</sc-if>
+              <sc-if value="{{grpWaveHint}}" hint-placeholder-val="{{false}}"><div style="font-size:14px;font-weight:700;color:var(--color-neutral-600);padding:18px 0">{{grpWaveHint}}</div></sc-if>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:760px;align-items:stretch">
+              <sc-for list="{{reasonChips}}" as="rc" hint-placeholder-count="3">
+                <button onClick="{{rc.tap}}" class="rs-chip" style="max-width:100%;text-align:left;display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;line-height:1.45;padding:12px 22px">
+                  <span>{{rc.t1}}</span>
+                  <sc-if value="{{rc.t2}}" hint-placeholder-val="{{false}}"><span>{{rc.t2}}</span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{roomStage === 'reveal'}}" hint-placeholder-val="{{false}}">
+            <div style="max-width:720px;width:min(96%,720px);background:var(--color-accent-100);border:2px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);font-size:15.5px;font-weight:700;line-height:1.7;text-align:left">
+              🎼 실제 음악에서는 <b>파(3:4)·솔(2:3)·도′(1:2)</b>을 잘 어울리는 음정으로 보고, <b>완전 음정</b>이라고 해요.<br>
+              <b>미(4:5)·라(3:5)</b>도 잘 어울리는 느낌이죠? 반면에 <b>레(8:9)·시(8:15)</b>는 잘 어울리지 않아요.<br>
+              여러분의 느낌도 이와 비슷했나요? <b>사람마다 조금씩은 다를 수 있어요!</b>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isTable}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);justify-content:center;align-items:flex-start;width:100%">
+
+            <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);flex:none">
+              <table class="table" style="font-size:15px">
+                <thead><tr><th>음</th><th>음정</th><th>진동수 비 (도 : 음)</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{itvRows}}" as="r" hint-placeholder-count="8">
+                    <tr style="background:{{r.bg}}"><td style="font-weight:800">{{r.n}}</td><td>{{r.itv}}</td><td style="font-family:'Jua',sans-serif;color:var(--color-accent-700)">{{r.ratio}}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);align-items:center;flex:1 1 400px;max-width:660px;min-width:320px">
+              <div style="display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;justify-content:center">
+                <div style="font-family:'Jua',sans-serif;font-size:18px">🏷️ 음정에 따른 분류 보기</div>
+                <button onClick="{{clsPlay}}" class="rs-pill" style="min-height:44px;font-size:15px;padding:8px 18px">{{clsBtn}}</button>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:36px;max-width:560px">
+                <sc-for list="{{clsPool}}" as="c" hint-placeholder-count="8">
+                  <span data-cls="{{c.n}}" class="tag tag-neutral" style="font-size:13px;padding:5px 12px;border:2px solid var(--color-neutral-300)">{{c.t}}</span>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;align-items:stretch">
+                <div data-clsroom="perfect" style="grid-row:span {{clsPerfRows}};background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:6px;align-items:center">
+                  <div style="font-family:'Jua',sans-serif;font-size:14px;color:var(--color-accent-2-700);text-align:center">완전음정 방<br><span style="font-size:11px;color:var(--color-neutral-600);font-family:'Gothic A1',sans-serif;font-weight:700">1·4·5·8도</span></div>
+                  <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:30px">
+                    <sc-for list="{{clsPerfect}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent-2" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
+                  </div>
+                </div>
+                <div style="grid-column:span 2;background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:4px;align-items:center">
+                  <div style="font-family:'Jua',sans-serif;font-size:14px;color:var(--color-accent-700)">장음정 방 <span style="font-size:11px;color:var(--color-neutral-600);font-family:'Gothic A1',sans-serif;font-weight:700">2·3·6·7도</span></div>
+                  <div data-clsroom="major" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:{{clsMajorMinH}}px;width:100%">
+                    <sc-for list="{{clsMajor}}" as="c" hint-placeholder-count="0"><span data-cls="{{c.n}}" class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
+                  </div>
+                </div>
+                <sc-if value="{{clsSplit}}" hint-placeholder-val="{{false}}">
+                  <div data-clsroom="simple" style="background:var(--color-neutral-100);border:2px dashed var(--color-accent-400);border-radius:var(--radius-sm);padding:6px;display:flex;flex-direction:column;gap:4px;align-items:center;animation:rsPop .3s ease">
+                    <div style="font-size:11.5px;font-weight:800;color:var(--color-accent-700);text-align:center">장음정 · 비가 간단한 방</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:26px">
+                      <sc-for list="{{clsSimple}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
+                    </div>
+                  </div>
+                  <div data-clsroom="complex" style="background:var(--color-neutral-100);border:2px dashed var(--color-accent-700);border-radius:var(--radius-sm);padding:6px;display:flex;flex-direction:column;gap:4px;align-items:center;animation:rsPop .3s ease">
+                    <div style="font-size:11.5px;font-weight:800;color:var(--color-accent-800);text-align:center">장음정 · 비가 복잡한 방</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:26px">
+                      <sc-for list="{{clsComplex}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <div style="grid-column:1/-1;font-family:'Jua',sans-serif;font-size:16px;text-align:center;margin-top:2px">⭐ 내가 나눈 방</div>
+                <sc-if value="{{myRooms}}" hint-placeholder-val="{{false}}">
+                  <sc-for list="{{myRooms}}" as="rb" hint-placeholder-count="3">
+                    <div style="background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:4px;align-items:center">
+                      <div style="font-family:'Jua',sans-serif;font-size:13px;text-align:center">{{rb.title}}</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:24px">
+                        <sc-if value="{{rb.empty}}" hint-placeholder-val="{{false}}"><span style="font-size:12px;color:var(--color-neutral-600);font-weight:700">(없음)</span></sc-if>
+                        <sc-for list="{{rb.chips}}" as="c" hint-placeholder-count="2"><span class="tag tag-neutral" style="font-size:12.5px">{{c.t}}</span></sc-for>
+                      </div>
+                    </div>
+                  </sc-for>
+                  <div style="grid-column:1/-1;justify-self:center;font-size:13.5px;font-weight:700;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:999px;padding:6px 14px;text-align:center">여러분이 나눈 방과 어떤 점이 같고 다른가요?</div>
+                </sc-if>
+                <sc-if value="{{myRoomsNone}}" hint-placeholder-val="{{false}}">
+                  <div style="grid-column:1/-1;font-size:13.5px;font-weight:700;color:var(--color-neutral-700);background:var(--color-neutral-200);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);text-align:center">먼저 별점 방 만들기를 해 보세요. 내가 나눈 방이 여기에 나타나요.</div>
+                </sc-if>
+              </div>
+              <div style="font-size:14px;font-weight:700;color:var(--color-neutral-700);min-height:20px;text-align:center">{{clsMsg}}</div>
+            </div>
+
+          </div>
+          <div class="rs-dial" style="text-align:center;max-width:660px"><b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>비가 간단할수록</b> 두 소리가 <b>더 잘 어울려요</b>!</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isPoly}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-3);max-width:94vw;overflow-x:auto;text-align:left">
+            <div style="font-family:'Jua',sans-serif;font-size:16px">🥁 북 — 2박마다</div>
+            <div style="white-space:nowrap">
+              <sc-for list="{{polyDrum}}" as="c" hint-placeholder-count="12">
+                <span style="display:inline-block;width:38px;height:38px;line-height:36px;margin:2px;border-radius:var(--radius-sm);border:2px solid {{c.bd}};background:{{c.bg}};text-align:center;font-weight:800">{{c.icon}}</span>
+              </sc-for>
+            </div>
+            <div style="font-family:'Jua',sans-serif;font-size:16px;margin-top:4px">🔔 방울 — 3박마다</div>
+            <div style="white-space:nowrap">
+              <sc-for list="{{polyBell}}" as="c" hint-placeholder-count="12">
+                <span style="display:inline-block;width:38px;height:38px;line-height:36px;margin:2px;border-radius:var(--radius-sm);border:2px solid {{c.bd}};background:{{c.bg}};text-align:center;font-weight:800">{{c.icon}}</span>
+              </sc-for>
+            </div>
+            <div style="font-family:'Jua',sans-serif;font-size:16px;margin-top:4px">🎯 함께 울리는 칸은?</div>
+            <div style="white-space:nowrap">
+              <sc-for list="{{polyAns}}" as="c" hint-placeholder-count="12">
+                <button onClick="{{c.tap}}" style="width:38px;height:38px;margin:2px;border-radius:var(--radius-sm);border:2px {{c.bs}} {{c.bd}};background:{{c.bg}};cursor:pointer;font-weight:800;font-size:15px;padding:0;color:var(--color-text)">{{c.n}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <button onClick="{{playPoly}}" class="rs-pill">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m6 3 14 9-14 9z"/></svg>
+            재생
+          </button>
+          <div class="rs-dial" style="text-align:center">{{polyMsg}}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isStrlen}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div style="display:flex;align-items:center;justify-content:flex-start;min-height:80px;width:min(680px,92%)">
+            <div style="width:16px;height:64px;background:linear-gradient(var(--color-accent-300),var(--color-accent-700));border-radius:var(--radius-sm);flex:none"></div>
+            <div data-str="sl" style="width:{{slW}}px;max-width:68vw;height:14px;background:linear-gradient(var(--color-neutral-100),var(--color-neutral-400));border-radius:5px;box-shadow:var(--shadow-sm)"></div>
+          </div>
+          <div class="rs-dial" style="font-size:21px;text-align:center">길이 <span style="color:var(--color-accent-700)">{{slL}}cm</span> — 1초에 <span style="color:var(--color-accent-700)">{{slF}}번</span> 떨려요 <span style="font-size:15px;color:var(--color-neutral-600)">{{slTag}}</span></div>
+          <sc-if value="{{rp}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-3);align-items:center;justify-content:center;background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);max-width:760px">
+              <span style="font-weight:800;color:var(--color-accent-2-700)">🔗 표상 연동 <span style="font-size:12px;color:var(--color-neutral-600)">({{rp.cap}})</span></span>
+              <span class="rs-rpi">비 <b>{{rp.a}} : {{rp.b}}</b><sc-if value="{{rp.hl}}" hint-placeholder-val="{{false}}"><b style="background:var(--color-accent-200);border-radius:999px;padding:2px 10px;margin-left:4px">{{rp.sa}} : {{rp.sb}}</b></sc-if><sc-if value="{{rp.red}}" hint-placeholder-val="{{false}}"><span> = <b>{{rp.sa}} : {{rp.sb}}</b></span></sc-if></span>
+              <span class="rs-rpi">분수 <span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;font-weight:800"><span style="border-bottom:2.5px solid currentColor;padding:0 6px">{{rp.sa}}</span><span style="padding:0 6px">{{rp.sb}}</span></span></span>
+              <span class="rs-rpi">소수 <b>{{rp.dec}}</b></span>
+              <span class="rs-rpi">백분율 <b>{{rp.pct}}%</b></span>
+            </div>
+          </sc-if>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center">
+            <span style="font-weight:800;color:var(--color-neutral-700)">짧게 ←</span>
+            <input type="range" min="20" max="110" step="1" value="{{slL}}" onChange="{{slInput}}" aria-label="줄 길이" style="width:min(380px,60vw);accent-color:var(--color-accent)">
+            <span style="font-weight:800;color:var(--color-neutral-700)">→ 길게</span>
+          </div>
+          <button onClick="{{slPluck}}" class="rs-pill2">♪ 줄 뜯기</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isSweep}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div style="display:flex;flex-direction:column;gap:var(--space-3);align-items:flex-start;width:min(620px,86%);margin-top:4px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:14px;height:40px;background:linear-gradient(var(--color-accent-300),var(--color-accent-700));border-radius:var(--radius-sm);flex:none"></div>
+              <div data-str="swA" style="width:{{swAW}}px;height:14px;background:linear-gradient(var(--color-neutral-100),var(--color-neutral-400));border-radius:5px;box-shadow:var(--shadow-sm)"></div>
+              <span style="font-weight:800;flex:none">{{swA}}cm</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="width:14px;height:40px;background:linear-gradient(var(--color-accent-300),var(--color-accent-700));border-radius:var(--radius-sm);flex:none"></div>
+              <div data-str="swB" style="width:{{swBW}}px;height:14px;background:linear-gradient(var(--color-neutral-100),var(--color-neutral-400));border-radius:5px;box-shadow:var(--shadow-sm)"></div>
+              <span style="font-weight:800;flex:none">{{swB}}cm</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center">
+            <span style="font-weight:800;color:var(--color-neutral-700)">함께 줄이기 ←</span>
+            <input type="range" min="32" max="64" step="2" value="{{swB}}" onChange="{{swInput}}" aria-label="두 줄 함께 조절" style="width:min(380px,60vw);accent-color:var(--color-accent)">
+            <span style="font-weight:800;color:var(--color-neutral-700)">→ 함께 늘리기</span>
+          </div>
+          <sc-if value="{{rp}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-wrap:wrap;gap:var(--space-2) var(--space-3);align-items:center;justify-content:center;background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);max-width:760px">
+              <span style="font-weight:800;color:var(--color-accent-2-700)">🔗 표상 연동 <span style="font-size:12px;color:var(--color-neutral-600)">({{rp.cap}})</span></span>
+              <span class="rs-rpi">비 <b>{{rp.a}} : {{rp.b}}</b><sc-if value="{{rp.hl}}" hint-placeholder-val="{{false}}"><b style="background:var(--color-accent-200);border-radius:999px;padding:2px 10px;margin-left:4px">{{rp.sa}} : {{rp.sb}}</b></sc-if></span>
+              <span class="rs-rpi">분수 <span style="display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;font-weight:800"><span style="border-bottom:2.5px solid currentColor;padding:0 6px">{{rp.sa}}</span><span style="padding:0 6px">{{rp.sb}}</span></span></span>
+              <span class="rs-rpi">소수 <b>{{rp.dec}}</b></span>
+              <span class="rs-rpi">백분율 <b>{{rp.pct}}%</b></span>
+            </div>
+          </sc-if>
+          <div class="rs-dial" style="font-size:18px;text-align:center;max-width:680px">길이는 <b>{{swA}}cm : {{swB}}cm</b>로 달라져도 비는 늘 <b style="background:var(--color-accent-200);padding:2px 10px;border-radius:999px">3 : 2</b> — 튕겨 보면 <b>어울림도 그대로</b>예요!</div>
+          <button onClick="{{swPlay}}" class="rs-pill2">♪ 두 줄 함께 뜯기</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isHarp}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <sc-if value="{{harpIntro}}" hint-placeholder-val="{{false}}">
+            <div style="background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-family:'Jua',sans-serif;font-size:19px;line-height:1.55;text-align:center">라(A) 음은 진동수가 <span style="color:var(--color-accent-700)">440Hz</span>!<br>라 음(440Hz)은 <span style="color:var(--color-accent-700)">세계가 함께 약속한</span> 악기 조율 <span style="color:var(--color-accent-700)">기준음</span>이에요.</div>
+          </sc-if>
+
+          <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);max-width:720px;width:min(96%,720px);text-align:left">
+            <div style="font-family:'Jua',sans-serif;font-size:18px">① 먼저 <span style="color:var(--color-accent-700)">귀로</span> 찾아 봐요! 목표 소리를 듣고, 줄 길이를 움직여 같은 소리를 찾으세요.</div>
+            <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
+              <button onClick="{{tGoal}}" class="rs-pill2">🔊 목표 소리({{harpN}}) 듣기</button>
+              <button onClick="{{tPluck}}" class="rs-pill2">♪ 내 줄 뜯기</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-weight:800;color:var(--color-neutral-700)">짧게 ←</span>
+              <input type="range" min="36" max="72" step="0.5" value="{{harpL}}" onChange="{{harpSlide}}" aria-label="하프 줄 길이" style="width:min(340px,54vw);accent-color:var(--color-accent)">
+              <span style="font-weight:800;color:var(--color-neutral-700)">→ 길게</span>
+              <span style="font-family:'Jua',sans-serif;font-size:17px">{{harpLTxt}}</span>
+            </div>
+            <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);margin-top:6px">{{tuneMsg}}</div>
+          </div>
+
+          <sc-if value="{{harpTuned}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsPop .35s ease">
+              <div style="font-size:16px;font-weight:700;color:var(--color-neutral-700);max-width:720px;text-align:center;line-height:1.7">② 이제 <b>계산으로 확인</b>! 라 : {{harpN}} = <b>{{harpA}} : {{harpB}}</b> — 라 길이 72cm에 <b>{{harpA}}/{{harpB}}</b>를 곱하면 {{harpN}} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b>
+                <button onClick="{{openHelp}}" class="rs-pill2" style="min-height:40px;font-size:14px;padding:6px 14px;margin-left:6px">❓ 왜 라보다 짧아질까?</button></div>
+              {{harpEl}}
+              <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4)">
+                <div style="font-size:22px;font-family:'Jua',sans-serif;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
+                  <span>{{harpN}} 줄의 길이 = 72 ×</span>
+                  <span style="display:inline-flex;flex-direction:column;align-items:center;gap:3px">
+                    <span data-blank="num" onClick="{{hbNum.tap}}" style="display:inline-block;min-width:64px;min-height:38px;padding:2px 12px;border-radius:12px 12px 0 0;border-bottom:4px solid {{hbNum.bb}};background:{{hbNum.bg}};color:{{hbNum.fg}};text-align:center;cursor:pointer;outline:{{hbNum.out}}">{{hbNum.t}}</span>
+                    <span style="align-self:stretch;min-width:64px;height:3.5px;background:var(--color-text);border-radius:2px"></span>
+                    <span data-blank="den" onClick="{{hbDen.tap}}" style="display:inline-block;min-width:64px;min-height:38px;padding:2px 12px;border-radius:0 0 12px 12px;border-top:4px solid {{hbDen.bb}};background:{{hbDen.bg}};color:{{hbDen.fg}};text-align:center;cursor:pointer;outline:{{hbDen.out}}">{{hbDen.t}}</span>
+                  </span>
+                  <span>=</span>
+                  <span data-blank="ans" onClick="{{hbAns.tap}}" style="display:inline-block;min-width:86px;min-height:42px;padding:4px 14px;border-radius:12px 12px 0 0;border-bottom:4px solid {{hbAns.bb}};background:{{hbAns.bg}};color:{{hbAns.fg}};text-align:center;cursor:pointer;outline:{{hbAns.out}}">{{hbAns.t}}</span>
+                  <span>cm</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+                <sc-for list="{{harpBankV}}" as="b" hint-placeholder-count="4">
+                  <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:52px;padding:11px 22px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-family:'Jua',sans-serif;font-size:19px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
+          <div style="font-size:52px;line-height:1">📝</div>
+          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="예) 진동수의 비가 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          <button onClick="{{refGo}}" class="rs-pill">제출!</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-3);width:100%">
+          <div data-card-panel="1" style="flex:none;background:var(--color-neutral-100);border:3.5px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);max-width:720px;width:min(96%,720px);box-shadow:var(--shadow-md)">
+            <div style="font-family:'Jua',sans-serif;font-size:20px;color:var(--color-accent-700);margin-bottom:8px">🃏 소리의 비밀 카드</div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="1">
+              <div style="font-size:19px;font-weight:700;line-height:2.3;text-wrap:pretty">
+                <sc-for list="{{r.tokens}}" as="tk" hint-placeholder-count="3">
+                  <span data-blank="{{tk.key}}" onClick="{{tk.tap}}" style="display:{{tk.disp}};min-width:{{tk.minw}};min-height:{{tk.minh}};padding:{{tk.pad}};margin:{{tk.mar}};border-radius:{{tk.rad}};border-bottom:{{tk.bb}};background:{{tk.bg}};color:{{tk.fg}};text-align:center;vertical-align:middle;cursor:{{tk.cur}};outline:{{tk.out}};font-family:{{tk.ff}}">{{tk.t}}</span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
+            <sc-for list="{{bank}}" as="b" hint-placeholder-count="2">
+              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-family:'Jua',sans-serif;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0">
+          <div style="font-size:72px;line-height:1">🎼</div>
+          {{harpEl}}
+          <div style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-6)">
+            <span style="font-family:'Jua',sans-serif;font-size:19px;color:var(--color-accent-700)">🔓 비밀번호 숫자</span>
+            <span style="font-family:'Jua',sans-serif;font-size:38px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:4px 22px;line-height:1.2">6</span>
+          </div>
+          <a href="index.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🏠 허브로 돌아가기 →</a>
+          <div style="font-size:14px;font-weight:700;color:var(--color-neutral-700)">다음 방 🗺️ 지도의 비밀은 준비 중이에요</div>
+        </div>
+      </sc-if>
+
+    </section>
+  </main>
+
+  <footer style="flex:none;display:flex;align-items:center;gap:10px;padding:9px 14px;background:var(--color-neutral-100);border-top:2px solid var(--color-neutral-300)">
+    <button onClick="{{prev}}" aria-label="이전" class="rs-pill2" style="opacity:{{prevOp}};min-height:54px;font-size:17px;color:var(--color-neutral-700)">← 이전</button>
+    <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+      <sc-if value="{{liveBadge}}" hint-placeholder-val="{{false}}">
+        <div style="font-family:'Jua',sans-serif;font-size:15.5px;line-height:1.35;padding:9px 16px;border-radius:999px;background:{{liveBg}};color:{{liveFg}};border:3px solid {{liveBd}};animation:rsPop .3s ease;text-align:center">{{liveBadge}}</div>
+      </sc-if>
+      <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+        <div style="text-align:center;font-size:14px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
+      </sc-if>
+    </div>
+    <button onClick="{{primary}}" class="rs-pill" style="background:{{primaryBg}}">{{primaryLabel}}</button>
+  </footer>
+
+  <sc-if value="{{helpOpen}}" hint-placeholder-val="{{false}}">
+    <div onClick="{{closeHelp}}" style="position:fixed;inset:0;z-index:70;background:color-mix(in srgb,var(--color-neutral-900) 50%,transparent);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div onClick="{{stopProp}}" style="width:min(96vw,680px);max-height:90dvh;overflow:auto;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-3);box-shadow:var(--shadow-lg);text-align:center">
+        <div style="font-family:'Jua',sans-serif;font-size:22px">🎻 <b>높은 소리</b>일수록 줄은 왜 짧아질까?</div>
+        <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-3);text-align:left">
+          <div style="display:flex;align-items:center;gap:10px;margin:8px 0"><b style="width:58px;color:var(--color-accent-2-700);flex:none">라 ★</b><div style="flex:1"><div style="width:100%;height:16px;border-radius:999px;background:linear-gradient(90deg,var(--color-accent-2-400),var(--color-accent-2-700));color:var(--color-neutral-100);font-size:13px;font-weight:800;padding-left:10px;line-height:16px">72cm</div></div></div>
+          <div style="display:flex;align-items:center;gap:10px;margin:8px 0"><b style="width:58px;color:var(--color-accent-700);flex:none">{{harpN}}</b><div style="flex:1"><div style="width:{{helpPct}}%;height:16px;border-radius:999px;background:linear-gradient(90deg,var(--color-accent-400),var(--color-accent-700));color:var(--color-neutral-100);font-size:13px;font-weight:800;padding-left:10px;line-height:16px">?cm</div></div></div>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">떨리는 빠르기 (진동수)</div><div style="font-size:24px;font-family:'Jua',sans-serif">라 : {{harpN}} = {{harpA}} : {{harpB}}</div></div>
+          <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">줄의 길이</div><div style="font-size:24px;font-family:'Jua',sans-serif;color:var(--color-accent-700)">라 : {{harpN}} = {{harpB}} : {{harpA}}</div></div>
+        </div>
+        <div style="font-size:16px;color:var(--color-neutral-700);font-weight:700">↑ 두 비는 숫자가 <b style="color:var(--color-accent-700)">뒤집혀</b> 있어요 (거꾸로 관계)</div>
+        <div style="background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-3);font-size:17px;font-weight:700;line-height:1.7">{{harpN}} 줄은 라보다 <b style="color:var(--color-accent-2-700)">높은 소리</b>예요. 높은 소리는 빨리 떨리니까 줄은 더 <b style="color:var(--color-accent-2-700)">짧아야</b> 해요.<br>그래서 답도 72보다 <b style="color:var(--color-accent-2-700)">작은</b> 값이 나와요!</div>
+        <div style="font-size:20px;font-family:'Jua',sans-serif">{{harpN}} 줄의 길이 = 72 × {{harpA}}/{{harpB}} = <b style="color:var(--color-accent-700)">?</b> cm</div>
+        <button onClick="{{closeHelp}}" class="rs-pill" style="align-self:center">닫기</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{voicePanel}}" hint-placeholder-val="{{false}}">
+    <div onClick="{{closeVoices}}" style="position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--color-neutral-900) 50%,transparent);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div onClick="{{stopProp}}" style="width:min(96vw,620px);max-height:88dvh;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-4);display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-lg);min-height:0">
+        <div style="display:flex;align-items:center;gap:10px;flex:none">
+          <div style="font-size:20px;color:var(--color-accent-700)">🎙️ 캐릭터 목소리</div>
+          <button onClick="{{closeVoices}}" aria-label="닫기" class="rs-round" style="margin-left:auto;width:44px;height:44px;font-size:17px">✕</button>
+        </div>
+        <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{voiceRows}}" as="r" hint-placeholder-count="2">
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--color-accent-100);border:2px solid var(--color-accent-200);border-radius:var(--radius-md);padding:10px 12px">
+              <div style="min-width:118px">
+                <div style="font-size:16px;color:var(--color-text)">{{r.name}}</div>
+                <div style="font-size:12px;color:var(--color-neutral-700)">{{r.tone}}</div>
+              </div>
+              <select onChange="{{r.change}}" aria-label="{{r.name}} 목소리" style="flex:1 1 200px;min-width:0;min-height:46px;font-family:inherit;font-size:15px;border:3px solid var(--color-neutral-300);border-radius:999px;padding:8px 12px;background:var(--color-neutral-100);color:var(--color-text)">
+                <sc-for list="{{r.opts}}" as="o" hint-placeholder-count="2">
+                  <option value="{{o.v}}" selected="{{o.sel}}">{{o.t}}</option>
+                </sc-for>
+              </select>
+              <button onClick="{{r.test}}" class="rs-pill2" style="min-height:46px;font-size:15px">▶ 들어보기</button>
+            </div>
+          </sc-for>
+        </div>
+        <button onClick="{{closeVoices}}" class="rs-pill" style="flex:none;min-height:52px;font-size:18px">다 골랐어요</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+      <div style="background:var(--color-neutral-100);border:4px solid {{toastBd}};border-radius:var(--radius-lg);padding:17px 21px;box-shadow:var(--shadow-lg);display:flex;gap:13px;align-items:flex-start">
+        <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
+        <div style="min-width:0">
+          <div style="font-family:'Jua',sans-serif;font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:var(--color-neutral-800);margin-top:4px">{{toastBody}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{closeToast}}" aria-label="닫기" class="rs-round" style="margin-left:auto;width:40px;height:40px;font-size:16px;border-width:2px">✕</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  LOG_EP = 'https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
+  LOG_TK = 'ratiosense-2026';
+  LAB = 'soundV3';
+
+  /* ── 구버전 sound.html의 순정률·하프 데이터 (그대로 이식) ── */
+  ITV = ['완전1도(같은 음)','장2도','장3도','완전4도','완전5도','장6도','장7도','완전8도(옥타브)'];
+  PERF = [0,3,4,7];
+  NOTES = [['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['솔',396,3,2],['라',440,5,3],['시',495,15,8],['도′',528,2,1]];
+  HBASE = 72;
+  HP = [{n:'시',a:8,b:9},{n:'도′',a:5,b:6},{n:'미′',a:2,b:3},{n:'파′',a:5,b:8},{n:'솔′',a:5,b:9}];
+  /* 음정에 따른 분류 보기: 1차 = 완전음정(1·4·5·8도) vs 장음정(2·3·6·7도),
+     2차 = 장음정을 비가 간단한 방(미·라) / 복잡한 방(레·시)으로 재분류 */
+  CLS = [
+    { n:'도',  r:'1:1',  room1:'perfect' },
+    { n:'레',  r:'8:9',  room1:'major', room2:'complex' },
+    { n:'미',  r:'4:5',  room1:'major', room2:'simple' },
+    { n:'파',  r:'3:4',  room1:'perfect' },
+    { n:'솔',  r:'2:3',  room1:'perfect' },
+    { n:'라',  r:'3:5',  room1:'major', room2:'simple' },
+    { n:'시',  r:'8:15', room1:'major', room2:'complex' },
+    { n:'도′', r:'1:2',  room1:'perfect' }
+  ];
+  CLS_SAY = {
+    p1:'먼저 아주 잘 어울리는 완전음정 방과, 장음정 방으로 나눠 볼게요.',
+    p2:'이제 장음정 방을 비가 간단한 방과 복잡한 방으로 다시 나눠요.',
+    done:'기준 분류가 완성됐어요! 여러분이 별점으로 나눈 방과 비교해 보세요. 어떤 점이 같고 다른가요?'
+  };
+  SND_DUR = 1.6;
+  DECAY = Math.pow(0.02, 1/(60*1.6));
+
+  /* 디자인 토큰 참조 — hex 하드코딩 대신 styles.css 변수를 문자열로 사용 */
+  C = {
+    n100:'var(--color-neutral-100)', n200:'var(--color-neutral-200)', n300:'var(--color-neutral-300)',
+    n400:'var(--color-neutral-400)', n500:'var(--color-neutral-500)', n600:'var(--color-neutral-600)',
+    n700:'var(--color-neutral-700)', n800:'var(--color-neutral-800)', n900:'var(--color-neutral-900)',
+    a100:'var(--color-accent-100)', a200:'var(--color-accent-200)', a300:'var(--color-accent-300)',
+    a400:'var(--color-accent-400)', a500:'var(--color-accent-500)', a600:'var(--color-accent-600)',
+    a700:'var(--color-accent-700)', a800:'var(--color-accent-800)', acc:'var(--color-accent)',
+    g100:'var(--color-accent-2-100)', g300:'var(--color-accent-2-300)', g500:'var(--color-accent-2-500)',
+    g600:'var(--color-accent-2-600)', g700:'var(--color-accent-2-700)',
+    txt:'var(--color-text)', bg:'var(--color-bg)'
+  };
+
+  state = {
+    i:0, audio:'full', cards:0, toast:null, solved:{},
+    voiceMap:{}, voicePanel:false, pressKey:-1,
+    rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
+    vibHit:[], vibCur:-1,
+    hxCur:-1,
+    roomStage:'collect', grpWaveN:null,
+    polySel:[], polyBeat:0, polyPlaying:false, polyHeard:false,
+    slL:72, swB:48,
+    clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
+    harpL:72, harpTuned:false, tuneMsg:'뜯어 보고 목표 소리와 비교해 보세요!',
+    hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
+    refText:'',
+    blanks:{}, used:{}
+  };
+
+  get STEPS() {
+    const st = [
+      { k:'story', emoji:'🎼', cap:'소리의 비밀을 찾아봅시다!',
+        lines:['안녕하세요! 저는 소리 안내자 레시오예요.',
+               '이 방에는 잘 어울리는 소리 속에 비의 비밀이 숨어 있어요.',
+               '소리의 비밀을 함께 찾아봅시다!'],
+        btn:'시작하기 →' },
+      { k:'vib',
+        say:'건반을 눌러 소리의 떨림을 느껴 보세요! 높은 음일수록 현의 길이가 짧고, 현이 빠르게 떨려요. 여덟 건반을 모두 눌러 소리를 들어 보세요.',
+        hi:'실제는 더 빠르지만 구분하기 쉽도록 천천히 보여드려요' }
+    ];
+    st.push({ k:'harmx',
+      say:'이제 도와 다른 음의 어울림을 자유롭게 탐색해 봐요! 건반을 아무 순서로나 눌러 도와 함께 울리는 소리를 듣고, 물결 무늬를 관찰한 다음, 별점 판에 내 귀 점수를 매겨 보세요. 일곱 음을 모두 평정하면 다음으로 갈 수 있어요.',
+      hi:'아무 순서나 괜찮아요 · 정답은 없어요 — 내 귀가 기준! 별점을 주면 그 음의 진동수 비가 열려요' });
+    st.push({ k:'rooms' });
+    st.push({ k:'table',
+      say:'음정 표 완성! 도부터 도′까지 다 들어봤어요. 1 대 2, 2 대 3, 3 대 4처럼 비가 간단할수록 두 소리가 더 잘 어울려요!',
+      hi:'▶ 분류 시작을 눌러 기준 분류를 한 번 보고, 내가 나눈 방과 비교해 보세요' });
+    st.push({ k:'story', emoji:'🥁', cap:'북은 2박마다 · 방울은 3박마다',
+      lines:['리듬에도 비가 숨어 있어요!',
+             '북은 2박마다, 방울은 3박마다 울려요.',
+             '두 리듬을 함께 연주하면 어떤 일이 생길까요?'],
+      btn:'리듬 실험실로! →' });
+    st.push({ k:'poly',
+      say:'재생을 눌러 들어 보고, 북과 방울이 같이 울리는 칸을 아래 줄에서 모두 눌러 보세요!',
+      hi:'🥁 북(2박)과 🔔 방울(3박)을 함께 연주해요' });
+    st.push({ k:'strlen',
+      say:'줄을 길게, 짧게 조절해 보세요! 줄이 길수록 천천히 떨려 낮은 소리, 짧을수록 빨리 떨려 높은 소리가 나요.' });
+    st.push({ k:'sweep',
+      say:'함께 늘리기! 두 줄을 같은 배율로 함께 늘이거나 줄여 보세요. 줄이 길어지고 짧아져도 변하지 않는 것은 무엇일까요?' });
+    this.HP.forEach((p, i) => st.push({ k:'harp', i,
+      say:(i === 0 ? '라 음 440헤르츠는 세계가 함께 약속한 악기 조율 기준음이에요. ' : '') +
+          '라 줄이 72센티미터일 때, ' + p.n + ' 줄은 몇 센티미터일까요? 먼저 귀로 찾아 보세요. 목표 소리를 듣고, 줄 길이를 움직여 같은 소리를 찾으세요.',
+      hi:'하프 공방 ' + (i + 1) + ' / 5' }));
+    st.push({ k:'reflect',
+      say:'내 말로 정리! 잘 어울리는 소리의 비밀을 내 말로 한 줄 적어 보세요.',
+      hi:'한 줄이면 충분해요' });
+    st.push({ k:'blank', id:'secret', who:'narrator',
+      say:'이제 소리의 비밀을 찾는 카드예요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
+    st.push({ k:'finish', who:'narrator',
+      say:'소리의 비밀을 모두 찾아냈어요. 정말 대단해요!', hi:'비밀번호 숫자 6을 얻었어요' });
+    return st;
+  }
+
+  WHO = {
+    ratio:    { name:'레시오', role:'소리의 비밀 안내자', emoji:'🎼', tone:'밝은 안내 목소리',
+                male:0, pitch:1.06, pitchF:1.06, rate:1.04, gap:160 },
+    narrator: { name:'안내', role:'문제를 읽어 주는 목소리', emoji:'📣', tone:'여성 내레이션',
+                male:0, pitch:1.18, pitchF:1.18, rate:1.06, gap:150 }
+  };
+
+  BLANKS = {
+    secret: { card:true, title:'🃏 소리의 비밀 카드', rows:[
+        ['두 음의 진동수의 비가 더 ', {a:'간단한'}, ' 비일수록 더 잘 어울린다.'] ],
+      bank:['간단한','복잡한'] }
+  };
+
+  gcd(a,b) { return b ? this.gcd(b, a%b) : a; }
+  gcd2(a,b) { a=Math.round(Math.abs(a)); b=Math.round(Math.abs(b)); while(b){ const t=a%b; a=b; b=t; } return a||1; }
+  hLen(i) { return this.HBASE * this.HP[i].a / this.HP[i].b; }
+  hFreq(L) { return Math.round(440 * this.HBASE / L); }
+  exS(i) { return String(Math.round(this.hLen(i)*100)/100); }
+  NM() { return [1,2,3,4,5,6,7].map(i => this.NOTES[i][0]); }
+  noteByName(n) { return this.NOTES[this.NOTES.findIndex(x => x[0] === n)]; }
+
+  /* ── 오디오: 효과음 버스(ColorRoom 관례) + 구버전 소리 함수(파라미터 그대로) ── */
+  ac() {
+    if (!this._ac) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      this._ac = new Ctx();
+      this._bus = this._ac.createGain(); this._bus.gain.value = 0.5;
+      const comp = this._ac.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.ratio.value = 6;
+      this._bus.connect(comp); comp.connect(this._ac.destination);
+    }
+    if (this._ac.state === 'suspended') this._ac.resume();
+    return this._ac;
+  }
+  sfx(kind) {
+    if (this.state.audio === 'mute') return;
+    const now = performance.now();
+    if (now - (this._lastSfx||0) < 60) return;
+    this._lastSfx = now;
+    const c = this.ac(); if (!c) return;
+    const t = c.currentTime, duck = this._speaking ? 0.35 : 1;
+    const n = (f, at, dur, vol, type) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t+at);
+      g.gain.setValueAtTime(0.0001, t+at);
+      g.gain.linearRampToValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+0.02);
+      g.gain.setValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+at+dur);
+      o.connect(g); g.connect(this._bus); o.start(t+at); o.stop(t+at+dur+0.05);
+    };
+    if (kind === 'tap') n(720, 0, 0.09, 0.08);
+    else if (kind === 'ok') {
+      [[523.25,0,0.30],[659.25,0.105,0.30],[783.99,0.21,0.34],[1046.5,0.315,0.62]]
+        .forEach((s,i) => { n(s[0], s[1], s[2], 0.115 - i*0.008, 'sine'); n(s[0]*2, s[1], s[2]*0.7, 0.026, 'sine'); });
+    }
+    else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
+    else if (kind === 'card') { [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i) => n(f, i*0.085, 0.5, 0.1 - i*0.008)); }
+    else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+  }
+  /* 구버전 tone/chord/strPluck/pluckT — 주파수·엔벌로프·타이밍 동일 */
+  tone(f, w, d) {
+    if (this.state.audio === 'mute') return;
+    try { const c = this.ac(), o = c.createOscillator(), g = c.createGain();
+      o.type='triangle'; o.frequency.value=f; o.connect(g); g.connect(c.destination);
+      g.gain.setValueAtTime(0, c.currentTime+w);
+      g.gain.linearRampToValueAtTime(.15, c.currentTime+w+.02);
+      g.gain.exponentialRampToValueAtTime(.001, c.currentTime+w+d);
+      o.start(c.currentTime+w); o.stop(c.currentTime+w+d); } catch(e) {}
+  }
+  chord(fA, fB, d) {
+    if (this.state.audio === 'mute') return;
+    const du = d || 1.8;
+    try { const c = this.ac();
+      [[fA,'sine',.18],[fB,'triangle',.15]].forEach(([f,ty,v]) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type=ty; o.frequency.value=f; o.connect(g); g.connect(c.destination);
+        g.gain.setValueAtTime(0, c.currentTime);
+        g.gain.linearRampToValueAtTime(v, c.currentTime+.03);
+        g.gain.setValueAtTime(v, c.currentTime+du*.55);
+        g.gain.exponentialRampToValueAtTime(.001, c.currentTime+du);
+        o.start(c.currentTime); o.stop(c.currentTime+du+.05); }); } catch(e) {}
+  }
+  strPluck(f) {
+    if (this.state.audio === 'mute') return;
+    try { const c = this.ac(); const t0 = c.currentTime;
+      const lp = c.createBiquadFilter(); lp.type='lowpass';
+      lp.frequency.value = Math.min(7000, f*7); lp.Q.value = .6; lp.connect(c.destination);
+      [[1,.5],[2,.24],[3,.12],[4,.07],[5,.04],[6,.024],[7,.014]].forEach(([m,v]) => {
+        const du = Math.max(.5, 2.6/Math.sqrt(m));
+        [[1,1],[1.004,.55]].forEach(([dt,vv]) => {
+          const o = c.createOscillator(), g = c.createGain();
+          o.type='triangle'; o.frequency.value = f*m*dt;
+          g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(v*vv, t0+.004);
+          g.gain.exponentialRampToValueAtTime(.0008, t0+du);
+          o.connect(g); g.connect(lp); o.start(t0); o.stop(t0+du+.1); }); }); } catch(e) {}
+  }
+  pluckT(f, w) {
+    if (this.state.audio === 'mute') return;
+    [[f,.3,2.4],[f*2,.13,1.7],[f*3,.06,1.2],[f*4,.03,.9],[f*5,.015,.6]].forEach(([ff,v,du]) => {
+      try { const c = this.ac(), o = c.createOscillator(), g = c.createGain();
+        o.type='sine'; o.frequency.value=ff; o.connect(g); g.connect(c.destination);
+        const t0 = c.currentTime + (w||0);
+        g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(v, t0+.005);
+        g.gain.exponentialRampToValueAtTime(.001, t0+du);
+        o.start(t0); o.stop(t0+du+.05); } catch(e) {} });
+  }
+  clap() {
+    if (this.state.audio === 'mute') return;
+    try {
+      if (!this._clap) { this._clap = new Audio('clap.mp3'); this._clap.preload='auto'; this._clap.volume=0.9; }
+      this._clap.currentTime = 0;
+      const p = this._clap.play(); if (p && p.catch) p.catch(() => {});
+    } catch(e) {}
+  }
+
+  /* ── TTS: ColorRoom 관례 (mp3 매니페스트 조회 → 없으면 speechSynthesis 폴백) ── */
+  ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+  voicePool() {
+    if (this._pool !== undefined) return this._pool;
+    let vs = [];
+    try { vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().indexOf('ko') === 0); } catch(e) {}
+    if (!vs.length) { this._pool = null; return null; }
+    const assign = {};
+    assign.ratio = vs[0];
+    assign.narrator = vs[1] || vs[0];
+    const pick = this.state.voiceMap || {};
+    Object.keys(pick).forEach(k => {
+      const v = vs.find(x => x.name === pick[k]);
+      if (v) assign[k] = v;
+    });
+    this._pool = { all: vs, assign };
+    return this._pool;
+  }
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut+1).trim());
+        s = s.slice(cut+1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
+  stopVoice() {
+    this._vtok = (this._vtok||0) + 1;
+    this._speaking = false;
+    try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
+    try { speechSynthesis.cancel(); } catch(e) {}
+  }
+  speak(text, who) {
+    this.stopVoice();
+    if (this.state.audio !== 'full') return;
+    const raw = (text === null || text === undefined) ? '' :
+      (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
+    const txt = raw
+      .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
+      .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
+    if (!txt || txt === '[object Object]') return;
+    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    const man = window.RS_TTS;
+    if (man && man[key]) {
+      try {
+        const a = new Audio('tts/' + key + '.mp3');
+        a.volume = 0.95; this._mp3 = a; this._speaking = true;
+        a.onended = () => { this._speaking = false; };
+        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
+        return;
+      } catch(e) {}
+    }
+    this._speakSynth(txt, who);
+  }
+  _speakSynth(txt, who) {
+    if (!('speechSynthesis' in window)) return;
+    const parts = this.chunks(txt);
+    const tok = this._vtok;
+    const cfg = this.WHO[who] || this.WHO.ratio;
+    const pool = this.voicePool();
+    const v = pool ? pool.assign[who] : null;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      const u = new SpeechSynthesisUtterance(parts[i]);
+      u.lang = 'ko-KR';
+      if (v) u.voice = v;
+      u.pitch = Math.max(0.1, Math.min(2, cfg.pitch));
+      u.rate = Math.max(0.5, Math.min(2, cfg.rate || 1.05));
+      u.volume = 1;
+      let advanced = false;
+      const go = () => { if (advanced || tok !== this._vtok) return; advanced = true; setTimeout(() => step(i+1), cfg.gap || 150); };
+      u.onend = go; u.onerror = go;
+      try { speechSynthesis.speak(u); } catch(e) { go(); }
+    };
+    step(0);
+  }
+
+  /* ── 로그: 구버전과 같은 시트·이벤트 이름 (pilot.soundV3.*) ── */
+  plog(ev, data) {
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    try {
+      if (this._user === 'guest') return;
+      this._q = this._q || [];
+      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+        seq: ++this._seq, clientTs:new Date().toISOString(),
+        eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+      if (this._q.length >= 10) this.flush();
+    } catch(e) {}
+  }
+  flush(beacon) {
+    try {
+      if (!this._q || !this._q.length) return;
+      const batch = this._q.splice(0);
+      const body = JSON.stringify({ token:this.LOG_TK, records:batch });
+      if (beacon && navigator.sendBeacon) {
+        if (!navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' }))) this._q.unshift.apply(this._q, batch);
+        return;
+      }
+      fetch(this.LOG_EP, { method:'POST', headers:{ 'Content-Type':'text/plain' }, body }).catch(() => { this._q.unshift.apply(this._q, batch); });
+    } catch(e) {}
+  }
+
+  ukey(b) { return b + ':' + (this._user || 'anon'); }
+
+  componentDidMount() {
+    this._seq = 0;
+    this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    /* 식별 번호(연구자 부여 코드)만 사용 — 구버전 rs3_user 그대로. 성명·이메일·계정은 어디서도 수집하지 않는다.
+       번호가 없으면 구버전과 동일하게 index로 보낸다('guest'는 로그 미전송). */
+    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    let audio = 'full';
+    try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
+    let cards = 0;
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    let voiceMap = {};
+    try { voiceMap = JSON.parse(localStorage.getItem('rs3_voices') || '{}') || {}; } catch(e) {}
+    this.setState({ audio, cards, voiceMap });
+    this._plucks = [0,0,0,0,0,0,0,0];
+    this._w1env = 0; this._s1T = 0; this._ph0 = performance.now();
+    try { speechSynthesis.onvoiceschanged = () => { this._pool = undefined; }; } catch(e) {}
+    this._flushT = setInterval(() => this.flush(), 5000);
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    document.addEventListener('visibilitychange', this._hide);
+    this._pageHide = () => this.flush(true);
+    addEventListener('pagehide', this._pageHide);
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+    this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
+    setTimeout(() => this.sayStep(0), 500);
+    const tick = () => { this._raf = requestAnimationFrame(tick); this._frame(); };
+    this._raf = requestAnimationFrame(tick);
+  }
+  componentWillUnmount() {
+    clearInterval(this._flushT); clearInterval(this._wd);
+    clearInterval(this._polyIv); clearTimeout(this._tT); clearTimeout(this._pressT);
+    if (this._polyRaf) { cancelAnimationFrame(this._polyRaf); this._polyRaf = null; }
+    this._clsStop();
+    if (this._raf) cancelAnimationFrame(this._raf);
+    document.removeEventListener('visibilitychange', this._hide);
+    removeEventListener('pagehide', this._pageHide);
+    this.stopVoice(); this.flush(true);
+  }
+
+  /* 애니메이션 루프 — 구버전 loopWave의 감쇠(DECAY)·위상 진행을 그대로 */
+  _frame() {
+    const st = this.STEPS[this.state.i];
+    if (!st) return;
+    if (st.k === 'vib') {
+      this._s1T++;
+      if (this._w1env > .001) this._w1env *= this.DECAY;
+      for (let i = 0; i < 8; i++) if (this._plucks[i] > .001) this._plucks[i] *= this.DECAY;
+      this.forceUpdate();
+    } else if (st.k === 'harmx' && this.state.hxCur >= 0) {
+      this.forceUpdate();
+    }
+  }
+
+  roomsSay(stage) {
+    if (stage === 'miss') return '잠깐! 아직 별점을 안 준 음이 있어요. 각 음을 눌러 도와 함께 들어 보고, 별점을 매겨 주세요. 정답은 없어요, 내 귀가 기준이에요!';
+    if (stage === 'collect') return '내가 매긴 별점을 모아 봤어요. 별을 비슷하게 준 음들끼리 모아 보면, 같은 방에 어떤 음들이 모이게 될까요?';
+    if (stage === 'rooms') return '별점이 방을 만들었어요! 점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 어떤 음들이 잘 어울리게 들리나요? 그 이유를 아래에서 골라 보세요.';
+    return '발견! 비가 간단할수록 잘 어울려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
+  }
+  sayStep(i) {
+    const s = this.STEPS[i];
+    if (!s) return;
+    const who = s.who || 'ratio';
+    if (s.k === 'story') this.speak(s.lines.join(' '), who);
+    else if (s.k === 'rooms') this.speak(this.roomsSay(this.state.roomStage), who);
+    else this.speak(s.say, who);
+  }
+
+  toast(icon, title, body, kind) {
+    this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    clearTimeout(this._tT);
+    this.setState({ toast: { icon, title, body, kind } });
+    this._tT = setTimeout(() => this.setState({ toast: null }), 4200);
+  }
+  toastOk(title, body) { this.plog('success', { slide: this.state.i }); this.toast('✅', title, body, 'ok'); }
+  toastRetry(body) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', '다시 한번!', body); }
+
+  markSolved() {
+    const s = Object.assign({}, this.state.solved);
+    s[this.state.i] = true;
+    this.setState({ solved: s });
+  }
+
+  go(d) {
+    const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
+    if (n === this.state.i) return;
+    this.stopVoice();
+    clearTimeout(this._tT); clearInterval(this._polyIv);
+    if (this._polyRaf) { cancelAnimationFrame(this._polyRaf); this._polyRaf = null; }
+    this._clsStop();
+    this._plucks = [0,0,0,0,0,0,0,0]; this._w1env = 0; this._s1T = 0;
+    const st = this.STEPS[n];
+    const patch = { i:n, toast:null, pressKey:-1,
+      vibHit: this.state.solved[n] ? this.state.vibHit : [], vibCur:-1,
+      hxCur:-1,
+      clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
+      grpWaveN:null, polyBeat:0, polyPlaying:false,
+      harpL:72, harpTuned:false, tuneMsg:'뜯어 보고 목표 소리와 비교해 보세요!',
+      hb:{}, hbUsed:{}, selBlank:null, helpOpen:false };
+    if (st.k === 'rooms') patch.roomStage = this.NM().some(x => !this.state.rates[x]) ? 'miss' : 'collect';
+    if (st.k === 'poly') patch.polySel = [];
+    if (st.k === 'harp') {
+      patch.hDone = st.i;
+      const p = this.HP[st.i];
+      patch.harpBank = [String(p.a), String(p.b), this.exS(st.i), '440']
+        .filter((v,ix,arr) => arr.indexOf(v) === ix).sort(() => Math.random() - .5);
+    }
+    if (st.k === 'finish') {
+      patch.hDone = this.HP.length;
+      setTimeout(() => { this.confetti(); this.clap(); }, 350);
+    }
+    this.setState(patch);
+    this.plog('nav', { to:n });
+    setTimeout(() => this.sayStep(n), 380);
+  }
+
+  confetti() {
+    try {
+      for (let i=0;i<28;i++) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:-16px;width:11px;height:17px;border-radius:3px;z-index:200;pointer-events:none;animation:rsFall linear forwards';
+        d.style.left = (4 + Math.random()*92) + 'vw';
+        d.style.background = ['var(--color-accent)','var(--color-accent-400)','var(--color-accent-2-500)','var(--color-accent-500)','var(--color-accent-700)','var(--color-accent-2-300)'][i%6];
+        d.style.animationDelay = (Math.random()*0.5) + 's';
+        d.style.animationDuration = (1.3 + Math.random()*1.1) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 3400);
+      }
+    } catch(e) {}
+  }
+  flyCard() {
+    try {
+      const src = document.querySelector('[data-card-panel]');
+      const dst = document.querySelector('[data-cards-badge]');
+      if (!src || !dst) return;
+      const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.textContent = '🃏';
+      el.style.cssText = 'position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:104px;height:142px;border-radius:16px;border:4px solid var(--color-accent-400);background:var(--color-neutral-100);box-shadow:var(--shadow-lg);font-size:46px';
+      el.style.left = (a.left + a.width/2 - 52) + 'px';
+      el.style.top = (a.top + a.height/2 - 71) + 'px';
+      document.body.appendChild(el);
+      const dx = (b.left + b.width/2) - (a.left + a.width/2);
+      const dy = (b.top + b.height/2) - (a.top + a.height/2);
+      const anim = el.animate([
+        { transform:'translate(0,0) scale(1) rotate(0deg)', opacity:1 },
+        { transform:'translate(' + (dx*0.45) + 'px,' + (dy*0.45 - 70) + 'px) scale(.72) rotate(-14deg)', opacity:1, offset:0.55 },
+        { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.12) rotate(8deg)', opacity:.25 }
+      ], { duration: 1150, easing:'cubic-bezier(.5,.05,.35,1)' });
+      anim.onfinish = () => {
+        el.remove();
+        try {
+          dst.animate([{ transform:'scale(1)' }, { transform:'scale(1.34)' }, { transform:'scale(1)' }], { duration:520, easing:'ease-out' });
+        } catch(e) {}
+      };
+    } catch(e) {}
+  }
+  _wiggleX(sel) {
+    try { const el = document.querySelector(sel); if (!el) return;
+      el.animate([
+        { transform:'none' }, { transform:'translateX(6px)' }, { transform:'translateX(-5px)' },
+        { transform:'translateX(4px)' }, { transform:'translateX(-3px)' }, { transform:'translateX(2px)' },
+        { transform:'translateX(-1px)' }, { transform:'none' }
+      ], { duration:1250, easing:'ease-out' }); } catch(e) {}
+  }
+  _wiggleY(sel) {
+    try { const el = document.querySelector(sel); if (!el) return;
+      el.animate([
+        { transform:'scaleY(2.6)' }, { transform:'scaleY(.4)' }, { transform:'scaleY(1.9)' },
+        { transform:'scaleY(.6)' }, { transform:'scaleY(1)' }
+      ], { duration:1200, easing:'ease-out' }); } catch(e) {}
+  }
+
+  cycleAudio() {
+    const order = ['full','sfx','mute'];
+    const next = order[(order.indexOf(this.state.audio) + 1) % 3];
+    if (next !== 'full') this.stopVoice();
+    try { localStorage.setItem('rs3_audio', next); } catch(e) {}
+    this.setState({ audio: next });
+    if (next === 'full') setTimeout(() => this.sayStep(this.state.i), 150);
+    else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
+  }
+  setVoice(who, name) {
+    const vm = Object.assign({}, this.state.voiceMap);
+    if (name) vm[who] = name; else delete vm[who];
+    try { localStorage.setItem('rs3_voices', JSON.stringify(vm)); } catch(e) {}
+    this._pool = undefined;
+    this.setState({ voiceMap: vm });
+    setTimeout(() => this.speak(who === 'narrator' ? '문제를 읽어 줄게요.' : '레시오예요. 반가워요!', who), 60);
+  }
+
+  /* ── 건반 공통 ── */
+  press(i) {
+    clearTimeout(this._pressT);
+    this.setState({ pressKey: i });
+    this._pressT = setTimeout(() => this.setState({ pressKey: -1 }), 180);
+  }
+
+  /* ── 1) 떨림 체험 (vib) ── */
+  vibKey(i) {
+    const n = this.NOTES[i];
+    this._f1 = n[1]; this._w1env = 1; this._plucks[i] = 1;
+    this.press(i);
+    this.tone(n[1], 0, this.SND_DUR);
+    this.plog('key', { n: n[0] });
+    const hit = this.state.vibHit.indexOf(i) >= 0 ? this.state.vibHit : this.state.vibHit.concat([i]);
+    this.setState({ vibHit: hit, vibCur: i });
+    if (hit.length >= 8 && !this.state.solved[this.state.i]) this.markSolved();
+  }
+
+  /* ── 2) 화음 미션 (harmx) ── */
+  hxKey(i) {
+    const n = this.NOTES[i];
+    this.press(i);
+    if (i === 0) this.tone(264, 0, 2); else this.chord(264, n[1], 2);
+    this.plog('harmx', { n: n[0] });
+    this._ph0 = performance.now();
+    this.setState({ hxCur: i });
+  }
+  rateStar(noteName, v, late) {
+    const rates = Object.assign({}, this.state.rates);
+    rates[noteName] = v;
+    const payload = { n: noteName, stars: v };
+    if (late) payload.late = 1;
+    this.plog('harmx_rate', payload);
+    const st = this.STEPS[this.state.i];
+    if (st.k === 'harmx') {
+      const allDone = this.NM().every(x => rates[x]);
+      const wasSolved = !!this.state.solved[this.state.i];
+      this.setState({ rates });
+      if (allDone && !wasSolved) {
+        this.markSolved();
+        this.toastOk('일곱 음 모두 평정 완료! ⭐', '건반 아래에 진동수의 비가 전부 열렸어요. 다시 눌러 확인해 보고, 다음으로 가요!');
+      } else if (!allDone) {
+        this.toastOk('별점 저장! ⭐', noteName + '의 진동수 비가 열렸어요. 건반을 다시 눌러 확인하고, 아직 안 들어 본 음도 눌러 봐요!');
+      } else {
+        this.sfx('ok');
+      }
+    } else {
+      this.sfx('tap');
+      this.setState({ rates });
+      if (this.NM().every(x => rates[x])) {
+        setTimeout(() => {
+          this.setState({ roomStage: 'collect' });
+          this.speak(this.roomsSay('collect'), 'ratio');
+        }, 600);
+      }
+    }
+  }
+
+  /* ── 3) 별점 방 만들기 (grp) ── */
+  roomsOf() {
+    const R = this.state.rates, NM = this.NM();
+    return {
+      hi: NM.filter(n => (R[n]||0) >= 4),
+      md: NM.filter(n => R[n] === 3),
+      lo: NM.filter(n => (R[n]||0) >= 1 && (R[n]||0) <= 2)
+    };
+  }
+  listenNote(n, log) {
+    const t = this.noteByName(n);
+    this.chord(264, t[1], 1.0);
+    if (log) this.plog('rooms_listen', { n });
+  }
+  buildRooms() {
+    this.sfx('tap');
+    this.plog('rooms_build', { r: this.state.rates });
+    this.setState({ roomStage: 'rooms' });
+    this.speak(this.roomsSay('rooms'), 'ratio');
+  }
+  reasonPick(k) {
+    this.plog('rooms_common', { pick: k });
+    if (k === 'ratio') {
+      this.markSolved();
+      this.setState({ roomStage: 'reveal' });
+      this.toastOk('발견! 비가 간단할수록 잘 어울려요', '이제 각 음의 진동수 비를 열어 봤어요 — 내 방과 비교해 보세요!');
+      this.speak(this.roomsSay('reveal'), 'ratio');
+    } else if (k === 'high') {
+      this.toastRetry('도′(높음)도 레(낮음)도 있는지 확인해 봐요 — 음의 높이만으로는 설명이 안 돼요!');
+    } else {
+      this.toastRetry('파와 솔은 도에서 멀지 않은데도 잘 어울려요 — 거리로는 설명이 안 돼요!');
+    }
+  }
+
+  /* ── 3b) 음정에 따른 분류 보기 (table) — 음 칩이 기준 방으로 순차 이동하는 애니메이션 ── */
+  _clsTimer(run, ms, fn) {
+    const id = setTimeout(() => { if (this._clsRun === run) fn(); }, ms);
+    (this._clsTids = this._clsTids || []).push(id);
+  }
+  _clsStop() {
+    this._clsRun = (this._clsRun || 0) + 1;
+    (this._clsTids || []).forEach(clearTimeout);
+    this._clsTids = [];
+    this._clsBusy = false;
+  }
+  _clsMove(run, n, room) {
+    /* 출발 칩(data-cls)을 재고 고정 클론을 목표 방(data-clsroom)으로 날린다 — flyCard 관례 */
+    try {
+      const src = document.querySelector('[data-cls="' + n + '"]');
+      const dst = document.querySelector('[data-clsroom="' + room + '"]');
+      if (src && dst) {
+        const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+        const g = document.createElement('div');
+        g.textContent = src.textContent;
+        g.style.cssText = 'position:fixed;z-index:250;pointer-events:none;font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--color-accent-200);color:var(--color-accent-800);border:2px solid var(--color-accent-400);box-shadow:var(--shadow-md)';
+        g.style.left = a.left + 'px'; g.style.top = a.top + 'px';
+        document.body.appendChild(g);
+        const dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+        const dy = (b.top + b.height * 0.7) - (a.top + a.height / 2);
+        g.animate([
+          { transform:'translate(0,0) scale(1)' },
+          { transform:'translate(' + dx * 0.5 + 'px,' + (dy * 0.5 - 26) + 'px) scale(1.06)', offset:0.55 },
+          { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.92)' }
+        ], { duration: 430, easing:'cubic-bezier(.45,.05,.4,1)' }).onfinish = () => g.remove();
+      }
+    } catch(e) {}
+    this.sfx('pour');
+    this.setState({ clsFly: n });
+    this._clsTimer(run, 430, () => {
+      const p = Object.assign({}, this.state.clsPlaced);
+      p[n] = room;
+      this.setState({ clsPlaced: p, clsFly: null });
+    });
+  }
+  playCls() {
+    if (this._clsBusy) return;
+    this._clsStop();
+    const run = this._clsRun;
+    this._clsBusy = true;
+    this.plog('itv_sort', { phase:'play' });
+    this.sfx('tap');
+    this.setState({ clsStage:'p1', clsPlaced:{}, clsFly:null, clsMsg:'잘 어울리는 정도로 먼저 크게 나눠요' });
+    this.speak(this.CLS_SAY.p1, 'ratio');
+    let t = 1500;
+    this.CLS.forEach(c => { this._clsTimer(run, t, () => this._clsMove(run, c.n, c.room1)); t += 560; });
+    t += 500;
+    this._clsTimer(run, t, () => {
+      this.setState({ clsStage:'p2', clsMsg:'장음정 방을 다시 둘로 나눠요' });
+      this.speak(this.CLS_SAY.p2, 'ratio');
+    });
+    t += 1400;
+    this.CLS.filter(c => c.room2).forEach(c => { this._clsTimer(run, t, () => this._clsMove(run, c.n, c.room2)); t += 560; });
+    t += 500;
+    this._clsTimer(run, t, () => {
+      this._clsBusy = false;
+      this.setState({ clsStage:'done', clsMsg:'완성! 아래의 내가 나눈 방과 비교해 보세요' });
+      this.plog('itv_sort', { phase:'done', my: this.roomsOf() });
+      this.markSolved();
+      this.sfx('ok');
+      this.speak(this.CLS_SAY.done, 'ratio');
+    });
+  }
+
+  /* ── 4) 폴리리듬 12칸 (poly) — 북 160Hz·방울 880Hz, 0.4초 간격 그대로.
+     같은 박의 북+방울은 AudioContext 절대 시각으로 '같은 t'에 예약해 정확히 동시에 울리고
+     (호출마다 currentTime을 다시 읽으면 렌더 퀀텀 경계에서 어긋날 수 있다),
+     칸 하이라이트는 setInterval 드리프트 대신 오디오 클록(t0 기준)으로 구동한다 —
+     구버전은 첫 틱이 +400ms에 1번 칸을 켜서 소리가 항상 한 칸 앞서 들리는 문제가 있었다. */
+  toneAt(c, f, at, d) {
+    if (!c || this.state.audio === 'mute') return;
+    try { const o = c.createOscillator(), g = c.createGain();
+      o.type='triangle'; o.frequency.value=f; o.connect(g); g.connect(c.destination);
+      g.gain.setValueAtTime(0, at);
+      g.gain.linearRampToValueAtTime(.15, at+.02);
+      g.gain.exponentialRampToValueAtTime(.001, at+d);
+      o.start(at); o.stop(at+d); } catch(e) {}
+  }
+  playPoly() {
+    if (this.state.polyPlaying) return;
+    this.plog('poly_play', {});
+    const c = this.ac();
+    const N = 12, STEP = 0.4;
+    const t0 = (c ? c.currentTime : 0) + 0.12;   /* 전체 시퀀스가 공유하는 기준 시각 */
+    const sched = [];
+    for (let b = 1; b <= N; b++) {
+      const at = t0 + (b - 1) * STEP;            /* 북·방울이 정확히 같은 at을 공유 */
+      const what = [];
+      if (b % 2 === 0) { this.toneAt(c, 160, at, .18); what.push('북'); }
+      if (b % 3 === 0) { this.toneAt(c, 880, at, .18); what.push('방울'); }
+      sched.push({ cell: b, at: Math.round((at - t0) * 1000) / 1000, sounds: what.join('+') || '무음' });
+    }
+    this._polySched = sched;
+    try { console.info('[poly] 칸별 스케줄(t0 기준 초):', JSON.stringify(sched)); } catch(e) {}
+    this.setState({ polyPlaying: true, polyBeat: 0 });
+    clearInterval(this._polyIv);
+    if (this._polyRaf) cancelAnimationFrame(this._polyRaf);
+    const p0 = performance.now();
+    const step = () => {
+      /* 칸 b의 소리는 t0+(b-1)×0.4에 시작 → 같은 순간에 칸 b를 켠다 */
+      const now = c ? c.currentTime : t0 + (performance.now() - p0) / 1000;
+      const b = Math.floor((now - t0) / STEP) + 1;
+      if (b > N) {
+        this._polyRaf = null;
+        this.setState({ polyBeat: 0, polyPlaying: false, polyHeard: true });
+        return;
+      }
+      if (b >= 1 && b !== this.state.polyBeat) this.setState({ polyBeat: b });
+      this._polyRaf = requestAnimationFrame(step);
+    };
+    this._polyRaf = requestAnimationFrame(step);
+  }
+  polyTap(i) {
+    const sel = this.state.polySel.slice();
+    const at = sel.indexOf(i);
+    if (at >= 0) sel.splice(at, 1); else sel.push(i);
+    this.sfx('tap');
+    this.setState({ polySel: sel });
+    const want = [6, 12];
+    if (want.every(x => sel.indexOf(x) >= 0) && sel.length === 2) {
+      this.plog('poly_ok', {});
+      this.markSolved();
+      this.toastOk('찾았다! 6박과 12박!', '북(2박)과 방울(3박)은 6박마다 다시 만나요. 2와 3의 비가 만드는 리듬의 비밀 — 2×3=6!');
+    } else if (sel.length >= 2) {
+      this.plog('poly_try', { sel: sel.slice() });
+      this.toastRetry('다시 들어 봐요 — 🥁 줄과 🔔 줄이 둘 다 채워진 칸은 어디인가요?');
+    }
+  }
+
+  /* ── 5) 줄 길이 (strlen) — f = 440 × 72/L 그대로 ── */
+  slSet(L) {
+    this.setState({ slL: L });
+    const now = Date.now();
+    if (now - (this._lastP||0) > 200) { this._lastP = now; this.slDoPluck(); }
+  }
+  slDoPluck() {
+    const L = this.state.slL;
+    this.strPluck(Math.round(440 * 72 / L));
+    this._wiggleY('[data-str="sl"]');
+  }
+
+  /* ── 6) 동치 스윕 (sweep) — 두 줄 3:2 유지, 같은 배율 ── */
+  swSet(b) {
+    this.setState({ swB: b });
+    const now = Date.now();
+    if (now - (this._lastS||0) > 260) {
+      this._lastS = now;
+      this.swDoPlay();
+      this.plog('sweep', { b });
+    }
+  }
+  swDoPlay() {
+    const b = this.state.swB, a = b * 3 / 2;
+    this.strPluck(Math.round(440 * 72 / a));
+    this.strPluck(Math.round(440 * 72 / b));
+    this._wiggleY('[data-str="swA"]');
+    this._wiggleY('[data-str="swB"]');
+  }
+
+  /* ── 7) 하프 공방 (harp) — 목표음 440×b/a, 조율 판정 ±1.5cm 그대로 ── */
+  harpGoal() {
+    const p = this.HP[this.STEPS[this.state.i].i];
+    this.pluckT(Math.round(440 * p.b / p.a));
+    this.plog('harp_goal', { n: p.n });
+  }
+  harpPluck() {
+    const st = this.STEPS[this.state.i];
+    const p = this.HP[st.i], ex = this.hLen(st.i), L = this.state.harpL;
+    this.pluckT(Math.round(440 * 72 / L));
+    this.plog('harp_tune', { n: p.n, L });
+    const diff = L - ex;
+    if (Math.abs(diff) <= 1.5) {
+      this.sfx('ok');
+      this.setState({ harpTuned: true, tuneMsg: '🎯 귀로 찾았어요! 약 ' + L + 'cm — 이제 계산으로 확인해 봐요!' });
+      this.speak('귀로 찾았어요! 이제 계산으로 확인해 봐요. 라 대 ' + p.n + ' 비를 써서 식을 세우고 길이를 구하세요.', 'ratio');
+    } else {
+      this.setState({ tuneMsg: diff > 0 ? '목표보다 소리가 낮아요 — 줄을 더 짧게!' : '목표보다 소리가 높아요 — 줄을 더 길게!' });
+    }
+  }
+  hbTargets() {
+    const st = this.STEPS[this.state.i];
+    const p = this.HP[st.i];
+    return [ { key:'num', a:String(p.a) }, { key:'den', a:String(p.b) }, { key:'ans', a:this.exS(st.i) } ];
+  }
+  placeHarp(word) {
+    const st = this.STEPS[this.state.i];
+    const p = this.HP[st.i];
+    const keys = this.hbTargets();
+    const hb = Object.assign({}, this.state.hb);
+    let target = this.state.selBlank && !hb[this.state.selBlank]
+      ? keys.find(k => k.key === this.state.selBlank)
+      : keys.find(k => !hb[k.key]);
+    if (!target) return;
+    if (target.a !== word && !this.state.selBlank) {
+      const other = keys.find(k => !hb[k.key] && k.a === word);
+      if (other) target = other;
+    }
+    if (target.a === word) {
+      hb[target.key] = word;
+      const used = Object.assign({}, this.state.hbUsed);
+      used[word] = true;
+      this.sfx('ok');
+      this.setState({ hb, hbUsed: used, selBlank: null });
+      if (keys.every(k => hb[k.key])) {
+        setTimeout(() => {
+          const ex = this.hLen(st.i), exS = this.exS(st.i);
+          this.setState({ hDone: st.i + 1 });
+          this.pluckT(this.hFreq(ex));
+          this.markSolved();
+          const bridge = (p.n === '미′') ? ' 💡 2 : 3 — 색깔의 방에서 빨강 2칸 : 노랑 3칸으로 칠했던 바로 그 비예요!' : '';
+          this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm',
+            p.n + ' 줄은 라 줄 전체의 ' + p.a + '/' + p.b + '! 72 × ' + p.a + '/' + p.b + ' = ' + exS + 'cm — 뜯으면 딱 ' + p.n + '!' + bridge);
+        }, 320);
+      }
+    } else {
+      this.sfx('oops');
+      this.toastRetry('다른 카드를 놓아 볼까요?');
+    }
+  }
+
+  /* ── 8) 내 말로 정리 (reflect) ── */
+  refGo() {
+    const v = (this.state.refText || '').trim();
+    if (!v) { this.toastRetry('한 줄이면 충분해요 — 내 말로 적어 봐요!'); return; }
+    this.plog('reflect', { room:'sound', text: v.slice(0,300) });
+    this.markSolved();
+    this.toastOk('제출 완료!', '내 말로 정리한 소리의 비밀이 저장됐어요.');
+  }
+
+  /* ── 9) 비밀 카드 빈칸 (blank) — ColorRoom 관례 ── */
+  blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
+  blankKeys() {
+    const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
+    def.rows.forEach((row, ri) => row.forEach((tk, ti) => { if (typeof tk === 'object') keys.push({ key: id+'-'+ri+'-'+ti, a: tk.a }); }));
+    return keys;
+  }
+  place(word) {
+    const keys = this.blankKeys();
+    const blanks = Object.assign({}, this.state.blanks);
+    let target = this.state.selBlank && !blanks[this.state.selBlank]
+      ? keys.find(k => k.key === this.state.selBlank)
+      : keys.find(k => !blanks[k.key]);
+    if (!target) return;
+    if (target.a !== word && !this.state.selBlank) {
+      const other = keys.find(k => !blanks[k.key] && k.a === word);
+      if (other) target = other;
+    }
+    if (target.a === word) {
+      blanks[target.key] = word;
+      const used = Object.assign({}, this.state.used);
+      const uk = this.STEPS[this.state.i].id + '|' + word;
+      used[uk] = (used[uk] || 0) + 1;
+      this.sfx('ok');
+      this.setState({ blanks, used, selBlank: null });
+      if (keys.every(k => blanks[k.key])) {
+        setTimeout(() => {
+          /* 구버전 summary 로그: {no, a:[채운 답들]} */
+          this.plog('summary', { no: 1, a: keys.map(k => blanks[k.key]) });
+          this.markSolved();
+          this.sfx('card'); this.flyCard();
+          /* 카드 지갑 — 구버전 rs3_cards:<식별번호> 키로 방 간 연동 */
+          let got = [];
+          try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+          if (got.indexOf('sound0') < 0) {
+            got.push('sound0');
+            try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
+          }
+          setTimeout(() => {
+            this.setState({ cards: got.length });
+            this.confetti();
+            this.toast('🃏', '비밀 카드를 도감에 모았어요!', '소리의 비밀 카드 획득 · 비밀번호 숫자는 6이에요.', 'ok');
+            this.speak('비밀 카드를 도감에 모았어요. 소리의 비밀 비밀번호 숫자는 6이에요.', 'narrator');
+          }, 1150);
+        }, 320);
+      }
+    } else {
+      this.sfx('oops');
+      this.toastRetry('다른 카드를 놓아 볼까요?');
+    }
+  }
+  chipDown(word, placeFn) {
+    return (e) => {
+      if (e.button === 1 || e.button === 2) return;
+      const src = e.currentTarget;
+      const g = document.createElement('div');
+      g.textContent = word;
+      g.style.cssText = "position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;color:var(--color-accent-700);opacity:.94;font-family:'Jua',sans-serif;transform:translate(-50%,-50%)";
+      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+      document.body.appendChild(g);
+      let moved = false;
+      const mv = (ev) => { moved = true; g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
+      const up = (ev) => {
+        document.removeEventListener('pointermove', mv);
+        document.removeEventListener('pointerup', up);
+        g.remove();
+        if (!moved) return;
+        const el = document.elementFromPoint(ev.clientX, ev.clientY);
+        const slot = el && el.closest ? el.closest('[data-blank]') : null;
+        if (slot && slot.getAttribute('data-blank')) {
+          this.setState({ selBlank: slot.getAttribute('data-blank') });
+          setTimeout(() => placeFn(word), 0);
+        }
+      };
+      document.addEventListener('pointermove', mv);
+      document.addEventListener('pointerup', up);
+      try { src.releasePointerCapture(e.pointerId); } catch(err) {}
+    };
+  }
+
+  /* ── SVG 빌더 (구버전 canvas/svg 지오메트리 이식) ── */
+  svgEl(vb, styleObj, html, key) {
+    return React.createElement('svg', { key: key || vb, viewBox: vb, style: styleObj,
+      dangerouslySetInnerHTML: { __html: html } });
+  }
+  /* 현 8줄 진동 — drawStrings 이식 (길이 ∝ 264/f, 위상 f/45) */
+  vibStringsSvg() {
+    const W = 634, H = 170, yBot = H - 16, maxLen = H - 34, step = W / 8;
+    const P = [];
+    P.push('<rect x="0" y="' + yBot + '" width="' + W + '" height="' + (H - yBot) + '" style="fill:' + this.C.a800 + '"/>');
+    this.NOTES.forEach((n, i) => {
+      const f = n[1], cx = step*i + step/2, len = maxLen * (264 / f), yTop = yBot - len;
+      const amp = step * 0.30 * this._plucks[i];
+      const vf = f / 45, ph = 2 * Math.PI * vf * (this._s1T / 60);
+      const active = this._plucks[i] > .03;
+      let dd = '';
+      for (let y = yTop; y <= yBot; y += 2) {
+        const dx = amp * Math.sin(Math.PI * (y - yTop) / len) * Math.cos(ph);
+        dd += (y === yTop ? 'M' : 'L') + (cx + dx).toFixed(1) + ' ' + y.toFixed(1) + ' ';
+      }
+      P.push('<path d="' + dd + '" style="fill:none;stroke:' + (active ? this.C.a400 : this.C.n500) + ';stroke-width:' + (active ? 5 : 3) + '"/>');
+      P.push('<circle cx="' + cx + '" cy="' + yTop.toFixed(1) + '" r="5" style="fill:' + this.C.n400 + '"/>');
+    });
+    return this.svgEl('0 0 634 170', { width:'634px', height:'170px', display:'block' }, P.join(''), 'vibstr');
+  }
+  /* 누른 음의 정지 파형 — vibWave 이식 (물결 수 ∝ f/264×4) */
+  vibWaveSvg(i) {
+    const n = this.NOTES[i];
+    const W = 560, padL = 16, padR = 16, top = 16, bottom = 104;
+    const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 6;
+    const cyc = n[1] / 264 * 4; let dd = ''; const span = W - padL - padR;
+    for (let px = 0; px <= span; px += 2) {
+      const x = padL + px, y = midY - amp * Math.sin(2 * Math.PI * cyc * px / span);
+      dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+    }
+    const html = '<line x1="16" y1="' + midY + '" x2="' + (W-16) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>'
+      + '<path d="' + dd + '" style="fill:none;stroke:' + this.C.g600 + ';stroke-width:3;stroke-linecap:round"/>'
+      + '<text x="' + (W/2) + '" y="116" text-anchor="middle" style="font-size:13px;font-weight:700;fill:' + this.C.n600 + '">' + n[0] + '의 떨림 모양 — 높은 음일수록 물결이 촘촘해요</text>';
+    return this.svgEl('0 0 560 120', { width:'min(560px,86vw)', display:'block' }, html, 'vibwave' + i);
+  }
+  /* 도+누른 음 두 물결 — drawHX 이식 (한 묶음 띠 + 5.2초 위상 순환 + 1.5초 유지) */
+  hxSvg() {
+    const cur = this.state.hxCur;
+    if (cur < 0) {
+      return this.svgEl('0 0 680 300', { width:'min(680px,86vw)', display:'block' },
+        '<text x="340" y="150" text-anchor="middle" style="font-size:21px;font-weight:700;fill:' + this.C.n500 + '">건반을 누르면 두 물결이 나타나요!</text>', 'hx');
+    }
+    const nb = this.NOTES[cur][3], nr = this.NOTES[cur][2], nm = this.NOTES[cur][0];
+    const rev = cur > 0 && !!this.state.rates[nm];
+    const W = 680, padL = 50, padR = 30, top = 54, bottom = 220;
+    const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 8, plotW = W - padL - padR;
+    const bandW = plotW * 0.42, bx0 = padL, bx1 = padL + bandW;
+    const CYC = 5200, HOLD = 1500, t = performance.now() - this._ph0, per = CYC + HOLD;
+    const k = Math.floor(t / per), r = Math.min((t - k * per) / CYC, 1);
+    const ph = (k + r) * 2 * Math.PI;
+    const P = [];
+    P.push('<rect x="' + bx0 + '" y="' + (top-8) + '" width="' + bandW + '" height="' + (bottom-top+16) + '" rx="8" style="fill:' + this.C.a100 + '"/>');
+    P.push('<line x1="' + bx0 + '" y1="' + (top-8) + '" x2="' + bx0 + '" y2="' + (bottom+8) + '" style="stroke:' + this.C.a700 + ';stroke-width:1.5" stroke-dasharray="4 4"/>');
+    P.push('<line x1="' + bx1 + '" y1="' + (top-8) + '" x2="' + bx1 + '" y2="' + (bottom+8) + '" style="stroke:' + this.C.a700 + ';stroke-width:2"/>');
+    P.push('<text x="' + (bx1+6) + '" y="' + (top+2) + '" style="font-size:13px;font-weight:700;fill:' + this.C.a700 + '">↺ 다시 처음으로!</text>');
+    P.push('<text x="' + ((bx0+bx1)/2) + '" y="' + (bottom+34) + '" text-anchor="middle" style="font-size:14px;fill:' + this.C.a700 + '">여기까지가 한 묶음 (무늬가 한 바퀴)</text>');
+    P.push('<text x="' + ((bx0+bx1)/2) + '" y="' + (top+2) + '" text-anchor="middle" style="font-size:14px;font-weight:800;fill:' + this.C.n600 + '">' + (rev ? ('도 ' + nb + '번 = ' + nm + ' ' + nr + '번') : '한 묶음(무늬 한 바퀴)') + '</text>');
+    P.push('<line x1="' + padL + '" y1="' + midY + '" x2="' + (W-padR) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>');
+    const wp = (cyc, col, wd) => {
+      let dd = ''; const span = W - padL - padR;
+      for (let px = 0; px <= span; px += 2) {
+        const x = padL + px, tt = px / bandW;
+        const y = midY - amp * Math.sin(2 * Math.PI * cyc * tt - ph * cyc);
+        dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+      }
+      return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:' + wd + ';stroke-linecap:round"/>';
+    };
+    P.push('<g opacity="0.3">' + wp(nb, this.C.g600, 2.5) + wp(nr, this.C.a600, 2.5) + '</g>');
+    P.push('<clipPath id="hxclip"><rect x="' + bx0 + '" y="0" width="' + bandW + '" height="300"/></clipPath>');
+    P.push('<g clip-path="url(#hxclip)">' + wp(nb, this.C.g600, 4) + wp(nr, this.C.a600, 4) + '</g>');
+    return this.svgEl('0 0 680 300', { width:'min(680px,86vw)', display:'block' }, P.join(''), 'hx');
+  }
+  /* 방 단계의 정지 이중 파형 — waveHTML 이식 */
+  grpWaveSvg(name) {
+    const i = this.NOTES.findIndex(x => x[0] === name);
+    const nb = this.NOTES[i][3], nr = this.NOTES[i][2];
+    const W = 560, padL = 40, padR = 20, top = 34, bottom = 150;
+    const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 6;
+    const bandW = (W - padL - padR) * 0.42, bx0 = padL, bx1 = padL + bandW;
+    const wp = (cyc, col) => {
+      let dd = ''; const span = W - padL - padR;
+      for (let px = 0; px <= span; px += 2) {
+        const x = padL + px, tt = px / bandW;
+        const y = midY - amp * Math.sin(2 * Math.PI * cyc * tt);
+        dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+      }
+      return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:2.5;stroke-linecap:round"/>';
+    };
+    const html = '<rect x="' + bx0 + '" y="' + (top-6) + '" width="' + bandW + '" height="' + (bottom-top+12) + '" rx="8" style="fill:' + this.C.a100 + '"/>'
+      + '<line x1="' + bx1 + '" y1="' + (top-6) + '" x2="' + bx1 + '" y2="' + (bottom+6) + '" style="stroke:' + this.C.a700 + ';stroke-width:2"/>'
+      + '<text x="' + ((bx0+bx1)/2) + '" y="' + (top-14) + '" text-anchor="middle" style="font-size:15px;font-weight:800;fill:' + this.C.n600 + '">도 ' + nb + '번 = ' + name + ' ' + nr + '번</text>'
+      + wp(nb, this.C.g600) + wp(nr, this.C.a600)
+      + '<text x="' + ((bx0+bx1)/2) + '" y="' + (bottom+30) + '" text-anchor="middle" style="font-size:13px;fill:' + this.C.a700 + '">노란 띠까지가 무늬 한 바퀴(한 묶음)예요</text>';
+    return this.svgEl('0 0 560 190', { width:'min(560px,88vw)', display:'block', margin:'0 auto' }, html, 'grpwave' + name);
+  }
+  /* 하프 그래픽 — harpHTML 이식 (줄 높이 L×3.6px, 만든 줄만 뜯기 가능) */
+  harpGraphic(hDone) {
+    const R = React;
+    const items = [{ n:'라 ★', L:this.HBASE, made:true, sub:'72cm' }].concat(
+      this.HP.map((p, i) => {
+        const L = this.hLen(i), made = i < hDone;
+        return { n:p.n, L, made, sub: made ? (Math.round(L*10)/10 + 'cm') : (p.a + ':' + p.b) };
+      }));
+    return R.createElement('div', { key:'harp',
+      style:{ background:'var(--color-neutral-900)', borderRadius:'var(--radius-md)', padding:'14px 12px 10px', boxShadow:'var(--shadow-md)', display:'inline-block' } },
+      R.createElement('div', { key:'beam', style:{ height:'14px', borderRadius:'999px', background:'linear-gradient(var(--color-accent-300),var(--color-accent-700))' } }),
+      R.createElement('div', { key:'row', style:{ display:'flex', justifyContent:'space-around', alignItems:'flex-start', gap:'6px', padding:'0 8px' } },
+        items.map((it, ix) => R.createElement('div', { key:ix, style:{ display:'flex', flexDirection:'column', alignItems:'center', width:'72px' } },
+          it.made
+            ? R.createElement('button', { key:'s', 'data-hstr':ix, 'aria-label':it.n + ' 줄 뜯기',
+                onClick: () => { this.pluckT(this.hFreq(it.L)); this._wiggleX('[data-hstr="' + ix + '"]'); },
+                style:{ width:'16px', height:Math.round(it.L*3.6) + 'px', background:'linear-gradient(var(--color-neutral-100),var(--color-neutral-400))', border:'none', borderRadius:'5px', cursor:'pointer', boxShadow:'var(--shadow-sm)', padding:0 } })
+            : R.createElement('div', { key:'s', style:{ width:0, height:Math.round(it.L*3.6) + 'px', borderLeft:'6px dashed var(--color-neutral-700)' } }),
+          R.createElement('div', { key:'l', style:{ marginTop:'8px', fontFamily:"'Jua',sans-serif", fontSize:'17px', color: it.made ? 'var(--color-neutral-100)' : 'var(--color-neutral-600)', textAlign:'center', lineHeight:1.3 } },
+            it.made ? it.n : '?',
+            R.createElement('br', { key:'b' }),
+            R.createElement('span', { key:'c', style:{ fontSize:'13px', color:'var(--color-neutral-500)', fontFamily:"'Gothic A1',sans-serif", fontWeight:700 } }, it.sub))
+        ))
+      )
+    );
+  }
+  /* D-1 표상 연동 — repPanel 이식 (비·분수·소수·백분율) */
+  repVals(a, b, cap, hl) {
+    const g = this.gcd2(a, b), sa = Math.round(a/g), sb = Math.round(b/g);
+    const v = a / b, dec = Math.round(v*100)/100, pct = Math.round(v*100);
+    const red = (sa !== Math.round(a) || sb !== Math.round(b));
+    return { a: Math.round(a), b: Math.round(b), sa, sb, dec, pct, cap,
+      hl: !!hl, red: red && !hl };
+  }
+
+  jz(w, a, b) { const c = w.charCodeAt(w.length-1); return ((c - 0xAC00) % 28 > 0) ? a : b; }
+
+  renderVals() {
+    const S = this.state, st = this.STEPS[S.i];
+    const who = this.WHO[st.who || 'ratio'] || this.WHO.ratio;
+    const solved = !!S.solved[S.i];
+
+    const v = {
+      pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
+      stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
+      cards: S.cards,
+      audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
+      audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
+      cycleAudio: () => this.cycleAudio(),
+      stopProp: (e) => e.stopPropagation(),
+      openVoices: () => { this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
+      closeVoices: () => { this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
+      voicePanel: S.voicePanel,
+      voiceRows: S.voicePanel ? (() => {
+        const pool = this.voicePool();
+        const list = pool ? pool.all : [];
+        return ['ratio','narrator'].map(k => {
+          const w = this.WHO[k];
+          const cur = S.voiceMap[k] || ((pool && pool.assign[k]) ? pool.assign[k].name : '');
+          return {
+            key: k, name: w.name, tone: w.tone, cur,
+            opts: list.map(vv => ({ v: vv.name, t: vv.name.replace(/\s*-\s*Korean.*$/i, '').replace(/\(Korean\)/i, '').trim(), sel: vv.name === cur })),
+            change: (e) => this.setVoice(k, e.target.value),
+            test: () => this.speak(k === 'narrator' ? '문제를 읽어 줄게요.' : '레시오예요. 반가워요!', k)
+          };
+        });
+      })() : null,
+      coachEmoji: who.emoji, coachName: who.name, coachRole: who.role,
+      coachText: st.k === 'story' ? st.lines.join('\n')
+        : (st.k === 'rooms' ? this.roomsSay(S.roomStage) : (st.say || '')),
+      coachHi: st.hi || '',
+      replay: () => this.sayStep(S.i),
+      isStory: st.k === 'story', storyEmoji: st.emoji || '', storyCap: st.cap || '',
+      isVib: st.k === 'vib', isHarmx: st.k === 'harmx', isRooms: st.k === 'rooms',
+      isTable: st.k === 'table', isPoly: st.k === 'poly', isStrlen: st.k === 'strlen',
+      isSweep: st.k === 'sweep', isHarp: st.k === 'harp', isReflect: st.k === 'reflect',
+      isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      showPiano: st.k === 'vib' || st.k === 'harmx',
+      roomStage: st.k === 'rooms' ? S.roomStage : '',
+      stringsEl: null, vibWaveEl: null, hxSvgEl: null, grpWaveEl: null, harpEl: null,
+      keys: null, bkeys: null, stars: null, missRows: null, rateChips: null,
+      roomBoxes: null, reasonChips: null, itvRows: null,
+      polyDrum: null, polyBell: null, polyAns: null, rp: null,
+      harpBankV: null, rows: null, bank: null,
+      showRate: false, hxRatio: '', hxItv: '', hxWaveMsg: '', grpWaveHint: '',
+      helpOpen: S.helpOpen, closeHelp: () => this.setState({ helpOpen: false }),
+      prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
+      toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
+      toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
+      toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
+      closeToast: () => this.setState({ toast: null }),
+      liveBadge: '', liveBg: '', liveFg: '', liveBd: '',
+      goNext: () => {
+        this.plog('complete', {});
+        try {
+          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+          if (d.indexOf('sound') < 0) { d.push('sound'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+        } catch(e) {}
+      }
+    };
+
+    if (v.showPiano) {
+      const isHx = st.k === 'harmx';
+      v.keys = this.NOTES.map((n, i) => {
+        const pressed = S.pressKey === i;
+        const isBase = isHx && i === 0;
+        const rated = isHx && i > 0 ? (S.rates[n[0]] || 0) : 0;
+        /* 손가락 유도: 아직 안 끝낸 건반에만 (vib=안 들어본 건반, harmx=미평정 음) */
+        const invite = st.k === 'vib' ? S.vibHit.indexOf(i) < 0 : (isHx && i > 0 && !rated);
+        return {
+          label: n[0], star: isBase,
+          sub: rated ? (n[3] + ':' + n[2] + ' ★' + rated) : '',
+          fingerD: invite ? 'flex' : 'none',
+          bg: pressed ? this.C.a200 : (isBase || rated ? this.C.g100 : 'linear-gradient(var(--color-neutral-100),var(--color-neutral-200))'),
+          bd: isBase ? this.C.g500 : (rated ? this.C.g500 : this.C.n800),
+          sh: (isBase ? '0 0 0 3px ' + this.C.g300 + ', ' : '')
+            + (pressed ? 'inset 0 -3px 0 color-mix(in srgb, var(--color-neutral-900) 14%, transparent)'
+                       : 'inset 0 -7px 0 color-mix(in srgb, var(--color-neutral-900) 10%, transparent)'),
+          tf: pressed ? 'translateY(2px)' : 'none',
+          tap: st.k === 'vib' ? (() => this.vibKey(i)) : (() => this.hxKey(i))
+        };
+      });
+      v.bkeys = [0,1,3,4,5].map(i => ({ left: i*80 + 55 }));
+      if (st.k === 'vib') v.stringsEl = this.vibStringsSvg();
+    }
+
+    if (st.k === 'vib') {
+      if (S.vibCur < 0) v.vibHz = '건반을 눌러 보세요';
+      else {
+        const n = this.NOTES[S.vibCur];
+        v.vibHz = n[0] + ' — 1초에 ' + n[1] + '번 떨려요 (' + n[0] + '의 진동수 : ' + n[1] + 'Hz)';
+        v.vibWaveEl = this.vibWaveSvg(S.vibCur);
+      }
+      if (solved) { v.liveBadge = '🎹 여덟 건반을 모두 들어봤어요!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      else if (S.vibHit.length > 0) { v.liveBadge = '들어본 건반 ' + S.vibHit.length + ' / 8'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
+    }
+
+    if (st.k === 'harmx') {
+      const cur = S.hxCur;
+      const doneN = this.NM().filter(x => S.rates[x]).length;
+      if (cur < 0) { v.hxRes = '건반을 눌러 도와의 어울림을 들어 보세요!'; }
+      else if (cur === 0) { v.hxRes = '도 혼자 울려요 — 기준음(★)이에요. 다른 건반을 눌러 함께 들어 보세요!'; }
+      else {
+        const n = this.NOTES[cur], a = n[3], b = n[2];
+        const rev = !!S.rates[n[0]];
+        if (rev) { v.hxRes = '도 : ' + n[0] + ' = 264Hz : ' + n[1] + 'Hz'; v.hxRatio = a + ' : ' + b; }
+        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울려요 — 아래 물결 무늬를 관찰해 보세요!'; }
+        v.hxItv = this.ITV[cur];
+        v.hxWaveMsg = rev
+          ? '(도) 초록 물결 ' + a + '번 + (' + n[0] + ') 주황 물결 ' + b + '번마다 반복되는 무늬가 생겨요!'
+          : '두 물결이 만드는 무늬가 얼마나 자주 반복되나요? 잘 보고 별점을 매겨 봐요!';
+      }
+      v.hxSvgEl = this.hxSvg();
+      v.showRate = cur >= 1;
+      if (cur >= 1) {
+        const nm = this.NOTES[cur][0];
+        v.hxName = nm;
+        const rated = S.rates[nm] || 0;
+        v.stars = [1,2,3,4,5].map(s => ({ n:s, op: rated >= s ? 1 : .3, tap: () => this.rateStar(nm, s) }));
+      }
+      if (solved) { v.liveBadge = '⭐ 일곱 음 모두 평정 완료!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      else if (doneN > 0) { v.liveBadge = '평정한 음 ' + doneN + ' / 7'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
+    }
+
+    if (st.k === 'rooms') {
+      const NM = this.NM();
+      const starStr = (n) => '★'.repeat(S.rates[n]||0) + '☆'.repeat(5 - (S.rates[n]||0));
+      if (S.roomStage === 'miss') {
+        v.missRows = NM.filter(n => !S.rates[n]).map(n => ({
+          n, play: () => this.listenNote(n, false),
+          stars: [1,2,3,4,5].map(s => ({ n:s, op: (S.rates[n]||0) >= s ? 1 : .3, tap: () => this.rateStar(n, s, true) }))
+        }));
+      }
+      if (S.roomStage === 'collect') {
+        v.rateChips = NM.map(n => ({ n, starsStr: starStr(n), tap: () => this.listenNote(n, true) }));
+        v.buildRooms = () => this.buildRooms();
+      }
+      if (S.roomStage === 'rooms' || S.roomStage === 'reveal') {
+        const r = this.roomsOf(), withRatio = S.roomStage === 'reveal';
+        const mk = (title, arr) => ({ title, empty: arr.length === 0,
+          chips: arr.map(n => { const t = this.noteByName(n);
+            return { n, starsStr: starStr(n), ratio: withRatio ? (t[3] + ' : ' + t[2]) : '',
+              tap: () => { this.listenNote(n, true); if (this.state.roomStage === 'rooms') this.setState({ grpWaveN: n }); } };
+          }) });
+        v.roomBoxes = [
+          mk(withRatio ? '⭐ 높은 방' : '⭐ 높은 방 (4~5점)', r.hi),
+          mk(withRatio ? '🙂 보통 방' : '🙂 보통 방 (3점)', r.md),
+          mk(withRatio ? '😖 낮은 방' : '😖 낮은 방 (1~2점)', r.lo)
+        ];
+      }
+      if (S.roomStage === 'rooms') {
+        v.grpWaveEl = S.grpWaveN ? this.grpWaveSvg(S.grpWaveN) : null;
+        v.grpWaveHint = S.grpWaveN ? '' : '점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 음을 누르면 그 화음의 물결 그래프가 함께 나타나요.';
+        /* 긴 선택지는 쉼표(의미 단위)에서 줄바꿈해 두 줄로 표시 */
+        v.reasonChips = [
+          { t1:'두 음의 진동수 비가 간단하여,', t2:'그래프 규칙이 자주 만들어질수록 화음이 잘 어울린다.', k:'ratio' },
+          { t1:'모두 높은 음이라서 잘 어울린다', t2:'', k:'high' },
+          { t1:'건반에서 도와 멀리 있어서 잘 어울린다', t2:'', k:'far' }
+        ].map(o => ({ t1:o.t1, t2:o.t2, tap: () => this.reasonPick(o.k) }));
+      }
+    }
+
+    if (st.k === 'table') {
+      v.itvRows = this.NOTES.map((m, i) => ({
+        n: (i === 0 ? '★' : '') + m[0], itv: this.ITV[i], ratio: m[3] + ' : ' + m[2],
+        bg: this.PERF.indexOf(i) >= 0 ? this.C.a100 : 'transparent'
+      }));
+      /* 음정에 따른 분류 보기 */
+      const P = S.clsPlaced || {}, fly = S.clsFly, stg = S.clsStage;
+      const chip = (c) => ({ n: c.n, t: c.n + ' ' + c.r });
+      v.clsPool = this.CLS.filter(c => !P[c.n] && fly !== c.n).map(chip);
+      v.clsPerfect = this.CLS.filter(c => P[c.n] === 'perfect').map(chip);
+      v.clsMajor = this.CLS.filter(c => P[c.n] === 'major' && fly !== c.n).map(chip);
+      v.clsSimple = this.CLS.filter(c => P[c.n] === 'simple').map(chip);
+      v.clsComplex = this.CLS.filter(c => P[c.n] === 'complex').map(chip);
+      v.clsSplit = stg === 'p2' || stg === 'done';
+      v.clsMajorMinH = v.clsSplit ? 0 : 30;
+      v.clsPerfRows = v.clsSplit ? 2 : 1;
+      v.clsBtn = this._clsBusy ? '⏳ 분류 중…' : (stg === 'done' ? '↺ 다시 보기' : '▶ 분류 시작');
+      v.clsPlay = () => this.playCls();
+      v.clsMsg = S.clsMsg || '';
+      /* 내가 나눈 방(rooms 단계 별점 데이터) 비교 */
+      const anyRate = this.NM().some(x => S.rates[x]);
+      if (anyRate) {
+        const r = this.roomsOf();
+        const mk = (title, arr) => ({ title, empty: arr.length === 0,
+          chips: arr.map(x => { const t = this.noteByName(x); return { t: x + ' ' + t[3] + ':' + t[2] }; }) });
+        v.myRooms = [ mk('⭐ 높은 방 (4~5점)', r.hi), mk('🙂 보통 방 (3점)', r.md), mk('😖 낮은 방 (1~2점)', r.lo) ];
+        v.myRoomsNone = false;
+      } else { v.myRooms = null; v.myRoomsNone = true; }
+    }
+
+    if (st.k === 'poly') {
+      const N = 12, beat = S.polyBeat;
+      v.polyDrum = Array.from({length:N}, (_, x) => { const b = x+1, on = b % 2 === 0;
+        return { icon: on ? '🥁' : '', bg: on ? this.C.a100 : this.C.n100, bd: beat === b ? this.C.a500 : this.C.n300 }; });
+      v.polyBell = Array.from({length:N}, (_, x) => { const b = x+1, on = b % 3 === 0;
+        return { icon: on ? '🔔' : '', bg: on ? this.C.g100 : this.C.n100, bd: beat === b ? this.C.a500 : this.C.n300 }; });
+      v.polyAns = Array.from({length:N}, (_, x) => { const b = x+1, on = S.polySel.indexOf(b) >= 0;
+        return { n: b, bg: on ? this.C.a200 : this.C.n100, bd: on ? this.C.a500 : this.C.n400,
+          bs: on ? 'solid' : 'dashed', tap: () => this.polyTap(b) }; });
+      v.playPoly = () => this.playPoly();
+      v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
+        : (solved ? '6박과 12박 — 2×3=6에서 다시 만나요!'
+        : (S.polyHeard ? '잘 들었나요? 🥁와 🔔이 같은 순간에 울린 칸을 눌러 보세요!' : '먼저 들어 보세요!'));
+    }
+
+    if (st.k === 'strlen') {
+      const L = S.slL, f = Math.round(440 * 72 / L);
+      v.slL = L; v.slF = f; v.slW = Math.round(L * 6);
+      v.slTag = L === 72 ? '(기준 라 ★)' : (L < 50 ? '(아주 높은 소리!)' : (L < 72 ? '(높은 소리!)' : (L > 84 ? '(아주 낮은 소리!)' : '(낮은 소리!)')));
+      v.slInput = (e) => this.slSet(+e.target.value);
+      v.slPluck = () => { this.plog('strlen', { L: this.state.slL }); this.slDoPluck(); };
+      v.rp = this.repVals(L, 72, '내 줄 길이 : 라 줄 72cm(기준)', false);
+    }
+
+    if (st.k === 'sweep') {
+      const b = S.swB, a = b * 3 / 2;
+      v.swA = a; v.swB = b; v.swAW = Math.round(a * 5); v.swBW = Math.round(b * 5);
+      v.swInput = (e) => this.swSet(+e.target.value);
+      v.swPlay = () => { this.plog('sweep_play', { b: this.state.swB }); this.swDoPlay(); };
+      v.rp = this.repVals(a, b, '긴 줄 : 짧은 줄', true);
+    }
+
+    if (st.k === 'harp') {
+      const p = this.HP[st.i];
+      v.harpN = p.n; v.harpA = p.a; v.harpB = p.b;
+      v.harpIntro = st.i === 0;
+      v.harpL = S.harpL;
+      v.harpLTxt = (+S.harpL).toFixed(1).replace(/\.0$/, '') + 'cm';
+      v.harpSlide = (e) => this.setState({ harpL: +e.target.value });
+      v.tGoal = () => this.harpGoal();
+      v.tPluck = () => this.harpPluck();
+      v.tuneMsg = S.tuneMsg; v.harpTuned = S.harpTuned;
+      v.openHelp = () => { this.setState({ helpOpen: true }); this.plog('harphelp', { n: p.n }); };
+      v.helpPct = Math.round(p.a / p.b * 1000) / 10;
+      v.harpEl = this.harpGraphic(S.hDone);
+      const mkHb = (key) => {
+        const filled = S.hb[key], sel = S.selBlank === key;
+        return { t: filled || '',
+          bb: filled ? this.C.g500 : this.C.a400,
+          bg: filled ? this.C.g100 : (sel ? this.C.a300 : this.C.a200),
+          fg: filled ? this.C.g700 : this.C.a700,
+          out: sel ? '3px dashed ' + this.C.a700 : 'none',
+          tap: () => { if (!this.state.hb[key]) { this.sfx('tap'); this.setState({ selBlank: key }); } } };
+      };
+      v.hbNum = mkHb('num'); v.hbDen = mkHb('den'); v.hbAns = mkHb('ans');
+      v.harpBankV = S.harpBank.map(w => ({ t: w,
+        vis: S.hbUsed[w] ? 'hidden' : 'visible',
+        tap: () => this.placeHarp(w),
+        down: this.chipDown(w, (word) => this.placeHarp(word)) }));
+    }
+
+    if (st.k === 'reflect') {
+      v.refText = S.refText;
+      v.refInput = (e) => this.setState({ refText: e.target.value });
+      v.refGo = () => this.refGo();
+    }
+
+    if (st.k === 'blank') {
+      const def = this.blankDef();
+      v.rows = def.rows.map((row, ri) => ({
+        tokens: row.map((tk, ti) => {
+          if (typeof tk === 'string')
+            return { t: tk, key:'', disp:'inline', minw:'0', minh:'0', pad:'0', mar:'0', rad:'0', bb:'none', bg:'transparent', fg:this.C.txt, cur:'default', out:'none', ff:'inherit' };
+          const key = st.id + '-' + ri + '-' + ti, filled = S.blanks[key], sel = S.selBlank === key;
+          return {
+            t: filled || '', key, disp:'inline-block', minw:'86px', minh:'40px',
+            pad:'2px 12px', mar:'0 4px', rad:'12px 12px 0 0',
+            bb: '4px solid ' + (filled ? this.C.g500 : this.C.a400),
+            bg: filled ? this.C.g100 : (sel ? this.C.a300 : this.C.a200),
+            fg: filled ? this.C.g700 : this.C.a700, cur:'pointer',
+            out: sel ? '3px dashed ' + this.C.a700 : 'none',
+            ff: "'Jua',sans-serif",
+            tap: () => { if (!filled) { this.sfx('tap'); this.setState({ selBlank: key }); } }
+          };
+        })
+      }));
+      const seen = {};
+      v.bank = def.bank.map((w) => {
+        seen[w] = (seen[w] || 0) + 1;
+        const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
+        return { t: w, vis: hidden ? 'hidden' : 'visible', tap: () => this.place(w), down: this.chipDown(w, (word) => this.place(word)) };
+      });
+    }
+
+    if (st.k === 'finish') {
+      v.harpEl = this.harpGraphic(this.HP.length);
+    }
+
+    const needsSolve = ['vib','harmx','rooms','table','poly','harp','reflect','blank'].indexOf(st.k) >= 0;
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finish' ? '처음으로' : '다음 →');
+    v.primaryBg = (!needsSolve || solved) ? this.C.acc : this.C.n400;
+    v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
+    if (st.k === 'table' && !solved && !v.liveBadge) v.footHint = '분류 과정을 한 번 보면 다음으로 갈 수 있어요';
+    v.primary = () => {
+      if (st.k === 'finish') {
+        this.stopVoice();
+        this.setState({ i:0, solved:{}, rates:{}, blanks:{}, used:{}, hb:{}, hbUsed:{},
+          refText:'', polySel:[], polyHeard:false, vibHit:[], vibCur:-1, hDone:0, roomStage:'collect', toast:null });
+        setTimeout(() => this.sayStep(0), 380);
+        return;
+      }
+      if (needsSolve && !solved) { this.sfx('oops'); this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return; }
+      if (st.k === 'sweep') this.plog('sweep_done', {});
+      if (st.k === 'rooms') this.plog('rooms_compare', {});
+      this.sfx('tap'); this.go(1);
+    };
+    return v;
+  }
+}
+</script>
+</body>
+</html>
