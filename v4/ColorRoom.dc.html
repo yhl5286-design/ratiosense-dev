@@ -12,13 +12,15 @@
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
 <script src="tts/manifest.js"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
-body{font-family:"Jua","Gothic A1","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:400;background:#f5ead8;color:#201e1d;overscroll-behavior:none;font-variant-numeric:tabular-nums}
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:400;background:#f5ead8;color:#201e1d;overscroll-behavior:none;font-variant-numeric:tabular-nums}
 a{color:#8c491a;text-decoration:none}
 a:hover{color:#c67139}
+/* 타이포 확정: 제목/헤더=Do Hyeon(도현), 나머지=Noto Sans KR(400 기본·강조 700 실굵기+색) */
+b,strong{font-weight:700;color:#8c491a}
 button{font-family:inherit}
 :focus-visible{outline:3px solid #c67139;outline-offset:3px}
 ::selection{background:#ffe1d0}
@@ -29,6 +31,9 @@ button{font-family:inherit}
 @keyframes rsTilt{0%{transform:none}35%{transform:rotate(-58deg) translate(6px,-14px)}70%{transform:rotate(-58deg) translate(6px,-14px)}100%{transform:none}}
 @keyframes rsStream{0%{opacity:0;transform:scaleY(0)}20%{opacity:1;transform:scaleY(1)}80%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1)}}
 @keyframes rsGlow{0%,100%{box-shadow:0 0 0 7px #ccdbb2}50%{box-shadow:0 0 0 11px #ccdbb2}}
+/* 반응형: 고정 폭 조작물은 태블릿/모바일에서 축소 (크롬북·태블릿 대상) */
+@media (max-width:1080px){.rs-fit{zoom:.85}}
+@media (max-width:700px){.rs-fit{zoom:.6}}
 </style>
 </helmet>
 
@@ -36,19 +41,25 @@ button{font-family:inherit}
 
   <header style="flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f9f4ed;border-bottom:2px solid #dcd3c4">
     <a href="index.html" aria-label="홈으로" style="flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:20px">🏠</a>
-    <div style="flex:none;font-family:'Jua',sans-serif;font-size:19px;letter-spacing:-.2px">색깔의 비밀</div>
+    <div style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px;letter-spacing:-.2px">색깔의 비밀</div>
     <div style="flex:1;min-width:36px;height:12px;border-radius:999px;background:#eee7db;overflow:hidden">
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,#c67139,#f6a06b);transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:#645c50;white-space:nowrap">{{stepLabel}}</div>
-    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-family:'Jua',sans-serif;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">{{audioIcon}}</button>
     <button onClick="{{openVoices}}" aria-label="목소리 고르기" title="캐릭터 목소리 고르기" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">🎙️</button>
   </header>
 
-  <main style="flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:12px;padding:12px;align-content:stretch;align-items:stretch;justify-content:center">
+  <sc-if value="{{hypoBanner}}" hint-placeholder-val="{{false}}">
+    <div style="flex:none;display:flex;justify-content:center;padding:4px 10px;background:#f9f4ed;border-bottom:2px solid #eee7db">
+      <div style="font-size:13.5px;font-weight:700;color:#8c491a;background:#fff2eb;border:2px solid #ffc6a5;border-radius:999px;padding:4px 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:96%">🔬 내 가설: {{hypoBanner}}</div>
+    </div>
+  </sc-if>
 
-    <aside style="flex:1 1 292px;min-width:0;max-width:400px;min-height:0;max-height:calc(100dvh - 168px);background:#f9f4ed;border:2.5px solid #dcd3c4;border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:11px;box-shadow:0 6px 18px rgba(32,30,29,.06)">
+  <main style="flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:8px;padding:8px;align-content:stretch;align-items:stretch;justify-content:center">
+
+    <aside style="flex:1 1 236px;min-width:0;max-width:320px;min-height:0;max-height:calc(100dvh - 92px);background:#f9f4ed;border:2.5px solid #dcd3c4;border-radius:26px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 6px 18px rgba(32,30,29,.06)">
       <div style="display:flex;align-items:center;gap:10px">
         <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
           <div style="width:56px;height:56px;flex:none">{{coachImgEl}}</div>
@@ -57,19 +68,19 @@ button{font-family:inherit}
           <div style="width:56px;height:56px;border-radius:999px;border:3px solid #f6a06b;background:#ffe1d0;flex:none;display:flex;align-items:center;justify-content:center;font-size:27px">{{coachEmoji}}</div>
         </sc-if>
         <div style="min-width:0">
-          <div style="font-family:'Jua',sans-serif;font-size:16px;line-height:1.3">{{coachName}}</div>
+          <div style="font-size:16px;line-height:1.3">{{coachName}}</div>
           <div style="font-size:12.5px;font-weight:700;color:#645c50">{{coachRole}}</div>
         </div>
         <button onClick="{{replay}}" aria-label="다시 듣기" style="margin-left:auto;flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:18px;cursor:pointer">🔁</button>
       </div>
-      <p style="margin:0;font-size:19.5px;line-height:1.7;font-weight:400;text-wrap:pretty;white-space:pre-line;flex:1 1 auto;min-height:0;overflow:auto">{{coachText}}</p>
+      <p style="margin:0;font-size:16.5px;line-height:1.65;font-weight:400;text-wrap:pretty;white-space:pre-line;flex:1 1 auto;min-height:0;overflow:auto">{{coachText}}</p>
       <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
-        <div style="font-family:'Jua',sans-serif;font-size:18px;color:#8c491a;background:#fff2eb;border-radius:16px;padding:10px 14px;line-height:1.5">{{coachHi}}</div>
+        <div style="font-size:15px;color:#8c491a;background:#fff2eb;border-radius:16px;padding:8px 12px;line-height:1.5">{{coachHi}}</div>
       </sc-if>
 
     </aside>
 
-    <section style="flex:3 1 460px;min-width:0;min-height:0;max-height:calc(100dvh - 168px);display:flex;flex-direction:column;align-items:center;gap:0;overflow:auto">
+    <section style="flex:3 1 440px;min-width:0;min-height:0;max-height:calc(100dvh - 92px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:6px;overflow:auto">
 
       <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:11px;animation:rsUp .35s ease">
@@ -78,6 +89,15 @@ button{font-family:inherit}
           </sc-if>
           <sc-if value="{{artCap}}" hint-placeholder-val="{{false}}">
             <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">{{artCap}}</div>
+          </sc-if>
+          <sc-if value="{{showSpin}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px;animation:rsPop .35s ease">
+              <div style="position:relative;width:150px;height:150px">
+                <button onClick="{{spinTap}}" aria-label="회전판 돌리기" style="width:150px;height:150px;border-radius:999px;border:4px solid #a19786;padding:0;cursor:pointer;background:conic-gradient({{spinC1}} 0 102.86deg, {{spinC2}} 102.86deg 360deg);animation:{{spinAnim}};box-shadow:0 6px 16px rgba(32,30,29,.2)"></button>
+                <div style="position:absolute;inset:0;border-radius:999px;background:{{spinMix}};opacity:{{spinOv}};transition:opacity 1.1s;pointer-events:none"></div>
+              </div>
+              <div style="font-size:13.5px;font-weight:700;color:#645c50;text-align:center;max-width:300px">{{spinMsg}}</div>
+            </div>
           </sc-if>
         </div>
       </sc-if>
@@ -93,7 +113,7 @@ button{font-family:inherit}
         <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;min-height:0">
         <div style="display:flex;flex-wrap:wrap;gap:11px;justify-content:center;max-width:760px;animation:rsUp .3s ease;flex:none">
           <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
-            <button onClick="{{c.pick}}" style="min-height:60px;padding:14px 24px;border-radius:999px;border:3px solid {{c.bd}};background:{{c.bg}};color:{{c.fg}};font-family:'Jua',sans-serif;font-size:18.5px;cursor:pointer;max-width:100%;text-align:left;line-height:1.4">{{c.t}}</button>
+            <button onClick="{{c.pick}}" style="min-height:60px;padding:14px 24px;border-radius:999px;border:3px solid {{c.bd}};background:{{c.bg}};color:{{c.fg}};font-size:18.5px;cursor:pointer;max-width:100%;text-align:left;line-height:1.4">{{c.t}}</button>
           </sc-for>
         </div>
         <sc-if value="{{obsMine}}" hint-placeholder-val="{{false}}">
@@ -102,7 +122,7 @@ button{font-family:inherit}
               <div style="width:min(100px,23vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{obsMine}};box-shadow:inset 0 -10px 18px rgba(0,0,0,.13)"></div>
               <div style="font-size:13.5px;font-weight:800;color:#8c491a">내 예상</div>
             </div>
-            <div style="font-family:'Jua',sans-serif;font-size:22px;color:#645c50;padding-bottom:26px">vs</div>
+            <div style="font-size:22px;color:#645c50;padding-bottom:26px">vs</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
               <div style="width:min(100px,23vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}};box-shadow:inset 0 -10px 18px rgba(0,0,0,.13)"></div>
               <div style="font-size:13.5px;font-weight:800;color:#645c50">목표 색</div>
@@ -122,7 +142,7 @@ button{font-family:inherit}
           <div style="display:flex;gap:6px;justify-content:center;align-items:stretch;min-height:0">
             <sc-for list="{{paints}}" as="p" hint-placeholder-count="2">
               <div style="display:flex;flex-direction:column;align-items:center;gap:6px;order:{{p.order}};min-height:0">
-                <div style="font-family:'Jua',sans-serif;font-size:17px;color:{{p.ink}};flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">{{p.name}} {{p.amt}}mL</div>
+                <div style="font-size:17px;color:{{p.ink}};flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">{{p.name}} {{p.amt}}mL</div>
                 <div onPointerDown="{{p.down}}" role="slider" aria-label="{{p.name}} 물감 양" aria-valuenow="{{p.amt}}" style="position:relative;flex:1;min-height:130px;width:min(20vw,84px);border-radius:16px;border:3.5px solid #c0b6a5;background:#f9f4ed;overflow:hidden;cursor:ns-resize;touch-action:none;box-shadow:inset 0 3px 8px rgba(32,30,29,.08)">
                   <div style="position:absolute;left:0;right:0;bottom:0;height:{{p.pct}}%;background:{{p.color}};transition:height .07s linear"></div>
                   <div style="position:absolute;left:0;right:0;bottom:{{p.pct}}%;height:5px;background:rgba(255,255,255,.9);opacity:{{p.handleOp}}"></div>
@@ -131,8 +151,8 @@ button{font-family:inherit}
                   </div>
                 </div>
                 <div style="display:flex;gap:8px;flex:none;align-items:center">
-                  <button onClick="{{p.minus}}" aria-label="{{p.name}} 5mL 줄이기" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:21px;color:#8c491a;cursor:pointer;padding:0">−</button>
-                  <button onClick="{{p.plus}}" aria-label="{{p.name}} 5mL 늘리기" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-family:'Jua',sans-serif;font-size:21px;color:#8c491a;cursor:pointer;padding:0">＋</button>
+                  <button onClick="{{p.minus}}" aria-label="{{p.name}} 5mL 줄이기" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:21px;color:#8c491a;cursor:pointer;padding:0">−</button>
+                  <button onClick="{{p.plus}}" aria-label="{{p.name}} 5mL 늘리기" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-size:21px;color:#8c491a;cursor:pointer;padding:0">＋</button>
                 </div>
               </div>
             </sc-for>
@@ -152,11 +172,25 @@ button{font-family:inherit}
             </div>
           </div>
 
-          <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:stretch;width:186px;flex:none">
-            <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-family:'Jua',sans-serif;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
-            <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:16px;color:#645c50;cursor:pointer">비우기</button>
+          <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:stretch;width:214px;flex:none">
+            <div style="background:#f9f4ed;border:3px solid #f6a06b;border-radius:18px;padding:9px 12px;display:flex;flex-direction:column;gap:5px;box-shadow:0 4px 12px rgba(246,160,107,.2)">
+              <sc-if value="{{sumHypo}}" hint-placeholder-val="{{false}}">
+                <div style="font-size:12.5px;font-weight:800;color:#645c50;line-height:1.35">🔬 내 가설<br><span style="font-size:14px;color:#8c491a">{{sumHypo}}</span></div>
+              </sc-if>
+              <div style="font-size:12.5px;font-weight:800;color:#645c50;line-height:1.35">🧪 지금 넣은 양</div>
+              <div style="font-size:19px;line-height:1.3;color:#201e1d">
+                <span style="color:#c0392b">빨강 {{redAmt}}</span><span style="font-size:14px;color:#645c50">mL</span>
+                <span style="color:#645c50"> : </span>
+                <span style="color:#b3921e">노랑 {{yelAmt}}</span><span style="font-size:14px;color:#645c50">mL</span>
+              </div>
+              <sc-if value="{{simpleRatio}}" hint-placeholder-val="{{false}}">
+                <div style="font-size:15px;color:#8c491a;background:#fff2eb;border-radius:999px;padding:3px 10px;text-align:center">{{simpleRatio}}</div>
+              </sc-if>
+            </div>
+            <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
+            <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">비우기</button>
             <sc-if value="{{canChangeHypo}}" hint-placeholder-val="{{false}}">
-              <button onClick="{{openHypo}}" style="min-height:48px;padding:11px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:15.5px;color:#8c491a;cursor:pointer">🔬 가설 바꾸기</button>
+              <button onClick="{{openHypo}}" style="min-height:48px;padding:11px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:15.5px;color:#8c491a;cursor:pointer">🔬 가설 바꾸기</button>
             </sc-if>
           </div>
           </div>
@@ -166,7 +200,7 @@ button{font-family:inherit}
             <div style="position:relative;width:44px;height:58px;margin-right:8px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 15px 15px;overflow:hidden;background:#f9f4ed;box-shadow:{{beakerRing}};transition:box-shadow .25s;flex:none">
               <div style="position:absolute;left:0;right:0;bottom:0;height:{{myPct}}%;background:{{myColor}};transition:height .18s,background .18s"></div>
             </div>
-            <div style="font-family:'Jua',sans-serif;font-size:15.5px;color:#8c491a;flex:none;white-space:nowrap">{{simpleRatio}}</div>
+            <div style="font-size:13px;font-weight:800;color:#645c50;flex:none;white-space:nowrap">{{beakerAmt}}</div>
             <sc-if value="{{labLog}}" hint-placeholder-val="{{false}}">
               <div style="display:flex;flex-wrap:nowrap;gap:5px;align-items:center;flex:none">
                 <div style="font-size:11.5px;font-weight:800;color:#645c50">📓</div>
@@ -184,24 +218,25 @@ button{font-family:inherit}
         <div style="display:flex;flex-direction:column;align-items:center;gap:14px;animation:rsUp .3s ease;width:100%">
           <div style="display:flex;gap:min(7vw,44px);justify-content:center;flex-wrap:wrap">
             <sc-for list="{{demos}}" as="d" hint-placeholder-count="2">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:9px">
-                <div style="position:relative;width:min(112px,26vw);height:min(25vh,146px)">
-                  <sc-if value="{{d.streaming}}" hint-placeholder-val="{{false}}">
-                    <div style="position:absolute;left:50%;top:-58px;width:13px;height:64px;margin-left:-6px;background:linear-gradient(to bottom,rgba(250,215,45,.35),rgb(250,215,45));border-radius:999px;transform-origin:top;animation:rsStream .75s ease"></div>
-                  </sc-if>
-                  <div style="position:absolute;inset:0;border:6px solid #201e1d;border-top-width:3px;border-radius:0 0 26px 26px;overflow:hidden;background:#f9f4ed">
-                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{d.pct}}%;background:{{d.color}};transition:height .75s ease,background .75s ease"></div>
-                  </div>
-                </div>
-                <div style="font-family:'Jua',sans-serif;font-size:16px">{{d.label}}</div>
-                <div style="font-size:13px;font-weight:800;color:#645c50">노랑 비커 {{d.left}}개 남음</div>
-                <div style="display:flex;gap:7px;align-items:flex-end;min-height:70px">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="display:flex;gap:7px;align-items:flex-end;min-height:56px">
                   <sc-for list="{{d.cups}}" as="cup" hint-placeholder-count="1">
-                    <button onClick="{{cup.pour}}" aria-label="노랑 20mL 붓기" style="width:40px;height:{{cup.h}}px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 12px 12px;background:#f9f4ed;cursor:{{cup.cur}};padding:0;position:relative;overflow:hidden;opacity:{{cup.op}};animation:{{cup.anim}};transform-origin:bottom right">
+                    <button onClick="{{cup.pour}}" aria-label="노랑 20mL 붓기" style="width:44px;height:{{cup.h}}px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 12px 12px;background:#f9f4ed;cursor:{{cup.cur}};padding:0;position:relative;overflow:hidden;opacity:{{cup.op}};animation:{{cup.anim}};transform-origin:bottom right">
                       <div style="position:absolute;left:0;right:0;bottom:0;height:{{cup.fill}}%;background:rgb(250,215,45)"></div>
                     </button>
                   </sc-for>
                 </div>
+                <div style="font-size:12px;font-weight:800;color:#645c50">노랑 비커 {{d.left}}개 남음 · 눌러서 붓기</div>
+                <div style="position:relative;width:min(124px,30vw);aspect-ratio:1/1.25">
+                  <sc-if value="{{d.streaming}}" hint-placeholder-val="{{false}}">
+                    <div style="position:absolute;left:50%;top:-44px;width:13px;height:54px;margin-left:-6px;background:linear-gradient(to bottom,rgba(250,215,45,.35),rgb(250,215,45));border-radius:999px;transform-origin:top;animation:rsStream .75s ease;z-index:2"></div>
+                  </sc-if>
+                  <div style="position:absolute;inset:0;border:6px solid #201e1d;border-top-width:3px;border-radius:0 0 22px 22px;overflow:hidden;background:#f9f4ed">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{d.pct}}%;background:{{d.color}};transition:height .75s ease,background .75s ease"></div>
+                    <div style="position:absolute;left:0;right:0;bottom:{{d.pct}}%;height:{{d.layerH}}%;background:rgb(250,215,45);opacity:{{d.layerOp}};transition:height .55s ease,opacity .45s ease,bottom .75s ease"></div>
+                  </div>
+                </div>
+                <div style="font-size:15px">{{d.label}}</div>
               </div>
             </sc-for>
           </div>
@@ -213,7 +248,7 @@ button{font-family:inherit}
         <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease">
           <div style="display:flex;gap:10px">
             <sc-for list="{{dotPal}}" as="q" hint-placeholder-count="2">
-              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 22px;border-radius:999px;border:4px solid {{q.bd}};background:#f9f4ed;font-family:'Jua',sans-serif;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
+              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 22px;border-radius:999px;border:4px solid {{q.bd}};background:#f9f4ed;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
             </sc-for>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:420px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:24px;padding:16px">
@@ -221,7 +256,7 @@ button{font-family:inherit}
               <button onClick="{{dd.tap}}" aria-label="점" style="width:min(15vw,58px);aspect-ratio:1;border-radius:999px;border:3px {{dd.bs}} {{dd.bd}};background:{{dd.bg}};cursor:pointer;padding:0"></button>
             </sc-for>
           </div>
-          <div style="font-family:'Jua',sans-serif;font-size:18px;color:#645c50">빨강 {{dotR}}개 · 노랑 {{dotY}}개</div>
+          <div style="font-size:18px;color:#645c50">빨강 {{dotR}}개 · 노랑 {{dotY}}개</div>
           <sc-if value="{{dotMix}}" hint-placeholder-val="{{false}}">
             <div style="display:flex;flex-direction:column;align-items:center;gap:5px;animation:rsPop .4s ease">
               <div style="width:96px;height:96px;border-radius:999px;border:4px solid #201e1d;background:{{dotMix}};filter:blur(1px)"></div>
@@ -235,19 +270,19 @@ button{font-family:inherit}
         <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%">
           <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;flex:none">
             <sc-for list="{{pots}}" as="q" hint-placeholder-count="2">
-              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:4px solid {{q.bd}};background:{{q.bg}};font-family:'Jua',sans-serif;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
+              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:4px solid {{q.bd}};background:{{q.bg}};font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
             </sc-for>
-            <button onClick="{{gridClear}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:16px;color:#645c50;cursor:pointer">모두 지우기</button>
+            <button onClick="{{gridClear}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">모두 지우기</button>
           </div>
           <sc-if value="{{showBrush}}" hint-placeholder-val="{{false}}">
             <div style="display:flex;gap:10px;align-items:center">
               <sc-for list="{{brushes}}" as="b" hint-placeholder-count="2">
-                <button onClick="{{b.pick}}" style="min-height:56px;padding:10px 18px;border-radius:999px;border:4px solid {{b.bd}};background:{{b.bg}};font-family:'Jua',sans-serif;font-size:15.5px;color:#8c491a;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="font-size:{{b.ic}}px;line-height:1">🖌️</span>{{b.name}}</button>
+                <button onClick="{{b.pick}}" style="min-height:56px;padding:10px 18px;border-radius:999px;border:4px solid {{b.bd}};background:{{b.bg}};font-size:15.5px;color:#8c491a;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="font-size:{{b.ic}}px;line-height:1">🖌️</span>{{b.name}}</button>
               </sc-for>
             </div>
           </sc-if>
-          <div style="font-family:'Jua',sans-serif;font-size:17px;color:#645c50;flex:none">{{gridCount}}</div>
-          <div onPointerDown="{{gridDown}}" onPointerUp="{{gridUp}}" onPointerCancel="{{gridUp}}" style="flex:none;display:grid;grid-template-columns:repeat({{gridCols}},minmax(0,1fr));grid-template-rows:repeat({{gridRows}},minmax(0,1fr));gap:{{gridGap}}px;width:{{gridW}}px;height:{{gridH}}px;max-width:96%;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:10px;touch-action:none">
+          <div style="font-size:17px;color:#645c50;flex:none">{{gridCount}}</div>
+          <div onPointerDown="{{gridDown}}" onPointerUp="{{gridUp}}" onPointerCancel="{{gridUp}}" class="rs-fit" style="flex:none;display:grid;grid-template-columns:repeat({{gridCols}},minmax(0,1fr));grid-template-rows:repeat({{gridRows}},minmax(0,1fr));gap:{{gridGap}}px;width:{{gridW}}px;height:{{gridH}}px;max-width:96%;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:10px;touch-action:none">
             <sc-for list="{{cells}}" as="c" hint-placeholder-count="5">
               <div onPointerEnter="{{c.over}}" onPointerDown="{{c.tap}}" style="min-width:0;min-height:0;border-radius:{{gridRad}}px;background:{{c.bg}};cursor:pointer"></div>
             </sc-for>
@@ -266,7 +301,7 @@ button{font-family:inherit}
           </sc-if>
           <div data-card-panel="1" style="flex:none;background:#f9f4ed;border:3.5px solid #f6a06b;border-radius:24px;padding:15px 20px;max-width:720px;width:min(96%,720px);box-shadow:0 8px 22px rgba(246,160,107,.25)">
             <sc-if value="{{cardTitle}}" hint-placeholder-val="{{false}}">
-              <div style="font-family:'Jua',sans-serif;font-size:20px;color:#8c491a;margin-bottom:8px">{{cardTitle}}</div>
+              <div style="font-size:20px;color:#8c491a;margin-bottom:8px">{{cardTitle}}</div>
             </sc-if>
             <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
               <div style="font-size:19px;font-weight:700;line-height:2.3;text-wrap:pretty">
@@ -276,9 +311,22 @@ button{font-family:inherit}
               </div>
             </sc-for>
           </div>
+          <sc-if value="{{wrongMix}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:18px;align-items:flex-end;justify-content:center;animation:rsPop .3s ease;flex:none">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:min(90px,20vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{wrongMix}};box-shadow:inset 0 -10px 18px rgba(0,0,0,.13)"></div>
+                <div style="font-size:13px;font-weight:800;color:#8c491a">{{wrongRatio}}의 색</div>
+              </div>
+              <div style="font-size:20px;color:#645c50;padding-bottom:24px">vs</div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:min(90px,20vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}};box-shadow:inset 0 -10px 18px rgba(0,0,0,.13)"></div>
+                <div style="font-size:13px;font-weight:800;color:#645c50">목표 색</div>
+              </div>
+            </div>
+          </sc-if>
           <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
             <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
-              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
+              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
             </sc-for>
           </div>
         </div>
@@ -287,29 +335,49 @@ button{font-family:inherit}
       <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:15px;animation:rsPop .5s ease">
           <div style="font-size:72px;line-height:1">🎨</div>
-          <div style="display:flex;align-items:center;gap:12px;background:#f9f4ed;border:4px solid #f6a06b;border-radius:24px;padding:15px 26px">
-            <span style="font-family:'Jua',sans-serif;font-size:19px;color:#8c491a">🔓 비밀번호 숫자</span>
-            <span style="font-family:'Jua',sans-serif;font-size:38px;background:#201e1d;color:#ffc6a5;border-radius:14px;padding:4px 22px;line-height:1.2">1</span>
-          </div>
-          <a href="SoundRoom.dc.html" onClick="{{goNext}}" style="min-height:64px;display:flex;align-items:center;padding:18px 36px;border-radius:999px;background:#c67139;color:#f9f4ed;font-family:'Jua',sans-serif;font-size:21px;box-shadow:0 8px 20px rgba(198,113,57,.35)">🎼 다음 방으로 →</a>
+          <a href="index.html" onClick="{{goNext}}" style="min-height:64px;display:flex;align-items:center;padding:18px 36px;border-radius:999px;background:#c67139;color:#f9f4ed;font-size:21px;box-shadow:0 8px 20px rgba(198,113,57,.35)">🏠 허브로 돌아가기 →</a>
+          <div style="font-size:14px;font-weight:700;color:#645c50">허브에서 🎼 소리의 비밀로 이어져요!</div>
         </div>
       </sc-if>
 
+      <sc-if value="{{isUnitize}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease;width:100%">
+          <div style="display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap">
+            <button onClick="{{uniPack}}" style="min-height:56px;padding:12px 24px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:18px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">🧺 10개 묶기</button>
+            <button onClick="{{uniUnpack}}" style="min-height:56px;padding:12px 24px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:17px;color:#645c50;cursor:pointer">묶음 풀기</button>
+            <div style="font-size:16px;color:#645c50">{{uniCnt}}</div>
+          </div>
+          <div style="display:flex;gap:18px;align-items:flex-end;justify-content:center;flex-wrap:wrap;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:24px;padding:16px;max-width:720px;min-height:180px">
+            <div style="display:flex;flex-wrap:wrap;gap:5px;max-width:310px;justify-content:center;align-content:flex-end">
+              <sc-for list="{{uniLooseCells}}" as="c" hint-placeholder-count="10">
+                <span style="width:24px;height:24px;border-radius:6px;background:{{c.bg}};border:2px solid #a19786;display:inline-block;animation:rsPop .25s ease"></span>
+              </sc-for>
+            </div>
+            <sc-for list="{{uniBundleList}}" as="b" hint-placeholder-count="0">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;animation:rsPop .3s ease">
+                <div style="width:34px;height:130px;border-radius:12px;background:linear-gradient(#f6a06b,#c67139);border:3px solid #8c491a;display:flex;align-items:center;justify-content:center;color:#f9f4ed;font-size:15px">10</div>
+                <div style="font-size:11px;font-weight:800;color:#645c50">묶음</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#645c50;text-align:center;max-width:620px">{{uniMsg}}</div>
+        </div>
+      </sc-if>
+
+      <div style="flex:none;display:flex;align-items:center;gap:8px;width:min(98%,780px);justify-content:space-between;padding:2px 0 8px;margin-top:2px">
+        <button onClick="{{prev}}" aria-label="이전" style="min-height:48px;padding:10px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:15px;color:#645c50;cursor:pointer;opacity:{{prevOp}}">← 이전</button>
+        <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+          <sc-if value="{{liveBadge}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:14.5px;line-height:1.35;padding:8px 14px;border-radius:999px;background:{{liveBg}};color:{{liveFg}};border:3px solid {{liveBd}};animation:rsPop .3s ease;text-align:center">{{liveBadge}}</div>
+          </sc-if>
+          <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+            <div style="text-align:center;font-size:13px;font-weight:700;color:#645c50">{{footHint}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{primary}}" style="min-height:50px;padding:11px 26px;border-radius:999px;border:none;background:{{primaryBg}};color:#f9f4ed;font-size:18px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">{{primaryLabel}}</button>
+      </div>
     </section>
   </main>
-
-  <footer style="flex:none;display:flex;align-items:center;gap:10px;padding:9px 14px;background:#f9f4ed;border-top:2px solid #dcd3c4">
-    <button onClick="{{prev}}" aria-label="이전" style="min-height:54px;padding:13px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:17px;color:#645c50;cursor:pointer;opacity:{{prevOp}}">← 이전</button>
-    <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
-      <sc-if value="{{liveBadge}}" hint-placeholder-val="{{false}}">
-        <div style="font-family:'Jua',sans-serif;font-size:15.5px;line-height:1.35;padding:9px 16px;border-radius:999px;background:{{liveBg}};color:{{liveFg}};border:3px solid {{liveBd}};animation:rsPop .3s ease;text-align:center">{{liveBadge}}</div>
-      </sc-if>
-      <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
-        <div style="text-align:center;font-size:14px;font-weight:700;color:#645c50">{{footHint}}</div>
-      </sc-if>
-    </div>
-    <button onClick="{{primary}}" style="min-height:54px;padding:13px 30px;border-radius:999px;border:none;background:{{primaryBg}};color:#f9f4ed;font-family:'Jua',sans-serif;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">{{primaryLabel}}</button>
-  </footer>
 
   <sc-if value="{{voicePanel}}" hint-placeholder-val="{{false}}">
     <div onClick="{{closeVoices}}" style="position:fixed;inset:0;z-index:80;background:rgba(32,30,29,.5);display:flex;align-items:center;justify-content:center;padding:16px">
@@ -345,14 +413,14 @@ button{font-family:inherit}
   <sc-if value="{{hypoOpts}}" hint-placeholder-val="{{false}}">
     <div style="position:fixed;inset:0;z-index:70;background:rgba(32,30,29,.44);display:flex;align-items:center;justify-content:center;padding:16px">
       <div style="width:min(96vw,600px);max-height:86dvh;overflow:auto;background:#f0fae1;border:4px solid #ccdbb2;border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;box-shadow:0 20px 50px rgba(32,30,29,.34)">
-        <div style="font-family:'Jua',sans-serif;font-size:19px;color:#56633f;text-align:center">🔬 새 가설을 골라 봐요</div>
+        <div style="font-size:19px;color:#56633f;text-align:center">🔬 새 가설을 골라 봐요</div>
         <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">틀린 가설은 목록에서 지워 뒀어요</div>
         <div style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center">
           <sc-for list="{{hypoOpts}}" as="h" hint-placeholder-count="3">
-            <button onClick="{{h.pick}}" style="min-height:54px;padding:12px 19px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:16.5px;color:#8c491a;cursor:pointer">{{h.t}}</button>
+            <button onClick="{{h.pick}}" style="min-height:54px;padding:12px 19px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-size:16.5px;color:#8c491a;cursor:pointer">{{h.t}}</button>
           </sc-for>
         </div>
-        <button onClick="{{closeHypo}}" style="min-height:48px;padding:11px 22px;border-radius:999px;border:3px solid #ccdbb2;background:#f9f4ed;font-family:'Jua',sans-serif;font-size:15.5px;color:#56633f;cursor:pointer">그대로 두기</button>
+        <button onClick="{{closeHypo}}" style="min-height:48px;padding:11px 22px;border-radius:999px;border:3px solid #ccdbb2;background:#f9f4ed;font-size:15.5px;color:#56633f;cursor:pointer">그대로 두기</button>
       </div>
     </div>
   </sc-if>
@@ -362,7 +430,7 @@ button{font-family:inherit}
       <div style="background:#f9f4ed;border:4px solid {{toastBd}};border-radius:24px;padding:17px 21px;box-shadow:0 16px 44px rgba(32,30,29,.28);display:flex;gap:13px;align-items:flex-start">
         <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
         <div style="min-width:0">
-          <div style="font-family:'Jua',sans-serif;font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <div style="font-size:20px;line-height:1.4">{{toastTitle}}</div>
           <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
             <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:#474238;margin-top:4px">{{toastBody}}</div>
           </sc-if>
@@ -390,47 +458,50 @@ class Component extends DCLogic {
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
     labLog: [], wallDone: 0, failed: [], hypoPick: false,
-    voiceMap: {}, voicePanel: false
+    voiceMap: {}, voicePanel: false,
+    uniLoose: 30, uniBund: 0, uniPacks: 0, uniUnpacks: 0, tmpNum: {}, spinOn: false, spinOv: 0
   };
 
   get STEPS() {
     return [
       { k:'story', who:'munch', art:'scream_incomplete.jpg', artAlt:'미완성 그림',
         artCap:'하늘 노을 부분이 비어 있어요',
-        lines:['안녕! 나는 화가 뭉크야. 오늘까지 이 그림을 끝내야 해.',
-               '그런데 하늘의 노을색을 어떻게 만들었는지 잊어버렸어.',
-               '색 과학자 먼셀에게 부탁했어. 너도 보조연구원이 되어 줄래?'],
+        lines:['안녕? 만나서 반가워. 나는 화가 \'뭉크\'라고 해.',
+               '미안하지만 부탁할 일이 있어. 하늘의 노을색을 칠하려고 하는데 이 색을 어떻게 만들었는지 잊어버렸어.',
+               '비율로 색을 만드는 과학자 먼셀에게 색을 만드는 방법을 찾아달라고 부탁했어.',
+               '먼셀을 도와 나의 색을 찾아줄래?'],
         btn:'좋아요, 도울게요!' },
       { k:'story', who:'munsell', swatch:true,
-        lines:['반가워. 나는 색을 비율로 섞는 과학자 먼셀이야.',
+        lines:['반가워. 나는 색을 만드는 과학자 \'먼셀\'이라고 해.',
+               '\'뭉크\'가 만들었던 색을 목표로 함께 색을 만들어볼까? 좋아.',
                '우리가 찾을 것은 바로 이 노을빛 주황이야.'],
         hi:'실험으로 함께 찾아보자.', btn:'실험 준비!' },
       { k:'chips', who:'munsell', need:2,
-        say:'색을 정하는 것은 무엇일까? 두 가지를 찾아봐. 아닌 것도 눌러서 확인해도 좋아.',
+        say:'색을 결정하는 것은 무엇일까? 이 중 두 가지를 찾아봐. 아닌 것도 눌러서 확인해도 좋아.',
         hint:'아닌 것 같은 것도 눌러 보세요 · 다시 눌러도 괜찮아요',
         chips:[ {t:'물감의 종류', ok:1, fb:'어떤 물감을 쓰는지가 색을 정해.'},
-                {t:'섞는 순서', ok:0, fb:'다 섞이고 나면 순서는 상관없어.'},
-                {t:'붓의 크기', ok:0, fb:'붓은 칠할 때 이야기야.'},
+                {t:'섞는 순서', ok:0, fb:'다 섞이고 나면 순서는 상관없단다. 다시 한번 생각해볼까?'},
+                {t:'붓의 크기', ok:0, fb:'붓의 크기는 칠할 때 필요한 것이란다. 다시 한번 생각해볼까?'},
                 {t:'각 물감의 양', ok:1, fb:'얼마나 넣는지도 색을 정해.'} ] },
       { k:'chips', who:'munsell', need:1, swatch:true,
-        say:'그럼 어떤 물감이 필요할까? 목표색을 잘 봐.',
+        say:'그럼 어떤 물감이 필요할까? 목표색을 잘 관찰해보고 추측해 봐.',
         chips:[ {t:'빨강 + 노랑', ok:1, fb:'맞아. 이 두 가지야.'},
-                {t:'빨강 + 파랑', ok:0, fb:'이 색에 파랑 기운이 보이니?'},
-                {t:'노랑 + 파랑', ok:0, fb:'이 색에 파랑 기운이 보이니?'} ] },
+                {t:'빨강 + 파랑', ok:0, fb:'빨강과 파랑이 섞이면 보라색이 된단다. 다시 한번 생각해볼까?'},
+                {t:'노랑 + 파랑', ok:0, fb:'노랑과 파랑이 섞이면 초록색이 된단다. 다시 한번 생각해볼까?'} ] },
       { k:'chips', who:'munsell', need:1,
-        say:'종류는 알았어. 그럼 양은 얼마나 넣어야 할까?',
+        say:'좋아. 어떤 물감이 필요한 지 종류는 알았어. 그럼 각각 물감의 양은 얼마나 넣어야 할까?',
         chips:[ {t:'실험으로 알아내야 해요', ok:1, fb:'바로 그거야. 실험이 필요해.'},
-                {t:'아무 양이나 괜찮아요', ok:0, fb:'정말 그럴까? 실험으로 확인해 보자.'},
-                {t:'많이 넣을수록 좋아요', ok:0, fb:'정말 그럴까? 실험으로 확인해 보자.'} ] },
+                {t:'아무 양이나 괜찮아요', ok:0, fb:'넣는 양이 달라지면 색도 달라진단다. 실험으로 확인해 볼까?'},
+                {t:'많이 넣을수록 좋아요', ok:0, fb:'양이 많아도 두 물감의 비가 다르면 색이 달라진단다. 실험으로 확인해 볼까?'} ] },
       { k:'demo', who:'munsell',
-        say:'빨강을 똑같이 20 밀리리터씩 넣은 비커 두 개야. 작은 노랑 비커를 눌러서 부어 봐. 왼쪽은 한 개, 오른쪽은 세 개야.',
+        say:'빨강을 똑같이 20ml씩 넣은 비커 두 개야. 작은 노랑 비커 20mL 짜리를 클릭해서 빨강 물감 위에 부어 봐. 노랑색 물감 왼쪽은 20mL, 오른쪽은 60mL야.',
         btn:'알겠어요!' },
-      { k:'chips', who:'munsell', need:1, mark:'obs',
-        say:'과학자는 실험 전에 가설을 세워. 목표색을 봐. 빨강과 노랑 중 어떤 것이 더 많을까?',
+      { k:'chips', who:'munsell', need:1, mark:'obs', swatch:true,
+        say:'과학자는 실험 전에 가설을 세워. 가설이란, 어떤 것이 맞을 거라고 예상하는 과학자의 생각이야. 예를 들어 빨강이 노랑보다 많으면 더 진하고 붉은 주황이 되겠지? 이렇게 실험하기 전에 결과를 미리 예상해 보는 것이 가설이란다. 우리도 가설을 세워 보자. 목표색을 잘 봐. 빨강과 노랑 중 어떤 것이 더 많을까?',
         hint:'좋은 가설은 찍는 게 아니라 관찰에서 나와요 · 다시 골라도 괜찮아요',
-        chips:[ {t:'🔴 빨강이 더 많아 보여요', v:'r', ok:1, fb:'빨강이 많으면 이렇게 진하고 붉은 주황이 돼. 옆의 목표색과 나란히 두고 봐. 목표색이 더 붉니?'},
-                {t:'🟡 노랑이 더 많아 보여요', v:'y', ok:1, fb:'노랑이 많으면 이렇게 밝고 환한 주황이 돼. 목표색과 닮았니, 아니면 목표색이 더 붉니?'},
-                {t:'🟠 둘이 비슷해 보여요', v:'s', ok:1, fb:'반반이면 딱 중간 주황이야. 목표색은 이것보다 노랗니, 붉니?'} ] },
+        chips:[ {t:'🔴 빨강이 더 많아 보여요', v:'r', ok:1, fb:'빨강이 많으면 이렇게 진하고 붉은 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
+                {t:'🟡 노랑이 더 많아 보여요', v:'y', ok:1, fb:'노랑이 많으면 이렇게 밝고 환한 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
+                {t:'🟠 둘이 비슷해 보여요', v:'s', ok:1, fb:'반반이면 딱 중간 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'} ] },
       { k:'chips', who:'munsell', need:1, swatch:true, mark:'hypo',
         say:'좋아. 그럼 얼마나 더 많을까? 네 예상에 맞는 것을 골라 봐.',
         hint:'틀려도 괜찮아요 — 실험으로 확인하면 그것도 발견이에요' },
@@ -438,20 +509,20 @@ class Component extends DCLogic {
         say:'네 가설대로 물감을 넣고 실험하기를 눌러 봐. 목표색이 나올 때까지 도전!',
         hi:'막대를 끌거나 ＋5mL 버튼을 눌러요' },
       { k:'lab', mode:'more', who:'munsell', run:'실험하기',
-        say:'완벽해. 그런데 이 색을 다른 양으로도 만들 수 있을까? 서로 다른 양으로 두 번 더 만들어 봐.',
+        say:'완벽해. 그런데 이 색과 같은 색을 다른 양으로도 만들 수 있을까? 서로 다른 양으로 두 번 더 만들어 봐.',
         hi:'두 손가락으로 벌려 보세요' },
-      { k:'lab', mode:'trap', who:'munsell', run:'확인하기',
-        say:'뭉크의 조수가 그랬대. 빨강 20 노랑 50에 각각 30씩 더해도 같은 색이라고. 정말일까? 빨강 50 노랑 80을 만들어 확인해 보자.',
-        hi:'빨강 50 · 노랑 80' },
       { k:'chips', who:'munsell', need:1,
         say:'양이 달라도 전부 같은 색이었어. 변하지 않은 것은 무엇일까?',
-        chips:[ {t:'두 양의 합', ok:0, fb:'20+50은 70, 40+100은 140. 합은 달라졌어.'},
-                {t:'두 양의 차', ok:0, fb:'30과 60. 차이도 달라졌어.'},
+        chips:[ {t:'두 양의 합', ok:0, fb:'20+50은 70, 40+100은 140 — 합은 달라졌단다. 다시 한번 생각해볼까?'},
+                {t:'두 양의 차', ok:0, fb:'30과 60 — 차이도 달라졌단다. 다시 한번 생각해볼까?'},
                 {t:'한쪽이 다른 쪽의 몇 배인지', ok:1, fb:'바로 그거야.'} ] },
+      { k:'lab', mode:'trap', who:'munsell', run:'확인하기',
+        say:'그런데 \'뭉크\'의 조수가 이 색을 만들려고 이렇게 해보고 싶대. 빨강 20에 30을 더하고, 노랑 50에 30을 더해도 같은 양을 더해보고 싶대. 같은 양을 더하니까 같은 색이 될거라고 말이야. 이 말이 정말 맞을까? 빨강 50 노랑 80을 만들어 확인해 보자.',
+        hi:'빨강 50 · 노랑 80' },
       { k:'chips', who:'munsell', need:1,
         say:'모두 간단히 하면 언제나 2 대 5야. 수첩에는 뭐라고 적을까?',
         chips:[ {t:'빨강 : 노랑 = 2 : 5', ok:1, fb:'양이 얼마든 이 비만 지키면 돼.'},
-                {t:'빨강 20mL, 노랑 50mL', ok:0, fb:'그러면 더 많이 만들 때 못 쓰잖아.'} ] },
+                {t:'빨강 20mL, 노랑 50mL', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'} ] },
       { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
         lines:['찾았다! 바로 이 색이야!', '너희 덕분에 그림을 완성했어. 정말 고마워!'],
         btn:'다음 →' },
@@ -461,10 +532,16 @@ class Component extends DCLogic {
       { k:'blank', id:'recipe', who:'munch',
         say:'드디어 비밀을 찾았어! 잊어버리지 않게 레시피 카드로 만들어 줘.' },
       { k:'story', who:'signac', art:'signacx_exhibit.png', artCrop:1, artCap:'점만 찍어 완성한 점묘화',
-        lines:['나는 점을 찍어 색을 만드는 화가 시냐크야.',
-               '나는 물감을 섞지 않아. 순색 점만 콕콕 찍지.',
-               '멀리서 보면 점들이 눈에서 섞여 하나의 색이 돼!'],
+        spin:1,
+        lines:['안녕? 네가 \'먼셀\'과 함께 \'뭉크\'를 도와줬다고 들었어! 나는 화가 \'시냐크\'라고 해.',
+               '나는 \'뭉크\'처럼 물감을 섞지 않고, 점들을 콕콕 찍어 색을 표현해.',
+               '내가 원하는 색을 만들기 위해 색 점의 비를 조절하여 찍으면, 멀리서 볼 때 그 점들이 눈에서 섞여 하나의 색이 되거든!',
+               '마치 빠르게 회전하면 하나의 색처럼 보이는 회전판처럼 말이야. 회전판을 한번 눌러봐.'],
         btn:'신기해요!' },
+      { k:'story', who:'signac', art:'signac_incomplete.jpg', artWash:1, artCap:'「양산을 든 여인」 — 주황이 빠진 미완성!',
+        lines:['지금 「양산을 든 여인」을 그리는 중인데, 보다시피 주황색 부분이 텅 비었어!',
+               '네가 점의 비로 이 주황을 채워 줄래?'],
+        btn:'제가 채워 볼게요!' },
       { k:'dots', who:'signac',
         say:'내 그림 「양산을 든 여인」의 하늘에 주황을 넣고 싶어. 그런데 나는 물감을 섞지 않으니 점으로 주황을 만들어야 해. 점 일곱 개로 만들어 줘. 빨강과 노랑을 몇 개씩 찍을까?',
         hi:'점 7개 · 빨강 : 노랑 = 2 : 5' },
@@ -472,6 +549,9 @@ class Component extends DCLogic {
         say:'이번엔 새로운 주황이야. 빨강 대 노랑이 2 대 3! 다섯 칸으로 나타내 봐.',
         hi:'빨강 : 노랑 = 2 : 3' },
       { k:'grid', n:10, who:'signac', say:'좋아! 이번엔 열 칸이야.', hi:'빨강 : 노랑 = 2 : 3' },
+      { k:'unitize', who:'signac',
+        say:'백 칸에 도전하기 전에! 낱칸 열 개를 한 묶음으로 만드는 연습을 해 보자. 묶으면 큰 붓 한 번이 되고, 풀면 다시 낱칸 열 개가 돼. 묶기 세 번, 풀기 한 번!',
+        hi:'묶기 3회 · 풀기 1회 — 묶음이 곧 큰 붓!' },
       { k:'grid', n:100, who:'signac', say:'마지막! 백 칸에 도전해 봐. 큰 붓을 쓰면 한 줄씩 칠할 수 있어.', hi:'빨강 : 노랑 = 2 : 3' },
       { k:'story', who:'signac', art:'signac_painting.jpg', artCap:'「양산을 든 여인」 완성!',
         lines:['고마워! 점을 이만큼 많이 찍었더니 드디어 완성이야.',
@@ -479,8 +559,8 @@ class Component extends DCLogic {
         btn:'다음 →' },
       { k:'blank', id:'cells', who:'munsell', say:'백 칸 중 빨강이 마흔 칸이야. 전체에 대한 빨강의 비율은 얼마일까?' },
       { k:'blank', id:'pct', who:'munsell', say:'빨강 40, 노랑 60을 넣어 주황 100 밀리리터를 만들었어. 각각 몇 퍼센트일까?' },
-      { k:'blank', id:'secret', who:'narrator', say:'이제 색깔의 비밀을 찾는 카드예요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
-      { k:'finish', who:'narrator', say:'색깔의 비밀을 모두 찾아냈어요. 정말 대단해요!', hi:'비밀번호 숫자 1을 얻었어요' }
+      { k:'blank', id:'secret', who:'narrator', say:'이제 색깔의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
+      { k:'finish', who:'narrator', say:'색깔의 비밀을 모두 찾아냈어요. 정말 대단해요!', hi:'탐색 완료! 허브로 돌아가요' }
     ];
   }
 
@@ -518,7 +598,7 @@ class Component extends DCLogic {
         ['빨강은 전체의 ', {a:'40'}, ' %'],
         ['노랑은 전체의 ', {a:'60'}, ' %'] ],
       bank:['40','60','50','100'] },
-    secret: { card:true, title:'🃏 색깔의 비밀 카드', rows:[
+    secret: { card:true, title:'📝 색깔의 비밀 정리', rows:[
         ['두 물감의 ', {a:'양'}, ' 이 달라도'],
         ['두 물감의 ', {a:'비'}, ' 가 같다면 같은 색이 된다.'] ],
       bank:['양','비','차이','개수'] }
@@ -627,6 +707,7 @@ class Component extends DCLogic {
   }
   speak(text, who) {
     this.stopVoice();
+    this._speakStamp = Date.now();
     if (this.state.audio !== 'full') return;
     const raw = (text === null || text === undefined) ? '' :
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
@@ -742,11 +823,13 @@ class Component extends DCLogic {
     this.speak(s.k === 'story' ? s.lines.join(' ') : s.say, s.who);
   }
 
-  toast(icon, title, body, kind) {
+  /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  toast(icon, title, body, kind, hold) {
     this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
-    this._tT = setTimeout(() => this.setState({ toast: null }), 4200);
+    const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
+    this._tT = setTimeout(close, 3000);
   }
 
   go(d) {
@@ -757,7 +840,8 @@ class Component extends DCLogic {
     this._wasHit = false;
     this._pts = new Map(); this._pinched = false; this._pinch0 = null;
     this.setState({ i:n, toast:null, amt:{ '빨강':0, '노랑':0 }, labLog:[], found: n === 9 ? this.state.found : [],
-      cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null });
+      cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
+      uniLoose:30, uniBund:0, uniPacks:0, uniUnpacks:0, tmpNum:{}, spinOn:false, spinOv:0 });
     this.plog('nav', { to:n });
     setTimeout(() => this.sayStep(n), 380);
   }
@@ -891,7 +975,7 @@ class Component extends DCLogic {
   runLab() {
     const st = this.STEPS[this.state.i];
     const a = this.state.amt['빨강'], b = this.state.amt['노랑'];
-    if (!(a > 0 && b > 0)) { this.toast('🤔', '둘 다 넣어야 해요', '빨강과 노랑을 모두 넣고 실험해요.'); return; }
+    if (!(a > 0 && b > 0)) { this.toast('🤔', '둘 다 넣어야 해', '빨강과 노랑을 둘 다 넣어야 섞을 수 있단다. 둘 다 넣고 실험해 볼까?'); return; }
     const ok = a * this.TGT[1] === b * this.TGT[0];
     const g = this.gcd(a,b);
     this.plog('lab', { mode:st.mode, a, b, ok });
@@ -901,9 +985,10 @@ class Component extends DCLogic {
       if (a === 50 && b === 80) {
         this.markSolved();
         this.toast('🔍', '조수의 말은 틀렸어요!', '같은 수를 더하면(+30) 색이 변해요. 곱해야 같은 색!', 'ok');
+        this.autoNext(3200);
         return;
       }
-      this.toast('🤔', '빨강 50 · 노랑 80으로 맞춰요', '조수의 주장을 직접 확인해 봐요.');
+      this.toast('🤔', '빨강 50 · 노랑 80으로 맞춰 보자', '조수가 말한 양 그대로 만들어 확인해 볼까?');
       return;
     }
     if (!ok) {
@@ -916,14 +1001,25 @@ class Component extends DCLogic {
         this.toast('🔬', '가설이 틀렸다는 걸 알아냈어요!', '틀린 가설을 지우는 것도 중요한 발견이에요. 아래에서 새 가설을 골라 봐요.', 'ok');
         return;
       }
+      /* 단계적 힌트(지침 6.5) — 문구는 v3 피드백 기준(관찰 권유형, 평가·추궁 표현 없음), 단계 구조만 추가 */
       const more = a * this.TGT[1] > b * this.TGT[0] ? '노랑' : '빨강';
-      this.toast('🤔', '아직 목표 색이 아니에요', more + '을(를) 더 넣어 볼까요? 내 색과 목표 색을 비교해요.');
+      const log = this.state.labLog;
+      const prev = log.length >= 2 ? log[log.length - 2] : null;
+      const additive = !!(prev && a > prev.a && b > prev.b && (a - prev.a) === (b - prev.b));
+      this.toast('🤔', '아직 목표 색이 아니야', this.hintNext('lab' + this.state.i, [
+        '아직 목표 색이 아니란다. 내 색과 목표 색을 나란히 놓고 비교해 볼까?',
+        additive ? '두 물감에 같은 양을 더하면 비가 달라진단다. 몇 배로 늘리는 방법을 생각해 볼까?'
+          : (more === '노랑' ? '노랑을 더 넣으면 색이 밝고 환해진단다. 조금 더 넣어 볼까?'
+                             : '빨강을 더 넣으면 색이 진하고 붉어진단다. 조금 더 넣어 볼까?'),
+        '한 물감만 5씩 바꾸면 색이 변하는 방향이 보인단다. 천천히 시험해 볼까?'
+      ]));
       return;
     }
     if (st.mode === 'find') {
       const hit = this.state.hypo === (a/g) + ':' + (b/g);
       this.setState({ found: [[a,b]] });
       this.markSolved();
+      this.autoNext(3200);
       this.toast('✅', '찾았다! 목표 색이에요',
         (this.state.hypo ? (hit ? '가설이 딱 맞았어요 — 진짜 과학자! ' : '가설과는 달랐지만 실험으로 확인했어요. ') : '') +
         '빨강 ' + a + ' : 노랑 ' + b, 'ok');
@@ -947,10 +1043,58 @@ class Component extends DCLogic {
       this.setState({ wallDone: this.state.wallDone + 1 });
       this.markSolved();
       this.toast('✅', '같은 색이에요!', a + ' : ' + b + ' 도 간단히 하면 ' + (a/g) + ' : ' + (b/g) + ' — 완벽해요!', 'ok');
+      this.autoNext(3200);
       return;
     }
   }
   clearLab() { this.sfx('tap'); this._wasHit = false; this.setState({ amt: { '빨강':0, '노랑':0 } }); }
+
+  /* 지침 6.5 — 재시도 횟수·오답 내용에 따른 단계적 힌트 (정답 직접 노출 금지) */
+  hintNext(key, stages) {
+    this._tries = this._tries || {};
+    const n = (this._tries[key] = (this._tries[key] || 0) + 1);
+    return stages[Math.min(n, stages.length) - 1];
+  }
+
+  /* 단위화 미니 과제(결정 1-b) — 낱칸 10개 ↔ 한 묶음. 재합성(묶기)에 더 많은 시도(3회) 배정: Lamon */
+  uniPack() {
+    if (this.state.uniLoose < 10) { this.toast('🤔', '낱칸이 부족해!', '묶음을 풀면 낱칸 10개가 돌아와. 풀기를 해 볼까?'); return; }
+    this.sfx('pour');
+    const packs = this.state.uniPacks + 1;
+    this.plog('unitize', { act:'pack', packs });
+    this.setState({ uniLoose: this.state.uniLoose - 10, uniBund: this.state.uniBund + 1, uniPacks: packs });
+    this._uniCheck();
+  }
+  uniUnpack() {
+    if (this.state.uniBund < 1) { this.toast('🤔', '풀 묶음이 없어!', '먼저 낱칸 10개를 한 묶음으로 묶어 볼까?'); return; }
+    this.sfx('tap');
+    const un = this.state.uniUnpacks + 1;
+    this.plog('unitize', { act:'unpack', unpacks: un });
+    this.setState({ uniLoose: this.state.uniLoose + 10, uniBund: this.state.uniBund - 1, uniUnpacks: un });
+    this._uniCheck();
+  }
+  /* v3 색팽이(뉴턴 원판): 2:5 → 102.86도, 0.09s 회전, 550ms 후 잔상 혼합색 오버레이 */
+  spinTap() {
+    if (this.state.spinOn) {
+      this.setState({ spinOn: false, spinOv: 0 });
+      return;
+    }
+    this.sfx('tap');
+    this.plog('dot_spin', {});
+    this.setState({ spinOn: true });
+    clearTimeout(this._spinT);
+    this._spinT = setTimeout(() => { if (this.state.spinOn) this.setState({ spinOv: 0.85 }); }, 550);
+  }
+  _uniCheck() {
+    setTimeout(() => {
+      const S = this.state;
+      if (S.uniPacks >= 3 && S.uniUnpacks >= 1 && !S.solved[S.i]) {
+        this.markSolved();
+        this.toast('✅', '묶음 = 큰 붓!', '낱칸 10개가 한 묶음, 한 묶음은 다시 낱칸 10개! 이제 백 칸에서 큰 붓(10칸 묶음)을 쓸 수 있어.', 'ok');
+        this.autoNext(3200);
+      }
+    }, 60);
+  }
 
   pourCup(side) {
     if (this.state.pouring) return;
@@ -966,7 +1110,7 @@ class Component extends DCLogic {
       if (p.a >= 1 && p.b >= 3) {
         this.markSolved();
         this.plog('demo', { done:1 });
-        setTimeout(() => this.toast('😮', '빨강은 똑같이 20mL인데!', '노랑 비커가 1개일 때와 3개일 때 색이 완전히 달라요. 두 물감의 양을 모두 봐야 해요!', 'ok'), 450);
+        setTimeout(() => { this.toast('😮', '빨강은 똑같이 20mL인데!', '노랑 비커가 1개일 때와 3개일 때 색이 완전히 달라요. 두 물감의 양을 모두 봐야 해요!', 'ok'); this.autoNext(3400); }, 450);
       }
     }, 780);
   }
@@ -992,8 +1136,8 @@ class Component extends DCLogic {
     const avg = [0,1,2].map(k => Math.round((p1[k]*r + p2[k]*y)/7));
     this.setState({ dotMix: this.rgb(avg) });
     this.plog('dots', { r, y, ok: r*5 === y*2 });
-    if (r*5 === y*2) { this.markSolved(); this.toast('✅', '점으로도 노을빛 주황!', '빨강 ' + r + ' : 노랑 ' + y + ' = 2 : 5 — 물감과 같은 비예요!', 'ok'); }
-    else { this.toast('🤔', '아직 그 주황이 아니에요', '빨강 ' + r + ' : 노랑 ' + y + ' 이에요. 어떤 점이 더 많아야 할까요?'); }
+    if (r*5 === y*2) { this.markSolved(); this.toast('✅', '점으로도 노을빛 주황!', '빨강 ' + r + ' : 노랑 ' + y + ' = 2 : 5 — 물감과 같은 비예요!', 'ok'); this.autoNext(3200); }
+    else { this.toast('🤔', '아직 그 주황이 아니야', '지금은 빨강 ' + r + ' : 노랑 ' + y + '이란다. 점의 수를 바꿔 한 번 더 만들어 볼까?'); }
   }
 
   gridCells() {
@@ -1016,10 +1160,10 @@ class Component extends DCLogic {
       setTimeout(() => {
         this._gLock = false;
         this.plog('grid', { n, r, y, ok: r*3 === y*2 });
-        if (r*3 === y*2) { this.markSolved(); this.toast('✅', '잘했어요!', '빨강 ' + r + '칸 · 노랑 ' + y + '칸 = 2 : 3!', 'ok'); }
+        if (r*3 === y*2) { this.markSolved(); this.toast('✅', '잘했어요!', '빨강 ' + r + '칸 · 노랑 ' + y + '칸 = 2 : 3!', 'ok'); this.autoNext(3200); }
         else {
           const diff = Math.round(n*2/5) - r;
-          this.toast('🤔', '2 : 3이 아니에요', diff > 0 ? ('노랑 ' + diff + '칸을 빨강으로 바꿔 봐요.') : ('빨강 ' + (-diff) + '칸을 노랑으로 바꿔 봐요.'));
+          this.toast('🤔', '2 : 3이 아니에요', diff > 0 ? ('노랑 ' + diff + '칸을 빨강으로 바꾸면 된단다. 한 번 더 해 볼까?') : ('빨강 ' + (-diff) + '칸을 노랑으로 바꾸면 된단다. 한 번 더 해 볼까?'));
         }
       }, 320);
     }
@@ -1047,31 +1191,45 @@ class Component extends DCLogic {
       const used = Object.assign({}, this.state.used);
       const uk = this.STEPS[this.state.i].id + '|' + word;
       used[uk] = (used[uk] || 0) + 1;
+      const tmpC = Object.assign({}, this.state.tmpNum);
+      delete tmpC[target.key];
       this.sfx('ok');
-      this.setState({ blanks, used, selBlank: null });
+      this.setState({ blanks, used, selBlank: null, tmpNum: tmpC });
       if (keys.every(k => blanks[k.key])) {
         setTimeout(() => {
           const id = this.STEPS[this.state.i].id;
           this.plog('blank', { id });
           this.markSolved();
           if (id === 'secret') {
-            this.sfx('card'); this.flyCard();
-            let got = [];
-            try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
-            if (got.indexOf('color0') < 0) { got.push('color0'); try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {} }
-            setTimeout(() => {
-              this.setState({ cards: got.length });
-              this.confetti();
-              this.toast('🃏', '비밀 카드를 도감에 모았어요!', '색깔의 비밀 카드 획득 · 비밀번호 숫자는 1이에요.', 'ok');
-              this.speak('비밀 카드를 도감에 모았어요. 색깔의 비밀 비밀번호 숫자는 1이에요.', 'narrator');
-            }, 1150);
+            /* 카드 보상은 평가의 방으로 이동 — 학습 정리 활동만 유지 */
+            this.confetti();
+            this.toast('✅', '정리 완성!', '색깔의 비밀을 문장으로 정리했어요. 허브로 돌아가 다음 탐험을 이어가요!', 'ok');
+            this.autoNext(3200);
           } else {
             this.confetti();
             this.toast('✅', '완성!', '아주 잘했어요.', 'ok');
+            this.autoNext(3200);
           }
         }, 320);
       }
     } else {
+      const stId = this.STEPS[this.state.i].id;
+      /* 지침 5.2 — 레시피의 오답 숫자는 거부하지 않고 배치를 허용, 그 값의 색을 보여 감각 증거로 확인 */
+      if (stId === 'recipe' && /^\d+$/.test(word) && /^\d+$/.test(target.a)) {
+        const tmp = Object.assign({}, this.state.tmpNum);
+        tmp[target.key] = word;
+        this.sfx('pour');
+        this.plog('recipe_wrong', { key: target.key, v: word });
+        this.setState({ tmpNum: tmp, selBlank: null });
+        /* 문구는 v3의 오답 색 표시 피드백 기준 + 단계 구조 */
+        this.toast('🎨', '이 값이면 이런 색이 된단다', this.hintNext('recipe', [
+          '그 값이면 이런 색이 된단다. 목표 색과 비교해 볼까?',
+          word === '3' ? '차이가 같아도 비가 다르면 색이 달라진단다. 몇 배인지로 생각해 볼까?'
+                       : '실험 기록장의 ⭕ 양들을 간단히 하면 힌트가 된단다. 다시 살펴볼까?',
+          '⭕ 기록을 간단히 하면 언제나 같은 비가 된단다. 그 비를 다시 놓아 볼까?'
+        ]));
+        return;
+      }
       this.sfx('oops');
       this.toast('🤔', '다시 한번!', '다른 카드를 놓아 볼까요?');
     }
@@ -1082,7 +1240,7 @@ class Component extends DCLogic {
       const src = e.currentTarget;
       const g = document.createElement('div');
       g.textContent = word;
-      g.style.cssText = "position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;color:#8c491a;opacity:.94;font-family:'Jua',sans-serif;transform:translate(-50%,-50%)";
+      g.style.cssText = "position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;color:#8c491a;opacity:.94;transform:translate(-50%,-50%)";
       g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
       document.body.appendChild(g);
       let moved = false;
@@ -1165,6 +1323,7 @@ class Component extends DCLogic {
       coachImgEl: who.img ? React.createElement('img', { src: who.img, alt: '', key: who.img,
         style: { width:'56px', height:'56px', borderRadius:'999px', objectFit:'cover', border:'3px solid #dcd3c4', background:'#f9f4ed', display:'block' } }) : null,
       artEl: st.art ? React.createElement('img', { src: st.art, alt: st.artCap || '', key: st.art,
+        className: st.artWash ? 'washed' : undefined,
         style: st.artCrop
           ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
           : { display:'block', maxWidth:'min(320px,70vw)', maxHeight:'38vh', borderRadius:'3px' } }) : null,
@@ -1172,15 +1331,31 @@ class Component extends DCLogic {
       coachName: who.name, coachRole: who.role,
       coachText: st.k === 'story' ? st.lines.join('\n') : (st.say || ''),
       coachHi: (st.k === 'lab' && st.mode === 'find') ? '' : (st.hi || ''),
+      /* 가설 상시 배너: 선택 시점부터 실험·확인·정리 단계 내내 상단 고정 */
+      hypoBanner: (() => {
+        if (!S.hypo || S.i < 7 || S.i > 15) return '';
+        const hp = S.hypo.split(':');
+        let desc = '';
+        Object.keys(this.HYPOS).forEach(k => this.HYPOS[k].forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; }));
+        return '빨강 ' + (hp[0]*10) + 'mL : 노랑 ' + (hp[1]*10) + 'mL' + (desc ? ' · ' + desc : '') + (S.failed.length ? '  (지운 가설 ' + S.failed.length + '개)' : '');
+      })(),
       hypoText: (isLab && st.mode === 'find' && S.hypo)
         ? (S.hypo.split(':')[0] + ' : ' + S.hypo.split(':')[1]) : '',
       replay: () => this.sayStep(S.i),
       tgtColor: tgt,
-      showSwatch: !!st.swatch,
+      /* 목표 색 견본: 가설을 세우는 7·8단계와 실험(lab) 단계 모두 같은 형태로 상시 제시 */
+      showSwatch: !!st.swatch || isLab,
       isStory: st.k === 'story', isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isDots: st.k === 'dots', isGrid: st.k === 'grid',
-      isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      isBlank: st.k === 'blank', isFinish: st.k === 'finish', isUnitize: st.k === 'unitize',
       artCap: st.artCap || '',
+      showSpin: !!st.spin,
+      spinC1: this.rgb(this.PRIM['빨강']), spinC2: this.rgb(this.PRIM['노랑']),
+      spinMix: this.rgb([0,1,2].map(k => Math.round((this.PRIM['빨강'][k]*2 + this.PRIM['노랑'][k]*5) / 7))),
+      spinAnim: S.spinOn ? 'rsSpin .09s linear infinite' : 'none',
+      spinOv: S.spinOv,
+      spinMsg: S.spinOn ? '빙글빙글 — 두 색이 주황 하나로 보여요! (잔상 착시) 다시 누르면 멈춰요' : '빨강 2칸 : 노랑 5칸 회전판이야. 눌러서 돌려봐!',
+      spinTap: () => this.spinTap(),
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
@@ -1216,7 +1391,7 @@ class Component extends DCLogic {
             this.plog('pick', { step: S.i, t: c.t, ok: !!c.ok });
             if (c.ok) {
               const okCount = p.filter(x => list[x] && list[x].ok).length;
-              if (okCount >= needed) { this.markSolved(); this.toast('✅', c.t, c.fb || '', 'ok'); }
+              if (okCount >= needed) { this.markSolved(); this.toast('✅', c.t, c.fb || '', 'ok'); this.autoNext(3000); }
               else this.toast('✅', c.t, (c.fb || '') + ' 하나 더 찾아봐요!', 'ok');
             } else this.toast('💡', '먼셀의 힌트', c.fb || '');
           }
@@ -1234,6 +1409,15 @@ class Component extends DCLogic {
       v.myPct = Math.min(94, (a + b) / 320 * 94);
       v.redAmt = a; v.yelAmt = b;
       v.simpleRatio = g ? ('간단히 하면 ' + (a/g) + ' : ' + (b/g)) : '';
+      /* 실험하기 버튼 위 요약 박스: 가설 + 현재 양(실시간) */
+      v.beakerAmt = (a || b) ? (a + ' : ' + b) : '';
+      v.sumHypo = (() => {
+        if (!S.hypo) return '';
+        const hp = S.hypo.split(':');
+        let desc = '';
+        Object.keys(this.HYPOS).forEach(k => this.HYPOS[k].forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; }));
+        return (desc ? desc + ' · ' : '') + hp[0] + ' : ' + hp[1];
+      })();
       v.runLabel = st.run || '실험하기';
       v.runLab = () => this.runLab();
       v.clearLab = () => this.clearLab();
@@ -1297,6 +1481,9 @@ class Component extends DCLogic {
           color: this.rgb(this.mix(yellow ? { '빨강':20, '노랑':yellow } : { '빨강':20 })),
           label: yellow ? ('빨강 20 : 노랑 ' + yellow) : '빨강 20 (노랑 0)',
           left: cups - poured,
+          /* 붓는 동안 노랑이 위에 쌓였다가(레이어), 부은 뒤 섞인 색으로 합쳐진다 */
+          layerH: S.pouring === side ? 15 : 0,
+          layerOp: S.pouring === side ? 1 : 0,
           streaming: S.pouring === side,
           cups: new Array(cups).fill(0).map((_, ci) => ({
             h: 56, fill: ci < poured ? 0 : 74,
@@ -1369,15 +1556,26 @@ class Component extends DCLogic {
           if (typeof tk === 'string')
             return { t: tk, key:'', disp:'inline', minw:'0', minh:'0', pad:'0', mar:'0', rad:'0', bb:'none', bg:'transparent', fg:'#201e1d', cur:'default', out:'none', ff:'inherit' };
           const key = st.id + '-' + ri + '-' + ti, filled = S.blanks[key], sel = S.selBlank === key;
+          const tmpv = (S.tmpNum || {})[key];
           return {
-            t: filled || '', key, disp:'inline-block', minw:'86px', minh:'40px',
+            t: filled || tmpv || '', key, disp:'inline-block', minw:'86px', minh:'40px',
             pad:'2px 12px', mar:'0 4px', rad:'12px 12px 0 0',
-            bb: '4px solid ' + (filled ? '#7a8a5e' : '#f6a06b'),
-            bg: filled ? '#f0fae1' : (sel ? '#ffc6a5' : '#ffe1d0'),
+            bb: '4px solid ' + (filled ? '#7a8a5e' : (tmpv ? '#d67f48' : '#f6a06b')),
+            bg: filled ? '#f0fae1' : (tmpv ? '#ffc6a5' : (sel ? '#ffc6a5' : '#ffe1d0')),
             fg: filled ? '#56633f' : '#8c491a', cur:'pointer',
             out: sel ? '3px dashed #8c491a' : 'none',
-            ff: "'Jua',sans-serif",
-            tap: () => { if (!filled) { this.sfx('tap'); this.setState({ selBlank: key }); } }
+            ff:'inherit',
+            tap: () => {
+              if (filled) return;
+              if (tmpv) {
+                const tmp = Object.assign({}, this.state.tmpNum);
+                delete tmp[key];
+                this.sfx('tap');
+                this.setState({ tmpNum: tmp, selBlank: key });
+                return;
+              }
+              this.sfx('tap'); this.setState({ selBlank: key });
+            }
           };
         })
       }));
@@ -1390,9 +1588,29 @@ class Component extends DCLogic {
       v.blankArt = def.art
         ? new Array(100).fill(0).map((_, i) => ({ bg: i < 40 ? this.rgb(this.PRIM['빨강']) : this.rgb(this.PRIM['노랑']) }))
         : null;
+      /* 지침 5.2 — 오답 값이 놓이면 그 값으로 섞은 색을 표시 */
+      v.wrongMix = null; v.wrongRatio = '';
+      if (st.id === 'recipe') {
+        const tv = S.tmpNum || {};
+        const n1 = S.blanks['recipe-0-1'] || tv['recipe-0-1'];
+        const n2 = S.blanks['recipe-0-3'] || tv['recipe-0-3'];
+        if (n1 && n2 && (tv['recipe-0-1'] || tv['recipe-0-3'])) {
+          v.wrongMix = this.rgb(this.mix({ '빨강': +n1, '노랑': +n2 }));
+          v.wrongRatio = '빨강 ' + n1 + ' : 노랑 ' + n2;
+        }
+      }
     }
 
-    const needsSolve = ['chips','lab','demo','dots','grid','blank'].indexOf(st.k) >= 0;
+    if (st.k === 'unitize') {
+      v.uniPack = () => this.uniPack();
+      v.uniUnpack = () => this.uniUnpack();
+      v.uniLooseCells = new Array(S.uniLoose).fill(0).map(() => ({ bg: this.rgb(this.PRIM['빨강']) }));
+      v.uniBundleList = new Array(S.uniBund).fill(0).map(() => ({}));
+      v.uniCnt = '낱칸 ' + S.uniLoose + '개 · 묶음 ' + S.uniBund + '개';
+      v.uniMsg = '묶기 ' + S.uniPacks + '/3 · 풀기 ' + S.uniUnpacks + '/1' + (solved ? ' — 완료! 더 연습해도 좋아요' : '');
+    }
+
+    const needsSolve = ['chips','lab','demo','dots','grid','blank','unitize'].indexOf(st.k) >= 0;
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finish' ? '처음으로' : '다음 →');
     v.primaryBg = (!needsSolve || solved) ? '#c67139' : '#c0b6a5';
     v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
