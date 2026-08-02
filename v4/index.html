@@ -52,31 +52,43 @@
   #loginOv{position:fixed;inset:0;background:color-mix(in srgb,var(--color-neutral-900) 52%,transparent);
     display:none;align-items:center;justify-content:center;z-index:50;padding:var(--space-3)}
   .lg{background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:calc(var(--radius-lg) * 1.15);
-    padding:var(--space-6) var(--space-4);width:min(420px,94vw);text-align:center;box-shadow:var(--shadow-lg)}
+    padding:var(--space-6) var(--space-4);width:min(440px,94vw);max-height:94dvh;overflow:auto;
+    text-align:center;box-shadow:var(--shadow-lg)}
   .lg h2{font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-weight:400;font-size:26px;margin:0 0 4px}
   .lg .hint{color:var(--color-neutral-700);font-weight:700;font-size:15.5px;margin-bottom:var(--space-3)}
-  #numShow{font-family:inherit;font-size:44px;letter-spacing:8px;min-height:62px;
-    border-bottom:5px solid var(--color-accent-400);margin:0 var(--space-6) var(--space-3);color:var(--color-accent-700)}
-  #numShow.empty{color:var(--color-neutral-400);letter-spacing:2px;font-size:20px;line-height:58px}
-  .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 var(--space-2)}
-  .pad button{font-family:inherit;font-size:26px;padding:14px 0;border:3px solid var(--color-neutral-300);
-    border-radius:999px;background:var(--color-neutral-100);cursor:pointer;touch-action:manipulation;color:var(--color-text)}
-  .pad button:hover{background:var(--color-neutral-200)}
-  .pad button:active{transform:scale(.94);background:var(--color-accent-100);border-color:var(--color-accent-400)}
-  .pad .del{color:var(--color-accent-700)}
-  .pad .go{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-neutral-100)}
-  .pad .go:hover{background:var(--color-accent-600)}
+  /* 식별 코드 입력 — 4자리(영문 대문자+숫자). 터치 타깃 48px 이상 */
+  #codeShow{display:flex;gap:var(--space-2);justify-content:center;margin:var(--space-2) 0 var(--space-3)}
+  #codeShow .cbox{font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-weight:400;font-size:34px;
+    width:56px;height:64px;line-height:64px;border:3px solid var(--color-neutral-300);border-bottom-width:5px;
+    border-radius:var(--radius-md);background:var(--color-neutral-200);color:var(--color-accent-700)}
+  #codeShow .cbox.filled{background:var(--color-accent-100);border-color:var(--color-accent-400)}
+  #codeShow .cbox.cur{background:var(--color-neutral-100);border-color:var(--color-accent)}
+  .padhint{font-size:13px;font-weight:700;color:var(--color-neutral-600);margin-bottom:var(--space-2)}
+  .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-2)}
+  .padrow{display:grid;grid-template-columns:1fr 1.3fr;gap:var(--space-2);margin-top:var(--space-2)}
+  .pad button{font-family:inherit;font-weight:700;font-size:21px;min-height:48px;padding:var(--space-2) 0;
+    border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);background:var(--color-neutral-100);
+    cursor:pointer;touch-action:manipulation;color:var(--color-text)}
+  .pad button.num{background:var(--color-accent-100);border-color:var(--color-accent-300);color:var(--color-accent-700)}
+  .padrow button{font-family:inherit;font-weight:700;font-size:19px;min-height:48px;
+    border:3px solid var(--color-neutral-300);border-radius:999px;background:var(--color-neutral-100);
+    cursor:pointer;touch-action:manipulation;color:var(--color-text)}
+  .pad button:hover,.padrow button:hover{background:var(--color-neutral-200)}
+  .pad button:active,.padrow button:active{transform:scale(.94);background:var(--color-accent-100);border-color:var(--color-accent-400)}
+  .padrow .del{color:var(--color-accent-700)}
+  .padrow .go{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-neutral-100)}
+  .padrow .go:hover{background:var(--color-accent-600);border-color:var(--color-accent-600)}
   #lgErr{color:var(--color-accent-700);font-weight:800;font-size:15px;min-height:22px;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>RatioSense</h1>
-  <div class="sub">방마다 숨어 있는 <b>비(比)의 비밀</b>을 찾아 탈출하는 비율 탐험!</div>
+  <div class="sub">방마다 숨어 있는 <b>비(比)의 비밀</b>을 찾아가는 비율 탐험!<br>비밀 카드를 모아 마지막 문을 열어요</div>
   <div class="chiprow">
     <span class="mychip" id="chip" style="display:none">🙋 <span id="chipNo"></span></span>
     <span class="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(평가의 방에서 모아요)</span></span>
-    <button class="ghost" id="chgBtn" style="display:none">번호 바꾸기</button>
+    <button class="ghost" id="chgBtn" style="display:none">코드 바꾸기</button>
     <span class="guestnote" id="guestNote">🔎 게스트 모드 — 활동 기록이 남지 않아요</span>
   </div>
   <div class="rooms">
@@ -84,55 +96,98 @@
     <a class="room" data-r="sound" href="SoundRoom.dc.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
     <div class="room locked" data-r="map" aria-disabled="true"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div><span class="locktag">🔒 준비 중</span></div>
     <div class="room locked" data-r="mart" aria-disabled="true"><div class="badge">4</div><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div><span class="locktag">🔒 준비 중</span></div>
-    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html"><div class="badge">5</div><div class="em">📝</div><div class="nm">평가의 방</div><div class="ds">4문제 · 비밀 카드 4장,<br>그리고 마지막 문</div><span class="locktag" id="evalLock" style="display:none">🔒 색·소리 방을 마치면 열려요</span></a>
+    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html"><div class="badge">5</div><div class="em">📝</div><div class="nm">평가의 방</div><div class="ds">5문제 · 비밀 카드 4장,<br>그리고 마지막 문</div><span class="locktag" id="evalLock" style="display:none">🔒 색·소리 방을 마치면 열려요</span></a>
   </div>
   <div class="foot">탐험 순서: 1번 색깔 → 2번 소리 → (3~5번 방은 준비 중) — 방이 끝나면 허브로 돌아와 다음 방으로 이어가요!</div>
 </div>
 
 <div id="loginOv">
   <div class="lg">
-    <h2>🙋 내 번호를 눌러 주세요</h2>
-    <div class="hint">선생님이 알려 준 <b>숫자 번호</b>만 누르면 돼요 (예: 601)</div>
-    <div id="numShow" class="empty">번호를 눌러 주세요</div>
-    <div class="pad">
-      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
-      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
-      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
-      <button class="del" data-k="del">←</button><button data-k="0">0</button><button class="go" data-k="go">시작!</button>
+    <h2>🙋 내 코드를 눌러 주세요</h2>
+    <div class="hint">연구자에게 받은 <b>4자리 코드</b>를 눌러 주세요 (예: HQ3T)</div>
+    <div id="codeShow" aria-live="polite" aria-label="입력한 코드">
+      <span class="cbox"></span><span class="cbox"></span><span class="cbox"></span><span class="cbox"></span>
     </div>
-    <div id="lgErr"></div>
+    <div class="padhint">글자를 누르면 칸이 채워져요</div>
+    <div class="pad" id="padGrid"></div>
+    <div class="padrow">
+      <button class="del" data-k="del">← 지우기</button><button class="go" data-k="go">시작!</button>
+    </div>
+    <div id="lgErr" role="alert"></div>
     <button class="ghost" id="guestBtn">🔎 로그인 없이 둘러보기 (기록이 남지 않아요)</button>
   </div>
 </div>
 
 <script>
-/* 허브 — 식별 번호(연구자 부여 코드)만 사용, 성명·이메일·계정 미수집.
+/* 허브 — 식별 코드(연구자가 부여한 4자리 영문 대문자+숫자)만 사용, 성명·이메일·계정 미수집.
    저장 키·형식은 구버전 v3와 동일: rs3_user {code,ts}, rs3_done:<code>, rs3_cards:<code> */
 const LOG_EP='https://script.google.com/macros/s/AKfycbw_-WjYHiIiDEGX_F0eLEfIn14iY-GIWr6NTcZbpMlIlp-7hTc6CFDAA848NdprWKw7/exec';
 const LOG_TK='ratiosense-2026';
+/* 허용 문자 — 혼동하기 쉬운 글자·숫자(B I L O S Z / 0 1 2 5 8)는 제외 */
+const CODE_LETTERS='ACDEFGHJKMNPQRTUVWXY';
+const CODE_DIGITS='34679';
+const CODE_CHARS=CODE_LETTERS+CODE_DIGITS;
+const CODE_RE=new RegExp('^['+CODE_CHARS+']{4}$');
 const $=s=>document.querySelector(s);
 function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
-function sendLog(code,ev,data){try{
+
+/* ── 로그: 각 방과 같은 중복 적재 방지 규칙 ──
+   ① 큐에 쌓아 두고 flush ② 꺼낸 배치는 inflight에 "전송 중"으로 보관 → 성공하면 폐기, 진짜 네트워크 실패일 때만 큐로 복귀
+   ③ 전송이 확인된 eventId는 다시 보내지 않는다(visibilitychange+pagehide 이중 beacon 차단)
+   ④ 배치를 만들 때 같은 eventId가 이미 있으면 제외
+   fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해 실패로 오인하고 재전송하는 일을 막는다 */
+const LOG={q:[],sent:{},sentIds:[],inflight:{},bid:0,sending:false,sess:uid(),seq:0};
+function plog(code,ev,data){try{
   if(!code||code==='guest')return; /* 게스트는 미전송 */
-  const body=JSON.stringify({token:LOG_TK,records:[{_t:'events',schemaVersion:'1',sessionId:uid(),
-    userCode:code,userName:'',seq:1,clientTs:new Date().toISOString(),eventId:uid(),
-    tab:'hubV3',eventType:'pilot.hubV3.'+ev,payload:JSON.stringify(data||{})}]});
-  if(navigator.sendBeacon)navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'}));
-  else fetch(LOG_EP,{method:'POST',headers:{'Content-Type':'text/plain'},body}).catch(()=>{});
+  LOG.q.push({_t:'events',schemaVersion:'1',sessionId:LOG.sess,userCode:code,userName:'',
+    seq:++LOG.seq,clientTs:new Date().toISOString(),eventId:uid(),
+    tab:'hubV3',eventType:'pilot.hubV3.'+ev,payload:JSON.stringify(data||{})});
+  flushLog();
 }catch(e){}}
+function logMark(ids){for(let i=0;i<ids.length;i++)if(!LOG.sent[ids[i]]){LOG.sent[ids[i]]=1;LOG.sentIds.push(ids[i]);}
+  while(LOG.sentIds.length>800)delete LOG.sent[LOG.sentIds.shift()];}
+function logBatch(max){const batch=[],seen={};
+  while(LOG.q.length&&batch.length<max){const r=LOG.q.shift();
+    if(!r||!r.eventId||LOG.sent[r.eventId]||seen[r.eventId])continue; /* 이미 보냈거나 배치 내 중복 */
+    seen[r.eventId]=1;batch.push(r);}
+  return batch;}
+function flushLog(beacon){try{
+  if(!LOG.q.length)return;
+  const useBeacon=!!(beacon&&navigator.sendBeacon);
+  if(!useBeacon&&LOG.sending)return; /* 진행 중이면 새 POST를 만들지 않음 */
+  const batch=logBatch(50);
+  if(!batch.length)return;
+  const ids=batch.map(r=>r.eventId);
+  const body=JSON.stringify({token:LOG_TK,records:batch});
+  const bid='b'+(++LOG.bid);LOG.inflight[bid]=batch;
+  if(useBeacon){let ok=false;
+    try{ok=navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'}));}catch(e){ok=false;}
+    delete LOG.inflight[bid];
+    if(ok)logMark(ids);else LOG.q.unshift.apply(LOG.q,batch);
+    return;}
+  LOG.sending=true;
+  const settle=ok=>{delete LOG.inflight[bid];LOG.sending=false;
+    if(ok)logMark(ids);else LOG.q.unshift.apply(LOG.q,batch);};
+  fetch(LOG_EP,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body})
+    .then(()=>settle(true),()=>settle(false));
+}catch(e){LOG.sending=false;}}
+setInterval(()=>flushLog(),5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushLog(true);});
+addEventListener('pagehide',()=>flushLog(true));
+
 function saveUser(code){try{localStorage.setItem('rs3_user',JSON.stringify({code,ts:Date.now()}));}catch(e){}}
 function getUser(){try{return (JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){return '';}}
 function uk(b){return b+':'+(getUser()||'anon');}
 function getDone(){try{return JSON.parse(localStorage.getItem(uk('rs3_done'))||'[]');}catch(e){return [];}}
 function getCards(){try{return JSON.parse(localStorage.getItem(uk('rs3_cards'))||'[]');}catch(e){return [];}}
 
-let num='';
-function paint(){const s=$('#numShow');
-  if(num){s.textContent=num;s.classList.remove('empty');}
-  else{s.textContent='번호를 눌러 주세요';s.classList.add('empty');}}
-function openLogin(){num='';paint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
+let code='';
+function paint(){const b=$('#codeShow').children;
+  for(let i=0;i<4;i++){const el=b[i];el.textContent=code[i]||'';
+    el.className='cbox'+(code[i]?' filled':(i===code.length?' cur':''));}}
+function openLogin(){code='';paint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
 function showChip(code){
-  $('#chipNo').textContent=code==='guest'?'게스트':code+'번';
+  $('#chipNo').textContent=code==='guest'?'게스트':code;
   $('#chip').style.display='inline-block';
   $('#chgBtn').style.display='inline-block';
   $('#guestNote').style.display=code==='guest'?'inline-flex':'none';}
@@ -154,14 +209,34 @@ function refresh(){
     if(dn.includes(a.dataset.r)){const s=document.createElement('span');s.className='donechk';s.textContent='✅';a.appendChild(s);}
     if(a.dataset.r===next&&(a.dataset.r!=='eval'||evalOpen))a.classList.add('next-room');});
 }
-document.querySelectorAll('.pad button').forEach(b=>b.onclick=()=>{
-  const k=b.dataset.k;
-  if(k==='del'){num=num.slice(0,-1);}
-  else if(k==='go'){
-    if(!/^\d{1,4}$/.test(num)){$('#lgErr').textContent='숫자를 1~4자리로 눌러 주세요!';return;}
-    saveUser(num);showChip(num);$('#loginOv').style.display='none';sendLog(num,'login',{});refresh();return;}
-  else{if(num.length<4)num+=k;}
-  $('#lgErr').textContent='';paint();});
+/* 화면 키패드 — 허용 문자만 생성(글자 20 + 숫자 5) */
+(function(){const pg=$('#padGrid');
+  CODE_CHARS.split('').forEach(ch=>{const b=document.createElement('button');
+    b.type='button';b.dataset.k=ch;b.textContent=ch;
+    if(CODE_DIGITS.indexOf(ch)>=0)b.className='num';
+    pg.appendChild(b);});})();
+function submitCode(){
+  if($('#loginOv').style.display!=='flex')return; /* Enter+클릭이 겹쳐 두 번 들어오는 것 차단 */
+  const v=code.toUpperCase();
+  if(!CODE_RE.test(v)){$('#lgErr').textContent='연구자에게 받은 4자리 코드를 입력해 주세요';return;}
+  saveUser(v);showChip(v);$('#loginOv').style.display='none';plog(v,'login',{});refresh();}
+function press(k){
+  if(k==='del'){code=code.slice(0,-1);}
+  else if(k==='go'){submitCode();return;}
+  else if(code.length<4){code+=String(k).toUpperCase();}
+  $('#lgErr').textContent='';paint();}
+$('#padGrid').onclick=e=>{const b=e.target.closest('button');if(b)press(b.dataset.k);};
+document.querySelectorAll('.padrow button').forEach(b=>b.onclick=()=>press(b.dataset.k));
+/* 크롬북·태블릿 외장 키보드 입력도 그대로 받는다(소문자는 자동으로 대문자 변환) */
+addEventListener('keydown',e=>{
+  if($('#loginOv').style.display!=='flex')return;
+  if(e.key==='Backspace'){e.preventDefault();press('del');return;}
+  if(e.key==='Enter'){e.preventDefault();press('go');return;}
+  if(e.key.length!==1||e.ctrlKey||e.metaKey||e.altKey)return;
+  const ch=e.key.toUpperCase();
+  e.preventDefault();
+  if(CODE_CHARS.indexOf(ch)>=0)press(ch);
+  else $('#lgErr').textContent='코드에 쓰지 않는 글자예요. 화면에 있는 글자 중에서 눌러 주세요';});
 $('#guestBtn').onclick=()=>{saveUser('guest');showChip('guest');$('#loginOv').style.display='none';refresh();};
 $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');}catch(e){}
   $('#chip').style.display='none';$('#chgBtn').style.display='none';$('#guestNote').style.display='none';openLogin();};

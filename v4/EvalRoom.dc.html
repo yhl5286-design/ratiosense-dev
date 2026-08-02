@@ -405,17 +405,57 @@ class Component extends DCLogic {
       if (this._q.length >= 10) this.flush();
     } catch(e) {}
   }
+  /* ── 로그 전송: 중복 적재 방지 ──
+     ① _sending 플래그 — fetch가 진행 중이면 새 POST를 만들지 않는다(동시 flush 차단)
+     ② 꺼낸 배치는 _inflight에 "전송 중"으로 보관 → 성공하면 폐기, 진짜 네트워크 실패일 때만 큐로 되돌려 재시도(자료 유실 방지)
+     ③ 전송이 확인된 eventId는 _sentSet에 남겨 다시 보내지 않는다(visibilitychange+pagehide 이중 beacon 차단)
+     ④ 배치를 만들 때 같은 eventId가 이미 있으면 제외한다
+     fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해(CORS 등) 실패로 오인하고
+     재전송하는 일을 막고, 페이지가 닫혀도 요청이 끝까지 나가게 한다. */
+  _logMark(ids) {
+    this._sentSet = this._sentSet || {}; this._sentIds = this._sentIds || [];
+    for (let i = 0; i < ids.length; i++) if (!this._sentSet[ids[i]]) { this._sentSet[ids[i]] = 1; this._sentIds.push(ids[i]); }
+    while (this._sentIds.length > 800) delete this._sentSet[this._sentIds.shift()];
+  }
+  _logBatch(max) {
+    this._sentSet = this._sentSet || {};
+    const q = this._q || [], batch = [], seen = {};
+    while (q.length && batch.length < max) {
+      const r = q.shift();
+      if (!r || !r.eventId || this._sentSet[r.eventId] || seen[r.eventId]) continue; /* 이미 보냈거나 배치 내 중복 */
+      seen[r.eventId] = 1; batch.push(r);
+    }
+    return batch;
+  }
   flush(beacon) {
     try {
       if (!this._q || !this._q.length) return;
-      const batch = this._q.splice(0);
+      const useBeacon = !!(beacon && navigator.sendBeacon);
+      if (!useBeacon && this._sending) return;
+      const batch = this._logBatch(50);
+      if (!batch.length) return;
+      const ids = batch.map(r => r.eventId);
       const body = JSON.stringify({ token:this.LOG_TK, records:batch });
-      if (beacon && navigator.sendBeacon) {
-        if (!navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' }))) this._q.unshift.apply(this._q, batch);
+      this._inflight = this._inflight || {};
+      this._bid = (this._bid || 0) + 1;
+      const bid = 'b' + this._bid;
+      this._inflight[bid] = batch;
+      if (useBeacon) {
+        let ok = false;
+        try { ok = navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' })); } catch(e) { ok = false; }
+        delete this._inflight[bid];
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
         return;
       }
-      fetch(this.LOG_EP, { method:'POST', headers:{ 'Content-Type':'text/plain' }, body }).catch(() => { this._q.unshift.apply(this._q, batch); });
-    } catch(e) {}
+      this._sending = true;
+      const settle = (ok) => {
+        delete this._inflight[bid];
+        this._sending = false;
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+      };
+      fetch(this.LOG_EP, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain' }, body })
+        .then(() => settle(true), () => settle(false));
+    } catch(e) { this._sending = false; }
   }
   ukey(b) { return b + ':' + (this._user || 'anon'); }
 
