@@ -94,11 +94,11 @@
   <div class="rooms">
     <a class="room" data-r="color" href="ColorRoom.dc.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">화가의 잃어버린 색을<br>실험으로 찾아요</div></a>
     <a class="room" data-r="sound" href="SoundRoom.dc.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
-    <div class="room locked" data-r="map" aria-disabled="true"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div><span class="locktag">🔒 준비 중</span></div>
+    <a class="room" data-r="map" id="mapCard" href="MapRoom.dc.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div><span class="locktag" id="mapLock" style="display:none">🔒 색·소리 방을 마치면 열려요</span></a>
     <div class="room locked" data-r="mart" aria-disabled="true"><div class="badge">4</div><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div><span class="locktag">🔒 준비 중</span></div>
-    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html"><div class="badge">5</div><div class="em">📝</div><div class="nm">평가의 방</div><div class="ds">5문제 · 비밀 카드 4장,<br>그리고 마지막 문</div><span class="locktag" id="evalLock" style="display:none">🔒 색·소리 방을 마치면 열려요</span></a>
+    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html"><div class="badge">5</div><div class="em">📝</div><div class="nm">평가의 방</div><div class="ds">5문제 · 비밀 카드 4장,<br>그리고 마지막 문</div><span class="locktag" id="evalLock" style="display:none">🔒 색·소리·지도 방을 마치면 열려요</span></a>
   </div>
-  <div class="foot">탐험 순서: 1번 색깔 → 2번 소리 → (3~5번 방은 준비 중) — 방이 끝나면 허브로 돌아와 다음 방으로 이어가요!</div>
+  <div class="foot">탐험 순서: 색깔 → 소리 → 지도 → 평가 (4번 마트는 준비 중) — 방이 끝나면 허브로 돌아와 다음 방으로 이어가요! · 게스트로 입장하면 모든 방을 자유롭게 둘러볼 수 있어요.</div>
 </div>
 
 <div id="loginOv">
@@ -194,10 +194,18 @@ function showChip(code){
 function refresh(){
   const dn=getDone();
   $('#walN').textContent=getCards().length;
-  const ORDER=['color','sound','eval'];
+  const ORDER=['color','sound','map','eval'];
   const next=ORDER.find(r=>!dn.includes(r));
-  /* 평가의 방 게이트: 색·소리 완료 후 열림 */
-  const evalOpen=dn.includes('color')&&dn.includes('sound');
+  const guest=(getUser()==='guest');
+  /* 지도 방 게이트: 색·소리 완료 후 열림 (게스트는 항상 열림) */
+  const mapOpen=guest||(dn.includes('color')&&dn.includes('sound'));
+  const mc=$('#mapCard');
+  if(mc){mc.classList.toggle('locked',!mapOpen);
+    $('#mapLock').style.display=mapOpen?'none':'inline-flex';
+    if(!mapOpen){mc.removeAttribute('href');mc.onclick=e=>{e.preventDefault();};}
+    else{mc.setAttribute('href','MapRoom.dc.html');mc.onclick=null;}}
+  /* 평가의 방 게이트: 색·소리·지도 완료 후 열림 (게스트는 항상 열림) */
+  const evalOpen=guest||(dn.includes('color')&&dn.includes('sound')&&dn.includes('map'));
   const ec=$('#evalCard');
   if(ec){ec.classList.toggle('locked',!evalOpen);
     $('#evalLock').style.display=evalOpen?'none':'inline-flex';
@@ -207,7 +215,7 @@ function refresh(){
     a.classList.remove('next-room');
     const old=a.querySelector('.donechk'); if(old)old.remove();
     if(dn.includes(a.dataset.r)){const s=document.createElement('span');s.className='donechk';s.textContent='✅';a.appendChild(s);}
-    if(a.dataset.r===next&&(a.dataset.r!=='eval'||evalOpen))a.classList.add('next-room');});
+    if(!guest&&a.dataset.r===next&&(a.dataset.r!=='eval'||evalOpen)&&(a.dataset.r!=='map'||mapOpen))a.classList.add('next-room');});
 }
 /* 화면 키패드 — 허용 문자만 생성(글자 20 + 숫자 5) */
 (function(){const pg=$('#padGrid');

@@ -463,6 +463,7 @@ class Component extends DCLogic {
     this._seq = 0;
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
     if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
@@ -743,7 +744,7 @@ class Component extends DCLogic {
       v.doorGo = () => this.doorTry();
     }
 
-    const needsSolve = ['sense','door'].indexOf(st.k) >= 0;
+    const needsSolve = (['sense','door'].indexOf(st.k) >= 0) && !this._guest;
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finale' ? '처음으로' : '다음 →');
     v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
     v.footHint = (needsSolve && !solved) ? (st.k === 'door' ? '카드의 숫자로 문을 열면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '';
