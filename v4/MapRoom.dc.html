@@ -1176,6 +1176,25 @@ class Component extends DCLogic {
     this.setState({ cards: got.length });
   }
 
+  /* 자막 다듬기 —
+     (1) 인물 이름은 작은따옴표로 감싸 대사 속에서 눈에 띄게 한다(이미 감싼 것은 그대로 둔다).
+     (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
+     화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
+     '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
+  NAMES = ['에라토스테네스','시냐크','레시오','먼셀','뭉크'];
+  markNames(t) {
+    let s = String(t);
+    this.NAMES.forEach(n => {
+      s = s.replace(new RegExp("(?<![\u0027\u2018\u2019])" + n + "(?![\u0027\u2018\u2019])", 'g'),
+                    "'" + n + "'");
+    });
+    return s;
+  }
+  wrapSay(t) {
+    if (!t) return '';
+    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+  }
+
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
   blankKeys() {
     const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
@@ -1261,7 +1280,7 @@ class Component extends DCLogic {
       coachImgEl: who.img ? this.coachPortrait(who) : null,
       coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name, coachRole: who.role,
       /* 대사가 빈 단계(m-prop)는 음성 없이 화면 글로만 안내 — screen은 읽어 주지 않습니다 */
-      coachText: st.say || st.screen || '',
+      coachText: this.wrapSay(st.say || st.screen || ''),
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story', isScale: st.k === 'scale', isZoom: st.k === 'zoom',

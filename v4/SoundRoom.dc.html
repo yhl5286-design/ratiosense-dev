@@ -1920,6 +1920,25 @@ class Component extends DCLogic {
   }
 
   /* ── 9) 비밀 카드 빈칸 (blank) — ColorRoom 관례 ── */
+  /* 자막 다듬기 —
+     (1) 인물 이름은 작은따옴표로 감싸 대사 속에서 눈에 띄게 한다(이미 감싼 것은 그대로 둔다).
+     (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
+     화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
+     '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
+  NAMES = ['에라토스테네스','시냐크','레시오','먼셀','뭉크'];
+  markNames(t) {
+    let s = String(t);
+    this.NAMES.forEach(n => {
+      s = s.replace(new RegExp("(?<![\u0027\u2018\u2019])" + n + "(?![\u0027\u2018\u2019])", 'g'),
+                    "'" + n + "'");
+    });
+    return s;
+  }
+  wrapSay(t) {
+    if (!t) return '';
+    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+  }
+
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
   blankKeys() {
     const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
@@ -2511,8 +2530,8 @@ class Component extends DCLogic {
       coachImgEl: who.img ? this.coachPortrait(who) : null,
       /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
       coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name, coachRole: who.role,
-      coachText: st.k === 'story' ? st.lines.join('\n')
-        : (st.k === 'rooms' ? this.roomsSay(S.roomStage) : (st.say || '')),
+      coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n')
+        : this.wrapSay(st.k === 'rooms' ? this.roomsSay(S.roomStage) : st.say),
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story', storyEmoji: st.emoji || '', storyCap: st.cap || '',
