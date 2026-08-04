@@ -41,17 +41,41 @@ button{font-family:inherit}
 .rs-pad:active{transform:scale(.94);background:var(--color-accent-100);border-color:var(--color-accent-400)}
 @media (max-width:1080px){.rs-fit{zoom:.85}}
 @media (max-width:700px){.rs-fit{zoom:.6}}
+/* ── 무대 카드 + 대사 자막 ──
+   도우미 대사는 좀은 좌측 세로 패널이 아니라 무대 카드 상단에 얹힌 자막 띄로 보여 준다.
+   자막 띄·과제 영역·이동 막대가 한 카드 안의 세 층이라 같은 면으로 읽히고,
+   조작물은 자막 아래 칸에만 놓이므로 자막이 조작을 가리지 않는다. */
+.rs-stage{flex:1 1 auto;width:100%;max-width:1160px;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.rs-sub{flex:none;display:flex;align-items:flex-start;gap:14px;padding:11px 18px 13px;background:var(--color-accent-100);border-bottom:2.5px solid var(--color-neutral-300);max-height:40dvh;overflow:auto}
+.rs-sub-who{flex:none;width:46px;height:46px;margin-top:2px}
+.rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rs-sub-name{font-size:15px;line-height:1.25}
+.rs-sub-role{font-size:12.5px;font-weight:700;color:var(--color-neutral-700)}
+.rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
+.rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
+.rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
+.rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
+.rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+@media (max-width:1080px){.rs-sub-text{font-size:19px}}
+@media (max-width:700px){.rs-sub{gap:9px;padding:8px 11px 10px;max-height:46dvh}.rs-sub-who{width:38px;height:38px}.rs-sub-text{font-size:17px;line-height:1.55}.rs-sub-hi{font-size:14.5px}.rs-play{padding:4px}}
+/* 좁은 화면에서 헤더가 가로로 넘치지 않도록: 간격·제목을 줄이고 진행 막대는 감춘다(진행은 n/N 글자로 읽힘) */
+@media (max-width:700px){
+  .rs-hd{gap:6px !important;padding:6px 8px !important}
+  .rs-hd-title{font-size:17px !important}
+  .rs-hd-bar{display:none !important}
+}
 </style>
 </helmet>
 
 <div style="height:100dvh;display:flex;flex-direction:column;background:var(--color-bg)">
 
-  <header style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
+  <header class="rs-hd" style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
     <a href="index.html" aria-label="홈으로" class="rs-round">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
     </a>
-    <div style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">평가의 방</div>
-    <div style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+    <div class="rs-hd-title" style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">평가의 방</div>
+    <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
@@ -59,93 +83,39 @@ button{font-family:inherit}
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
   </header>
 
-  <main style="flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:8px;padding:8px;align-content:stretch;align-items:stretch;justify-content:center">
+  <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
 
-    <aside style="flex:1 1 236px;min-width:0;max-width:320px;min-height:0;max-height:calc(100dvh - 92px);background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-2);display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-sm)">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:56px;height:56px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);flex:none;display:flex;align-items:center;justify-content:center;font-size:27px">🎼</div>
-        <div style="min-width:0">
-          <div style="font-size:16px;line-height:1.3">레시오</div>
-          <div style="font-size:12.5px;font-weight:700;color:var(--color-neutral-700)">평가의 방 안내자</div>
+    <section class="rs-stage">
+
+      <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <div class="rs-sub">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{true}}">
+          <div class="rs-sub-who" style="border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:26px">{{coachEmoji}}</div>
+        </sc-if>
+        <div class="rs-sub-body">
+          <div class="rs-sub-tag">
+            <div class="rs-sub-name">{{coachName}}</div>
+            <div class="rs-sub-role">{{coachRole}}</div>
+          </div>
+          <p class="rs-sub-text">{{coachText}}</p>
+          <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+            <div class="rs-sub-hi">{{coachHi}}</div>
+          </sc-if>
         </div>
-        <button onClick="{{replay}}" aria-label="다시 듣기" class="rs-round" style="margin-left:auto">
+        <button onClick="{{replay}}" aria-label="대사 다시 듣기" title="대사 다시 듣기" class="rs-round" style="margin-top:2px">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
       </div>
-      <p style="margin:0;font-size:16.5px;line-height:1.65;font-weight:400;text-wrap:pretty;white-space:pre-line;flex:1 1 auto;min-height:0;overflow:auto">{{coachText}}</p>
-      <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
-        <div style="font-size:15px;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:var(--radius-md);padding:8px 12px;line-height:1.5">{{coachHi}}</div>
-      </sc-if>
-    </aside>
 
-    <section style="flex:3 1 440px;min-width:0;min-height:0;max-height:calc(100dvh - 92px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;overflow:auto">
+      <div class="rs-play">
 
       <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
-          <div style="font-size:96px;line-height:1">📝</div>
-          <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:560px;line-height:1.6">같은 색 만들기 5문제 · 비밀 카드 4장 · 그리고 마지막 문</div>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{isSense}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
-          <div style="font-size:16px;background:var(--color-accent-100);color:var(--color-accent-700);border-radius:999px;padding:5px 16px">{{qLabel}}</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:680px">{{senseTitle}}</div>
-          <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap;align-items:flex-start">
-            <sc-for list="{{sensePaints}}" as="p" hint-placeholder-count="2">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3)">
-                <div style="display:flex;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:999px;background:{{p.sw}};border:2px solid var(--color-neutral-400);display:inline-block"></span><span style="font-size:17px">{{p.name}} {{p.amt}}mL</span></div>
-                <div style="display:flex;gap:6px">
-                  <button onClick="{{p.m10}}" class="rs-pill2" style="min-height:44px;min-width:52px;font-size:15px;padding:6px 10px">−10</button>
-                  <button onClick="{{p.m5}}" class="rs-pill2" style="min-height:44px;min-width:48px;font-size:15px;padding:6px 10px">−5</button>
-                  <button onClick="{{p.p5}}" style="min-height:44px;min-width:48px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-100);font-size:15px;color:var(--color-accent-700);cursor:pointer">+5</button>
-                  <button onClick="{{p.p10}}" style="min-height:44px;min-width:52px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);font-size:15px;color:var(--color-accent-700);cursor:pointer">+10</button>
-                </div>
-              </div>
-            </sc-for>
-          </div>
-          <div style="display:flex;gap:var(--space-6);justify-content:center;align-items:flex-end;flex-wrap:wrap">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
-              <div style="width:min(104px,24vw);aspect-ratio:1;border-radius:999px;border:5px solid var(--color-neutral-900);background:{{senseTgt}};box-shadow:var(--shadow-md)"></div>
-              <div style="font-size:13px;font-weight:800;color:var(--color-neutral-700)">목표 색</div>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
-              <div style="width:96px;height:120px;border:5px solid var(--color-neutral-900);border-top-width:3px;border-radius:0 0 22px 22px;position:relative;overflow:hidden;background:var(--color-neutral-100)">
-                <div style="position:absolute;left:0;right:0;bottom:0;height:{{myPct}}%;background:{{myColor}};transition:height .25s,background .25s"></div>
-              </div>
-              <div style="font-size:13px;font-weight:800;color:var(--color-neutral-700)">내가 만든 색</div>
-            </div>
-          </div>
-          <div style="background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-4);box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:6px var(--space-3);align-items:center;justify-content:center;max-width:96%">
-            <span style="font-size:12.5px;font-weight:800;color:var(--color-neutral-700)">🧪 지금 넣은 양</span>
-            <span style="font-size:20px;line-height:1.3">
-              <span style="color:var(--color-accent-700)">{{sumP0}} {{sumA}}</span><span style="font-size:14px;color:var(--color-neutral-600)">mL</span>
-              <span style="color:var(--color-neutral-600)"> : </span>
-              <span style="color:var(--color-accent-2-700)">{{sumP1}} {{sumB}}</span><span style="font-size:14px;color:var(--color-neutral-600)">mL</span>
-            </span>
-            <sc-if value="{{sumRatio}}" hint-placeholder-val="{{false}}">
-              <span style="font-size:15px;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:999px;padding:3px 12px">{{sumRatio}}</span>
-            </sc-if>
-          </div>
-          <sc-if value="{{senseUsedTxt}}" hint-placeholder-val="{{false}}">
-            <div style="font-size:12.5px;font-weight:700;color:var(--color-neutral-600);text-align:center">{{senseUsedTxt}}</div>
-          </sc-if>
-          <div style="display:flex;gap:10px;justify-content:center">
-            <button onClick="{{senseGo}}" class="rs-pill">🎨 완성!</button>
-            <button onClick="{{senseClear}}" class="rs-pill2">비우기</button>
-          </div>
-          <sc-if value="{{wonCard}}" hint-placeholder-val="{{false}}">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .45s ease" data-card-panel="1">
-              <div style="width:min(280px,80vw);border-radius:var(--radius-md);overflow:hidden;border:4px solid var(--color-accent-500);box-shadow:var(--shadow-lg);background:var(--color-neutral-100)">
-                <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:14px;text-align:center;padding:6px">🃏 비밀 카드 {{wonCard.no}}</div>
-                <div style="padding:var(--space-3);display:flex;flex-direction:column;align-items:center;gap:8px">
-                  <div style="font-size:15px;font-weight:800;text-align:center;line-height:1.6">{{wonCard.concept}}</div>
-                  <div style="font-size:44px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 26px;line-height:1.3">{{wonCard.digit}}</div>
-                </div>
-              </div>
-              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">이 숫자를 기억해 두세요!</div>
-            </div>
-          </sc-if>
+          <div style="font-size:96px;line-height:1">🔐</div>
+          <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:600px;line-height:1.6">1. + 6 + 1 + 8 — 네 자리를 이으면 무엇이 될까요?</div>
         </div>
       </sc-if>
 
@@ -154,7 +124,7 @@ button{font-family:inherit}
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
             <sc-for list="{{doorCards}}" as="c" hint-placeholder-count="4">
               <div style="width:132px;border-radius:var(--radius-md);overflow:hidden;border:3px solid var(--color-accent-500);background:var(--color-neutral-100);box-shadow:var(--shadow-sm)">
-                <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:11.5px;text-align:center;padding:4px">카드 {{c.no}}</div>
+                <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:11.5px;text-align:center;padding:4px">{{c.no}}</div>
                 <div style="padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:5px">
                   <div style="font-size:10.5px;font-weight:800;text-align:center;line-height:1.5;min-height:46px">{{c.concept}}</div>
                   <div style="font-size:27px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-sm);padding:0 16px">{{c.digit}}</div>
@@ -188,11 +158,15 @@ button{font-family:inherit}
             <figcaption style="font-size:11px;margin-top:6px;color:var(--color-neutral-600);text-align:center">산드로 보티첼리, 「비너스의 탄생」(1485년경) — Wikimedia Commons · 퍼블릭 도메인</figcaption>
           </figure>
           <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:640px">화면 비율부터 인물의 배치까지 — 이 명화 곳곳에 <b>황금비 1.618</b>이 숨어 있다고 해요.<br>해바라기 씨앗, 소라 껍데기, 그리고 여러분이 찾은 색과 소리의 비까지 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
-          <a href="index.html" onClick="{{goNext}}" class="rs-pill" style="min-height:60px;padding:16px 32px;font-size:20px">🏠 허브로 돌아가기 →</a>
+          <a href="index.html" onClick="{{goNext}}" class="rs-pill2" style="min-height:52px;padding:13px 26px;font-size:17px">🏠 여기서 마치고 허브로</a>
         </div>
       </sc-if>
 
-      <div style="flex:none;display:flex;align-items:center;gap:8px;width:min(98%,780px);justify-content:space-between;padding:2px 0 8px;margin-top:2px">
+      </div>
+
+      <!-- 이동 막대 — 무대 카드 아래층에 고정(과제 영역이 길어져도 가려지지 않음) -->
+      <div class="rs-nav">
+        <div class="rs-nav-in">
         <button onClick="{{prev}}" aria-label="이전" class="rs-pill2" style="opacity:{{prevOp}};min-height:48px;font-size:15px;color:var(--color-neutral-700)">← 이전</button>
         <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
           <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
@@ -200,6 +174,7 @@ button{font-family:inherit}
           </sc-if>
         </div>
         <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </div>
       </div>
     </section>
   </main>
@@ -228,72 +203,35 @@ class Component extends DCLogic {
   LOG_TK = 'ratiosense-2026';
   LAB = 'evalV3';
 
-  /* v3 eval.html의 색 엔진 그대로 (노랑+파랑 초록 보정 포함) */
-  PRIM = { '빨강':[230,40,55], '노랑':[250,215,45], '파랑':[45,100,205] };
-  mix(c) {
-    const ks = Object.keys(c).filter(k => c[k] > 0), t = ks.reduce((s,k) => s + c[k], 0);
-    if (!t) return [252,250,245];
-    const o = [0,0,0];
-    ks.forEach(k => { const w = c[k]/t, p = this.PRIM[k]; for (let i=0;i<3;i++) o[i] += p[i]*w; });
-    let out = o.map(v => Math.round(v));
-    if (ks.length === 2 && ks.indexOf('노랑') >= 0 && ks.indexOf('파랑') >= 0) {
-      out[0] = Math.round(out[0]*0.4); out[1] = Math.min(255, Math.round(out[1]*1.15)); out[2] = Math.round(out[2]*0.6);
-    }
-    return out;
-  }
-  rgb(a) { return 'rgb(' + a[0] + ',' + a[1] + ',' + a[2] + ')'; }
-
-  /* 같은 색 만들기 1~5 — v3 eval.html의 sense 문제(FAM·판정 로직 원본 그대로) */
-  FAM = [
-    { id:'진한 주황', paints:['빨강','노랑'], r:[2,1] },
-    { id:'주황',     paints:['빨강','노랑'], r:[1,1] },
-    { id:'자주',     paints:['빨강','파랑'], r:[2,1] }
-  ];
-  /* 비밀카드 4장 — 내용·숫자(1·6·1·8=φ) 유지, 문제 2~5 해결 시 1장씩 지급(색 2장 → 소리 2장) */
+  /* 비밀 카드 4장 — 참여를 시작할 때 1. 을 받고, 색깔·소리·지도 방을 마칠 때마다 한 자리씩 더한다.
+     이 방에서는 카드를 새로 주지 않고, 모은 네 자리로 마지막 문을 열기만 한다. */
   CARDS = [
-    { id:'eval0', digit:'1', concept:'양이 달라도 비율이 같으면 같은 색!',
-      say:'양이 달라도 비율이 같으면 같은 색! 첫 번째 비밀 카드예요. 카드의 숫자는 1이에요.' },
-    { id:'eval1', digit:'6', concept:'「~에 대한」 앞의 양이 기준량!',
-      say:'비를 읽을 때, 에 대한, 앞에 온 양이 기준량이에요! 두 번째 비밀 카드예요. 카드의 숫자는 6이에요.' },
-    { id:'eval2', digit:'1', concept:'진동수의 비가 간단할수록 어울리는 화음!',
-      say:'색 문제를 풀고 있지만, 소리의 비밀에서 배운 것도 카드로 남겨요. 진동수의 비가 간단할수록 어울리는 화음! 세 번째 카드의 숫자는 1이에요.' },
-    { id:'eval3', digit:'8', concept:'줄의 길이와 음높이는 서로 반대!',
-      say:'줄의 길이와 음높이는 서로 반대! 마지막 비밀 카드예요. 카드의 숫자는 8이에요.' }
+    { id:'start', digit:'1.', room:'🚪 탐색을 시작할 때', concept:'비의 비밀을 찾아 떠나는 열쇠' },
+    { id:'color', digit:'6',  room:'🎨 색깔의 비밀',     concept:'양이 달라도 비가 같으면 같은 색!' },
+    { id:'sound', digit:'1',  room:'🎼 소리의 비밀',     concept:'진동수의 비가 간단할수록 어울리는 화음!' },
+    { id:'map',   digit:'8',  room:'🗺️ 지도의 비밀',     concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' }
   ];
   WHO = {
-    ratio:    { name:'레시오', role:'평가의 방 안내자', pitch:1.06, rate:1.04, gap:160 },
+    /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
+       emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
+    ratio:    { name:'레시오', role:'비의 비밀 탐색 안내자', emoji:'🎼',
+                img:'ratio_portrait.jpg', imgBare:1, pitch:1.06, rate:1.04, gap:160 },
     narrator: { name:'안내', role:'문제를 읽어 주는 목소리', pitch:1.18, rate:1.06, gap:150 }
   };
 
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
-    amt:{},
     doorVal:'', doorOpen:false
   };
 
   get STEPS() {
     return [
       { k:'story',
-        lines:['드디어 평가의 방이에요! 같은 색 만들기 다섯 문제로 비의 감각을 확인해 봐요.',
-               '문제를 풀어 가면 비밀 카드 네 장이 모여요. 카드의 숫자로 마지막 문을 열 수 있어요!'],
-        btn:'평가 시작! →' },
-      { k:'sense', fi:0, kk:0, n:1,
-        say:'첫 번째 문제예요. 빨강과 노랑을 2 대 1로 섞어 진한 주황색을 만들어 보세요.',
-        hi:'🎨 문제 1 — 빨강 : 노랑 = 2 : 1' },
-      { k:'sense', fi:1, kk:0, n:2,
-        say:'두 번째 문제예요. 이번엔 빨강과 노랑을 1 대 1로 섞어 주황색을 만들어 보세요.',
-        hi:'🎨 문제 2 — 빨강 : 노랑 = 1 : 1' },
-      { k:'sense', fi:1, kk:1, n:3,
-        say:'세 번째 문제예요. 같은 주황색을 아까와 다른 양으로 다시 만들어 보세요. 비가 같으면 정말 같은 색이 나올까요?',
-        hi:'🎨 문제 3 — 같은 주황을 다른 양으로!' },
-      { k:'sense', fi:2, kk:0, n:4,
-        say:'네 번째 문제예요. 이번엔 빨강과 파랑을 2 대 1로 섞어 자주색을 만들어 보세요.',
-        hi:'🎨 문제 4 — 빨강 : 파랑 = 2 : 1' },
-      { k:'sense', fi:2, kk:1, n:5,
-        say:'마지막 문제예요. 같은 자주색을 또 다른 양으로 만들어 보세요. 양이 달라도 비가 같으면 같은 색이지요!',
-        hi:'🎨 문제 5 — 같은 자주를 다른 양으로!' },
+        lines:['드디어 마지막 방이에요! 참여를 시작할 때 받은 1. 과 색깔·소리·지도 방에서 하나씩 모은 6, 1, 8 — 비밀 카드 네 장이 여기 다 모였어요.',
+               '카드에 적힌 숫자를 차례로 눌러 마지막 문을 열어 봐요!'],
+        btn:'문 앞으로 →' },
       { k:'door',
-        say:'카드 네 장을 모두 모았어요! 카드에 적힌 숫자를 문제 순서대로 눌러 마지막 문을 열어 보세요.',
+        say:'카드 네 장이 모두 모였어요! 시작할 때 받은 1. 부터 색깔, 소리, 지도 순서대로 숫자를 눌러 마지막 문을 열어 보세요.',
         hi:'🔐 마지막 문 — 카드의 숫자 네 개' },
       { k:'finale',
         say:'1.618, 황금비는 예로부터 가장 아름답다고 여겨진 비예요. 보티첼리의 비너스의 탄생 같은 명화에도, 해바라기 씨앗과 소라 껍데기에도 이 비가 숨어 있어요. 색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있답니다. 긴 여정을 함께해 줘서 정말 고마워요!',
@@ -468,7 +406,7 @@ class Component extends DCLogic {
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
-    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').filter(x => x.indexOf('eval') === 0).length; } catch(e) {}
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
     this.setState({ audio, cards });
     this._flushT = setInterval(() => this.flush(), 5000);
     this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
@@ -485,10 +423,38 @@ class Component extends DCLogic {
     this.stopVoice(); this.flush(true);
   }
 
+  /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
+     who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
+     초상 뒤에 이모지를 깔아 두고, 이미지 로드에 실패하면 이미지를 감춰 이모지가 대신 보이게 한다. */
+  coachPortrait(who) {
+    const bare = !!who.imgBare;
+    return React.createElement('div', { key: who.img,
+      style: { position:'relative', width:'100%', height:'100%', borderRadius:'999px', overflow:'hidden',
+               border: bare ? 'none' : '3px solid var(--color-accent-400)' } },
+      /* 대체 표시 — 초상 아래에 깔린 이모지 원. 초상이 뜨면 완전히 가려지고, 로드에 실패하면 드러난다 */
+      React.createElement('div', { key:'fb',
+        style: { position:'absolute', inset:'0', borderRadius:'999px',
+                 background:'var(--color-accent-200)', display:'flex', alignItems:'center',
+                 justifyContent:'center', fontSize:'27px',
+                 border: bare ? '3px solid var(--color-accent-400)' : 'none' } }, who.emoji || ''),
+      React.createElement('img', { key:'p', src: who.img, alt: '',
+        onError: (e) => { try { e.currentTarget.style.display = 'none'; } catch(err) {} },
+        style: { position:'absolute', inset:'0', width:'100%', height:'100%',
+                 objectFit:'cover', display:'block' } })
+    );
+  }
+
+  /* 문제 지문처럼 <b>·<br>이 섞인 짧은 HTML을 그대로 보여 주는 조각 */
+  htmlEl(key, html, style) {
+    return React.createElement('div', { key: key, style: style || {},
+      dangerouslySetInnerHTML: { __html: html } });
+  }
+
   sayStep(i) {
     const s = this.STEPS[i];
     if (!s) return;
-    this.speak(s.k === 'story' ? s.lines.join(' ') : s.say, 'ratio');
+    const t = s.k === 'story' ? s.lines.join(' ') : s.say;
+    if (t) this.speak(t, 'ratio');
   }
   autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3000); }
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
@@ -517,7 +483,7 @@ class Component extends DCLogic {
     this.stopVoice();
     clearTimeout(this._tT);
     clearTimeout(this._autoT);
-    const patch = { i:n, toast:null, amt:{}, doorVal:'' };
+    const patch = { i:n, toast:null, doorVal:'' };
     if (this.STEPS[n].k === 'finale') {
       setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
     }
@@ -570,63 +536,6 @@ class Component extends DCLogic {
     else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
   }
 
-  /* ── 같은 색 만들기 (v3 sense 판정 로직 원본: a·r1===b·r0, 가족 단위 같은 양 재사용 차단) ── */
-  senseAdd(name, d) {
-    const amt = Object.assign({}, this.state.amt);
-    amt[name] = Math.max(0, (amt[name] || 0) + d);
-    this.sfx('tap');
-    this.setState({ amt });
-  }
-  senseGo() {
-    const st = this.STEPS[this.state.i];
-    const f = this.FAM[st.fi], p0 = f.paints[0], p1 = f.paints[1], r0 = f.r[0], r1 = f.r[1];
-    const a = this.state.amt[p0] || 0, b = this.state.amt[p1] || 0;
-    this.plog('sense_try', { n: st.n, a, b });
-    if (!(a > 0 && b > 0)) { this.toastRetry(p0 + '과 ' + p1 + '을 둘 다 넣어야 섞을 수 있어요. 둘 다 넣고 완성을 눌러 볼까요?'); return; }
-    if (!(a * r1 === b * r0)) {
-      /* v3 원문 기준 + 단계 힌트(지침 6.5) */
-      this.toastRetry(this.hintNext('sense' + st.n, [
-        '아직 목표 색이 아니에요. ' + r0 + ' 대 ' + r1 + '의 비를 다시 생각해 볼까요?',
-        '내 색과 목표 색을 나란히 놓고 보면 어느 물감이 많았는지 보여요. 비교해 볼까요?',
-        '한 물감만 5씩 바꾸면 색이 변하는 방향이 보여요. 천천히 시험해 볼까요?'
-      ]));
-      return;
-    }
-    const used = this._famUsed = this._famUsed || {};
-    const arr = used[st.fi] = used[st.fi] || [];
-    const key = a + ':' + b;
-    if (arr.indexOf(key) >= 0) {
-      this.toastRetry('아까와 같은 양이에요. 이번엔 다른 양으로 만들어 볼까요?');
-      this.setState({ amt: {} });
-      return;
-    }
-    arr.push(key);
-    const g = this.gcd(a, b);
-    this.markSolved();
-    if (st.n >= 2) this.awardCard(st.n - 2, p0 + ' ' + a + ' : ' + p1 + ' ' + b + ' = ' + (a/g) + ' : ' + (b/g));
-    else { this.toastOk('맞았어요! 양은 달라도 비는 같아요!', p0 + ' ' + a + ' : ' + p1 + ' ' + b + ' = ' + (a/g) + ' : ' + (b/g)); this.autoNext(3200); }
-  }
-  gcd(a, b) { return b ? this.gcd(b, a % b) : a; }
-  /* 카드 지급 — 색 2장(동치비·기준량) 먼저, 소리 2장(간단한 비·반대) 뒤에. 지급 시 레시오가 개념을 읽어 준다 */
-  awardCard(ci, ratioTxt) {
-    const card = this.CARDS[ci];
-    let got = [];
-    try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
-    if (got.indexOf(card.id) < 0) {
-      got.push(card.id);
-      try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
-    }
-    this.plog('card', { id: card.id, digit: card.digit });
-    this.plog('success', { slide: this.state.i });
-    this.sfx('card'); this.flyCard();
-    setTimeout(() => {
-      this.setState({ cards: got.filter(x => x.indexOf('eval') === 0).length });
-      this.confetti();
-      this.toast('🃏', '맞았어요! 비밀 카드 획득!', ratioTxt + ' — ' + card.concept + ' 카드의 숫자는 ' + card.digit + '!', 'ok', true);
-      this.speak(card.say, 'ratio');
-    }, 1150);
-  }
-
   /* ── 마지막 문 (1618 = φ) ── */
   doorKey(k) {
     this.sfx('tap');
@@ -652,8 +561,8 @@ class Component extends DCLogic {
       this.sfx('oops');
       this.setState({ doorVal: '' });
       this.toastRetry(this.hintNext('door', [
-        '네 장의 카드에 적힌 숫자를 문제 순서대로 읽어 볼까요?',
-        '1번 카드부터 4번 카드까지, 숫자를 왼쪽부터 차례로 눌러 보세요.',
+'네 장의 카드에 적힌 숫자를 왼쪽부터 차례로 읽어 볼까요?',
+        '시작 카드, 색깔, 소리, 지도 순서예요. 카드 아래 숫자를 그 순서대로 눌러 보세요.',
         '카드의 숫자를 그대로 이어 붙이면 네 자리 수가 돼요 — 다시 한 번!'
       ]));
     }
@@ -689,13 +598,16 @@ class Component extends DCLogic {
       audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
+      /* 이 방의 도우미는 언제나 레시오 — 초상으로 표시하고, 이모지는 로드 실패 시 대체 표시 */
+      coachImgEl: this.WHO.ratio.img ? this.coachPortrait(this.WHO.ratio) : null,
+      coachEmoji: this.WHO.ratio.img ? '' : (this.WHO.ratio.emoji || ''),
+      coachName: this.WHO.ratio.name, coachRole: this.WHO.ratio.role,
       coachText: st.k === 'story' ? st.lines.join('\n') : (st.say || ''),
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
-      isStory: st.k === 'story', isSense: st.k === 'sense',
+      isStory: st.k === 'story',
       isDoor: st.k === 'door', isFinale: st.k === 'finale',
-      sensePaints: null, doorCards: null, doorSlots: null, doorPad: null,
-      wonCard: null, qLabel: '',
+      doorCards: null, doorSlots: null, doorPad: null,
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
@@ -710,49 +622,27 @@ class Component extends DCLogic {
       }
     };
 
-    if (st.k === 'sense') {
-      const f = this.FAM[st.fi], p0 = f.paints[0], p1 = f.paints[1], r0 = f.r[0], r1 = f.r[1];
-      const a = S.amt[p0] || 0, b = S.amt[p1] || 0, tot = a + b;
-      v.qLabel = st.hi || ('문제 ' + st.n);
-      v.senseTitle = st.kk === 0
-        ? '"' + p0 + ' : ' + p1 + ' = ' + r0 + ' : ' + r1 + '인 ' + f.id + '색 만들기" — 비가 맞으면 목표 색이 돼요!'
-        : '"같은 ' + f.id + '색을 다른 양으로 만들기" — ' + r0 + ' : ' + r1 + '은 그대로! 양을 바꿔도 같은 색이 나올까요?';
-      v.sensePaints = [p0, p1].map(nm => ({
-        name: nm, amt: S.amt[nm] || 0, sw: this.rgb(this.PRIM[nm]),
-        p5: () => this.senseAdd(nm, 5), p10: () => this.senseAdd(nm, 10),
-        m5: () => this.senseAdd(nm, -5), m10: () => this.senseAdd(nm, -10)
-      }));
-      v.senseTgt = this.rgb(this.mix({ [p0]: r0, [p1]: r1 }));
-      v.myColor = this.rgb(this.mix(S.amt));
-      v.myPct = Math.min(92, tot / 170 * 92);
-      /* 완성! 버튼 위 요약 박스: 현재 양(실시간) + 간단히 한 비 */
-      v.sumP0 = p0; v.sumP1 = p1; v.sumA = a; v.sumB = b;
-      const gg = (a > 0 && b > 0) ? this.gcd(a, b) : 0;
-      v.sumRatio = gg ? ('간단히 하면 ' + (a/gg) + ' : ' + (b/gg)) : '';
-      const used = (this._famUsed && this._famUsed[st.fi]) || [];
-      v.senseUsedTxt = st.kk === 1 && used.length
-        ? '이미 만든 양: ' + used.join(' , ') + '\n(다른 양으로!)' : '';
-      v.senseGo = () => this.senseGo();
-      v.senseClear = () => { this.sfx('tap'); this.setState({ amt: {} }); };
-      if (solved && st.n >= 2) v.wonCard = { no: st.n - 1, concept: this.CARDS[st.n - 2].concept, digit: this.CARDS[st.n - 2].digit };
-    }
-
     if (st.k === 'door') {
-      v.doorCards = this.CARDS.map((c, i) => ({ no: i + 1, concept: c.concept, digit: c.digit }));
+      v.doorCards = this.CARDS.map((c, i) => ({ no: c.room, concept: c.concept, digit: c.digit }));
       v.doorSlots = [0,1,2,3].map(i => ({ d: S.doorVal[i] || '', bd: S.doorVal[i] ? 'var(--color-accent-500)' : 'var(--color-neutral-300)' }));
       v.doorPad = ['1','2','3','4','5','6','7','8','9','⌫','0','C'].map(k => ({ k, tap: () => this.doorKey(k) }));
       v.doorGo = () => this.doorTry();
     }
 
-    const needsSolve = (['sense','door'].indexOf(st.k) >= 0) && !this._guest;
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finale' ? '처음으로' : '다음 →');
+    const last = S.i === this.STEPS.length - 1;
+    const needsSolve = (st.k === 'door') && !this._guest;
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
+      : (last ? '처음으로' : (st.k === 'finale' ? '🃏 카드 복습 →' : '다음 →'));
     v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
-    v.footHint = (needsSolve && !solved) ? (st.k === 'door' ? '카드의 숫자로 문을 열면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '';
+    v.footHint = (needsSolve && !solved)
+      ? (st.k === 'door' ? '카드의 숫자로 문을 열면 다음으로 갈 수 있어요'
+        : '문제를 해결하면 다음으로 갈 수 있어요')
+      : '';
     v.primary = () => {
-      if (st.k === 'finale') {
+      if (last) {
         this.stopVoice();
-        this._famUsed = {};
-        this.setState({ i:0, solved:{}, amt:{}, doorVal:'', doorOpen:false, toast:null });
+        this._tries = {};
+        this.setState({ i:0, solved:{}, doorVal:'', doorOpen:false, toast:null });
         setTimeout(() => this.sayStep(0), 380);
         return;
       }

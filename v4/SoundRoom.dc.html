@@ -51,17 +51,41 @@ button{font-family:inherit}
 /* 반응형: 고정 폭 조작물(피아노·12칸·하프)은 태블릿/모바일에서 축소 — 크롬북·태블릿 대상 */
 @media (max-width:1080px){.rs-fit{zoom:.85}}
 @media (max-width:700px){.rs-fit{zoom:.6}}
+/* ── 무대 카드 + 대사 자막 ──
+   도우미 대사는 좀은 좌측 세로 패널이 아니라 무대 카드 상단에 얹힌 자막 띄로 보여 준다.
+   자막 띄·과제 영역·이동 막대가 한 카드 안의 세 층이라 같은 면으로 읽히고,
+   조작물은 자막 아래 칸에만 놓이므로 자막이 조작을 가리지 않는다. */
+.rs-stage{flex:1 1 auto;width:100%;max-width:1160px;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.rs-sub{flex:none;display:flex;align-items:flex-start;gap:14px;padding:11px 18px 13px;background:var(--color-accent-100);border-bottom:2.5px solid var(--color-neutral-300);max-height:40dvh;overflow:auto}
+.rs-sub-who{flex:none;width:46px;height:46px;margin-top:2px}
+.rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rs-sub-name{font-size:15px;line-height:1.25}
+.rs-sub-role{font-size:12.5px;font-weight:700;color:var(--color-neutral-700)}
+.rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
+.rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
+.rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
+.rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
+.rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+@media (max-width:1080px){.rs-sub-text{font-size:19px}}
+@media (max-width:700px){.rs-sub{gap:9px;padding:8px 11px 10px;max-height:46dvh}.rs-sub-who{width:38px;height:38px}.rs-sub-text{font-size:17px;line-height:1.55}.rs-sub-hi{font-size:14.5px}.rs-play{padding:4px}}
+/* 좁은 화면에서 헤더가 가로로 넘치지 않도록: 간격·제목을 줄이고 진행 막대는 감춘다(진행은 n/N 글자로 읽힘) */
+@media (max-width:700px){
+  .rs-hd{gap:6px !important;padding:6px 8px !important}
+  .rs-hd-title{font-size:17px !important}
+  .rs-hd-bar{display:none !important}
+}
 </style>
 </helmet>
 
 <div style="height:100dvh;display:flex;flex-direction:column;background:var(--color-bg)">
 
-  <header style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
+  <header class="rs-hd" style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
     <a href="index.html" aria-label="홈으로" class="rs-round">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
     </a>
-    <div style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">소리의 비밀</div>
-    <div style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+    <div class="rs-hd-title" style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">소리의 비밀</div>
+    <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
@@ -70,26 +94,34 @@ button{font-family:inherit}
     <button onClick="{{openVoices}}" aria-label="목소리 고르기" title="캐릭터 목소리 고르기" class="rs-round">🎙️</button>
   </header>
 
-  <main style="flex:1;min-height:0;overflow:auto;display:flex;flex-wrap:wrap;gap:8px;padding:8px;align-content:stretch;align-items:stretch;justify-content:center">
+  <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
 
-    <aside style="flex:1 1 236px;min-width:0;max-width:320px;min-height:0;max-height:calc(100dvh - 92px);background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-2);display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow-sm)">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:56px;height:56px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);flex:none;display:flex;align-items:center;justify-content:center;font-size:27px">{{coachEmoji}}</div>
-        <div style="min-width:0">
-          <div style="font-size:16px;line-height:1.3">{{coachName}}</div>
-          <div style="font-size:12.5px;font-weight:700;color:var(--color-neutral-700)">{{coachRole}}</div>
+    <section class="rs-stage">
+
+      <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <div class="rs-sub">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{true}}">
+          <div class="rs-sub-who" style="border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:26px">{{coachEmoji}}</div>
+        </sc-if>
+        <div class="rs-sub-body">
+          <div class="rs-sub-tag">
+            <div class="rs-sub-name">{{coachName}}</div>
+            <div class="rs-sub-role">{{coachRole}}</div>
+          </div>
+          <p class="rs-sub-text">{{coachText}}</p>
+          <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+            <div class="rs-sub-hi">{{coachHi}}</div>
+          </sc-if>
         </div>
-        <button onClick="{{replay}}" aria-label="다시 듣기" class="rs-round" style="margin-left:auto">
+        <button onClick="{{replay}}" aria-label="대사 다시 듣기" title="대사 다시 듣기" class="rs-round" style="margin-top:2px">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
       </div>
-      <p style="margin:0;font-size:16.5px;line-height:1.65;font-weight:400;text-wrap:pretty;white-space:pre-line;flex:1 1 auto;min-height:0;overflow:auto">{{coachText}}</p>
-      <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
-        <div style="font-size:15px;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:var(--radius-md);padding:8px 12px;line-height:1.5">{{coachHi}}</div>
-      </sc-if>
-    </aside>
 
-    <section style="flex:3 1 440px;min-width:0;min-height:0;max-height:calc(100dvh - 92px);display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;overflow:auto">
+      <div class="rs-play">
 
       <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
@@ -301,58 +333,8 @@ button{font-family:inherit}
 
       <sc-if value="{{isPoly}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
-          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-            <button onClick="{{playDrum}}" class="rs-pill2" style="font-size:15px">{{drumLb}}</button>
-            <button onClick="{{playBell}}" class="rs-pill2" style="font-size:15px">{{bellLb}}</button>
-            <button onClick="{{playBoth}}" class="rs-pill" style="min-height:48px;font-size:16px;padding:10px 22px">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m6 3 14 9-14 9z"/></svg>
-              함께 듣기
-            </button>
-          </div>
-          <div class="rs-fit" style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);max-width:94vw;overflow-x:auto;text-align:left">
-            <div style="font-size:15px">🥁 북 — 2박마다 <span style="font-size:11.5px;color:var(--color-accent-700);font-weight:800">2칸 묶음</span></div>
-            <div style="white-space:nowrap">
-              <sc-for list="{{polyDrum}}" as="c" hint-placeholder-count="12">
-                <span style="display:inline-block;width:38px;height:38px;line-height:36px;margin:2px {{c.mr}}px 2px 2px;border-radius:var(--radius-sm);border:2px solid {{c.bd}};background:{{c.bg}};text-align:center;font-weight:800">{{c.icon}}</span>
-              </sc-for>
-            </div>
-            <div style="font-size:15px;margin-top:4px">🔔 방울 — 3박마다 <span style="font-size:11.5px;color:var(--color-accent-2-700);font-weight:800">3칸 묶음</span></div>
-            <div style="white-space:nowrap">
-              <sc-for list="{{polyBell}}" as="c" hint-placeholder-count="12">
-                <span style="display:inline-block;width:38px;height:38px;line-height:36px;margin:2px {{c.mr}}px 2px 2px;border-radius:var(--radius-sm);border:2px solid {{c.bd}};background:{{c.bg}};text-align:center;font-weight:800">{{c.icon}}</span>
-              </sc-for>
-            </div>
-            <div style="font-size:15px;margin-top:4px">🎯 함께 울리는 칸은? <span style="font-size:11.5px;color:var(--color-neutral-600);font-weight:700">두 묶음의 경계가 만나는 곳을 찾아 눌러요</span></div>
-            <div style="white-space:nowrap">
-              <sc-for list="{{polyAns}}" as="c" hint-placeholder-count="12">
-                <button onClick="{{c.tap}}" style="width:44px;height:44px;margin:2px;border-radius:var(--radius-sm);border:2px {{c.bs}} {{c.bd}};background:{{c.bg}};cursor:pointer;font-weight:800;font-size:15px;padding:0;color:var(--color-text)">{{c.n}}</button>
-              </sc-for>
-            </div>
-            <div style="font-size:15px;margin-top:6px">🎛️ 내 리듬 만들기 <span style="font-size:11.5px;color:var(--color-neutral-600);font-weight:700">칸을 눌러 리듬을 찍고 재생해 봐요</span>
-              <button onClick="{{playMine}}" class="rs-pill2" style="min-height:36px;font-size:13px;padding:5px 12px;margin-left:8px">▶ 내 리듬 재생</button></div>
-            <div style="white-space:nowrap">
-              <sc-for list="{{polyMine}}" as="c" hint-placeholder-count="12">
-                <button onClick="{{c.tap}}" aria-label="내 리듬 {{c.n}}박" style="width:44px;height:44px;margin:2px;border-radius:var(--radius-sm);border:2px {{c.bs}} {{c.bd}};background:{{c.bg}};cursor:pointer;font-weight:800;font-size:14px;padding:0;color:var(--color-text)">{{c.t}}</button>
-              </sc-for>
-            </div>
-          </div>
+          {{polyEl}}
           <div class="rs-dial" style="text-align:center;font-size:16px">{{polyMsg}}</div>
-          <sc-if value="{{polyFound}}" hint-placeholder-val="{{false}}">
-            <div style="background:var(--color-neutral-100);border:3px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-3);max-width:94vw;overflow-x:auto;text-align:center;animation:rsPop .35s ease">
-              <div style="font-size:16px">🧺 묶어서 확인! — 12칸을 직접 묶어 봐요</div>
-              <div style="white-space:nowrap;margin:8px 0">
-                <sc-for list="{{grpCells}}" as="c" hint-placeholder-count="12">
-                  <span style="display:inline-block;width:34px;height:34px;line-height:31px;margin:2px {{c.mr}}px 2px 2px;border-radius:var(--radius-sm);border:2px solid {{c.bd}};background:{{c.bg}};font-weight:800;font-size:13px">{{c.n}}</span>
-                </sc-for>
-              </div>
-              <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-                <button onClick="{{grp2}}" class="rs-pill2" style="font-size:15px">{{grp2Lb}}</button>
-                <button onClick="{{grp3}}" class="rs-pill2" style="font-size:15px">{{grp3Lb}}</button>
-                <button onClick="{{grpUndoB}}" class="rs-pill2" style="font-size:15px">{{grpUndoLb}}</button>
-              </div>
-              <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);margin-top:8px;min-height:20px">{{grpMsg}}</div>
-            </div>
-          </sc-if>
         </div>
       </sc-if>
 
@@ -420,39 +402,47 @@ button{font-family:inherit}
             <div style="background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font-size:19px;line-height:1.55;text-align:center">라(A) 음은 진동수가 <span style="color:var(--color-accent-700)">440Hz</span>!<br>라 음(440Hz)은 <span style="color:var(--color-accent-700)">세계가 함께 약속한</span> 악기 조율 <span style="color:var(--color-accent-700)">기준음</span>이에요.</div>
           </sc-if>
 
-          <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);max-width:720px;width:min(96%,720px);text-align:left">
-            <div style="font-size:18px">① 먼저 <span style="color:var(--color-accent-700)">귀로</span> 찾아 봐요! 목표 소리를 듣고, 줄 길이를 움직여 같은 소리를 찾으세요.</div>
-            <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
-              <button onClick="{{tGoal}}" class="rs-pill2">🔊 목표 소리({{harpN}}) 듣기</button>
-              <button onClick="{{tPluck}}" class="rs-pill2">♪ 내 줄 뜯기</button>
+          <sc-if value="{{harpEar}}" hint-placeholder-val="{{false}}">
+            <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);max-width:760px;width:min(96%,760px);text-align:left">
+              <div style="font-size:18px">1부 · <span style="color:var(--color-accent-700)">귀로 찾기</span> — 목표 소리를 듣고, 줄 길이를 움직여 같은 소리를 찾으세요. <b>움직이는 동안 소리가 계속 나요!</b></div>
+              <div style="display:flex;gap:8px;margin:8px 0;flex-wrap:wrap">
+                <button onClick="{{tGoal}}" class="rs-pill2">🔊 목표 소리({{harpN}}) 듣기</button>
+                <button onClick="{{tPluck}}" class="rs-pill2">♪ 내 줄 뜯어 확인하기</button>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="font-weight:800;color:var(--color-neutral-700)">짧게 ←</span>
+                <input type="range" min="36" max="72" step="0.5" value="{{harpL}}" onChange="{{harpSlide}}" onPointerUp="{{harpSlideEnd}}" onPointerCancel="{{harpSlideEnd}}" aria-label="하프 줄 길이" style="width:min(340px,54vw);accent-color:var(--color-accent)">
+                <span style="font-weight:800;color:var(--color-neutral-700)">→ 길게</span>
+                <span style="font-size:17px">{{harpLTxt}}</span>
+              </div>
+              <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);margin-top:6px">{{tuneMsg}}</div>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <span style="font-weight:800;color:var(--color-neutral-700)">짧게 ←</span>
-              <input type="range" min="36" max="72" step="0.5" value="{{harpL}}" onChange="{{harpSlide}}" aria-label="하프 줄 길이" style="width:min(340px,54vw);accent-color:var(--color-accent)">
-              <span style="font-weight:800;color:var(--color-neutral-700)">→ 길게</span>
-              <span style="font-size:17px">{{harpLTxt}}</span>
-            </div>
-            <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);margin-top:6px">{{tuneMsg}}</div>
-          </div>
+          </sc-if>
+          <sc-if value="{{harpPh1}}" hint-placeholder-val="{{false}}">
+            <div class="rs-fit">{{rulerEl}}</div>
+          </sc-if>
+          <sc-if value="{{harpEar}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:18px;font-weight:800;color:{{cellFg}};background:{{cellBg}};border:2.5px solid {{cellBd}};border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);text-align:center;max-width:760px">{{cellTxt}}</div>
+          </sc-if>
 
           <sc-if value="{{harpTuned}}" hint-placeholder-val="{{false}}">
             <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsPop .35s ease">
-              <div style="font-size:16px;font-weight:700;color:var(--color-neutral-700);max-width:720px;text-align:center;line-height:1.7">② 이제 <b>계산으로 확인</b>! 라 : {{harpN}} = <b>{{harpA}} : {{harpB}}</b> — 라 길이 72cm에 <b>{{harpA}}/{{harpB}}</b>를 곱하면 {{harpN}} 길이를 알 수 있어요. <b>식을 세우고 길이를 구하세요!</b>
-                <button onClick="{{openHelp}}" class="rs-pill2" style="min-height:40px;font-size:14px;padding:6px 14px;margin-left:6px">❓ 왜 라보다 짧아질까?</button></div>
-              <div class="rs-fit">{{harpEl}}</div>
-              <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4)">
-                <div style="font-size:22px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center">
-                  <span>{{harpN}} 줄의 길이 = 72 ×</span>
-                  <span style="display:inline-flex;flex-direction:column;align-items:center;gap:3px">
-                    <span data-blank="num" onClick="{{hbNum.tap}}" style="display:inline-block;min-width:64px;min-height:38px;padding:2px 12px;border-radius:12px 12px 0 0;border-bottom:4px solid {{hbNum.bb}};background:{{hbNum.bg}};color:{{hbNum.fg}};text-align:center;cursor:pointer;outline:{{hbNum.out}}">{{hbNum.t}}</span>
-                    <span style="align-self:stretch;min-width:64px;height:3.5px;background:var(--color-text);border-radius:2px"></span>
-                    <span data-blank="den" onClick="{{hbDen.tap}}" style="display:inline-block;min-width:64px;min-height:38px;padding:2px 12px;border-radius:0 0 12px 12px;border-top:4px solid {{hbDen.bb}};background:{{hbDen.bg}};color:{{hbDen.fg}};text-align:center;cursor:pointer;outline:{{hbDen.out}}">{{hbDen.t}}</span>
-                  </span>
-                  <span>=</span>
-                  <span data-blank="ans" onClick="{{hbAns.tap}}" style="display:inline-block;min-width:86px;min-height:42px;padding:4px 14px;border-radius:12px 12px 0 0;border-bottom:4px solid {{hbAns.bb}};background:{{hbAns.bg}};color:{{hbAns.fg}};text-align:center;cursor:pointer;outline:{{hbAns.out}}">{{hbAns.t}}</span>
-                  <span>cm</span>
-                </div>
+              <div style="background:var(--color-accent-2-100);border:3px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);max-width:760px;width:min(96%,760px);font-size:19px;line-height:1.9;text-align:center">
+                <div>🎯 귀로 찾은 <b>{{harpN}}</b> 줄은 <b style="color:var(--color-accent-2-700)">{{harpB}}칸 중 {{harpA}}칸</b>이에요!</div>
+                <div>72cm를 <b>{{harpB}}등분</b>하면 → 한 칸 = 72 ÷ {{harpB}} = <b style="color:var(--color-accent-2-700)">{{harpUnit}}cm</b></div>
+                <div>그 한 칸이 <b>{{harpA}}칸</b>이니까 → {{harpUnit}} × {{harpA}} = <b style="color:var(--color-accent-2-700)">{{harpTot}}cm</b></div>
+                <button onClick="{{openHelp}}" class="rs-pill2" style="min-height:40px;font-size:14px;padding:6px 14px;margin-top:6px">❓ 왜 라보다 짧아질까?</button>
               </div>
+              <div class="rs-fit">{{harpEl}}</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{harpCalc}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%">
+              <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);max-width:760px;width:min(96%,760px);text-align:center;font-size:18px;line-height:1.6">2부 · <span style="color:var(--color-accent-700)">칸으로 계산하기</span> — 이번엔 귀 대신 <b>칸</b>으로 구해요. {{harpN}} 줄은 <b>{{harpB}}칸 중 {{harpA}}칸</b>!
+                <button onClick="{{openHelp}}" class="rs-pill2" style="min-height:40px;font-size:14px;padding:6px 14px;margin-left:6px">❓ 왜 라보다 짧아질까?</button></div>
+              <div class="rs-fit">{{cellsEl}}</div>
+              <div class="rs-fit">{{calcEl}}</div>
               <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
                 <sc-for list="{{harpBankV}}" as="b" hint-placeholder-count="4">
                   <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:52px;padding:11px 22px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
@@ -493,14 +483,26 @@ button{font-family:inherit}
 
       <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0">
-          <div style="font-size:72px;line-height:1">🎼</div>
           <div class="rs-fit">{{harpEl}}</div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .45s ease">
+            <div style="width:min(260px,80vw);border-radius:var(--radius-md);overflow:hidden;border:4px solid var(--color-accent-500);box-shadow:var(--shadow-lg);background:var(--color-neutral-100)">
+              <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:14px;text-align:center;padding:6px">🃏 소리의 비밀 카드</div>
+              <div style="padding:var(--space-3);display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:15px;font-weight:800;text-align:center;line-height:1.6">진동수의 비가 간단할수록 어울리는 화음!</div>
+                <div style="font-size:44px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 26px;line-height:1.3">1</div>
+              </div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">황금비의 셋째 자리예요. 기억해 두세요!</div>
+          </div>
           <a href="index.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🏠 허브로 돌아가기 →</a>
-          <div style="font-size:14px;font-weight:700;color:var(--color-neutral-700)">허브로 돌아가면 📝 평가의 방이 열려요!</div>
         </div>
       </sc-if>
 
-      <div style="flex:none;display:flex;align-items:center;gap:8px;width:min(98%,780px);justify-content:space-between;padding:2px 0 8px;margin-top:2px">
+      </div>
+
+      <!-- 이동 막대 — 무대 카드 아래층에 고정(과제 영역이 길어져도 가려지지 않음) -->
+      <div class="rs-nav">
+        <div class="rs-nav-in">
         <button onClick="{{prev}}" aria-label="이전" class="rs-pill2" style="opacity:{{prevOp}};min-height:48px;font-size:15px;color:var(--color-neutral-700)">← 이전</button>
         <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
           <sc-if value="{{liveBadge}}" hint-placeholder-val="{{false}}">
@@ -511,6 +513,7 @@ button{font-family:inherit}
           </sc-if>
         </div>
         <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </div>
       </div>
     </section>
   </main>
@@ -592,7 +595,14 @@ class Component extends DCLogic {
   PERF = [0,3,4,7];
   NOTES = [['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['솔',396,3,2],['라',440,5,3],['시',495,15,8],['도′',528,2,1]];
   HBASE = 72;
-  HP = [{n:'시',a:8,b:9},{n:'도′',a:5,b:6},{n:'미′',a:2,b:3},{n:'파′',a:5,b:8},{n:'솔′',a:5,b:9}];
+  /* 하프 공방 — 두 국면 구성.
+     1부(ph:1) 귀로 찾기: 비가 복잡해 계산으로 접근하기 어려운 음(시 8:9, 파′ 5:8, 솔′ 5:9)
+       → 슬라이더 실시간 소리 + 등분 칸 눈금으로 감각 → 단위화.
+     2부(ph:2) 칸으로 계산하기: 비가 간단한 음(미′ 2:3, 도′ 5:6)
+       → 한 칸 길이(72÷b) → 반복(×a) → 곱셈식(72×a/b). */
+  HP = [{n:'시',a:8,b:9,ph:1},{n:'파′',a:5,b:8,ph:1},{n:'솔′',a:5,b:9,ph:1},
+        {n:'미′',a:2,b:3,ph:2},{n:'도′',a:5,b:6,ph:2}];
+  HP1 = 3;  /* 1부 단계 수 */
   /* 음정에 따른 분류 보기: 1차 = 완전음정(1·4·5·8도) vs 장음정(2·3·6·7도),
      2차 = 장음정을 비가 간단한 방(미·라) / 복잡한 방(레·시)으로 재분류 */
   CLS = [
@@ -612,6 +622,30 @@ class Component extends DCLogic {
   };
   SND_DUR = 1.6;
   DECAY = Math.pow(0.02, 1/(60*1.6));
+
+  /* ── 리듬(폴리리듬) = 화음의 슬로모션 ──
+     12칸·0.4초 격자. d = 🥁 북이 울리는 간격(칸), t = 🔺 트라이앵글이 울리는 간격(칸).
+     비는 앱이 먼저 말하지 않는다 — 학습자가 격자에서 간격을 세어 찾아낸다.
+     r23(2:3)은 화음의 도·솔 진동수 비, r25(2:5)는 색깔의 비밀에서 만든 노을빛 주황과 이어진다. */
+  PN = 12; PSTEP = 0.4;
+  POLY = { r23:{ d:2, t:3 }, r25:{ d:2, t:5 } };
+  /* 어울림의 기제 비교 — 간단한 비일수록 다시 만나기까지 걸리는 칸이 짧다 */
+  WHY = [ { d:2, t:3, note:'솔' }, { d:2, t:5, note:'' }, { d:8, t:9, note:'레' } ];
+  /* 트라이앵글 배음 — 정수배가 아닌 비화음 배음이라 금속성으로 들린다 */
+  TRI_P = [1, 2.13, 3.38, 4.79, 6.11, 7.42, 9.03];
+  LINKQ = {
+    r23: { q:'우리가 찾은 2 : 3 — 어디에서 만난 비일까요?',
+      opts:[ { t:'🎹 화음에서 도와 솔의 진동수 비', ok:1 },
+             { t:'📏 하프에서 라 줄의 길이', ok:0, fb:'하프에서는 줄 하나의 길이를 나누었어요. 지금은 두 소리가 함께 울릴 때의 비를 찾고 있어요.' },
+             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'별점을 매기며 만난 진동수 비 표를 떠올려 볼까요? 그 안에 2 : 3이 있었어요.' } ] },
+    r25: { q:'우리가 찾은 2 : 5 — 어디에서 만난 비일까요?',
+      opts:[ { t:'🎨 색깔의 비밀에서 만든 노을빛 주황', ok:1 },
+             { t:'🎹 화음에서 도와 솔의 진동수 비', ok:0, fb:'도와 솔은 2 : 3이었어요. 2 : 5는 소리가 아닌 다른 방에서 만났어요.' },
+             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'첫 번째 방에서 물감을 섞어 만든 색을 떠올려 볼까요?' } ] }
+  };
+  WHYQ = [ { t:'비가 간단할수록 두 소리가 더 빨리 다시 만나요', ok:1 },
+           { t:'비가 복잡할수록 더 빨리 다시 만나요', ok:0, fb:'8 : 9는 비가 가장 복잡했는데, 12칸 안에서 한 번도 만나지 못했어요. 다시 비교해 볼까요?' },
+           { t:'다시 만나는 것은 비와 상관없어요', ok:0, fb:'2 : 3과 8 : 9의 만나는 칸을 나란히 놓고 견주어 볼까요? 두 리듬이 달랐어요.' } ];
 
   /* 디자인 토큰 참조 — hex 하드코딩 대신 styles.css 변수를 문자열로 사용 */
   C = {
@@ -633,12 +667,14 @@ class Component extends DCLogic {
     vibHit:[], vibCur:-1,
     hxCur:-1,
     roomStage:'collect', grpWaveN:null,
-    polySel:[], polyBeat:0, polyPlaying:false, polyHeard:false,
-    polyFound:false, grp2:false, grp3:false, grpUndone:false, grpMode:0,
-    myBeats:[], heardDrum:false, heardBell:false,
+    polyStage:'listen', polyBeat:0, polyPlaying:false, polyTag:'',
+    heardDrum:false, heardTri:false, heardBoth:false, polyFeel:'',
+    pickD:0, pickT:0, polyFound:false, linkPick:-1,
+    whyPlayed:{}, whyPick:-1, myD:0, myT:0, myMeet:null,
+    grp2:false, grp3:false, grpUndone:false, grpMode:0,
     slL:72, swB:48,
     clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
-    harpL:72, harpTuned:false, tuneMsg:'뜯어 보고 목표 소리와 비교해 보세요!',
+    harpL:72, harpTuned:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 목표 소리와 비교해 보세요!',
     hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
     refText:'',
     blanks:{}, used:{}
@@ -648,7 +684,7 @@ class Component extends DCLogic {
     const st = [
       { k:'story', emoji:'🎼', cap:'소리의 비밀을 찾아봅시다!',
         lines:['안녕하세요! 두 번째 소리의 비밀을 찾으러 오셨군요.',
-               '저는 소리 안내자 레시오예요.',
+               '저는 비의 비밀 탐색 안내자 레시오예요.',
                '소리의 높낮이는 공기가 떨리는 빠르기, 곧 진동수로 정해져요. 두 소리가 함께 울릴 때 그 진동수의 비가 간단할수록 더 잘 어울린답니다.',
                '이 방에서는 건반과 줄, 하프를 다루며 잘 어울리는 소리 속에 숨은 비의 비밀을 함께 찾아볼 거예요.',
                '자, 함께 찾아봐요!'],
@@ -664,50 +700,106 @@ class Component extends DCLogic {
     st.push({ k:'table',
       say:'음정 표 완성! 도부터 도′까지 다 들어봤어요. 1 대 2, 2 대 3, 3 대 4처럼 비가 간단할수록 두 소리가 더 잘 어울려요!',
       hi:'▶ 분류 시작을 눌러 기준 분류를 한 번 보고, 내가 나눈 방과 비교해 보세요' });
-    st.push({ k:'story', emoji:'🥁', cap:'북은 2박마다 · 방울은 3박마다',
-      lines:['리듬에도 비가 숨어 있어요!',
-             '북은 2박마다, 방울은 3박마다 울려요.',
-             '두 리듬을 함께 연주하면 어떤 일이 생길까요?'],
+    st.push({ k:'story', emoji:'🥁', cap:'화음을 아주 느리게 늘리면?',
+      lines:['잘 어울리는 화음 속에 간단한 비가 숨어 있다는 것까지 찾아냈어요.',
+             '그런데 왜 하필 간단한 비여야 잘 어울릴까요?',
+             '떨림은 너무 빨라서 눈에 보이지 않아요. 그래서 아주 느리게 늘려 볼게요.',
+             '느리게 늘린 떨림이 바로 리듬이에요. 북과 트라이앵글로 그 비밀을 눈으로 보고 귀로 들어 봐요.'],
       btn:'리듬 실험실로! →' });
-    st.push({ k:'poly',
-      say:'재생을 눌러 들어 보고, 북과 방울이 같이 울리는 칸을 아래 줄에서 모두 눌러 보세요!',
-      hi:'🥁 북(2박)과 🔔 방울(3박)을 함께 연주해요' });
+    st.push({ k:'poly', p:'r23',
+      say:'먼저 아무것도 알려 주지 않고 리듬을 들려줄게요. 북만, 트라이앵글만, 그리고 함께 들어 보고 두 소리가 잘 맞아떨어지는지 느껴 보세요.',
+      hi:'🥁 북 · 🔺 트라이앵글 — 귀가 먼저예요' });
+    st.push({ k:'poly', p:'r25',
+      say:'이번에는 다른 리듬이에요. 아까처럼 먼저 귀로 들어 보고, 칸을 세어 이 리듬에 숨은 비를 찾아보세요.',
+      hi:'두 번째 리듬 — 이번에도 귀가 먼저!' });
+    st.push({ k:'poly', p:'why',
+      say:'세 리듬을 차례로 들어 보세요. 두 소리가 다시 만나기까지 몇 칸이 걸리는지 견주어 보면, 왜 간단한 비가 잘 어울리는지 보일 거예요.',
+      hi:'세 리듬의 만나는 칸을 비교해요' });
     st.push({ k:'strlen',
       say:'줄을 길게, 짧게 조절해 보세요! 줄이 길수록 천천히 떨려 낮은 소리, 짧을수록 빨리 떨려 높은 소리가 나요.' });
     st.push({ k:'sweep',
       say:'함께 늘리기! 두 줄을 같은 배율로 함께 늘이거나 줄여 보세요. 줄이 길어지고 짧아져도 변하지 않는 것은 무엇일까요?' });
-    this.HP.forEach((p, i) => st.push({ k:'harp', i,
-      say:(i === 0 ? '라 음 440헤르츠는 세계가 함께 약속한 악기 조율 기준음이에요. ' : '') +
-          '라 줄이 72센티미터일 때, ' + p.n + ' 줄은 몇 센티미터일까요? 먼저 귀로 찾아 보세요. 목표 소리를 듣고, 줄 길이를 움직여 같은 소리를 찾으세요.',
-      hi:'하프 공방 ' + (i + 1) + ' / 5' }));
+    this.HP.forEach((p, i) => {
+      if (p.ph === 1) st.push({ k:'harp', i,
+        say:(i === 0 ? '라 음 440헤르츠는 세계가 함께 약속한 악기 조율 기준음이에요. ' : '') +
+            '라 줄이 72센티미터일 때, ' + p.n + ' 줄은 몇 센티미터일까요? 이번에는 계산하지 말고 귀로 찾아 보세요. 슬라이더를 움직이면 줄 소리가 따라 나와요. 목표 소리와 같아지는 자리를 찾은 다음, 눈금이 몇 칸인지 읽어 보세요.',
+        hi:'하프 공방 1부 · 귀로 찾기 ' + (i + 1) + ' / ' + this.HP1 });
+      else st.push({ k:'harp', i,
+        say:'이번에는 귀 대신 칸으로 구해 봐요. ' + p.n + ' 줄은 ' + p.b + '칸 중 ' + p.a + '칸이에요. 72센티미터를 ' + p.b + '등분하면 한 칸은 몇 센티미터일까요? 한 칸을 먼저 구하고, 그 다음 ' + p.a + '칸의 길이를 구해 보세요.',
+        hi:'하프 공방 2부 · 칸으로 계산하기 ' + (i + 1 - this.HP1) + ' / ' + (this.HP.length - this.HP1) });
+    });
     st.push({ k:'reflect',
       say:'내 말로 정리! 잘 어울리는 소리의 비밀을 내 말로 한 줄 적어 보세요.',
       hi:'한 줄이면 충분해요' });
     st.push({ k:'blank', id:'secret', who:'ratio',
       say:'이제 소리의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
+    st.push({ k:'blank', id:'tune', who:'ratio',
+      say:'카드 문제예요. 악기의 음을 맞출 때 무엇을 기준으로 삼았는지 떠올려 보세요.',
+      hi:'🃏 카드 문제 1 / 4' });
+    st.push({ k:'blank', id:'string', who:'ratio',
+      say:'두 번째 카드 문제예요. 하프 공방에서 줄의 길이를 바꿀 때 소리가 어떻게 달라졌는지 떠올려 보세요.',
+      hi:'🃏 카드 문제 2 / 4' });
+    st.push({ k:'blank', id:'span', who:'ratio',
+      say:'세 번째 카드 문제예요. 라 줄 72센티미터를 네 칸으로 똑같이 나누면 한 칸은 몇 센티미터일까요?',
+      hi:'🃏 카드 문제 3 / 4' });
+    st.push({ k:'blank', id:'simple', who:'ratio',
+      say:'마지막 카드 문제예요. 도와 솔은 2 대 3, 도와 시는 8 대 15예요. 어느 쪽이 더 잘 어울릴까요?',
+      hi:'🃏 카드 문제 4 / 4' });
     st.push({ k:'finish', who:'ratio',
-      say:'소리의 비밀을 모두 찾아냈어요. 정말 대단해요!', hi:'탐색 완료! 허브로 돌아가요' });
+      say:'소리의 비밀을 모두 찾아냈어요! 카드 문제도 다 풀었으니 비밀 카드의 숫자 1을 받아요. 황금비의 셋째 자리랍니다.',
+      hi:'탐색 완료! 카드 숫자 1 획득' });
     return st;
   }
 
   WHO = {
-    ratio:    { name:'레시오', role:'소리의 비밀 안내자', emoji:'🎼', tone:'밝은 안내 목소리',
+    /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
+       emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
+    ratio:    { name:'레시오', role:'비의 비밀 탐색 안내자', emoji:'🎼',
+                img:'ratio_portrait.jpg', imgBare:1, tone:'밝은 안내 목소리',
                 male:0, pitch:1.06, pitchF:1.06, rate:1.04, gap:160 },
     narrator: { name:'안내', role:'문제를 읽어 주는 목소리', emoji:'📣', tone:'여성 내레이션',
                 male:0, pitch:1.18, pitchF:1.18, rate:1.06, gap:150 }
   };
 
+  /* 카드 문제 — 이 방을 통과해야 비밀 카드의 숫자를 받는다.
+     tune·string 두 장은 예전 평가의 방에 모아 두었던 소리 카드를 이 방으로 옮겨 온 것이다. */
   BLANKS = {
+    tune: { title:'🎵 소리 카드 1 — 기준음', rows:[
+        ['악기의 음 높이를 맞출 때는 ', {a:'라'}, ' 음 440Hz를 기준으로'],
+        ['다른 음들의 진동수 ', {a:'비'}, ' 를 계산하여 정한다.'] ],
+      bank:['라','비','도','차이'] },
+    string: { title:'🎵 소리 카드 2 — 줄의 길이', rows:[
+        ['줄이 ', {a:'짧을수록'}, ' 빠르게 떨려 높은 소리가 난다.'],
+        ['줄의 길이와 음 높이의 관계는 서로 ', {a:'반대'}, ' 이다.'] ],
+      bank:['짧을수록','반대','길수록','비례'] },
+    /* 없어진 마트의 비밀 문제를 소리의 맥락으로 옮긴 두 장.
+       '묶음 가격 ÷ 개수 = 1개 값' → '전체 길이 ÷ 등분 수 = 한 칸 길이',
+       '어느 가게가 싼가' → '어느 비가 더 잘 어울리는가' */
+    span: { title:'🎵 소리 카드 3 — 한 칸의 길이', rows:[
+        ['라 줄 72cm를 4등분하면'],
+        ['한 칸은 72 ÷ 4 = ', {a:'18'}, ' cm이다.'] ],
+      bank:['18','12','24'] },
+    simple: { title:'🎵 소리 카드 4 — 어느 쪽이 더 어울릴까', rows:[
+        ['도와 솔의 진동수의 비는 2 : 3, 도와 시는 8 : 15이다.'],
+        ['둘 중 더 간단한 비는 ', {a:'2 : 3'}, ' 이므로,'],
+        ['더 잘 어울리는 것은 ', {a:'도와 솔'}, ' 이다.'] ],
+      bank:['2 : 3','도와 솔','8 : 15','도와 시'] },
     secret: { card:true, title:'🃏 소리의 비밀 카드', rows:[
         ['두 음의 진동수의 비가 더 ', {a:'간단한'}, ' 비일수록 더 잘 어울린다.'] ],
       bank:['간단한','복잡한'] }
   };
+  /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 셋째 자리 */
+  DIGIT = { id:'sound', d:'1', concept:'진동수의 비가 간단할수록 어울리는 화음!' };
 
   gcd(a,b) { return b ? this.gcd(b, a%b) : a; }
   gcd2(a,b) { a=Math.round(Math.abs(a)); b=Math.round(Math.abs(b)); while(b){ const t=a%b; a=b; b=t; } return a||1; }
   hLen(i) { return this.HBASE * this.HP[i].a / this.HP[i].b; }
   hFreq(L) { return Math.round(440 * this.HBASE / L); }
   exS(i) { return String(Math.round(this.hLen(i)*100)/100); }
+  numS(v) { return String(Math.round(v*100)/100); }
+  hUnit(i) { return this.HBASE / this.HP[i].b; }          /* 한 칸의 길이 = 72 ÷ b */
+  hUnitS(i) { return this.numS(this.hUnit(i)); }
+  hPhase(i) { return this.HP[i].ph; }
   NM() { return [1,2,3,4,5,6,7].map(i => this.NOTES[i][0]); }
   noteByName(n) { return this.NOTES[this.NOTES.findIndex(x => x[0] === n)]; }
 
@@ -800,7 +892,7 @@ class Component extends DCLogic {
   clap() {
     if (this.state.audio === 'mute') return;
     try {
-      if (!this._clap) { this._clap = new Audio('clap.mp3'); this._clap.preload='auto'; this._clap.volume=0.9; }
+      if (!this._clap) { this._clap = new Audio('uploads/v3/clap.mp3'); this._clap.preload='auto'; this._clap.volume=0.9; }
       this._clap.currentTime = 0;
       const p = this._clap.play(); if (p && p.catch) p.catch(() => {});
     } catch(e) {}
@@ -980,7 +1072,7 @@ class Component extends DCLogic {
     this._w1env = 0; this._s1T = 0; this._ph0 = performance.now();
     try { speechSynthesis.onvoiceschanged = () => { this._pool = undefined; }; } catch(e) {}
     this._flushT = setInterval(() => this.flush(), 5000);
-    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.harpDroneOff(); this.flush(true); } };
     document.addEventListener('visibilitychange', this._hide);
     this._pageHide = () => this.flush(true);
     addEventListener('pagehide', this._pageHide);
@@ -996,6 +1088,7 @@ class Component extends DCLogic {
     if (this._polyRaf) { cancelAnimationFrame(this._polyRaf); this._polyRaf = null; }
     this._clsStop();
     if (this._raf) cancelAnimationFrame(this._raf);
+    this.harpDroneOff();
     document.removeEventListener('visibilitychange', this._hide);
     removeEventListener('pagehide', this._pageHide);
     this.stopVoice(); this.flush(true);
@@ -1021,6 +1114,27 @@ class Component extends DCLogic {
     if (stage === 'rooms') return '별점이 방을 만들었어요! 점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 어떤 음들이 잘 어울리게 들리나요? 그 이유를 아래에서 골라 보세요.';
     return '발견! 비가 간단할수록 잘 어울려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
   }
+  /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
+     who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
+     초상 뒤에 이모지를 깔아 두고, 이미지 로드에 실패하면 이미지를 감춰 이모지가 대신 보이게 한다. */
+  coachPortrait(who) {
+    const bare = !!who.imgBare;
+    return React.createElement('div', { key: who.img,
+      style: { position:'relative', width:'100%', height:'100%', borderRadius:'999px', overflow:'hidden',
+               border: bare ? 'none' : '3px solid var(--color-accent-400)' } },
+      /* 대체 표시 — 초상 아래에 깔린 이모지 원. 초상이 뜨면 완전히 가려지고, 로드에 실패하면 드러난다 */
+      React.createElement('div', { key:'fb',
+        style: { position:'absolute', inset:'0', borderRadius:'999px',
+                 background:'var(--color-accent-200)', display:'flex', alignItems:'center',
+                 justifyContent:'center', fontSize:'27px',
+                 border: bare ? '3px solid var(--color-accent-400)' : 'none' } }, who.emoji || ''),
+      React.createElement('img', { key:'p', src: who.img, alt: '',
+        onError: (e) => { try { e.currentTarget.style.display = 'none'; } catch(err) {} },
+        style: { position:'absolute', inset:'0', width:'100%', height:'100%',
+                 objectFit:'cover', display:'block' } })
+    );
+  }
+
   sayStep(i) {
     const s = this.STEPS[i];
     if (!s) return;
@@ -1051,7 +1165,7 @@ class Component extends DCLogic {
   go(d) {
     const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
     if (n === this.state.i) return;
-    this.stopVoice();
+    this.stopVoice(); this.harpDroneOff();
     clearTimeout(this._tT); clearTimeout(this._autoT); clearInterval(this._polyIv);
     if (this._polyRaf) { cancelAnimationFrame(this._polyRaf); this._polyRaf = null; }
     this._clsStop();
@@ -1062,19 +1176,23 @@ class Component extends DCLogic {
       hxCur:-1,
       clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
       grpWaveN:null, polyBeat:0, polyPlaying:false,
-      harpL:72, harpTuned:false, tuneMsg:'뜯어 보고 목표 소리와 비교해 보세요!',
+      harpL:72, harpTuned:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 목표 소리와 비교해 보세요!',
       hb:{}, hbUsed:{}, selBlank:null, helpOpen:false };
     if (st.k === 'rooms') patch.roomStage = this.NM().some(x => !this.state.rates[x]) ? 'miss' : 'collect';
-    if (st.k === 'poly') { patch.polySel = []; patch.polyFound = false; patch.grp2 = false; patch.grp3 = false; patch.grpUndone = false; patch.grpMode = 0; patch.myBeats = []; patch.heardDrum = false; patch.heardBell = false; }
+    if (st.k === 'poly') {
+      patch.polyStage = 'listen'; patch.polyTag = '';
+      patch.heardDrum = false; patch.heardTri = false; patch.heardBoth = false; patch.polyFeel = '';
+      patch.pickD = 0; patch.pickT = 0; patch.polyFound = false; patch.linkPick = -1;
+      patch.whyPlayed = {}; patch.whyPick = -1; patch.myD = 0; patch.myT = 0; patch.myMeet = null;
+      patch.grp2 = false; patch.grp3 = false; patch.grpUndone = false; patch.grpMode = 0;
+    }
     if (st.k === 'harp') {
       patch.hDone = st.i;
-      const p = this.HP[st.i];
-      patch.harpBank = [String(p.a), String(p.b), this.exS(st.i), '440']
-        .filter((v,ix,arr) => arr.indexOf(v) === ix).sort(() => Math.random() - .5);
+      patch.harpBank = this.HP[st.i].ph === 1 ? [] : this.harpBankFor(st.i, 'a1');
     }
     if (st.k === 'finish') {
       patch.hDone = this.HP.length;
-      setTimeout(() => { this.confetti(); this.clap(); }, 350);
+      setTimeout(() => { this.confetti(); this.clap(); this.awardDigit(); }, 350);
     }
     this.setState(patch);
     this.plog('nav', { to:n });
@@ -1318,42 +1436,107 @@ class Component extends DCLogic {
     });
   }
 
-  /* ── 4) 폴리리듬 12칸 (poly) — 북 160Hz·방울 880Hz, 0.4초 간격 그대로.
-     같은 박의 북+방울은 AudioContext 절대 시각으로 '같은 t'에 예약해 정확히 동시에 울리고
+  /* ── 4) 리듬 = 화음의 슬로모션 (poly) ─────────────────────────────────────
+     두 소리가 어울리는 까닭은 두 떨림이 짧은 주기로 다시 만나기 때문이다.
+     떨림은 눈에 보이지 않지만 리듬은 보인다 — 그래서 리듬을 화음의 슬로모션으로 쓴다.
+     흐름 ① 듣기(비를 알려 주지 않는다) → ② 찾기(12칸에서 간격을 세어 학습자가 비를 찾는다)
+          → ③ 연결(같은 비를 화음·색에서 다시 만난다) → ④ 기제(간단한 비일수록 빨리 다시 만난다) + 단위화.
+     같은 칸의 북+트라이앵글은 AudioContext 절대 시각으로 '같은 at'에 예약해 정확히 동시에 울리고
      (호출마다 currentTime을 다시 읽으면 렌더 퀀텀 경계에서 어긋날 수 있다),
-     칸 하이라이트는 setInterval 드리프트 대신 오디오 클록(t0 기준)으로 구동한다 —
-     구버전은 첫 틱이 +400ms에 1번 칸을 켜서 소리가 항상 한 칸 앞서 들리는 문제가 있었다. */
-  toneAt(c, f, at, d) {
-    if (!c || this.state.audio === 'mute') return;
-    try { const o = c.createOscillator(), g = c.createGain();
-      o.type='triangle'; o.frequency.value=f; o.connect(g); g.connect(c.destination);
-      g.gain.setValueAtTime(0, at);
-      g.gain.linearRampToValueAtTime(.15, at+.02);
-      g.gain.exponentialRampToValueAtTime(.001, at+d);
-      o.start(at); o.stop(at+d); } catch(e) {}
+     칸 하이라이트는 setInterval 드리프트 대신 오디오 클록(t0 기준)으로 구동한다. */
+  noiseBuf(c) {
+    if (this._nb) return this._nb;
+    const n = Math.floor(c.sampleRate * 0.4), buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    this._nb = buf; return buf;
   }
-  /* 단계적 듣기: mode = 'drum'(북만) | 'bell'(방울만) | 'both'(함께) | 'mine'(내 리듬) */
-  playPoly(mode) {
+  /* 🥁 북 — 낮은 사인의 급격한 피치 드롭(190→54Hz) + 짧은 저역 노이즈(가죽 때리는 소리) */
+  drumAt(c, at) {
+    if (!c || this.state.audio === 'mute') return;
+    try {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(190, at);
+      o.frequency.exponentialRampToValueAtTime(54, at + 0.11);
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.linearRampToValueAtTime(0.42, at + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0008, at + 0.34);
+      o.connect(g); g.connect(c.destination);
+      o.start(at); o.stop(at + 0.4);
+      const s = c.createBufferSource(), ng = c.createGain(), lp = c.createBiquadFilter();
+      s.buffer = this.noiseBuf(c);
+      lp.type = 'lowpass'; lp.frequency.value = 900;
+      ng.gain.setValueAtTime(0.11, at);
+      ng.gain.exponentialRampToValueAtTime(0.0006, at + 0.07);
+      s.connect(lp); lp.connect(ng); ng.connect(c.destination);
+      s.start(at); s.stop(at + 0.12);
+    } catch(e) {}
+  }
+  /* 🔺 트라이앵글 — 금속 막대의 비화음 배음(정수배가 아니다) + 고역 통과 + 1.5초 긴 감쇠.
+     북(낮고 짧다)과 음색이 확실히 갈리도록 높고 맑게, 오래 울리게 만든다. */
+  triAt(c, at) {
+    if (!c || this.state.audio === 'mute') return;
+    try {
+      const hp = c.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 1200; hp.Q.value = 0.5;
+      hp.connect(c.destination);
+      this.TRI_P.forEach((m, i) => {
+        const o = c.createOscillator(), g = c.createGain();
+        o.type = 'sine';
+        o.frequency.value = 1860 * m * (1 + (i % 2 ? 0.0035 : -0.0028));
+        const v = 0.085 / (1 + i * 0.72), du = Math.max(0.35, 1.5 - i * 0.13);
+        g.gain.setValueAtTime(0.0001, at);
+        g.gain.linearRampToValueAtTime(v, at + 0.003);
+        g.gain.exponentialRampToValueAtTime(0.0005, at + du);
+        o.connect(g); g.connect(hp); o.start(at); o.stop(at + du + 0.05);
+      });
+      const s = c.createBufferSource(), ng = c.createGain();
+      s.buffer = this.noiseBuf(c);
+      ng.gain.setValueAtTime(0.05, at);
+      ng.gain.exponentialRampToValueAtTime(0.0004, at + 0.03);
+      s.connect(ng); ng.connect(hp);
+      s.start(at); s.stop(at + 0.05);
+    } catch(e) {}
+  }
+  lcm(a, b) { return a * b / this.gcd2(a, b); }
+  polyP(st) { const s = st || this.STEPS[this.state.i]; return this.POLY[s.p] || null; }
+  /* 12칸 안에서 두 소리가 다시 만나는 칸 (최소공배수의 배수) */
+  meetCells(p) {
+    const m = this.lcm(p.d, p.t), out = [];
+    for (let b = m; b <= this.PN; b += m) out.push(b);
+    return out;
+  }
+  /* mode = 'drum'(북만) | 'tri'(트라이앵글만) | 'both'(함께)
+     def를 주면 그 간격으로 연주한다(기제 비교 카드·내가 정한 간격). tag는 어느 격자를 밝힐지 가리킨다. */
+  playPoly(mode, def, tag) {
     if (this.state.polyPlaying) return;
-    this.plog('poly_play', { mode: mode, mine: mode === 'mine' ? this.state.myBeats.slice().sort((x,y)=>x-y) : undefined });
+    const st = this.STEPS[this.state.i];
+    const p = def || this.polyP(st);
+    if (!p || !p.d || !p.t) return;
     const c = this.ac();
-    const N = 12, STEP = 0.4;
+    const N = this.PN, STEP = this.PSTEP;
     const t0 = (c ? c.currentTime : 0) + 0.12;   /* 전체 시퀀스가 공유하는 기준 시각 */
     const sched = [];
     for (let b = 1; b <= N; b++) {
-      const at = t0 + (b - 1) * STEP;            /* 같은 박의 소리는 정확히 같은 at을 공유 */
+      const at = t0 + (b - 1) * STEP;            /* 같은 칸의 소리는 정확히 같은 at을 공유 */
       const what = [];
-      if ((mode === 'drum' || mode === 'both') && b % 2 === 0) { this.toneAt(c, 160, at, .18); what.push('북'); }
-      if ((mode === 'bell' || mode === 'both') && b % 3 === 0) { this.toneAt(c, 880, at, .18); what.push('방울'); }
-      if (mode === 'mine' && this.state.myBeats.indexOf(b) >= 0) { this.toneAt(c, 520, at, .18); what.push('내 리듬'); }
+      if ((mode === 'drum' || mode === 'both') && b % p.d === 0) { this.drumAt(c, at); what.push('북'); }
+      if ((mode === 'tri'  || mode === 'both') && b % p.t === 0) { this.triAt(c, at); what.push('트라이앵글'); }
       sched.push({ cell: b, at: Math.round((at - t0) * 1000) / 1000, sounds: what.join('+') || '무음' });
     }
     this._polySched = sched;
-    try { console.info('[poly] ' + mode + ' 스케줄(t0 기준 초):', JSON.stringify(sched)); } catch(e) {}
-    const heard = {};
-    if (mode === 'drum') heard.heardDrum = true;
-    if (mode === 'bell') heard.heardBell = true;
-    this.setState(Object.assign({ polyPlaying: true, polyBeat: 0, _polyMode: mode }, heard));
+    try { console.info('[poly] ' + (tag || st.p || '') + '/' + mode + ' ' + p.d + ':' + p.t + ' 스케줄(t0 기준 초):', JSON.stringify(sched)); } catch(e) {}
+    this.plog('poly_play', { task: st.p || '', mode, d: p.d, t: p.t, tag: tag || 'main' });
+    const patch = { polyPlaying: true, polyBeat: 0, polyTag: tag || 'main' };
+    if (!tag) {
+      if (mode === 'drum') patch.heardDrum = true;
+      if (mode === 'tri') patch.heardTri = true;
+      if (mode === 'both') patch.heardBoth = true;
+    }
+    if (tag && tag.indexOf('why') === 0) {
+      const wp = Object.assign({}, this.state.whyPlayed); wp[tag] = true; patch.whyPlayed = wp;
+    }
+    this.setState(patch);
     clearInterval(this._polyIv);
     if (this._polyRaf) cancelAnimationFrame(this._polyRaf);
     const p0 = performance.now();
@@ -1363,9 +1546,7 @@ class Component extends DCLogic {
       const b = Math.floor((now - t0) / STEP) + 1;
       if (b > N) {
         this._polyRaf = null;
-        this.setState(mode === 'both'
-          ? { polyBeat: 0, polyPlaying: false, polyHeard: true }
-          : { polyBeat: 0, polyPlaying: false });
+        this.setState({ polyBeat: 0, polyPlaying: false, polyTag: '' });
         return;
       }
       if (b >= 1 && b !== this.state.polyBeat) this.setState({ polyBeat: b });
@@ -1373,36 +1554,85 @@ class Component extends DCLogic {
     };
     this._polyRaf = requestAnimationFrame(step);
   }
-  myToggle(b) {
-    const m = this.state.myBeats.slice();
-    const at = m.indexOf(b);
-    if (at >= 0) m.splice(at, 1); else m.push(b);
+
+  /* ① 듣기 → 느낌 고르기(정답 없음) → ② 찾기로 넘어간다 */
+  polyFeelPick(v) {
+    const st = this.STEPS[this.state.i];
     this.sfx('tap');
-    this.setState({ myBeats: m });
+    this.plog('poly_feel', { task: st.p, feel: v });
+    this.setState({ polyFeel: v, polyStage: 'find' });
+    this.speak('좋아요. 이제 칸을 보면서, 북과 트라이앵글이 각각 몇 칸마다 울리는지 세어 보세요.', 'ratio');
   }
-  polyTap(i) {
-    const sel = this.state.polySel.slice();
-    const at = sel.indexOf(i);
-    if (at >= 0) sel.splice(at, 1); else sel.push(i);
+  /* ② 찾기 — 간격을 세어 고르면 두 값이 다 채워졌을 때 확인한다 */
+  polyPick(which, n) {
     this.sfx('tap');
-    this.setState({ polySel: sel });
-    const want = [6, 12];
-    if (want.every(x => sel.indexOf(x) >= 0) && sel.length === 2) {
-      this.plog('poly_ok', {});
-      this.setState({ polyFound: true });
-      this.toastOk('찾았다! 6박과 12박!', '이제 아래에서 12칸을 직접 묶어 보고, 왜 6박마다 다시 만나는지 확인해 봐요!');
-      this.speak('찾았어요! 이제 12칸을 2칸씩, 3칸씩 직접 묶어 보고, 묶음을 풀어도 보세요. 왜 6박마다 다시 만나는지 보일 거예요.', 'ratio');
-    } else if (sel.length >= 2) {
-      this.plog('poly_try', { sel: sel.slice() });
-      /* 단계적 힌트(지침 6.5): 재시도 횟수·오답 내용에 따라 질문이 구체화 */
-      const oddPick = sel.some(x => x % 2 === 1);
-      this.toastRetry(this.hintNext('poly', [
-        '어느 칸에서 🥁와 🔔이 둘 다 색칠되어 있나요? 두 줄을 위아래로 나란히 살펴볼까요?',
-        oddPick ? '고른 칸에 🥁 북이 있었나요? 북은 2, 4, 6처럼 2박마다 울려요 — 방울 줄도 함께 볼까요?'
-                : '방울 줄도 같이 볼까요? 🔔은 3, 6, 9처럼 3박마다 울려요. 두 줄이 겹치는 곳은 어디일까요?',
-        '다시 재생하면서, 두 줄 모두 색이 칠해진 칸만 손가락으로 짚어 볼까요? 딱 두 칸이에요.'
+    const patch = {};
+    patch[which === 'd' ? 'pickD' : 'pickT'] = n;
+    this.setState(patch);
+    setTimeout(() => this.polyCheck(), 40);
+  }
+  polyCheck() {
+    const S = this.state, st = this.STEPS[S.i], p = this.polyP(st);
+    if (!p || !S.pickD || !S.pickT || S.polyFound) return;
+    if (S.pickD === p.d && S.pickT === p.t) {
+      this.plog('poly_ok', { task: st.p, d: p.d, t: p.t });
+      this.hintReset('polycount' + st.p);
+      this.setState({ polyFound: true, polyStage: 'link' });
+      this.toastOk('찾았다! ' + p.d + ' : ' + p.t,
+        '북은 ' + p.d + '칸마다, 트라이앵글은 ' + p.t + '칸마다 울려요 — 이 리듬에 숨은 비예요!');
+      this.speak(st.p === 'r23'
+        ? '잘 찾았어요! 북은 두 칸마다, 트라이앵글은 세 칸마다 울렸어요. 그러니까 이 리듬에 숨은 비는 2 대 3이에요. 그런데 이 비, 어디선가 만나지 않았나요?'
+        : '잘 찾았어요! 북은 두 칸마다, 트라이앵글은 다섯 칸마다 울렸어요. 이 리듬에 숨은 비는 2 대 5예요. 이 비도 어디선가 만난 적이 있어요.', 'ratio');
+    } else {
+      this.plog('poly_try', { task: st.p, d: S.pickD, t: S.pickT });
+      /* 단계적 힌트(지침 6.5): 사실 안내 → 방향 → 전략. 정답 간격은 말하지 않는다 */
+      this.toastRetry(this.hintNext('polycount' + st.p, [
+        '울린 칸에는 악기 그림이 놓여 있어요. 처음 울린 칸부터 그다음 울린 칸까지 몇 칸을 건너뛰나요?',
+        '한 악기만 다시 들어 볼까요? 소리가 날 때 켜지는 칸만 눈으로 따라가면 간격이 보여요.',
+        '울린 칸의 번호를 차례로 적어 보세요. 번호가 몇씩 커지는지 보면 몇 칸마다인지 알 수 있어요.'
       ]));
     }
+  }
+  /* ③ 연결 — 찾아낸 비를 앞 방에서 만난 비와 잇는다 */
+  polyLink(ix) {
+    const st = this.STEPS[this.state.i], q = this.LINKQ[st.p], o = q.opts[ix];
+    this.plog('poly_link', { task: st.p, pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.toastRetry(o.fb); return; }
+    this.markSolved();
+    this.setState({ linkPick: ix, polyStage: 'done' });
+    if (st.p === 'r23') {
+      this.toastOk('같은 2 : 3이에요!', '화음에서 도와 솔의 진동수 비가 2 : 3이었어요 — 그 비가 리듬으로도 나타났어요.');
+      this.speak('맞아요! 화음에서 도와 솔의 진동수 비가 2 대 3이었지요. 도가 두 번 떨리는 동안 솔은 세 번 떨려서, 짧은 주기로 자꾸 다시 만나요. 리듬에서 북과 트라이앵글이 여섯 칸마다 다시 만난 것과 똑같아요.', 'ratio');
+    } else {
+      this.toastOk('같은 2 : 5예요!', '색깔의 비밀에서 만든 노을빛 주황이 빨강 2 : 노랑 5였어요 — 색으로도, 리듬으로도 같은 비예요.');
+      this.speak('맞아요! 색깔의 비밀에서 만든 노을빛 주황이 빨강 2, 노랑 5였지요. 같은 2 대 5가 색으로도 리듬으로도 나타나요. 비는 눈으로도 귀로도 만날 수 있어요.', 'ratio');
+    }
+  }
+  /* ④ 기제 — 세 리듬을 견주어 '간단한 비일수록 빨리 다시 만난다'를 찾는다 */
+  whyPlay(i) { this.playPoly('both', this.WHY[i], 'why' + i); }
+  polyWhy(ix) {
+    const o = this.WHYQ[ix];
+    this.plog('poly_why', { pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.toastRetry(o.fb); return; }
+    this.setState({ whyPick: ix });
+    this.toastOk('맞아요! 간단한 비일수록 빨리 다시 만나요',
+      '2 : 3은 6칸마다, 2 : 5는 10칸마다 — 8 : 9는 12칸 안에서 한 번도 만나지 못했어요.');
+    this.speak('그래요! 비가 간단할수록 두 소리는 더 빨리 다시 만나요. 2 대 3은 여섯 칸마다, 2 대 5는 열 칸마다 만나고, 8 대 9는 열두 칸 안에서 한 번도 만나지 못해요. 진동수도 똑같아요. 그래서 간단한 비가 더 잘 어울리는 거예요. 이제 아래에서 12칸을 직접 묶어 확인해 봐요.', 'ratio');
+  }
+  /* 내가 정한 간격으로 만들기 — 두 간격을 골라 들어 보고 다시 만나는 칸을 확인한다 */
+  myIntv(which, n) {
+    this.sfx('tap');
+    const patch = {};
+    patch[which === 'd' ? 'myD' : 'myT'] = n;
+    this.setState(patch);
+  }
+  playMine() {
+    const S = this.state;
+    if (!S.myD || !S.myT) { this.toastRetry('북과 트라이앵글의 간격을 하나씩 골라 보세요!'); return; }
+    const meet = this.meetCells({ d: S.myD, t: S.myT });
+    this.setState({ myMeet: meet });
+    this.plog('poly_mine', { d: S.myD, t: S.myT, meet: this.lcm(S.myD, S.myT) });
+    this.playPoly('both', { d: S.myD, t: S.myT }, 'mine');
   }
   /* 지침 6.5 — 과제별 재시도 카운터 기반 단계 힌트 (정답 직접 노출 금지) */
   hintNext(key, stages) {
@@ -1411,7 +1641,8 @@ class Component extends DCLogic {
     return stages[Math.min(n, stages.length) - 1];
   }
   hintReset(key) { if (this._tries) delete this._tries[key]; }
-  /* 폴리리듬 묶기/풀기 — 공배수 형식화(2×3=6) 미니 조작 */
+  /* 단위화 — 12칸을 2칸 단위·3칸 단위로 다시 세어 보고, 풀어서 낱칸으로 되돌린다.
+     단위가 커지면 횟수가 준다(2칸씩 6번, 3칸씩 4번). 6은 2로도 3으로도 딱 묶이므로 6칸마다 다시 만난다. */
   grpSet(m) {
     this.sfx('tap');
     this.plog('beat_group', { mode: String(m) });
@@ -1432,8 +1663,8 @@ class Component extends DCLogic {
       const S = this.state;
       if (S.grp2 && S.grp3 && S.grpUndone && !S.solved[S.i]) {
         this.markSolved();
-        this.toastOk('2×3=6 — 공배수 발견!', '2칸씩 묶으면 6묶음, 3칸씩 묶으면 4묶음. 6은 2로도 3으로도 딱 묶여요 — 그래서 6박마다 다시 만나요!');
-        this.autoNext(3200);
+        /* 아래에 자유 조작(내가 정한 간격)이 남아 있으므로 자동으로 넘기지 않는다 */
+        this.toastOk('단위가 커지면 횟수가 줄어요!', '12칸을 2칸 단위로 세면 6번, 3칸 단위로 세면 4번. 6은 2로도 3으로도 딱 묶여요 — 그래서 6칸마다 다시 만나요!');
       }
     }, 60);
   }
@@ -1468,37 +1699,124 @@ class Component extends DCLogic {
     this._wiggleY('[data-str="swB"]');
   }
 
-  /* ── 7) 하프 공방 (harp) — 목표음 440×b/a, 조율 판정 ±1.5cm 그대로 ── */
+  /* ── 7) 하프 공방 (harp) — 목표음 440×b/a, 조율 판정 ±1.5cm 그대로 ──
+     1부: 실시간 드론(슬라이더 조작 중 연속 재생) + 등분 칸 눈금 → 귀로 찾고 칸을 읽는다.
+     2부: 한 칸 길이(72÷b) → 반복(×a) → 곱셈식(72×a/b) 3단 과제. */
   harpGoal() {
     const p = this.HP[this.STEPS[this.state.i].i];
+    this.harpDroneOff();
     this.pluckT(Math.round(440 * p.b / p.a));
     this.plog('harp_goal', { n: p.n });
   }
+
+  /* 실시간 드론 — 오실레이터를 드래그당 1개만 만들고 주파수만 갱신(노드 폭증 방지).
+     주파수 갱신은 30ms 스로틀, 조작이 멎으면 620ms 뒤 자동 페이드아웃. */
+  harpDrone(f) {
+    if (this.state.audio === 'mute') return;
+    const c = this.ac(); if (!c) return;
+    if (!this._dr) {
+      try {
+        const o = c.createOscillator(), g = c.createGain(), lp = c.createBiquadFilter();
+        o.type = 'triangle'; o.frequency.setValueAtTime(f, c.currentTime);
+        lp.type = 'lowpass'; lp.frequency.value = 4600; lp.Q.value = 0.6;
+        g.gain.setValueAtTime(0.0001, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.12, c.currentTime + 0.06);
+        o.connect(lp); lp.connect(g); g.connect(c.destination);
+        o.start();
+        this._dr = { o, g };
+        this._drF = performance.now();
+      } catch(e) { return; }
+    } else {
+      const now = performance.now();
+      if (now - (this._drF || 0) >= 30) {
+        this._drF = now;
+        try { this._dr.o.frequency.setTargetAtTime(f, c.currentTime, 0.015); } catch(e) {}
+      }
+    }
+    clearTimeout(this._drT);
+    this._drT = setTimeout(() => this.harpDroneOff(), 620);
+  }
+  harpDroneOff() {
+    clearTimeout(this._drT);
+    const d = this._dr; if (!d) return;
+    this._dr = null;
+    try {
+      const c = this._ac, t = c.currentTime;
+      d.g.gain.cancelScheduledValues(t);
+      d.g.gain.setValueAtTime(Math.max(0.0002, d.g.gain.value), t);
+      d.g.gain.exponentialRampToValueAtTime(0.0006, t + 0.16);
+      d.o.stop(t + 0.24);
+    } catch(e) {}
+  }
+  /* 슬라이더 조작 — 상태 갱신 + 드론 주파수 추종. 로그는 600ms 스로틀. */
+  harpSlide(L) {
+    this.setState({ harpL: L });
+    this.harpDrone(Math.round(440 * this.HBASE / L));
+    const st = this.STEPS[this.state.i];
+    const now = Date.now();
+    if (now - (this._lastHD || 0) > 600) {
+      this._lastHD = now;
+      const p = this.HP[st.i];
+      this.plog('harp_drag', { n: p.n, L, cells: Math.round(L / this.hUnit(st.i) * 100) / 100 });
+    }
+  }
+
   harpPluck() {
     const st = this.STEPS[this.state.i];
     const p = this.HP[st.i], ex = this.hLen(st.i), L = this.state.harpL;
+    const unit = this.hUnit(st.i), unitS = this.hUnitS(st.i), exS = this.exS(st.i);
+    this.harpDroneOff();
     this.pluckT(Math.round(440 * 72 / L));
     this.plog('harp_tune', { n: p.n, L });
     const diff = L - ex;
     if (Math.abs(diff) <= 1.5) {
-      this.sfx('ok');
-      this.setState({ harpTuned: true, tuneMsg: '🎯 귀로 찾았어요! 약 ' + L + 'cm — 이제 계산으로 확인해 봐요!' });
-      this.speak('귀로 찾았어요! 이제 계산으로 확인해 봐요. 라 대 ' + p.n + ' 비를 써서 식을 세우고 길이를 구하세요.', 'ratio');
+      /* 판정 통과 → 칸 수 확정. 감각(귀) 뒤에 단위화가 따라온다. */
+      this.plog('harp_cells', { n: p.n, b: p.b, a: p.a, unit, len: ex, L });
+      this.setState({ harpL: ex, harpTuned: true, hDone: st.i + 1,
+        tuneMsg: '🎯 귀로 찾았어요! ' + p.b + '칸 중 ' + p.a + '칸 — ' + exS + 'cm예요.' });
+      this.markSolved();
+      this.hintReset('harpear' + st.i);
+      this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm',
+        '72cm를 ' + p.b + '등분하면 한 칸이 ' + unitS + 'cm — 그 ' + p.a + '칸이 ' + exS + 'cm예요!');
+      this.speak('귀로 찾았어요! 72센티미터를 ' + p.b + '등분하면 한 칸이 ' + unitS +
+                 '센티미터, 그 ' + p.a + '칸이 ' + exS + '센티미터예요.', 'ratio');
     } else {
-      this.setState({ tuneMsg: diff > 0
-        ? '목표보다 소리가 낮게 들리죠? 줄이 짧아지면 소리가 어떻게 됐었나요 — 조금 더 짧게 해 볼까요?'
-        : '목표보다 소리가 높게 들리죠? 줄이 길어지면 소리가 어떻게 됐었나요 — 조금 더 길게 해 볼까요?' });
+      /* 단계적 힌트(지침 6.5): 사실 안내 → 방향 → 전략. 정답 수치는 노출하지 않는다. */
+      this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
+        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 목표 소리와 내 줄 소리를 번갈아 들어 볼까요?',
+        diff > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
+                 : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
+        '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
+      ]) });
     }
   }
-  hbTargets() {
-    const st = this.STEPS[this.state.i];
-    const p = this.HP[st.i];
-    return [ { key:'num', a:String(p.a) }, { key:'den', a:String(p.b) }, { key:'ans', a:this.exS(st.i) } ];
+
+  /* 2부 과제 진행 단계 — a1(한 칸 구하기) → a2(칸 반복) → b(곱셈식) */
+  hcStage(hb) {
+    const h = hb || this.state.hb;
+    if (!(h.div && h.unit)) return 'a1';
+    if (!(h.rep && h.tot)) return 'a2';
+    return 'b';
+  }
+  harpBankFor(i, stage) {
+    const p = this.HP[i], unitS = this.hUnitS(i), totS = this.exS(i);
+    const list = stage === 'a1' ? [String(p.b), unitS, String(p.a), '440']
+               : stage === 'a2' ? [String(p.a), totS, unitS, String(p.b)]
+                                : [String(p.a), String(p.b), totS, '440'];
+    return list.filter((v,ix,arr) => arr.indexOf(v) === ix).sort(() => Math.random() - .5);
+  }
+  hbTargets(stage) {
+    const st = this.STEPS[this.state.i], i = st.i, p = this.HP[i];
+    const s = stage || this.hcStage();
+    if (s === 'a1') return [ { key:'div', a:String(p.b) }, { key:'unit', a:this.hUnitS(i) } ];
+    if (s === 'a2') return [ { key:'rep', a:String(p.a) }, { key:'tot', a:this.exS(i) } ];
+    return [ { key:'num', a:String(p.a) }, { key:'den', a:String(p.b) }, { key:'ans', a:this.exS(i) } ];
   }
   placeHarp(word) {
     const st = this.STEPS[this.state.i];
     const p = this.HP[st.i];
-    const keys = this.hbTargets();
+    const stage = this.hcStage();
+    const keys = this.hbTargets(stage);
     const hb = Object.assign({}, this.state.hb);
     let target = this.state.selBlank && !hb[this.state.selBlank]
       ? keys.find(k => k.key === this.state.selBlank)
@@ -1515,28 +1833,65 @@ class Component extends DCLogic {
       this.sfx('ok');
       this.setState({ hb, hbUsed: used, selBlank: null });
       if (keys.every(k => hb[k.key])) {
-        setTimeout(() => {
-          const ex = this.hLen(st.i), exS = this.exS(st.i);
-          this.setState({ hDone: st.i + 1 });
-          this.pluckT(this.hFreq(ex));
-          this.markSolved();
-          const bridge = (p.n === '미′') ? ' 💡 2 : 3 — 색깔의 방에서 빨강 2칸 : 노랑 3칸으로 칠했던 바로 그 비예요!' : '';
-          this.autoNext(3400);
-          this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm',
-            p.n + ' 줄은 라 줄 전체의 ' + p.a + '/' + p.b + '! 72 × ' + p.a + '/' + p.b + ' = ' + exS + 'cm — 뜯으면 딱 ' + p.n + '!' + bridge);
-        }, 320);
+        const unitS = this.hUnitS(st.i), exS = this.exS(st.i);
+        if (stage === 'a1') {
+          this.plog('harp_unit', { n: p.n, b: p.b, unit: this.hUnit(st.i) });
+          setTimeout(() => {
+            this.setState({ harpBank: this.harpBankFor(st.i, 'a2'), hbUsed: {}, selBlank: null });
+            /* 중간 단계는 harp_unit·harp_rep으로 남기고, success는 줄 완성 때만(기존 의미 유지) */
+            this.toast('✅', '한 칸을 찾았어요! ' + unitS + 'cm',
+              '72cm를 ' + p.b + '등분하면 한 칸이 ' + unitS + 'cm — 그럼 ' + p.a + '칸은 몇 cm일까요?', 'ok');
+            this.speak('좋아요! 72센티미터를 ' + p.b + '등분했으니 한 칸은 ' + unitS +
+                       '센티미터예요. 그럼 ' + p.a + '칸은 몇 센티미터일까요?', 'ratio');
+          }, 320);
+        } else if (stage === 'a2') {
+          this.plog('harp_rep', { n: p.n, a: p.a, tot: this.hLen(st.i) });
+          setTimeout(() => {
+            this.setState({ harpBank: this.harpBankFor(st.i, 'b'), hbUsed: {}, selBlank: null });
+            this.pluckT(this.hFreq(this.hLen(st.i)));
+            this.toast('✅', p.a + '칸은 ' + exS + 'cm!',
+              unitS + 'cm짜리 한 칸이 ' + p.a + '칸 — 이제 이 계산을 곱셈식 하나로 써 볼까요?', 'ok');
+            this.speak('맞아요! ' + p.a + '칸이니까 ' + exS + '센티미터예요. 이번에는 같은 계산을 곱셈식 하나로 써 볼까요? 72센티미터에 어떤 분수를 곱하면 될까요?', 'ratio');
+          }, 320);
+        } else {
+          setTimeout(() => {
+            this.setState({ hDone: st.i + 1 });
+            this.pluckT(this.hFreq(this.hLen(st.i)));
+            this.markSolved();
+            const bridge = (p.n === '미′') ? ' 💡 2 : 3 — 화음의 도와 솔, 북과 트라이앵글의 리듬, 색깔의 방 점묘에서 만났던 바로 그 비예요!' : '';
+            this.autoNext(3400);
+            this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm',
+              p.b + '등분한 한 칸(' + unitS + 'cm)이 ' + p.a + '칸 = 라 줄의 ' + p.a + '/' + p.b + '! 72 × ' + p.a + '/' + p.b + ' = ' + exS + 'cm' + bridge);
+          }, 320);
+        }
       }
     } else {
       this.sfx('oops');
-      /* 단계적 힌트(지침 6.5): 오답 유형(뒤집힌 분수·진동수 혼동)에 따라 질문 구체화 */
-      const flipped = (target.key === 'num' && word === String(p.b)) || (target.key === 'den' && word === String(p.a));
-      this.toastRetry(this.hintNext('harp' + st.i, [
-        '식을 소리 내어 읽어 볼까요? 라 줄 72센티미터에 어떤 분수를 곱하면 ' + p.n + ' 줄이 될까요?',
-        word === '440' ? '440은 라 음의 진동수(헤르츠)예요 — 지금 구하는 건 줄의 길이죠? 길이의 비를 떠올려 볼까요?'
-          : (flipped ? '분수의 위아래가 바뀌지 않았나요? 라 : ' + p.n + ' = ' + p.a + ' : ' + p.b + ' — 어느 수가 위(분자)로 갈까요?'
-                     : '귀로 찾은 길이를 떠올려 봐요 — ' + p.n + ' 줄은 라 줄보다 길었나요, 짧았나요?'),
-        p.n + ' 줄은 라보다 높은 소리니까 답이 72보다 작아야 해요. 그렇다면 곱하는 분수는 1보다 클까요, 작을까요?'
-      ]));
+      /* 단계적 힌트(지침 6.5): 사실 안내 → 방향 → 전략. 정답 수치 직접 노출 금지 */
+      if (stage === 'a1') {
+        this.toastRetry(this.hintNext('harpu' + st.i, [
+          p.n + ' 줄은 ' + p.b + '칸 중 ' + p.a + '칸이라고 했어요. 72cm를 몇 칸으로 나누어야 할까요?',
+          word === '440' ? '440은 라 음의 진동수(헤르츠)예요 — 지금 구하는 건 한 칸의 길이죠? 눈금 그림을 다시 볼까요?'
+            : '눈금 그림을 보세요. 라 줄이 몇 칸으로 나뉘어 있나요? 그 수로 72를 나누면 한 칸이 나와요.',
+          '한 칸을 ' + p.b + '번 이어 붙이면 72cm가 되어야 해요. 나눗셈으로 한 칸을 먼저 구해 볼까요?'
+        ]));
+      } else if (stage === 'a2') {
+        this.toastRetry(this.hintNext('harpr' + st.i, [
+          '한 칸의 길이는 방금 구했어요. 이제 그 한 칸이 몇 칸 필요한지 세어 볼까요?',
+          word === String(p.b) ? '' + p.b + '은 전체를 나눈 칸 수예요 — ' + p.n + '이 차지하는 칸 수는 그중 몇 칸일까요?'
+            : '눈금 그림에서 색칠된 칸만 세어 보세요. ' + p.n + '은 ' + p.b + '칸 중 몇 칸인가요?',
+          '한 칸의 길이에 칸 수를 곱하면 돼요. 한 칸을 그만큼 이어 붙인 것과 같아요.'
+        ]));
+      } else {
+        const flipped = (target.key === 'num' && word === String(p.b)) || (target.key === 'den' && word === String(p.a));
+        this.toastRetry(this.hintNext('harp' + st.i, [
+          '식을 소리 내어 읽어 볼까요? 라 줄 72센티미터에 어떤 분수를 곱하면 ' + p.n + ' 줄이 될까요?',
+          word === '440' ? '440은 라 음의 진동수(헤르츠)예요 — 지금 구하는 건 줄의 길이죠? 길이의 비를 떠올려 볼까요?'
+            : (flipped ? '분수의 위아래가 바뀌지 않았나요? 라 : ' + p.n + ' = ' + p.a + ' : ' + p.b + ' — 어느 수가 위(분자)로 갈까요?'
+                       : '방금 센 칸을 떠올려 봐요 — 전체 칸 수는 아래(분모), 차지한 칸 수는 위(분자)예요.'),
+          p.n + ' 줄은 라보다 높은 소리니까 답이 72보다 작아야 해요. 그렇다면 곱하는 분수는 1보다 클까요, 작을까요?'
+        ]));
+      }
     }
   }
 
@@ -1548,6 +1903,20 @@ class Component extends DCLogic {
     this.markSolved();
     this.toastOk('제출 완료!', '내 말로 정리한 소리의 비밀이 저장됐어요.');
     this.autoNext(3000);
+  }
+
+  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
+     네 자리(1. · 6 · 1 · 8)가 모이면 평가의 방 마지막 문이 열린다. */
+  awardDigit() {
+    const D = this.DIGIT;
+    let got = [];
+    try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+    if (got.indexOf(D.id) < 0) {
+      got.push(D.id);
+      try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
+    }
+    this.plog('card', { id: D.id, digit: D.d });
+    this.setState({ cards: got.length });
   }
 
   /* ── 9) 비밀 카드 빈칸 (blank) — ColorRoom 관례 ── */
@@ -1719,14 +2088,115 @@ class Component extends DCLogic {
       + '<text x="' + ((bx0+bx1)/2) + '" y="' + (bottom+30) + '" text-anchor="middle" style="font-size:13px;fill:' + this.C.a700 + '">노란 띠까지가 무늬 한 바퀴(한 묶음)예요</text>';
     return this.svgEl('0 0 560 190', { width:'min(560px,88vw)', display:'block', margin:'0 auto' }, html, 'grpwave' + name);
   }
-  /* 하프 그래픽 — harpHTML 이식 (줄 높이 L×3.6px, 만든 줄만 뜯기 가능) */
+  /* 1부 눈금자 — 라 줄 72cm를 b등분한 눈금 + 내 줄 길이(칸 읽기).
+     칸 눈금이 줄과 나란히 보여, 귀로 맞춘 길이가 곧 '몇 칸'인지 읽히게 한다. */
+  harpRulerSvg(i, L, tuned) {
+    const p = this.HP[i], b = p.b, unit = this.hUnit(i);
+    const X0 = 34, X1 = 626, span = X1 - X0, cw = span / b;
+    const yA = 32, yB = 100, h = 30;
+    const myW = span * L / this.HBASE, cells = L / unit;
+    const full = Math.max(0, Math.floor(cells + 1e-6));
+    const P = [];
+    P.push('<text x="' + X0 + '" y="' + (yA-9) + '" style="font-size:14px;font-weight:800;fill:' + this.C.g700 + '">라 줄 72cm — ' + b + '등분한 눈금</text>');
+    P.push('<rect x="' + X0 + '" y="' + yA + '" width="' + span + '" height="' + h + '" rx="7" style="fill:' + this.C.g100 + ';stroke:' + this.C.g500 + ';stroke-width:2.5"/>');
+    for (let k = 0; k < b; k++) {
+      const x = X0 + cw*k;
+      if (k) P.push('<line x1="' + x.toFixed(1) + '" y1="' + yA + '" x2="' + x.toFixed(1) + '" y2="' + (yA+h) + '" style="stroke:' + this.C.g500 + ';stroke-width:2"/>');
+      P.push('<text x="' + (x+cw/2).toFixed(1) + '" y="' + (yA+h/2+5) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:' + this.C.g700 + '">' + (k+1) + '</text>');
+      P.push('<line x1="' + x.toFixed(1) + '" y1="' + (yA+h) + '" x2="' + x.toFixed(1) + '" y2="' + (yB+h) + '" style="stroke:' + this.C.n300 + ';stroke-width:1.5" stroke-dasharray="3 4"/>');
+    }
+    P.push('<line x1="' + X1 + '" y1="' + (yA+h) + '" x2="' + X1 + '" y2="' + (yB+h) + '" style="stroke:' + this.C.n300 + ';stroke-width:1.5" stroke-dasharray="3 4"/>');
+    P.push('<text x="' + X0 + '" y="' + (yB-9) + '" style="font-size:14px;font-weight:800;fill:' + this.C.a700 + '">'
+      + (tuned ? ('내 줄 = ' + p.a + '칸 (' + this.exS(i) + 'cm)') : ('내 줄 — 목표: ' + p.n)) + '</text>');
+    P.push('<rect x="' + X0 + '" y="' + yB + '" width="' + span + '" height="' + h + '" rx="7" style="fill:' + this.C.n200 + '"/>');
+    P.push('<rect x="' + X0 + '" y="' + yB + '" width="' + myW.toFixed(1) + '" height="' + h + '" rx="7" style="fill:' + (tuned ? this.C.a300 : this.C.a200) + ';stroke:' + this.C.a700 + ';stroke-width:2.5"/>');
+    for (let k = 1; k < b; k++) {
+      const x = X0 + cw*k;
+      if (x < X0 + myW - 1) P.push('<line x1="' + x.toFixed(1) + '" y1="' + yB + '" x2="' + x.toFixed(1) + '" y2="' + (yB+h) + '" style="stroke:' + this.C.a700 + ';stroke-width:2"/>');
+    }
+    for (let k = 0; k < full; k++)
+      P.push('<text x="' + (X0+cw*k+cw/2).toFixed(1) + '" y="' + (yB+h/2+5) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:' + this.C.a700 + '">' + (k+1) + '</text>');
+    P.push('<line x1="' + (X0+myW).toFixed(1) + '" y1="' + (yB-5) + '" x2="' + (X0+myW).toFixed(1) + '" y2="' + (yB+h+13) + '" style="stroke:' + this.C.a700 + ';stroke-width:3.5"/>');
+    const near = (X0 + myW) > X1 - 70;
+    P.push('<text x="' + (X0+myW+(near ? -6 : 6)).toFixed(1) + '" y="' + (yB+h+27) + '" text-anchor="' + (near ? 'end' : 'start') + '" style="font-size:13.5px;font-weight:800;fill:' + this.C.a700 + '">' + (Math.round(L*10)/10) + 'cm</text>');
+    return this.svgEl('0 0 660 156', { width:'min(660px,92vw)', display:'block', margin:'0 auto' }, P.join(''), 'hruler' + i + (tuned ? 't' : ''));
+  }
+
+  /* 2부 칸 그림 — 72cm를 b등분하고 그중 a칸을 표시. 구한 값은 채워 넣어 등분→반복이 보이게. */
+  harpCellsSvg(i) {
+    const p = this.HP[i], b = p.b, S = this.state;
+    const X0 = 34, X1 = 626, span = X1 - X0, cw = span / b;
+    const y = 44, h = 34;
+    const unitTxt = S.hb.unit ? (S.hb.unit + 'cm') : '?cm';
+    const totTxt = S.hb.tot ? (S.hb.tot + 'cm') : '?cm';
+    const P = [];
+    P.push('<text x="' + ((X0+X1)/2) + '" y="20" text-anchor="middle" style="font-size:14px;font-weight:800;fill:' + this.C.g700 + '">라 줄 72cm를 ' + b + '등분 — 그중 ' + p.a + '칸이 ' + p.n + '</text>');
+    P.push('<line x1="' + X0 + '" y1="30" x2="' + X1 + '" y2="30" style="stroke:' + this.C.g500 + ';stroke-width:2"/>');
+    P.push('<rect x="' + X0 + '" y="' + y + '" width="' + span + '" height="' + h + '" rx="7" style="fill:' + this.C.n200 + ';stroke:' + this.C.n400 + ';stroke-width:2"/>');
+    P.push('<rect x="' + X0 + '" y="' + y + '" width="' + (cw*p.a).toFixed(1) + '" height="' + h + '" rx="7" style="fill:' + this.C.a200 + ';stroke:' + this.C.a700 + ';stroke-width:2.5"/>');
+    for (let k = 1; k < b; k++) {
+      const x = X0 + cw*k;
+      P.push('<line x1="' + x.toFixed(1) + '" y1="' + y + '" x2="' + x.toFixed(1) + '" y2="' + (y+h) + '" style="stroke:' + (k <= p.a ? this.C.a700 : this.C.n400) + ';stroke-width:2"/>');
+    }
+    for (let k = 0; k < b; k++)
+      P.push('<text x="' + (X0+cw*k+cw/2).toFixed(1) + '" y="' + (y+h/2+5) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:' + (k < p.a ? this.C.a700 : this.C.n600) + '">' + (k+1) + '</text>');
+    /* 한 칸 표시 */
+    P.push('<line x1="' + X0 + '" y1="' + (y+h+8) + '" x2="' + (X0+cw).toFixed(1) + '" y2="' + (y+h+8) + '" style="stroke:' + this.C.a700 + ';stroke-width:3"/>');
+    P.push('<text x="' + (X0+cw/2).toFixed(1) + '" y="' + (y+h+26) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:' + this.C.a700 + '">한 칸 ' + unitTxt + '</text>');
+    /* a칸 전체 표시 */
+    P.push('<line x1="' + X0 + '" y1="' + (y+h+38) + '" x2="' + (X0+cw*p.a).toFixed(1) + '" y2="' + (y+h+38) + '" style="stroke:' + this.C.g700 + ';stroke-width:3"/>');
+    P.push('<text x="' + (X0+cw*p.a/2).toFixed(1) + '" y="' + (y+h+56) + '" text-anchor="middle" style="font-size:13.5px;font-weight:800;fill:' + this.C.g700 + '">' + p.n + ' = ' + p.a + '칸 ' + totTxt + '</text>');
+    return this.svgEl('0 0 660 148', { width:'min(660px,92vw)', display:'block', margin:'0 auto' }, P.join(''), 'hcells' + i + unitTxt + totTxt);
+  }
+
+  /* 2부 계산 과제 — ① 한 칸 구하기 → ② 칸 반복 → ③ 곱셈식 한 줄 (단계 진행형 공개) */
+  harpCalcEl(i) {
+    const R = React, S = this.state, p = this.HP[i];
+    const stage = this.hcStage();
+    const slot = (key, w) => {
+      const filled = S.hb[key], sel = S.selBlank === key;
+      return R.createElement('span', { key:key, 'data-blank':key,
+        onClick: () => { if (!this.state.hb[key]) { this.sfx('tap'); this.setState({ selBlank: key }); } },
+        style:{ display:'inline-block', minWidth:(w || 68) + 'px', minHeight:'42px', padding:'4px 12px',
+          borderRadius:'12px 12px 0 0', borderBottom:'4px solid ' + (filled ? this.C.g500 : this.C.a400),
+          background: filled ? this.C.g100 : (sel ? this.C.a300 : this.C.a200),
+          color: filled ? this.C.g700 : this.C.a700, textAlign:'center', cursor:'pointer', lineHeight:'34px',
+          outline: sel ? '3px dashed ' + this.C.a700 : 'none' } }, filled || '');
+    };
+    const txt = (k, t, col) => R.createElement('span', { key:k, style: col ? { color:col } : null }, t);
+    const row = (key, cap, kids, active) => R.createElement('div', { key:key,
+      style:{ background: active ? this.C.n100 : this.C.bg,
+        border:'3px solid ' + (active ? this.C.a400 : this.C.n300), borderRadius:'var(--radius-md)',
+        padding:'var(--space-2) var(--space-3)', opacity: active ? 1 : 0.85, width:'min(96vw,700px)' } },
+      R.createElement('div', { key:'c', style:{ fontSize:'14.5px', fontWeight:800, color: active ? this.C.a700 : this.C.n600, marginBottom:'4px' } }, cap),
+      R.createElement('div', { key:'e', style:{ fontSize:'22px', display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap', justifyContent:'center' } }, kids));
+    const rows = [];
+    rows.push(row('a1', '① 먼저 한 칸의 길이 — 72cm를 몇 등분?',
+      [txt('t1', '72 ÷ '), slot('div'), txt('t2', ' = '), slot('unit', 86), txt('t3', ' cm')], stage === 'a1'));
+    if (stage !== 'a1')
+      rows.push(row('a2', '② 그럼 ' + p.a + '칸은? — 한 칸을 몇 번 이어 붙일까?',
+        [txt('t1', (S.hb.unit || '?') + ' × '), slot('rep'), txt('t2', ' = '), slot('tot', 86), txt('t3', ' cm')], stage === 'a2'));
+    if (stage === 'b')
+      rows.push(row('b', '③ 이 계산을 곱셈식 하나로',
+        [txt('t1', p.n + ' 줄의 길이 = 72 × '),
+         R.createElement('span', { key:'fr', style:{ display:'inline-flex', flexDirection:'column', alignItems:'center', gap:'3px' } },
+           slot('num'),
+           R.createElement('span', { key:'bar', style:{ alignSelf:'stretch', minWidth:'68px', height:'3.5px', background:'var(--color-text)', borderRadius:'2px' } }),
+           slot('den')),
+         txt('t2', ' = '), slot('ans', 86), txt('t3', ' cm')], true));
+    return R.createElement('div', { key:'hcalc',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px' } }, rows);
+  }
+
+  /* 하프 그래픽 — harpHTML 이식 (줄 높이 L×3.6px, 만든 줄만 뜯기 가능)
+     HP는 학습 순서(1부→2부)로 정렬돼 있으므로, 그림에서는 길이 내림차순으로 다시 배열한다. */
   harpGraphic(hDone) {
     const R = React;
     const items = [{ n:'라 ★', L:this.HBASE, made:true, sub:'72cm' }].concat(
       this.HP.map((p, i) => {
         const L = this.hLen(i), made = i < hDone;
         return { n:p.n, L, made, sub: made ? (Math.round(L*10)/10 + 'cm') : (p.a + ':' + p.b) };
-      }));
+      })).sort((x, y) => y.L - x.L);
     return R.createElement('div', { key:'harp',
       style:{ background:'var(--color-neutral-900)', borderRadius:'var(--radius-md)', padding:'14px 12px 10px', boxShadow:'var(--shadow-md)', display:'inline-block' } },
       R.createElement('div', { key:'beam', style:{ height:'14px', borderRadius:'999px', background:'linear-gradient(var(--color-accent-300),var(--color-accent-700))' } }),
@@ -1752,6 +2222,258 @@ class Component extends DCLogic {
     const red = (sa !== Math.round(a) || sb !== Math.round(b));
     return { a: Math.round(a), b: Math.round(b), sa, sb, dec, pct, cap,
       hl: !!hl, red: red && !hl };
+  }
+
+  /* ── 리듬 화면 빌더 (poly) — 듣기 → 찾기 → 연결 / 기제 + 단위화 ────────────
+     비를 먼저 말하지 않는다. 듣기 단계에서는 박자 칸만 뛰고, 악기 표시는 다 듣고 난 뒤에 나타난다. */
+  pBtn(key, label, on, cls, style, al) {
+    return React.createElement('button', { key, onClick: on, className: cls || 'rs-pill2',
+      'aria-label': al || undefined,
+      style: Object.assign({ fontSize:'15px' }, style || {}) }, label);
+  }
+  pNum(key, n, sel, on, w, al) {
+    return React.createElement('button', { key, onClick: on, 'aria-label': al || String(n),
+      style:{ width:(w||46)+'px', height:'46px', borderRadius:'999px', cursor:'pointer', padding:0,
+        border:'3px solid ' + (sel ? this.C.a600 : this.C.n300),
+        background: sel ? this.C.a200 : this.C.n100,
+        color: sel ? this.C.a800 : this.C.txt, fontSize:'17px', fontWeight:800, fontFamily:'inherit' } }, n);
+  }
+  pCap(key, t, col, size) {
+    return React.createElement('div', { key, style:{ fontSize:(size||15)+'px', fontWeight:700,
+      color: col || this.C.n700, lineHeight:1.5, textAlign:'center' } }, t);
+  }
+  /* 12칸 한 줄 — intv 간격마다 악기 아이콘, 나머지 칸은 번호(세기 위한 눈금) */
+  polyRow(key, intv, o) {
+    const R = React, size = o.size || 36;
+    return R.createElement('div', { key, style:{ whiteSpace:'nowrap', lineHeight:0 } },
+      Array.from({ length: this.PN }, (_, x) => {
+        const b = x + 1, on = intv > 0 && b % intv === 0, isCur = o.cur === b;
+        const isMeet = !!(o.meet && o.meet.indexOf(b) >= 0);
+        return R.createElement('span', { key:b, style:{
+          display:'inline-block', verticalAlign:'top', width:size+'px', height:size+'px',
+          lineHeight:(size-6)+'px', margin:'2px', borderRadius:'var(--radius-sm)',
+          border:'2px solid ' + (isCur ? this.C.a700 : (isMeet ? this.C.a600 : (on ? o.bdOn : this.C.n300))),
+          background: isCur ? this.C.a300 : (on ? o.bgOn : this.C.n100),
+          textAlign:'center', fontWeight:800,
+          fontSize: (on ? Math.round(size*0.5) : Math.round(size*0.38)) + 'px',
+          color: on ? this.C.txt : this.C.n500,
+          boxShadow: isMeet ? '0 0 0 2px ' + this.C.a300 : 'none'
+        } }, on ? o.icon : (o.nums === false ? '' : String(b)));
+      }));
+  }
+  polyEl() {
+    const st = this.STEPS[this.state.i];
+    return st.p === 'why' ? this.polyWhyEl() : this.polyFindEl(st);
+  }
+  polyFindEl(st) {
+    const R = React, S = this.state, p = this.polyP(st), stage = S.polyStage;
+    const cur = S.polyTag === 'main' ? S.polyBeat : 0;
+    const meet = this.meetCells(p);
+    const heardAll = S.heardDrum && S.heardTri && S.heardBoth;
+    const kids = [];
+
+    kids.push(R.createElement('div', { key:'play', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
+      this.pBtn('bd', (S.heardDrum ? '✓ ' : '') + '🥁 북만 듣기', () => this.playPoly('drum')),
+      this.pBtn('bt', (S.heardTri ? '✓ ' : '') + '🔺 트라이앵글만 듣기', () => this.playPoly('tri')),
+      this.pBtn('bb', (S.heardBoth ? '✓ ' : '') + '▶ 함께 듣기', () => this.playPoly('both'), 'rs-pill',
+        { minHeight:'48px', fontSize:'16px', padding:'10px 22px' })));
+
+    const box = [];
+    if (stage === 'listen') {
+      box.push(this.pCap('c0', '🎧 지금은 소리만 — 두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요', this.C.a700, 16));
+      box.push(this.polyRow('r0', 0, { cur, icon:'', bdOn:this.C.n300, bgOn:this.C.n100 }));
+    } else {
+      box.push(R.createElement('div', { key:'l1', style:{ fontSize:'15px', fontWeight:700, textAlign:'left' } }, '🥁 북'));
+      box.push(this.polyRow('r1', p.d, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100,
+        meet: S.polyFound ? meet : null }));
+      box.push(R.createElement('div', { key:'l2', style:{ fontSize:'15px', fontWeight:700, textAlign:'left', marginTop:'4px' } }, '🔺 트라이앵글'));
+      box.push(this.polyRow('r2', p.t, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100,
+        meet: S.polyFound ? meet : null }));
+      if (S.polyFound)
+        box.push(this.pCap('c1', '🎯 두 소리가 같은 칸에서 함께 울리는 곳: ' + meet.join('칸, ') + '칸 — ' + this.lcm(p.d, p.t) + '칸마다 다시 만나요!', this.C.a700, 15.5));
+    }
+    kids.push(R.createElement('div', { key:'grid', className:'rs-fit',
+      style:{ background:this.C.n100, border:'3px solid ' + this.C.n300, borderRadius:'var(--radius-md)',
+        padding:'var(--space-2) var(--space-3)', maxWidth:'94vw', overflowX:'auto', textAlign:'left' } }, box));
+
+    if (stage === 'listen') {
+      if (heardAll) {
+        kids.push(R.createElement('div', { key:'feel', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', animation:'rsPop .3s ease' } },
+          this.pCap('q', '🤔 함께 들으니 어떻던가요? 정답은 없어요 — 내 귀가 기준!', this.C.txt, 17),
+          R.createElement('div', { key:'ch', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center' } },
+            this.pBtn('f1', '🙂 딱딱 잘 맞아떨어져요', () => this.polyFeelPick('match'), 'rs-chip'),
+            this.pBtn('f2', '😕 자꾸 어긋나는 것 같아요', () => this.polyFeelPick('off'), 'rs-chip'))));
+      } else {
+        kids.push(this.pCap('need', '북만, 트라이앵글만, 그리고 함께 — 세 가지를 모두 들어 보세요.', this.C.n700, 16));
+      }
+    }
+
+    if (stage === 'find') {
+      const ask = (key, label, nm, which, sel) => R.createElement('div', { key,
+        style:{ display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap', justifyContent:'center' } },
+        R.createElement('span', { key:'t', style:{ fontSize:'17px', fontWeight:700 } }, label),
+        R.createElement('div', { key:'n', style:{ display:'flex', gap:'6px' } },
+          [1,2,3,4,5,6].map(n => this.pNum('n'+n, n, sel === n, () => this.polyPick(which, n), 46, nm + ' ' + n + '칸마다'))));
+      kids.push(R.createElement('div', { key:'find',
+        style:{ background:this.C.n100, border:'3px solid ' + this.C.a400, borderRadius:'var(--radius-lg)',
+          padding:'var(--space-3)', display:'flex', flexDirection:'column', gap:'10px',
+          maxWidth:'min(96vw,700px)', animation:'rsPop .3s ease' } },
+        this.pCap('h', '🔍 칸을 세어 봐요 — 각 악기는 몇 칸마다 울리나요?', this.C.a700, 17),
+        ask('a1', '🥁 북은', '북', 'd', S.pickD),
+        ask('a2', '🔺 트라이앵글은', '트라이앵글', 't', S.pickT)));
+    }
+
+    if (stage === 'link' || stage === 'done') {
+      kids.push(R.createElement('div', { key:'ratio',
+        style:{ background:this.C.a100, border:'3px solid ' + this.C.a400, borderRadius:'999px',
+          padding:'10px 24px', fontSize:'20px', fontWeight:700, textAlign:'center', animation:'rsPop .3s ease' } },
+        '🥁 ' + p.d + '칸마다 : 🔺 ' + p.t + '칸마다 → ',
+        R.createElement('b', { key:'r', style:{ color:this.C.a700, fontSize:'24px' } }, p.d + ' : ' + p.t)));
+    }
+
+    if (stage === 'link') {
+      const q = this.LINKQ[st.p];
+      kids.push(R.createElement('div', { key:'link', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px' } },
+        this.pCap('q', q.q, this.C.txt, 17),
+        R.createElement('div', { key:'o', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center', maxWidth:'760px' } },
+          q.opts.map((o, ix) => this.pBtn('o'+ix, o.t, () => this.polyLink(ix), 'rs-chip', { fontSize:'16px' })))));
+    }
+
+    if (stage === 'done') {
+      const card = [];
+      if (st.p === 'r23') {
+        const sol = S.rates['솔'] || 0;
+        card.push(this.pCap('t', '🔗 같은 비를 또 만났어요', this.C.a700, 18));
+        card.push(R.createElement('div', { key:'m', style:{ fontSize:'19px', lineHeight:1.8, textAlign:'center' } },
+          '🎹 화음 — 도 : 솔 = 264Hz : 396Hz = ',
+          R.createElement('b', { key:'b', style:{ color:this.C.a700 } }, '2 : 3')));
+        card.push(this.pCap('x', '도가 2번 떨리는 동안 솔은 3번 떨려요. 그래서 짧은 주기로 자꾸 다시 만나지요 — 리듬에서 두 소리가 6칸마다 다시 만난 것과 똑같아요.', this.C.n700, 16));
+        if (sol) card.push(this.pCap('s', '내가 솔에 준 별점: ' + '★'.repeat(sol) + '☆'.repeat(5 - sol), this.C.g700, 15));
+        card.push(R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
+          this.pBtn('c1', '🎹 도와 솔 함께 듣기', () => { this.plog('poly_cross', { task:'r23', kind:'chord' }); this.chord(264, 396, 2); }),
+          this.pBtn('c2', '🥁 리듬으로 다시 듣기', () => this.playPoly('both'))));
+      } else {
+        card.push(this.pCap('t', '🔗 같은 비를 또 만났어요', this.C.a700, 18));
+        card.push(R.createElement('div', { key:'m', style:{ fontSize:'19px', lineHeight:1.8, textAlign:'center' } },
+          '🎨 색깔의 비밀 — 🔴 빨강 2 : 🟡 노랑 5 → 🟠 노을빛 주황 = ',
+          R.createElement('b', { key:'b', style:{ color:this.C.a700 } }, '2 : 5')));
+        card.push(this.pCap('x', '같은 2 : 5가 색으로도, 리듬으로도 나타나요. 이 리듬에서 두 소리는 10칸마다 다시 만나요 — 2 : 3보다 늦게 만나지요.', this.C.n700, 16));
+        card.push(R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
+          this.pBtn('c2', '🥁 리듬으로 다시 듣기', () => this.playPoly('both'))));
+      }
+      kids.push(R.createElement('div', { key:'done',
+        style:{ background:this.C.n100, border:'3px solid ' + this.C.g300, borderRadius:'var(--radius-lg)',
+          padding:'var(--space-3)', display:'flex', flexDirection:'column', gap:'8px',
+          maxWidth:'min(96vw,720px)', animation:'rsPop .35s ease' } }, card));
+    }
+    return R.createElement('div', { key:'poly',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'var(--space-2)', width:'100%' } }, kids);
+  }
+  /* ④ 기제 + 단위화 — 세 리듬을 견주고, 12칸을 다른 단위로 다시 센다 */
+  polyWhyEl() {
+    const R = React, S = this.state;
+    const kids = [];
+    const cards = this.WHY.map((w, i) => {
+      const tag = 'why' + i, played = !!S.whyPlayed[tag];
+      const cur = S.polyTag === tag ? S.polyBeat : 0;
+      const meet = this.meetCells(w);
+      const lc = this.lcm(w.d, w.t);
+      const cap = !played ? '들어 보세요'
+        : (meet.length ? ('✅ ' + meet.join('칸, ') + '칸에서 함께! — ' + lc + '칸마다 다시 만나요')
+                       : ('❌ 12칸 안에서는 한 번도 만나지 못해요 (' + lc + '칸을 가야 만나요)'));
+      return R.createElement('div', { key:tag,
+        style:{ background:this.C.n100, border:'3px solid ' + (played ? this.C.a400 : this.C.n300),
+          borderRadius:'var(--radius-md)', padding:'var(--space-2)', display:'flex', flexDirection:'column',
+          gap:'6px', alignItems:'center', flex:'0 0 auto' } },
+        R.createElement('div', { key:'h', style:{ display:'flex', alignItems:'center', gap:'8px' } },
+          R.createElement('b', { key:'r', style:{ fontSize:'20px', color:this.C.a700 } }, w.d + ' : ' + w.t),
+          w.note ? R.createElement('span', { key:'n', style:{ fontSize:'13px', fontWeight:700, color:this.C.n600 } }, '(화음의 ' + w.note + ')') : null,
+          this.pBtn('p', (played ? '✓ ' : '') + '▶ 듣기', () => this.whyPlay(i), 'rs-pill2',
+            { minHeight:'38px', fontSize:'13px', padding:'5px 14px' }, w.d + ' 대 ' + w.t + ' 리듬 듣기')),
+        this.polyRow('d', w.d, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100, meet, size:22, nums:false }),
+        this.polyRow('t', w.t, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100, meet, size:22, nums:false }),
+        this.pCap('c', cap, played ? (meet.length ? this.C.a700 : this.C.n700) : this.C.n600, 13.5));
+    });
+    kids.push(R.createElement('div', { key:'cards', className:'rs-fit',
+      style:{ display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', maxWidth:'94vw' } }, cards));
+
+    const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
+    if (!allPlayed) {
+      kids.push(this.pCap('need', '세 리듬을 모두 들어 보세요. 두 소리가 다시 만나는 칸이 어떻게 달라지나요?', this.C.n700, 16));
+    } else if (S.whyPick < 0) {
+      kids.push(R.createElement('div', { key:'q', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', animation:'rsPop .3s ease' } },
+        this.pCap('t', '🤔 세 리듬을 견주어 보면 무엇을 알 수 있나요?', this.C.txt, 17),
+        R.createElement('div', { key:'o', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center', maxWidth:'760px' } },
+          this.WHYQ.map((o, ix) => this.pBtn('o'+ix, o.t, () => this.polyWhy(ix), 'rs-chip', { fontSize:'16px' })))));
+    } else {
+      const sol = S.rates['솔'] || 0, re = S.rates['레'] || 0;
+      const star = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+      kids.push(R.createElement('div', { key:'rev',
+        style:{ background:this.C.a100, border:'3px solid ' + this.C.a300, borderRadius:'var(--radius-md)',
+          padding:'var(--space-2) var(--space-3)', maxWidth:'min(96vw,760px)', fontSize:'16px',
+          fontWeight:700, lineHeight:1.75, textAlign:'center', animation:'rsPop .3s ease' } },
+        '진동수도 똑같아요. 비가 간단할수록 두 떨림이 더 빨리 다시 만나서, 귀에 잘 어울리게 들려요.',
+        R.createElement('br', { key:'b' }),
+        (sol && re && sol > re)
+          ? ('여러분도 솔(2 : 3)에 ' + star(sol) + ', 레(8 : 9)에 ' + star(re) + '을 주었지요!')
+          : '실제 음악에서도 2 : 3인 솔은 잘 어울리는 음, 8 : 9인 레는 잘 어울리지 않는 음으로 꼽혀요!'));
+
+      /* 단위화 — 12칸을 2칸 단위·3칸 단위로 다시 세기 */
+      const gm = S.grpMode;
+      const gcells = R.createElement('div', { key:'gc', style:{ whiteSpace:'nowrap', margin:'8px 0', lineHeight:0 } },
+        Array.from({ length: 12 }, (_, x) => {
+          const b = x + 1, gi = gm ? Math.floor(x / gm) : -1;
+          return R.createElement('span', { key:b, style:{
+            display:'inline-block', verticalAlign:'top', width:'34px', height:'34px', lineHeight:'30px',
+            margin:'2px ' + ((gm && b % gm === 0 && b < 12) ? 10 : 0) + 'px 2px 2px',
+            borderRadius:'var(--radius-sm)', fontWeight:800, fontSize:'13px', textAlign:'center',
+            border:'2px solid ' + (gm ? (gm === 2 ? this.C.a500 : this.C.g500) : this.C.n400),
+            background: gm ? (gi % 2 === 0 ? (gm === 2 ? this.C.a100 : this.C.g100) : (gm === 2 ? this.C.a200 : this.C.g300)) : this.C.n100
+          } }, b);
+        }));
+      kids.push(R.createElement('div', { key:'grp', className:'rs-fit',
+        style:{ background:this.C.n100, border:'3px solid ' + this.C.g300, borderRadius:'var(--radius-md)',
+          padding:'var(--space-3)', maxWidth:'94vw', overflowX:'auto', textAlign:'center', animation:'rsPop .35s ease' } },
+        this.pCap('t', '🧺 12칸을 다른 단위로 다시 세어 봐요', this.C.txt, 16),
+        gcells,
+        R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
+          this.pBtn('g2', (S.grp2 ? '✓ ' : '') + '2칸씩 묶기', () => this.grpSet(2)),
+          this.pBtn('g3', (S.grp3 ? '✓ ' : '') + '3칸씩 묶기', () => this.grpSet(3)),
+          this.pBtn('gu', (S.grpUndone ? '✓ ' : '') + '묶음 풀기', () => this.grpUndo())),
+        this.pCap('m', gm === 2 ? '2칸 단위로 세니 12 ÷ 2 = 6번!'
+          : (gm === 3 ? '3칸 단위로 세니 12 ÷ 3 = 4번 — 단위가 커지니 횟수가 줄었어요!'
+          : (S.grpUndone ? '풀면 다시 낱칸 12개!' : '낱칸 12개 — 버튼으로 묶어 보세요')), this.C.n700, 14.5)));
+
+      /* 내가 정한 간격으로 만들기 */
+      const cur = S.polyTag === 'mine' ? S.polyBeat : 0;
+      const mine = [];
+      const pick = (key, label, nm, which, sel) => R.createElement('div', { key,
+        style:{ display:'flex', alignItems:'center', gap:'6px', flexWrap:'wrap', justifyContent:'center' } },
+        R.createElement('span', { key:'t', style:{ fontSize:'15px', fontWeight:700 } }, label),
+        [2,3,4,5,6].map(n => this.pNum('n'+n, n, sel === n, () => this.myIntv(which, n), 40, '내 ' + nm + ' ' + n + '칸마다')));
+      mine.push(this.pCap('t', '🎛️ 내가 정한 간격으로 만들기 — 두 소리는 몇 칸마다 만날까요?', this.C.txt, 16));
+      mine.push(pick('p1', '🥁 북', '북', 'd', S.myD));
+      mine.push(pick('p2', '🔺 트라이앵글', '트라이앵글', 't', S.myT));
+      if (S.myD && S.myT) {
+        mine.push(this.polyRow('md', S.myD, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100, meet:this.meetCells({d:S.myD,t:S.myT}), size:28 }));
+        mine.push(this.polyRow('mt', S.myT, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100, meet:this.meetCells({d:S.myD,t:S.myT}), size:28 }));
+      }
+      mine.push(R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center' } },
+        this.pBtn('mp', '▶ 내 리듬 재생', () => this.playMine())));
+      if (S.myMeet) {
+        const lc = this.lcm(S.myD, S.myT);
+        mine.push(this.pCap('r', S.myMeet.length
+          ? ('✅ ' + S.myD + ' : ' + S.myT + ' → ' + lc + '칸마다 다시 만나요 (' + S.myMeet.join('칸, ') + '칸)')
+          : ('❌ ' + S.myD + ' : ' + S.myT + ' → 12칸 안에서는 만나지 못해요 (' + lc + '칸을 가야 만나요)'),
+          S.myMeet.length ? this.C.a700 : this.C.n700, 15.5));
+      }
+      kids.push(R.createElement('div', { key:'mine', className:'rs-fit',
+        style:{ background:this.C.n100, border:'3px solid ' + this.C.n300, borderRadius:'var(--radius-md)',
+          padding:'var(--space-2) var(--space-3)', maxWidth:'94vw', overflowX:'auto',
+          display:'flex', flexDirection:'column', gap:'6px', alignItems:'center' } }, mine));
+    }
+    return R.createElement('div', { key:'why',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'var(--space-2)', width:'100%' } }, kids);
   }
 
   jz(w, a, b) { const c = w.charCodeAt(w.length-1); return ((c - 0xAC00) % 28 > 0) ? a : b; }
@@ -1786,7 +2508,9 @@ class Component extends DCLogic {
           };
         });
       })() : null,
-      coachEmoji: who.emoji, coachName: who.name, coachRole: who.role,
+      coachImgEl: who.img ? this.coachPortrait(who) : null,
+      /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
+      coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name, coachRole: who.role,
       coachText: st.k === 'story' ? st.lines.join('\n')
         : (st.k === 'rooms' ? this.roomsSay(S.roomStage) : (st.say || '')),
       coachHi: st.hi || '',
@@ -1799,9 +2523,12 @@ class Component extends DCLogic {
       showPiano: st.k === 'vib' || st.k === 'harmx',
       roomStage: st.k === 'rooms' ? S.roomStage : '',
       stringsEl: null, vibWaveEl: null, hxSvgEl: null, grpWaveEl: null, harpEl: null,
+      rulerEl: null, cellsEl: null, calcEl: null,
+      harpPh1: false, harpEar: false, harpTuned: false, harpCalc: false,
+      cellTxt: '', cellBg: '', cellFg: '', cellBd: '',
       keys: null, bkeys: null, stars: null, missRows: null, rateChips: null,
       roomBoxes: null, reasonChips: null, itvRows: null,
-      polyDrum: null, polyBell: null, polyAns: null, rp: null,
+      polyEl: null, polyMsg: '', rp: null,
       harpBankV: null, rows: null, bank: null,
       showRate: false, hxRatio: '', hxItv: '', hxWaveMsg: '', grpWaveHint: '',
       helpOpen: S.helpOpen, closeHelp: () => this.setState({ helpOpen: false }),
@@ -1959,59 +2686,32 @@ class Component extends DCLogic {
     }
 
     if (st.k === 'poly') {
-      const N = 12, beat = S.polyBeat;
-      /* ② 묶음 색 시각화: 북=2칸 묶음(테라코타 교대), 방울=3칸 묶음(세이지 교대) + 묶음 경계 간격 —
-         경계가 동시에 끝나는 6·12가 눈으로 드러난다 */
-      v.polyDrum = Array.from({length:N}, (_, x) => { const b = x+1, on = b % 2 === 0, gi = Math.floor(x / 2);
-        return { icon: on ? '🥁' : '', mr: (b % 2 === 0 && b < 12) ? 8 : 0,
-          bg: gi % 2 === 0 ? this.C.a100 : this.C.a200,
-          bd: beat === b ? this.C.a500 : this.C.a300 }; });
-      v.polyBell = Array.from({length:N}, (_, x) => { const b = x+1, on = b % 3 === 0, gi = Math.floor(x / 3);
-        return { icon: on ? '🔔' : '', mr: (b % 3 === 0 && b < 12) ? 8 : 0,
-          bg: gi % 2 === 0 ? this.C.g100 : this.C.g300,
-          bd: beat === b ? this.C.a500 : this.C.g300 }; });
-      v.polyAns = Array.from({length:N}, (_, x) => { const b = x+1, on = S.polySel.indexOf(b) >= 0;
-        return { n: b, bg: on ? this.C.a200 : this.C.n100, bd: on ? this.C.a500 : this.C.n400,
-          bs: on ? 'solid' : 'dashed', tap: () => this.polyTap(b) }; });
-      /* ③ 내 리듬 만들기 */
-      v.polyMine = Array.from({length:N}, (_, x) => { const b = x+1, on = S.myBeats.indexOf(b) >= 0;
-        return { n: b, t: on ? '●' : String(b),
-          bg: on ? this.C.g300 : this.C.n100, bd: beat === b ? this.C.a500 : (on ? this.C.g500 : this.C.n400),
-          bs: on ? 'solid' : 'dashed', tap: () => this.myToggle(b) }; });
-      /* ① 단계적 듣기 */
-      v.playDrum = () => this.playPoly('drum');
-      v.playBell = () => this.playPoly('bell');
-      v.playBoth = () => this.playPoly('both');
-      v.playMine = () => { if (!S.myBeats.length) { this.toastRetry('먼저 내 리듬 줄의 칸을 눌러 리듬을 찍어 보세요!'); return; } this.playPoly('mine'); };
-      v.drumLb = (S.heardDrum ? '✓ ' : '') + '🥁 북만 듣기';
-      v.bellLb = (S.heardBell ? '✓ ' : '') + '🔔 방울만 듣기';
-      v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
-        : (solved ? '6박과 12박 — 2×3=6에서 다시 만나요!'
-        : (S.polyFound ? '아래에서 묶기 조작으로 확인해 봐요!'
-        : (S.polyHeard ? '잘 들었나요? 🥁와 🔔이 같은 순간에 울린 칸을 눌러 보세요!'
-        : ((S.heardDrum && S.heardBell) ? '좋아요! 이제 함께 듣기로 두 소리를 겹쳐 들어 보세요!'
-        : '북만, 방울만 차례로 들으며 귀를 준비해요!'))));
-      /* 묶기/풀기 미니 조작 */
-      v.polyFound = S.polyFound;
-      const gm = S.grpMode;
-      v.grpCells = Array.from({length:12}, (_, x) => {
-        const b = x + 1;
-        const gi = gm ? Math.floor(x / gm) : -1;
-        return { n: b,
-          mr: (gm && b % gm === 0 && b < 12) ? 10 : 0,
-          bd: gm ? (gm === 2 ? this.C.a500 : this.C.g500) : this.C.n400,
-          bg: gm ? (gi % 2 === 0 ? (gm === 2 ? this.C.a100 : this.C.g100) : (gm === 2 ? this.C.a200 : this.C.g300)) : this.C.n100 };
-      });
-      v.grp2 = () => this.grpSet(2);
-      v.grp3 = () => this.grpSet(3);
-      v.grpUndoB = () => this.grpUndo();
-      v.grp2Lb = (S.grp2 ? '✓ ' : '') + '2칸씩 묶기';
-      v.grp3Lb = (S.grp3 ? '✓ ' : '') + '3칸씩 묶기';
-      v.grpUndoLb = (S.grpUndone ? '✓ ' : '') + '묶음 풀기';
-      v.grpMsg = gm === 2 ? '2칸씩 묶으니 12 ÷ 2 = 6묶음!'
-        : (gm === 3 ? '3칸씩 묶으니 12 ÷ 3 = 4묶음!'
-        : (S.grpUndone ? '풀면 다시 낱칸 12개!' : '낱칸 12개 — 버튼으로 묶어 보세요'));
-      if (S.polyFound && !solved) { v.footHintOverride = '2칸씩·3칸씩 묶고, 풀기까지 해 보면 완료!'; }
+      v.polyEl = this.polyEl();
+      if (st.p === 'why') {
+        const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
+        v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
+          : (solved ? '단위가 커지면 횟수가 줄어요 — 6은 2로도 3으로도 딱 묶여요!'
+          : (S.whyPick >= 0 ? '12칸을 2칸 단위·3칸 단위로 다시 세어 보고, 풀기까지 해 봐요!'
+          : (allPlayed ? '세 리듬을 다 들었어요! 무엇을 알 수 있는지 골라 봐요.'
+          : '세 리듬을 차례로 들으며, 다시 만나는 칸을 견주어 봐요!')));
+        if (!solved) v.footHintOverride = S.whyPick >= 0
+          ? '2칸씩·3칸씩 묶고, 풀기까지 하면 완료!'
+          : (allPlayed ? '세 리듬을 견주어 알 수 있는 것을 골라요' : '세 리듬을 모두 들어 보세요');
+        if (solved) { v.liveBadge = '✅ 완료! 아래에서 간격을 바꿔 더 만들어 보고 다음으로 가요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+        else if (S.whyPick >= 0) { v.liveBadge = '🔎 간단한 비일수록 빨리 다시 만나요'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
+      } else {
+        const p = this.polyP(st);
+        v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
+          : (S.polyStage === 'done' ? ('같은 ' + p.d + ' : ' + p.t + '이 리듬에도, 앞의 방에도 있었어요!')
+          : (S.polyStage === 'link' ? '이 비를 앞에서 어디서 만났는지 떠올려 봐요!'
+          : (S.polyStage === 'find' ? '칸을 세어 보세요 — 각 악기는 몇 칸마다 울리나요?'
+          : ((S.heardDrum && S.heardTri && S.heardBoth) ? '잘 들었나요? 느낌을 골라 봐요.'
+          : '아직 비는 알려 주지 않았어요 — 먼저 귀로 들어 봐요!'))));
+        if (!solved) v.footHintOverride = S.polyStage === 'link' ? '이 비를 앞에서 만난 곳을 고르면 완료!'
+          : (S.polyStage === 'find' ? '두 악기가 몇 칸마다 울리는지 세어 보세요'
+          : '북만, 트라이앵글만, 함께 — 세 가지를 다 들어 보세요');
+        if (S.polyStage === 'done') { v.liveBadge = '🔗 ' + p.d + ' : ' + p.t + ' — 같은 비를 세 번째로 만났어요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      }
     }
 
     if (st.k === 'strlen') {
@@ -2032,32 +2732,50 @@ class Component extends DCLogic {
     }
 
     if (st.k === 'harp') {
-      const p = this.HP[st.i];
+      const p = this.HP[st.i], ph = p.ph;
+      const unit = this.hUnit(st.i), unitS = this.hUnitS(st.i);
       v.harpN = p.n; v.harpA = p.a; v.harpB = p.b;
+      v.harpUnit = unitS; v.harpTot = this.exS(st.i);
       v.harpIntro = st.i === 0;
+      v.harpPh1 = ph === 1;                      /* 1부 — 눈금은 조율 뒤에도 남긴다 */
+      v.harpEar = ph === 1 && !S.harpTuned;      /* 1부 — 귀로 찾기(식 빈칸 없음) */
+      v.harpTuned = ph === 1 && S.harpTuned;     /* 1부 — 칸 확정 + 단위화 */
+      v.harpCalc = ph === 2;                     /* 2부 — 칸으로 계산하기 */
       v.harpL = S.harpL;
       v.harpLTxt = (+S.harpL).toFixed(1).replace(/\.0$/, '') + 'cm';
-      v.harpSlide = (e) => this.setState({ harpL: +e.target.value });
+      v.harpSlide = (e) => this.harpSlide(+e.target.value);
+      v.harpSlideEnd = () => this.harpDroneOff();
       v.tGoal = () => this.harpGoal();
       v.tPluck = () => this.harpPluck();
-      v.tuneMsg = S.tuneMsg; v.harpTuned = S.harpTuned;
+      v.tuneMsg = S.tuneMsg;
       v.openHelp = () => { this.setState({ helpOpen: true }); this.plog('harphelp', { n: p.n }); };
       v.helpPct = Math.round(p.a / p.b * 1000) / 10;
       v.harpEl = this.harpGraphic(S.hDone);
-      const mkHb = (key) => {
-        const filled = S.hb[key], sel = S.selBlank === key;
-        return { t: filled || '',
-          bb: filled ? this.C.g500 : this.C.a400,
-          bg: filled ? this.C.g100 : (sel ? this.C.a300 : this.C.a200),
-          fg: filled ? this.C.g700 : this.C.a700,
-          out: sel ? '3px dashed ' + this.C.a700 : 'none',
-          tap: () => { if (!this.state.hb[key]) { this.sfx('tap'); this.setState({ selBlank: key }); } } };
-      };
-      v.hbNum = mkHb('num'); v.hbDen = mkHb('den'); v.hbAns = mkHb('ans');
-      v.harpBankV = S.harpBank.map(w => ({ t: w,
-        vis: S.hbUsed[w] ? 'hidden' : 'visible',
-        tap: () => this.placeHarp(w),
-        down: this.chipDown(w, (word) => this.placeHarp(word)) }));
+      if (ph === 1) {
+        v.rulerEl = this.harpRulerSvg(st.i, S.harpL, S.harpTuned);
+        const cells = S.harpL / unit;
+        const near = Math.abs(cells - Math.round(cells)) < 0.06;
+        v.cellTxt = S.harpTuned
+          ? ('📏 내 줄은 ' + p.b + '칸으로 나눈 것 중 ' + p.a + '칸!')
+          : ('📏 ' + p.b + '칸으로 나눈 눈금 — 지금 내 줄은 ' +
+             (near ? ('딱 ' + Math.round(cells) + '칸') : ('약 ' + (Math.round(cells*10)/10) + '칸')));
+        v.cellBg = S.harpTuned ? this.C.g100 : this.C.a100;
+        v.cellFg = S.harpTuned ? this.C.g700 : this.C.a700;
+        v.cellBd = S.harpTuned ? this.C.g300 : this.C.a300;
+        if (S.harpTuned) { v.liveBadge = '🎯 ' + p.b + '칸 중 ' + p.a + '칸 — 다음으로 갈 수 있어요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      } else {
+        v.cellsEl = this.harpCellsSvg(st.i);
+        v.calcEl = this.harpCalcEl(st.i);
+        v.harpBankV = S.harpBank.map(w => ({ t: w,
+          vis: S.hbUsed[w] ? 'hidden' : 'visible',
+          tap: () => this.placeHarp(w),
+          down: this.chipDown(w, (word) => this.placeHarp(word)) }));
+        if (!solved) {
+          const sg = this.hcStage();
+          v.footHintOverride = sg === 'a1' ? '① 한 칸의 길이부터 구해요'
+            : (sg === 'a2' ? '② 한 칸이 ' + p.a + '칸이면 몇 cm일까요?' : '③ 마지막! 곱셈식 하나로 써 봐요');
+        }
+      }
     }
 
     if (st.k === 'reflect') {
@@ -2107,7 +2825,10 @@ class Component extends DCLogic {
       if (st.k === 'finish') {
         this.stopVoice();
         this.setState({ i:0, solved:{}, rates:{}, blanks:{}, used:{}, hb:{}, hbUsed:{},
-          refText:'', polySel:[], polyHeard:false, vibHit:[], vibCur:-1, hDone:0, roomStage:'collect', toast:null });
+          refText:'', polyStage:'listen', heardDrum:false, heardTri:false, heardBoth:false, polyFeel:'',
+          pickD:0, pickT:0, polyFound:false, linkPick:-1, whyPlayed:{}, whyPick:-1, myD:0, myT:0, myMeet:null,
+          grp2:false, grp3:false, grpUndone:false, grpMode:0,
+          vibHit:[], vibCur:-1, hDone:0, roomStage:'collect', toast:null });
         setTimeout(() => this.sayStep(0), 380);
         return;
       }

@@ -87,7 +87,7 @@
   <div class="sub">방마다 숨어 있는 <b>비(比)의 비밀</b>을 찾아가는 비율 탐험!<br>비밀 카드를 모아 마지막 문을 열어요</div>
   <div class="chiprow">
     <span class="mychip" id="chip" style="display:none">🙋 <span id="chipNo"></span></span>
-    <span class="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(평가의 방에서 모아요)</span></span>
+    <span class="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(시작할 때 1., 방마다 한 자리씩)</span></span>
     <button class="ghost" id="chgBtn" style="display:none">코드 바꾸기</button>
     <span class="guestnote" id="guestNote">🔎 게스트 모드 — 활동 기록이 남지 않아요</span>
   </div>
@@ -95,10 +95,9 @@
     <a class="room" data-r="color" href="ColorRoom.dc.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">화가의 잃어버린 색을<br>실험으로 찾아요</div></a>
     <a class="room" data-r="sound" href="SoundRoom.dc.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div></a>
     <a class="room" data-r="map" id="mapCard" href="MapRoom.dc.html"><div class="badge">3</div><div class="em">🗺️</div><div class="nm">지도의 비밀</div><div class="ds">축척으로 마을을,<br>비로 지구를 재요</div><span class="locktag" id="mapLock" style="display:none">🔒 색·소리 방을 마치면 열려요</span></a>
-    <div class="room locked" data-r="mart" aria-disabled="true"><div class="badge">4</div><div class="em">🛒</div><div class="nm">마트의 비밀</div><div class="ds">하나에 얼마?<br>할인의 비밀까지</div><span class="locktag">🔒 준비 중</span></div>
-    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html"><div class="badge">5</div><div class="em">📝</div><div class="nm">평가의 방</div><div class="ds">5문제 · 비밀 카드 4장,<br>그리고 마지막 문</div><span class="locktag" id="evalLock" style="display:none">🔒 색·소리·지도 방을 마치면 열려요</span></a>
+    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html"><div class="badge">4</div><div class="em">📝</div><div class="nm">평가의 방</div><div class="ds">같은 색 5문제 · 마트 7문제,<br>마지막 문과 카드 복습 16장</div><span class="locktag" id="evalLock" style="display:none">🔒 색·소리·지도 방을 마치면 열려요</span></a>
   </div>
-  <div class="foot">탐험 순서: 색깔 → 소리 → 지도 → 평가 (4번 마트는 준비 중) — 방이 끝나면 허브로 돌아와 다음 방으로 이어가요! · 게스트로 입장하면 모든 방을 자유롭게 둘러볼 수 있어요.</div>
+  <div class="foot">탐험 순서: 색깔 → 소리 → 지도 → 평가 — 방이 끝나면 허브로 돌아와 다음 방으로 이어가요! · 게스트로 입장하면 모든 방을 자유롭게 둘러볼 수 있어요.</div>
 </div>
 
 <div id="loginOv">
@@ -191,8 +190,17 @@ function showChip(code){
   $('#chip').style.display='inline-block';
   $('#chgBtn').style.display='inline-block';
   $('#guestNote').style.display=code==='guest'?'inline-flex':'none';}
+/* 참여를 시작하면 황금비의 첫 자리 '1.'을 먼저 준다.
+   나머지 6·1·8은 색깔·소리·지도 방을 마칠 때 하나씩 받고, 넷이 모이면 평가의 방 문이 열린다. */
+function grantStartCard(){
+  if(!getUser())return;
+  try{const a=getCards();
+    if(!a.includes('start')){a.push('start');
+      localStorage.setItem(uk('rs3_cards'),JSON.stringify(a));}}catch(e){}
+}
 function refresh(){
   const dn=getDone();
+  grantStartCard();
   $('#walN').textContent=getCards().length;
   const ORDER=['color','sound','map','eval'];
   const next=ORDER.find(r=>!dn.includes(r));
