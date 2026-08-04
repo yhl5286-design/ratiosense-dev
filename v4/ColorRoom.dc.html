@@ -135,10 +135,23 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
+      <!-- 목표 색 견본. 실험 단계에서는 내 비커 색을 바로 옆에 같은 크기로 붙여
+           둘을 눈으로 견주게 한다(지침 4.5 예측 후 확인) -->
       <sc-if value="{{showSwatch}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:7px;margin-bottom:12px;flex:none">
-          <div style="width:min(126px,29vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}};box-shadow:inset 0 -12px 20px rgba(0,0,0,.13),0 6px 16px rgba(32,30,29,.2)"></div>
-          <div style="font-size:14px;font-weight:800;color:#645c50">목표 색 · 노을빛 주황</div>
+        <div style="display:flex;gap:min(6vw,30px);align-items:flex-start;justify-content:center;margin-bottom:12px;flex:none">
+          <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+              <div style="width:min(126px,29vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{myColor}};box-shadow:inset 0 -12px 20px rgba(0,0,0,.13),0 6px 16px rgba(32,30,29,.2);transition:background .18s"></div>
+              <div style="font-size:14px;font-weight:800;color:#8c491a">내 색 {{beakerAmt}}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:24px;color:#645c50;align-self:center;padding-bottom:22px">vs</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="width:min(126px,29vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}};box-shadow:inset 0 -12px 20px rgba(0,0,0,.13),0 6px 16px rgba(32,30,29,.2)"></div>
+            <div style="font-size:14px;font-weight:800;color:#645c50">목표 색 · 노을빛 주황</div>
+          </div>
         </div>
       </sc-if>
 
@@ -876,7 +889,9 @@ class Component extends DCLogic {
     const man = window.RS_TTS;
     if (man && man[key]) {
       try {
-        const a = new Audio('tts/' + key + '.mp3');
+        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+           브라우저에 남은 옛 음성이 재생되지 않는다. */
+        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
         a.volume = 0.95; this._mp3 = a; this._speaking = true;
         a.onended = () => { this._speaking = false; };
         a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
@@ -1043,8 +1058,10 @@ class Component extends DCLogic {
   }
 
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  /* kind='quiet' — 소리 없이 띄우는 알림.
+     가설처럼 아직 맞고 틀림을 가릴 수 없는 선택에는 정답 소리를 내지 않는다. */
   toast(icon, title, body, kind, hold) {
-    this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    if (kind !== 'quiet') this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
     const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
@@ -1723,8 +1740,16 @@ class Component extends DCLogic {
             this.plog('pick', { step: S.i, t: c.t, ok: !!c.ok });
             if (c.ok) {
               const okCount = p.filter(x => list[x] && list[x].ok).length;
-              if (okCount >= needed) { this.markSolved(); this.toast('✅', c.t, c.fb || '', 'ok'); this.autoNext(3000); }
-              else this.toast('✅', c.t, (c.fb || '') + ' 하나 더 찾아봐요!', 'ok');
+              /* 가설은 실험 전이라 옳고 그름을 가릴 수 없다 — 정답 표시와 소리 없이 세운 가설만 되짚어 준다 */
+              const quiet = (st.mark === 'hypo');
+              const ic = quiet ? '📝' : '✅';
+              const tt = quiet ? '가설을 세웠어요' : c.t;
+              const bd = quiet ? (c.t + ' — 실험으로 확인해 봐요!') : (c.fb || '');
+              if (okCount >= needed) {
+                this.markSolved();
+                this.toast(ic, tt, bd, quiet ? 'quiet' : 'ok');
+                this.autoNext(3000);
+              } else this.toast(ic, tt, (quiet ? bd : (c.fb || '') + ' 하나 더 찾아봐요!'), quiet ? 'quiet' : 'ok');
             } else this.toast('💡', '먼셀의 힌트', c.fb || '');
           }
         };

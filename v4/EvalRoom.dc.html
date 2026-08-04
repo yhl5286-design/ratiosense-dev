@@ -301,7 +301,9 @@ class Component extends DCLogic {
     const man = window.RS_TTS;
     if (man && man[key]) {
       try {
-        const a = new Audio('tts/' + key + '.mp3');
+        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+           브라우저에 남은 옛 음성이 재생되지 않는다. */
+        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
         a.volume = 0.95; this._mp3 = a; this._speaking = true;
         a.onended = () => { this._speaking = false; };
         a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
