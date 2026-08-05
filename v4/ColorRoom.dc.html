@@ -162,6 +162,19 @@ button{font-family:inherit}
 
       <sc-if value="{{isChips}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;min-height:0">
+        <sc-if value="{{madeList}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:11px 18px;max-width:96%;animation:rsPop .35s ease">
+            <div style="font-size:14px;font-weight:800;color:#645c50">🧪 내가 만든 양</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+              <sc-for list="{{madeList}}" as="m" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:8px;background:#fff;border:2.5px solid #f6a06b;border-radius:999px;padding:6px 14px">
+                  <span style="width:20px;height:20px;border-radius:999px;border:2px solid #201e1d;background:{{m.color}};display:inline-block"></span>
+                  <span style="font-size:17px;font-weight:800;color:#8c491a">{{m.t}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
         <div style="display:flex;flex-wrap:wrap;gap:11px;justify-content:center;max-width:760px;animation:rsUp .3s ease;flex:none">
           <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
             <button onClick="{{c.pick}}" style="min-height:60px;padding:14px 24px;border-radius:999px;border:3px solid {{c.bd}};background:{{c.bg}};color:{{c.fg}};font-size:18.5px;cursor:pointer;max-width:100%;text-align:left;line-height:1.4">{{c.t}}</button>
@@ -615,35 +628,44 @@ class Component extends DCLogic {
         say:'네 가설대로 물감을 넣고 실험하기를 눌러 봐. 목표색이 나올 때까지 도전!',
         hi:'막대를 끌거나 ＋5mL 버튼을 눌러요' },
       { k:'lab', mode:'more', who:'munsell', run:'실험하기',
-        say:'완벽해. 그런데 이 색과 같은 색을 다른 양으로도 만들 수 있을까? 서로 다른 양으로 두 번 더 만들어 봐.',
+        say:'완벽해. 그런데 이 색과 같은 색을 다른 양으로도 만들 수 있을까? 앞에서 만든 양과 다르게, 한 번만 더 만들어 봐.',
         hi:'두 손가락으로 벌려 보세요' },
       { k:'chips', who:'munsell', need:1,
-        say:'양이 달라도 전부 같은 색이었어. 변하지 않은 것은 무엇일까?',
+        say:'양이 달라도 전부 같은 색이었어. 무엇이 달라지지 않았을까? 그리고 그것을 수첩에 어떻게 적어 두면 좋을까?',
+        need:2,
         chips:[ {t:'두 양의 합', ok:0, fb:'20+50은 70, 40+100은 140 — 합은 달라졌단다. 다시 한번 생각해볼까?'},
                 {t:'두 양의 차', ok:0, fb:'30과 60 — 차이도 달라졌단다. 다시 한번 생각해볼까?'},
-                {t:'한쪽이 다른 쪽의 몇 배인지', ok:1, fb:'바로 그거야.'} ] },
+                {t:'한쪽이 다른 쪽의 몇 배인지', ok:1, fb:'바로 그거야. 그럼 수첩에는 어떻게 적어 둘까?'},
+                {t:'수첩에 「빨강 20mL, 노랑 50mL」라고 적기', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'},
+                {t:'수첩에 「빨강 : 노랑」의 비로 적기', ok:1, fb:'양이 얼마든 이 비만 지키면 같은 색이 나와.'} ] },
       /* 단위화(재합성) — '간단히 하면 2 : 5'라는 결론이 처음 말해지는 다음 단계 바로 앞에 둔다.
          앱이 대신 약분해 보여 주던 것을 학습자가 10mL 컵으로 옮겨 담아 손으로 만들어 낸다. */
       { k:'cups', who:'munsell',
         say:'실험으로 찾은 빨강 20mL와 노랑 50mL를 다시 가져왔어. 여기 10mL짜리 작은 컵이 있어. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐.',
         hi:'빈 컵을 누르면 비커에서 10mL가 옮겨져요' },
-      { k:'chips', who:'munsell', need:1,
-        say:'모두 간단히 하면 언제나 2 대 5야. 수첩에는 뭐라고 적을까?',
-        chips:[ {t:'빨강 : 노랑 = 2 : 5', ok:1, fb:'양이 얼마든 이 비만 지키면 돼.'},
-                {t:'빨강 20mL, 노랑 50mL', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'} ] },
       { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
         lines:['찾았다! 바로 이 색이야!', '너희 덕분에 그림을 완성했어. 정말 고마워!'],
         btn:'다음 →' },
       /* 여기서부터 한 걸음 더 — 찾은 비를 크게 늘려 보고(벽화),
       /* 뭉크가 색을 찾은 직후, 또래 아이가 오개념을 직접 물어 함께 따져 본다 */
+      { k:'story', who:'ratio', emoji:'🎨',
+        lines:['잠깐, 더 생각해봐요!',
+               '여기 질문이 있는 학생이 있어요.',
+               '잠깐 대화를 들어볼까요?'],
+        btn:'좋아요! →' },
       { k:'story', who:'kid', emoji:'🙋',
         lines:['잠깐만요! 저도 색을 만들어 보고 싶어요.',
                '그런데 왜 이렇게 하면 안 되나요?',
                '빨강 20에 30을 더하고, 노랑 50에도 30을 더하면 똑같이 더한 거잖아요.',
                '같은 양을 더했으니까 같은 색이 나와야 하는 거 아니에요?'],
         btn:'그러게요? →' },
+      { k:'story', who:'munsell', emoji:'🔬',
+        lines:['좋은 물음이야, 다인아.',
+               '같은 수를 더하는 것과 같은 수를 곱하는 것은 다른 일이란다.',
+               '말로만 따지지 말고, 네 말대로 직접 만들어서 확인해 보자.'],
+        btn:'만들어 볼게요! →' },
       { k:'lab', mode:'trap', who:'munsell', run:'확인하기',
-        say:'좋은 물음이야! 말로만 따지지 말고 직접 만들어 보자. \'다인\'이 말한 대로 빨강 50, 노랑 80을 만들어서 목표 색과 나란히 놓고 확인해 볼까?',
+        say:'다인이가 말한 대로 빨강 50, 노랑 80을 만들어서, 목표 색과 나란히 놓고 확인해 볼까?',
         hi:'빨강 50 · 노랑 80' },
       /* 오개념을 어른이 대신 말해 주지 않고, 또래 아이가 직접 물어 함께 따져 보게 한다 */
       /* 시냐크로 넘어가기 전, 안내자가 여기까지를 한 번 매듭짓는다 */
@@ -681,7 +703,7 @@ class Component extends DCLogic {
                '지금부터는 비율을 공부해볼까요?'],
         btn:'좋아요! →' },
       { k:'blank', id:'cells', who:'ratio',
-        say:'백 칸 중 빨강이 마흔 칸이에요. 전체에 대한 빨강의 비율은 얼마일까요?' },
+        say:'100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요?' },
       { k:'blank', id:'pct', who:'ratio',
         say:'빨강 40, 노랑 60을 넣어 주황 100mL를 만들었어요. 각각 몇 퍼센트일까요?' },
       { k:'blank', id:'secret', who:'ratio', say:'이제 색깔의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
@@ -1064,7 +1086,7 @@ class Component extends DCLogic {
     clearTimeout(this._tT); clearTimeout(this._autoT);
     this._wasHit = false;
     this._pts = new Map(); this._pinched = false; this._pinch0 = null;
-    this.setState({ i:n, toast:null, amt:{ '빨강':0, '노랑':0 }, labLog:[], found: n === this.I_FIND ? this.state.found : [],
+    this.setState({ i:n, toast:null, amt:{ '빨강':0, '노랑':0 }, labLog:[],
       cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
       tmpNum:{},
       cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
@@ -1290,13 +1312,12 @@ class Component extends DCLogic {
       if (this.state.found.some(f => f[0]+':'+f[1] === key)) { this.toast('🤔', '이미 실험한 양이에요', '새로운 양으로 도전!'); return; }
       const found = this.state.found.concat([[a,b]]);
       this.setState({ found, amt:{ '빨강':0, '노랑':0 } });
-      if (found.length >= 3) {
-        this.markSolved(); this.confetti();
-        this.toast('🎉', '실험 대성공!', '서로 다른 양인데 전부 같은 색! 곧 다음으로 넘어가요.', 'ok');
-        this.autoNext(2600);
-      } else {
-        this.toast('✅', '성공!', '또 다른 양으로 한 번 더! (' + found.length + '/3)', 'ok');
-      }
+      this.markSolved(); this.confetti();
+      const g0 = this.gcd(found[0][0], found[0][1]), g1 = this.gcd(a, b);
+      this.toast('🎉', '성공! 양은 달라도 같은 색이에요',
+        '처음 ' + found[0][0] + ' : ' + found[0][1] + '  →  이번 ' + a + ' : ' + b
+        + '  ·  간단히 하면 둘 다 ' + (a/g1) + ' : ' + (b/g1) + '!', 'ok');
+      this.autoNext(3600);
       return;
     }
     if (st.mode === 'wall') {
@@ -1690,6 +1711,9 @@ class Component extends DCLogic {
     };
 
     if (st.k === 'chips') {
+      /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 견주게 한다 */
+      v.madeList = (st.mark || S.found.length < 2) ? null
+        : S.found.map(f => ({ t: f[0] + ' : ' + f[1], color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] })) }));
       let list = st.chips || [];
       if (st.mark === 'hypo') {
         list = (this.HYPOS[S.obs] || this.HYPOS.y).map(o =>
