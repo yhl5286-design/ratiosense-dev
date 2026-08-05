@@ -126,6 +126,9 @@ button{font-family:inherit}
 
       <div class="rs-play">
 
+      <sc-if value="{{storyDemo}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsPop .4s ease;margin:auto 0">{{storyDemo}}</div>
+      </sc-if>
       <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:11px;animation:rsUp .35s ease">
           <sc-if value="{{storyEmoji}}" hint-placeholder-val="{{false}}">
@@ -671,7 +674,7 @@ class Component extends DCLogic {
                '그러면 빨강 60, 노랑 90이 되는데요.',
                '같은 양을 더했으니까 같은 색이 나와야 하는 거 아니에요?'],
         btn:'그러게요? →' },
-      { k:'story', who:'munsell', emoji:'🔬',
+      { k:'story', who:'munsell', emoji:'🔬', demo:'cups',
         lines:['좋은 질문이에요.',
                '하지만 같은 수를 더하는 것과 같은 수를 곱하는 것은 다른 일이란다.',
                '빨강이 20에서 60이 되었으니 3배가 되었지?',
@@ -1521,6 +1524,30 @@ class Component extends DCLogic {
   }
 
   /* 백분율 문제에서 쓰는 비커 그림 — 빨강 40 · 노랑 60이 섞여 주황 100이 된다 */
+  /* 10mL 컵으로 세어 보는 시연 — 2:5, 6:9(더하기), 6:15(곱하기)를 나란히 놓는다 */
+  cupRowsEl() {
+    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
+    const cup = (k, c) => R.createElement('span', { key:k, style:{ display:'inline-block', width:'15px', height:'21px',
+      margin:'0 2px 2px 0', borderRadius:'0 0 4px 4px', border:'2px solid ' + ink, borderTopWidth:'1px', background:c } });
+    const row = (k, r, y, cap, ok) => R.createElement('div', { key:k,
+      style:{ display:'flex', alignItems:'center', gap:'10px', flexWrap:'wrap', justifyContent:'center',
+        background:'var(--color-neutral-100)', border:'3px solid ' + (ok === false ? '#f6a06b' : (ok ? '#ccdbb2' : 'var(--color-neutral-300)')),
+        borderRadius:'16px', padding:'8px 14px' } },
+      R.createElement('div', { key:'c', style:{ display:'flex', flexWrap:'wrap', maxWidth:'320px' } },
+        Array.from({ length:r }, (_, i) => cup('r'+i, this.rgb(P['빨강']))).concat(
+        Array.from({ length:y }, (_, i) => cup('y'+i, this.rgb(P['노랑']))))),
+      R.createElement('div', { key:'m', style:{ fontSize:'15px', fontWeight:800, color:'var(--color-neutral-700)', whiteSpace:'nowrap' } },
+        '빨강 ' + r + '컵 : 노랑 ' + y + '컵'),
+      R.createElement('div', { key:'s', style:{ width:'34px', height:'34px', borderRadius:'999px',
+        border:'3px solid ' + ink, background:this.rgb(this.mix({ '빨강': r*10, '노랑': y*10 })) } }),
+      R.createElement('div', { key:'t', style:{ fontSize:'13.5px', fontWeight:800,
+        color: ok === false ? '#8c491a' : (ok ? '#56633f' : 'var(--color-neutral-700)') } }, cap));
+    return R.createElement('div', { key:'cups', style:{ display:'flex', flexDirection:'column', gap:'8px', alignItems:'center' } },
+      row('a', 2, 5, '우리가 찾은 비'),
+      row('b', 6, 9, '40씩 더하면 — 색이 달라요', false),
+      row('c', 6, 15, '3배씩 늘리면 — 같은 색!', true));
+  }
+
   pctBeakers() {
     const P = this.PRIM;
     return [
@@ -1715,7 +1742,8 @@ class Component extends DCLogic {
       tgtColor: tgt,
       /* 목표 색 견본: 가설을 세우는 7·8단계와 실험(lab) 단계 모두 같은 형태로 상시 제시 */
       showSwatch: !!st.swatch || isLab,
-      isStory: st.k === 'story', isChips: st.k === 'chips', isLab,
+      isStory: st.k === 'story' && st.demo !== 'cups',
+      storyDemo: (st.k === 'story' && st.demo === 'cups') ? this.cupRowsEl() : null, isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
       artCap: st.artCap || '',
