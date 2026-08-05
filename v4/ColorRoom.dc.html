@@ -405,6 +405,18 @@ button{font-family:inherit}
 
       <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
         <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <sc-if value="{{pctArt}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:16px;align-items:flex-end;justify-content:center;margin-bottom:10px">
+              <sc-for list="{{pctArt}}" as="v" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <div style="position:relative;width:{{v.w}}px;height:96px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 14px 14px;overflow:hidden;background:#f9f4ed">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{v.h}}%;background:{{v.c}}"></div>
+                  </div>
+                  <div style="font-size:14px;font-weight:800;color:#645c50">{{v.t}}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
           <sc-if value="{{blankArt}}" hint-placeholder-val="{{false}}">
             <div style="flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);gap:2px;aspect-ratio:1;width:auto;max-width:min(90%,240px);background:#f9f4ed;border:3px solid #dcd3c4;border-radius:16px;padding:8px">
               <sc-for list="{{blankArt}}" as="c" hint-placeholder-count="0">
@@ -442,6 +454,7 @@ button{font-family:inherit}
               <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
             </sc-for>
           </div>
+          <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:640px;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:7px 18px">✋ 낱말을 <b>손가락이나 마우스로 누른 채 끌어서</b> 빈칸 위에 놓아 주세요</div>
         </div>
       </sc-if>
 
@@ -703,9 +716,9 @@ class Component extends DCLogic {
                '지금부터는 비율을 공부해볼까요?'],
         btn:'좋아요! →' },
       { k:'blank', id:'cells', who:'ratio',
-        say:'100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요?' },
+        say:'100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요? 아래 낱말을 손가락이나 마우스로 누른 채 끌어서, 빈칸 위에 놓아 주세요.' },
       { k:'blank', id:'pct', who:'ratio',
-        say:'빨강 40, 노랑 60을 넣어 주황 100mL를 만들었어요. 각각 몇 퍼센트일까요?' },
+        say:'이어서 비율 문제예요. 만약 물감 빨강 40mL, 노랑 60mL을 넣어 주황 100mL를 만들었다면, 각 색깔은 전체의 몇 퍼센트일까요?' },
       { k:'blank', id:'secret', who:'ratio', say:'이제 색깔의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
       { k:'finish', who:'ratio',
         say:'색깔의 비밀을 잘 찾아냈어요! 카드 숫자 6을 얻었어요! 잘 기억해두세요!',
@@ -753,11 +766,8 @@ class Component extends DCLogic {
                 male:0, slot:0, pitch:1.18, pitchF:1.18, rate:1.06, gap:150 }
   };
 
-  HYPOS = {
-    r: [['10','1','빨강이 훨씬 많음'], ['3','2','빨강이 조금 많음']],
-    y: [['1','10','노랑이 훨씬 많음'], ['2','5','노랑이 두 배 반쯤']],
-    s: [['1','1','둘이 비슷함']]
-  };
+  /* 가설은 세 가지만 — 어느 쪽이 많은지에 따라 하나씩 고른다 */
+  HYPOS = [['2','1','빨강이 더 많음'], ['2','5','노랑이 더 많음'], ['1','1','둘이 비슷함']];
 
   BLANKS = {
     cells: { art:true, rows:[
@@ -1512,6 +1522,16 @@ class Component extends DCLogic {
     }
   }
 
+  /* 백분율 문제에서 쓰는 비커 그림 — 빨강 40 · 노랑 60이 섞여 주황 100이 된다 */
+  pctBeakers() {
+    const P = this.PRIM;
+    return [
+      { t:'빨강 40mL', w:52, h:40, c:this.rgb(P['빨강']) },
+      { t:'노랑 60mL', w:52, h:60, c:this.rgb(P['노랑']) },
+      { t:'주황 100mL', w:66, h:100, c:this.rgb(this.mix({ '빨강':40, '노랑':60 })) }
+    ];
+  }
+
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
   blankKeys() {
     const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
@@ -1688,7 +1708,7 @@ class Component extends DCLogic {
         if (!S.hypo || S.i < this.I_HYPO || S.i >= this.I_SIGNAC) return '';
         const hp = S.hypo.split(':');
         let desc = '';
-        Object.keys(this.HYPOS).forEach(k => this.HYPOS[k].forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; }));
+        this.HYPOS.forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; });
         return '빨강 ' + (hp[0]*10) + 'mL : 노랑 ' + (hp[1]*10) + 'mL' + (desc ? ' · ' + desc : '') + (S.failed.length ? '  (지운 가설 ' + S.failed.length + '개)' : '');
       })(),
       hypoText: (isLab && st.mode === 'find' && S.hypo)
@@ -1712,11 +1732,12 @@ class Component extends DCLogic {
 
     if (st.k === 'chips') {
       /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 견주게 한다 */
+      v.pctArt = null;
       v.madeList = (st.mark || S.found.length < 2) ? null
         : S.found.map(f => ({ t: f[0] + ' : ' + f[1], color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] })) }));
       let list = st.chips || [];
       if (st.mark === 'hypo') {
-        list = (this.HYPOS[S.obs] || this.HYPOS.y).map(o =>
+        list = this.HYPOS.map(o =>
           ({ t: '빨강 ' + (o[0]*10) + 'mL : 노랑 ' + (o[1]*10) + 'mL · ' + o[2], v: o[0]+':'+o[1], ok:1 }));
       }
       const picked = S.picks[S.i] || [];
@@ -1775,7 +1796,7 @@ class Component extends DCLogic {
         if (!S.hypo) return '';
         const hp = S.hypo.split(':');
         let desc = '';
-        Object.keys(this.HYPOS).forEach(k => this.HYPOS[k].forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; }));
+        this.HYPOS.forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; });
         return (desc ? desc + ' · ' : '') + hp[0] + ' : ' + hp[1];
       })();
       v.runLabel = st.run || '실험하기';
@@ -1816,7 +1837,7 @@ class Component extends DCLogic {
       v.liveFg = goal ? '#56633f' : '#8c491a';
       v.liveBd = goal ? '#ccdbb2' : '#f6a06b';
       const allH = [];
-      Object.keys(this.HYPOS).forEach(k => this.HYPOS[k].forEach(o => allH.push(o)));
+      this.HYPOS.forEach(o => allH.push(o));
       v.canChangeHypo = st.mode === 'find' && !!S.hypo && !S.hypoPick && !solved;
       v.openHypo = () => { this.sfx('tap'); this.setState({ hypoPick: true }); };
       v.closeHypo = () => { this.sfx('tap'); this.setState({ hypoPick: false }); };
@@ -1961,6 +1982,7 @@ class Component extends DCLogic {
     }
 
     if (st.k === 'blank') {
+      v.pctArt = st.id === 'pct' ? this.pctBeakers() : null;
       const def = this.blankDef();
       v.cardTitle = def.title || '';
       v.rows = def.rows.map((row, ri) => ({

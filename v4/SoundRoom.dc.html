@@ -490,6 +490,7 @@ button{font-family:inherit}
               <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
             </sc-for>
           </div>
+            <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:640px;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:7px 18px">✋ 낱말을 <b>손가락이나 마우스로 누른 채 끌어서</b> 빈칸 위에 놓아 주세요</div>
         </div>
       </sc-if>
 
@@ -699,9 +700,8 @@ class Component extends DCLogic {
   get STEPS() {
     const st = [
       { k:'story', emoji:'🎼', cap:'소리의 비밀을 찾아봅시다!',
-        lines:['안녕하세요! 저는 \'비(比)\'의 비밀 탐색을 돕는 안내자, 레시오예요.',
-               '이 방은 소리의 비밀을 알아내는 방이에요.',
-               '두 번째 비밀은 무엇일까요? 레시오와 함께 풀러가볼까요?'],
+        lines:['이 방은 소리의 비밀을 알아내는 방이에요.',
+             '아름다운 소리의 비밀을 찾으러 가볼까요?'],
         btn:'시작하기 →' },
       { k:'vib',
         say:'건반을 눌러 소리의 떨림을 느껴 보세요! 높은 음일수록 현의 길이가 짧고, 현이 빠르게 떨려요. 여덟 건반을 모두 눌러 소리를 들어 보세요.',
