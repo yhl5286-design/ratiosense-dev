@@ -2582,7 +2582,8 @@ class Component extends DCLogic {
       coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name, coachRole: who.role,
       coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n')
         : this.wrapSay(st.k === 'rooms' ? this.roomsSay(S.roomStage) : st.say),
-      coachHi: st.hi || '',
+      /* 자막 아래 안내 띠는 쓰지 않는다 — 화면에는 레시오의 말만 둔다 */
+      coachHi: '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story', storyEmoji: st.emoji || '', storyCap: st.cap || '',
       isVib: st.k === 'vib', isHarmx: st.k === 'harmx', isRooms: st.k === 'rooms',
