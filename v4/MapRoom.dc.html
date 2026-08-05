@@ -240,7 +240,7 @@ button{font-family:inherit}
           </div>
           <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
             <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
-              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+              <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
             </sc-for>
           </div>
         </div>
@@ -505,6 +505,7 @@ class Component extends DCLogic {
 
   ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
   stopVoice() {
+    clearTimeout(this._sayT);
     this._vtok = (this._vtok||0) + 1;
     this._speaking = false;
     try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
@@ -636,7 +637,7 @@ class Component extends DCLogic {
     addEventListener('pointerup', this._drawEnd);
     addEventListener('pointercancel', this._drawEnd);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
-    setTimeout(() => this.sayStep(0), 500);
+    this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
     clearInterval(this._flushT); clearTimeout(this._tT); clearTimeout(this._autoT);
@@ -702,7 +703,7 @@ class Component extends DCLogic {
     if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); this.awardDigit(); }, 350);
     this.setState(patch);
     this.plog('nav', { to:n });
-    setTimeout(() => this.sayStep(n), 380);
+    this._sayT = setTimeout(() => this.sayStep(n), 380);
   }
   confetti() {
     try {
@@ -724,7 +725,7 @@ class Component extends DCLogic {
     if (next !== 'full') this.stopVoice();
     try { localStorage.setItem('rs3_audio', next); } catch(e) {}
     this.setState({ audio: next });
-    if (next === 'full') setTimeout(() => this.sayStep(this.state.i), 150);
+    if (next === 'full') this._sayT = setTimeout(() => this.sayStep(this.state.i), 150);
     else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
   }
 
@@ -1437,7 +1438,7 @@ class Component extends DCLogic {
       v.bank = def.bank.map((w) => {
         seen[w] = (seen[w] || 0) + 1;
         const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
-        return { t: w, vis: hidden ? 'hidden' : 'visible', tap: () => this.place(w), down: this.chipDown(w) };
+        return { t: w, vis: hidden ? 'hidden' : 'visible', down: this.chipDown(w) };
       });
     }
 

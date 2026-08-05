@@ -28,6 +28,12 @@ button{font-family:inherit}
 /* 노트북처럼 세로가 짧은 화면에서는 견본을 줄여 조작 영역이 잘리지 않게 한다 */
 @media (max-height:900px){.rs-swatch{width:min(96px,24vw);border-width:4px}}
 @media (max-height:800px){.rs-swatch{width:min(76px,20vw);border-width:4px}}
+/* 좁은 화면: 실험 화면이 가로로 밀려 나가지 않게 접고, 조작물을 화면 폭에 맞춘다 */
+@media (max-width:720px){
+  .rs-labrow{flex-wrap:wrap !important;gap:10px !important}
+  .rs-labrow > *{max-width:100% !important}
+  .rs-play{overflow-x:hidden}
+}
 @keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
 @keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
@@ -183,7 +189,7 @@ button{font-family:inherit}
       <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
         <div onPointerDown="{{padDown}}" onPointerMove="{{padMove}}" onPointerUp="{{padUp}}" onPointerCancel="{{padUp}}" style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;touch-action:none">
 
-          <div style="flex:1;min-height:0;display:flex;gap:12px;justify-content:center;align-items:stretch;flex-wrap:nowrap;width:100%">
+          <div class="rs-labrow" style="flex:1;min-height:0;display:flex;gap:12px;justify-content:center;align-items:stretch;flex-wrap:nowrap;width:100%">
           <div style="display:flex;gap:6px;justify-content:center;align-items:stretch;min-height:0">
             <sc-for list="{{paints}}" as="p" hint-placeholder-count="2">
               <div style="display:flex;flex-direction:column;align-items:center;gap:6px;order:{{p.order}};min-height:0">
@@ -420,7 +426,7 @@ button{font-family:inherit}
           </sc-if>
           <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
             <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
-              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
+              <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
             </sc-for>
           </div>
         </div>
@@ -457,7 +463,9 @@ button{font-family:inherit}
             <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
           </sc-if>
         </div>
-        <button onClick="{{primary}}" style="min-height:50px;padding:11px 26px;border-radius:999px;border:none;background:{{primaryBg}};color:var(--color-neutral-100);font-size:18px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">{{primaryLabel}}</button>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+  <button onClick="{{primary}}" style="min-height:50px;padding:11px 26px;border-radius:999px;border:none;background:{{primaryBg}};color:var(--color-neutral-100);font-size:18px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">{{primaryLabel}}</button>
+        </sc-if>
         </div>
       </div>
     </section>
@@ -849,6 +857,7 @@ class Component extends DCLogic {
     return out;
   }
   stopVoice() {
+    clearTimeout(this._sayT);
     this._vtok = (this._vtok||0) + 1;
     this._speaking = false;
     try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
@@ -997,7 +1006,7 @@ class Component extends DCLogic {
     addEventListener('pointerup', this._ptUp, true);
     addEventListener('pointercancel', this._ptUp, true);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
-    setTimeout(() => this.sayStep(0), 500);
+    this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
     clearInterval(this._flushT); clearInterval(this._wd);
@@ -1060,7 +1069,7 @@ class Component extends DCLogic {
       cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
     if (this.STEPS[n].k === 'finish') setTimeout(() => this.awardDigit(), 350);
     this.plog('nav', { to:n });
-    setTimeout(() => this.sayStep(n), 380);
+    this._sayT = setTimeout(() => this.sayStep(n), 380);
   }
 
   /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
@@ -1592,7 +1601,7 @@ class Component extends DCLogic {
     if (next !== 'full') this.stopVoice();
     try { localStorage.setItem('rs3_audio', next); } catch(e) {}
     this.setState({ audio: next });
-    if (next === 'full') setTimeout(() => this.sayStep(this.state.i), 150);
+    if (next === 'full') this._sayT = setTimeout(() => this.sayStep(this.state.i), 150);
     else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
   }
 
@@ -1961,7 +1970,7 @@ class Component extends DCLogic {
       v.bank = def.bank.map((w) => {
         seen[w] = (seen[w] || 0) + 1;
         const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
-        return { t: w, vis: hidden ? 'hidden' : 'visible', tap: () => this.place(w), down: this.chipDown(w) };
+        return { t: w, vis: hidden ? 'hidden' : 'visible', down: this.chipDown(w) };
       });
       v.blankArt = def.art
         ? new Array(100).fill(0).map((_, i) => ({ bg: i < 40 ? this.rgb(this.PRIM['빨강']) : this.rgb(this.PRIM['노랑']) }))
@@ -1980,7 +1989,9 @@ class Component extends DCLogic {
     }
 
     const needsSolve = (['chips','lab','demo','cups','dots','grid','blank'].indexOf(st.k) >= 0) && !this._guest;
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finish' ? '처음으로' : '다음 →');
+    /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : '다음 →';
+    v.showPrimary = st.k !== 'finish';
     v.primaryBg = (!needsSolve || solved) ? '#c67139' : '#c0b6a5';
     v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
     v.primary = () => {

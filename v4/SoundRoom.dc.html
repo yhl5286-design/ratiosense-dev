@@ -457,7 +457,7 @@ button{font-family:inherit}
               <div class="rs-fit">{{calcEl}}</div>
               <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
                 <sc-for list="{{harpBankV}}" as="b" hint-placeholder-count="4">
-                  <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:52px;padding:11px 22px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+                  <button onPointerDown="{{b.down}}" style="min-height:52px;padding:11px 22px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
                 </sc-for>
               </div>
             </div>
@@ -487,7 +487,7 @@ button{font-family:inherit}
           </div>
           <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
             <sc-for list="{{bank}}" as="b" hint-placeholder-count="2">
-              <button onPointerDown="{{b.down}}" onClick="{{b.tap}}" style="min-height:56px;padding:13px 24px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+              <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:var(--radius-md);border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
             </sc-for>
           </div>
         </div>
@@ -524,7 +524,9 @@ button{font-family:inherit}
             <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
           </sc-if>
         </div>
-        <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+  <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </sc-if>
         </div>
       </div>
     </section>
@@ -726,9 +728,6 @@ class Component extends DCLogic {
     st.push({ k:'poly', p:'why',
       say:'세 리듬을 차례로 들어 보세요. 두 소리가 다시 만나기까지 몇 칸이 걸리는지 견주어 보면, 왜 간단한 비가 잘 어울리는지 보일 거예요.',
       hi:'세 리듬의 만나는 칸을 비교해요' });
-    st.push({ k:'poly', p:'unit',
-      say:'같은 12칸을 다른 단위로 다시 세어 볼까요? 2칸씩 묶고, 3칸씩도 묶어 보고, 다시 풀어 보세요. 단위가 커지면 세는 횟수가 어떻게 달라지는지 살펴봐요.',
-      hi:'🧺 12칸을 다른 단위로 세기' });
     st.push({ k:'poly', p:'mine',
       say:'이번에는 여러분이 직접 간격을 정해 봐요. 북과 트라이앵글이 몇 칸마다 울릴지 골라 재생하면, 두 소리가 몇 칸마다 다시 만나는지 알 수 있어요. 여러 가지로 바꿔 가며 충분히 만들어 보세요.',
       hi:'🎛️ 내가 정한 간격 — 마음껏 바꿔 보세요' });
@@ -916,6 +915,7 @@ class Component extends DCLogic {
     return out;
   }
   stopVoice() {
+    clearTimeout(this._sayT);
     this._vtok = (this._vtok||0) + 1;
     this._speaking = false;
     try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
@@ -1064,7 +1064,7 @@ class Component extends DCLogic {
     addEventListener('pagehide', this._pageHide);
     this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
-    setTimeout(() => this.sayStep(0), 500);
+    this._sayT = setTimeout(() => this.sayStep(0), 500);
     const tick = () => { this._raf = requestAnimationFrame(tick); this._frame(); };
     this._raf = requestAnimationFrame(tick);
   }
@@ -1182,7 +1182,7 @@ class Component extends DCLogic {
     }
     this.setState(patch);
     this.plog('nav', { to:n });
-    setTimeout(() => this.sayStep(n), 380);
+    this._sayT = setTimeout(() => this.sayStep(n), 380);
   }
 
   confetti() {
@@ -1248,7 +1248,7 @@ class Component extends DCLogic {
     if (next !== 'full') this.stopVoice();
     try { localStorage.setItem('rs3_audio', next); } catch(e) {}
     this.setState({ audio: next });
-    if (next === 'full') setTimeout(() => this.sayStep(this.state.i), 150);
+    if (next === 'full') this._sayT = setTimeout(() => this.sayStep(this.state.i), 150);
     else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
   }
   setVoice(who, name) {
@@ -1287,6 +1287,7 @@ class Component extends DCLogic {
 
   /* ── 2) 화음 미션 (harmx) ── */
   hxKey(i) {
+    if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; }
     const n = this.NOTES[i];
     this.press(i);
     if (i === 0) this.tone(264, 0, 2); else this.chord(264, n[1], 2);
@@ -1501,6 +1502,7 @@ class Component extends DCLogic {
   /* mode = 'drum'(북만) | 'tri'(트라이앵글만) | 'both'(함께)
      def를 주면 그 간격으로 연주한다(기제 비교 카드·내가 정한 간격). tag는 어느 격자를 밝힐지 가리킨다. */
   playPoly(mode, def, tag) {
+    if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; }
     if (this.state.polyPlaying) return;
     const st = this.STEPS[this.state.i];
     const p = def || this.polyP(st);
@@ -1596,7 +1598,8 @@ class Component extends DCLogic {
     }
   }
   /* ④ 기제 — 세 리듬을 견주어 '간단한 비일수록 빨리 다시 만난다'를 찾는다 */
-  whyPlay(i) { this.playPoly('both', this.WHY[i], 'why' + i); }
+  whyPlay(i) {
+    if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; } this.playPoly('both', this.WHY[i], 'why' + i); }
   polyWhy(ix) {
     const o = this.WHYQ[ix];
     this.plog('poly_why', { pick: ix, ok: o.ok ? 1 : 0 });
@@ -1722,6 +1725,7 @@ class Component extends DCLogic {
      1부: 실시간 드론(슬라이더 조작 중 연속 재생) + 등분 칸 눈금 → 귀로 찾고 칸을 읽는다.
      2부: 한 칸 길이(72÷b) → 반복(×a) → 곱셈식(72×a/b) 3단 과제. */
   harpGoal() {
+    if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; }
     const p = this.HP[this.STEPS[this.state.i].i];
     this.harpDroneOff();
     this.pluckT(Math.round(440 * p.b / p.a));
@@ -2878,13 +2882,15 @@ class Component extends DCLogic {
       v.bank = def.bank.map((w) => {
         seen[w] = (seen[w] || 0) + 1;
         const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
-        return { t: w, vis: hidden ? 'hidden' : 'visible', tap: () => this.place(w), down: this.chipDown(w, (word) => this.place(word)) };
+        return { t: w, vis: hidden ? 'hidden' : 'visible', down: this.chipDown(w, (word) => this.place(word)) };
       });
     }
 
 
     const needsSolve = (['vib','harmx','rooms','table','poly','harp','reflect','blank'].indexOf(st.k) >= 0) && !this._guest;
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'finish' ? '처음으로' : '다음 →');
+    /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : '다음 →';
+    v.showPrimary = st.k !== 'finish';
     v.primaryBg = (!needsSolve || solved) ? this.C.acc : this.C.n400;
     v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
     if (st.k === 'table' && !solved && !v.liveBadge) v.footHint = '분류 과정을 한 번 보면 다음으로 갈 수 있어요';
