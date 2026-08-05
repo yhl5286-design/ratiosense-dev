@@ -1361,11 +1361,22 @@ class Component extends DCLogic {
   }
 
   /* ── 3b) 음정에 따른 분류 보기 (table) — 음 칩이 기준 방으로 순차 이동하는 애니메이션 ── */
+  /* 안내가 아직 말하는 중이면 끝날 때까지 기다렸다가 이어 간다(말이 잘리지 않게) */
+  _afterVoice(run, fn) {
+    const tick = () => {
+      if (this._clsRun !== run) return;
+      if (this._speaking) { this._clsWaitT = setTimeout(tick, 250); return; }
+      fn();
+    };
+    tick();
+  }
+
   _clsTimer(run, ms, fn) {
     const id = setTimeout(() => { if (this._clsRun === run) fn(); }, ms);
     (this._clsTids = this._clsTids || []).push(id);
   }
   _clsStop() {
+    clearTimeout(this._clsWaitT);
     this._clsRun = (this._clsRun || 0) + 1;
     (this._clsTids || []).forEach(clearTimeout);
     this._clsTids = [];
@@ -1412,21 +1423,20 @@ class Component extends DCLogic {
     let t = 1500;
     this.CLS.forEach(c => { this._clsTimer(run, t, () => this._clsMove(run, c.n, c.room1)); t += 560; });
     t += 500;
-    this._clsTimer(run, t, () => {
+    this._clsTimer(run, t, () => this._afterVoice(run, () => {
       this.setState({ clsStage:'p2', clsMsg:'장음정 방을 다시 둘로 나눠요' });
       this.speak(this.CLS_SAY.p2, 'ratio');
-    });
+    }));
     t += 1400;
     this.CLS.filter(c => c.room2).forEach(c => { this._clsTimer(run, t, () => this._clsMove(run, c.n, c.room2)); t += 560; });
     t += 500;
-    this._clsTimer(run, t, () => {
+    this._clsTimer(run, t, () => this._afterVoice(run, () => {
       this._clsBusy = false;
       this.setState({ clsStage:'done', clsMsg:'완성! 아래의 내가 나눈 방과 비교해 보세요' });
       this.plog('itv_sort', { phase:'done', my: this.roomsOf() });
       this.markSolved();
-      this.sfx('ok');
       this.speak(this.CLS_SAY.done, 'ratio');
-    });
+    }));
   }
 
   /* ── 4) 리듬 = 화음의 슬로모션 (poly) ─────────────────────────────────────
