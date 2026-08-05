@@ -657,6 +657,11 @@ class Component extends DCLogic {
         say:'모두 간단히 하면 언제나 2 대 5였어. 수첩에는 뭐라고 적으면 좋을까?',
         chips:[ {t:'수첩에 「빨강 : 노랑 = 2 : 5」로 적기', ok:1, fb:'양이 얼마든 이 비만 지키면 같은 색이 나와.'},
                 {t:'수첩에 「빨강 20mL, 노랑 50mL」라고 적기', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'} ] },
+      { k:'story', who:'munsell', emoji:'🔬', demo:'recipe',
+        lines:['수첩에 적은 이 비가 바로 물감 만드는 법이야.',
+               '빨강 20mL에 노랑 50mL를 섞으면 노을빛 주황 70mL가 나오지.',
+               '이 물감을 예쁘게 포장해서 뭉크에게 선물하자!'],
+        btn:'선물할게요! →' },
       { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
         lines:['찾았다! 바로 이 색이야!', '너희 덕분에 그림을 완성했어. 정말 고마워!'],
         btn:'다음 →' },
@@ -1525,6 +1530,44 @@ class Component extends DCLogic {
 
   /* 백분율 문제에서 쓰는 비커 그림 — 빨강 40 · 노랑 60이 섞여 주황 100이 된다 */
   /* 10mL 컵으로 세어 보는 시연 — 2:5, 6:9(더하기), 6:15(곱하기)를 나란히 놓는다 */
+  /* 물감 만드는 법 — 수첩에 적은 2 : 5를 그대로 만들어 뭉크에게 줄 선물로 포장한다 */
+  recipeEl() {
+    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
+    const beaker = (k, w, h, c, cap) => R.createElement('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px' } },
+      R.createElement('div', { key:'b', style:{ position:'relative', width:w+'px', height:'86px',
+        border:'4px solid ' + ink, borderTopWidth:'2px', borderRadius:'0 0 13px 13px', overflow:'hidden',
+        background:'var(--color-neutral-100)' } },
+        R.createElement('div', { key:'f', style:{ position:'absolute', left:0, right:0, bottom:0,
+          height:h+'%', background:c } })),
+      R.createElement('div', { key:'c', style:{ fontSize:'13.5px', fontWeight:800, color:'var(--color-neutral-700)' } }, cap));
+    const plus = (k, t) => R.createElement('div', { key:k, style:{ fontSize:'26px', color:'var(--color-neutral-600)', paddingBottom:'22px' } }, t);
+    const mixed = this.rgb(this.mix({ '빨강':20, '노랑':50 }));
+    return R.createElement('div', { key:'recipe',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'14px' } },
+      /* 만드는 법 카드 */
+      R.createElement('div', { key:'card',
+        style:{ background:'var(--color-neutral-100)', border:'4px solid var(--color-accent-500)',
+          borderRadius:'18px', padding:'12px 26px', boxShadow:'var(--shadow-md)', textAlign:'center' } },
+        R.createElement('div', { key:'t', style:{ fontSize:'14px', fontWeight:800, color:'var(--color-accent-700)' } }, '📝 물감 만드는 법'),
+        R.createElement('div', { key:'r', style:{ fontSize:'24px', fontWeight:800, marginTop:'4px' } },
+          '빨강 : 노랑 = ', R.createElement('span', { key:'n', style:{ color:'var(--color-accent-700)' } }, '2 : 5'))),
+      /* 섞기 */
+      R.createElement('div', { key:'mix', style:{ display:'flex', gap:'12px', alignItems:'flex-end', justifyContent:'center', flexWrap:'wrap' } },
+        beaker('r', 46, 29, this.rgb(P['빨강']), '빨강 20mL'),
+        plus('p', '+'),
+        beaker('y', 46, 71, this.rgb(P['노랑']), '노랑 50mL'),
+        plus('e', '='),
+        beaker('o', 62, 100, mixed, '노을빛 주황 70mL')),
+      /* 선물 포장 */
+      R.createElement('div', { key:'gift',
+        style:{ display:'flex', alignItems:'center', gap:'12px', background:'var(--color-accent-100)',
+          border:'3px solid var(--color-accent-400)', borderRadius:'999px', padding:'9px 22px' } },
+        R.createElement('div', { key:'g', style:{ fontSize:'30px' } }, '🎁'),
+        R.createElement('div', { key:'x', style:{ fontSize:'16px', fontWeight:800, color:'var(--color-accent-700)' } },
+          '리본을 묶어 뭉크에게 선물해요!')));
+  }
+
   cupRowsEl() {
     const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
     const cup = (k, c) => R.createElement('span', { key:k, style:{ display:'inline-block', width:'15px', height:'21px',
@@ -1742,8 +1785,9 @@ class Component extends DCLogic {
       tgtColor: tgt,
       /* 목표 색 견본: 가설을 세우는 7·8단계와 실험(lab) 단계 모두 같은 형태로 상시 제시 */
       showSwatch: !!st.swatch || isLab,
-      isStory: st.k === 'story' && st.demo !== 'cups',
-      storyDemo: (st.k === 'story' && st.demo === 'cups') ? this.cupRowsEl() : null, isChips: st.k === 'chips', isLab,
+      isStory: st.k === 'story' && !st.demo,
+      storyDemo: (st.k === 'story' && st.demo === 'cups') ? this.cupRowsEl()
+        : ((st.k === 'story' && st.demo === 'recipe') ? this.recipeEl() : null), isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
       artCap: st.artCap || '',
