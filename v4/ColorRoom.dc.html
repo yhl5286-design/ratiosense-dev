@@ -629,14 +629,11 @@ class Component extends DCLogic {
         say:'아래 두 비커에 빨강 물감을 20mL 넣었어. 여기에 노랑 물감을 다르게 넣어볼거야. 왼쪽에는 20mL, 오른쪽은 60mL 넣어서 색을 확인해봐.',
         btn:'알겠어요!' },
       { k:'chips', who:'munsell', need:1, mark:'obs', swatch:true,
-        say:'과학자는 실험 전에 가설을 세워. 가설은 어떤 것이 맞을 거라고 예상하는 과학자의 생각이야. 가설이 맞는지 틀린지 알아내려면 가설에 맞는 조건을 갖추어 실험을 해야 해. 우리가 가진 목표색을 잘 봐. 어떤 색이 더 많을 것인지부터 예상해보자.',
+        say:'과학자는 실험 전에 가설을 세워. 가설은 어떤 것이 맞을 거라고 예상하는 과학자의 생각이야. 가설이 맞는지 틀린지 알아내려면 가설에 맞는 조건을 갖추어 실험을 해야 해. 우리가 가진 목표색을 잘 봐. 어떤 색이 더 많아 보이니? 고르면 그 가설대로 바로 실험해 볼 거야.',
         hint:'좋은 가설은 찍는 게 아니라 관찰에서 나와요 · 다시 골라도 괜찮아요',
         chips:[ {t:'🔴 빨강이 더 많아 보여요', v:'r', ok:1, fb:'빨강이 많으면 이렇게 진하고 붉은 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
                 {t:'🟡 노랑이 더 많아 보여요', v:'y', ok:1, fb:'노랑이 많으면 이렇게 밝고 환한 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
                 {t:'🟠 둘이 비슷해 보여요', v:'s', ok:1, fb:'반반이면 딱 중간 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'} ] },
-      { k:'chips', who:'munsell', need:1, swatch:true, mark:'hypo',
-        say:'좋아. 그럼 얼마나 더 많을까? 네 예상에 맞는 것을 골라 봐.',
-        hint:'틀려도 괜찮아요 — 실험으로 확인하면 그것도 발견이에요' },
       { k:'lab', mode:'find', who:'munsell', run:'실험하기',
         say:'네 가설대로 물감을 넣고 실험하기를 눌러 봐. 목표색이 나올 때까지 도전!',
         hi:'막대를 끌거나 ＋5mL 버튼을 눌러요' },
@@ -650,7 +647,7 @@ class Component extends DCLogic {
                 {t:'두 양의 차', ok:0, fb:'30과 60 — 차이도 달라졌단다. 다시 한번 생각해볼까?'},
                 {t:'한쪽이 다른 쪽의 몇 배인지', ok:1, fb:'바로 그거야. 그럼 수첩에는 어떻게 적어 둘까?'},
                 {t:'수첩에 「빨강 20mL, 노랑 50mL」라고 적기', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'},
-                {t:'수첩에 「빨강 : 노랑」의 비로 적기', ok:1, fb:'양이 얼마든 이 비만 지키면 같은 색이 나와.'} ] },
+                {t:'수첩에 「빨강 : 노랑 = 2 : 5」로 적기', ok:1, fb:'양이 얼마든 이 비만 지키면 같은 색이 나와.'} ] },
       /* 단위화(재합성) — '간단히 하면 2 : 5'라는 결론이 처음 말해지는 다음 단계 바로 앞에 둔다.
          앱이 대신 약분해 보여 주던 것을 학습자가 10mL 컵으로 옮겨 담아 손으로 만들어 낸다. */
       { k:'cups', who:'munsell',
@@ -1696,7 +1693,7 @@ class Component extends DCLogic {
           ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
           /* artBig: 색상환처럼 글씨를 읽어야 하는 도해는 더 크게(자막·버튼을 밀어내지 않는 범위) */
           : st.artBig
-            ? { display:'block', maxWidth:'min(520px,84vw)', maxHeight:artMax(52), width:'auto', height:'auto', borderRadius:'3px' }
+            ? { display:'block', maxWidth:'min(380px,68vw)', maxHeight:artMax(38), width:'auto', height:'auto', borderRadius:'3px' }
             : { display:'block', maxWidth:'min(360px,72vw)', maxHeight:artMax(42), borderRadius:'3px' } }) : null,
       /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
       coachEmoji: who.img ? '' : (who.emoji || ''),
@@ -1755,7 +1752,12 @@ class Component extends DCLogic {
             const p = picked.indexOf(ci) >= 0 ? picked : picked.concat([ci]);
             const picks = Object.assign({}, S.picks); picks[S.i] = p;
             const ns = { picks };
-            if (st.mark === 'obs') ns.obs = c.v;
+            if (st.mark === 'obs') {
+              ns.obs = c.v;
+              /* 고른 관찰이 곧 가설이 된다 — 빨강 더 많음 2:1, 노랑 더 많음 2:5, 비슷함 1:1 */
+              const H = { r:'2:1', y:'2:5', s:'1:1' };
+              ns.hypo = H[c.v] || '1:1'; ns.failed = [];
+            }
             if (st.mark === 'hypo') { ns.hypo = c.v; ns.failed = []; }
             this.setState(ns);
             this.plog('pick', { step: S.i, t: c.t, ok: !!c.ok });
