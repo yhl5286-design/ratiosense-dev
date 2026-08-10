@@ -581,7 +581,7 @@ class Component extends DCLogic {
     labLog: [], wallDone: 0, failed: [], hypoPick: false,
     voiceMap: {}, voicePanel: false,
     tmpNum: {},
-    cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null
+    cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null,
   };
 
   /* 단위화 조작 상수 — 10mL를 한 단위로 삼아 빨강 20mL·노랑 50mL를 옮겨 담는다 */
@@ -642,7 +642,7 @@ class Component extends DCLogic {
         hi:'막대를 끌거나 ＋5mL 버튼을 눌러요' },
       { k:'lab', mode:'more', who:'munsell', run:'실험하기',
         say:'완벽해. 그런데 이 색과 같은 색을 다른 양으로도 만들 수 있을까? 앞에서 만든 양과 다르게, 한 번만 더 만들어 봐.',
-        hi:'두 손가락으로 벌려 보세요' },
+        hi:'빨강과 노랑 막대를 각각 움직여 다른 양으로 만들어요' },
       { k:'chips', who:'munsell', need:1,
         say:'양이 달라도 전부 같은 색이었어. 무엇이 달라지지 않았을까?',
         chips:[ {t:'두 양의 합', ok:0, fb:'20+50은 70, 40+100은 140 — 합은 달라졌단다. 다시 한번 생각해볼까?'},
@@ -711,6 +711,18 @@ class Component extends DCLogic {
         say:'이번엔 새로운 주황이야. 빨강 대 노랑을 2 대 3으로, 열 칸에 나타내 줘. 빨강 4칸, 노랑 6칸이야.',
         hi:'빨강 : 노랑 = 2 : 3' },
       { k:'grid', n:100, who:'signac', say:'마지막으로 백 칸에 도전해 봐, 큰 붓을 쓰면 한 줄씩 칠할 수 있어!', hi:'빨강 : 노랑 = 2 : 3' },
+      /* 개수 대비 — 여기까지는 칸이 늘어나도 비가 그대로여서 개수를 세어도 답이 맞았다.
+         칸 수가 많은 쪽이 오히려 비는 작은 사례를 견주게 하여 개수로 판단하는 습관을
+         드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
+      { k:'chips', who:'signac', need:1, demo:'cmp',
+        say:'점을 많이 찍는다고 색이 진해질까? 두 그림을 견주어 보자. 어느 쪽 주황이 더 붉을까?',
+        hint:'칸 수만 세지 말고, 전체에서 빨강이 차지하는 몫을 봐요',
+        chips:[ {t:'㉮ — 빨강 칸이 여덟 칸으로 더 많으니까', ok:0,
+                 fb:'빨강 칸은 여덟 칸으로 더 많아. 그런데 노랑도 열두 칸이나 있지. 전체에서 빨강이 차지하는 몫을 견주어 볼까?'},
+                {t:'㉯ — 빨강이 차지하는 몫이 더 크니까', ok:1,
+                 fb:'맞아. 칸 수가 아니라 전체에서 차지하는 몫이 색을 정하는 거야.'},
+                {t:'둘이 똑같아', ok:0,
+                 fb:'㉮는 스무 칸 중 여덟 칸, ㉯는 여섯 칸 중 세 칸이야. 반이 넘는 쪽은 어느 쪽일까?'} ] },
       { k:'story', who:'signac', art:'signac_painting.jpg', artCap:'「양산을 든 여인」 완성!',
         lines:['점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3이었지!',
                '내가 원하던 색을 연습해보고 그림을 그릴 수 있게 만들어줘서 고마워.'],
@@ -1041,7 +1053,7 @@ class Component extends DCLogic {
     this._pageHide = () => this.flush(true);
     addEventListener('pagehide', this._pageHide);
     this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
-    this._ptUp = (e) => { if (this._pts) { this._pts.delete(e.pointerId); if (this._pts.size === 0) { this._pinched = false; this._pinch0 = null; } } };
+    this._ptUp = (e) => { if (this._pts) this._pts.delete(e.pointerId); };
     addEventListener('pointerup', this._ptUp, true);
     addEventListener('pointercancel', this._ptUp, true);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
@@ -1101,7 +1113,7 @@ class Component extends DCLogic {
     this.stopVoice();
     clearTimeout(this._tT); clearTimeout(this._autoT);
     this._wasHit = false;
-    this._pts = new Map(); this._pinched = false; this._pinch0 = null;
+    this._pts = new Map();
     this.setState({ i:n, toast:null, amt:{ '빨강':0, '노랑':0 }, labLog:[],
       cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
       tmpNum:{},
@@ -1211,9 +1223,8 @@ class Component extends DCLogic {
       const el = e.currentTarget;
       try { el.setPointerCapture(e.pointerId); } catch(err) {}
       this.padDown(e);
-      if (this._pts.size >= 2) return;
       const r = el.getBoundingClientRect();
-      const apply = (cy) => { if (this._pts.size >= 2 || this._pinched) return; this.setAmt(name, (r.bottom - cy) / r.height * this.MAX); };
+      const apply = (cy) => { this.setAmt(name, (r.bottom - cy) / r.height * this.MAX); };
       apply(e.clientY);
       const mv = (ev) => apply(ev.clientY);
       const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
@@ -1224,35 +1235,15 @@ class Component extends DCLogic {
     this._pts = this._pts || new Map();
     if (this._pts.has(e.pointerId)) return;
     this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    if (this._pts.size === 2) {
-      const p = Array.from(this._pts.values());
-      this._pinch0 = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
-      this._base = Object.assign({}, this.state.amt);
-      this._pinched = true;
-    }
   }
   padMove(e) {
     if (!this._pts || !this._pts.has(e.pointerId)) return;
     this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
-    if (this._pts.size === 2 && this._pinch0 && this._base) {
-      const p = Array.from(this._pts.values());
-      const d = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
-      const b0 = this._base['빨강'] || 0, y0 = this._base['노랑'] || 0;
-      const cap = Math.min(b0 ? this.MAX / b0 : 99, y0 ? this.MAX / y0 : 99);
-      const k = Math.max(0.2, Math.min(cap, d / this._pinch0));
-      const na = Math.round(b0 * k / 5) * 5;
-      const nb = Math.round(y0 * k / 5) * 5;
-      if (na !== this.state.amt['빨강'] || nb !== this.state.amt['노랑']) {
-        this.sfx('pour');
-        this.setState({ amt: { '빨강': na, '노랑': nb } });
-        this.hitCue(na, nb);
-      }
-    }
+    /* 두 손가락으로 함께 늘리는 조작은 두지 않는다. 앱이 두 양에 같은 배율을 곱해
+       비를 대신 지켜 주면, 관계를 지키는 일이 학습자에게 남지 않기 때문이다(지침 1.5·3.3). */
   }
   padUp(e) {
     if (this._pts) this._pts.delete(e.pointerId);
-    this._pinch0 = null;
-    if (!this._pts || this._pts.size === 0) this._pinched = false;
   }
 
   goalMet(a, b) {
@@ -1568,6 +1559,39 @@ class Component extends DCLogic {
           '리본을 묶어 뭉크에게 선물해요!')));
   }
 
+  /* 개수 대비 그림(지침 2.8) — 칸 수는 ㉮가 많지만 빨강의 몫은 ㉯가 크다.
+     보기를 고르기 전에는 칸만 보이고, 고른 뒤에 두 주황을 섞어 나란히 드러낸다. */
+  cmpGridsEl() {
+    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
+    const shown = !!(this.state.picks[this.state.i] || []).length;
+    const cell = (k, c) => R.createElement('div', { key:k,
+      style:{ width:'26px', height:'26px', border:'2px solid ' + ink, background:c, boxSizing:'border-box' } });
+    const panel = (k, tag, cols, red, yel) => {
+      const tot = red + yel;
+      return R.createElement('div', { key:k,
+        style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px',
+          background:'var(--color-neutral-100)', border:'3px solid var(--color-neutral-300)',
+          borderRadius:'18px', padding:'12px 16px' } },
+        R.createElement('div', { key:'t', style:{ fontSize:'19px', fontWeight:800, color:'var(--color-accent-700)' } }, tag),
+        R.createElement('div', { key:'g',
+          style:{ display:'grid', gridTemplateColumns:'repeat(' + cols + ', 26px)', gap:'2px' } },
+          Array.from({ length:red }, (_, i) => cell('r'+i, this.rgb(P['빨강']))).concat(
+          Array.from({ length:yel }, (_, i) => cell('y'+i, this.rgb(P['노랑']))))),
+        R.createElement('div', { key:'c', style:{ fontSize:'15px', fontWeight:800, color:'var(--color-neutral-700)' } },
+          tot + '칸 중 빨강 ' + red + '칸'),
+        shown ? R.createElement('div', { key:'m',
+          style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px' } },
+          R.createElement('div', { key:'d', style:{ width:'54px', height:'54px', borderRadius:'999px',
+            border:'4px solid ' + ink, background:this.rgb(this.mix({ '빨강': red*10, '노랑': yel*10 })) } }),
+          R.createElement('div', { key:'p', style:{ fontSize:'14px', fontWeight:800, color:'var(--color-accent-700)' } },
+            '빨강이 ' + Math.round(red / tot * 100) + '%')) : null);
+    };
+    return R.createElement('div', { key:'cmp',
+      style:{ display:'flex', gap:'20px', alignItems:'flex-start', justifyContent:'center', flexWrap:'wrap' } },
+      panel('a', '㉮', 5, 8, 12),
+      panel('b', '㉯', 3, 3, 3));
+  }
+
   cupRowsEl() {
     const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
     const cup = (k, c) => R.createElement('span', { key:k, style:{ display:'inline-block', width:'15px', height:'21px',
@@ -1787,7 +1811,8 @@ class Component extends DCLogic {
       showSwatch: !!st.swatch || isLab,
       isStory: st.k === 'story' && !st.demo,
       storyDemo: (st.k === 'story' && st.demo === 'cups') ? this.cupRowsEl()
-        : ((st.k === 'story' && st.demo === 'recipe') ? this.recipeEl() : null), isChips: st.k === 'chips', isLab,
+        : ((st.k === 'story' && st.demo === 'recipe') ? this.recipeEl()
+        : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null)), isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
       artCap: st.artCap || '',

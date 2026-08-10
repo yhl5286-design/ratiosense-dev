@@ -1,8 +1,9 @@
 /* 캐릭터 음성 매니페스트 — 등록된 키는 tts/<키>.mp3를 재생하고, 없는 대사는 브라우저 음성으로 대체됩니다.
    생성: CLOVA Voice Premium · 캐스팅(확정) — 레시오=vhyeri(혜리 Pro),
    뭉크=njooahn(주안), 먼셀=nwoosik(우식), 시냐크=nraewon(래원). 대사 목록은 lines.csv 참고. */
-window.RS_TTS_V = '202608051218';
+window.RS_TTS_V = '202608101430';
 window.RS_TTS = {
+  '1n99xk1': 1,
   /* ── 색깔의 비밀 (ColorRoom) ── */
   // ratio c-intro: 안녕하세요! 첫 번째 색깔의 비밀을 찾으러 오셨군요. 저는 비의 비밀 탐색 안내자 레시오예요.
   "15l7a64": 1,
