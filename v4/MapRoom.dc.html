@@ -146,33 +146,6 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
-      <sc-if value="{{isDraw}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
-          <div style="font-size:16px;background:var(--color-accent-100);color:var(--color-accent-700);border-radius:999px;padding:5px 16px">{{drawLabel}}</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:680px">실제로 가로 <b>300m</b>, 세로 <b>200m</b>인 운동장을 지도에 그려 보세요! 격자를 <b>드래그</b>하면 직사각형이 그려져요.</div>
-          <div class="rs-fit" style="flex:none;display:grid;grid-template-columns:repeat({{drawCols}},{{drawCell}}px);grid-template-rows:repeat({{drawRows}},{{drawCell}}px);gap:2px;background:var(--color-accent-200);border:3px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:6px;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:var(--shadow-sm)">
-            <sc-for list="{{drawCells}}" as="c" hint-placeholder-count="24">
-              <div data-mcell="{{c.id}}" onPointerDown="{{c.down}}" style="min-width:0;min-height:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:3px;border-radius:4px;background:{{c.bg}};outline:{{c.out}};outline-offset:-2px;cursor:crosshair;font-size:9.5px;font-weight:700;color:{{c.fg}}">100m</div>
-            </sc-for>
-          </div>
-          <div style="flex:none;min-height:46px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--color-neutral-800);background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:6px 16px;max-width:96%;text-align:center;line-height:1.7">{{drawInfo}}</div>
-          <!-- 그리는 도중 버튼이 생겼다 사라지며 화면이 밀리면 드래그 좌표가 어긋나므로, 자리를 늘 비워 둡니다. -->
-          <div style="flex:none;min-height:56px;display:flex;align-items:center;justify-content:center">
-            <sc-if value="{{drawCanReset}}" hint-placeholder-val="{{true}}">
-              <button onClick="{{drawReset}}" class="rs-pill2">↺ 다시 그리기</button>
-            </sc-if>
-          </div>
-          <sc-if value="{{simEl}}" hint-placeholder-val="{{false}}">
-            <div data-sim="1" style="display:flex;flex-direction:column;align-items:center;gap:8px;width:100%;animation:rsPop .4s ease">
-              <div style="font-size:16px;background:var(--color-accent-2-100);color:var(--color-accent-2-700);border-radius:999px;padding:5px 16px">🔍 닮음 확인 — 지도 도형과 실제 운동장</div>
-              <div style="max-width:98%;overflow-x:auto">{{simEl}}</div>
-              <div style="font-size:16.5px;font-weight:400;line-height:1.65;color:var(--color-neutral-800);text-align:center;max-width:620px">{{simText}}</div>
-              <div style="font-size:15.5px;font-weight:700;line-height:1.6;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:var(--radius-md);padding:9px 15px;text-align:center;max-width:620px">{{simMountain}}</div>
-            </div>
-          </sc-if>
-        </div>
-      </sc-if>
-
       <sc-if value="{{isMovie}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);animation:rsUp .3s ease;width:100%">
           <div style="font-size:16px;background:var(--color-accent-100);color:var(--color-accent-700);border-radius:999px;padding:5px 16px">🏛️ 기원전 3세기 · 알렉산드리아</div>
@@ -332,11 +305,6 @@ class Component extends DCLogic {
       opts:[['10,000 cm',1],['100 cm',0],['1,000 cm',0]] }
   ];
 
-  /* 지도 → 실제 방향만 다루던 축척 과제의 반대 방향.
-     실제 길이를 100m 단위로 '나누어' 칸 수를 얻고(분해), 그 칸을 '반복해' 도형을 만든다(재합성).
-     완성한 그림과 실제 운동장은 닮은 도형 — 대응변의 비가 3 : 2 = 300 : 200 으로 같다. */
-  DRAW = { cols:6, rows:4, unit:100, w:3, h:2 };
-
   /* 대사 속 물음에 답을 고르는 선택 버튼 — 정답을 즉시 알려 주지 않고 hintNext 3단계로 안내 */
   QUIZ = {
     c2: {
@@ -411,7 +379,6 @@ class Component extends DCLogic {
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
     zVal:100, zPhase:0, qpicks:{}, vidOpen:false,
-    draw:{ a:null, b:null },
     refText:'',
     blanks:{}, used:{}, selBlank:null
   };
@@ -631,12 +598,6 @@ class Component extends DCLogic {
     document.addEventListener('visibilitychange', this._hide);
     this._pageHide = () => this.flush(true);
     addEventListener('pagehide', this._pageHide);
-    /* 격자 밖으로 손이 나가도 계속 그려지고, 어디서 손을 떼든 그리기가 끝나도록 문서 전체에서 받습니다. */
-    this._drawMove = (e) => { if (this._drawing) this.drawMove(e); };
-    this._drawEnd = (e) => { if (this._drawing) this.drawUp(e); };
-    addEventListener('pointermove', this._drawMove);
-    addEventListener('pointerup', this._drawEnd);
-    addEventListener('pointercancel', this._drawEnd);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
@@ -644,9 +605,6 @@ class Component extends DCLogic {
     clearInterval(this._flushT); clearTimeout(this._tT); clearTimeout(this._autoT);
     document.removeEventListener('visibilitychange', this._hide);
     removeEventListener('pagehide', this._pageHide);
-    removeEventListener('pointermove', this._drawMove);
-    removeEventListener('pointerup', this._drawEnd);
-    removeEventListener('pointercancel', this._drawEnd);
     this.stopVoice(); this.flush(true);
   }
 
@@ -695,12 +653,6 @@ class Component extends DCLogic {
     clearTimeout(this._tT); clearTimeout(this._autoT);
     const patch = { i:n, toast:null, selBlank:null };
     if (this.STEPS[n].k === 'zoom') { patch.zPhase = 0; patch.zVal = 100; }
-    /* 그리기 단계는 아직 못 풀었을 때만 초기화 — 되돌아왔을 때 정답 그림과 닮음 확인은 남깁니다. */
-    if (this.STEPS[n].k === 'draw') {
-      this._drawing = false;
-      if (!this.state.solved[n]) { this._dA = null; this._dB = null; patch.draw = { a:null, b:null }; }
-      else { const d = this.state.draw || {}; this._dA = d.a; this._dB = d.b; }
-    }
     if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); this.awardDigit(); }, 350);
     this.setState(patch);
     this.plog('nav', { to:n });
@@ -982,139 +934,6 @@ class Component extends DCLogic {
     return this.svgEl('0 0 ' + W + ' ' + H, { width: 'min(560px,92vw)', display: 'block' }, frame + body, 'comic' + k + (solved ? 's' : ''));
   }
 
-  /* ── 닮음으로 직접 그리기 ─────────────────────────────────────────────
-     지도 → 실제 방향만 다루던 축척 과제의 반대 방향. 실제 300m·200m를 한 칸(100m)으로
-     나누어 칸 수를 얻고(분해), 그 칸을 반복해 직사각형을 만든다(재합성). */
-  drawBox(d) {
-    d = d || this.state.draw;
-    if (!d || !d.a || !d.b) return null;
-    const r0 = Math.min(d.a.r, d.b.r), r1 = Math.max(d.a.r, d.b.r);
-    const c0 = Math.min(d.a.c, d.b.c), c1 = Math.max(d.a.c, d.b.c);
-    return { r0, r1, c0, c1, w: c1 - c0 + 1, h: r1 - r0 + 1 };
-  }
-  /* 드래그의 두 끝(_dA·_dB)은 화면 갱신을 기다리지 않는 값으로 따로 들고 있습니다.
-     브라우저가 pointermove를 몰아서 전달해도 손을 뗀 자리가 정확히 반영됩니다. */
-  drawDown(r, c, e) {
-    if (this.state.solved[this.state.i]) return;
-    /* 글자가 선택되면 브라우저가 그리기를 끌어놓기로 착각해 도중에 취소해 버립니다. */
-    try { if (e && e.preventDefault) e.preventDefault(); } catch(err) {}
-    this._drawing = true;
-    /* 드래그를 시작할 때 칸의 위치를 한 번 재어 두고 그 값으로만 판단합니다.
-       그리는 도중 화면이 조금이라도 움직여도 손이 짚은 칸이 어긋나지 않습니다. */
-    this._cellBox = [].slice.call(document.querySelectorAll('[data-mcell]')).map((el) => {
-      const b = el.getBoundingClientRect();
-      const p = (el.getAttribute('data-mcell') || '').split(',');
-      return { r:+p[0], c:+p[1], l:b.left, t:b.top, rt:b.right, bt:b.bottom };
-    });
-    this._dA = { r, c }; this._dB = { r, c };
-    this.sfx('tap');
-    this.setState({ draw: { a: this._dA, b: this._dB } });
-  }
-  /* 손가락·마우스가 격자 밖으로 나가도 가장 가까운 칸까지 이어서 그려집니다. */
-  drawAt(e) {
-    const list = this._cellBox || [];
-    let best = null, bestD = Infinity;
-    for (let k = 0; k < list.length; k++) {
-      const b = list[k];
-      const dx = Math.max(b.l - e.clientX, 0, e.clientX - b.rt);
-      const dy = Math.max(b.t - e.clientY, 0, e.clientY - b.bt);
-      const d = dx*dx + dy*dy;
-      if (d < bestD) { bestD = d; best = b; if (d === 0) break; }
-    }
-    return best ? { r: best.r, c: best.c } : null;
-  }
-  drawMove(e) {
-    if (!this._drawing || !this._dA) return;
-    const p = this.drawAt(e);
-    if (!p) return;
-    if (this._dB && this._dB.r === p.r && this._dB.c === p.c) return;
-    this._dB = p;
-    this.setState({ draw: { a: this._dA, b: this._dB } });
-  }
-  drawUp(e) {
-    if (!this._drawing) return;
-    this._drawing = false;
-    if (e && this._dA) { const p = this.drawAt(e); if (p) this._dB = p; }
-    const box = this.drawBox({ a: this._dA, b: this._dB });
-    if (!box) return;
-    this.setState({ draw: { a: this._dA, b: this._dB } });
-    this.drawJudge(box);
-  }
-  drawReset() {
-    if (this.state.solved[this.state.i]) return;
-    this.sfx('tap');
-    this._drawing = false;
-    this._dA = null; this._dB = null;
-    this.plog('draw', { reset: 1 });
-    this.setState({ draw: { a:null, b:null }, toast: null });
-  }
-  drawJudge(box) {
-    const D = this.DRAW;
-    if (this.state.solved[this.state.i]) return;
-    const ok = box.w === D.w && box.h === D.h;
-    this.plog('draw', { w: box.w, h: box.h, ok: ok ? 1 : 0 });
-    if (ok) {
-      this.markSolved();
-      this.plog('similar', { map: D.w + ':' + D.h, real: (D.w*D.unit) + ':' + (D.h*D.unit) });
-      this.toastOk('맞았어요! 가로 3칸 × 세로 2칸',
-        '300m를 100m로 나누면 3칸, 200m를 100m로 나누면 2칸이에요. 그 칸을 반복해 운동장을 그렸어요!');
-      /* 닮음 확인이 화면 아래에 생기므로 부드럽게 그 자리로 옮겨 줍니다. */
-      setTimeout(() => { try { const el = document.querySelector('[data-sim]'); if (el) el.scrollIntoView({ behavior:'smooth', block:'center' }); } catch(err) {} }, 700);
-      return;
-    }
-    if (box.w === D.h && box.h === D.w) {
-      this.toastRetry('칸 수는 맞는데 가로와 세로가 서로 바뀌었어요. 가로가 더 긴 300m, 세로가 200m가 되도록 눕혀서 다시 그려 볼까요?');
-      return;
-    }
-    this.toastRetry(this.hintNext('draw', [
-      '지도의 한 칸은 실제로 100m예요. 지금 그린 그림은 실제로 몇 m × 몇 m인지 아래 글에서 확인해 볼까요?',
-      '가로부터 정해 봐요. 실제 가로 300m 안에 100m짜리 칸이 몇 번 들어갈까요? 세로도 같은 방법으로 세어 봐요.',
-      '실제 길이를 100m로 나누면 칸 수가 나와요. 먼저 가로로 칸을 늘려 놓고, 그 줄을 세로로 반복해서 직사각형을 만들어 보세요.'
-    ]));
-  }
-
-  /* 닮음 확인 — 지도 도형(3칸 × 2칸)과 실제 운동장(300m × 200m)을 나란히 놓고
-     대응하는 변의 비가 모두 같음을 보입니다. 실제 쪽에도 100m 칸을 점선으로 나눠
-     '같은 칸을 반복했다'는 재합성이 두 그림에서 함께 읽히게 했습니다. */
-  similarSvg() {
-    const D = this.DRAW;
-    const ink = 'var(--color-neutral-900)', sub = 'var(--color-neutral-700)';
-    const acc = 'var(--color-accent)', acc1 = 'var(--color-accent-100)', acc3 = 'var(--color-accent-300)';
-    const acc6 = 'var(--color-accent-600)', acc7 = 'var(--color-accent-700)';
-    const g1 = 'var(--color-accent-2-100)', g5 = 'var(--color-accent-2-500)', g7 = 'var(--color-accent-2-700)';
-    const W = 540, H = 234;
-    const tx = (x, y, s, fs, fill, anc) => '<text x="' + x + '" y="' + y + '" ' + (anc ? 'text-anchor="' + anc + '" ' : '') +
-      'style="font-size:' + fs + 'px;font-weight:800;fill:' + (fill || ink) + '">' + s + '</text>';
-    const box = (x, y, cell, fill, stroke, dash) => {
-      let s = '<rect x="' + x + '" y="' + y + '" width="' + (cell*D.w) + '" height="' + (cell*D.h) + '" rx="4" style="fill:' + fill + ';stroke:' + stroke + ';stroke-width:3"/>';
-      for (let c = 1; c < D.w; c++)
-        s += '<line x1="' + (x+cell*c) + '" y1="' + y + '" x2="' + (x+cell*c) + '" y2="' + (y+cell*D.h) + '" style="stroke:' + stroke + ';stroke-width:1.5' + (dash ? ';stroke-dasharray:5 4' : '') + '"/>';
-      for (let r = 1; r < D.h; r++)
-        s += '<line x1="' + x + '" y1="' + (y+cell*r) + '" x2="' + (x+cell*D.w) + '" y2="' + (y+cell*r) + '" style="stroke:' + stroke + ';stroke-width:1.5' + (dash ? ';stroke-dasharray:5 4' : '') + '"/>';
-      return s;
-    };
-    let g = '';
-    /* 왼쪽 — 지도 위에 그린 도형 */
-    g += tx(103, 54, '지도에 그린 운동장', 13, sub, 'middle');
-    g += box(64, 78, 26, acc1, acc6, false);
-    g += tx(103, 152, '가로 3칸', 13, acc7, 'middle');
-    g += tx(58, 112, '세로 2칸', 13, g7, 'end');
-    /* 가운데 — 같은 비로 늘리기 */
-    g += tx(215, 92, '같은 비로', 11.5, sub, 'middle');
-    g += '<line x1="180" y1="108" x2="248" y2="108" style="stroke:' + acc3 + ';stroke-width:4;stroke-linecap:round"/>';
-    g += '<path d="M240 101 L250 108 L240 115" style="fill:none;stroke:' + acc3 + ';stroke-width:4;stroke-linecap:round;stroke-linejoin:round"/>';
-    g += tx(215, 130, '늘리기', 11.5, sub, 'middle');
-    /* 오른쪽 — 실제 운동장 (100m 칸을 점선으로) */
-    g += tx(366, 44, '실제 운동장', 13, sub, 'middle');
-    g += box(288, 56, 52, g1, g5, true);
-    g += tx(366, 178, '가로 300m', 13, acc7, 'middle');
-    g += tx(452, 112, '세로 200m', 13, g7, 'start');
-    g += tx(314, 88, '100m', 10.5, g7, 'middle');
-    /* 아래 — 대응변의 비 */
-    g += '<rect x="112" y="196" width="316" height="30" rx="15" style="fill:' + acc1 + ';stroke:' + acc + ';stroke-width:2.5"/>';
-    g += tx(270, 217, '가로 : 세로 = 3 : 2 = 300 : 200', 16, acc7, 'middle');
-    return this.svgEl('0 0 ' + W + ' ' + H, { width: 'min(540px,94vw)', display: 'block' }, g, 'sim');
-  }
 
   scalePick(ok, obj) {
     if (this.state.solved[this.state.i]) return;
@@ -1305,12 +1124,8 @@ class Component extends DCLogic {
       isStory: st.k === 'story',
       storyArt: (st.k === 'story' && st.art === 'scholar') ? this.scholarSvg() : null,
       storyEmoji: !(st.k === 'story' && st.art === 'scholar'), isScale: st.k === 'scale', isZoom: st.k === 'zoom',
-      isDraw: st.k === 'draw',
       isMovie: st.k === 'movie', isComic: st.k === 'comic', isProp: st.k === 'prop',
       isReflect: st.k === 'reflect', isBlank: st.k === 'blank', isFinish: st.k === 'finish',
-      drawCells: null, simEl: null, simText: '', simMountain: '', drawInfo: '', drawLabel: '',
-      drawCols: this.DRAW.cols, drawRows: this.DRAW.rows, drawCell: 54, drawCanReset: false,
-      drawReset: () => this.drawReset(),
       mapEl: null, comicEl: null, propEl: null, choices: null, meetEl: null, propRevealEl: null,
       quiz: null, quizQ: '',
       zq1: null, zq2: null, zoomQ1: false, zoomQ2: false, zVal: S.zVal,
@@ -1351,32 +1166,6 @@ class Component extends DCLogic {
       const zq = this.ZOOMQ[st.zi];
       v.zoomQ = (zq && !solved) ? ('지도를 ' + zq.p + '%로 확대하면, 다리는 몇 cm가 될까요?') : '';
       v.zq = (zq && !solved) ? zq.opts.map(o => ({ t: o[0], pick: () => this.zoomPick(o[1] === 1) })) : null;
-    }
-
-    if (st.k === 'draw') {
-      const D = this.DRAW, bx = this.drawBox();
-      v.drawLabel = st.hi;
-      v.drawCanReset = !!bx && !solved;
-      const cells = [];
-      for (let r = 0; r < D.rows; r++) for (let c = 0; c < D.cols; c++) {
-        const on = !!bx && r >= bx.r0 && r <= bx.r1 && c >= bx.c0 && c <= bx.c1;
-        cells.push({
-          id: r + ',' + c,
-          bg: on ? (solved ? 'var(--color-accent-2-200)' : 'var(--color-accent-300)') : 'var(--color-neutral-100)',
-          fg: on ? (solved ? 'var(--color-accent-2-700)' : 'var(--color-accent-800)') : 'var(--color-neutral-400)',
-          out: on ? '2.5px solid ' + (solved ? 'var(--color-accent-2-600)' : 'var(--color-accent-600)') : 'none',
-          down: (e) => this.drawDown(r, c, e)
-        });
-      }
-      v.drawCells = cells;
-      v.drawInfo = bx
-        ? '가로 ' + bx.w + '칸 × 세로 ' + bx.h + '칸  =  실제 ' + (bx.w*D.unit) + 'm × ' + (bx.h*D.unit) + 'm'
-        : '아직 그린 것이 없어요 — 격자를 드래그해 보세요 · 한 칸 = 실제 ' + D.unit + 'm';
-      if (solved) {
-        v.simEl = this.similarSvg();
-        v.simText = '모양은 그대로이고 크기만 줄어든 두 도형을 닮은 도형이라고 해요. 닮은 도형은 대응하는 변의 비가 모두 같아요. 지도에 그린 운동장의 가로 : 세로는 3 : 2, 실제 운동장의 가로 : 세로는 300 : 200 — 간단히 하면 똑같이 3 : 2예요.';
-        v.simMountain = '앞에서 본 산도 마찬가지예요. 지도의 삼각형과 실제 산은 닮은 도형이라, 밑변도 높이도 같은 비로 줄어 있어요.';
-      }
     }
 
     if (st.k === 'movie') {
@@ -1444,7 +1233,7 @@ class Component extends DCLogic {
     }
 
     /* 게스트(자유 탐색): needsSolve 게이트 무시 — 과제 미해결이어도 '다음' 활성. 실제 학습자는 순차 잠금 유지 */
-    const needsSolve = (!st.intro && ['scale','zoom','draw','prop','blank'].indexOf(st.k) >= 0) || !!st.quiz;
+    const needsSolve = (!st.intro && ['scale','zoom','prop','blank'].indexOf(st.k) >= 0) || !!st.quiz;
     const gate = needsSolve && !solved && !this._guest;
     v.showPrimary = st.k !== 'finish';
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
@@ -1453,8 +1242,7 @@ class Component extends DCLogic {
       : (st.k === 'reflect' ? '제출! →' : '다음 →')));
     v.primaryBg = gate ? 'var(--color-neutral-400)' : 'var(--color-accent)';
     v.footHint = gate ? (st.k === 'blank' ? '빈칸을 모두 채우면 다음으로 갈 수 있어요'
-      : (st.k === 'draw' ? '운동장을 알맞게 그리면 다음으로 갈 수 있어요'
-      : (st.quiz ? '알맞은 답을 고르면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요'))) : '';
+      : (st.quiz ? '알맞은 답을 고르면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요')) : '';
     v.primary = () => {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
       if (gate) { this.sfx('oops'); this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return; }
