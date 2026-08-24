@@ -288,10 +288,9 @@ class Component extends DCLogic {
   LOG_TK = 'ratiosense-2026';
   LAB = 'mapV3';
 
-  /* 배율 문제 — 100%에서 3cm인 다리를 120·150·200%로 확대하면? */
+  /* 배율 문제 — 100%에서 3cm인 다리를 120·200%로 확대하면? */
   ZOOMQ = [
     { p:120, ans:'3.6cm', opts:[['3.6 cm',1],['3.2 cm',0],['4.2 cm',0]] },
-    { p:150, ans:'4.5cm', opts:[['4.5 cm',1],['3.5 cm',0],['5 cm',0]] },
     { p:200, ans:'6cm',   opts:[['6 cm',1],['5 cm',0],['9 cm',0]] }
   ];
 
@@ -398,14 +397,9 @@ class Component extends DCLogic {
       { k:'scale', oi:0, who:'ratio',
         say:'지도에 다리가 3센티미터로 그려져 있어요. 실제 다리는 얼마나 길까요?',
         hi:'🌉 다리' },
-      { k:'scale', oi:1, who:'ratio',
-        say:'지도에 도로가 5센티미터로 그려져 있어요. 실제 도로는 얼마나 길까요?',
-        hi:'⛰️ 산' },
       { k:'zoom', zi:0, who:'ratio',
         say:'지도를 복사기로 더 잘 보이게 확대했어요. 백이십 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?' },
       { k:'zoom', zi:1, who:'ratio',
-        say:'이번에는 백오십 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?' },
-      { k:'zoom', zi:2, who:'ratio',
         say:'마지막으로 이백 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?' },
       /* 축척·배율 구간을 매듭짓고 에라토스테네스 이야기로 넘어가는 다리 */
       { k:'story', who:'ratio', art:'scholar',

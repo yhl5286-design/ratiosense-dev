@@ -721,11 +721,8 @@ class Component extends DCLogic {
         hi:'빨강이 두 배가 되었어요 · 노랑은 몇 컵일까요' },
       { k:'lab', mode:'more', who:'munsell', run:'기록하기',
         say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 각 물감의 양을 다르게 해서 목표색을 찾아봐. 슬라이더를 자유롭게 움직여서 양을 조절해봐. ＋, − 버튼으로 조정하고 싶다면 10씩 커지거나 작아져. 목표색을 잘 찾아보고 기록해둬.',
-        hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기' },
-      { k:'lab', mode:'more', who:'munsell', run:'기록하기',
-        say:'마지막 미션이야. 지금까지 만든 것과 또 다른 양으로 목표색을 한 번 더 만들어 봐. 슬라이더는 500mL까지 올라가니까 아주 많은 양으로도 만들 수 있어.',
-        hi:'미션 · 또 다른 양으로 목표색 만들기 · 슬라이더는 500mL까지' },
-      /* 네 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
+        hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기 · 슬라이더는 500mL까지' },
+      /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
          안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
          답은 어른이 말해 주지 않는다 — 다인이 말대로 직접 만들어 보고, 그 결과를 근거로
          학습자가 설명을 완성한 뒤에야 '무엇이 그대로였나'를 한 마디로 모은다. */
@@ -735,39 +732,27 @@ class Component extends DCLogic {
                '노랑 40mL에도 노랑 30mL를 더하면 빨강 50, 노랑 70이 되잖아요?',
                '이렇게 같은 양을 더해도 같은 색이 나오나요?'],
         btn:'그러게요? →' },
-      { k:'story', who:'munsell', emoji:'🔬',
-        lines:['좋은 질문이야!',
-               '같은 양을 더하면 어떻게 되는지 다시 실험으로 보여주자.'],
-        btn:'해 볼게요! →' },
       /* 오개념을 말로 반박하지 않는다 — 다인이가 말한 그대로 손으로 만들어 보고,
          목표색 옆에 나란히 놓아 달라진다는 것을 눈으로 확인하게 한다. */
       { k:'lab', mode:'trap', unit:'cup', who:'munsell', run:'확인하기',
         startR:20, startY:40, trapA:50, trapB:70,
-        say:'지금 비커에는 실험으로 찾은 빨강 20mL와 노랑 40mL가 들어 있어. 다인이가 말한 대로 빨강에도 30mL, 노랑에도 30mL를 똑같이 더 넣어 봐. 목표색과 같은 색이 나올까?',
+        say:'좋은 질문이야! 같은 양을 더하면 어떻게 되는지 실험으로 보여주자. 지금 비커에는 실험으로 찾은 빨강 20mL와 노랑 40mL가 들어 있어. 다인이가 말한 대로 빨강에도 30mL, 노랑에도 30mL를 똑같이 더 넣어 봐. 목표색과 같은 색이 나올까?',
         hi:'빨강도 세 컵, 노랑도 세 컵 더 부어요' },
       { k:'blank', id:'why', who:'munsell', demo:'cups',
         say:'아래 그림을 같이 볼까? 빨강:노랑에 같은 양을 각각 더했지만 다른 색이 되었어. 친구에게 뭐라고 설명해 주면 좋을지 낱말 카드를 끌어서 완성해 봐.' },
       /* 실험과 다인이의 반례를 모두 겪은 뒤에 묻는다 — 더해도 안 되고 곱하면 되는 까닭을
          한 마디로 모으는 자리다. */
-      { k:'chips', who:'munsell', need:1,
-        say:'양이 달라도 전부 같은 색이었어. 무엇이 달라지지 않았을까?',
-        chips:[ {t:'두 양의 합', ok:0, fb:'20+40은 60, 40+80은 120 — 합은 달라졌단다. 다시 한번 생각해볼까?'},
-                {t:'두 양의 차', ok:0, fb:'20과 40 — 차이도 달라졌단다. 다시 한번 생각해볼까?'},
-                {t:'한쪽이 다른 쪽의 몇 배인지', ok:1, fb:'바로 그거야.'} ] },
       /* 단위화(재합성) — 세 번 되풀이한다. 양에 맞춰 묶는 단위를 바꾸면
          20:40도, 30:60도, 40:80도 모두 1컵 : 2컵이 되어 같은 비가 손으로 드러난다.
          앱이 대신 약분해 보여 주던 자리를 학습자의 조작이 대신한다. */
       { k:'cups', who:'munsell', src:{ r:20, y:40 }, unit:20, ask:true,
         say:'실험으로 찾은 빨강 20mL와 노랑 40mL를 다시 가져왔어. 이번에는 조금 더 큰 20mL짜리 컵을 줄게. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐.',
         hi:'빈 컵을 누르면 비커에서 20mL가 옮겨져요' },
-      { k:'cups', who:'munsell', src:{ r:30, y:60 }, unit:30,
-        say:'이번에는 빨강 30mL와 노랑 60mL야. 컵도 30mL짜리로 바꿔 줄게. 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 직접 옮겨 담아 봐.',
-        hi:'컵 하나는 30mL예요' },
       { k:'cups', who:'munsell', src:{ r:40, y:80 }, unit:40,
         say:'마지막이야. 빨강 40mL와 노랑 80mL를 40mL짜리 컵으로 옮겨 담아 봐. 이번에도 몇 컵 대 몇 컵이 될까?',
         hi:'컵 하나는 40mL예요' },
       { k:'chips', who:'munsell', need:1,
-        say:'모두 간단히 하면 언제나 1 대 2였어. 수첩에는 뭐라고 적으면 좋을까?',
+        say:'양이 달라도 전부 같은 색이었어. 모두 간단히 하면 언제나 1 대 2였어. 수첩에는 뭐라고 적으면 좋을까?',
         chips:[ {t:'수첩에 「빨강 : 노랑 = 1 : 2」로 적기', ok:1, fb:'양이 얼마든 이 비만 지키면 같은 색이 나와.'},
                 {t:'수첩에 「빨강 20mL, 노랑 40mL」라고 적기', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'} ] },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
@@ -790,16 +775,12 @@ class Component extends DCLogic {
                '이때도 비의 비밀이 숨어 있대요. 같이 알아볼까요?'],
         btn:'좋아요! →' },
       /* 시냐크 소개 — 시냐크 본인의 점묘화 대표작을 그대로 보여 준다. */
-      { k:'story', who:'signac', art:'signac_feneon.jpg',
-        artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890) — 배경까지 모두 점으로 찍었어요',
-        lines:['안녕? 나는 화가 \'시냐크\'라고 해.',
-               '나는 \'뭉크\'처럼 물감을 섞지 않고, 점들을 콕콕 찍어 색을 표현해.',
-               '내가 원하는 색을 만들기 위해 색 점의 비를 조절하여 찍으면, 멀리서 볼 때 그 점들이 눈에서 섞여 하나의 색이 되거든!'],
-        btn:'신기해요!' },
-      { k:'story', who:'signac', art:'signac_incomplete.jpg', artWash:1, artCap:'「양산을 든 여인」 — 주황이 빠진 미완성!',
-        lines:['지금 「양산을 든 여인」을 그리는 중인데, 보다시피 주황색 부분이 텅 비었어!',
-               '네가 점의 비로 이 주황을 채워 줄래?'],
-        btn:'제가 채워 볼게요!' },
+      { k:'story', who:'signac', art:'signac_feneon.jpg', art2:'signac_incomplete.jpg', art2Wash:1,
+        artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890)  ·  「양산을 든 여인」 — 주황이 빠진 미완성',
+        lines:['안녕? 나는 점을 찍어 색을 표현하는 화가 \'시냐크\'라고 해.',
+               '그런데 지금 「양산을 든 여인」을 그릴 때 필요한 주황색을 만드는 중이야.',
+               '같이 점을 찍으며 색을 만드는 걸 도와주겠니?'],
+        btn:'좋아요!' },
       { k:'dots', who:'signac',
         say:'나는 빨강 2개와 노랑 3개가 섞인 주황을 만들고 싶어. 점을 찍어보는 연습을 해보자. 위에서 물감 단추를 먼저 누르고, 아래 빈 칸을 누르면 그 색으로 점이 찍혀. 잘못 찍었으면 그 점을 한 번 더 누르면 지워져.',
         hi:'점 5개 · 빨강 : 노랑 = 2 : 3' },
@@ -1948,7 +1929,14 @@ class Component extends DCLogic {
       mp3Count: (() => { try { return Object.keys(window.RS_TTS || {}).length; } catch(e) { return 0; } })(),
       coachImgEl: who.img ? this.coachPortrait(who) : null,
       /* 그림 높이는 화면 높이에 맞춰 줄인다 — 노트북에서 자막이 길어도 그림과 버튼이 잘리지 않게 */
-      artEl: st.art ? React.createElement('img', { src: st.art, alt: st.artAlt || st.artCap || '', key: st.art,
+      artEl: st.art2 ? React.createElement('div', { key:'arts',
+        style:{ display:'flex', gap:'12px', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } }, [
+          React.createElement('img', { src: st.art, alt: st.artAlt || '', key: st.art,
+            style:{ display:'block', maxWidth:'min(240px,40vw)', maxHeight:artMax(34), borderRadius:'3px' } }),
+          React.createElement('img', { src: st.art2, alt:'', key: st.art2,
+            className: st.art2Wash ? 'washed' : undefined,
+            style:{ display:'block', maxWidth:'min(240px,40vw)', maxHeight:artMax(34), borderRadius:'3px' } })
+        ]) : st.art ? React.createElement('img', { src: st.art, alt: st.artAlt || st.artCap || '', key: st.art,
         className: st.artWash ? 'washed' : undefined,
         style: st.artCrop
           ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
@@ -2289,7 +2277,7 @@ class Component extends DCLogic {
          화면 높이에 맞춰 칸을 줄인다 — 스크롤을 내리지 않고 백판 전체를 보게 한다. */
       const vh = (typeof innerHeight === 'number') ? innerHeight : 900;
       const tier = vh < 820 ? 2 : (vh < 900 ? 1 : 0);
-      const cell = n === 100 ? [40, 32, 25][tier] : [62, 56, 50][tier];
+      const cell = n === 100 ? [34, 28, 22][tier] : [62, 56, 50][tier];
       const gap = n === 100 ? [3, 2, 2][tier] : [6, 5, 5][tier];
       const chrome = 26;
       v.gridCols = n <= 10 ? 5 : 10;
