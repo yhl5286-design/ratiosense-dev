@@ -503,12 +503,28 @@ class Component extends DCLogic {
     }
     this._speakSynth(txt, who);
   }
+  /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
+     크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut + 1).trim());
+        s = s.slice(cut + 1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
   _speakSynth(txt, who) {
     if (!('speechSynthesis' in window)) return;
     const cfg = this.WHO[who] || this.WHO.ratio;
     const tok = this._vtok;
-    const parts = [];
-    txt.split(/(?<=[.!?])\s+/).forEach(s => { if (s.trim()) parts.push(s.trim()); });
+    const parts = this.chunks(txt);
     this._speaking = true;
     const step = (i) => {
       if (tok !== this._vtok) return;
@@ -588,6 +604,16 @@ class Component extends DCLogic {
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest');
     if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    /* 순서 잠금 — 색깔·소리 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.
+       게스트는 자유 탐색이므로 통과. 저장소를 읽지 못하면 막지 않는다(잠금 오작동으로 참여자를 가두지 않는다). */
+    if (this._user && !this._guest && window === window.parent) {
+      let blocked = false;
+      try {
+        const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+        blocked = d.indexOf('color') < 0 || d.indexOf('sound') < 0;
+      } catch(e) { blocked = false; }
+      if (blocked) { try { location.replace('index.html'); } catch(e) {} }
+    }
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
@@ -597,12 +623,14 @@ class Component extends DCLogic {
     this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
     document.addEventListener('visibilitychange', this._hide);
     this._pageHide = () => this.flush(true);
+    /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
     addEventListener('pagehide', this._pageHide);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
-    clearInterval(this._flushT); clearTimeout(this._tT); clearTimeout(this._autoT);
+    clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
     document.removeEventListener('visibilitychange', this._hide);
     removeEventListener('pagehide', this._pageHide);
     this.stopVoice(); this.flush(true);
@@ -1000,7 +1028,7 @@ class Component extends DCLogic {
   }
 
   /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
-     네 자리(1. · 6 · 1 · 8)가 모이면 평가의 방 마지막 문이 열린다. */
+     네 장(1 · 6 · 1 · 8)이 모이면 평가의 방 마지막 문이 열린다. */
   awardDigit() {
     const D = this.DIGIT;
     let got = [];

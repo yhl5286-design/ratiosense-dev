@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RatioSense 목소리 고르기</title>
+<style>
+  :root{--bg:#faf7f2;--card:#fff;--line:#e8e0d4;--ink:#2b2622;--dim:#6d6459;--gold:#c9911f;--pick:#1f7a4d}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:15px;line-height:1.6}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 16px 120px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--dim);font-size:14px;margin:0 0 20px}
+  .warn{background:#fff6e8;border:1px solid #e8d5ac;border-radius:10px;padding:14px 16px;margin:0 0 20px;font-size:14px}
+  .warn code{background:#f3e9d6;padding:2px 6px;border-radius:5px;font-size:13px}
+  .person{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+  .phead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
+  .pname{font-size:17px;font-weight:700}
+  .prole{color:var(--dim);font-size:13.5px}
+  .pintent{color:var(--dim);font-size:13.5px;margin-bottom:4px}
+  .pnow{font-size:13.5px;margin-bottom:10px}
+  .pnow b{color:var(--pick)}
+  .sample{color:var(--dim);font-size:13px;background:#faf7f2;border-radius:8px;padding:8px 10px;margin-bottom:12px}
+  .cands{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+  .c{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;
+     padding:7px 9px;background:#fff;cursor:pointer}
+  .c:hover{background:#fffaf0}
+  .c.sel{border:2px solid var(--pick);background:#f2fbf6;padding:6px 8px}
+  .c.playing{border-color:var(--gold);background:#fffaf0}
+  .pl{flex:none;width:32px;height:32px;border-radius:999px;border:2px solid var(--gold);
+      background:#fff;color:var(--gold);font-size:12px;cursor:pointer;font-family:inherit;padding:0}
+  .pl:hover{background:var(--gold);color:#fff}
+  .cn{flex:1;min-width:0}
+  .code{font-family:ui-monospace,Consolas,monospace;font-size:12.5px}
+  .note{color:var(--dim);font-size:12px}
+  .real{font-size:12px;color:var(--pick);margin-left:5px}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+       padding:10px 16px;display:flex;gap:10px;align-items:center;font-size:14px;flex-wrap:wrap}
+  .bar button{border:2px solid var(--gold);background:#fff;color:var(--gold);border-radius:999px;
+              padding:8px 16px;font-size:14px;cursor:pointer;font-family:inherit}
+  .bar button:hover{background:var(--gold);color:#fff}
+  #out{width:100%;height:190px;font-family:ui-monospace,Consolas,monospace;font-size:12.5px;
+       border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:12px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>RatioSense 목소리 고르기</h1>
+  <p class="sub">인물마다 후보 목소리를 들어 보고 고릅니다. 여기서 고른다고 앱이 바뀌지는 않습니다 — 아래 「고른 결과」를 넘겨 주시면 그 목소리로 다시 받아 넣습니다.</p>
+  <div id="body">불러오는 중…</div>
+  <textarea id="out" readonly></textarea>
+</div>
+<div class="bar">
+  <button id="stop">■ 멈춤</button>
+  <button id="show">고른 결과 보기</button>
+  <button id="copy">복사</button>
+  <button id="reset">선택 지우기</button>
+  <span id="now">—</span>
+</div>
+<script>
+const LS = 'rs_voice_pick_v1';
+let CAST = null, SETS = null, VER = '1', cur = null, curEl = null;
+const $ = s => document.querySelector(s);
+const body = $('#body'), now = $('#now'), out = $('#out');
+const picks = JSON.parse(localStorage.getItem(LS) || '{}');
+
+function stop() {
+  if (cur) { cur.pause(); cur = null; }
+  if (curEl) { curEl.classList.remove('playing'); curEl = null; }
+  now.textContent = '—';
+}
+
+function play(file, label, el) {
+  const same = curEl === el;
+  stop();
+  if (same) return;
+  cur = new Audio('../tts/_samples/' + file + '?v=' + VER);
+  curEl = el; el.classList.add('playing');
+  now.textContent = '▶ ' + label;
+  cur.onended = stop;
+  cur.play().catch(() => { now.textContent = '재생 실패 — ' + file + ' 가 없습니다'; });
+}
+
+function save() { localStorage.setItem(LS, JSON.stringify(picks)); }
+
+function render() {
+  body.innerHTML = '';
+  const common = (SETS._common && SETS._common.rows) || [];
+  if (!common.length) {
+    body.innerHTML = '<div class="warn"><b>아직 견본이 없습니다.</b><br>' +
+      'v4 폴더에서 <code>node _tools/synth_samples.mjs</code> 를 돌리면 후보 목소리를 한 번씩 받아 옵니다.' +
+      '<br>CLOVA Voice Premium 권한이 살아 있어야 합니다.</div>';
+    return;
+  }
+  for (const who of Object.keys(CAST)) {
+    const p = CAST[who];
+    const mine = (SETS[who] && SETS[who].rows) || [];
+    const seen = new Set(mine.map(r => r.speaker));
+    const rows = mine.concat(common.filter(r => !seen.has(r.speaker)));
+    const sel = picks[who] || p.speaker;
+
+    const box = document.createElement('div');
+    box.className = 'person';
+    box.innerHTML =
+      '<div class="phead"><span class="pname">' + p.name + '</span>' +
+      '<span class="prole">' + p.role + '</span></div>' +
+      '<div class="pintent">설계 의도 — ' + p.intent + '</div>' +
+      '<div class="pnow">지금 고른 목소리 <b>' + sel + '</b>' +
+      (sel === p.speaker ? ' <span class="note">(현재 앱과 같음)</span>' : ' <span class="note">(현재 앱은 ' + p.speaker + ')</span>') +
+      '</div>' +
+      '<div class="sample">견본 대사 — ' + p.sample + '</div>';
+
+    const grid = document.createElement('div');
+    grid.className = 'cands';
+    for (const r of rows) {
+      const c = document.createElement('div');
+      c.className = 'c' + (r.speaker === sel ? ' sel' : '');
+      const isReal = r.file.indexOf(who + '__') === 0;
+      c.innerHTML = '<button class="pl">▶</button><div class="cn">' +
+        '<div class="code">' + r.speaker + (isReal ? '<span class="real">실제 대사</span>' : '') + '</div>' +
+        '<div class="note">' + (r.note || '') + '</div></div>';
+      c.querySelector('.pl').onclick = e => { e.stopPropagation(); play(r.file, p.name + ' · ' + r.speaker, c); };
+      c.onclick = () => { picks[who] = r.speaker; save(); render(); };
+      grid.appendChild(c);
+    }
+    box.appendChild(grid);
+    body.appendChild(box);
+  }
+}
+
+$('#stop').onclick = stop;
+$('#reset').onclick = () => { for (const k in picks) delete picks[k]; save(); out.style.display = 'none'; render(); };
+$('#show').onclick = () => {
+  const o = {};
+  for (const who of Object.keys(CAST)) {
+    const s = picks[who] || CAST[who].speaker;
+    o[who] = { name: CAST[who].name, speaker: s, changed: s !== CAST[who].speaker };
+  }
+  const ch = Object.keys(o).filter(k => o[k].changed);
+  out.value = (ch.length ? '바뀐 인물 ' + ch.length + '명 — ' + ch.map(k => o[k].name + ' → ' + o[k].speaker).join(', ')
+                         : '바뀐 인물 없음 (현재 배정 그대로)') + '\n\n' + JSON.stringify(o, null, 2);
+  out.style.display = 'block';
+  out.scrollIntoView({ behavior: 'smooth', block: 'end' });
+};
+$('#copy').onclick = () => {
+  if (!out.value) $('#show').onclick();
+  navigator.clipboard.writeText(out.value).then(() => { now.textContent = '복사했습니다'; },
+                                                () => { out.select(); now.textContent = 'Ctrl+C 로 복사하세요'; });
+};
+
+Promise.all([
+  fetch('cast.json?t=' + Date.now()).then(r => r.json()),
+  fetch('../tts/_samples/index.json?t=' + Date.now()).then(r => r.json()).catch(() => ({ sets: {} })),
+]).then(([c, s]) => {
+  CAST = c.cast; SETS = s.sets || {}; VER = s.ver || '1';
+  render();
+}).catch(e => { body.textContent = '자료를 읽지 못했습니다 — ' + e; });
+</script>
+</body>
+</html>

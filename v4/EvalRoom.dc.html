@@ -120,7 +120,7 @@ button{font-family:inherit}
       <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
           <div style="font-size:96px;line-height:1">🔐</div>
-          <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:600px;line-height:1.6">1. + 6 + 1 + 8 — 네 자리를 이으면 무엇이 될까요?</div>
+          <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:600px;line-height:1.6">1 + 6 + 1 + 8 — 이어 붙이면 무엇이 될까요?</div>
         </div>
       </sc-if>
 
@@ -151,6 +151,40 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
+      <!-- 황금비 막대 — 기준을 늘여도 두 막대의 비는 그대로임을 눈으로 확인한다 -->
+      <sc-if value="{{isPhi}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
+
+          <div style="width:min(680px,94%);display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:76px;flex:none;font-size:14px;font-weight:800;color:var(--color-neutral-700);text-align:right">기준<br>1배</div>
+              <div style="flex:1;height:38px;background:var(--color-neutral-200);border-radius:var(--radius-sm);overflow:hidden">
+                <div style="width:{{phiBaseW}}%;height:100%;background:var(--color-accent-500);border-radius:var(--radius-sm);transition:width .18s ease"></div>
+              </div>
+              <div style="width:78px;flex:none;font-size:17px;font-weight:800;color:var(--color-accent-700)">{{phiBase}}cm</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:76px;flex:none;font-size:14px;font-weight:800;color:var(--color-neutral-700);text-align:right">황금비<br>1.618배</div>
+              <div style="flex:1;height:38px;background:var(--color-neutral-200);border-radius:var(--radius-sm);overflow:hidden">
+                <div style="width:{{phiGoldW}}%;height:100%;background:var(--color-accent-2-500);border-radius:var(--radius-sm);transition:width .18s ease"></div>
+              </div>
+              <div style="width:78px;flex:none;font-size:17px;font-weight:800;color:var(--color-accent-2-700)">{{phiGold}}cm</div>
+            </div>
+          </div>
+
+          <div style="font-size:19px;font-weight:800;color:var(--color-neutral-800);background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:999px;padding:7px 22px">{{phiRatio}}</div>
+
+          <div style="display:flex;align-items:center;gap:12px;width:min(680px,94%)">
+            <button onClick="{{phiMinus}}" aria-label="기준 1cm 줄이기" class="rs-round">−</button>
+            <input type="range" min="{{phiMin}}" max="{{phiMax}}" step="1" value="{{phiBase}}" onChange="{{phiInput}}" aria-label="기준 막대 길이" style="flex:1;min-width:0;accent-color:var(--color-accent)">
+            <button onClick="{{phiPlus}}" aria-label="기준 1cm 늘리기" class="rs-round">＋</button>
+          </div>
+
+          <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:620px">{{phiHint}}</div>
+
+        </div>
+      </sc-if>
+
       <sc-if value="{{isFinale}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0;max-width:720px">
           <div style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-4)">
@@ -158,11 +192,8 @@ button{font-family:inherit}
             <span style="font-size:30px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 18px">1.618</span>
             <span style="font-size:19px;color:var(--color-accent-2-700)">황금비 φ!</span>
           </div>
-          <figure style="margin:0;max-width:min(560px,92%)">
-            <img src="venus.jpg" alt="산드로 보티첼리, 비너스의 탄생" class="washed" style="width:100%;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);display:block">
-            <figcaption style="font-size:11px;margin-top:6px;color:var(--color-neutral-600);text-align:center">산드로 보티첼리, 「비너스의 탄생」(1485년경) — Wikimedia Commons · 퍼블릭 도메인</figcaption>
-          </figure>
-          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:640px">화면 비율부터 인물의 배치까지 — 이 명화 곳곳에 <b>황금비 1.618</b>이 숨어 있다고 해요.<br>해바라기 씨앗, 소라 껍데기, 그리고 여러분이 찾은 색과 소리의 비까지 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
+          {{phiArt}}
+          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">모양에서도, 자연에서도, 수에서도 같은 값 <b>1.618</b>이 나와요.<br>여러분이 색과 소리와 지도에서 찾은 것처럼 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
           <a href="index.html" onClick="{{goNext}}" class="rs-pill2" style="min-height:52px;padding:13px 26px;font-size:17px">🏠 여기서 마치고 허브로</a>
         </div>
       </sc-if>
@@ -208,13 +239,13 @@ class Component extends DCLogic {
   LOG_TK = 'ratiosense-2026';
   LAB = 'evalV3';
 
-  /* 비밀 카드 4장 — 참여를 시작할 때 1. 을 받고, 색깔·소리·지도 방을 마칠 때마다 한 자리씩 더한다.
-     이 방에서는 카드를 새로 주지 않고, 모은 네 자리로 마지막 문을 열기만 한다. */
+  /* 비밀 카드 4장 — 색깔의 방에서 두 장(1·6), 소리와 지도에서 한 장씩 받는다. 거저 주는 카드는 없다.
+     네 장의 숫자를 왼쪽부터 이어 붙이면 1618이 되고, 그것이 마지막 문의 열쇠다. */
   CARDS = [
-    { id:'start', digit:'1.', room:'🚪 탐색을 시작할 때', concept:'비의 비밀을 찾아 떠나는 열쇠' },
-    { id:'color', digit:'6',  room:'🎨 색깔의 비밀',     concept:'양이 달라도 비가 같으면 같은 색!' },
-    { id:'sound', digit:'1',  room:'🎼 소리의 비밀',     concept:'진동수의 비가 간단할수록 어울리는 화음!' },
-    { id:'map',   digit:'8',  room:'🗺️ 지도의 비밀',     concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' }
+    { id:'color1', digit:'1', room:'🎨 색깔의 비밀 ①', concept:'양이 달라도 비가 같으면 같은 색!' },
+    { id:'color2', digit:'6', room:'🎨 색깔의 비밀 ②', concept:'양이 달라도 비가 같으면 같은 색!' },
+    { id:'sound',  digit:'1', room:'🎼 소리의 비밀',   concept:'진동수의 비가 간단할수록 어울리는 화음!' },
+    { id:'map',    digit:'8', room:'🗺️ 지도의 비밀',   concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' }
   ];
   WHO = {
     /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
@@ -226,20 +257,29 @@ class Component extends DCLogic {
 
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
-    doorVal:'', doorOpen:false
+    doorVal:'', doorOpen:false,
+    /* 황금비 막대 — 기준 길이(cm) */
+    phiBase:4
   };
+  PHI = 1.618;
+  PHI_MIN = 2; PHI_MAX = 20;   /* 기준 막대의 길이 범위(cm) */
 
   get STEPS() {
     return [
       { k:'story',
-        lines:['드디어 마지막 방이에요! 참여를 시작할 때 받은 1. 과 색깔·소리·지도 방에서 하나씩 모은 6, 1, 8 — 비밀 카드 네 장이 여기 다 모였어요.',
+        lines:['드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리와 지도에서 받은 1과 8 — 비밀 카드 네 장이 여기 다 모였어요.',
                '카드에 적힌 숫자를 차례로 눌러 마지막 문을 열어 봐요!'],
         btn:'문 앞으로 →' },
       { k:'door',
-        say:'카드 네 장이 모두 모였어요! 시작할 때 받은 1. 부터 색깔, 소리, 지도 순서대로 숫자를 눌러 마지막 문을 열어 보세요.',
-        hi:'🔐 마지막 문 — 카드의 숫자 네 개' },
+        say:'카드 네 장이 모두 모였어요! 색깔, 소리, 지도 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
+        hi:'🔐 마지막 문 — 카드의 숫자를 차례로' },
+      /* 1.618을 수로만 외우고 끝내지 않는다 — 1 : 1.618이 무엇을 뜻하는지
+         기준 막대를 직접 늘여 보며 확인하고, 그 뒤에 황금비를 기록한다. */
+      { k:'phi',
+        say:'황금비 1.618은 그냥 한 개의 수가 아니라 1 대 1.618이라는 비예요. 기준이 되는 길이를 1이라고 할 때, 황금비의 길이는 그 1.618배랍니다. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요?',
+        hi:'📏 기준을 여러 번 바꿔 가며 두 막대를 견주어 봐요' },
       { k:'finale',
-        say:'1.618, 황금비는 예로부터 가장 아름답다고 여겨진 비예요. 보티첼리의 비너스의 탄생 같은 명화에도, 해바라기 씨앗과 소라 껍데기에도 이 비가 숨어 있어요. 색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있답니다. 긴 여정을 함께해 줘서 정말 고마워요!',
+        say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 수학에서는 세 가지가 대표적이에요. 가로가 세로의 1.618배인 황금사각형은 정사각형을 떼어내도 남은 조각이 또 같은 모양이 되고, 정오각형은 대각선을 한 변으로 나누면 꼭 1.618이 나와요. 앞의 두 수를 더해 나가는 피보나치 수도 이웃한 두 수의 비가 점점 1.618에 가까워진답니다. 색과 소리와 지도에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
         hi:'🎉 여정 완주 — 비 감각의 달인!' }
     ];
   }
@@ -292,6 +332,8 @@ class Component extends DCLogic {
     try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
     try { speechSynthesis.cancel(); } catch(e) {}
   }
+  /* 비를 읽을 때 쓰는 한자어 수 — 1은 '한'이 아니라 '일'로 읽혀야 한다 */
+  SINO(v) { const S = ['영','일','이','삼','사','오','육','칠','팔','구','십']; return +v <= 10 ? S[+v] : v; }
   speak(text, who) {
     this.stopVoice();
     this._speakStamp = Date.now();
@@ -300,6 +342,11 @@ class Component extends DCLogic {
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
     const txt = raw
       .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
+      /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
+         화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
+         '1 대 1.618'처럼 뒤가 소수인 경우에는 앞자리만 바꾼다 — 소수를 쪼개면 잘못 읽힌다. */
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
       .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
     if (!txt) return;
     const key = this.ttsKey((who||'ratio') + '|' + txt);
@@ -317,12 +364,28 @@ class Component extends DCLogic {
     }
     this._speakSynth(txt, who);
   }
+  /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
+     크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut + 1).trim());
+        s = s.slice(cut + 1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
   _speakSynth(txt, who) {
     if (!('speechSynthesis' in window)) return;
     const cfg = this.WHO[who] || this.WHO.ratio;
     const tok = this._vtok;
-    const parts = [];
-    txt.split(/(?<=[.!?])\s+/).forEach(s => { if (s.trim()) parts.push(s.trim()); });
+    const parts = this.chunks(txt);
     this._speaking = true;
     const step = (i) => {
       if (tok !== this._vtok) return;
@@ -410,6 +473,16 @@ class Component extends DCLogic {
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
     if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    /* 순서 잠금 — 세 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.
+       게스트는 자유 탐색이므로 통과. 저장소를 읽지 못하면 막지 않는다(잠금 오작동으로 참여자를 가두지 않는다). */
+    if (this._user && !this._guest && window === window.parent) {
+      let blocked = false;
+      try {
+        const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+        blocked = ['color','sound','map'].some(r => d.indexOf(r) < 0);
+      } catch(e) { blocked = false; }
+      if (blocked) { try { location.replace('index.html'); } catch(e) {} }
+    }
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
@@ -419,12 +492,14 @@ class Component extends DCLogic {
     this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
     document.addEventListener('visibilitychange', this._hide);
     this._pageHide = () => this.flush(true);
+    /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
     addEventListener('pagehide', this._pageHide);
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
-    clearInterval(this._flushT); clearTimeout(this._tT); clearTimeout(this._autoT);
+    clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
     document.removeEventListener('visibilitychange', this._hide);
     removeEventListener('pagehide', this._pageHide);
     this.stopVoice(); this.flush(true);
@@ -562,6 +637,94 @@ class Component extends DCLogic {
     else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
   }
 
+
+  /* ── 황금비가 정말로 나타나는 세 가지 ──
+     널리 도는 예(파르테논·모나리자·앵무조개)는 근거가 없어 싣지 않는다.
+     해바라기 잎차례도 어림에 가까워 뺐다. 여기 셋은 모두 수학에서 정확히 φ가 되는 것들이라,
+     그림 위에 그은 선이 곧 설명이 된다. */
+  phiGalleryEl() {
+    const R = React, PHI = 1.618;
+    const A = 'var(--color-accent-500)', A2 = 'var(--color-accent-2-500)', INK = 'var(--color-neutral-800)';
+    const el = (t, a, ...c) => R.createElement(t, a, ...c);
+
+    const card = (k, tag, title, svg, note) => el('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'7px', width:'232px',
+        background:'var(--color-neutral-100)', border:'3px solid var(--color-neutral-300)',
+        borderRadius:'18px', padding:'12px 12px 14px' } },
+      el('div', { key:'g', style:{ fontSize:'12px', fontWeight:800, color:'var(--color-accent-700)' } }, tag),
+      el('div', { key:'t', style:{ fontSize:'15.5px', fontWeight:800, color:'var(--color-neutral-800)' } }, title),
+      svg,
+      el('div', { key:'n', style:{ fontSize:'12.5px', fontWeight:700, lineHeight:1.55,
+        color:'var(--color-neutral-700)', textAlign:'center' } }, note));
+
+    /* ① 황금사각형 — 정사각형을 떼어내도 남은 직사각형이 또 1 : 1.618. 이것이 황금비의 정의다. */
+    const W = 204, H = Math.round(W / PHI);            /* 204 x 126 */
+    const rect1 = el('svg', { key:'s1', width:W, height:H + 26, viewBox:'0 0 ' + W + ' ' + (H + 26) },
+      el('rect', { key:'o', x:1, y:1, width:W - 2, height:H - 2, fill:'none', stroke:INK, strokeWidth:2.5 }),
+      el('rect', { key:'sq', x:1, y:1, width:H - 2, height:H - 2, fill:A, fillOpacity:0.18, stroke:A, strokeWidth:2.5 }),
+      el('rect', { key:'r2', x:H - 1, y:1, width:W - H - 1, height:H - 2, fill:A2, fillOpacity:0.18, stroke:A2, strokeWidth:2.5 }),
+      /* 남은 직사각형 안에서 한 번 더 — 같은 모양이 되풀이된다 */
+      el('rect', { key:'sq2', x:H - 1, y:1, width:W - H - 1, height:W - H - 1, fill:'none', stroke:A2, strokeWidth:1.4, strokeDasharray:'4 3' }),
+      el('text', { key:'t1', x:H / 2, y:H + 17, textAnchor:'middle', style:{ fontSize:'12px', fontWeight:800, fill:INK } }, '1'),
+      el('text', { key:'t2', x:(H + W) / 2, y:H + 17, textAnchor:'middle', style:{ fontSize:'12px', fontWeight:800, fill:INK } }, '0.618'),
+      el('text', { key:'t3', x:W / 2, y:H + 3, textAnchor:'middle', style:{ fontSize:'0px' } }, ''),
+      el('line', { key:'l1', x1:1, y1:H + 6, x2:H - 1, y2:H + 6, stroke:A, strokeWidth:2 }),
+      el('line', { key:'l2', x1:H - 1, y1:H + 6, x2:W - 1, y2:H + 6, stroke:A2, strokeWidth:2 }));
+
+    /* ② 정오각형 — 대각선 ÷ 한 변 = sin72° ÷ sin36° = φ. 어림이 아니라 정확히 황금비다. */
+    const CX = 102, CY = 106, RR = 82;
+    const P5 = [0, 1, 2, 3, 4].map(i => {
+      const a = (-90 + i * 72) * Math.PI / 180;
+      return [CX + RR * Math.cos(a), CY + RR * Math.sin(a)];
+    });
+    const pt = (v) => v[0].toFixed(1) + ',' + v[1].toFixed(1);
+    const diags = [];
+    for (let i = 0; i < 5; i++) {
+      const j = (i + 2) % 5;
+      diags.push(el('line', { key:'g' + i, x1:P5[i][0], y1:P5[i][1], x2:P5[j][0], y2:P5[j][1],
+        stroke:'var(--color-neutral-400)', strokeWidth:1.4 }));
+    }
+    const pent = el('svg', { key:'s2', width:204, height:204, viewBox:'0 0 204 204' },
+      el('polygon', { key:'p', points:P5.map(pt).join(' '), fill:'var(--color-neutral-200)', stroke:INK, strokeWidth:2.2 }),
+      ...diags,
+      /* 한 변 하나와 대각선 하나만 굵게 — 둘의 비가 곧 1 : 1.618 */
+      el('line', { key:'side', x1:P5[3][0], y1:P5[3][1], x2:P5[4][0], y2:P5[4][1], stroke:A, strokeWidth:5, strokeLinecap:'round' }),
+      el('line', { key:'diag', x1:P5[4][0], y1:P5[4][1], x2:P5[1][0], y2:P5[1][1], stroke:A2, strokeWidth:5, strokeLinecap:'round' }),
+      el('text', { key:'ls', x:(P5[3][0] + P5[4][0]) / 2, y:P5[3][1] + 19, textAnchor:'middle',
+        style:{ fontSize:'14px', fontWeight:800, fill:A } }, '한 변 1'),
+      el('text', { key:'ld', x:CX + 4, y:CY - 34, textAnchor:'middle',
+        style:{ fontSize:'14px', fontWeight:800, fill:A2 } }, '대각선 1.618'));
+
+    /* ③ 피보나치 — 이웃한 두 수의 비가 1.618로 다가간다 */
+    const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+    const bars = FIB.map((f, i) => el('div', { key:'f' + i,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2px' } },
+      el('div', { key:'b', style:{ width:'13px', height:Math.min(64, 6 + f * 1.05) + 'px',
+        background:(i >= 7 ? A : 'var(--color-neutral-400)'), borderRadius:'3px 3px 0 0' } }),
+      el('div', { key:'n', style:{ fontSize:'9.5px', fontWeight:800, color:'var(--color-neutral-700)' } }, String(f))));
+    const fib = el('div', { key:'s3', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'7px', height:'204px', justifyContent:'center' } },
+      el('div', { key:'r', style:{ display:'flex', gap:'4px', alignItems:'flex-end' } }, bars),
+      el('div', { key:'d', style:{ display:'flex', flexDirection:'column', gap:'3px', alignItems:'center',
+        fontSize:'12.5px', fontWeight:800, color:'var(--color-neutral-700)' } },
+        el('div', { key:'a' }, '13 ÷ 8 = 1.625'),
+        el('div', { key:'b' }, '21 ÷ 13 = 1.615'),
+        el('div', { key:'c', style:{ color:'var(--color-accent-700)', fontSize:'14px' } }, '55 ÷ 34 = 1.6176 …')));
+
+    return el('div', { key:'gal',
+      style:{ display:'flex', gap:'14px', justifyContent:'center', flexWrap:'wrap' } },
+      card('a', '📐 모양', '황금사각형',  rect1, '가로가 세로의 1.618배인 직사각형. 정사각형을 떼어내도 남은 직사각형이 또 1 : 1.618이에요.'),
+      card('b', '⬟ 도형', '정오각형',    pent,  '정오각형은 대각선을 한 변으로 나누면 꼭 1.618이 나와요. 어림이 아니라 정확히 황금비예요.'),
+      card('c', '🔢 수',   '피보나치 수',   fib,   '앞의 두 수를 더해 만든 수열이에요. 이웃한 두 수의 비가 점점 1.618에 가까워져요.'));
+  }
+
+  /* ── 황금비 막대 (1 : 1.618) ── */
+  phiSet(v) {
+    const b = Math.max(this.PHI_MIN, Math.min(this.PHI_MAX, Math.round(v)));
+    if (b === this.state.phiBase) return;
+    this.plog('phi', { base: b });
+    this.setState({ phiBase: b });
+  }
+
   /* ── 마지막 문 (1618 = φ) ── */
   doorKey(k) {
     this.sfx('tap');
@@ -588,7 +751,7 @@ class Component extends DCLogic {
       this.setState({ doorVal: '' });
       this.toastRetry(this.hintNext('door', [
 '네 장의 카드에 적힌 숫자를 왼쪽부터 차례로 읽어 볼까요?',
-        '시작 카드, 색깔, 소리, 지도 순서예요. 카드 아래 숫자를 그 순서대로 눌러 보세요.',
+        '색깔의 방에서 받은 두 장이 먼저예요. 카드 아래 숫자를 왼쪽부터 그대로 눌러 보세요.',
         '카드의 숫자를 그대로 이어 붙이면 네 자리 수가 돼요 — 다시 한 번!'
       ]));
     }
@@ -632,7 +795,8 @@ class Component extends DCLogic {
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story',
-      isDoor: st.k === 'door', isFinale: st.k === 'finale',
+      isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi',
+      phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
       doorCards: null, doorSlots: null, doorPad: null,
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
@@ -653,6 +817,23 @@ class Component extends DCLogic {
       v.doorSlots = [0,1,2,3].map(i => ({ d: S.doorVal[i] || '', bd: S.doorVal[i] ? 'var(--color-accent-500)' : 'var(--color-neutral-300)' }));
       v.doorPad = ['1','2','3','4','5','6','7','8','9','⌫','0','C'].map(k => ({ k, tap: () => this.doorKey(k) }));
       v.doorGo = () => this.doorTry();
+    }
+
+    if (st.k === 'phi') {
+      const b = S.phiBase, g = Math.round(b * this.PHI * 10) / 10;
+      /* 두 막대는 같은 자로 그린다 — 기준이 최대일 때 황금비 막대가 화면을 꽉 채우도록 */
+      const span = this.PHI_MAX * this.PHI;
+      v.phiBase = b;
+      v.phiGold = g.toFixed(1).replace(/\.0$/, '');
+      v.phiBaseW = (b / span * 100).toFixed(2);
+      v.phiGoldW = (b * this.PHI / span * 100).toFixed(2);
+      v.phiMin = this.PHI_MIN; v.phiMax = this.PHI_MAX;
+      v.phiInput = (e) => this.phiSet(+e.target.value);
+      v.phiMinus = () => this.phiSet(b - 1);
+      v.phiPlus = () => this.phiSet(b + 1);
+      /* 기준이 바뀌어도 두 막대의 비는 그대로라는 것을 수로도 곁들여 둔다 */
+      v.phiRatio = '기준 ' + b + 'cm  :  황금비 ' + v.phiGold + 'cm';
+      v.phiHint = '기준을 여러 길이로 옮겨 보세요 — 기준이 커지면 황금비 막대도 함께 커지지만, 두 막대의 비는 언제나 1 : 1.618이에요.';
     }
 
     const last = S.i === this.STEPS.length - 1;

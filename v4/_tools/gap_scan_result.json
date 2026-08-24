@@ -1,0 +1,599 @@
+{
+  "rows": [
+    {
+      "room": "ColorRoom",
+      "key": "x9dxf0",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[0] story",
+      "text": "안녕하세요! 저는 '비(比)'의 비밀 탐색을 돕는 안내자, 레시오예요. 이 방은 색깔의 비밀 방이에요. 색깔의 비밀 방에는 여러분의 도움이 필요한 화가와 과학자가 기다리고 있어요. 우리 함께 비밀을 풀어가볼까요?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "v77v39",
+      "who": "munch",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[1] story",
+      "text": "안녕? 만나서 반가워. 나는 화가 '뭉크'라고 해. 나는 '절규'라는 작품을 그리던 중이야. 이 작품에서 중요한 노을 진 하늘을 칠해야 하는데 물감이 말라 버렸어. 노을색을 찾기 위해 과학자 먼셀이 나의 주황색을 만들어주겠다고 했어. 너도 먼셀을 도와 색을 만들어줄래?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1uorf61",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[2] story",
+      "text": "안녕? 만나서 반가워. 나는 색깔을 연구하는 과학자 먼셀이야. 이렇게 색상환을 만든 사람이지. 나와 함께 뭉크의 노을색을 만들어볼까?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1m6g1j4",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[3] chips",
+      "text": "색을 결정하는 것은 무엇일까? 이 중 두 가지를 찾아봐. 아닌 것도 눌러서 확인해도 좋아."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "y9qpoo",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[4] chips",
+      "text": "그럼 어떤 색의 물감이 필요할까? 목표색을 잘 관찰해보고 추측해 봐."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1ejyh1p",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[5] chips",
+      "text": "좋아. 그럼 각각 물감의 양은 얼마나 넣어야 할까?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "mpqjdy",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[6] demo",
+      "text": "아래 두 비커에 빨강 물감을 20 밀리리터 넣었어. 여기에 노랑 물감을 다르게 넣어볼거야. 왼쪽에는 20 밀리리터 , 오른쪽은 60 밀리리터 넣어서 색을 확인해봐."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1dh87w5",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[7] chips",
+      "text": "과학자는 실험 전에 가설을 세워. 가설은 어떤 것이 맞을 거라고 예상하는 과학자의 생각이야. 가설이 맞는지 틀린지 알아내려면 가설에 맞는 조건을 갖추어 실험을 해야 해. 우리가 가진 목표색을 잘 봐. 어떤 색이 더 많아 보이니? 고르면 그 가설대로 바로 실험해 볼 거야."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "2pc7k5",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[8] lab",
+      "text": "네 가설대로 물감을 넣고 실험하기를 눌러 봐. 목표색이 나올 때까지 도전!"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "19zl0po",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[9] lab",
+      "text": "완벽해. 그런데 이 색과 같은 색을 다른 양으로도 만들 수 있을까? 앞에서 만든 양과 다르게, 한 번만 더 만들어 봐."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1gz1gy0",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[10] chips",
+      "text": "양이 달라도 전부 같은 색이었어. 무엇이 달라지지 않았을까?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1mlgkyu",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[11] cups",
+      "text": "실험으로 찾은 빨강 20 밀리리터 와 노랑 50 밀리리터 를 다시 가져왔어. 여기 10 밀리리터 짜리 작은 컵이 있어. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1dax7lw",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[12] chips",
+      "text": "모두 간단히 하면 언제나 2 대 5였어. 수첩에는 뭐라고 적으면 좋을까?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "cpya95",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[13] story",
+      "text": "수첩에 적은 이 비가 바로 물감 만드는 법이야. 빨강 20 밀리리터 에 노랑 50 밀리리터 를 섞으면 노을빛 주황 70 밀리리터 가 나오지. 이 물감을 예쁘게 포장해서 뭉크에게 선물하자!"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1vswjtl",
+      "who": "munch",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[14] story",
+      "text": "찾았다! 바로 이 색이야! 너희 덕분에 그림을 완성했어. 정말 고마워!"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1bhnlpx",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[15] story",
+      "text": "잠깐, 더 생각해봐요! 여기 질문이 있는 학생이 있어요. 우리 같이 들어볼까요?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1szjzby",
+      "who": "kid",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[16] story",
+      "text": "잠깐만요! 저도 색을 만들어 보고 싶어요. 그런데 왜 이렇게 하면 안 되나요? 빨강 20에 40을 더하고, 노랑 50에도 40을 더하면 똑같이 더한 거잖아요. 그러면 빨강 60, 노랑 90이 되는데요. 같은 양을 더했으니까 같은 색이 나와야 하는 거 아니에요?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "2ua18a",
+      "who": "munsell",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[17] story",
+      "text": "좋은 질문이에요. 하지만 같은 수를 더하는 것과 같은 수를 곱하는 것은 다른 일이란다. 빨강이 20에서 60이 되었으니 3배가 되었지? 그러면 노랑도 3배가 되어야 해. 50의 3배는 150이란다. 90이 아니라 150을 넣어야 같은 색이 된단다."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "19q1ftp",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[18] story",
+      "text": "지금까지 '뭉크'와 '먼셀'을 도와 색을 만드는 비의 비밀을 알아냈어요. 정말 수고했어요! 이번에는 다른 방법으로 색을 만들어 볼 거예요. 이때도 비의 비밀이 숨어 있대요. 같이 알아볼까요?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "df71zw",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[19] story",
+      "text": "안녕? 나는 화가 '시냐크'라고 해. 나는 '뭉크'처럼 물감을 섞지 않고, 점들을 콕콕 찍어 색을 표현해. 내가 원하는 색을 만들기 위해 색 점의 비를 조절하여 찍으면, 멀리서 볼 때 그 점들이 눈에서 섞여 하나의 색이 되거든!"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1qol5sr",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[20] story",
+      "text": "지금 「양산을 든 여인」을 그리는 중인데, 보다시피 주황색 부분이 텅 비었어! 네가 점의 비로 이 주황을 채워 줄래?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "xpjsc2",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[21] dots",
+      "text": "나는 빨강 2개와 노랑 3개가 섞인 주황을 만들고 싶어. 점을 찍어보는 연습을 해보자. 위에서 물감 단추를 먼저 누르고, 아래 빈 칸을 누르면 그 색으로 점이 찍혀. 잘못 찍었으면 그 점을 한 번 더 누르면 지워져."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "u40wdw",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[22] grid",
+      "text": "이번엔 새로운 주황이야. 빨강 대 노랑을 2 대 3으로, 열 칸에 나타내 줘. 빨강 4칸, 노랑 6칸이야."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "3fraxb",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[23] grid",
+      "text": "마지막으로 백 칸에 도전해 봐, 큰 붓을 쓰면 한 줄씩 칠할 수 있어!"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1n99xk1",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[24] chips",
+      "text": "점을 많이 찍는다고 색이 진해질까? 두 그림을 견주어 보자. 어느 쪽 주황이 더 붉을까?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1l85pc2",
+      "who": "signac",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[25] story",
+      "text": "점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3이었지! 내가 원하던 색을 연습해보고 그림을 그릴 수 있게 만들어줘서 고마워."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1nkpg0q",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[26] story",
+      "text": "시냐크와 함께 점을 찍어 주황을 표현해냈군요! 잘했어요! 지금부터는 비율을 공부해볼까요?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "vcu9vl",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[27] blank",
+      "text": "100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요? 아래 낱말을 손가락이나 마우스로 누른 채 끌어서, 빈칸 위에 놓아 주세요."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1irmrji",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[28] blank",
+      "text": "이어서 비율 문제예요. 만약 물감 빨강 40 밀리리터 , 노랑 60 밀리리터 을 넣어 주황 100 밀리리터 를 만들었다면, 각 색깔은 전체의 몇 퍼센트일까요?"
+    },
+    {
+      "room": "ColorRoom",
+      "key": "de7s1z",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[29] blank",
+      "text": "이제 색깔의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요."
+    },
+    {
+      "room": "ColorRoom",
+      "key": "1sza40h",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "ColorRoom[처음] STEPS[30] finish",
+      "text": "색깔의 비밀을 잘 찾아냈어요! 카드 숫자 6을 얻었어요! 잘 기억해두세요!"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "hvu3dr",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[0] story",
+      "text": "이 방은 소리의 비밀을 알아내는 방이에요. 아름다운 소리의 비밀을 찾으러 가볼까요?"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "550p9a",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[1] vib",
+      "text": "건반을 눌러 소리의 떨림을 느껴 보세요! 높은 음일수록 현의 길이가 짧고, 현이 빠르게 떨려요. 여덟 건반을 모두 눌러 소리를 들어 보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1xu7nwv",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[2] harmx",
+      "text": "이제 도와 다른 음의 어울림을 자유롭게 탐색해 봐요! 건반을 자유롭게 눌러보면서 도와 함께 울리는 소리를 듣고, 물결 무늬를 관찰한 다음, 별점 판에 점수를 매겨 보세요. 일곱 음을 모두 평가하면 다음으로 갈 수 있어요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1q3rk6f",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[3] rooms:rooms",
+      "text": "별점이 방을 만들었어요! 점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 어떤 음들이 잘 어울리게 들리나요? 그 이유를 아래에서 골라 보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "16wnnv2",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[3] rooms:collect",
+      "text": "내가 매긴 별점을 모아 봤어요. 별을 비슷하게 준 음들끼리 모아 보면, 같은 방에 어떤 음들이 모이게 될까요?"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "x2tpq4",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[3] rooms:reveal",
+      "text": "발견! 비가 간단할수록 잘 어울려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "fjd4ip",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[4] table",
+      "text": "음정 표 완성! 도부터 한 옥타브 높은 도까지 다 들어봤어요. 1 대 2, 2 대 3, 3 대 4처럼 비가 간단할수록 두 소리가 더 잘 어울려요!"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "y5r21v",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[5] story",
+      "text": "잘 어울리는 두 음의 비밀은 진동수의 비가 간단하다는 것까지 알아봤어요. 그런데 왜 하필 간단한 비여야 잘 어울릴까요? 저와 함께 리듬을 듣고, 보고, 만들면서 그 이유까지 찾아봐요!"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "g8b99z",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[6] poly",
+      "text": "먼저 아무것도 알려 주지 않고 리듬을 들려줄게요. 북만, 트라이앵글만, 그리고 함께 들어 보고 두 소리가 잘 맞아떨어지는지 느껴 보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "15aunvy",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[7] poly",
+      "text": "이번에는 다른 리듬이에요. 아까처럼 먼저 귀로 들어 보고, 칸을 세어 이 리듬에 숨은 비를 찾아보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "10uhrl9",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[8] poly",
+      "text": "여러 리듬을 차례로 들어 보세요. 두 소리가 다시 만나기까지 몇 칸이 걸리는지, 어떤 리듬일 때 두 소리가 자주 만나는지 비교해보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "a6uhwe",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[9] poly",
+      "text": "이번에는 여러분이 직접 간격을 정해 봐요. 북과 트라이앵글이 몇 칸마다 울릴지 골라 재생하면, 두 소리가 몇 칸마다 다시 만나는지 알 수 있어요. 여러 가지로 바꿔 가며 충분히 만들어 보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1fstxev",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[10] strlen",
+      "text": "리듬으로 비를 잘 느껴봤나요? 재밌죠? 이번에는 비율을 이용해서 악기를 만들어보려고 해요. 먼저 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1u0jnbq",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[11] harp",
+      "text": "라 음 440 헤르츠 는 악기를 조율할 때 기준이 되는 음이에요. 라 줄이 72센티미터일 때, 솔 줄은 몇 센티미터일까요? 슬라이더를 움직이면서 소리를 들어보고, 솔 음이 나오는 자리를 찾아보세요. 이때 72 센티미터 를 기준으로 몇 칸인지도 확인해보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1403897",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[12] harp",
+      "text": "이번에는 귀 대신 칸으로 구해 봐요. 미 줄은 3칸 중 2칸이에요. 72센티미터를 3등분하면 한 칸은 몇 센티미터일까요? 한 칸을 먼저 구하고, 그 다음 2칸의 길이를 구해 보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1nlghga",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[13] blank",
+      "text": "이제 소리의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요."
+    },
+    {
+      "room": "SoundRoom",
+      "key": "dr80qz",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[처음] STEPS[14] finish",
+      "text": "소리의 비밀을 잘 찾아냈어요! 카드 숫자 1을 얻었어요! 잘 기억해두세요!"
+    },
+    {
+      "room": "SoundRoom",
+      "key": "1fcvula",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "SoundRoom[이어서] STEPS[0] story",
+      "text": "이 방은 소리의 비밀을 알아내는 방이에요. 색깔 방에서는 물감의 양을 비로 맞추어 주황을 만들었지요. 이번에는 같은 비를 귀로 찾아볼 거예요. 아름다운 소리의 비밀을 찾으러 가볼까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "19ysjan",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[1] scale",
+      "text": "지도는 넓은 땅을 종이 위에 담으려고 실제 거리를 일정한 비율로 줄여서 그린 그림이에요. 얼마나 줄였는지를 나타낸 것이 축척이에요. 지도 오른쪽 아래를 보면 축척 1 대 10,000이라고 적혀 있죠? 지도에서 1만큼이 실제로는 10,000만큼이라는 뜻이에요."
+    },
+    {
+      "room": "MapRoom",
+      "key": "litsbb",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[2] scale",
+      "text": "축척이 1 대 10,000인 지도예요. 지도에서 1센티미터는 실제로 몇 센티미터일까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "1bqmcqi",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[3] scale",
+      "text": "지도에 다리가 3센티미터로 그려져 있어요. 실제 다리는 얼마나 길까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "14hufy4",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[4] scale",
+      "text": "지도에 도로가 5센티미터로 그려져 있어요. 실제 도로는 얼마나 길까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "fgd6tn",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[5] zoom",
+      "text": "지도를 복사기로 더 잘 보이게 확대했어요. 백이십 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "37lny5",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[6] zoom",
+      "text": "이번에는 백오십 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "9vk6pl",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[7] zoom",
+      "text": "마지막으로 이백 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "6csdeb",
+      "who": "eratos",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[9] movie",
+      "text": "젊은 벗이여! 만나서 반갑소. 나는 옛 그리스의 수학자, '에라토스테네스' 라오. 내가 신기한 소식을 하나 들었소."
+    },
+    {
+      "room": "MapRoom",
+      "key": "h7rt0f",
+      "who": "eratos",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[10] comic",
+      "text": "남쪽 도시 시에네에서는 여름 한낮, 정오가 되면 그림자가 하나도 생기지 않는다고 하오. 해가 바로 머리 꼭대기에 있어 햇빛이 막대와 나란히 내려오기 때문이지. 막대와 햇빛이 이루는 각이 0도라는 뜻이라오."
+    },
+    {
+      "room": "MapRoom",
+      "key": "j1c5cv",
+      "who": "eratos",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[11] comic",
+      "text": "그런데 같은 시각, 북쪽 도시 알렉산드리아에서는 막대에 그림자가 생긴단 말이지. 햇빛이 비스듬히 내려오기 때문이오. 막대와 햇빛이 이루는 각을 재어 보니 7.2도였소. 같은 시각에 같은 햇빛이 비추는데 각도가 다르다니. 지구가 평평하다면 이런 일이 어떻게 생길 수 있겠소? 그래서 나는 지구가 둥근 원이라고 생각하기로 했소."
+    },
+    {
+      "room": "MapRoom",
+      "key": "1e5tp6v",
+      "who": "eratos",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[12] comic",
+      "text": "내가 지구를 다 걸어 잴 수는 없지 않겠소? 다만, 시에네와 알렉산드리아 두 도시의 거리는 내가 잴 수 있소. 그 거리는 800km였소."
+    },
+    {
+      "room": "MapRoom",
+      "key": "dzood1",
+      "who": "eratos",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[13] prop",
+      "text": "둥근 원 전체는 360도. 360을 7.2도로 나누면 50이 나온다오. 7.2도 대 360도는 곧 1 대 50이라오. 그렇다면 1 대 50은 800킬로미터 대 지구 둘레. 나와 함께 지구의 둘레를 계산해보겠소?"
+    },
+    {
+      "room": "MapRoom",
+      "key": "1olhw5b",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[14] blank",
+      "text": "이제 지도의 비밀 카드를 완성해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요."
+    },
+    {
+      "room": "MapRoom",
+      "key": "18q0fwm",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "MapRoom[처음] STEPS[15] finish",
+      "text": "지도의 비밀을 잘 찾아냈어요! 카드 숫자 8을 얻었어요! 잘 기억해두세요!"
+    },
+    {
+      "room": "EvalRoom",
+      "key": "9571yb",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "EvalRoom[처음] STEPS[0] story",
+      "text": "드디어 마지막 방이에요! 참여를 시작할 때 받은 1. 과 색깔·소리·지도 방에서 하나씩 모은 6, 1, 8 — 비밀 카드 네 장이 여기 다 모였어요. 카드에 적힌 숫자를 차례로 눌러 마지막 문을 열어 봐요!"
+    },
+    {
+      "room": "EvalRoom",
+      "key": "1ny5szs",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "EvalRoom[처음] STEPS[1] door",
+      "text": "카드 네 장이 모두 모였어요! 시작할 때 받은 1. 부터 색깔, 소리, 지도 순서대로 숫자를 눌러 마지막 문을 열어 보세요."
+    },
+    {
+      "room": "EvalRoom",
+      "key": "24sz8t",
+      "who": "ratio",
+      "inMan": true,
+      "mp3": true,
+      "where": "EvalRoom[처음] STEPS[2] finale",
+      "text": "1.618, 황금비는 예로부터 가장 아름답다고 여겨진 비예요. 보티첼리의 비너스의 탄생 같은 명화에도, 해바라기 씨앗과 소라 껍데기에도 이 비가 숨어 있어요. 색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있답니다. 긴 여정을 함께해 줘서 정말 고마워요!"
+    }
+  ],
+  "missing": []
+}

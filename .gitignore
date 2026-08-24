@@ -1,0 +1,5 @@
+# 작업 중 생기는 것들 — 배포에 필요 없습니다
+v4/tts/_old/
+v4/tts/_new/
+v4/tts/_samples/
+*.bak*

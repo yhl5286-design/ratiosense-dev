@@ -38,10 +38,10 @@ button{font-family:inherit}
 .rs-string{-webkit-appearance:none;appearance:none;flex:1;min-width:0;height:52px;background:transparent;cursor:grab}
 .rs-string:active{cursor:grabbing}
 .rs-string::-webkit-slider-runnable-track{height:13px;border-radius:6px;box-shadow:var(--shadow-sm);
-  background:linear-gradient(90deg,var(--color-accent-600) 0 var(--p,50%),var(--color-neutral-300) var(--p,50%) 100%)}
+  background:linear-gradient(90deg,var(--c,var(--color-accent-600)) 0 var(--p,50%),var(--color-neutral-300) var(--p,50%) 100%)}
 .rs-string::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:44px;margin-top:-15px;border-radius:6px;border:3px solid var(--color-neutral-900);background:linear-gradient(var(--color-accent-200),var(--color-accent-600));box-shadow:var(--shadow-md)}
 .rs-string::-moz-range-track{height:13px;border-radius:6px;
-  background:linear-gradient(90deg,var(--color-accent-600) 0 var(--p,50%),var(--color-neutral-300) var(--p,50%) 100%)}
+  background:linear-gradient(90deg,var(--c,var(--color-accent-600)) 0 var(--p,50%),var(--color-neutral-300) var(--p,50%) 100%)}
 .rs-string::-moz-range-thumb{width:22px;height:44px;border-radius:6px;border:3px solid var(--color-neutral-900);background:linear-gradient(var(--color-accent-200),var(--color-accent-600))}
 @keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
@@ -423,10 +423,23 @@ button{font-family:inherit}
               </div>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center">
                 <span class="rs-peg" style="height:44px"></span>
-                <input type="range" min="36" max="72" step="0.5" value="{{harpL}}" onChange="{{harpSlide}}" onPointerUp="{{harpSlideEnd}}" onPointerCancel="{{harpSlideEnd}}" aria-label="하프 줄 길이" class="rs-string" style="--p:{{harpPct}}%;max-width:min(420px,58vw)">
+                <!-- 손잡이가 그 음의 자리에 닿으면 슬라이더 위에 바로 표시한다 -->
+                <div style="position:relative;flex:1;min-width:0;max-width:min(420px,58vw);display:flex;align-items:center">
+                  <input type="range" min="36" max="72" step="0.5" value="{{harpL}}" onChange="{{harpSlide}}" onPointerUp="{{harpSlideEnd}}" onPointerCancel="{{harpSlideEnd}}" aria-label="하프 줄 길이" class="rs-string" style="--p:{{harpPct}}%;--c:{{harpTrack}};width:100%">
+                  <!-- 손잡이 폭만큼 좌우로 들인 층 — 이 안에서는 백분율이 곧 손잡이 한가운데다 -->
+                  <div style="position:absolute;left:11px;right:11px;top:0;bottom:0;pointer-events:none">
+                    <div style="position:absolute;left:{{harpPct}}%;top:-14px;bottom:-14px;width:4px;margin-left:-2px;border-radius:2px;background:{{harpLineBg}};box-shadow:{{harpLineSh}};transition:background .12s;z-index:2"></div>
+                    <div style="position:absolute;left:{{harpPct}}%;top:-40px;transform:translateX(-50%);display:{{harpLineTag}};font-size:14px;font-weight:800;color:var(--color-neutral-100);background:var(--color-accent-2-700);border-radius:999px;padding:3px 13px;white-space:nowrap;box-shadow:var(--shadow-md);animation:rsPop .25s ease;z-index:3">🎯 {{harpN}} 자리</div>
+                  </div>
+                </div>
                 <span class="rs-peg" style="height:44px"></span>
               </div>
-              <div style="font-size:19px;font-weight:800;text-align:center;margin-top:6px">{{harpLTxt}}</div>
+              <div style="display:flex;justify-content:center;margin-top:6px">
+                <div style="font-size:19px;font-weight:800;text-align:center;color:{{harpLFg}};background:{{harpLBg}};border:2.5px solid {{harpLBd}};border-radius:var(--radius-md);padding:3px 16px;transition:background .15s,color .15s">{{harpLTxt}}</div>
+              </div>
+              <sc-if value="{{harpHit}}" hint-placeholder-val="{{false}}">
+                <div style="font-size:16px;font-weight:800;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:6px 14px;margin-top:7px;display:inline-block;animation:rsPop .3s ease">{{harpHitTxt}}</div>
+              </sc-if>
               <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);margin-top:6px;text-align:center">{{tuneMsg}}</div>
             </div>
           </sc-if>
@@ -610,6 +623,8 @@ class Component extends DCLogic {
   PERF = [0,3,4,7];
   NOTES = [['도',264,1,1],['레',297,9,8],['미',330,5,4],['파',352,4,3],['솔',396,3,2],['라',440,5,3],['시',495,15,8],['도′',528,2,1]];
   HBASE = 72;
+  HTOL = 2.5;   /* 조율 판정 허용 오차(cm) — 귀로 찾는 과제이므로 뜯어 확인할 때는 넉넉히 본다 */
+  HHIT = 0.01;  /* 화면 표시 기준 — 선은 정확히 그 자리를 지날 때만 켜진다 */
   /* 하프 공방 — 두 국면 구성.
      1부(ph:1) 귀로 찾기: 비가 복잡해 계산으로 접근하기 어려운 음(시 8:9, 파′ 5:8, 솔′ 5:9)
        → 슬라이더 실시간 소리 + 등분 칸 눈금으로 감각 → 단위화.
@@ -650,16 +665,31 @@ class Component extends DCLogic {
           { d:3, t:4, note:'파' }, { d:8, t:9, note:'레' } ];
   /* 트라이앵글 배음 — 정수배가 아닌 비화음 배음이라 금속성으로 들린다 */
   TRI_P = [1, 2.13, 3.38, 4.79, 6.11, 7.42, 9.03];
-  LINKQ = {
-    r12: { q:'우리가 찾은 1 : 2 — 어디에서 만난 비일까요?',
-      opts:[ { t:'🎹 화음에서 도와 한 옥타브 높은 도의 진동수 비', ok:1 },
-             { t:'🎹 화음에서 도와 솔의 진동수 비', ok:0, fb:'도와 솔은 2 : 3이었어요. 앞에서 별점을 매긴 표를 다시 떠올려 볼까요?' },
-             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'진동수 비 표에서 가장 간단한 비가 무엇이었는지 떠올려 볼까요?' } ] },
-    r23: { q:'우리가 찾은 2 : 3 — 어디에서 만난 비일까요?',
+  /* ③ 연결 문항 — 기본은 소리 방 안(화음↔리듬↔하프)에서 잇는다.
+     색깔 방을 이미 마친 학습자에게는 앞 방에서 만든 빨강 2 : 노랑 3까지 함께 잇는다.
+     같은 비를 성질이 다른 소재에서 다시 만나게 하여, 먼저 익힌 색 표상이
+     낯선 음정 표상을 해석하는 발판이 되도록 한다(다중표상의 제약 기능).
+     색깔 방을 건너뛴 학습자에게는 색 선택지를 넣지 않아 문항이 그대로 성립한다. */
+  get LINKQ() {
+    const r23 = { q:'우리가 찾은 2 : 3 — 어디에서 만난 비일까요?',
       opts:[ { t:'🎹 화음에서 도와 솔의 진동수 비', ok:1 },
              { t:'📏 하프에서 라 줄의 길이', ok:0, fb:'하프에서는 줄 하나의 길이를 나누었어요. 지금은 두 소리가 함께 울릴 때의 비를 찾고 있어요.' },
-             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'별점을 매기며 만난 진동수 비 표를 떠올려 볼까요? 그 안에 2 : 3이 있었어요.' } ] }
-  };
+             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'별점을 매기며 만난 진동수 비 표를 떠올려 볼까요? 그 안에 2 : 3이 있었어요.' } ] };
+    if (this.didColor()) {
+      r23.q = '우리가 찾은 2 : 3 — 앞에서 어디에서 만난 비일까요? (맞는 곳이 둘이에요)';
+      r23.opts.splice(1, 0, { t:'🎨 색깔 방에서 만든 빨강 : 노랑', ok:1, cross:1,
+        msg:['색깔 방에서도 만난 2 : 3이에요!',
+             '빨강 2 : 노랑 3으로 주황을 만들었지요 — 물감의 양에서 찾은 그 비가 소리에서도 똑같이 나타났어요. 소재는 달라도 비는 같아요.'] });
+      r23.opts[3].fb = '진동수 비 표와 색깔 방에서 만든 주황을 함께 떠올려 볼까요? 둘 다 2 : 3이었어요.';
+    }
+    return {
+      r12: { q:'우리가 찾은 1 : 2 — 어디에서 만난 비일까요?',
+        opts:[ { t:'🎹 화음에서 도와 한 옥타브 높은 도의 진동수 비', ok:1 },
+               { t:'🎹 화음에서 도와 솔의 진동수 비', ok:0, fb:'도와 솔은 2 : 3이었어요. 앞에서 별점을 매긴 표를 다시 떠올려 볼까요?' },
+               { t:'✨ 오늘 처음 보는 비', ok:0, fb:'진동수 비 표에서 가장 간단한 비가 무엇이었는지 떠올려 볼까요?' } ] },
+      r23: r23
+    };
+  }
   WHYQ = [ { t:'비가 간단할수록 두 소리가 더 빨리 다시 만나요', ok:1 },
            { t:'비가 복잡할수록 더 빨리 다시 만나요', ok:0, fb:'8 : 9는 비가 가장 복잡했는데, 12칸 안에서 한 번도 만나지 못했어요. 다시 비교해 볼까요?' },
            { t:'다시 만나는 것은 비와 상관없어요', ok:0, fb:'1 : 2와 8 : 9의 만나는 칸을 나란히 놓고 견주어 볼까요? 두 리듬이 아주 달랐어요.' } ];
@@ -700,7 +730,13 @@ class Component extends DCLogic {
   get STEPS() {
     const st = [
       { k:'story', emoji:'🎼', cap:'소리의 비밀을 찾아봅시다!',
-        lines:['이 방은 소리의 비밀을 알아내는 방이에요.',
+        /* 색깔 방을 마쳤다면 앞 방에서 만든 표상을 먼저 되짚어 준다 —
+           친숙한 색 표상이 낯선 음정 표상을 해석하는 발판이 된다. */
+        lines: this.didColor()
+          ? ['이 방은 소리의 비밀을 알아내는 방이에요.',
+             '색깔 방에서는 물감의 양을 비로 맞추어 주황을 만들었지요. 이번에는 같은 비를 귀로 찾아볼 거예요.',
+             '아름다운 소리의 비밀을 찾으러 가볼까요?']
+          : ['이 방은 소리의 비밀을 알아내는 방이에요.',
              '아름다운 소리의 비밀을 찾으러 가볼까요?'],
         btn:'시작하기 →' },
       { k:'vib',
@@ -1038,6 +1074,15 @@ class Component extends DCLogic {
   }
 
   ukey(b) { return b + ':' + (this._user || 'anon'); }
+  /* 색깔 방을 이미 마쳤는가 — 앞 방의 표상을 되짚는 안내와 연결 문항의 조건.
+     render가 componentDidMount보다 먼저 도는 첫 그림에서도 값이 흔들리지 않도록
+     this._user에 기대지 않고 localStorage를 직접 읽는다. */
+  didColor() {
+    try {
+      const u = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || 'anon';
+      return JSON.parse(localStorage.getItem('rs3_done:' + u) || '[]').indexOf('color') >= 0;
+    } catch(e) { return false; }
+  }
 
   componentDidMount() {
     this._seq = 0;
@@ -1047,6 +1092,13 @@ class Component extends DCLogic {
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
     if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    /* 순서 잠금 — 색깔 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.
+       게스트는 자유 탐색이므로 통과. 저장소를 읽지 못하면 막지 않는다(잠금 오작동으로 참여자를 가두지 않는다). */
+    if (this._user && !this._guest && window === window.parent) {
+      let blocked = false;
+      try { blocked = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]').indexOf('color') < 0; } catch(e) { blocked = false; }
+      if (blocked) { try { location.replace('index.html'); } catch(e) {} }
+    }
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
@@ -1597,11 +1649,14 @@ class Component extends DCLogic {
   /* ③ 연결 — 찾아낸 비를 앞 방에서 만난 비와 잇는다 */
   polyLink(ix) {
     const st = this.STEPS[this.state.i], q = this.LINKQ[st.p], o = q.opts[ix];
-    this.plog('poly_link', { task: st.p, pick: ix, ok: o.ok ? 1 : 0 });
+    /* cross=1 — 앞 방(색깔)의 비와 이은 응답. 방을 넘나든 연결이 일어났는지 따로 남긴다. */
+    this.plog('poly_link', { task: st.p, pick: ix, ok: o.ok ? 1 : 0, cross: o.cross ? 1 : 0 });
     if (!o.ok) { this.toastRetry(o.fb); return; }
     this.markSolved();
     this.setState({ linkPick: ix, polyStage: 'done' });
-    if (st.p === 'r12') {
+    if (o.msg) {
+      this.toastOk(o.msg[0], o.msg[1]);
+    } else if (st.p === 'r12') {
       this.toastOk('같은 1 : 2예요!', '화음에서 도와 한 옥타브 높은 도의 진동수 비가 1 : 2였어요 — 그 비가 리듬으로도 나타났어요.');
     } else {
       this.toastOk('같은 2 : 3이에요!', '화음에서 도와 솔의 진동수 비가 2 : 3이었어요 — 그 비가 리듬으로도 나타났어요.');
@@ -1801,7 +1856,7 @@ class Component extends DCLogic {
     this.pluckT(Math.round(440 * 72 / L));
     this.plog('harp_tune', { n: p.n, L });
     const diff = L - ex;
-    if (Math.abs(diff) <= 2.5) {
+    if (Math.abs(diff) <= this.HTOL) {
       /* 판정 통과 → 칸 수 확정. 감각(귀) 뒤에 단위화가 따라온다. */
       this.plog('harp_cells', { n: p.n, b: p.b, a: p.a, unit, len: ex, L });
       this.setState({ harpL: ex, harpTuned: true, hDone: st.i + 1,
@@ -1938,7 +1993,7 @@ class Component extends DCLogic {
   }
 
   /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
-     네 자리(1. · 6 · 1 · 8)가 모이면 평가의 방 마지막 문이 열린다. */
+     네 장(1 · 6 · 1 · 8)이 모이면 평가의 방 마지막 문이 열린다. */
   awardDigit() {
     const D = this.DIGIT;
     let got = [];
@@ -2401,6 +2456,8 @@ class Component extends DCLogic {
           '🎹 화음 — 도 : 솔 = 264Hz : 396Hz = ',
           R.createElement('b', { key:'b', style:{ color:this.C.a700 } }, '2 : 3')));
         card.push(this.pCap('x', '도가 2번 떨리는 동안 솔은 3번 떨려요. 그래서 짧은 주기로 자꾸 다시 만나지요 — 리듬에서 두 소리가 6칸마다 다시 만난 것과 똑같아요.', this.C.n700, 16));
+        /* 앞 방을 마친 학습자에게만 — 물감의 양과 소리의 떨림이 같은 비였음을 나란히 놓는다 */
+        if (this.didColor()) card.push(this.pCap('cx', '🎨 색깔 방에서 만든 빨강 2 : 노랑 3도 같은 비였어요. 물감의 양에서도, 소리의 떨림에서도 2 : 3이에요 — 재료는 달라도 비는 같아요.', this.C.a700, 16));
         if (sol) card.push(this.pCap('s', '내가 솔에 준 별점: ' + '★'.repeat(sol) + '☆'.repeat(5 - sol), this.C.g700, 15));
         card.push(R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
           this.pBtn('c1', '🎹 도와 솔 함께 듣기', () => { this.plog('poly_cross', { task:'r23', kind:'chord' }); this.chord(264, 396, 2); }),
@@ -2840,6 +2897,20 @@ class Component extends DCLogic {
         v.rulerEl = this.harpRulerSvg(st.i, S.harpL, S.harpTuned);
         const cells = S.harpL / unit;
         const near = Math.abs(cells - Math.round(cells)) < 0.06;
+        /* 귀로만 찾게 두면 정답 자리에 닿고도 그것을 모른 채 지나친다.
+           허용 오차 안에 들어오면 그 자리에서 바로 알려 주고, 확정은 뜯어 확인할 때 한다. */
+        v.harpHit = !S.harpTuned && Math.abs(S.harpL - this.hLen(st.i)) < this.HHIT;
+        /* 손잡이 한가운데에 표시를 붙인다 — 손잡이 폭(22px)을 뺀 길이 위의 비율이라야 자리가 맞는다 */
+        /* 손잡이를 따라다니는 세로선 — 그 음의 자리에 닿으면 굵은 초록으로 바뀐다 */
+        const on = v.harpHit || S.harpTuned;
+        v.harpTrack = on ? 'var(--color-accent-2-600)' : 'var(--color-accent-600)';
+        v.harpLineBg = on ? 'var(--color-accent-2-700)' : 'transparent';
+        v.harpLineSh = on ? '0 0 0 2px var(--color-neutral-100), 0 2px 8px rgba(0,0,0,.25)' : 'none';
+        v.harpLineTag = on ? 'block' : 'none';
+        v.harpHitTxt = v.harpHit ? '🎯 바로 이 자리예요! 「내 줄 뜯어 확인하기」를 눌러 보세요' : '';
+        v.harpLBg = v.harpHit ? this.C.g100 : 'transparent';
+        v.harpLFg = v.harpHit ? this.C.g700 : 'var(--color-text)';
+        v.harpLBd = v.harpHit ? this.C.g300 : 'transparent';
         v.cellTxt = S.harpTuned
           ? ('📏 내 줄은 ' + p.b + '칸으로 나눈 것 중 ' + p.a + '칸!')
           : ('📏 ' + p.b + '칸으로 나눈 눈금 — 지금 내 줄은 ' +
