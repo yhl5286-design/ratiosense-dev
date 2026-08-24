@@ -775,6 +775,8 @@ class Component extends DCLogic {
         say:'이번에는 귀 대신 칸으로 구해 봐요. ' + p.n + ' 줄은 ' + p.b + '칸 중 ' + p.a + '칸이에요. 72센티미터를 ' + p.b + '등분하면 한 칸은 몇 센티미터일까요? 한 칸을 먼저 구하고, 그 다음 ' + p.a + '칸의 길이를 구해 보세요.',
         hi:'하프 공방 2부 · 칸으로 계산하기 ' + (i + 1 - this.HP1) + ' / ' + (this.HP.length - this.HP1) });
     });
+    st.push({ k:'reflect', who:'ratio',
+      say:'소리의 비밀을 내 말로 한 줄 정리해 봐요. 떠오르는 대로 적으면 돼요.' });
     st.push({ k:'blank', id:'secret', who:'ratio',
       say:'이제 소리의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
     st.push({ k:'finish', who:'ratio',
@@ -2975,13 +2977,14 @@ class Component extends DCLogic {
 
     const needsSolve = (['vib','harmx','rooms','table','poly','harp','reflect','blank'].indexOf(st.k) >= 0) && !this._guest;
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : '다음 →';
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
     v.showPrimary = st.k !== 'finish';
     v.primaryBg = (!needsSolve || solved) ? this.C.acc : this.C.n400;
     v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
     if (st.k === 'table' && !solved && !v.liveBadge) v.footHint = '분류 과정을 한 번 보면 다음으로 갈 수 있어요';
     if (v.footHintOverride && !solved) v.footHint = v.footHintOverride;
     v.primary = () => {
+      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.refGo(); return; }
       if (st.k === 'finish') {
         this.stopVoice();
         this.setState({ i:0, solved:{}, rates:{}, blanks:{}, used:{}, hb:{}, hbUsed:{},

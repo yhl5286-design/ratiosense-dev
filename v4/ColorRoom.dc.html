@@ -459,6 +459,14 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
+      <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
+          <div style="font-size:48px;line-height:1">📝</div>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:560px"><b>색깔의 비밀(비와 비율)</b>을 내 말로 한 줄 적어 보세요!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="예) 물감의 양이 달라도 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+        </div>
+      </sc-if>
+
       <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
         <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
           <sc-if value="{{pctArt}}" hint-placeholder-val="{{false}}">
@@ -642,7 +650,7 @@ class Component extends DCLogic {
 
   state = {
     i: 0, amt: { '빨강':0, '노랑':0 }, found: [], hypo: null, obs: null,
-    picks: {}, solved: {}, dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
+    picks: {}, solved: {}, refText:'', dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
     labLog: [], wallDone: 0, failed: [], hypoPick: false,
@@ -813,6 +821,8 @@ class Component extends DCLogic {
         say:'100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요? 아래 낱말을 손가락이나 마우스로 누른 채 끌어서, 빈칸 위에 놓아 주세요.' },
       { k:'blank', id:'pct', who:'ratio',
         say:'이어서 비율 문제예요. 만약 물감 빨강 40mL, 노랑 60mL을 넣어 주황 100mL를 만들었다면, 각 색깔은 전체의 몇 퍼센트일까요?' },
+      { k:'reflect', who:'ratio',
+        say:'색깔의 비밀을 내 말로 한 줄 정리해 봐요. 떠오르는 대로 적으면 돼요.' },
       { k:'blank', id:'secret', who:'ratio', say:'이제 색깔의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
       { k:'finish', who:'ratio',
         say:'색깔의 비밀을 잘 찾아냈어요! 카드 숫자 1과 6을 차례로 얻었어요! 잘 기억해두세요!',
@@ -1064,6 +1074,16 @@ class Component extends DCLogic {
       try { speechSynthesis.speak(u); } catch(e) { go(); }
     };
     step(0);
+  }
+
+  /* ── 내 말로 정리 (reflect) — 지침 4.4 단계 끝 언어 성찰 과제 ── */
+  submitReflect() {
+    const v = (this.state.refText || '').trim();
+    if (!v) { this.toast('✏️', '한 줄이면 충분해요', '내 말로 적어 봐요!'); return; }
+    this.plog('reflect', { room:'color', text: v.slice(0,300) });
+    this.markSolved();
+    this.sfx('ok');
+    this.go(1);
   }
 
   plog(ev, data) {
@@ -1974,6 +1994,8 @@ class Component extends DCLogic {
         : (((st.k === 'story' || st.k === 'blank') && st.demo === 'recipe') ? this.recipeEl()
         : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null)), isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
+      isReflect: st.k === 'reflect', refText: S.refText,
+      refInput: (e) => this.setState({ refText: e.target.value }),
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
       /* 마침 카드 — 이 방은 황금비의 앞 두 자리를 차례로 준다 */
       cardConcept: this.CONCEPT,
@@ -2361,13 +2383,14 @@ class Component extends DCLogic {
       }
     }
 
-    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank'].indexOf(st.k) >= 0) && !this._guest;
+    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect'].indexOf(st.k) >= 0) && !this._guest;
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : '다음 →';
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
     v.showPrimary = st.k !== 'finish';
     v.primaryBg = (!needsSolve || solved) ? '#c67139' : '#c0b6a5';
     v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
     v.primary = () => {
+      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
       if (st.k === 'finish') { this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null }); return; }
       if (needsSolve && !solved) {
         this.sfx('oops');

@@ -418,6 +418,8 @@ class Component extends DCLogic {
       { k:'prop', who:'eratos', sid:'m-prop', quiz:'prop',
         say:'둥근 원 전체는 360도. 360을 7.2도로 나누면 50이 나온다오. 7.2도 대 360도는 곧 1 대 50이라오. 그렇다면 1 대 50은 800킬로미터 대 지구 둘레. 나와 함께 지구의 둘레를 계산해보겠소?',
         hi:'🌍 지구 둘레 — 1 : 50 = 800km : ?' },
+      { k:'reflect', who:'ratio',
+        say:'지도의 비밀을 내 말로 한 줄 정리해 봐요. 떠오르는 대로 적으면 돼요.' },
       { k:'blank', id:'secret', who:'ratio',
         say:'이제 지도의 비밀 카드를 완성해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
         hi:'🃏 지도의 비밀 카드 — 빈칸 채우기' },
@@ -1255,7 +1257,7 @@ class Component extends DCLogic {
     }
 
     /* 게스트(자유 탐색): needsSolve 게이트 무시 — 과제 미해결이어도 '다음' 활성. 실제 학습자는 순차 잠금 유지 */
-    const needsSolve = (!st.intro && ['scale','zoom','prop','blank'].indexOf(st.k) >= 0) || !!st.quiz;
+    const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect'].indexOf(st.k) >= 0) || !!st.quiz;
     const gate = needsSolve && !solved && !this._guest;
     v.showPrimary = st.k !== 'finish';
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
