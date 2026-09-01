@@ -9,14 +9,15 @@ const V4 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /* 비를 한자어로 읽는 방 — 앱의 speak()에 같은 규칙이 들어 있는 방만 적는다.
    규칙이 없는 방에까지 적용하면 이미 만들어 둔 mp3의 키와 어긋난다. */
-const SINO_ROOMS = new Set(['ColorRoom', 'EvalRoom']);
+const SINO_ROOMS = new Set(['ColorRoom', 'EvalRoom', 'SoundRoom', 'MapRoom']);  /* 2026-08-27 네 방 모두 규칙 보유 */
 const SINO = v => { const S = ['영','일','이','삼','사','오','육','칠','팔','구','십']; return +v <= 10 ? S[+v] : v; };
 const norm = (raw, room) => {
   const t = raw == null ? '' : (typeof raw === 'string' ? raw : (Array.isArray(raw) ? raw.join(' ') : String(raw)));
   let x = t.replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '');
   if (SINO_ROOMS.has(room)) {
-    x = x.replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => SINO(a) + ' 대 ' + b)
-         .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d])/g, (mm, a, b) => SINO(a) + ' 대 ' + SINO(b));
+    x = x.replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')   /* 빨강:노랑 → 빨강 대 노랑 */
+             .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => SINO(a) + ' 대 ' + b)
+         .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => SINO(a) + ' 대 ' + SINO(b));  /* 10,000은 건드리지 않는다 */
   }
   return x.replace(/mL/g, ' 밀리리터 ').replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ')
           .replace(/\s+/g, ' ').trim();

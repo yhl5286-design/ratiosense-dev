@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js"></script>
+<script src="tts/manifest.js?v=202608270500"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -48,7 +48,6 @@ button{font-family:inherit}
 .rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .rs-sub-name{font-size:16.5px;line-height:1.3}
-.rs-sub-role{font-size:13.5px;font-weight:700;color:var(--color-neutral-700)}
 .rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
 .rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
 .rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
@@ -95,7 +94,6 @@ button{font-family:inherit}
         <div class="rs-sub-body">
           <div class="rs-sub-tag">
             <div class="rs-sub-name">{{coachName}}</div>
-            <div class="rs-sub-role">{{coachRole}}</div>
           </div>
           <p class="rs-sub-text">{{coachText}}</p>
           <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
@@ -192,8 +190,37 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:48px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:560px"><b>지도의 비밀(축척)</b>을 내 말로 한 줄 적어 보세요!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="예) 지도는 실제 거리를 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 구해 본 것</b>을 하나 예로 들어서, <b>지도의 비밀(축척)</b>을 한 줄 적어 보세요!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="예) 지도에서 3센티미터인 다리가 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+        </div>
+      </sc-if>
+
+      <!-- 감각 잇기(지침 2.3) — 세 방에서 만난 비를 나란히 놓고 견주게 한다 -->
+      <sc-if value="{{isBridge}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;animation:rsUp .3s ease;margin:auto 0">
+          <div style="display:flex;gap:min(4vw,20px);align-items:stretch;justify-content:center;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🎨 색깔의 방</div>
+              <div style="font-size:26px;color:var(--color-accent-700)">1 : 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">빨강과 노랑의 양</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-2-400);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🎵 소리의 방</div>
+              <div style="font-size:26px;color:var(--color-accent-2-700)">1 : 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">두 음의 진동수</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-500);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🗺️ 지도의 방</div>
+              <div style="font-size:26px;color:var(--color-accent-700)">1 : 50</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">7.2도와 360도 · 800km와 지구 둘레</div>
+            </div>
+          </div>
+          <div class="rs-dial" style="font-size:19px;text-align:center;max-width:min(640px,92vw)">세 방에서 찾은 것은 <b>어떤 점이 같을까요?</b></div>
+          <div style="display:flex;flex-direction:column;gap:11px;align-items:stretch;max-width:min(640px,92vw);width:100%">
+            <sc-for list="{{bridgeOpts}}" as="o" hint-placeholder-count="3">
+              <button onClick="{{o.pick}}" style="min-height:58px;padding:14px 22px;border-radius:18px;border:3px solid {{o.bd}};background:{{o.bg}};color:var(--color-text);font-size:18px;cursor:pointer;text-align:left;line-height:1.45">{{o.t}}</button>
+            </sc-for>
+          </div>
         </div>
       </sc-if>
 
@@ -354,7 +381,7 @@ class Component extends DCLogic {
   };
 
   /* 카드 문제 — 이 방을 통과해야 비밀 카드의 숫자를 받는다.
-     dist·earth 두 장은 예전 평가의 방에 모아 두었던 지도 카드를 이 방으로 옮겨 온 것이다. */
+     dist·earth 두 장은 예전 비의 비밀에 모아 두었던 지도 카드를 이 방으로 옮겨 온 것이다. */
   BLANKS = {
     secret: { card:true, title:'🃏 지도의 비밀 카드', rows:[
         ['지도는 실제 거리를 일정한 ', {a:'비율'}, ' 로 줄여 나타낸 것이다.'],
@@ -367,6 +394,8 @@ class Component extends DCLogic {
   DIGIT = { id:'map', d:'8', concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' };
 
   WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
     /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
        emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
     ratio:    { name:'레시오', role:'비의 비밀 탐색 안내자', emoji:'🧭',
@@ -378,7 +407,7 @@ class Component extends DCLogic {
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
     zVal:100, zPhase:0, qpicks:{}, vidOpen:false,
-    refText:'',
+    refText:'', bridgePick:null,
     blanks:{}, used:{}, selBlank:null
   };
 
@@ -411,17 +440,26 @@ class Component extends DCLogic {
       { k:'comic', ci:0, who:'eratos', sid:'m-comic1',
         say:'남쪽 도시 시에네에서는 여름 한낮, 정오가 되면 그림자가 하나도 생기지 않는다고 하오. 해가 바로 머리 꼭대기에 있어 햇빛이 막대와 나란히 내려오기 때문이지. 막대와 햇빛이 이루는 각이 0도라는 뜻이라오.' },
       { k:'comic', ci:1, who:'eratos', sid:'m-comic2',
-        say:'그런데 같은 시각, 북쪽 도시 알렉산드리아에서는 막대에 그림자가 생긴단 말이지. 햇빛이 비스듬히 내려오기 때문이오. 막대와 햇빛이 이루는 각을 재어 보니 7.2도였소. 같은 시각에 같은 햇빛이 비추는데 각도가 다르다니. 지구가 평평하다면 이런 일이 어떻게 생길 수 있겠소? 그래서 나는 지구가 둥근 원이라고 생각하기로 했소.' },
+        say:'그런데 같은 시각, 북쪽 알렉산드리아에서는 막대에 그림자가 생긴단 말이오. 각을 재어 보니 7.2도였소. 같은 햇빛인데 각이 다르다니, 지구가 평평하다면 있을 수 없는 일이지요.' },
       { k:'comic', ci:2, who:'eratos', sid:'m-comic3',
         say:'내가 지구를 다 걸어 잴 수는 없지 않겠소? 다만, 시에네와 알렉산드리아 두 도시의 거리는 내가 잴 수 있소. 그 거리는 800km였소.' },
       /* 각도의 비를 말한 그 화면에서 곧바로 지구 둘레를 구한다 */
       { k:'prop', who:'eratos', sid:'m-prop', quiz:'prop',
         say:'둥근 원 전체는 360도. 360을 7.2도로 나누면 50이 나온다오. 7.2도 대 360도는 곧 1 대 50이라오. 그렇다면 1 대 50은 800킬로미터 대 지구 둘레. 나와 함께 지구의 둘레를 계산해보겠소?',
         hi:'🌍 지구 둘레 — 1 : 50 = 800km : ?' },
+      /* 감각 사이를 잇는 자리(지침 2.3) — 앞선 방에서 만난 1 : 2와 이 방의 1 : 50을 나란히 놓고,
+         셋이 같은 구조임을 학습자가 직접 확인하게 한다. 화자가 먼저 답을 말하지 않는다. */
+      { k:'bridge', who:'ratio',
+        say:'잠깐만요! 색깔의 방과 소리의 방에서 찾은 1 대 2, 그리고 이 방에서 찾은 1 대 50을 나란히 놓아 봤어요. 세 방에서 찾은 것은 어떤 점이 같을까요? 아래에서 골라 보세요.',
+        hi:'🎨 색깔 · 🎵 소리 · 🗺️ 지도 — 세 방에서 만난 비를 견주어요' },
+      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
       { k:'reflect', who:'ratio',
-        say:'지도의 비밀을 내 말로 한 줄 정리해 봐요. 떠오르는 대로 적으면 돼요.' },
+        say:'지도에서 다리의 길이를 구하고, 지도를 확대해 보고, 지구의 둘레까지 구해 보았지요. 이 가운데 하나를 골라 봐요. 그때 무엇을 했고 왜 그렇게 구할 수 있었는지 한 줄로 적어 주세요.',
+        hi:'다리 길이 · 확대 · 지구 둘레 — 그중 하나를 예로 들어 적어요' },
+      /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
+         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
       { k:'blank', id:'secret', who:'ratio',
-        say:'이제 지도의 비밀 카드를 완성해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
+        say:'여러분이 적은 내용을 잘 보았어요. 지도와 확대, 지구의 둘레로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
         hi:'🃏 지도의 비밀 카드 — 빈칸 채우기' },
       { k:'finish', who:'ratio',
         say:'지도의 비밀을 잘 찾아냈어요! 카드 숫자 8을 얻었어요! 잘 기억해두세요!',
@@ -475,6 +513,7 @@ class Component extends DCLogic {
     try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
     try { speechSynthesis.cancel(); } catch(e) {}
   }
+  SINO(v) { const S = ['영','일','이','삼','사','오','육','칠','팔','구','십']; return +v <= 10 ? S[+v] : v; }
   speak(text, who) {
     this.stopVoice();
     if (this.state.audio !== 'full') return;
@@ -482,6 +521,17 @@ class Component extends DCLogic {
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
     const txt = raw
       .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
+      /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
+         화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
+         '1 대 1.618'처럼 뒤가 소수인 경우에는 앞자리만 바꾼다 — 소수를 쪼개면 잘못 읽힌다. */
+      /* 비를 콜론으로 적은 것은 「대」로 읽는다 — 화면은 빨강:노랑, 소리는 「빨강 대 노랑」.
+         콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
+         숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
+      .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
+      /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
+         「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
       .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
     if (!txt) return;
     const key = this.ttsKey((who||'ratio') + '|' + txt);
@@ -1023,8 +1073,27 @@ class Component extends DCLogic {
     this.go(1);
   }
 
+  /* ── 감각 잇기 (bridge) — 지침 2.3 ──
+     세 방에서 만난 비를 견주게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
+  BRIDGE = [
+    { t:'세 방 모두 크기가 달라져도 비가 같으면 관계가 그대로였어요', ok:1,
+      fb:'맞아요! 물감의 양이 달라도, 진동수가 달라도, 지도의 크기가 달라도 비만 같으면 관계는 그대로였어요.' },
+    { t:'세 방 모두 수가 클수록 정확해졌어요', ok:0,
+      fb:'수가 크다고 색이 붉어지거나 지도가 정확해지지는 않았지요. 다시 한번 생각해볼까요?' },
+    { t:'지도는 색이나 소리와 상관이 없어요', ok:0,
+      fb:'세 방에서 모두 두 양을 견주는 비가 나왔어요. 그 점을 다시 견주어 볼까요?' }
+  ];
+  bridgePick(ix) {
+    const o = this.BRIDGE[ix];
+    this.plog('bridge', { room:'map', pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.sfx('oops'); this.toastRetry(o.fb); return; }
+    this.markSolved();
+    this.setState({ bridgePick: ix });
+    this.toast('🔗', '세 방이 이어졌어요!', o.fb, 'ok');
+  }
+
   /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
-     네 장(1 · 6 · 1 · 8)이 모이면 평가의 방 마지막 문이 열린다. */
+     네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
   awardDigit() {
     const D = this.DIGIT;
     let got = [];
@@ -1139,7 +1208,7 @@ class Component extends DCLogic {
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
       coachImgEl: who.img ? this.coachPortrait(who) : null,
-      coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name, coachRole: who.role,
+      coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name,
       /* 대사가 빈 단계(m-prop)는 음성 없이 화면 글로만 안내 — screen은 읽어 주지 않습니다 */
       coachText: this.wrapSay(st.say || st.screen || ''),
       /* 자막 아래 안내 띠는 쓰지 않는다 — 화면에는 대사만 둔다(st.hi는 내부 표시용으로만 남긴다) */
@@ -1157,6 +1226,13 @@ class Component extends DCLogic {
       vidOpen: S.vidOpen, vidBtn: !S.vidOpen,
       openVid: () => { this.sfx('tap'); this.plog('movie', { open: 1 }); this.setState({ vidOpen: true }); },
       refText: S.refText, refInput: (e) => this.setState({ refText: e.target.value }),
+      isBridge: st.k === 'bridge',
+      bridgeOpts: st.k === 'bridge' ? this.BRIDGE.map((o, ix) => ({
+        t: o.t,
+        pick: () => this.bridgePick(ix),
+        bd: S.bridgePick === ix ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)',
+        bg: S.bridgePick === ix ? 'var(--color-accent-2-200)' : 'var(--color-neutral-100)'
+      })) : null,
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
@@ -1257,7 +1333,7 @@ class Component extends DCLogic {
     }
 
     /* 게스트(자유 탐색): needsSolve 게이트 무시 — 과제 미해결이어도 '다음' 활성. 실제 학습자는 순차 잠금 유지 */
-    const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect'].indexOf(st.k) >= 0) || !!st.quiz;
+    const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect','bridge'].indexOf(st.k) >= 0) || !!st.quiz;
     const gate = needsSolve && !solved && !this._guest;
     v.showPrimary = st.k !== 'finish';
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')

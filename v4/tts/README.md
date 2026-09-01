@@ -105,7 +105,7 @@ node _tools/install_new.mjs         실제로 설치한다
 파일을 두 번 눌러 여는 대신 로컬 서버로 여세요(그냥 열면 `voice_check.json` 을 못 읽습니다).
 
 ```
-python -m http.server 8777      v4의 윗 폴더에서 실행
+node v4/_tools/serve.mjs        v4의 윗 폴더에서 실행 (캐시 안 함)
 ```
 
 그다음 `http://localhost:8777/v4/_tools/voice_check.html`
@@ -176,6 +176,7 @@ export NCP_CLOVA_CLIENT_SECRET="여기에 Client Secret"
 | `_tools/synth.py` | 한 줄만 받는다 |
 | `_tools/install_new.mjs` | `_new` 의 mp3를 설치하고 매니페스트·판 번호를 갱신한다 |
 | `_tools/voice_check.html` | 대사 차례대로 들어 보는 페이지 |
+| `_tools/serve.mjs` | **확인용 서버. 아무것도 캐시하지 않는다** |
 | `_tools/cast.json` | **인물별 목소리 배정. 목소리를 바꾸려면 여기만 고친다** |
 | `_tools/synth_samples.mjs` | 후보 화자 견본을 `tts/_samples/` 에 받는다(앱 음성은 그대로) |
 | `_tools/voice_picker.html` | 인물마다 후보를 들어 보고 고르는 페이지 |
@@ -185,7 +186,23 @@ export NCP_CLOVA_CLIENT_SECRET="여기에 Client Secret"
 
 ## 자주 걸리는 것
 
-**새 음성을 넣었는데 옛 목소리가 나온다** — `RS_TTS_V` 를 안 올렸거나 브라우저가 캐시를 쥐고 있습니다. `install_new.mjs` 가 자동으로 올려 주며, 그래도 그러면 강력 새로고침(Ctrl+Shift+R) 하세요.
+**새 음성을 넣었는데 옛 목소리가 나온다** — 대개 브라우저 캐시입니다. 2026-08-27에 원인을 찾아 두 가지를 고쳤습니다.
+
+1. 방 파일이 매니페스트를 `tts/manifest.js?v=<판번호>` 로 부릅니다. 전에는 판 번호가 없어, 새 음성을 등록해도 브라우저가 **옛 목록**을 붙들고 있었습니다. `install_new.mjs` 가 판 번호를 올릴 때 이 태그도 함께 고칩니다.
+2. 확인용 서버를 **`node v4/_tools/serve.mjs`** 로 바꾸었습니다. `python -m http.server` 는 캐시 헤더를 하나도 보내지 않아, 브라우저가 「마지막 수정 시각이 오래된 파일일수록 오래 캐시한다」는 기본 규칙에 따라 **몇 시간씩** 옛 파일을 붙들었습니다. 새 서버는 `Cache-Control: no-store` 를 보내 매번 새로 받게 합니다.
+
+    ```
+    node v4/_tools/serve.mjs        rs-main-deploy 폴더에서 실행
+    http://localhost:8777/v4/index.html
+    ```
+
+    **포트가 이미 잡혀 있으면 옛 서버가 그대로 뜹니다.** 먼저 확인하세요.
+
+    ```
+    Get-NetTCPConnection -LocalPort 8777 -State Listen | ForEach-Object { Get-Process -Id $_.OwningProcess }
+    ```
+
+그래도 옛 소리가 나면 강력 새로고침(Ctrl+Shift+R)을 하거나, 주소 끝에 `?fresh=1` 처럼 아무 값이나 붙여 한 번 여세요.
 
 **목록에 없는 키라고 경고가 뜬다** — 음성을 받은 뒤 대사를 또 고친 것입니다. ②를 다시 돌려 목록을 맞춘 뒤 확인하세요.
 

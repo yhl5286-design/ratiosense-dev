@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js"></script>
+<script src="tts/manifest.js?v=202608270500"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -63,7 +63,6 @@ button{font-family:inherit}
 .rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .rs-sub-name{font-size:16.5px;line-height:1.3}
-.rs-sub-role{font-size:13.5px;font-weight:700;color:var(--color-neutral-700)}
 .rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
 .rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
 .rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:6px;padding:8px}
@@ -121,7 +120,6 @@ button{font-family:inherit}
         <div class="rs-sub-body">
           <div class="rs-sub-tag">
             <div class="rs-sub-name">{{coachName}}</div>
-            <div class="rs-sub-role">{{coachRole}}</div>
           </div>
           <p class="rs-sub-text">{{coachText}}</p>
           <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
@@ -367,7 +365,7 @@ button{font-family:inherit}
               <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
                 <div style="font-size:16px;color:{{q.ink}}">{{q.name}} 비커</div>
                 <div style="display:flex;gap:10px;align-items:flex-end">
-                  <div style="position:relative;width:64px;height:150px;border:5px solid #201e1d;border-top-width:2px;border-radius:0 0 18px 18px;overflow:hidden;background:#f9f4ed;flex:none">
+                  <div style="position:relative;width:64px;height:150px;border:5px solid #201e1d;border-top-width:2px;border-radius:0 0 18px 18px;overflow:hidden;background:#f9f4ed;flex:none;box-shadow:{{q.ring}};transition:box-shadow .2s">
                     <div style="position:absolute;left:0;right:0;bottom:0;height:{{q.pct}}%;background:{{q.color}};transition:height .35s ease"></div>
                     <sc-for list="{{cupTicks}}" as="t" hint-placeholder-count="4">
                       <div style="position:absolute;left:0;right:0;bottom:{{t.at}}%;height:{{t.h}};background:{{t.bg}};box-shadow:0 1px 0 rgba(249,244,237,.55)"></div>
@@ -380,7 +378,7 @@ button{font-family:inherit}
                   </div>
                 </div>
                 <div style="font-size:14px;font-weight:800;color:#645c50">비커에 남은 물감 {{q.left}}mL <span style="font-size:11.5px;color:#a19786">· 눈금 한 칸 10mL</span></div>
-                <div style="display:flex;gap:5px;align-items:flex-end;justify-content:center;min-height:58px;min-width:186px;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:16px;padding:7px 9px">
+                <div style="display:flex;gap:5px;align-items:flex-end;justify-content:center;min-height:58px;min-width:186px;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:16px;padding:7px 9px;box-shadow:{{q.ring}};transition:box-shadow .2s">
                   <sc-for list="{{q.cups}}" as="cu" hint-placeholder-count="2">
                     <div style="width:30px;height:{{cupIconH}};border:3px solid #201e1d;border-top-width:2px;border-radius:0 0 10px 10px;background:#f9f4ed;position:relative;overflow:hidden;flex:none;animation:{{cu.anim}}">
                       <div style="position:absolute;left:0;right:0;bottom:0;height:74%;background:{{q.color}}"></div>
@@ -388,8 +386,28 @@ button{font-family:inherit}
                   </sc-for>
                 </div>
                 <div style="font-size:16.5px;color:{{q.ink}};background:{{q.countBg}};border:2.5px solid {{q.countBd}};border-radius:999px;padding:4px 14px">{{q.count}}</div>
+                <!-- 기호 병치(지침 4.2) — 조작 대상 바로 곁에서 수치와 컵 수가 함께 바뀐다 -->
+                <div style="display:flex;align-items:center;gap:7px;background:#fffdf6;border:3px solid {{q.countBd}};border-radius:14px;padding:5px 12px;box-shadow:{{q.ring}};transition:box-shadow .2s">
+                  <span style="font-size:11.5px;font-weight:800;color:#a19786">옮긴 양</span>
+                  <span style="font-size:19px;color:{{q.ink}};font-variant-numeric:tabular-nums">{{q.symMl}}</span>
+                  <span style="font-size:15px;color:#a19786">=</span>
+                  <span style="font-size:19px;color:{{q.ink}};font-variant-numeric:tabular-nums">{{q.symCup}}</span>
+                </div>
               </div>
             </sc-for>
+          </div>
+
+          <!-- 두 조작 대상을 견준 비 기호 — 컵을 옮길 때마다 아래 줄이 함께 바뀐다.
+               간단히 한 비는 앱이 먼저 적어 주지 않는다(아래 선택 과제에서 학습자가 옮긴다). -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:18px;padding:8px 20px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:12.5px;font-weight:800;color:#645c50">비커의 양</span>
+              <span style="font-size:20px;color:#201e1d;font-variant-numeric:tabular-nums"><span style="color:#c0392b">{{cupSymMlR}}</span> : <span style="color:#b3921e">{{cupSymMlY}}</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:12.5px;font-weight:800;color:#645c50">옮겨 담은 컵</span>
+              <span style="font-size:22px;color:#201e1d;font-variant-numeric:tabular-nums"><span style="color:#c0392b">{{cupSymCupR}}</span> : <span style="color:#b3921e">{{cupSymCupY}}</span></span>
+            </div>
           </div>
 
           <sc-if value="{{cupSum}}" hint-placeholder-val="{{false}}">
@@ -462,8 +480,25 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:48px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:560px"><b>색깔의 비밀(비와 비율)</b>을 내 말로 한 줄 적어 보세요!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="예) 물감의 양이 달라도 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <!-- 내가 한 조작을 그대로 되불러 놓는다 — 이 가운데 하나를 예로 들어 적게 한다 -->
+          <sc-if value="{{refRecall}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:11px 18px;max-width:min(640px,94vw)">
+              <div style="font-size:13.5px;font-weight:800;color:#645c50">🧪 내가 해 본 것</div>
+              <div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center">
+                <sc-for list="{{refRecall}}" as="m" hint-placeholder-count="3">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;background:#fffdf6;border:2.5px solid #f6a06b;border-radius:16px;padding:6px 13px">
+                    <div style="display:flex;align-items:center;gap:7px">
+                      <span style="width:19px;height:19px;border-radius:999px;border:2px solid #201e1d;background:{{m.color}};display:inline-block;flex:none"></span>
+                      <span style="font-size:16px;font-weight:800;color:#8c491a;white-space:nowrap">{{m.t}}</span>
+                    </div>
+                    <div style="font-size:11.5px;font-weight:700;color:#a19786">{{m.cap}}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 해 본 것</b>을 하나 예로 들어서, <b>색깔의 비밀(비와 비율)</b>을 한 줄 적어 보세요!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="예) 빨강 20mL에 노랑 40mL를 부었을 때 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
         </div>
       </sc-if>
 
@@ -519,6 +554,23 @@ button{font-family:inherit}
             </sc-for>
           </div>
           <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:640px;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:7px 18px">✋ 낱말을 <b>손가락이나 마우스로 누른 채 끌어서</b> 빈칸 위에 놓아 주세요</div>
+        </div>
+      </sc-if>
+
+      <!-- 조작 직후 발문(지침 5.1) — 조작물은 그대로 둔 채, 그 아래에서 어떻게·왜·기호를 묻는다 -->
+      <sc-if value="{{probeRows}}" hint-placeholder-val="{{false}}">
+        <div style="flex:none;width:min(760px,96%);background:#fffdf6;border:3.5px solid #f6a06b;border-radius:22px;padding:13px 18px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;gap:11px">
+          <div style="font-size:17px;color:#8c491a">{{probeTitle}}</div>
+          <sc-for list="{{probeRows}}" as="row" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:16.5px;font-weight:700;color:#474238;line-height:1.45"><b>{{row.no}}</b> {{row.q}}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{row.opts}}" as="o" hint-placeholder-count="2">
+                  <button onClick="{{o.pick}}" style="min-height:46px;padding:9px 16px;border-radius:14px;border:2.5px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}};font-size:16px;cursor:{{o.cur}};text-align:left;line-height:1.4;max-width:100%">{{o.t}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
         </div>
       </sc-if>
 
@@ -650,7 +702,7 @@ class Component extends DCLogic {
 
   state = {
     i: 0, amt: { '빨강':0, '노랑':0 }, found: [], hypo: null, obs: null,
-    picks: {}, solved: {}, refText:'', dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
+    picks: {}, solved: {}, refText:'', probe:{}, cupFlash:null, dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
     labLog: [], wallDone: 0, failed: [], hypoPick: false,
@@ -675,16 +727,14 @@ class Component extends DCLogic {
   get STEPS() {
     return [
       { k:'story', who:'ratio', emoji:'🎨',
-        lines:['안녕하세요! 저는 \'비(比)\'의 비밀 탐색을 돕는 안내자, 레시오예요.',
-               '이 방은 색깔의 비밀 방이에요.',
-               '색깔의 비밀 방에는 여러분의 도움이 필요한 화가와 과학자가 기다리고 있어요.',
-               '우리 함께 비밀을 풀어가볼까요?'],
+        lines:['안녕하세요! 저는 비의 비밀을 함께 찾을 레시오예요.',
+               '여기는 색깔의 비밀 방이에요. 도움이 필요한 화가와 과학자가 기다리고 있어요.',
+               '함께 풀어 볼까요?'],
         btn:'탐험 시작! →' },
       { k:'story', who:'munch', art:'scream_half.jpg', artAlt:'칠하다 만 그림',
         artCap:'노을 진 하늘을 칠하다 말았어요',
-        lines:['안녕? 만나서 반가워. 나는 화가 \'뭉크\'라고 해.',
-               '나는 \'절규\'라는 작품을 그리던 중이야. 이 작품에서 중요한 노을 진 하늘을 칠해야 하는데 물감이 말라 버렸어.',
-               '노을색을 찾기 위해 과학자 먼셀이 나의 주황색을 만들어주겠다고 했어. 너도 먼셀을 도와 색을 만들어줄래?'],
+        lines:['안녕? 나는 화가 뭉크야. 「절규」의 노을 진 하늘을 칠해야 하는데 물감이 말라 버렸어.',
+               '과학자 먼셀이 주황색을 만들어 주겠다고 했어. 너도 도와줄래?'],
         btn:'좋아요, 도울게요!' },
       { k:'story', who:'munsell', art:'munsell_circle.jpg', artBig:1,
         artAlt:'먼셀 20색상환 — 빨강·주황·노랑·초록·파랑·보라 스무 가지 색이 원을 이루며 이름과 색 값이 적혀 있다',
@@ -714,7 +764,7 @@ class Component extends DCLogic {
         say:'아래 두 비커에 빨강 물감을 20mL 넣었어. 여기에 노랑 물감을 다르게 넣어볼거야. 왼쪽에는 20mL, 오른쪽은 60mL 넣어서 색을 확인해봐.',
         btn:'알겠어요!' },
       { k:'chips', who:'munsell', need:1, mark:'obs', swatch:true,
-        say:'과학자는 실험 전에 가설을 세워. 가설은 어떤 것이 맞을 거라고 예상하는 과학자의 생각이야. 가설이 맞는지 틀린지 알아내려면 가설에 맞는 조건을 갖추어 실험을 해야 해. 우리가 가진 목표색을 잘 봐. 어떤 색이 더 많아 보이니? 고르면 그 가설대로 바로 실험해 볼 거야.',
+        say:'과학자는 실험 전에 가설을 세워. 가설은 어떻게 될지 미리 예상해 보는 것이란다. 목표색을 잘 봐. 어떤 색이 더 많아 보이니? 고르면 그 가설대로 바로 실험해 볼 거야.',
         hint:'좋은 가설은 찍는 게 아니라 관찰에서 나와요 · 다시 골라도 괜찮아요',
         chips:[ {t:'🔴 빨강이 더 많아 보여요', v:'r', ok:1, fb:'빨강이 많으면 이렇게 진하고 붉은 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
                 {t:'🟡 노랑이 더 많아 보여요', v:'y', ok:1, fb:'노랑이 많으면 이렇게 밝고 환한 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
@@ -728,7 +778,7 @@ class Component extends DCLogic {
         say:'완벽해. 그런데 같은 색을 다른 양으로도 만들 수 있을까? 이번에는 빨강 물감을 10mL씩 네 컵 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 아까와 같은 색이 될까?',
         hi:'빨강이 두 배가 되었어요 · 노랑은 몇 컵일까요' },
       { k:'lab', mode:'more', who:'munsell', run:'기록하기',
-        say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 각 물감의 양을 다르게 해서 목표색을 찾아봐. 슬라이더를 자유롭게 움직여서 양을 조절해봐. ＋, − 버튼으로 조정하고 싶다면 10씩 커지거나 작아져. 목표색을 잘 찾아보고 기록해둬.',
+        say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 슬라이더로 양을 정하고, 찾으면 기록해 둬.',
         hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기 · 슬라이더는 500mL까지' },
       /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
          안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
@@ -744,10 +794,10 @@ class Component extends DCLogic {
          목표색 옆에 나란히 놓아 달라진다는 것을 눈으로 확인하게 한다. */
       { k:'lab', mode:'trap', unit:'cup', who:'munsell', run:'확인하기',
         startR:20, startY:40, trapA:50, trapB:70,
-        say:'좋은 질문이야! 같은 양을 더하면 어떻게 되는지 실험으로 보여주자. 지금 비커에는 실험으로 찾은 빨강 20mL와 노랑 40mL가 들어 있어. 다인이가 말한 대로 빨강에도 30mL, 노랑에도 30mL를 똑같이 더 넣어 봐. 목표색과 같은 색이 나올까?',
+        say:'좋은 질문이야! 실험으로 보여 주자. 비커에는 빨강 20mL와 노랑 40mL가 들어 있어. 다인이 말대로 양쪽에 30mL씩 더 넣어 봐. 목표색과 같아질까?',
         hi:'빨강도 세 컵, 노랑도 세 컵 더 부어요' },
       { k:'blank', id:'why', who:'munsell', demo:'cups',
-        say:'아래 그림을 같이 볼까? 빨강:노랑에 같은 양을 각각 더했지만 다른 색이 되었어. 친구에게 뭐라고 설명해 주면 좋을지 낱말 카드를 끌어서 완성해 봐.' },
+        say:'아래 그림을 같이 볼까? 빨강:노랑에 같은 양을 각각 더했어. 그런데 다른 색이 되었지. 친구에게 뭐라고 설명해 주면 좋을지 낱말 카드를 끌어서 완성해 봐.' },
       /* 실험과 다인이의 반례를 모두 겪은 뒤에 묻는다 — 더해도 안 되고 곱하면 되는 까닭을
          한 마디로 모으는 자리다. */
       /* 단위화(재합성) — 세 번 되풀이한다. 양에 맞춰 묶는 단위를 바꾸면
@@ -755,7 +805,19 @@ class Component extends DCLogic {
          앱이 대신 약분해 보여 주던 자리를 학습자의 조작이 대신한다. */
       { k:'cups', who:'munsell', src:{ r:20, y:40 }, unit:20, ask:true,
         say:'실험으로 찾은 빨강 20mL와 노랑 40mL를 다시 가져왔어. 이번에는 조금 더 큰 20mL짜리 컵을 줄게. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐.',
-        hi:'빈 컵을 누르면 비커에서 20mL가 옮겨져요' },
+        hi:'빈 컵을 누르면 비커에서 20mL가 옮겨져요',
+        probe:{ title:'🤔 방금 한 일을 짚어 볼까', rows:[
+          { q:'어떻게 해서 1컵과 2컵이 되었나요?', opts:[
+            { t:'20mL짜리 컵으로 두 비커를 모두 옮겨 담았어요', ok:1 },
+            { t:'빨강을 덜어 내고 노랑을 더 넣었어요', ok:0, fb:'물감은 한 방울도 덜어 내거나 더 넣지 않았단다. 세는 단위만 바꾸었지?' } ] },
+          { q:'양은 그대로인데 왜 1과 2라는 새로운 수가 보였을까요?', opts:[
+            { t:'20mL를 한 묶음으로 세었기 때문이에요', ok:1 },
+            { t:'물감이 줄어들었기 때문이에요', ok:0, fb:'비커의 물감은 컵으로 자리만 옮겼을 뿐 줄어들지 않았단다.' },
+            { t:'컵이 비커보다 작기 때문이에요', ok:0, fb:'컵이 작다는 것만으로는 1과 2가 나오지 않는단다. 무엇을 한 묶음으로 세었는지 다시 볼까?' } ] },
+          { q:'손으로 옮긴 이 일을 기호로 쓰면 어느 것일까요?', opts:[
+            { t:'20 : 40 = 1 : 2', ok:1 },
+            { t:'20 + 40 = 60', ok:0, fb:'두 양을 더한 값이란다. 우리가 한 일은 두 양을 견주어 본 것이지?' },
+            { t:'40 − 20 = 20', ok:0, fb:'두 양의 차란다. 우리가 한 일은 두 양을 견주어 본 것이지?' } ] } ] } },
       { k:'cups', who:'munsell', src:{ r:40, y:80 }, unit:40,
         say:'마지막이야. 빨강 40mL와 노랑 80mL를 40mL짜리 컵으로 옮겨 담아 봐. 이번에도 몇 컵 대 몇 컵이 될까?',
         hi:'컵 하나는 40mL예요' },
@@ -770,7 +832,7 @@ class Component extends DCLogic {
       /* 찾은 비를 큰 통에 그대로 옮겨 쓰는 자리 — 빨강 50mL는 이미 담겨 있고,
          노랑을 10mL 컵으로 부어 학습자가 1 : 2를 스스로 지킨다. */
       { k:'lab', mode:'wall', unit:'cup', who:'munch', run:'완성하기', lockR:50,
-        say:'아하! 빨강과 노랑을 1대 2로 섞으면 그 색이 나오는구나! 알아내줘서 정말 고마워! 이것만 기억하면 더 큰 그림을 그릴 때도 물감을 다시 만들 수 있겠어! 큰 통에 빨강을 50mL 넣었어. 그럼 노랑은 얼마나 넣어야 할까?',
+        say:'빨강과 노랑을 1 대 2로 섞으면 그 색이 나오는구나. 알아내줘서 고마워! 큰 통에 빨강을 50mL 넣었어. 그럼 노랑은 얼마나 넣어야 할까?',
         hi:'10mL 컵으로 노랑을 부어요' },
       { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
         lines:['네가 준 물감으로 노을을 칠해 완성했어.',
@@ -790,12 +852,34 @@ class Component extends DCLogic {
                '같이 점을 찍으며 색을 만드는 걸 도와주겠니?'],
         btn:'좋아요!' },
       { k:'dots', who:'signac',
-        say:'나는 빨강 2개와 노랑 3개가 섞인 주황을 만들고 싶어. 점을 찍어보는 연습을 해보자. 위에서 물감 단추를 먼저 누르고, 아래 빈 칸을 누르면 그 색으로 점이 찍혀. 잘못 찍었으면 그 점을 한 번 더 누르면 지워져.',
-        hi:'점 5개 · 빨강 : 노랑 = 2 : 3' },
+        say:'나는 빨강 2개와 노랑 3개가 섞인 주황을 만들고 싶어. 위에서 물감을 고르고 아래 빈 칸을 누르면 점이 찍혀. 잘못 찍었으면 한 번 더 누르면 지워져.',
+        hi:'점 5개 · 빨강 : 노랑 = 2 : 3',
+        probe:{ title:'🤔 방금 찍은 점을 짚어 볼까', rows:[
+          { q:'어떻게 해서 이 주황이 되었나요?', opts:[
+            { t:'빨강 점 2개와 노랑 점 3개를 찍었어요', ok:1 },
+            { t:'아무 색이나 다섯 개를 찍었어요', ok:0, fb:'색을 아무렇게나 찍으면 이 주황이 안 나와. 각 색을 몇 개씩 찍었는지 다시 볼까?' } ] },
+          { q:'왜 점의 개수가 색을 정할까요?', opts:[
+            { t:'전체에서 각 색이 차지하는 몫이 정해지기 때문이에요', ok:1 },
+            { t:'점이 많을수록 색이 진해지기 때문이에요', ok:0, fb:'점을 많이 찍어도 두 색의 비가 같으면 같은 주황이야. 다시 생각해볼까?' } ] },
+          { q:'내가 찍은 점을 기호로 쓰면 어느 것일까요?', opts:[
+            { t:'빨강 : 노랑 = 2 : 3', ok:1 },
+            { t:'빨강 : 노랑 = 3 : 2', ok:0, fb:'앞에는 빨강 점 수, 뒤에는 노랑 점 수를 놓는 거야. 순서를 다시 볼까?' },
+            { t:'빨강 : 전체 = 2 : 3', ok:0, fb:'전체는 다섯 개야. 지금 견준 건 빨강과 노랑이지?' } ] } ] } },
       { k:'grid', n:10, who:'signac',
         say:'이번엔 새로운 주황이야. 빨강 대 노랑을 2 대 3으로, 열 칸에 나타내 줘. 빨강 4칸, 노랑 6칸이야.',
         hi:'빨강 : 노랑 = 2 : 3' },
-      { k:'grid', n:100, who:'signac', say:'마지막으로 백 칸에 도전해 봐, 큰 붓을 쓰면 한 줄씩 칠할 수 있어!', hi:'빨강 : 노랑 = 2 : 3' },
+      { k:'grid', n:100, who:'signac', say:'마지막으로 백 칸에 도전해 봐, 큰 붓을 쓰면 한 줄씩 칠할 수 있어!', hi:'빨강 : 노랑 = 2 : 3',
+        probe:{ title:'🤔 방금 칠한 백 칸을 짚어 볼까', rows:[
+          { q:'백 칸을 어떻게 칠했나요?', opts:[
+            { t:'빨강 40칸, 노랑 60칸으로 나누어 칠했어요', ok:1 },
+            { t:'한 칸씩 아무 데나 칠했어요', ok:0, fb:'칠한 자리는 달라도 좋아. 그런데 각 색을 몇 칸 칠했는지가 색을 정하지. 다시 세어 볼까?' } ] },
+          { q:'칸이 열 칸에서 백 칸으로 늘었는데 왜 같은 주황일까요?', opts:[
+            { t:'칸 수가 늘어도 빨강과 노랑의 비가 2 대 3 그대로이기 때문이에요', ok:1 },
+            { t:'칸이 많아져서 색이 더 진해졌기 때문이에요', ok:0, fb:'칸이 많아져도 색은 그대로였지? 무엇이 변하지 않았는지 다시 볼까?' } ] },
+          { q:'백 칸에 칠한 것을 기호로 쓰면 어느 것일까요?', opts:[
+            { t:'40 : 60 = 2 : 3', ok:1 },
+            { t:'40 : 100 = 2 : 3', ok:0, fb:'40과 100은 빨강과 전체를 견준 거야. 지금은 빨강과 노랑을 견주고 있지?' },
+            { t:'40 + 60 = 100', ok:0, fb:'두 수를 더한 값이야. 우리가 한 일은 두 양을 견주어 본 것이지?' } ] } ] } },
       /* 개수 대비 — 여기까지는 칸이 늘어나도 비가 그대로여서 개수를 세어도 답이 맞았다.
          칸 수가 많은 쪽이 오히려 비는 작은 사례를 견주게 하여 개수로 판단하는 습관을
          드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
@@ -821,9 +905,15 @@ class Component extends DCLogic {
         say:'100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요? 아래 낱말을 손가락이나 마우스로 누른 채 끌어서, 빈칸 위에 놓아 주세요.' },
       { k:'blank', id:'pct', who:'ratio',
         say:'이어서 비율 문제예요. 만약 물감 빨강 40mL, 노랑 60mL을 넣어 주황 100mL를 만들었다면, 각 색깔은 전체의 몇 퍼센트일까요?' },
+      /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
+         화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3). */
       { k:'reflect', who:'ratio',
-        say:'색깔의 비밀을 내 말로 한 줄 정리해 봐요. 떠오르는 대로 적으면 돼요.' },
-      { k:'blank', id:'secret', who:'ratio', say:'이제 색깔의 비밀을 문장으로 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
+        say:'지금까지 한 일을 떠올려 봐요. 빨강 20mL에 노랑 40mL를 부어 목표색을 만들었고, 빨강이 40mL로 늘었을 때는 노랑을 80mL 부었지요. 컵으로 옮겨 담으니 언제나 1컵 대 2컵이었고, 점 다섯 개를 찍을 때도 백 칸을 칠할 때도 두 색이 차지하는 몫은 그대로였어요. 색깔의 방에서 했던 경험을 바탕으로 왜 양이 달라져도 같은 색이 되었는지 여러분이 설명해 보세요.',
+        hi:'아래에 내가 만든 양이 남아 있어요 · 그중 하나를 예로 들어 적어요' },
+      /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
+         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
+      { k:'blank', id:'secret', who:'ratio',
+        say:'여러분이 적은 내용을 잘 보았어요. 물감과 컵, 점과 칸으로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' },
       { k:'finish', who:'ratio',
         say:'색깔의 비밀을 잘 찾아냈어요! 카드 숫자 1과 6을 차례로 얻었어요! 잘 기억해두세요!',
         hi:'탐색 완료! 카드 숫자 1 · 6 획득' }
@@ -845,6 +935,8 @@ class Component extends DCLogic {
   get I_SIGNAC() { return this._stepIdx('signac', s => s.who === 'signac'); }
 
   WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
     /* 레시오 = 방 안내자(밝은 여성 목소리, vhyeri). 초상(ratio_portrait.jpg)으로 표시.
        원본 이미지에 이미 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1 → 이중 테두리 방지).
        emoji는 이미지를 불러오지 못했을 때 보여 줄 대체 표시로 남겨 둔다. */
@@ -903,7 +995,7 @@ class Component extends DCLogic {
         ['두 물감의 ', {a:'비'}, ' 가 같다면 같은 색이 된다.'] ],
       bank:['양','비','차이','개수'] },
     /* 카드 문제 — 이 방을 통과해야 비밀 카드의 숫자를 받는다.
-       base·equiv 두 장은 예전 평가의 방에 모아 두었던 색깔 카드를 옮겨 온 것이고,
+       base·equiv 두 장은 예전 비의 비밀에 모아 두었던 색깔 카드를 옮겨 온 것이고,
        cup·denser 두 장은 없어진 마트의 비밀 문제를 색의 맥락으로 바꾼 것이다
        ('묶음 가격 ÷ 개수 = 1개 값' → '전체 mL ÷ 컵 수 = 한 컵의 양',
         '어느 가게가 싼가' → '어느 주황이 더 붉은가'). */
@@ -1028,8 +1120,14 @@ class Component extends DCLogic {
       /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
          화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
          '1 대 1.618'처럼 뒤가 소수인 경우에는 앞자리만 바꾼다 — 소수를 쪼개면 잘못 읽힌다. */
+      /* 비를 콜론으로 적은 것은 「대」로 읽는다 — 화면은 빨강:노랑, 소리는 「빨강 대 노랑」.
+         콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
+         숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
+      .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
       .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
+         「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
       .replace(/mL/g, ' 밀리리터 ').replace(/\s+/g, ' ').trim();
     if (!txt || txt === '[object Object]') return;
     const key = this.ttsKey((who||'ratio') + '|' + txt);
@@ -1242,7 +1340,7 @@ class Component extends DCLogic {
   }
 
   /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
-     네 장(1 · 6 · 1 · 8)이 모이면 평가의 방 마지막 문이 열린다. */
+     네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
   awardDigit() {
     let got = [];
     try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
@@ -1279,7 +1377,36 @@ class Component extends DCLogic {
   }
   autoNext(ms) {
     clearTimeout(this._autoT);
+    /* 조작 직후 발문(probe)이 남아 있으면 저절로 넘어가지 않는다 — 조작 화면에서 묻는 것이 이 발문의 자리다 */
+    const st = this.STEPS[this.state.i] || {};
+    if (st.probe && !this.probeOk(st)) return;
     this._autoT = setTimeout(() => this.go(1), ms || 2300);
+  }
+
+  /* ── 조작 직후 발문 (probe) — 지침 5.1 ──
+     과제를 해결한 그 화면에서, 조작물을 그대로 둔 채 세 가지를 묻는다.
+     어떻게 했는가 · 왜 그렇게 되었는가 · 그 경험이 기호와 어떻게 이어지는가.
+     답을 요구하는 물음이 아니라 추론을 요구하는 물음이므로, 틀려도 막지 않고 되물어 준다. */
+  probeKey(ri) { return this.state.i + '-' + ri; }
+  probeOk(st) {
+    if (!st || !st.probe) return true;
+    const P = this.state.probe || {};
+    for (let ri = 0; ri < st.probe.rows.length; ri++) if (P[this.probeKey(ri)] == null) return false;
+    return true;
+  }
+  probePick(ri, oi) {
+    const st = this.STEPS[this.state.i] || {};
+    if (!st.probe) return;
+    const row = st.probe.rows[ri], o = row.opts[oi];
+    this.plog('probe', { row: ri, pick: oi, ok: o.ok ? 1 : 0, q: row.q.slice(0,60) });
+    if (!o.ok) {
+      this.sfx('oops');
+      this.toast('🤔', '다시 한번!', o.fb || '조작물을 다시 보면서 생각해 볼까?');
+      return;
+    }
+    const P = Object.assign({}, this.state.probe); P[this.probeKey(ri)] = oi;
+    this.setState({ probe: P });
+    this.sfx('ok');
   }
 
   confetti() {
@@ -1521,9 +1648,12 @@ class Component extends DCLogic {
       return;
     }
     this.sfx('pour');
-    const ns = { cupSeq: S.cupSeq.concat([side]) };
+    const ns = { cupSeq: S.cupSeq.concat([side]), cupFlash: side };
     ns[side === 'r' ? 'cupR' : 'cupY'] = n + 1;
     this.setState(ns);
+    /* 조작 대상(비커·컵)과 그 곁의 기호를 같은 순간에 함께 강조한다 — 지침 4.2 */
+    clearTimeout(this._flashT);
+    this._flashT = setTimeout(() => this.setState({ cupFlash: null }), 750);
     const r = side === 'r' ? n + 1 : S.cupR, y = side === 'y' ? n + 1 : S.cupY;
     this.plog('cup', { act:'pour', c:side, r, y });
     if (r >= this.cupMax('r') && y >= this.cupMax('y')) {
@@ -1823,7 +1953,7 @@ class Component extends DCLogic {
           this.plog('blank', { id });
           this.markSolved();
           if (id === 'secret') {
-            /* 카드 보상은 평가의 방으로 이동 — 학습 정리 활동만 유지 */
+            /* 카드 보상은 비의 비밀으로 이동 — 학습 정리 활동만 유지 */
             this.confetti();
             this.toast('✅', '정리 완성!', '색깔의 비밀을 문장으로 정리했어요. 허브로 돌아가 다음 탐험을 이어가요!', 'ok');
             this.autoNext(3200);
@@ -1966,7 +2096,7 @@ class Component extends DCLogic {
             : { display:'block', maxWidth:'min(360px,72vw)', maxHeight:artMax(42), borderRadius:'3px' } }) : null,
       /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
       coachEmoji: who.img ? '' : (who.emoji || ''),
-      coachName: who.name, coachRole: who.role,
+      coachName: who.name,
       coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n') : this.wrapSay(st.say),
       coachHi: (st.k === 'lab' && st.mode === 'find') ? '' : (st.hi || ''),
       /* 가설 상시 배너: 선택 시점부터 실험·확인·정리 단계 내내 상단 고정 */
@@ -1995,6 +2125,19 @@ class Component extends DCLogic {
         : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null)), isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
       isReflect: st.k === 'reflect', refText: S.refText,
+      /* 정리 단계에 학습자 자신의 조작 기록을 다시 띄운다 — 「비밀」을 허공에서 떠올리지 않고
+         자기가 만든 양을 근거로 말하게 하는 발판이다(지침 5.3). */
+      refRecall: st.k === 'reflect' ? (() => {
+        const list = S.found.map(f => ({
+          t: '빨강 ' + f[0] + ' : 노랑 ' + f[1],
+          cap: '실험으로 만든 양',
+          color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] }))
+        }));
+        list.push({ t: '1컵 : 2컵', cap: '컵으로 옮겨 담았을 때', color: tgt });
+        list.push({ t: '빨강 40칸 : 노랑 60칸', cap: '백 칸에 칠했을 때',
+          color: this.rgb(this.mix({ '빨강': 40, '노랑': 60 })) });
+        return list;
+      })() : null,
       refInput: (e) => this.setState({ refText: e.target.value }),
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
       /* 마침 카드 — 이 방은 황금비의 앞 두 자리를 차례로 준다 */
@@ -2256,9 +2399,20 @@ class Component extends DCLogic {
           countBg: full ? '#f0fae1' : '#fff2eb',
           countBd: full ? '#ccdbb2' : '#ffc6a5',
           pour: () => this.cupPour(c.side),
+          /* 방금 옮겨 담은 쪽 — 조작 대상과 곁의 기호에 같은 색 고리를 동시에 켠다 */
+          ring: S.cupFlash === c.side ? ('0 0 0 6px ' + (c.side === 'r' ? 'rgba(192,57,43,.35)' : 'rgba(179,146,30,.4)')) : 'none',
+          /* 옮긴 양과 컵 수 — 컵을 하나 옮길 때마다 둘이 함께 바뀐다 */
+          symMl: (n * uML) + 'mL',
+          symCup: n + '컵',
           cups: new Array(n).fill(0).map((_, ci) => ({ anim: ci === n - 1 ? 'rsPop .3s ease' : 'none' }))
         };
       });
+      /* ── 기호 병치(지침 4.2 · 4.1) ──
+         조작 대상 바로 곁에 그 양의 수치를, 두 열 아래에 두 양을 견준 비 기호를 함께 띄운다.
+         컵을 옮길 때마다 수와 기호가 같이 바뀌고, 방금 조작한 쪽은 기호와 조작 대상이
+         같은 순간에 같은 색 고리로 강조된다. 간단히 한 비는 앱이 먼저 말하지 않는다. */
+      v.cupSymMlR = src.r + 'mL'; v.cupSymMlY = src.y + 'mL';
+      v.cupSymCupR = this.cupCount('r') + '컵'; v.cupSymCupY = this.cupCount('y') + '컵';
       v.cupSum = done ? ('빨강 ' + this.cupMax('r') + '컵  :  노랑 ' + this.cupMax('y') + '컵') : '';
       v.cupBackOn = !S.cupPick;
       v.cupBackOp = S.cupUndo >= 1 ? 0.4 : 1;
@@ -2383,17 +2537,39 @@ class Component extends DCLogic {
       }
     }
 
+    /* 조작 직후 발문 — 과제를 해결한 뒤에만, 그 조작 화면 안에서 펼친다 */
+    const probeOk = this.probeOk(st);
+    v.probeTitle = (st.probe && solved) ? (st.probe.title || '🤔 방금 한 일을 짚어 볼까') : '';
+    v.probeRows = (st.probe && solved) ? st.probe.rows.map((row, ri) => {
+      const sel = (S.probe || {})[this.probeKey(ri)];
+      return {
+        q: row.q,
+        no: (ri + 1) + '.',
+        opts: row.opts.map((o, oi) => ({
+          t: o.t,
+          pick: () => this.probePick(ri, oi),
+          bd: sel === oi ? '#ccdbb2' : '#dcd3c4',
+          bg: sel === oi ? '#f0fae1' : '#fffdf6',
+          fg: sel === oi ? '#56633f' : '#645c50',
+          cur: sel == null ? 'pointer' : 'default'
+        }))
+      };
+    }) : null;
+
     const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect'].indexOf(st.k) >= 0) && !this._guest;
+    const gateOk = solved && probeOk;
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
     v.showPrimary = st.k !== 'finish';
-    v.primaryBg = (!needsSolve || solved) ? '#c67139' : '#c0b6a5';
-    v.footHint = (needsSolve && !solved && !v.liveBadge) ? '문제를 해결하면 다음으로 갈 수 있어요' : '';
+    v.primaryBg = (!needsSolve || gateOk) ? '#c67139' : '#c0b6a5';
+    v.footHint = (needsSolve && !gateOk && !v.liveBadge)
+      ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '';
     v.primary = () => {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
-      if (st.k === 'finish') { this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null }); return; }
-      if (needsSolve && !solved) {
+      if (st.k === 'finish') { this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null, refText:'', probe:{} }); return; }
+      if (needsSolve && !gateOk) {
         this.sfx('oops');
+        if (solved && !probeOk) { this.toast('🤔', '조금만 더!', '아래 물음에 답하고 넘어가요.'); return; }
         if (st.k === 'cups') { this.cupGateHint(); return; }
         this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return;
       }

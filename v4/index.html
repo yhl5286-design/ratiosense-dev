@@ -190,7 +190,7 @@ function showChip(code){
   $('#chgBtn').style.display='inline-block';
   $('#guestNote').style.display=code==='guest'?'inline-flex':'none';}
 /* 카드는 시작할 때 거저 주지 않는다 — 1 · 6 · 1 · 8 네 장을 색깔·소리·지도 방에서
-   직접 찾아내야 하고(색깔의 방이 두 장), 넷이 모여야 평가의 방 마지막 문이 열린다. */
+   직접 찾아내야 하고(색깔의 방이 두 장), 넷이 모여야 비의 비밀 마지막 문이 열린다. */
 function refresh(){
   const dn=getDone();
   $('#walN').textContent=getCards().length;
@@ -213,7 +213,7 @@ function refresh(){
     const lk=$(g.lock); if(lk)lk.style.display=g.open?'none':'inline-flex';
     if(g.open){c.setAttribute('href',g.href);c.onclick=null;}
     else{c.removeAttribute('href');c.onclick=e=>{e.preventDefault();};}});
-  /* 평가의 방은 허브에 두지 않는다 — 지도의 비밀을 마치면 그 화면에서 바로 이어진다 */
+  /* 비의 비밀은 허브에 두지 않는다 — 지도의 비밀을 마치면 그 화면에서 바로 이어진다 */
   document.querySelectorAll('.room').forEach(a=>{
     a.classList.remove('next-room');
     const old=a.querySelector('.donechk'); if(old)old.remove();

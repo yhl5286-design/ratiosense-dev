@@ -3,3 +3,6 @@ v4/tts/_old/
 v4/tts/_new/
 v4/tts/_samples/
 *.bak*
+
+# 로컬 버전 스냅숏 — 저장소에 올리지 않습니다
+_versions/

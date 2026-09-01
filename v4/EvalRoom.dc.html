@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js"></script>
+<script src="tts/manifest.js?v=202608270500"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -56,7 +56,6 @@ button{font-family:inherit}
 .rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .rs-sub-name{font-size:16.5px;line-height:1.3}
-.rs-sub-role{font-size:13.5px;font-weight:700;color:var(--color-neutral-700)}
 .rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
 .rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
 .rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
@@ -79,7 +78,7 @@ button{font-family:inherit}
     <a href="index.html" aria-label="홈으로" class="rs-round">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
     </a>
-    <div class="rs-hd-title" style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">평가의 방</div>
+    <div class="rs-hd-title" style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">비의 비밀</div>
     <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
     </div>
@@ -103,7 +102,6 @@ button{font-family:inherit}
         <div class="rs-sub-body">
           <div class="rs-sub-tag">
             <div class="rs-sub-name">{{coachName}}</div>
-            <div class="rs-sub-role">{{coachRole}}</div>
           </div>
           <p class="rs-sub-text">{{coachText}}</p>
           <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
@@ -194,9 +192,37 @@ button{font-family:inherit}
           </div>
           {{phiArt}}
           <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">모양에서도, 자연에서도, 수에서도 같은 값 <b>1.618</b>이 나와요.<br>여러분이 색과 소리와 지도에서 찾은 것처럼 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
+        </div>
+      </sc-if>
+
+      <!-- 다섯 방에서 만난 비를 한자리에 모아 '비의 비밀'에 답한다 -->
+      <sc-if value="{{isWrap}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0;max-width:740px">
+
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">색깔</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">물감의 비</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎵</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">소리</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">음정의 비</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🥁</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">리듬</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">리듬의 비</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🗺️</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">지도</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">축척의 비</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🌍</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">지구</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">그림자의 비</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">✨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">황금비</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">1 : 1.618</span></div>
+          </div>
+
+          <div style="font-size:20px;font-weight:800;color:var(--color-neutral-700)">↓</div>
+
+          <div style="font-size:22px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:12px 28px;text-align:center">
+            모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
+          </div>
+
+          <div style="font-size:16px;font-weight:700;line-height:1.85;text-align:center;color:var(--color-neutral-800);max-width:660px">
+            우리 주변 곳곳에 언제나 <b>비</b>가 숨어 있다는 것 — 그것이 <b>비의 비밀</b>이에요.<br>
+            이제 비의 비밀을 알았으니, 주변을 잘 관찰하면서 비를 찾아보세요!
+          </div>
+
           <a href="index.html" onClick="{{goNext}}" class="rs-pill2" style="min-height:52px;padding:13px 26px;font-size:17px">🏠 여기서 마치고 허브로</a>
         </div>
       </sc-if>
+
 
       </div>
 
@@ -248,6 +274,8 @@ class Component extends DCLogic {
     { id:'map',    digit:'8', room:'🗺️ 지도의 비밀',   concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' }
   ];
   WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
     /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
        emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
     ratio:    { name:'레시오', role:'비의 비밀 탐색 안내자', emoji:'🎼',
@@ -267,7 +295,7 @@ class Component extends DCLogic {
   get STEPS() {
     return [
       { k:'story',
-        lines:['드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리와 지도에서 받은 1과 8 — 비밀 카드 네 장이 여기 다 모였어요.',
+        lines:['드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리와 지도에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요.',
                '카드에 적힌 숫자를 차례로 눌러 마지막 문을 열어 봐요!'],
         btn:'문 앞으로 →' },
       { k:'door',
@@ -280,7 +308,12 @@ class Component extends DCLogic {
         hi:'📏 기준을 여러 번 바꿔 가며 두 막대를 견주어 봐요' },
       { k:'finale',
         say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 수학에서는 세 가지가 대표적이에요. 가로가 세로의 1.618배인 황금사각형은 정사각형을 떼어내도 남은 조각이 또 같은 모양이 되고, 정오각형은 대각선을 한 변으로 나누면 꼭 1.618이 나와요. 앞의 두 수를 더해 나가는 피보나치 수도 이웃한 두 수의 비가 점점 1.618에 가까워진답니다. 색과 소리와 지도에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
-        hi:'🎉 여정 완주 — 비 감각의 달인!' }
+        hi:'🎉 여정 완주 — 비 감각의 달인!' },
+      /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
+         소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
+      { k:'wrap',
+        say:'여러분은 지금까지 색깔과 소리, 리듬, 지도, 지구의 비밀을 확인하고 황금비까지 찾아냈어요. 그러면 비의 비밀은 무엇일까요? 우리 주변 곳곳에 언제나 \'비\'가 숨어 있다는 것, 그것이 비의 비밀이랍니다. 이제 비의 비밀을 알았으니 주변을 잘 관찰하면서 비를 찾아내고 함께 많은 것을 알아보세요!',
+        hi:'🔎 다섯 방의 비를 한자리에 — 비의 비밀' }
     ];
   }
 
@@ -345,8 +378,14 @@ class Component extends DCLogic {
       /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
          화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
          '1 대 1.618'처럼 뒤가 소수인 경우에는 앞자리만 바꾼다 — 소수를 쪼개면 잘못 읽힌다. */
+      /* 비를 콜론으로 적은 것은 「대」로 읽는다 — 화면은 빨강:노랑, 소리는 「빨강 대 노랑」.
+         콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
+         숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
+      .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
       .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
+         「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
       .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
     if (!txt) return;
     const key = this.ttsKey((who||'ratio') + '|' + txt);
@@ -790,12 +829,13 @@ class Component extends DCLogic {
       /* 이 방의 도우미는 언제나 레시오 — 초상으로 표시하고, 이모지는 로드 실패 시 대체 표시 */
       coachImgEl: this.WHO.ratio.img ? this.coachPortrait(this.WHO.ratio) : null,
       coachEmoji: this.WHO.ratio.img ? '' : (this.WHO.ratio.emoji || ''),
-      coachName: this.WHO.ratio.name, coachRole: this.WHO.ratio.role,
+      coachName: this.WHO.ratio.name,
       coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n') : this.wrapSay(st.say),
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story',
       isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi',
+      isWrap: st.k === 'wrap',
       phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
       doorCards: null, doorSlots: null, doorPad: null,
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
@@ -839,7 +879,7 @@ class Component extends DCLogic {
     const last = S.i === this.STEPS.length - 1;
     const needsSolve = (st.k === 'door') && !this._guest;
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
-      : (last ? '처음으로' : (st.k === 'finale' ? '🃏 카드 복습 →' : '다음 →'));
+      : (last ? '처음으로' : (st.k === 'finale' ? '비의 비밀은? →' : '다음 →'));
     v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
     v.footHint = (needsSolve && !solved)
       ? (st.k === 'door' ? '카드의 숫자로 문을 열면 다음으로 갈 수 있어요'

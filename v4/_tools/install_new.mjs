@@ -91,6 +91,19 @@ man = man.slice(0, at) + block + man.slice(at);
 man = man.replace(/RS_TTS_V = '\d+'/, "RS_TTS_V = '" + stamp + "'");
 fs.writeFileSync(MAN, man, 'utf8');
 
+/* ④ 방 파일이 매니페스트를 부르는 태그에도 같은 판 번호를 박는다.
+   판 번호가 없으면 브라우저가 옛 목록을 캐시에 붙들어, 새 음성을 등록해도 옛 소리가 난다. */
+let stamped = 0;
+for (const room of ['ColorRoom', 'SoundRoom', 'MapRoom', 'EvalRoom']) {
+  const f = room + '.dc.html';
+  if (!fs.existsSync(f)) continue;
+  const before = fs.readFileSync(f, 'utf8');
+  const after = before.replace(/<script src="tts\/manifest\.js(?:\?v=\d+)?"><\/script>/,
+                               '<script src="tts/manifest.js?v=' + stamp + '"></script>');
+  if (after !== before) { fs.writeFileSync(f, after, 'utf8'); stamped++; }
+}
+if (stamped) console.log('방 파일 ' + stamped + '개의 매니페스트 태그에 판 번호를 박았습니다.');
+
 console.log('\n설치 끝 — 등록 ' + add.length + '개 · 음성 판 번호 ' + stamp);
 console.log('되돌리려면: tts/manifest.js.bak-' + stamp + ' 를 manifest.js 로 되돌리세요.');
 console.log('다음: node _tools/make_voice_check.mjs && node _tools/gen_todo.mjs 로 목록을 갱신하고,');
