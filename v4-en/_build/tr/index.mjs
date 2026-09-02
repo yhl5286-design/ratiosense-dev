@@ -1,0 +1,51 @@
+/* 허브 화면 번역.
+   방 이름은 네 방에서 똑같이 쓴다 — The Color Secret · The Sound Secret ·
+   The Map Secret · The Secret of Ratio.
+   2·3·4번과 23·24·25번은 <b>를 사이에 둔 한 문장이 세 조각으로 나뉜 것이다.
+   따로 읽으면 어색해도 이어 붙으면 한 문장이 되게 옮겼다. */
+export default {
+  'RatioSense — 비율 탐험대': 'RatioSense — A Ratio Adventure',
+
+  /* “방마다 숨어 있는 [비(比)의 비밀]을 찾아가는 비율 탐험!” */
+  '방마다 숨어 있는': 'A ratio adventure — every room hides',
+  '비(比)의 비밀': 'the Secret of Ratio',
+  '을 찾아가는 비율 탐험!': ', and it is yours to find!',
+  '비밀 카드를 모아 마지막 문을 열어요': 'Collect the secret cards to open the last door',
+
+  '🃏 비밀 카드': '🃏 Secret cards',
+  '(색깔의 방 두 장, 소리·지도 한 장씩)': '(two from Color, one each from Sound and Map)',
+  '코드 바꾸기': 'Change code',
+  '🔎 게스트 모드 — 활동 기록이 남지 않아요': '🔎 Guest mode — nothing you do is recorded',
+
+  '색깔의 비밀': 'The Color Secret',
+  '화가의 잃어버린 색을': "Find the painter's lost",
+  '실험으로 찾아요': 'color by experimenting',
+
+  '소리의 비밀': 'The Sound Secret',
+  '떨림의 비가 만드는': 'Chords and a harp made',
+  '화음과 하프': 'from ratios of vibration',
+  '🔒 색깔 방을 마치면 열려요': '🔒 Opens when you finish the Color room',
+
+  '지도의 비밀': 'The Map Secret',
+  '축척으로 마을을,': 'Measure a town with scale,',
+  '비로 지구를 재요': 'and the Earth with ratio',
+  '🔒 색·소리 방을 마치면 열려요': '🔒 Opens when you finish Color and Sound',
+
+  '탐험 순서: 색깔 → 소리 → 지도 — 앞 방을 마쳐야 다음 방이 열려요! 방이 끝나면 허브로 돌아와 다음 방으로 이어가요. 세 방을 모두 마치면 마지막 문이 열려요. · 게스트로 입장하면 모든 방을 자유롭게 둘러볼 수 있어요.':
+    'Your route: Color → Sound → Map. Each room opens once you finish the one before it! When a room ends you come back here and go on to the next. Finish all three and the last door opens. · Enter as a guest to look around every room freely.',
+
+  '🙋 내 코드를 눌러 주세요': '🙋 Tap in your code',
+  /* “연구자에게 받은 [4자리 코드]를 눌러 주세요 (예: HQ3T)” */
+  '연구자에게 받은': 'Tap in the',
+  '4자리 코드': '4-character code',
+  '를 눌러 주세요 (예: HQ3T)': ' the researcher gave you (for example: HQ3T)',
+  '입력한 코드': 'The code you entered',
+  '글자를 누르면 칸이 채워져요': 'Tap a character and it fills a box',
+  '← 지우기': '← Delete',
+  '시작!': 'Start!',
+  '🔎 로그인 없이 둘러보기 (기록이 남지 않아요)': '🔎 Look around without signing in (nothing is recorded)',
+  '게스트': 'Guest',
+  '연구자에게 받은 4자리 코드를 입력해 주세요': 'Please enter the 4-character code the researcher gave you',
+  '코드에 쓰지 않는 글자예요. 화면에 있는 글자 중에서 눌러 주세요':
+    'That character is not used in codes. Please tap one of the characters on the screen',
+};

@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../v4/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../v4/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<script src="../v4/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
+<script>/* English edition speaks through the browser voice — no pre-made mp3 files. */
+window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+/* 타이포 확정: 제목/헤더=Do Hyeon(도현), 나머지=Noto Sans KR(400 기본·강조 700 실굵기+색) */
+body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;font-weight:400;background:var(--color-bg);color:var(--color-text);overscroll-behavior:none;font-variant-numeric:tabular-nums}
+b,strong{font-weight:700;color:var(--color-accent-700)}
+[data-blank]{font-weight:400}
+a{color:var(--color-accent-700);text-decoration:none}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--color-accent);outline-offset:3px}
+::selection{background:var(--color-accent-200)}
+@keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
+.washed{filter:saturate(0.6) contrast(0.85) brightness(1.1) opacity(0.94)}
+.rs-round{flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid var(--color-neutral-300);background:var(--color-neutral-100);font-size:19px;cursor:pointer;color:var(--color-accent-700)}
+.rs-round:hover{background:var(--color-neutral-200)}
+.rs-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:13px 28px;border-radius:999px;border:none;background:var(--color-accent);color:var(--color-neutral-100);font-size:19px;cursor:pointer;box-shadow:var(--shadow-md);text-decoration:none}
+.rs-pill:hover{background:var(--color-accent-600)}
+.rs-pill:active{background:var(--color-accent-700)}
+.rs-pill2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:11px 20px;border-radius:999px;border:3px solid var(--color-neutral-300);background:var(--color-neutral-100);color:var(--color-accent-700);font-size:16px;cursor:pointer}
+.rs-pill2:hover{background:var(--color-neutral-200)}
+.rs-dial{font-family:inherit;font-weight:700;font-size:19px;color:var(--color-text);line-height:1.6}
+.rs-pad{font-size:24px;width:72px;min-height:56px;border:3px solid var(--color-neutral-300);border-radius:999px;background:var(--color-neutral-100);cursor:pointer;color:var(--color-text);touch-action:manipulation}
+.rs-pad:hover{background:var(--color-neutral-200)}
+.rs-pad:active{transform:scale(.94);background:var(--color-accent-100);border-color:var(--color-accent-400)}
+@media (max-width:1080px){.rs-fit{zoom:.85}}
+@media (max-width:700px){.rs-fit{zoom:.6}}
+/* 세로가 짧은 화면에서도 한 화면에 담기도록 조작물 전체를 함께 줄인다.
+   너무 줄이면 조작이 어려우므로 0.72 아래로는 내리지 않는다. */
+@media (max-height:900px){.rs-fit{zoom:.84}}
+@media (max-height:800px){.rs-fit{zoom:.74}}
+@media (max-width:1080px) and (max-height:800px){.rs-fit{zoom:.72}}
+/* ── 무대 카드 + 대사 자막 ──
+   도우미 대사는 좀은 좌측 세로 패널이 아니라 무대 카드 상단에 얹힌 자막 띄로 보여 준다.
+   자막 띄·과제 영역·이동 막대가 한 카드 안의 세 층이라 같은 면으로 읽히고,
+   조작물은 자막 아래 칸에만 놓이므로 자막이 조작을 가리지 않는다. */
+.rs-stage{flex:1 1 auto;width:100%;max-width:1160px;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.rs-sub{flex:none;display:flex;align-items:flex-start;gap:14px;padding:11px 18px 13px;background:var(--color-accent-100);border-bottom:2.5px solid var(--color-neutral-300);max-height:40dvh;overflow:auto}
+.rs-sub-who{flex:none;width:76px;height:76px;margin-top:2px}
+.rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rs-sub-name{font-size:16.5px;line-height:1.3}
+.rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
+.rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
+.rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
+.rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
+.rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+@media (max-width:1080px){.rs-sub-text{font-size:19px}}
+@media (max-width:700px){.rs-sub{gap:9px;padding:8px 11px 10px;max-height:46dvh}.rs-sub-who{width:58px;height:58px}.rs-sub-text{font-size:17px;line-height:1.55}.rs-sub-hi{font-size:14.5px}.rs-play{padding:4px}}
+/* 좁은 화면에서 헤더가 가로로 넘치지 않도록: 간격·제목을 줄이고 진행 막대는 감춘다(진행은 n/N 글자로 읽힘) */
+@media (max-width:700px){
+  .rs-hd{gap:6px !important;padding:6px 8px !important}
+  .rs-hd-title{font-size:17px !important}
+  .rs-hd-bar{display:none !important}
+}
+</style>
+</helmet>
+
+<div style="height:100dvh;display:flex;flex-direction:column;background:var(--color-bg)">
+
+  <header class="rs-hd" style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
+    <a href="index.html" aria-label="Home" class="rs-round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    </a>
+    <div class="rs-hd-title" style="flex:none;font-family:'Fredoka','Nunito',sans-serif;font-size:20px">The Secret of Ratio</div>
+    <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+      <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
+    </div>
+    <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <button onClick="{{cycleAudio}}" aria-label="Sound settings" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
+  </header>
+
+  <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
+
+    <section class="rs-stage">
+
+      <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <div class="rs-sub">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{true}}">
+          <div class="rs-sub-who" style="border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:42px">{{coachEmoji}}</div>
+        </sc-if>
+        <div class="rs-sub-body">
+          <div class="rs-sub-tag">
+            <div class="rs-sub-name">{{coachName}}</div>
+          </div>
+          <p class="rs-sub-text">{{coachText}}</p>
+          <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+            <div class="rs-sub-hi">{{coachHi}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{replay}}" aria-label="Say that again" title="Say that again" class="rs-round" style="margin-top:2px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+
+      <div class="rs-play">
+
+      <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
+          <div style="font-size:96px;line-height:1">🔐</div>
+          <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:600px;line-height:1.6">1 + 6 + 1 + 8 — what do you get when you line them up?</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isDoor}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{doorCards}}" as="c" hint-placeholder-count="4">
+              <div style="width:132px;border-radius:var(--radius-md);overflow:hidden;border:3px solid var(--color-accent-500);background:var(--color-neutral-100);box-shadow:var(--shadow-sm)">
+                <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:11.5px;text-align:center;padding:4px">{{c.no}}</div>
+                <div style="padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <div style="font-size:10.5px;font-weight:800;text-align:center;line-height:1.5;min-height:46px">{{c.concept}}</div>
+                  <div style="font-size:27px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-sm);padding:0 16px">{{c.digit}}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center">
+            <sc-for list="{{doorSlots}}" as="s" hint-placeholder-count="4">
+              <div style="width:58px;height:66px;border:3px solid {{s.bd}};border-radius:var(--radius-md);background:var(--color-neutral-100);font-size:32px;display:flex;align-items:center;justify-content:center">{{s.d}}</div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,72px);gap:8px;justify-content:center">
+            <sc-for list="{{doorPad}}" as="p" hint-placeholder-count="12">
+              <button onClick="{{p.tap}}" class="rs-pad">{{p.k}}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{doorGo}}" class="rs-pill">🔓 Open the door!</button>
+        </div>
+      </sc-if>
+
+      <!-- 황금비 막대 — 기준을 늘여도 두 막대의 비는 그대로임을 눈으로 확인한다 -->
+      <sc-if value="{{isPhi}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
+
+          <div style="width:min(680px,94%);display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:76px;flex:none;font-size:14px;font-weight:800;color:var(--color-neutral-700);text-align:right">Base<br>×1</div>
+              <div style="flex:1;height:38px;background:var(--color-neutral-200);border-radius:var(--radius-sm);overflow:hidden">
+                <div style="width:{{phiBaseW}}%;height:100%;background:var(--color-accent-500);border-radius:var(--radius-sm);transition:width .18s ease"></div>
+              </div>
+              <div style="width:78px;flex:none;font-size:17px;font-weight:800;color:var(--color-accent-700)">{{phiBase}}cm</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:76px;flex:none;font-size:14px;font-weight:800;color:var(--color-neutral-700);text-align:right">Golden ratio<br>×1.618</div>
+              <div style="flex:1;height:38px;background:var(--color-neutral-200);border-radius:var(--radius-sm);overflow:hidden">
+                <div style="width:{{phiGoldW}}%;height:100%;background:var(--color-accent-2-500);border-radius:var(--radius-sm);transition:width .18s ease"></div>
+              </div>
+              <div style="width:78px;flex:none;font-size:17px;font-weight:800;color:var(--color-accent-2-700)">{{phiGold}}cm</div>
+            </div>
+          </div>
+
+          <div style="font-size:19px;font-weight:800;color:var(--color-neutral-800);background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:999px;padding:7px 22px">{{phiRatio}}</div>
+
+          <div style="display:flex;align-items:center;gap:12px;width:min(680px,94%)">
+            <button onClick="{{phiMinus}}" aria-label="Make the base 1cm shorter" class="rs-round">−</button>
+            <input type="range" min="{{phiMin}}" max="{{phiMax}}" step="1" value="{{phiBase}}" onChange="{{phiInput}}" aria-label="Length of the base bar" style="flex:1;min-width:0;accent-color:var(--color-accent)">
+            <button onClick="{{phiPlus}}" aria-label="Make the base 1cm longer" class="rs-round">＋</button>
+          </div>
+
+          <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:620px">{{phiHint}}</div>
+
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFinale}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0;max-width:720px">
+          <div style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-4)">
+            <span style="font-size:19px;color:var(--color-accent-700)">1 · 6 · 1 · 8 →</span>
+            <span style="font-size:30px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 18px">1.618</span>
+            <span style="font-size:19px;color:var(--color-accent-2-700)">The golden ratio φ!</span>
+          </div>
+          {{phiArt}}
+          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">In shapes, in nature and in numbers, the very same value <b>1.618</b> turns up.<br>Just as you found in color, sound and maps, the world is full of one thing — <b>The Secret of Ratio</b>!</div>
+        </div>
+      </sc-if>
+
+      <!-- 다섯 방에서 만난 비를 한자리에 모아 '비의 비밀'에 답한다 -->
+      <sc-if value="{{isWrap}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0;max-width:740px">
+
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Color</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of paints</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎵</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Sound</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of pitches</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🥁</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Rhythm</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of beats</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🗺️</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Map</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of scale</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🌍</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Earth</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of shadows</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">✨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Golden ratio</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">1 : 1.618</span></div>
+          </div>
+
+          <div style="font-size:20px;font-weight:800;color:var(--color-neutral-700)">↓</div>
+
+          <div style="font-size:22px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:12px 28px;text-align:center">
+            It was all <span style="color:var(--color-accent-2-700)">ratio</span>!
+          </div>
+
+          <div style="font-size:16px;font-weight:700;line-height:1.85;text-align:center;color:var(--color-neutral-800);max-width:660px">
+            Everywhere around us there is always a <b>ratio</b> in hiding — and that is <b>The Secret of Ratio</b>.<br>
+            Now that you know the Secret of Ratio, look around you and go find the ratios!
+          </div>
+
+          <a href="index.html" onClick="{{goNext}}" class="rs-pill2" style="min-height:52px;padding:13px 26px;font-size:17px">🏠 Finish here and go back</a>
+        </div>
+      </sc-if>
+
+
+      </div>
+
+      <!-- 이동 막대 — 무대 카드 아래층에 고정(과제 영역이 길어져도 가려지지 않음) -->
+      <div class="rs-nav">
+        <div class="rs-nav-in">
+        <button onClick="{{prev}}" aria-label="Back" class="rs-pill2" style="opacity:{{prevOp}};min-height:48px;font-size:15px;color:var(--color-neutral-700)">← Back</button>
+        <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+          <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+            <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+      <div style="background:var(--color-neutral-100);border:4px solid {{toastBd}};border-radius:var(--radius-lg);padding:17px 21px;box-shadow:var(--shadow-lg);display:flex;gap:13px;align-items:flex-start">
+        <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
+        <div style="min-width:0">
+          <div style="font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:var(--color-neutral-800);margin-top:4px">{{toastBody}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{closeToast}}" aria-label="Close" class="rs-round" style="margin-left:auto;width:40px;height:40px;font-size:16px;border-width:2px">✕</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+  LOG_TK = 'ratiosense-2026';
+  LAB = 'evalV3en';
+
+  /* 비밀 카드 4장 — 색깔의 방에서 두 장(1·6), 소리와 지도에서 한 장씩 받는다. 거저 주는 카드는 없다.
+     네 장의 숫자를 왼쪽부터 이어 붙이면 1618이 되고, 그것이 마지막 문의 열쇠다. */
+  CARDS = [
+    { id:'color1', digit:'1', room:'🎨 The Color Secret ①', concept:'Different amounts, same ratio — the same color!' },
+    { id:'color2', digit:'6', room:'🎨 The Color Secret ②', concept:'Different amounts, same ratio — the same color!' },
+    { id:'sound',  digit:'1', room:'🎼 The Sound Secret',   concept:'The simpler the ratio of the vibrations, the sweeter the chord!' },
+    { id:'map',    digit:'8', room:'🗺️ The Map Secret',   concept:'A map is the real distance shrunk by one steady ratio!' }
+  ];
+  WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
+    /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
+       emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
+    ratio:    { name:'Ratia', role:'your guide to the Secret of Ratio', emoji:'🎼',
+                img:'../v4/ratio_portrait.jpg', imgBare:1, pitch:1.06, rate:1.04, gap:160 },
+    narrator: { name:'Guide', role:'the voice that reads the questions aloud', pitch:1.18, rate:1.06, gap:150 }
+  };
+
+  state = {
+    i:0, audio:'full', cards:0, toast:null, solved:{},
+    doorVal:'', doorOpen:false,
+    /* 황금비 막대 — 기준 길이(cm) */
+    phiBase:4
+  };
+  PHI = 1.618;
+  PHI_MIN = 2; PHI_MAX = 20;   /* 기준 막대의 길이 범위(cm) */
+
+  get STEPS() {
+    return [
+      { k:'story',
+        lines:['This is the last room at last! The 1 and the 6 from the Color room, the 1 and the 8 from Sound and Map. All four secret cards are here together.',
+               'Tap the numbers on the cards in order and open the last door!'],
+        btn:'To the door →' },
+      { k:'door',
+        say:'All four cards are here! Tap the numbers on them in order — Color, Sound, Map — to open the last door.',
+        hi:'🔐 The last door — the card numbers, in order' },
+      /* 1.618을 수로만 외우고 끝내지 않는다 — 1 : 1.618이 무엇을 뜻하는지
+         기준 막대를 직접 늘여 보며 확인하고, 그 뒤에 황금비를 기록한다. */
+      { k:'phi',
+        say:'The golden ratio 1.618 is not just one number — it is the ratio 1 to 1.618. If you call the base length 1, the golden length is 1.618 times as long. Move the bar below to change the base. What happens to the golden bar when the base gets longer?',
+        hi:'📏 Change the base a few times and compare the two bars' },
+      { k:'finale',
+        say:'The golden ratio, 1.618, has been called beautiful for a very long time. Three examples stand out in mathematics. In a golden rectangle the long side is 1.618 times the short one, and if you cut a square off it, what is left is the same shape again. In a regular pentagon, the diagonal divided by a side is exactly 1.618. And in the Fibonacci numbers, where each number is the sum of the two before it, the ratio of neighbours creeps closer and closer to 1.618. Just as you found in color, sound and maps, the Secret of Ratio is hidden all over the world. Thank you so much for coming all this way with me!',
+        hi:'🎉 Journey complete — you have a real sense for ratio!' },
+      /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
+         소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
+      { k:'wrap',
+        say:'So far you have uncovered the secrets of color, sound, rhythm, maps and the Earth, and you found the golden ratio too. So what is the Secret of Ratio? It is this: a ratio is always hiding somewhere around us. Now that you know it, keep looking around, find the ratios, and discover many more things!',
+        hi:'🔎 Every ratio in one place — the Secret of Ratio' }
+    ];
+  }
+
+  /* ── 오디오/효과음 (SoundRoom 관례) ── */
+  ac() {
+    if (!this._ac) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      this._ac = new Ctx();
+      this._bus = this._ac.createGain(); this._bus.gain.value = 0.5;
+      const comp = this._ac.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.ratio.value = 6;
+      this._bus.connect(comp); comp.connect(this._ac.destination);
+    }
+    if (this._ac.state === 'suspended') this._ac.resume();
+    return this._ac;
+  }
+  sfx(kind) {
+    if (this.state.audio === 'mute') return;
+    const now = performance.now();
+    if (now - (this._lastSfx||0) < 60) return;
+    this._lastSfx = now;
+    const c = this.ac(); if (!c) return;
+    const t = c.currentTime, duck = this._speaking ? 0.35 : 1;
+    const n = (f, at, dur, vol, type) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t+at);
+      g.gain.setValueAtTime(0.0001, t+at);
+      g.gain.linearRampToValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+0.02);
+      g.gain.setValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+at+dur);
+      o.connect(g); g.connect(this._bus); o.start(t+at); o.stop(t+at+dur+0.05);
+    };
+    if (kind === 'tap') n(720, 0, 0.09, 0.08);
+    else if (kind === 'ok') {
+      [[523.25,0,0.30],[659.25,0.105,0.30],[783.99,0.21,0.34],[1046.5,0.315,0.62]]
+        .forEach((s,i) => { n(s[0], s[1], s[2], 0.115 - i*0.008, 'sine'); n(s[0]*2, s[1], s[2]*0.7, 0.026, 'sine'); });
+    }
+    else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
+    else if (kind === 'card') { [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i) => n(f, i*0.085, 0.5, 0.1 - i*0.008)); }
+    else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+  }
+
+  /* ── TTS (mp3 매니페스트 → speechSynthesis 폴백) ── */
+  ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+  stopVoice() {
+    this._vtok = (this._vtok||0) + 1;
+    this._speaking = false;
+    try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
+    try { speechSynthesis.cancel(); } catch(e) {}
+  }
+  /* Korean numeral reading is not needed here: a ratio is spoken as "2 to 3". */
+  speak(text, who) {
+    this.stopVoice();
+    this._speakStamp = Date.now();
+    if (this.state.audio !== 'full') return;
+    const raw = (text === null || text === undefined) ? '' :
+      (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
+    const txt = raw
+      .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
+      /* A ratio written with a colon is spoken as "to": 2:3 → "2 to 3".
+         Units are spelled out so the voice does not read them letter by letter.
+         No word boundary before the unit: it has to catch "20mL" as well as "mL". */
+      .replace(/°/g, ' degrees ')
+      .replace(/([A-Za-z0-9.]+)\s*:\s*([A-Za-z0-9.]+)/g, '$1 to $2')
+      .replace(/mL\b/g, ' milliliters ').replace(/cm\b/g, ' centimeters ')
+      .replace(/Hz\b/g, ' hertz ')
+      .replace(/\s+/g, ' ').replace(/ ([.,!?])/g, '$1').trim();
+    if (!txt) return;
+    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    const man = window.RS_TTS;
+    if (man && man[key]) {
+      try {
+        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+           브라우저에 남은 옛 음성이 재생되지 않는다. */
+        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+        a.volume = 0.95; this._mp3 = a; this._speaking = true;
+        a.onended = () => { this._speaking = false; };
+        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
+        return;
+      } catch(e) {}
+    }
+    this._speakSynth(txt, who);
+  }
+  /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
+     크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut + 1).trim());
+        s = s.slice(cut + 1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
+  _speakSynth(txt, who) {
+    if (!('speechSynthesis' in window)) return;
+    const cfg = this.WHO[who] || this.WHO.ratio;
+    const tok = this._vtok;
+    const parts = this.chunks(txt);
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      const u = new SpeechSynthesisUtterance(parts[i]);
+      u.lang = 'en-US'; u.pitch = cfg.pitch; u.rate = cfg.rate; u.volume = 1;
+      let adv = false;
+      const go = () => { if (adv || tok !== this._vtok) return; adv = true; setTimeout(() => step(i+1), cfg.gap || 150); };
+      u.onend = go; u.onerror = go;
+      try { speechSynthesis.speak(u); } catch(e) { go(); }
+    };
+    step(0);
+  }
+
+  /* ── 로그: pilot.evalV3.* (v3 eval 스키마 유지) ── */
+  plog(ev, data) {
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    try {
+      if (this._user === 'guest') return;
+      this._q = this._q || [];
+      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+        seq: ++this._seq, clientTs:new Date().toISOString(),
+        eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+      if (this._q.length >= 10) this.flush();
+    } catch(e) {}
+  }
+  /* ── 로그 전송: 중복 적재 방지 ──
+     ① _sending 플래그 — fetch가 진행 중이면 새 POST를 만들지 않는다(동시 flush 차단)
+     ② 꺼낸 배치는 _inflight에 "전송 중"으로 보관 → 성공하면 폐기, 진짜 네트워크 실패일 때만 큐로 되돌려 재시도(자료 유실 방지)
+     ③ 전송이 확인된 eventId는 _sentSet에 남겨 다시 보내지 않는다(visibilitychange+pagehide 이중 beacon 차단)
+     ④ 배치를 만들 때 같은 eventId가 이미 있으면 제외한다
+     fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해(CORS 등) 실패로 오인하고
+     재전송하는 일을 막고, 페이지가 닫혀도 요청이 끝까지 나가게 한다. */
+  _logMark(ids) {
+    this._sentSet = this._sentSet || {}; this._sentIds = this._sentIds || [];
+    for (let i = 0; i < ids.length; i++) if (!this._sentSet[ids[i]]) { this._sentSet[ids[i]] = 1; this._sentIds.push(ids[i]); }
+    while (this._sentIds.length > 800) delete this._sentSet[this._sentIds.shift()];
+  }
+  _logBatch(max) {
+    this._sentSet = this._sentSet || {};
+    const q = this._q || [], batch = [], seen = {};
+    while (q.length && batch.length < max) {
+      const r = q.shift();
+      if (!r || !r.eventId || this._sentSet[r.eventId] || seen[r.eventId]) continue; /* 이미 보냈거나 배치 내 중복 */
+      seen[r.eventId] = 1; batch.push(r);
+    }
+    return batch;
+  }
+  flush(beacon) {
+    try {
+      if (!this._q || !this._q.length) return;
+      const useBeacon = !!(beacon && navigator.sendBeacon);
+      if (!useBeacon && this._sending) return;
+      const batch = this._logBatch(50);
+      if (!batch.length) return;
+      const ids = batch.map(r => r.eventId);
+      const body = JSON.stringify({ token:this.LOG_TK, records:batch });
+      this._inflight = this._inflight || {};
+      this._bid = (this._bid || 0) + 1;
+      const bid = 'b' + this._bid;
+      this._inflight[bid] = batch;
+      if (useBeacon) {
+        let ok = false;
+        try { ok = navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' })); } catch(e) { ok = false; }
+        delete this._inflight[bid];
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+        return;
+      }
+      this._sending = true;
+      const settle = (ok) => {
+        delete this._inflight[bid];
+        this._sending = false;
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+      };
+      fetch(this.LOG_EP, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain' }, body })
+        .then(() => settle(true), () => settle(false));
+    } catch(e) { this._sending = false; }
+  }
+  ukey(b) { return b + ':' + (this._user || 'anon'); }
+
+  componentDidMount() {
+    this._seq = 0;
+    this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
+    if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    /* 순서 잠금 — 세 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.
+       게스트는 자유 탐색이므로 통과. 저장소를 읽지 못하면 막지 않는다(잠금 오작동으로 참여자를 가두지 않는다). */
+    if (this._user && !this._guest && window === window.parent) {
+      let blocked = false;
+      try {
+        const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+        blocked = ['color','sound','map'].some(r => d.indexOf(r) < 0);
+      } catch(e) { blocked = false; }
+      if (blocked) { try { location.replace('index.html'); } catch(e) {} }
+    }
+    let audio = 'full';
+    try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
+    let cards = 0;
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    this.setState({ audio, cards });
+    this._flushT = setInterval(() => this.flush(), 5000);
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    document.addEventListener('visibilitychange', this._hide);
+    this._pageHide = () => this.flush(true);
+    /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+    addEventListener('pagehide', this._pageHide);
+    this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
+    setTimeout(() => this.sayStep(0), 500);
+  }
+  componentWillUnmount() {
+    clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
+    document.removeEventListener('visibilitychange', this._hide);
+    removeEventListener('pagehide', this._pageHide);
+    this.stopVoice(); this.flush(true);
+  }
+
+  /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
+     who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
+     초상 뒤에 이모지를 깔아 두고, 이미지 로드에 실패하면 이미지를 감춰 이모지가 대신 보이게 한다. */
+  coachPortrait(who) {
+    const bare = !!who.imgBare;
+    return React.createElement('div', { key: who.img,
+      style: { position:'relative', width:'100%', height:'100%', borderRadius:'999px', overflow:'hidden',
+               border: bare ? 'none' : '3px solid var(--color-accent-400)' } },
+      /* 대체 표시 — 초상 아래에 깔린 이모지 원. 초상이 뜨면 완전히 가려지고, 로드에 실패하면 드러난다 */
+      React.createElement('div', { key:'fb',
+        style: { position:'absolute', inset:'0', borderRadius:'999px',
+                 background:'var(--color-accent-200)', display:'flex', alignItems:'center',
+                 justifyContent:'center', fontSize:'27px',
+                 border: bare ? '3px solid var(--color-accent-400)' : 'none' } }, who.emoji || ''),
+      React.createElement('img', { key:'p', src: who.img, alt: '',
+        onError: (e) => { try { e.currentTarget.style.display = 'none'; } catch(err) {} },
+        style: { position:'absolute', inset:'0', width:'100%', height:'100%',
+                 objectFit:'cover', display:'block' } })
+    );
+  }
+
+  /* 문제 지문처럼 <b>·<br>이 섞인 짧은 HTML을 그대로 보여 주는 조각 */
+  htmlEl(key, html, style) {
+    return React.createElement('div', { key: key, style: style || {},
+      dangerouslySetInnerHTML: { __html: html } });
+  }
+
+  sayStep(i) {
+    const s = this.STEPS[i];
+    if (!s) return;
+    const t = s.k === 'story' ? s.lines.join(' ') : s.say;
+    if (t) this.speak(t, 'ratio');
+  }
+  autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3000); }
+  /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  toast(icon, title, body, kind, hold) {
+    this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    clearTimeout(this._tT);
+    this.setState({ toast: { icon, title, body, kind } });
+    const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
+    this._tT = setTimeout(close, 3000);
+  }
+  toastOk(t, b) { this.plog('success', { slide: this.state.i }); this.toast('✅', t, b, 'ok'); }
+  toastRetry(b) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', 'Try once more!', b); }
+  /* 자막 다듬기 —
+     (1) 인물 이름은 작은따옴표로 감싸 대사 속에서 눈에 띄게 한다(이미 감싼 것은 그대로 둔다).
+     (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
+     화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
+     '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
+  NAMES = ['Eratosthenes','Signac','Ratia','Munsell','Munch'];
+  markNames(t) {
+    let s = String(t);
+    this.NAMES.forEach(n => {
+      s = s.replace(new RegExp("(?<!['‘’\\w])" + n + "(?!['‘’\\w])", 'g'),
+                    "'" + n + "'");
+    });
+    return s;
+  }
+  wrapSay(t) {
+    if (!t) return '';
+    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+  }
+
+  markSolved() {
+    const s = Object.assign({}, this.state.solved);
+    s[this.state.i] = true;
+    this.setState({ solved: s });
+  }
+  hintNext(key, stages) {
+    this._tries = this._tries || {};
+    const n = (this._tries[key] = (this._tries[key] || 0) + 1);
+    return stages[Math.min(n, stages.length) - 1];
+  }
+  go(d) {
+    const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
+    if (n === this.state.i) return;
+    this.stopVoice();
+    clearTimeout(this._tT);
+    clearTimeout(this._autoT);
+    const patch = { i:n, toast:null, doorVal:'' };
+    if (this.STEPS[n].k === 'finale') {
+      setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
+    }
+    this.setState(patch);
+    this.plog('nav', { to:n });
+    setTimeout(() => this.sayStep(n), 380);
+  }
+  confetti() {
+    try {
+      for (let i=0;i<28;i++) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:-16px;width:11px;height:17px;border-radius:3px;z-index:200;pointer-events:none;animation:rsFall linear forwards';
+        d.style.left = (4 + Math.random()*92) + 'vw';
+        d.style.background = ['var(--color-accent)','var(--color-accent-400)','var(--color-accent-2-500)','var(--color-accent-500)','var(--color-accent-700)','var(--color-accent-2-300)'][i%6];
+        d.style.animationDelay = (Math.random()*0.5) + 's';
+        d.style.animationDuration = (1.3 + Math.random()*1.1) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 3400);
+      }
+    } catch(e) {}
+  }
+  flyCard() {
+    try {
+      const src = document.querySelector('[data-card-panel]');
+      const dst = document.querySelector('[data-cards-badge]');
+      if (!src || !dst) return;
+      const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.textContent = '🃏';
+      el.style.cssText = 'position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:104px;height:142px;border-radius:16px;border:4px solid var(--color-accent-400);background:var(--color-neutral-100);box-shadow:var(--shadow-lg);font-size:46px';
+      el.style.left = (a.left + a.width/2 - 52) + 'px';
+      el.style.top = (a.top + a.height/2 - 71) + 'px';
+      document.body.appendChild(el);
+      const dx = (b.left + b.width/2) - (a.left + a.width/2);
+      const dy = (b.top + b.height/2) - (a.top + a.height/2);
+      el.animate([
+        { transform:'translate(0,0) scale(1) rotate(0deg)', opacity:1 },
+        { transform:'translate(' + (dx*0.45) + 'px,' + (dy*0.45 - 70) + 'px) scale(.72) rotate(-14deg)', opacity:1, offset:0.55 },
+        { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.12) rotate(8deg)', opacity:.25 }
+      ], { duration: 1150, easing:'cubic-bezier(.5,.05,.35,1)' }).onfinish = () => el.remove();
+    } catch(e) {}
+  }
+  cycleAudio() {
+    const order = ['full','sfx','mute'];
+    const next = order[(order.indexOf(this.state.audio) + 1) % 3];
+    if (next !== 'full') this.stopVoice();
+    try { localStorage.setItem('rs3_audio', next); } catch(e) {}
+    this.setState({ audio: next });
+    if (next === 'full') setTimeout(() => this.sayStep(this.state.i), 150);
+    else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
+  }
+
+
+  /* ── 황금비가 정말로 나타나는 세 가지 ──
+     널리 도는 예(파르테논·모나리자·앵무조개)는 근거가 없어 싣지 않는다.
+     해바라기 잎차례도 어림에 가까워 뺐다. 여기 셋은 모두 수학에서 정확히 φ가 되는 것들이라,
+     그림 위에 그은 선이 곧 설명이 된다. */
+  phiGalleryEl() {
+    const R = React, PHI = 1.618;
+    const A = 'var(--color-accent-500)', A2 = 'var(--color-accent-2-500)', INK = 'var(--color-neutral-800)';
+    const el = (t, a, ...c) => R.createElement(t, a, ...c);
+
+    const card = (k, tag, title, svg, note) => el('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'7px', width:'232px',
+        background:'var(--color-neutral-100)', border:'3px solid var(--color-neutral-300)',
+        borderRadius:'18px', padding:'12px 12px 14px' } },
+      el('div', { key:'g', style:{ fontSize:'12px', fontWeight:800, color:'var(--color-accent-700)' } }, tag),
+      el('div', { key:'t', style:{ fontSize:'15.5px', fontWeight:800, color:'var(--color-neutral-800)' } }, title),
+      svg,
+      el('div', { key:'n', style:{ fontSize:'12.5px', fontWeight:700, lineHeight:1.55,
+        color:'var(--color-neutral-700)', textAlign:'center' } }, note));
+
+    /* ① 황금사각형 — 정사각형을 떼어내도 남은 직사각형이 또 1 : 1.618. 이것이 황금비의 정의다. */
+    const W = 204, H = Math.round(W / PHI);            /* 204 x 126 */
+    const rect1 = el('svg', { key:'s1', width:W, height:H + 26, viewBox:'0 0 ' + W + ' ' + (H + 26) },
+      el('rect', { key:'o', x:1, y:1, width:W - 2, height:H - 2, fill:'none', stroke:INK, strokeWidth:2.5 }),
+      el('rect', { key:'sq', x:1, y:1, width:H - 2, height:H - 2, fill:A, fillOpacity:0.18, stroke:A, strokeWidth:2.5 }),
+      el('rect', { key:'r2', x:H - 1, y:1, width:W - H - 1, height:H - 2, fill:A2, fillOpacity:0.18, stroke:A2, strokeWidth:2.5 }),
+      /* 남은 직사각형 안에서 한 번 더 — 같은 모양이 되풀이된다 */
+      el('rect', { key:'sq2', x:H - 1, y:1, width:W - H - 1, height:W - H - 1, fill:'none', stroke:A2, strokeWidth:1.4, strokeDasharray:'4 3' }),
+      el('text', { key:'t1', x:H / 2, y:H + 17, textAnchor:'middle', style:{ fontSize:'12px', fontWeight:800, fill:INK } }, '1'),
+      el('text', { key:'t2', x:(H + W) / 2, y:H + 17, textAnchor:'middle', style:{ fontSize:'12px', fontWeight:800, fill:INK } }, '0.618'),
+      el('text', { key:'t3', x:W / 2, y:H + 3, textAnchor:'middle', style:{ fontSize:'0px' } }, ''),
+      el('line', { key:'l1', x1:1, y1:H + 6, x2:H - 1, y2:H + 6, stroke:A, strokeWidth:2 }),
+      el('line', { key:'l2', x1:H - 1, y1:H + 6, x2:W - 1, y2:H + 6, stroke:A2, strokeWidth:2 }));
+
+    /* ② 정오각형 — 대각선 ÷ 한 변 = sin72° ÷ sin36° = φ. 어림이 아니라 정확히 황금비다. */
+    const CX = 102, CY = 106, RR = 82;
+    const P5 = [0, 1, 2, 3, 4].map(i => {
+      const a = (-90 + i * 72) * Math.PI / 180;
+      return [CX + RR * Math.cos(a), CY + RR * Math.sin(a)];
+    });
+    const pt = (v) => v[0].toFixed(1) + ',' + v[1].toFixed(1);
+    const diags = [];
+    for (let i = 0; i < 5; i++) {
+      const j = (i + 2) % 5;
+      diags.push(el('line', { key:'g' + i, x1:P5[i][0], y1:P5[i][1], x2:P5[j][0], y2:P5[j][1],
+        stroke:'var(--color-neutral-400)', strokeWidth:1.4 }));
+    }
+    const pent = el('svg', { key:'s2', width:204, height:204, viewBox:'0 0 204 204' },
+      el('polygon', { key:'p', points:P5.map(pt).join(' '), fill:'var(--color-neutral-200)', stroke:INK, strokeWidth:2.2 }),
+      ...diags,
+      /* 한 변 하나와 대각선 하나만 굵게 — 둘의 비가 곧 1 : 1.618 */
+      el('line', { key:'side', x1:P5[3][0], y1:P5[3][1], x2:P5[4][0], y2:P5[4][1], stroke:A, strokeWidth:5, strokeLinecap:'round' }),
+      el('line', { key:'diag', x1:P5[4][0], y1:P5[4][1], x2:P5[1][0], y2:P5[1][1], stroke:A2, strokeWidth:5, strokeLinecap:'round' }),
+      el('text', { key:'ls', x:(P5[3][0] + P5[4][0]) / 2, y:P5[3][1] + 19, textAnchor:'middle',
+        style:{ fontSize:'14px', fontWeight:800, fill:A } }, 'side 1'),
+      el('text', { key:'ld', x:CX + 4, y:CY - 34, textAnchor:'middle',
+        style:{ fontSize:'14px', fontWeight:800, fill:A2 } }, 'diagonal 1.618'));
+
+    /* ③ 피보나치 — 이웃한 두 수의 비가 1.618로 다가간다 */
+    const FIB = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55];
+    const bars = FIB.map((f, i) => el('div', { key:'f' + i,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'2px' } },
+      el('div', { key:'b', style:{ width:'13px', height:Math.min(64, 6 + f * 1.05) + 'px',
+        background:(i >= 7 ? A : 'var(--color-neutral-400)'), borderRadius:'3px 3px 0 0' } }),
+      el('div', { key:'n', style:{ fontSize:'9.5px', fontWeight:800, color:'var(--color-neutral-700)' } }, String(f))));
+    const fib = el('div', { key:'s3', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'7px', height:'204px', justifyContent:'center' } },
+      el('div', { key:'r', style:{ display:'flex', gap:'4px', alignItems:'flex-end' } }, bars),
+      el('div', { key:'d', style:{ display:'flex', flexDirection:'column', gap:'3px', alignItems:'center',
+        fontSize:'12.5px', fontWeight:800, color:'var(--color-neutral-700)' } },
+        el('div', { key:'a' }, '13 ÷ 8 = 1.625'),
+        el('div', { key:'b' }, '21 ÷ 13 = 1.615'),
+        el('div', { key:'c', style:{ color:'var(--color-accent-700)', fontSize:'14px' } }, '55 ÷ 34 = 1.6176 …')));
+
+    return el('div', { key:'gal',
+      style:{ display:'flex', gap:'14px', justifyContent:'center', flexWrap:'wrap' } },
+      card('a', '📐 Shape', 'The golden rectangle',  rect1, 'A rectangle whose long side is 1.618 times its short side. Cut a square off it and the rectangle left over is 1 : 1.618 again.'),
+      card('b', '⬟ Figure', 'The regular pentagon',    pent,  'Divide a diagonal of a regular pentagon by one of its sides and you get exactly 1.618 — not close to it, exactly the golden ratio.'),
+      card('c', '🔢 Number',   'The Fibonacci numbers',   fib,   'Each number is the sum of the two before it. The ratio of two neighbours gets closer and closer to 1.618.'));
+  }
+
+  /* ── 황금비 막대 (1 : 1.618) ── */
+  phiSet(v) {
+    const b = Math.max(this.PHI_MIN, Math.min(this.PHI_MAX, Math.round(v)));
+    if (b === this.state.phiBase) return;
+    this.plog('phi', { base: b });
+    this.setState({ phiBase: b });
+  }
+
+  /* ── 마지막 문 (1618 = φ) ── */
+  doorKey(k) {
+    this.sfx('tap');
+    let v = this.state.doorVal;
+    if (k === '⌫') v = v.slice(0, -1);
+    else if (k === 'C') v = '';
+    else if (v.length < 4) v += k;
+    this.setState({ doorVal: v });
+  }
+  doorTry() {
+    const v = this.state.doorVal;
+    const ok = v === '1618';
+    this.plog('door_try', { code: v, ok });
+    if (ok) {
+      this.plog('door_open', {});
+      this.markSolved();
+      this.setState({ doorOpen: true });
+      this.sfx('win'); this.confetti();
+      this.toast('🔓', '1.618 — the golden ratio!', 'Line up the card numbers and you get the golden ratio φ! The door opens!', 'ok', true);
+      this.speak('1.618 — you found the golden ratio! The door opens!', 'ratio');
+      setTimeout(() => this.go(1), 2600);
+    } else {
+      this.sfx('oops');
+      this.setState({ doorVal: '' });
+      this.toastRetry(this.hintNext('door', [
+'Shall we read the four card numbers from left to right?',
+        'The two cards from the Color room come first. Tap the numbers under the cards from the left, just as they are.',
+        'Line the card numbers up just as they are and you get a four-digit number — try again!'
+      ]));
+    }
+  }
+
+  waveSvg() {
+    const W = 460, padL = 30, padR = 16, top = 26, bottom = 120;
+    const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 6;
+    const bandW = (W - padL - padR) * 0.42, bx0 = padL, bx1 = padL + bandW;
+    const wp = (cyc, col) => {
+      let dd = ''; const span = W - padL - padR;
+      for (let px = 0; px <= span; px += 2) {
+        const x = padL + px, tt = px / bandW;
+        const y = midY - amp * Math.sin(2 * Math.PI * cyc * tt);
+        dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
+      }
+      return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:2.5;stroke-linecap:round"/>';
+    };
+    const html = '<rect x="' + bx0 + '" y="' + (top-6) + '" width="' + bandW + '" height="' + (bottom-top+12) + '" rx="8" style="fill:var(--color-accent-100)"/>'
+      + wp(2, 'var(--color-accent-2-600)') + wp(3, 'var(--color-accent-600)')
+      + '<text x="' + ((bx0+bx1)/2) + '" y="' + (top-10) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:var(--color-neutral-600)">2 waves of C = 3 waves of G — a short pattern that repeats often</text>';
+    return React.createElement('svg', { key:'qwave', viewBox:'0 0 460 150',
+      style:{ width:'min(460px,86vw)', display:'block' }, dangerouslySetInnerHTML:{ __html: html } });
+  }
+
+  renderVals() {
+    const S = this.state, st = this.STEPS[S.i];
+    const solved = !!S.solved[S.i];
+    const v = {
+      pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
+      stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
+      cards: S.cards,
+      audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
+      audioTitle: S.audio === 'full' ? 'Voice + sound effects' : (S.audio === 'sfx' ? 'Sound effects only' : 'Sound off'),
+      cycleAudio: () => this.cycleAudio(),
+      /* 이 방의 도우미는 언제나 레시오 — 초상으로 표시하고, 이모지는 로드 실패 시 대체 표시 */
+      coachImgEl: this.WHO.ratio.img ? this.coachPortrait(this.WHO.ratio) : null,
+      coachEmoji: this.WHO.ratio.img ? '' : (this.WHO.ratio.emoji || ''),
+      coachName: this.WHO.ratio.name,
+      coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n') : this.wrapSay(st.say),
+      coachHi: st.hi || '',
+      replay: () => this.sayStep(S.i),
+      isStory: st.k === 'story',
+      isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi',
+      isWrap: st.k === 'wrap',
+      phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
+      doorCards: null, doorSlots: null, doorPad: null,
+      prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
+      toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
+      toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
+      toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
+      closeToast: () => this.setState({ toast: null }),
+      goNext: () => {
+        this.plog('complete', {});
+        try {
+          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+          if (d.indexOf('eval') < 0) { d.push('eval'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+        } catch(e) {}
+      }
+    };
+
+    if (st.k === 'door') {
+      v.doorCards = this.CARDS.map((c, i) => ({ no: c.room, concept: c.concept, digit: c.digit }));
+      v.doorSlots = [0,1,2,3].map(i => ({ d: S.doorVal[i] || '', bd: S.doorVal[i] ? 'var(--color-accent-500)' : 'var(--color-neutral-300)' }));
+      v.doorPad = ['1','2','3','4','5','6','7','8','9','⌫','0','C'].map(k => ({ k, tap: () => this.doorKey(k) }));
+      v.doorGo = () => this.doorTry();
+    }
+
+    if (st.k === 'phi') {
+      const b = S.phiBase, g = Math.round(b * this.PHI * 10) / 10;
+      /* 두 막대는 같은 자로 그린다 — 기준이 최대일 때 황금비 막대가 화면을 꽉 채우도록 */
+      const span = this.PHI_MAX * this.PHI;
+      v.phiBase = b;
+      v.phiGold = g.toFixed(1).replace(/\.0$/, '');
+      v.phiBaseW = (b / span * 100).toFixed(2);
+      v.phiGoldW = (b * this.PHI / span * 100).toFixed(2);
+      v.phiMin = this.PHI_MIN; v.phiMax = this.PHI_MAX;
+      v.phiInput = (e) => this.phiSet(+e.target.value);
+      v.phiMinus = () => this.phiSet(b - 1);
+      v.phiPlus = () => this.phiSet(b + 1);
+      /* 기준이 바뀌어도 두 막대의 비는 그대로라는 것을 수로도 곁들여 둔다 */
+      v.phiRatio = 'Base ' + b + 'cm  :  golden ratio ' + v.phiGold + 'cm';
+      v.phiHint = 'Move the base to different lengths. When the base grows the golden bar grows with it, but the ratio of the two bars is always 1 : 1.618.';
+    }
+
+    const last = S.i === this.STEPS.length - 1;
+    const needsSolve = (st.k === 'door') && !this._guest;
+    v.primaryLabel = st.k === 'story' ? (st.btn || 'Next →')
+      : (last ? 'Start over' : (st.k === 'finale' ? 'So what is the secret? →' : 'Next →'));
+    v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
+    v.footHint = (needsSolve && !solved)
+      ? (st.k === 'door' ? 'Open the door with the card numbers to go on'
+        : 'Solve this and you can go on')
+      : '';
+    v.primary = () => {
+      if (last) {
+        this.stopVoice();
+        this._tries = {};
+        this.setState({ i:0, solved:{}, doorVal:'', doorOpen:false, toast:null });
+        setTimeout(() => this.sayStep(0), 380);
+        return;
+      }
+      if (needsSolve && !solved) { this.sfx('oops'); this.toast('🤔', 'Almost there!', 'Finish this one first, then move on.'); return; }
+      this.sfx('tap'); this.go(1);
+    };
+    return v;
+  }
+}
+</script>
+</body>
+</html>

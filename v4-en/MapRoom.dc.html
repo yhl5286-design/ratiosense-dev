@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../v4/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../v4/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<script src="../v4/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
+<script>/* English edition speaks through the browser voice — no pre-made mp3 files. */
+window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;font-weight:400;background:var(--color-bg);color:var(--color-text);overscroll-behavior:none;font-variant-numeric:tabular-nums}
+b,strong{font-weight:700;color:var(--color-accent-700)}
+[data-blank]{font-weight:400}
+a{color:var(--color-accent-700);text-decoration:none}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--color-accent);outline-offset:3px}
+::selection{background:var(--color-accent-200)}
+@keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
+.rs-round{flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid var(--color-neutral-300);background:var(--color-neutral-100);font-size:19px;cursor:pointer;color:var(--color-accent-700)}
+.rs-round:hover{background:var(--color-neutral-200)}
+.rs-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:13px 28px;border-radius:999px;border:none;background:var(--color-accent);color:var(--color-neutral-100);font-size:19px;cursor:pointer;box-shadow:var(--shadow-md);text-decoration:none}
+.rs-pill:hover{background:var(--color-accent-600)}
+.rs-pill:active{background:var(--color-accent-700)}
+.rs-pill2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:11px 20px;border-radius:999px;border:3px solid var(--color-neutral-300);background:var(--color-neutral-100);color:var(--color-accent-700);font-size:16px;cursor:pointer}
+.rs-pill2:hover{background:var(--color-neutral-200)}
+.rs-choice{min-height:60px;padding:14px 28px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);color:var(--color-accent-700);font-size:20px;cursor:pointer;max-width:100%}
+.rs-choice:hover{background:var(--color-accent-100)}
+.rs-dial{font-family:inherit;font-weight:700;font-size:19px;color:var(--color-text);line-height:1.6}
+@media (max-width:1080px){.rs-fit{zoom:.9}}
+@media (max-width:700px){.rs-fit{zoom:.62}}
+/* ── 무대 카드 + 대사 자막 ──
+   도우미 대사는 좀은 좌측 세로 패널이 아니라 무대 카드 상단에 얹힌 자막 띄로 보여 준다.
+   자막 띄·과제 영역·이동 막대가 한 카드 안의 세 층이라 같은 면으로 읽히고,
+   조작물은 자막 아래 칸에만 놓이므로 자막이 조작을 가리지 않는다. */
+.rs-stage{flex:1 1 auto;width:100%;max-width:1160px;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.rs-sub{flex:none;display:flex;align-items:flex-start;gap:14px;padding:11px 18px 13px;background:var(--color-accent-100);border-bottom:2.5px solid var(--color-neutral-300);max-height:40dvh;overflow:auto}
+.rs-sub-who{flex:none;width:76px;height:76px;margin-top:2px}
+.rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rs-sub-name{font-size:16.5px;line-height:1.3}
+.rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
+.rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
+.rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
+.rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
+.rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+@media (max-width:1080px){.rs-sub-text{font-size:19px}}
+@media (max-width:700px){.rs-sub{gap:9px;padding:8px 11px 10px;max-height:46dvh}.rs-sub-who{width:58px;height:58px}.rs-sub-text{font-size:17px;line-height:1.55}.rs-sub-hi{font-size:14.5px}.rs-play{padding:4px}}
+/* 좁은 화면에서 헤더가 가로로 넘치지 않도록: 간격·제목을 줄이고 진행 막대는 감춘다(진행은 n/N 글자로 읽힘) */
+@media (max-width:700px){
+  .rs-hd{gap:6px !important;padding:6px 8px !important}
+  .rs-hd-title{font-size:17px !important}
+  .rs-hd-bar{display:none !important}
+}
+</style>
+</helmet>
+
+<div style="height:100dvh;display:flex;flex-direction:column;background:var(--color-bg)">
+
+  <header class="rs-hd" style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
+    <a href="index.html" aria-label="Home" class="rs-round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    </a>
+    <div class="rs-hd-title" style="flex:none;font-family:'Fredoka','Nunito',sans-serif;font-size:20px">The Map Secret</div>
+    <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+      <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
+    </div>
+    <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <button onClick="{{cycleAudio}}" aria-label="Sound settings" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
+  </header>
+
+  <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
+
+    <section class="rs-stage">
+
+      <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <div class="rs-sub">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{true}}">
+          <div class="rs-sub-who" style="border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:42px">{{coachEmoji}}</div>
+        </sc-if>
+        <div class="rs-sub-body">
+          <div class="rs-sub-tag">
+            <div class="rs-sub-name">{{coachName}}</div>
+          </div>
+          <p class="rs-sub-text">{{coachText}}</p>
+          <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+            <div class="rs-sub-hi">{{coachHi}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{replay}}" aria-label="Say that again" title="Say that again" class="rs-round" style="margin-top:2px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+
+      <div class="rs-play">
+
+      <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
+          <sc-if value="{{storyArt}}" hint-placeholder-val="{{false}}">
+            <div>{{storyArt}}</div>
+          </sc-if>
+          <sc-if value="{{storyEmoji}}" hint-placeholder-val="{{true}}">
+            <div style="font-size:96px;line-height:1">🗺️</div>
+            <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:560px;line-height:1.6">Let's find the secret of <b>ratio</b> hidden inside a map!</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isScale}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div style="max-width:98%;overflow-x:auto">{{mapEl}}</div>
+          <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{choices}}" as="c" hint-placeholder-count="3">
+              <button onClick="{{c.pick}}" class="rs-choice">{{c.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isZoom}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
+          <div style="max-width:98%;overflow-x:auto">{{mapEl}}</div>
+          <sc-if value="{{zoomQ}}" hint-placeholder-val="{{true}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsUp .3s ease">
+              <div class="rs-dial" style="font-size:20px;text-align:center">{{zoomQ}}</div>
+              <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+                <sc-for list="{{zq}}" as="c" hint-placeholder-count="3"><button onClick="{{c.pick}}" class="rs-choice">{{c.t}}</button></sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isMovie}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);animation:rsUp .3s ease;width:100%">
+          <div style="font-size:16px;background:var(--color-accent-100);color:var(--color-accent-700);border-radius:999px;padding:5px 16px">🏛️ 3rd century BC · Alexandria</div>
+          <div class="rs-dial" style="font-size:20px;text-align:center"><b>Eratosthenes</b> is here to meet you!</div>
+          <div style="max-width:98%">{{meetEl}}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isComic}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);animation:rsUp .3s ease;width:100%">
+          <div style="max-width:98%;overflow-x:auto">{{comicEl}}</div>
+          <sc-if value="{{quizQ}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;animation:rsUp .3s ease">
+              <div class="rs-dial" style="font-size:19px;text-align:center;max-width:620px;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:9px 18px">❓ {{quizQ}}</div>
+              <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+                <sc-for list="{{quiz}}" as="c" hint-placeholder-count="3">
+                  <button onClick="{{c.pick}}" class="rs-choice" style="font-size:17.5px;border-color:{{c.bd}};background:{{c.bg}};color:{{c.fg}}">{{c.t}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isProp}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:700px"><b>Finding the circumference of the Earth!</b><br>Difference in shadow angle between the two cities <b>7.2°</b> : the whole circle <b>360°</b> = <b>1 : 50</b><br>If the two cities are <b>800km</b> apart, how many km is once around the Earth?</div>
+          <div style="max-width:98%;overflow-x:auto">{{propEl}}</div>
+          <div class="rs-dial" style="font-size:22px">1 : 50 = 800km : <b>( ? )</b></div>
+          <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{quiz}}" as="c" hint-placeholder-count="3">
+              <button onClick="{{c.pick}}" class="rs-choice" style="border-color:{{c.bd}};background:{{c.bg}};color:{{c.fg}}">{{c.t}}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{propRevealEl}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .4s ease">
+              <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700)">The working Eratosthenes left us — 800km × 50 = 40,000km</div>
+              <div style="max-width:98%">{{propRevealEl}}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
+          <div style="font-size:48px;line-height:1">📝</div>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">Take one thing you <b>worked out for yourself</b> and write one line about <b>the secret of maps (scale)</b>!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="e.g. The bridge that is 3 centimetres on the map …" aria-label="In my own words" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+        </div>
+      </sc-if>
+
+      <!-- 감각 잇기(지침 2.3) — 세 방에서 만난 비를 나란히 놓고 견주게 한다 -->
+      <sc-if value="{{isBridge}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;animation:rsUp .3s ease;margin:auto 0">
+          <div style="display:flex;gap:min(4vw,20px);align-items:stretch;justify-content:center;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🎨 The Color room</div>
+              <div style="font-size:26px;color:var(--color-accent-700)">1 : 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">amounts of red and yellow</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-2-400);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🎵 The Sound room</div>
+              <div style="font-size:26px;color:var(--color-accent-2-700)">1 : 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">vibrations of two notes</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-500);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🗺️ The Map room</div>
+              <div style="font-size:26px;color:var(--color-accent-700)">1 : 50</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">7.2° and 360° · 800km and the Earth’s circumference</div>
+            </div>
+          </div>
+          <div class="rs-dial" style="font-size:19px;text-align:center;max-width:min(640px,92vw)">What do all three rooms <b>have in common?</b></div>
+          <div style="display:flex;flex-direction:column;gap:11px;align-items:stretch;max-width:min(640px,92vw);width:100%">
+            <sc-for list="{{bridgeOpts}}" as="o" hint-placeholder-count="3">
+              <button onClick="{{o.pick}}" style="min-height:58px;padding:14px 22px;border-radius:18px;border:3px solid {{o.bd}};background:{{o.bg}};color:var(--color-text);font-size:18px;cursor:pointer;text-align:left;line-height:1.45">{{o.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <div data-card-panel="1" style="flex:none;background:var(--color-neutral-100);border:3.5px solid var(--color-accent-400);border-radius:24px;padding:16px 22px;max-width:720px;width:min(96%,720px);box-shadow:var(--shadow-md)">
+            <sc-if value="{{cardTitle}}" hint-placeholder-val="{{false}}">
+              <div style="font-size:20px;color:var(--color-accent-700);margin-bottom:8px">{{cardTitle}}</div>
+            </sc-if>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+              <div style="font-size:19px;font-weight:700;line-height:2.4;text-wrap:pretty">
+                <sc-for list="{{r.tokens}}" as="tk" hint-placeholder-count="3">
+                  <span data-blank="{{tk.key}}" onClick="{{tk.tap}}" style="display:{{tk.disp}};min-width:{{tk.minw}};min-height:{{tk.minh}};padding:{{tk.pad}};margin:{{tk.mar}};border-radius:{{tk.rad}};border-bottom:{{tk.bb}};background:{{tk.bg}};color:{{tk.fg}};text-align:center;vertical-align:middle;cursor:{{tk.cur}};outline:{{tk.out}}">{{tk.t}}</span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
+            <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
+              <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:640px;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:7px 18px">✋ Take a word, <b>hold it down with your finger or mouse and drag it</b> onto the blank</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:15px;animation:rsPop .5s ease;margin:auto 0">
+          <div style="font-size:72px;line-height:1">🗺️</div>
+          <div class="rs-dial" style="font-size:22px;text-align:center">You have found every part of the Map secret!</div>
+          <sc-if value="{{vidBtn}}" hint-placeholder-val="{{true}}">
+            <button onClick="{{openVid}}" class="rs-pill2">🎬 Watch the story of Eratosthenes</button>
+          </sc-if>
+          <sc-if value="{{vidOpen}}" hint-placeholder-val="{{false}}">
+            <video onEnded="{{movieEnd}}" src="../v4/eratos.mp4?v=2" controls playsinline preload="metadata" style="width:min(560px,88vw);border-radius:var(--radius-md);border:3px solid var(--color-neutral-300);background:var(--color-neutral-900)"></video>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .45s ease">
+            <div style="width:min(260px,80vw);border-radius:var(--radius-md);overflow:hidden;border:4px solid var(--color-accent-500);box-shadow:var(--shadow-lg);background:var(--color-neutral-100)">
+              <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:14px;text-align:center;padding:6px">🃏 The Map secret card</div>
+              <div style="padding:var(--space-3);display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:15px;font-weight:800;text-align:center;line-height:1.6">A map is the real distance shrunk by one steady ratio!</div>
+                <div style="font-size:44px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 26px;line-height:1.3">8</div>
+              </div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">This is the last digit of the golden ratio!</div>
+          </div>
+          <a href="EvalRoom.dc.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">📝 On to the last room →</a>
+          <a href="index.html" onClick="{{goNext}}" style="font-size:15px;font-weight:700;color:var(--color-accent-700);text-decoration:underline">🏠 Back to the start</a>
+        </div>
+      </sc-if>
+
+      </div>
+
+      <!-- 이동 막대 — 무대 카드 아래층에 고정(과제 영역이 길어져도 가려지지 않음) -->
+      <div class="rs-nav">
+        <div class="rs-nav-in">
+        <button onClick="{{prev}}" aria-label="Back" class="rs-pill2" style="opacity:{{prevOp}};min-height:48px;font-size:15px;color:var(--color-neutral-700)">← Back</button>
+        <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+          <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+            <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
+          </sc-if>
+        </div>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+          <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </sc-if>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+      <div style="background:var(--color-neutral-100);border:4px solid {{toastBd}};border-radius:var(--radius-lg);padding:17px 21px;box-shadow:var(--shadow-lg);display:flex;gap:13px;align-items:flex-start">
+        <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
+        <div style="min-width:0">
+          <div style="font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:var(--color-neutral-800);margin-top:4px">{{toastBody}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{closeToast}}" aria-label="Close" class="rs-round" style="margin-left:auto;width:40px;height:40px;font-size:16px;border-width:2px">✕</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+  LOG_TK = 'ratiosense-2026';
+  LAB = 'mapV3en';
+
+  /* 배율 문제 — 100%에서 3cm인 다리를 120·200%로 확대하면? */
+  ZOOMQ = [
+    { p:120, ans:'3.6cm', opts:[['3.6 cm',1],['3.2 cm',0],['4.2 cm',0]] },
+    { p:200, ans:'6cm',   opts:[['6 cm',1],['5 cm',0],['9 cm',0]] }
+  ];
+
+  OBJS = [
+    { em:'🌉', n:'bridge', dim:'length', cells:3, real:300, shape:'rect',
+      opts:[['30,000 cm',1],['3,000 cm',0],['300 cm',0]] },
+    { em:'🛣️', n:'road', dim:'length', cells:5, real:500, shape:'road',
+      opts:[['50,000 cm',1],['5,000 cm',0],['500 cm',0]] },
+    /* 축척을 알려 주는 대신 학습자가 먼저 찾아보게 하는 물음 */
+    { em:'📏', n:'one square', dim:'length', cells:1, real:100, shape:'unit',
+      opts:[['10,000 cm',1],['100 cm',0],['1,000 cm',0]] }
+  ];
+
+  /* 대사 속 물음에 답을 고르는 선택 버튼 — 정답을 즉시 알려 주지 않고 hintNext 3단계로 안내 */
+  QUIZ = {
+    c2: {
+      q: 'The same day, the same hour — so why did a shadow fall in one place only?',
+      opts: [
+        ['Because the Earth is round', 1],
+        ['Because the sun happened to be tilted that day', 0],
+        ['Because the stick was planted at a slant', 0]
+      ],
+      okT: 'Just so! Because the Earth is round',
+      okB: 'The ground curves, so the two sticks point in different directions. That is why I decided the Earth must be a round circle.',
+      hints: [
+        'Both sticks stand straight up from the ground, and there is only one sun. So what is it that differs between the two cities?',
+        'If the ground were flat, both sticks would point the same way. Then surely the shadows would be the same too?',
+        'Try drawing the ground a different shape. What shape must it be for the two sticks to point in different directions?'
+      ]
+    },
+    c4: {
+      q: 'Put 7.2° : 360° in its simplest form. What ratio do you get?',
+      opts: [
+        ['1 : 50', 1],
+        ['1 : 5', 0],
+        ['7 : 360', 0]
+      ],
+      okT: 'That is the very ratio! 7.2° : 360° = 1 : 50',
+      okB: 'The angle between the two cities is one fiftieth of a full turn. So the distance between them must be one fiftieth of the Earth’s circumference.',
+      hints: [
+        'To simplify a ratio you divide both numbers by the same number. Here, try dividing by the first number, 7.2.',
+        '7.2 ÷ 7.2 is 1. So what is 360 ÷ 7.2? That number was in my story a moment ago.',
+        'Ten lots of 7.2 make 72, and five lots of 72 make 360. So count how many 7.2s fit in altogether.'
+      ]
+    },
+    prop: {
+      q: '1 : 50 = 800km : ( ? ) — how many km is once around the Earth?',
+      opts: [
+        ['40,000 km', 1],
+        ['4,000 km', 0],
+        ['850 km', 0]
+      ],
+      okT: 'The Earth is very nearly 40,000km — you have it! 🌍',
+      okB: 'Worked out 2,200 years ago from nothing but a shadow and the distance between two cities. It is very close to the circumference we measure today.',
+      hints: [
+        'In the ratio 1 : 50, what did you multiply the 1 by to make it 800? Whatever you do on the left you must do on the right.',
+        'You multiplied 1 by 800 to get 800, so you must multiply 50 by 800 as well, or the ratio is broken.',
+        'Work 50 × 800 out step by step. Ten lots of 800 make 8,000, and then take five of those.'
+      ]
+    }
+  };
+
+  /* 카드 문제 — 이 방을 통과해야 비밀 카드의 숫자를 받는다.
+     dist·earth 두 장은 예전 비의 비밀에 모아 두었던 지도 카드를 이 방으로 옮겨 온 것이다. */
+  BLANKS = {
+    secret: { card:true, title:'🃏 The Map secret card', rows:[
+        ['A map shows real distance shrunk by one steady ', {a:'ratio'}, '.'],
+        ['A scale of 1:10,000 shrinks real distance to one ', {a:'10,000'}, 'th of its size.'] ],
+      bank:['ratio','10,000','distance','100'] },
+    /* 없어진 마트의 비밀 문제를 지도의 맥락으로 옮긴 두 장.
+       '1개당 값' → '1cm당 실제 거리', '어느 가게가 싼가' → '어느 지도가 자세한가' */
+  };
+  /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 넷째 자리 */
+  DIGIT = { id:'map', d:'8', concept:'A map is the real distance shrunk by one steady ratio!' };
+
+  WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
+    /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
+       emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
+    ratio:    { name:'Ratia', role:'your guide to the Secret of Ratio', emoji:'🧭',
+                img:'../v4/ratio_portrait.jpg', imgBare:1, pitch:1.06, rate:1.04, gap:160 },
+    eratos:   { name:'Eratosthenes', role:'the scholar who first measured the Earth', emoji:'🧔', img:'../v4/eratos_portrait.jpg', pitch:0.82, rate:0.98, gap:190 },
+    narrator: { name:'Guide', role:'the voice that reads the questions aloud', emoji:'📣', pitch:1.14, rate:1.05, gap:150 }
+  };
+
+  state = {
+    i:0, audio:'full', cards:0, toast:null, solved:{},
+    zVal:100, zPhase:0, qpicks:{}, vidOpen:false,
+    refText:'', bridgePick:null,
+    blanks:{}, used:{}, selBlank:null
+  };
+
+  get STEPS() {
+    return [
+      { k:'story', who:'ratio',
+        say:'Hello! I am Ratia, your guide on the hunt for the Secret of Ratio. This is the Map room. We will compare maps with real distances in all sorts of ways and find the secret together. Shall we go and solve the third secret?',
+        hi:'🗺️ The Map Secret — off we go!', btn:'Start exploring! →' },
+      /* 축척이 무엇인지 먼저 짚고, 다음 단계에서 문제로 확인한다 */
+      { k:'scale', oi:2, intro:1, who:'ratio',
+        say:'A map is a picture of a wide piece of land squeezed onto paper, with every real distance shrunk by the same ratio. The scale tells you how much it was shrunk. Look at the bottom right of the map — it says the scale is 1 to 10,000. That means 1 on the map is 10,000 in real life.',
+        btn:'Got it! →' },
+      { k:'scale', oi:2, who:'ratio',
+        say:'This map has a scale of 1 to 10,000. On the map, 1 centimetre stands for how many centimetres in real life?',
+        hi:'📏 Scale 1 : 10,000' },
+      { k:'scale', oi:0, who:'ratio',
+        say:'The bridge is drawn 3 centimetres long on the map. How long is the real bridge?',
+        hi:'🌉 The bridge' },
+      { k:'zoom', zi:0, who:'ratio',
+        say:'We put the map through a copier to make it easier to see. Blown up to one hundred and twenty per cent, how many centimetres long is the bridge?' },
+      { k:'zoom', zi:1, who:'ratio',
+        say:'Last one — blown up to two hundred per cent, how many centimetres long is the bridge?' },
+      /* 축척·배율 구간을 매듭짓고 에라토스테네스 이야기로 넘어가는 다리 */
+      { k:'story', who:'ratio', art:'scholar',
+        say:'You have worked out the secret of maps! Now let us use ratio to solve a secret that is not on paper — the secret of the Earth itself. A great mathematician is waiting for you.',
+        btn:'Yes please! →' },
+      { k:'movie', who:'eratos', sid:'m-movie',
+        say:"My young friend! I am glad to meet you. I am Eratosthenes, a mathematician of ancient Greece. I have heard a most curious piece of news.",
+        hi:'🏛️ Greece, 2,200 years ago — you have met Eratosthenes' },
+      { k:'comic', ci:0, who:'eratos', sid:'m-comic1',
+        say:'In Syene, the city to the south, they say that at noon on a summer day no shadow falls at all. The sun stands straight overhead, so its light comes down alongside the stick. The angle between stick and sunlight is zero degrees.' },
+      { k:'comic', ci:1, who:'eratos', sid:'m-comic2',
+        say:'Yet at that very hour, in Alexandria to the north, the stick does cast a shadow. I measured the angle: 7.2 degrees. The same sunlight, and a different angle — that could never happen if the Earth were flat.' },
+      { k:'comic', ci:2, who:'eratos', sid:'m-comic3',
+        say:'I could hardly walk right around the Earth to measure it. But the distance between Syene and Alexandria I could measure, and it was 800km.' },
+      /* 각도의 비를 말한 그 화면에서 곧바로 지구 둘레를 구한다 */
+      { k:'prop', who:'eratos', sid:'m-prop', quiz:'prop',
+        say:'A full circle is 360 degrees. Divide 360 by 7.2 and you get 50. So 7.2 degrees to 360 degrees is 1 to 50. And that means 1 to 50 is also 800 kilometres to the circumference of the Earth. Will you work out the circumference with me?',
+        hi:'🌍 The Earth’s circumference — 1 : 50 = 800km : ?' },
+      /* 감각 사이를 잇는 자리(지침 2.3) — 앞선 방에서 만난 1 : 2와 이 방의 1 : 50을 나란히 놓고,
+         셋이 같은 구조임을 학습자가 직접 확인하게 한다. 화자가 먼저 답을 말하지 않는다. */
+      { k:'bridge', who:'ratio',
+        say:'Hold on a moment! Here is the 1 to 2 you found in the Color room and the Sound room, side by side with the 1 to 50 you found in this one. What do all three have in common? Choose below.',
+        hi:'🎨 Color · 🎵 Sound · 🗺️ Map — comparing the ratios from all three rooms' },
+      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
+      { k:'reflect', who:'ratio',
+        say:'You worked out the length of a bridge from a map, you blew the map up, and you even found the circumference of the Earth. Pick one of those. Write one line about what you did and why it worked.',
+        hi:'Bridge length · zooming in · the Earth’s circumference — write about one of them' },
+      /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
+         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
+      { k:'blank', id:'secret', who:'ratio',
+        say:'I have read what you wrote. You have studied ratio through maps, zooming and the circumference of the Earth. Now let us pull it together. Drag the word cards into the blanks.',
+        hi:'🃏 The Map secret card — fill in the blanks' },
+      { k:'finish', who:'ratio',
+        say:'You found the Map secret! You have earned the card number 8. Keep it safe!',
+        hi:'🎉 Room complete — card number 8 is yours' }
+    ];
+  }
+
+  ac() {
+    if (!this._ac) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      this._ac = new Ctx();
+      this._bus = this._ac.createGain(); this._bus.gain.value = 0.5;
+      const comp = this._ac.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.ratio.value = 6;
+      this._bus.connect(comp); comp.connect(this._ac.destination);
+    }
+    if (this._ac.state === 'suspended') this._ac.resume();
+    return this._ac;
+  }
+  sfx(kind) {
+    if (this.state.audio === 'mute') return;
+    const now = performance.now();
+    if (now - (this._lastSfx||0) < 60) return;
+    this._lastSfx = now;
+    const c = this.ac(); if (!c) return;
+    const t = c.currentTime, duck = this._speaking ? 0.35 : 1;
+    const n = (f, at, dur, vol, type) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t+at);
+      g.gain.setValueAtTime(0.0001, t+at);
+      g.gain.linearRampToValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+0.02);
+      g.gain.setValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+at+dur);
+      o.connect(g); g.connect(this._bus); o.start(t+at); o.stop(t+at+dur+0.05);
+    };
+    if (kind === 'tap') n(720, 0, 0.09, 0.08);
+    else if (kind === 'ok') {
+      [[523.25,0,0.30],[659.25,0.105,0.30],[783.99,0.21,0.34],[1046.5,0.315,0.62]]
+        .forEach((s,i) => { n(s[0], s[1], s[2], 0.115 - i*0.008, 'sine'); n(s[0]*2, s[1], s[2]*0.7, 0.026, 'sine'); });
+    }
+    else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
+    else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+  }
+
+  ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+  stopVoice() {
+    clearTimeout(this._sayT);
+    this._vtok = (this._vtok||0) + 1;
+    this._speaking = false;
+    try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
+    try { speechSynthesis.cancel(); } catch(e) {}
+  }
+  /* Korean numeral reading is not needed here: a ratio is spoken as "2 to 3". */
+  speak(text, who) {
+    this.stopVoice();
+    if (this.state.audio !== 'full') return;
+    const raw = (text === null || text === undefined) ? '' :
+      (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
+    const txt = raw
+      .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
+      /* A ratio written with a colon is spoken as "to": 2:3 → "2 to 3".
+         Units are spelled out so the voice does not read them letter by letter.
+         No word boundary before the unit: it has to catch "20mL" as well as "mL". */
+      .replace(/°/g, ' degrees ')
+      .replace(/([A-Za-z0-9.]+)\s*:\s*([A-Za-z0-9.]+)/g, '$1 to $2')
+      .replace(/mL\b/g, ' milliliters ').replace(/cm\b/g, ' centimeters ')
+      .replace(/Hz\b/g, ' hertz ')
+      .replace(/\s+/g, ' ').replace(/ ([.,!?])/g, '$1').trim();
+    if (!txt) return;
+    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    const man = window.RS_TTS;
+    if (man && man[key]) {
+      try {
+        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+           브라우저에 남은 옛 음성이 재생되지 않는다. */
+        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+        a.volume = 0.95; this._mp3 = a; this._speaking = true;
+        a.onended = () => { this._speaking = false; };
+        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
+        return;
+      } catch(e) {}
+    }
+    this._speakSynth(txt, who);
+  }
+  /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
+     크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut + 1).trim());
+        s = s.slice(cut + 1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
+  _speakSynth(txt, who) {
+    if (!('speechSynthesis' in window)) return;
+    const cfg = this.WHO[who] || this.WHO.ratio;
+    const tok = this._vtok;
+    const parts = this.chunks(txt);
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      const u = new SpeechSynthesisUtterance(parts[i]);
+      u.lang = 'en-US'; u.pitch = cfg.pitch; u.rate = cfg.rate; u.volume = 1;
+      let adv = false;
+      const go = () => { if (adv || tok !== this._vtok) return; adv = true; setTimeout(() => step(i+1), cfg.gap || 150); };
+      u.onend = go; u.onerror = go;
+      try { speechSynthesis.speak(u); } catch(e) { go(); }
+    };
+    step(0);
+  }
+
+  plog(ev, data) {
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    try {
+      if (this._user === 'guest') return;
+      this._q = this._q || [];
+      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+        seq: ++this._seq, clientTs:new Date().toISOString(),
+        eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+      if (this._q.length >= 10) this.flush();
+    } catch(e) {}
+  }
+  _logMark(ids) {
+    this._sentSet = this._sentSet || {}; this._sentIds = this._sentIds || [];
+    for (let i = 0; i < ids.length; i++) if (!this._sentSet[ids[i]]) { this._sentSet[ids[i]] = 1; this._sentIds.push(ids[i]); }
+    while (this._sentIds.length > 800) delete this._sentSet[this._sentIds.shift()];
+  }
+  _logBatch(max) {
+    this._sentSet = this._sentSet || {};
+    const q = this._q || [], batch = [], seen = {};
+    while (q.length && batch.length < max) {
+      const r = q.shift();
+      if (!r || !r.eventId || this._sentSet[r.eventId] || seen[r.eventId]) continue;
+      seen[r.eventId] = 1; batch.push(r);
+    }
+    return batch;
+  }
+  flush(beacon) {
+    try {
+      if (!this._q || !this._q.length) return;
+      const useBeacon = !!(beacon && navigator.sendBeacon);
+      if (!useBeacon && this._sending) return;
+      const batch = this._logBatch(50);
+      if (!batch.length) return;
+      const ids = batch.map(r => r.eventId);
+      const body = JSON.stringify({ token:this.LOG_TK, records:batch });
+      this._inflight = this._inflight || {};
+      this._bid = (this._bid || 0) + 1;
+      const bid = 'b' + this._bid;
+      this._inflight[bid] = batch;
+      if (useBeacon) {
+        let ok = false;
+        try { ok = navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' })); } catch(e) { ok = false; }
+        delete this._inflight[bid];
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+        return;
+      }
+      this._sending = true;
+      const settle = (ok) => {
+        delete this._inflight[bid];
+        this._sending = false;
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+      };
+      fetch(this.LOG_EP, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain' }, body })
+        .then(() => settle(true), () => settle(false));
+    } catch(e) { this._sending = false; }
+  }
+  ukey(b) { return b + ':' + (this._user || 'anon'); }
+
+  componentDidMount() {
+    this._seq = 0;
+    this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    this._guest = (this._user === 'guest');
+    if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    /* 순서 잠금 — 색깔·소리 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.
+       게스트는 자유 탐색이므로 통과. 저장소를 읽지 못하면 막지 않는다(잠금 오작동으로 참여자를 가두지 않는다). */
+    if (this._user && !this._guest && window === window.parent) {
+      let blocked = false;
+      try {
+        const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+        blocked = d.indexOf('color') < 0 || d.indexOf('sound') < 0;
+      } catch(e) { blocked = false; }
+      if (blocked) { try { location.replace('index.html'); } catch(e) {} }
+    }
+    let audio = 'full';
+    try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
+    let cards = 0;
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    this.setState({ audio, cards });
+    this._flushT = setInterval(() => this.flush(), 5000);
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    document.addEventListener('visibilitychange', this._hide);
+    this._pageHide = () => this.flush(true);
+    /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+    addEventListener('pagehide', this._pageHide);
+    this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
+    this._sayT = setTimeout(() => this.sayStep(0), 500);
+  }
+  componentWillUnmount() {
+    clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
+    document.removeEventListener('visibilitychange', this._hide);
+    removeEventListener('pagehide', this._pageHide);
+    this.stopVoice(); this.flush(true);
+  }
+
+  /* 도우미 초상 — 56×56 원형 슬롯(에라토스테네스·레시오 공통 규격).
+     who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
+     초상 뒤에 이모지를 깔아 두고, 이미지 로드에 실패하면 이미지를 감춰 이모지가 대신 보이게 한다. */
+  coachPortrait(who) {
+    const bare = !!who.imgBare;
+    return React.createElement('div', { key: who.img,
+      style: { position:'relative', width:'100%', height:'100%', borderRadius:'999px', overflow:'hidden',
+               border: bare ? 'none' : '3px solid var(--color-accent-400)' } },
+      /* 대체 표시 — 초상 아래에 깔린 이모지 원. 초상이 뜨면 완전히 가려지고, 로드에 실패하면 드러난다 */
+      React.createElement('div', { key:'fb',
+        style: { position:'absolute', inset:'0', borderRadius:'999px',
+                 background:'var(--color-accent-200)', display:'flex', alignItems:'center',
+                 justifyContent:'center', fontSize:'27px',
+                 border: bare ? '3px solid var(--color-accent-400)' : 'none' } }, who.emoji || ''),
+      React.createElement('img', { key:'p', src: who.img, alt: '',
+        onError: (e) => { try { e.currentTarget.style.display = 'none'; } catch(err) {} },
+        style: { position:'absolute', inset:'0', width:'100%', height:'100%',
+                 objectFit:'cover', display:'block' } })
+    );
+  }
+
+  sayStep(i) { const s = this.STEPS[i]; if (s) this.speak(s.say, s.who || 'ratio'); }
+  autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3200); }
+  toast(icon, title, body, kind, hold) {
+    this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    clearTimeout(this._tT);
+    this.setState({ toast: { icon, title, body, kind } });
+    const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
+    this._tT = setTimeout(close, 3000);
+  }
+  toastOk(t, b) { this.plog('success', { slide: this.state.i }); this.toast('✅', t, b, 'ok'); }
+  toastRetry(b) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', 'Try once more!', b); }
+  markSolved() { const s = Object.assign({}, this.state.solved); s[this.state.i] = true; this.setState({ solved: s }); }
+  hintNext(key, stages) {
+    this._tries = this._tries || {};
+    const n = (this._tries[key] = (this._tries[key] || 0) + 1);
+    return stages[Math.min(n, stages.length) - 1];
+  }
+  go(d) {
+    const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
+    if (n === this.state.i) return;
+    this.stopVoice();
+    clearTimeout(this._tT); clearTimeout(this._autoT);
+    const patch = { i:n, toast:null, selBlank:null };
+    if (this.STEPS[n].k === 'zoom') { patch.zPhase = 0; patch.zVal = 100; }
+    if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); this.awardDigit(); }, 350);
+    this.setState(patch);
+    this.plog('nav', { to:n });
+    this._sayT = setTimeout(() => this.sayStep(n), 380);
+  }
+  confetti() {
+    try {
+      for (let i=0;i<28;i++) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:-16px;width:11px;height:17px;border-radius:3px;z-index:200;pointer-events:none;animation:rsFall linear forwards';
+        d.style.left = (4 + Math.random()*92) + 'vw';
+        d.style.background = ['var(--color-accent)','var(--color-accent-400)','var(--color-accent-2-500)','var(--color-accent-500)','var(--color-accent-700)','var(--color-accent-2-300)'][i%6];
+        d.style.animationDelay = (Math.random()*0.5) + 's';
+        d.style.animationDuration = (1.3 + Math.random()*1.1) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 3400);
+      }
+    } catch(e) {}
+  }
+  cycleAudio() {
+    const order = ['full','sfx','mute'];
+    const next = order[(order.indexOf(this.state.audio) + 1) % 3];
+    if (next !== 'full') this.stopVoice();
+    try { localStorage.setItem('rs3_audio', next); } catch(e) {}
+    this.setState({ audio: next });
+    if (next === 'full') this._sayT = setTimeout(() => this.sayStep(this.state.i), 150);
+    else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
+  }
+
+  svgEl(vb, styleObj, html, key) {
+    return React.createElement('svg', { key: key || vb, viewBox: vb, style: styleObj, dangerouslySetInnerHTML: { __html: html } });
+  }
+
+  /* 알렉산드리아 도서관 — 에라토스테네스가 일하던 곳. 배경 그림으로만 쓰고 글씨는 넣지 않는다 */
+  /* 지도를 그리는 옛 학자 — 두루마리·지구본·책상만 남긴 간단한 장면 */
+  scholarSvg() {
+    const ink = 'var(--color-neutral-800)', st1 = 'var(--color-neutral-200)', st2 = 'var(--color-neutral-300)';
+    const sky = 'var(--color-accent-100)', robe = '#3f5b86', skin = '#e8c39a', wood = '#b98b5e';
+    let g = '<rect x="0" y="0" width="520" height="330" rx="14" style="fill:' + sky + '"/>';
+    /* 창 너머 도시 */
+    g += '<rect x="24" y="34" width="150" height="150" rx="8" style="fill:var(--color-neutral-100)"/>';
+    [0,1,2].forEach(i => { g += '<rect x="' + (40 + i*44) + '" y="' + (120 - i*14) + '" width="30" height="' + (64 + i*14) + '" style="fill:' + st2 + '"/>'; });
+    /* 책장과 두루마리 */
+    g += '<rect x="366" y="24" width="130" height="176" rx="6" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    [0,1,2].forEach(r => { g += '<line x1="366" y1="' + (80 + r*44) + '" x2="496" y2="' + (80 + r*44) + '" style="stroke:' + ink + ';stroke-width:2"/>';
+      [0,1,2,3].forEach(c => { g += '<circle cx="' + (386 + c*30) + '" cy="' + (60 + r*44) + '" r="10" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2"/>'; }); });
+    /* 학자 */
+    g += '<circle cx="252" cy="106" r="34" style="fill:' + skin + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<path d="M218 100 Q252 62 286 100 Q286 76 252 70 Q218 76 218 100 Z" style="fill:var(--color-neutral-500)"/>';
+    g += '<path d="M232 128 Q252 158 272 128 Q262 148 252 148 Q242 148 232 128 Z" style="fill:var(--color-neutral-500)"/>';
+    g += '<path d="M196 224 Q200 152 252 148 Q304 152 308 224 Z" style="fill:' + robe + ';stroke:' + ink + ';stroke-width:2.5;stroke-linejoin:round"/>';
+    /* 책상과 지도 */
+    g += '<rect x="20" y="224" width="480" height="16" rx="4" style="fill:' + wood + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<rect x="150" y="196" width="210" height="30" rx="4" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<path d="M170 216 Q210 200 250 214 Q290 226 340 208" style="fill:none;stroke:' + ink + ';stroke-width:2;stroke-dasharray:6 5"/>';
+    /* 지구본 */
+    g += '<circle cx="424" cy="252" r="34" style="fill:#bcd6e8;stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<path d="M400 236 Q424 246 448 236 M398 262 Q424 272 450 262" style="fill:none;stroke:' + ink + ';stroke-width:2"/>';
+    g += '<ellipse cx="424" cy="252" rx="14" ry="34" style="fill:none;stroke:' + ink + ';stroke-width:2"/>';
+    g += '<rect x="418" y="286" width="12" height="20" style="fill:' + wood + ';stroke:' + ink + ';stroke-width:2"/>';
+    /* 두루마리 몇 개 */
+    [0,1,2].forEach(i => { g += '<rect x="' + (36 + i*40) + '" y="' + (252 + (i%2)*18) + '" width="44" height="14" rx="7" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2"/>'; });
+    return this.svgEl('0 0 520 330', { width:'min(520px,90%)', maxWidth:'100%', display:'block' }, g, 'scholar');
+  }
+
+  librarySvg() {
+    const ink = 'var(--color-neutral-800)', st1 = 'var(--color-neutral-200)', st2 = 'var(--color-neutral-300)';
+    const sky = 'var(--color-accent-100)', sea = 'var(--color-accent-2-200)', acc = 'var(--color-accent-400)';
+    let g = '<rect x="0" y="0" width="520" height="300" rx="14" style="fill:' + sky + '"/>';
+    g += '<circle cx="432" cy="62" r="26" style="fill:var(--color-accent-300)"/>';
+    g += '<rect x="0" y="236" width="520" height="64" style="fill:' + sea + '"/>';
+    /* 등대 */
+    g += '<rect x="446" y="120" width="34" height="118" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<rect x="452" y="92" width="22" height="30" style="fill:' + st2 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<circle cx="463" cy="86" r="9" style="fill:var(--color-accent-300);stroke:' + ink + ';stroke-width:2.5"/>';
+    /* 도서관 본관 — 계단 · 기둥 · 박공지붕 */
+    g += '<rect x="46" y="228" width="330" height="12" style="fill:' + st2 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<rect x="60" y="214" width="302" height="14" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    for (let i = 0; i < 7; i++) {
+      const x = 78 + i * 44;
+      g += '<rect x="' + x + '" y="118" width="26" height="96" rx="3" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+      g += '<line x1="' + (x+8) + '" y1="124" x2="' + (x+8) + '" y2="208" style="stroke:' + st2 + ';stroke-width:3"/>';
+      g += '<line x1="' + (x+17) + '" y1="124" x2="' + (x+17) + '" y2="208" style="stroke:' + st2 + ';stroke-width:3"/>';
+    }
+    g += '<rect x="60" y="104" width="302" height="16" style="fill:' + st2 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<path d="M52 104 L211 46 L370 104 Z" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5;stroke-linejoin:round"/>';
+    g += '<circle cx="211" cy="84" r="12" style="fill:' + acc + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    /* 두루마리 몇 개 */
+    for (let i = 0; i < 3; i++) {
+      const x = 392 + (i % 2) * 26, y = 200 + i * 14;
+      g += '<rect x="' + x + '" y="' + y + '" width="30" height="10" rx="5" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2"/>';
+    }
+    return this.svgEl('0 0 520 300', { width: 'min(520px,92%)', maxWidth: '100%', display: 'block' }, g, 'lib');
+  }
+
+  mapSvg(obj, f) {
+    const u = 62 * f, cells = obj.cells;
+    const padL = 52, gy = 118;
+    const W = Math.max(520, padL * 2 + u * cells + 30), H = 250;
+    const ink = 'var(--color-neutral-700)';
+    let g = '<rect x="0" y="0" width="' + W + '" height="' + H + '" rx="12" style="fill:var(--color-accent-100)"/>';
+    /* 강 — 다리 문제에서만 다리 아래를 가로지른다 */
+    if (obj.shape === 'rect') {
+    g += '<rect x="0" y="' + (gy - 34) + '" width="' + W + '" height="88" style="fill:#bcd6e8"/>';
+    g += '<path d="M0 ' + (gy - 34) + ' Q' + (W*0.3) + ' ' + (gy - 46) + ' ' + W + ' ' + (gy - 30) + '" style="fill:none;stroke:#8fb6cf;stroke-width:3"/>';
+    g += '<path d="M0 ' + (gy + 54) + ' Q' + (W*0.6) + ' ' + (gy + 66) + ' ' + W + ' ' + (gy + 50) + '" style="fill:none;stroke:#8fb6cf;stroke-width:3"/>';
+    }
+    const bx = padL, bw = u * cells, byy = gy + 6;
+    if (obj.shape === 'unit') {
+      /* 집 한 채 — 가로 1cm */
+      const hh = u * 0.72;
+      g += '<rect x="' + bx + '" y="' + (byy + 4) + '" width="' + bw.toFixed(1) + '" height="' + hh.toFixed(1) + '" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2.5"/>';
+      g += '<path d="M' + (bx - 8) + ' ' + (byy + 4) + ' L' + (bx + bw/2).toFixed(1) + ' ' + (byy - hh*0.55).toFixed(1) + ' L' + (bx + bw + 8).toFixed(1) + ' ' + (byy + 4) + ' Z" style="fill:var(--color-accent-400);stroke:' + ink + ';stroke-width:2.5;stroke-linejoin:round"/>';
+      g += '<rect x="' + (bx + bw*0.36).toFixed(1) + '" y="' + (byy + hh*0.42).toFixed(1) + '" width="' + (bw*0.28).toFixed(1) + '" height="' + (hh*0.58).toFixed(1) + '" style="fill:var(--color-neutral-400);stroke:' + ink + ';stroke-width:2"/>';
+    } else if (obj.shape === 'road') {
+      /* 도로 — 가로 5cm, 가운데 차선 */
+      g += '<rect x="' + bx + '" y="' + byy + '" width="' + bw.toFixed(1) + '" height="26" style="fill:var(--color-neutral-400);stroke:' + ink + ';stroke-width:2.5"/>';
+      const n = Math.max(3, Math.round(cells * 2));
+      for (let k = 0; k < n; k++) {
+        const w0 = bw / n * 0.5, x = bx + bw / n * k + w0 * 0.5;
+        g += '<rect x="' + x.toFixed(1) + '" y="' + (byy + 11) + '" width="' + w0.toFixed(1) + '" height="4" style="fill:var(--color-neutral-100)"/>';
+      }
+    } else {
+      /* 다리 — 강을 가로지른다 */
+      g += '<line x1="0" y1="' + (byy+14) + '" x2="' + bx + '" y2="' + (byy+14) + '" style="stroke:var(--color-neutral-300);stroke-width:16"/>';
+      g += '<line x1="' + (bx+bw) + '" y1="' + (byy+14) + '" x2="' + W + '" y2="' + (byy+14) + '" style="stroke:var(--color-neutral-300);stroke-width:16"/>';
+      g += '<rect x="' + bx + '" y="' + (byy+6) + '" width="' + bw.toFixed(1) + '" height="16" style="fill:var(--color-neutral-400);stroke:' + ink + ';stroke-width:2"/>';
+      g += '<rect x="' + bx + '" y="' + byy + '" width="' + bw.toFixed(1) + '" height="8" style="fill:var(--color-accent-400);stroke:' + ink + ';stroke-width:2"/>';
+      [0.25,0.5,0.75].forEach(t => { const x = bx + bw*t;
+        g += '<line x1="' + x.toFixed(1) + '" y1="' + (byy-12) + '" x2="' + x.toFixed(1) + '" y2="' + byy + '" style="stroke:' + ink + ';stroke-width:2.5"/>'; });
+      g += '<path d="M' + bx + ' ' + (byy-12) + ' Q' + (bx+bw/2).toFixed(1) + ' ' + (byy-26) + ' ' + (bx+bw).toFixed(1) + ' ' + (byy-12) + '" style="fill:none;stroke:' + ink + ';stroke-width:2.5"/>';
+    }
+    /* 다리 길이 — 지도에 적힌 값(확대해도 그대로 3cm로 주어진 값) */
+    const ly = byy + 54;
+    g += '<line x1="' + bx + '" y1="' + ly + '" x2="' + (bx+bw).toFixed(1) + '" y2="' + ly + '" style="stroke:' + ink + ';stroke-width:2"/>';
+    g += '<line x1="' + bx + '" y1="' + (ly-6) + '" x2="' + bx + '" y2="' + (ly+6) + '" style="stroke:' + ink + ';stroke-width:2"/>';
+    g += '<line x1="' + (bx+bw).toFixed(1) + '" y1="' + (ly-6) + '" x2="' + (bx+bw).toFixed(1) + '" y2="' + (ly+6) + '" style="stroke:' + ink + ';stroke-width:2"/>';
+    /* 지금 보이는 지도에서의 길이 — 확대했으면 그만큼 늘어난 값을 적는다 */
+    const shown = Math.round(cells * f * 100) / 100;
+    g += '<text x="' + (bx+bw/2).toFixed(1) + '" y="' + (ly+20) + '" text-anchor="middle" style="font-size:15px;font-weight:800;fill:' + ink + '">' + shown + 'cm</text>';
+    /* 축척은 원래 크기(100%)일 때만 — 확대하면 축척이 달라지므로 적지 않는다 */
+    if (f === 1) {
+      g += '<text x="' + (W-18) + '" y="' + (H-16) + '" text-anchor="end" style="font-size:14px;font-weight:800;fill:' + ink + '">Scale 1 : 10,000</text>';
+    }
+    return this.svgEl('0 0 ' + W + ' ' + H, { width: Math.min(W, 880) + 'px', maxWidth: '100%', display: 'block' }, g, 'map' + cells + '-' + f);
+  }
+
+  sceneImg(src, key, maxH) {
+    return React.createElement('img', { src, alt: '', key,
+      style: { display:'block', maxWidth:'min(440px,86vw)', maxHeight: maxH || '52vh', width:'auto', height:'auto',
+        borderRadius:'var(--radius-lg)', border:'3px solid var(--color-neutral-300)', boxShadow:'var(--shadow-md)',
+        background:'var(--color-neutral-100)' } });
+  }
+
+  propSvg() {
+    const g =
+      '<circle cx="150" cy="150" r="118" style="fill:none;stroke:var(--color-neutral-400);stroke-width:2;stroke-dasharray:4 7"/>' +
+      '<circle cx="150" cy="150" r="96" style="fill:var(--color-accent-2-200);stroke:var(--color-accent-2-500);stroke-width:4"/>' +
+      '<circle cx="150" cy="150" r="4.5" style="fill:var(--color-neutral-900)"/>' +
+      '<line x1="150" y1="150" x2="150" y2="54" style="stroke:var(--color-neutral-700);stroke-width:3;stroke-dasharray:7 5"/>' +
+      '<line x1="150" y1="150" x2="108" y2="64" style="stroke:var(--color-neutral-700);stroke-width:3;stroke-dasharray:7 5"/>' +
+      '<path d="M108 64 A96 96 0 0 1 150 54" style="fill:none;stroke:var(--color-accent);stroke-width:8"/>' +
+      '<text x="158" y="120" style="font-size:16px;font-weight:800;fill:var(--color-accent-700)">7.2°</text>' +
+      '<text x="60" y="52" style="font-size:15px;font-weight:800;fill:var(--color-accent-700)">800km</text>' +
+      '<text x="150" y="48" style="font-size:12px;font-weight:800;fill:var(--color-neutral-800)">Syene</text>' +
+      '<text x="22" y="82" style="font-size:12px;font-weight:800;fill:var(--color-neutral-800)">Alexandria</text>' +
+      '<text x="150" y="292" text-anchor="middle" style="font-size:15px;font-weight:800;fill:var(--color-neutral-700)">Once around the Earth = 360° = ? km</text>';
+    return this.svgEl('0 0 300 300', { width: 'min(344px,84vw)', display: 'block' }, g, 'prop');
+  }
+
+  /* 요약 만화 4컷 — 새 서사(① 시에네 0° ② 알렉산드리아 7.2° ③ 두 도시 800km ④ 각도비 1:50)에 맞춘 도해.
+     사진이 없는 장면은 모두 디자인 시스템 토큰만 쓴 인라인 SVG로 그립니다. */
+  comicSvg(k, solved) {
+    const ink = 'var(--color-neutral-900)', paper = 'var(--color-neutral-100)', sub = 'var(--color-neutral-700)';
+    const acc = 'var(--color-accent)', acc6 = 'var(--color-accent-600)', acc7 = 'var(--color-accent-700)';
+    const acc1 = 'var(--color-accent-100)', acc2 = 'var(--color-accent-200)', acc3 = 'var(--color-accent-300)';
+    const gr1 = 'var(--color-accent-2-100)', gr3 = 'var(--color-accent-2-300)', gr6 = 'var(--color-accent-2-600)', gr7 = 'var(--color-accent-2-700)';
+    const W = 360, H = 282;
+    const frame = '<rect x="1.5" y="1.5" width="' + (W-3) + '" height="' + (H-3) + '" rx="12" style="fill:' + paper + ';stroke:' + ink + ';stroke-width:3"/>';
+    const title = (t) => '<text x="14" y="25" style="font-size:14.5px;font-weight:800;fill:' + ink + '">' + t + '</text>';
+    const tx = (x,y,s,fs,fill,anc) => '<text x="' + x + '" y="' + y + '" ' + (anc ? 'text-anchor="' + anc + '" ' : '') +
+      'style="font-size:' + fs + 'px;font-weight:800;fill:' + (fill || ink) + '">' + s + '</text>';
+    const sun = (cx,cy,r) => {
+      let s = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" style="fill:' + acc + ';stroke:' + acc6 + ';stroke-width:2"/>';
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 4;
+        s += '<line x1="' + (cx + Math.cos(a)*(r+3)).toFixed(1) + '" y1="' + (cy + Math.sin(a)*(r+3)).toFixed(1) +
+             '" x2="' + (cx + Math.cos(a)*(r+8)).toFixed(1) + '" y2="' + (cy + Math.sin(a)*(r+8)).toFixed(1) +
+             '" style="stroke:' + acc6 + ';stroke-width:2.5;stroke-linecap:round"/>';
+      }
+      return s;
+    };
+    const stick = (x, top, base) =>
+      '<line x1="' + x + '" y1="' + top + '" x2="' + x + '" y2="' + base + '" style="stroke:' + sub + ';stroke-width:6;stroke-linecap:round"/>' +
+      '<rect x="' + (x-9) + '" y="' + (base-2) + '" width="18" height="6" rx="2" style="fill:' + sub + '"/>';
+    const badge = (cx, y, t, on) =>
+      '<rect x="' + (cx-46) + '" y="' + y + '" width="92" height="21" rx="10" style="fill:' + (on ? acc2 : gr1) + ';stroke:' + (on ? acc6 : gr6) + ';stroke-width:2"/>' +
+      tx(cx, y+15, t, 12, on ? acc7 : gr7, 'middle');
+
+    let body;
+    if (k === 0) {
+      /* 컷 1 — 해·햇빛 선·막대와 '그림자 0°' 표시만 남긴 간결한 그림 */
+      body =
+        '<rect x="6" y="200" width="348" height="76" rx="10" style="fill:' + gr1 + '"/>' +
+        '<line x1="6" y1="200" x2="354" y2="200" style="stroke:' + gr6 + ';stroke-width:2.5"/>' +
+        sun(150, 60, 20) +
+        [60, 100, 200, 240, 300].map(x =>
+          '<line x1="' + x + '" y1="90" x2="' + x + '" y2="196" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>').join('') +
+        '<line x1="150" y1="90" x2="150" y2="196" style="stroke:' + acc + ';stroke-width:5;stroke-linecap:round"/>' +
+        stick(270, 152, 200) +
+        '<line x1="270" y1="142" x2="270" y2="200" style="stroke:' + acc + ';stroke-width:3;stroke-dasharray:7 6"/>' +
+        badge(270, 214, 'stick and sunlight 0°', true);
+    } else if (k === 1) {
+      /* 컷 2 — 같은 날 같은 시각, 두 도시 비교 (물음을 던지는 장면) */
+      body = '<rect x="242" y="8" width="106" height="22" rx="11" style="fill:' + acc2 + ';stroke:' + acc6 + ';stroke-width:2"/>' +
+        '<line x1="180" y1="40" x2="180" y2="272" style="stroke:var(--color-neutral-300);stroke-width:2;stroke-dasharray:6 6"/>' +
+        '<rect x="8" y="204" width="166" height="70" rx="8" style="fill:' + gr1 + '"/>' +
+        '<line x1="8" y1="204" x2="174" y2="204" style="stroke:' + gr6 + ';stroke-width:2.5"/>' +
+        sun(60, 64, 12) +
+        [92, 128].map(x => '<line x1="' + x + '" y1="82" x2="' + x + '" y2="200" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>').join('') +
+        stick(92, 154, 204) +
+        badge(90, 214, 'stick and sunlight 0°', false) +
+        '<rect x="186" y="204" width="166" height="70" rx="8" style="fill:' + gr1 + '"/>' +
+        '<line x1="186" y1="204" x2="352" y2="204" style="stroke:' + gr6 + ';stroke-width:2.5"/>' +
+        sun(322, 58, 12) +
+        '<line x1="300" y1="76" x2="252" y2="200" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>' +
+        '<line x1="334" y1="82" x2="290" y2="200" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>' +
+        stick(252, 154, 204) +
+        '<line x1="252" y1="204" x2="222" y2="204" style="stroke:' + ink + ';stroke-width:7;stroke-linecap:round"/>' +
+        '<line x1="252" y1="154" x2="222" y2="204" style="stroke:' + acc6 + ';stroke-width:2;stroke-dasharray:5 4"/>' +
+        '<path d="M252 188 A34 34 0 0 1 234.5 183.1" style="fill:none;stroke:' + acc7 + ';stroke-width:3"/>' +
+        badge(266, 214, 'shadow 7.2°', true) +
+        badge(266, 214, 'stick and sunlight 7.2°', true);
+    } else if (k === 1) {
+    } else if (k === 2) {
+      /* 컷 3 — 지구 전체는 못 재지만 두 도시 사이 800km는 잴 수 있다 */
+      const cy = 391.3, r = 210, ax = 110, bx = 250, ay = 193.3;
+      body = title('Panel 3 · What I can measure — the gap between two cities') +
+        '<path d="M10 268 A' + r + ' ' + r + ' 0 0 1 350 268 Z" style="fill:' + gr1 + ';stroke:' + gr6 + ';stroke-width:3"/>' +
+        '<circle cx="58" cy="86" r="26" style="fill:' + acc1 + ';stroke:' + acc3 + ';stroke-width:2.5"/>' +
+        '<path d="M46 74 L70 98 M70 74 L46 98" style="stroke:' + sub + ';stroke-width:4;stroke-linecap:round"/>' +
+        tx(58, 126, 'I cannot walk', 10.5, sub, 'middle') +
+        tx(58, 140, 'right around the Earth', 10.5, sub, 'middle') +
+        '<path d="M' + ax + ' ' + ay + ' A' + r + ' ' + r + ' 0 0 1 ' + bx + ' ' + ay + '" style="fill:none;stroke:' + acc + ';stroke-width:7;stroke-linecap:round"/>' +
+        '<circle cx="' + ax + '" cy="' + ay + '" r="6" style="fill:' + acc7 + '"/>' +
+        '<circle cx="' + bx + '" cy="' + ay + '" r="6" style="fill:' + acc7 + '"/>' +
+        '<line x1="' + ax + '" y1="' + (ay-22) + '" x2="' + ax + '" y2="' + (ay+8) + '" style="stroke:' + sub + ';stroke-width:2"/>' +
+        '<line x1="' + bx + '" y1="' + (ay-22) + '" x2="' + bx + '" y2="' + (ay+8) + '" style="stroke:' + sub + ';stroke-width:2"/>' +
+        '<line x1="' + ax + '" y1="' + (ay-16) + '" x2="' + bx + '" y2="' + (ay-16) + '" style="stroke:' + sub + ';stroke-width:2;stroke-dasharray:6 5"/>' +
+        '<rect x="150" y="' + (ay-33) + '" width="60" height="22" rx="11" style="fill:' + acc2 + ';stroke:' + acc6 + ';stroke-width:2"/>' +
+        tx(180, ay-17, '800km', 13, acc7, 'middle') +
+        tx(ax, ay+26, 'Alexandria', 11.5, gr7, 'middle') +
+        tx(bx, ay+26, 'Syene', 11.5, gr7, 'middle') +
+        '<path d="M232 96 l10 12 l20 -26" style="fill:none;stroke:' + gr6 + ';stroke-width:5;stroke-linecap:round;stroke-linejoin:round"/>' +
+        tx(272, 106, 'But the gap between the cities', 11, gr7) +
+        tx(272, 122, 'I can measure!', 11, gr7);
+    } else {
+      /* 컷 4 — 중심각 7.2°와 한 바퀴 360°의 비 */
+      const cx = 104, cy0 = 172, R = 74;
+      const th = -116 * Math.PI / 180;
+      const px = (cx + R * Math.cos(th)).toFixed(1), py = (cy0 + R * Math.sin(th)).toFixed(1);
+      const ix = (cx + 42 * Math.cos(th)).toFixed(1), iy = (cy0 + 42 * Math.sin(th)).toFixed(1);
+      body = title('Panel 4 · A ratio of angles — 7.2° and 360°') +
+        '<circle cx="' + cx + '" cy="' + cy0 + '" r="' + R + '" style="fill:' + gr1 + ';stroke:' + gr6 + ';stroke-width:3"/>' +
+        '<path d="M' + cx + ' ' + cy0 + ' L' + cx + ' ' + (cy0-42) + ' A42 42 0 0 0 ' + ix + ' ' + iy + ' Z" style="fill:' + acc2 + '"/>' +
+        '<line x1="' + cx + '" y1="' + cy0 + '" x2="' + cx + '" y2="' + (cy0-R) + '" style="stroke:' + sub + ';stroke-width:2.5;stroke-dasharray:6 5"/>' +
+        '<line x1="' + cx + '" y1="' + cy0 + '" x2="' + px + '" y2="' + py + '" style="stroke:' + sub + ';stroke-width:2.5;stroke-dasharray:6 5"/>' +
+        '<path d="M' + px + ' ' + py + ' A' + R + ' ' + R + ' 0 0 1 ' + cx + ' ' + (cy0-R) + '" style="fill:none;stroke:' + acc + ';stroke-width:7;stroke-linecap:round"/>' +
+        '<circle cx="' + cx + '" cy="' + cy0 + '" r="4" style="fill:' + ink + '"/>' +
+        tx(cx+8, cy0-14, '7.2°', 13, acc7) +
+        tx(96, 76, '800km', 12, acc7, 'end') +
+        tx(cx, cy0+R+22, 'Once around the Earth = 360°', 12, gr7, 'middle') +
+        '<rect x="200" y="86" width="148" height="118" rx="14" style="fill:' + acc1 + ';stroke:' + acc3 + ';stroke-width:3"/>' +
+        tx(274, 116, '360° ÷ 7.2° =', 14, ink, 'middle') +
+        tx(274, 146, solved ? '50' : '?', 26, solved ? gr7 : acc7, 'middle') +
+        '<line x1="216" y1="160" x2="332" y2="160" style="stroke:' + acc3 + ';stroke-width:2"/>' +
+        tx(274, 182, solved ? '7.2° : 360° = 1 : 50' : '7.2° : 360° = ( ? )', 13, solved ? gr7 : sub, 'middle');
+    }
+    return this.svgEl('0 0 ' + W + ' ' + H, { width: 'min(560px,92vw)', display: 'block' }, frame + body, 'comic' + k + (solved ? 's' : ''));
+  }
+
+
+  scalePick(ok, obj) {
+    if (this.state.solved[this.state.i]) return;
+    if (ok) {
+      this.plog('scale', { obj: obj.n });
+      this.markSolved();
+      const tot = (obj.cells * 10000).toLocaleString();
+      this.toastOk('That\'s right! ' + tot + 'cm = ' + obj.real + 'm!',
+        'On the map ' + obj.cells + 'cm × 10,000 = ' + tot + 'cm = ' + obj.real + 'm! That is 100m repeated ' + obj.cells + ' times over.');
+      this.autoNext(3400);
+    } else {
+      this.toastRetry(this.hintNext('scale' + obj.n, [
+        'How many metres is one square in real life? Shall we look again at the 100m above the squares?',
+        'Repeat one square of 100m as many times as there are squares and you get the real length. How many times is that?',
+        'An answer in cm is not the real distance here. Shall we look for the answer written in m?'
+      ]));
+    }
+  }
+
+  zoomPick(ok) {
+    const st = this.STEPS[this.state.i], zq = this.ZOOMQ[st.zi];
+    if (!zq) return;
+    if (!ok) {
+      this.toastRetry(this.hintNext('zoom' + st.zi, [
+        'Stretching the map to ' + zq.p + '% stretches the length on the map by just as much.',
+        zq.p + '% means ' + (zq.p/100) + ' times. So what is ' + (zq.p/100) + ' times 3cm?',
+        '3 × ' + (zq.p/100) + ' — work it out and choose.'
+      ]));
+      return;
+    }
+    this.sfx('ok');
+    this.plog('zoom', { pct: zq.p });
+    this.markSolved();
+    this.toast('✅', 'That\'s right! ' + zq.ans, '3cm × ' + (zq.p/100) + ' = ' + zq.ans
+      + (st.zi === this.ZOOMQ.length - 1 ? ' — however big you blow the map up, the real bridge stays the same!' : ''), 'ok');
+  }
+
+  /* 대사 속 물음에 답을 고르는 선택 버튼 — 오답이면 3단계 힌트, 정답이면 개념 문장과 함께 다음으로 */
+  quizPick(id, opt) {
+    const S = this.state, st = this.STEPS[S.i], q = this.QUIZ[id];
+    if (S.solved[S.i]) return;
+    const picks = Object.assign({}, S.qpicks);
+    picks[S.i] = (picks[S.i] || []).concat([opt[0]]);
+    this.setState({ qpicks: picks });
+    this.plog('quiz', { step: st.sid || st.k, pick: opt[0], ok: !!opt[1] });
+    if (opt[1]) {
+      this.markSolved();
+      if (id === 'prop') this.plog('prop', { ans: 40000 });
+      this.toastOk(q.okT, q.okB);
+    } else {
+      this.toastRetry(this.hintNext('quiz-' + id, q.hints));
+    }
+  }
+
+  movieEnd() { this.plog('movie', { done: 1 }); }
+
+  submitReflect() {
+    const v = (this.state.refText || '').trim();
+    if (!v) { this.toastRetry('One line is plenty — say it your own way!'); return; }
+    this.plog('reflect', { room: 'map', text: v.slice(0, 300) });
+    this.markSolved();
+    this.sfx('ok');
+    this.go(1);
+  }
+
+  /* ── 감각 잇기 (bridge) — 지침 2.3 ──
+     세 방에서 만난 비를 견주게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
+  BRIDGE = [
+    { t:'In all three, the sizes changed but the relationship held as long as the ratio stayed the same', ok:1,
+      fb:'Exactly! Different amounts of paint, different vibrations, different map sizes — as long as the ratio was the same, the relationship held.' },
+    { t:'In all three, bigger numbers made things more accurate', ok:0,
+      fb:'Bigger numbers did not make the color redder or the map more accurate. Shall we think again?' },
+    { t:'Maps have nothing to do with color or sound', ok:0,
+      fb:'All three rooms gave you a ratio comparing two quantities. Shall we look at that again?' }
+  ];
+  bridgePick(ix) {
+    const o = this.BRIDGE[ix];
+    this.plog('bridge', { room:'map', pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.sfx('oops'); this.toastRetry(o.fb); return; }
+    this.markSolved();
+    this.setState({ bridgePick: ix });
+    this.toast('🔗', 'The three rooms link up!', o.fb, 'ok');
+  }
+
+  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
+     네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
+  awardDigit() {
+    const D = this.DIGIT;
+    let got = [];
+    try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+    if (got.indexOf(D.id) < 0) {
+      got.push(D.id);
+      try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
+    }
+    this.plog('card', { id: D.id, digit: D.d });
+    this.setState({ cards: got.length });
+  }
+
+  /* 자막 다듬기 —
+     (1) 인물 이름은 작은따옴표로 감싸 대사 속에서 눈에 띄게 한다(이미 감싼 것은 그대로 둔다).
+     (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
+     화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
+     '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
+  NAMES = ['Eratosthenes','Signac','Ratia','Munsell','Munch'];
+  markNames(t) {
+    let s = String(t);
+    this.NAMES.forEach(n => {
+      s = s.replace(new RegExp("(?<!['‘’\\w])" + n + "(?!['‘’\\w])", 'g'),
+                    "'" + n + "'");
+    });
+    return s;
+  }
+  wrapSay(t) {
+    if (!t) return '';
+    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+  }
+
+  blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
+  blankKeys() {
+    const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
+    def.rows.forEach((row, ri) => row.forEach((tk, ti) => { if (typeof tk === 'object') keys.push({ key: id+'-'+ri+'-'+ti, a: tk.a }); }));
+    return keys;
+  }
+  place(word) {
+    const keys = this.blankKeys();
+    const blanks = Object.assign({}, this.state.blanks);
+    let target = this.state.selBlank && !blanks[this.state.selBlank]
+      ? keys.find(k => k.key === this.state.selBlank)
+      : keys.find(k => !blanks[k.key]);
+    if (!target) return;
+    if (target.a !== word && !this.state.selBlank) {
+      const other = keys.find(k => !blanks[k.key] && k.a === word);
+      if (other) target = other;
+    }
+    if (target.a === word) {
+      blanks[target.key] = word;
+      const used = Object.assign({}, this.state.used);
+      const uk = this.STEPS[this.state.i].id + '|' + word;
+      used[uk] = (used[uk] || 0) + 1;
+      this.sfx('ok');
+      this.setState({ blanks, used, selBlank: null });
+      if (keys.every(k => blanks[k.key])) {
+        setTimeout(() => {
+          this.plog('summary', { no: 1, a: keys.map(k => blanks[k.key]) });
+          this.markSolved();
+          this.confetti();
+          this.toast('✅', 'All wrapped up!', 'You have put the Map secret into words. Head back and carry on with the next adventure!', 'ok');
+          this.autoNext(3400);
+        }, 320);
+      }
+    } else {
+      this.sfx('oops');
+      this.toast('🤔', 'Try once more!', this.hintNext('blank', [
+        'Think back — what did the map shrink real distance by?',
+        'A scale of 1:10,000 shrinks the real thing to one what-th of its size? Look at the number after the colon.',
+        'Shall we try a different card? Read the sentence out loud and the right word will stand out.'
+      ]));
+    }
+  }
+  chipDown(word) {
+    return (e) => {
+      if (e.button === 1 || e.button === 2) return;
+      const src = e.currentTarget;
+      const g = document.createElement('div');
+      g.textContent = word;
+      g.style.cssText = 'position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:18px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;color:var(--color-accent-700);opacity:.94;transform:translate(-50%,-50%)';
+      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+      document.body.appendChild(g);
+      let moved = false;
+      const mv = (ev) => { moved = true; g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
+      const up = (ev) => {
+        document.removeEventListener('pointermove', mv);
+        document.removeEventListener('pointerup', up);
+        g.remove();
+        if (!moved) return;
+        const el = document.elementFromPoint(ev.clientX, ev.clientY);
+        const slot = el && el.closest ? el.closest('[data-blank]') : null;
+        if (slot && slot.getAttribute('data-blank')) {
+          this.setState({ selBlank: slot.getAttribute('data-blank') });
+          setTimeout(() => this.place(word), 0);
+        }
+      };
+      document.addEventListener('pointermove', mv);
+      document.addEventListener('pointerup', up);
+      try { src.releasePointerCapture(e.pointerId); } catch(err) {}
+    };
+  }
+
+  renderVals() {
+    const S = this.state, st = this.STEPS[S.i];
+    const who = this.WHO[st.who] || this.WHO.ratio;
+    const solved = !!S.solved[S.i];
+    const v = {
+      pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
+      stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
+      cards: S.cards,
+      audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
+      audioTitle: S.audio === 'full' ? 'Voice + sound effects' : (S.audio === 'sfx' ? 'Sound effects only' : 'Sound off'),
+      cycleAudio: () => this.cycleAudio(),
+      coachImgEl: who.img ? this.coachPortrait(who) : null,
+      coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name,
+      /* 대사가 빈 단계(m-prop)는 음성 없이 화면 글로만 안내 — screen은 읽어 주지 않습니다 */
+      coachText: this.wrapSay(st.say || st.screen || ''),
+      /* 자막 아래 안내 띠는 쓰지 않는다 — 화면에는 대사만 둔다(st.hi는 내부 표시용으로만 남긴다) */
+      coachHi: '',
+      replay: () => this.sayStep(S.i),
+      isStory: st.k === 'story',
+      storyArt: (st.k === 'story' && st.art === 'scholar') ? this.scholarSvg() : null,
+      storyEmoji: !(st.k === 'story' && st.art === 'scholar'), isScale: st.k === 'scale', isZoom: st.k === 'zoom',
+      isMovie: st.k === 'movie', isComic: st.k === 'comic', isProp: st.k === 'prop',
+      isReflect: st.k === 'reflect', isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      mapEl: null, comicEl: null, propEl: null, choices: null, meetEl: null, propRevealEl: null,
+      quiz: null, quizQ: '',
+      zq1: null, zq2: null, zoomQ1: false, zoomQ2: false, zVal: S.zVal,
+      rows: null, bank: null, cardTitle: '',
+      vidOpen: S.vidOpen, vidBtn: !S.vidOpen,
+      openVid: () => { this.sfx('tap'); this.plog('movie', { open: 1 }); this.setState({ vidOpen: true }); },
+      refText: S.refText, refInput: (e) => this.setState({ refText: e.target.value }),
+      isBridge: st.k === 'bridge',
+      bridgeOpts: st.k === 'bridge' ? this.BRIDGE.map((o, ix) => ({
+        t: o.t,
+        pick: () => this.bridgePick(ix),
+        bd: S.bridgePick === ix ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)',
+        bg: S.bridgePick === ix ? 'var(--color-accent-2-200)' : 'var(--color-neutral-100)'
+      })) : null,
+      prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
+      toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
+      toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
+      toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
+      closeToast: () => this.setState({ toast: null }),
+      movieEnd: () => this.movieEnd(),
+      goNext: () => {
+        this.plog('complete', {});
+        try {
+          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+          if (d.indexOf('map') < 0) { d.push('map'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+        } catch(e) {}
+      }
+    };
+
+    if (st.k === 'scale') {
+      const obj = this.OBJS[st.oi];
+      v.scaleLabel = st.hi;
+      v.scaleTitle = obj.shape === 'unit'
+        ? 'This map has a scale of 1 : 10,000. On this map, 1cm stands for how many cm in real life?'
+        : ('On the map the ' + obj.n + ' is drawn ' + obj.cells + 'cm long. How long is the real ' + obj.n + '?');
+      v.scaleHelp = obj.shape === 'unit' ? '' : 'On the map 1cm = 10,000cm in real life';
+      v.mapEl = this.mapSvg(obj, 1);
+      v.choices = st.intro ? null : obj.opts.map(o => ({ t: o[0], pick: () => this.scalePick(o[1] === 1, obj) }));
+    }
+
+    if (st.k === 'zoom') {
+      const obj = this.OBJS[0], f = (solved ? this.ZOOMQ[st.zi].p : (st.zi === 0 ? 100 : this.ZOOMQ[st.zi-1].p)) / 100;
+      v.mapEl = this.mapSvg(obj, f);
+      const zq = this.ZOOMQ[st.zi];
+      v.zoomQ = (zq && !solved) ? ('Stretching the map to ' + zq.p + '%, how many cm long is the bridge?') : '';
+      v.zq = (zq && !solved) ? zq.opts.map(o => ({ t: o[0], pick: () => this.zoomPick(o[1] === 1) })) : null;
+    }
+
+    if (st.k === 'movie') {
+      v.meetEl = this.librarySvg();
+    }
+
+    if (st.k === 'comic') {
+      v.comicNo = st.ci + 1;
+      v.comicEl = this.comicSvg(st.ci, solved);
+      v.comicCap = [
+        'At noon in Syene the shadow is 0° — the sunlight reaches straight down to the bottom of the well',
+        solved ? 'The ground curves, so the two sticks point different ways — the Earth is a round circle!'
+               : 'Same day, same hour, and yet the stick in Alexandria casts a shadow of 7.2°',
+        'I could not walk around the whole Earth, but the 800km between the two cities I could measure',
+        solved ? '360 ÷ 7.2 = 50 — so 7.2° : 360° = 1 : 50, and therefore 1 : 50 = 800km : the Earth’s circumference!'
+               : 'Out of a full 360°, the two cities are 7.2° apart — let us find the ratio of those two'
+      ][st.ci];
+    }
+
+    if (st.k === 'prop') {
+      v.propEl = this.propSvg();
+      v.propRevealEl = solved ? this.sceneImg('../v4/eratos_scene2.jpg', 'prop-scene2', '34vh') : null;
+    }
+
+    if (st.quiz) {
+      const q = this.QUIZ[st.quiz], picked = S.qpicks[S.i] || [];
+      v.quizQ = q.q;
+      v.quiz = q.opts.map(o => {
+        const on = picked.indexOf(o[0]) >= 0, good = on && !!o[1];
+        return {
+          t: o[0],
+          bd: good ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)',
+          bg: on ? (good ? 'var(--color-accent-2-100)' : 'var(--color-neutral-200)') : 'var(--color-neutral-100)',
+          fg: good ? 'var(--color-accent-2-700)' : 'var(--color-accent-700)',
+          pick: () => this.quizPick(st.quiz, o)
+        };
+      });
+    }
+
+    if (st.k === 'blank') {
+      const def = this.blankDef();
+      v.cardTitle = def.title || '';
+      v.rows = def.rows.map((row, ri) => ({
+        tokens: row.map((tk, ti) => {
+          if (typeof tk === 'string')
+            return { t: tk, key:'', disp:'inline', minw:'0', minh:'0', pad:'0', mar:'0', rad:'0', bb:'none', bg:'transparent', fg:'var(--color-neutral-900)', cur:'default', out:'none' };
+          const key = st.id + '-' + ri + '-' + ti, filled = S.blanks[key], sel = S.selBlank === key;
+          return {
+            t: filled || '', key, disp:'inline-block', minw:'92px', minh:'40px',
+            pad:'2px 12px', mar:'0 4px', rad:'12px 12px 0 0',
+            bb: '4px solid ' + (filled ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)'),
+            bg: filled ? 'var(--color-accent-2-100)' : (sel ? 'var(--color-accent-200)' : 'var(--color-accent-100)'),
+            fg: filled ? 'var(--color-accent-2-700)' : 'var(--color-accent-700)', cur:'pointer',
+            out: sel ? '3px dashed var(--color-accent-700)' : 'none',
+            tap: () => { if (filled) return; this.sfx('tap'); this.setState({ selBlank: key }); }
+          };
+        })
+      }));
+      const seen = {};
+      v.bank = def.bank.map((w) => {
+        seen[w] = (seen[w] || 0) + 1;
+        const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
+        return { t: w, vis: hidden ? 'hidden' : 'visible', down: this.chipDown(w) };
+      });
+    }
+
+    /* 게스트(자유 탐색): needsSolve 게이트 무시 — 과제 미해결이어도 '다음' 활성. 실제 학습자는 순차 잠금 유지 */
+    const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect','bridge'].indexOf(st.k) >= 0) || !!st.quiz;
+    const gate = needsSolve && !solved && !this._guest;
+    v.showPrimary = st.k !== 'finish';
+    v.primaryLabel = st.k === 'story' ? (st.btn || 'Next →')
+      : (st.k === 'movie' ? 'Tell me the news! →'
+      : (st.k === 'comic' ? (st.ci < 3 ? 'Next panel →' : 'Work it out with ratio! ✏️')
+      : (st.k === 'reflect' ? 'Submit! →' : 'Next →')));
+    v.primaryBg = gate ? 'var(--color-neutral-400)' : 'var(--color-accent)';
+    v.footHint = gate ? (st.k === 'blank' ? 'Fill in every blank and you can go on'
+      : (st.quiz ? 'Choose the right answer and you can go on' : 'Solve this and you can go on')) : '';
+    v.primary = () => {
+      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
+      if (gate) { this.sfx('oops'); this.toast('🤔', 'Almost there!', 'Finish this one first, then move on.'); return; }
+      this.sfx('tap'); this.go(1);
+    };
+    return v;
+  }
+}
+</script>
+</body>
+</html>

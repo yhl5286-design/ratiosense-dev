@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../v4/support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="../v4/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<script src="../v4/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
+<script>/* English edition speaks through the browser voice — no pre-made mp3 files. */
+window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;font-weight:400;background:#f5ead8;color:#201e1d;overscroll-behavior:none;font-variant-numeric:tabular-nums}
+a{color:#8c491a;text-decoration:none}
+a:hover{color:#c67139}
+/* 타이포 확정: 제목/헤더=Do Hyeon(도현), 나머지=Noto Sans KR(400 기본·강조 700 실굵기+색) */
+b,strong{font-weight:700;color:#8c491a}
+button{font-family:inherit}
+:focus-visible{outline:3px solid #c67139;outline-offset:3px}
+::selection{background:#ffe1d0}
+.rs-swatch{width:min(126px,29vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d}
+/* 노트북처럼 세로가 짧은 화면에서는 견본을 줄여 조작 영역이 잘리지 않게 한다 */
+@media (max-height:900px){.rs-swatch{width:min(96px,24vw);border-width:4px}}
+@media (max-height:800px){.rs-swatch{width:min(76px,20vw);border-width:4px}}
+/* 좁은 화면: 실험 화면이 가로로 밀려 나가지 않게 접고, 조작물을 화면 폭에 맞춘다 */
+@media (max-width:720px){
+  .rs-labrow{flex-wrap:wrap !important;gap:10px !important}
+  .rs-labrow > *{max-width:100% !important}
+  .rs-play{overflow-x:hidden}
+}
+@keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
+@keyframes rsTilt{0%{transform:none}35%{transform:rotate(-58deg) translate(6px,-14px)}70%{transform:rotate(-58deg) translate(6px,-14px)}100%{transform:none}}
+@keyframes rsStream{0%{opacity:0;transform:scaleY(0)}20%{opacity:1;transform:scaleY(1)}80%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1)}}
+@keyframes rsGlow{0%,100%{box-shadow:0 0 0 7px #ccdbb2}50%{box-shadow:0 0 0 11px #ccdbb2}}
+/* 색팽이(뉴턴 원판) — 빠르게 돌면 두 색이 섞여 한 색으로 보인다 */
+@keyframes rsSpin{to{transform:rotate(360deg)}}
+@keyframes rsBlend{from{opacity:0}to{opacity:1}}
+/* 반응형: 고정 폭 조작물은 태블릿/모바일에서 축소 (크롬북·태블릿 대상) */
+@media (max-width:1080px){.rs-fit{zoom:.85}}
+@media (max-width:700px){.rs-fit{zoom:.6}}
+/* 세로가 짧은 화면에서도 한 화면에 담기도록 조작물 전체를 함께 줄인다.
+   너무 줄이면 조작이 어려우므로 0.72 아래로는 내리지 않는다. */
+@media (max-height:900px){.rs-fit{zoom:.84}}
+@media (max-height:800px){.rs-fit{zoom:.74}}
+@media (max-width:1080px) and (max-height:800px){.rs-fit{zoom:.72}}
+/* ── 무대 카드 + 대사 자막 ──
+   도우미 대사는 좌측 세로 패널이 아니라 무대 카드 상단에 얹힌 자막 띠로 보여 준다.
+   자막 띠와 과제 영역은 한 카드 안의 두 층이라 같은 면으로 읽히고,
+   과제 조작물은 자막 아래 칸에만 놓이므로 자막이 조작을 가리지 않는다. */
+.rs-round{flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid var(--color-neutral-300);background:var(--color-neutral-100);font-size:19px;cursor:pointer;color:var(--color-accent-700)}
+.rs-round:hover{background:var(--color-neutral-200)}
+.rs-stage{flex:1 1 auto;width:100%;max-width:1160px;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.rs-sub{flex:none;display:flex;align-items:flex-start;gap:14px;padding:11px 18px 13px;background:var(--color-accent-100);border-bottom:2.5px solid var(--color-neutral-300);max-height:40dvh;overflow:auto}
+.rs-sub-who{flex:none;width:76px;height:76px;margin-top:2px}
+.rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rs-sub-name{font-size:16.5px;line-height:1.3}
+.rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
+.rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
+.rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:6px;padding:8px}
+.rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
+.rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+@media (max-width:1080px){.rs-sub-text{font-size:19px}}
+@media (max-width:700px){.rs-sub{gap:9px;padding:8px 11px 10px;max-height:46dvh}.rs-sub-who{width:58px;height:58px}.rs-sub-text{font-size:17px;line-height:1.55}.rs-sub-hi{font-size:14.5px}.rs-play{padding:4px}}
+/* 좁은 화면에서 헤더가 가로로 넘치지 않도록: 간격·제목을 줄이고 진행 막대는 감춘다(진행은 n/N 글자로 읽힘) */
+@media (max-width:700px){
+  .rs-hd{gap:6px !important;padding:6px 8px !important}
+  .rs-hd-title{font-size:17px !important}
+  .rs-hd-bar{display:none !important}
+}
+</style>
+</helmet>
+
+<div style="height:100dvh;display:flex;flex-direction:column;background:#f5ead8">
+
+  <header class="rs-hd" style="flex:none;display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f9f4ed;border-bottom:2px solid #dcd3c4">
+    <a href="index.html" aria-label="Home" style="flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:20px">🏠</a>
+    <div class="rs-hd-title" style="flex:none;font-family:'Fredoka','Nunito',sans-serif;font-size:20px;letter-spacing:-.2px">The Color Secret</div>
+    <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:#eee7db;overflow:hidden">
+      <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,#c67139,#f6a06b);transition:width .4s ease"></div>
+    </div>
+    <div style="flex:none;font-size:13px;font-weight:800;color:#645c50;white-space:nowrap">{{stepLabel}}</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
+    <button onClick="{{cycleAudio}}" aria-label="Sound settings" title="{{audioTitle}}" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">{{audioIcon}}</button>
+    <button onClick="{{openVoices}}" aria-label="Choose voices" title="Choose character voices" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">🎙️</button>
+  </header>
+
+  <sc-if value="{{hypoBanner}}" hint-placeholder-val="{{false}}">
+    <div style="flex:none;display:flex;justify-content:center;padding:4px 10px;background:#f9f4ed;border-bottom:2px solid #eee7db">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:#8c491a;background:#fff2eb;border:2px solid #ffc6a5;border-radius:999px;padding:3px 14px;white-space:nowrap;overflow:hidden;max-width:96%">
+        <span style="overflow:hidden;text-overflow:ellipsis">🔬 My hypothesis: {{hypoBanner}}</span>
+        <!-- 가설의 색과 목표색을 배너에서 맞대어 둔다 — 수 대신 눈으로 견주는 단서 -->
+        <span style="flex:none;width:20px;height:20px;border-radius:999px;border:2.5px solid #201e1d;background:{{hypoColor}}"></span>
+        <span style="flex:none;font-size:11.5px;font-weight:800;color:#645c50">Target color</span>
+        <span style="flex:none;width:20px;height:20px;border-radius:999px;border:2.5px solid #201e1d;background:{{tgtColor}}"></span>
+      </div>
+    </div>
+  </sc-if>
+
+  <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
+
+    <section class="rs-stage">
+
+      <!-- 대사 자막 — 무대 카드 상단에 얹힌 띠. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <div class="rs-sub">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who" style="border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:42px">{{coachEmoji}}</div>
+        </sc-if>
+        <div class="rs-sub-body">
+          <div class="rs-sub-tag">
+            <div class="rs-sub-name">{{coachName}}</div>
+          </div>
+          <p class="rs-sub-text">{{coachText}}</p>
+          <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+            <div class="rs-sub-hi">{{coachHi}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{replay}}" aria-label="Say that again" title="Say that again" class="rs-round" style="margin-top:2px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+
+      <div class="rs-play">
+
+      <sc-if value="{{storyDemo}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsPop .4s ease;margin:auto 0">{{storyDemo}}</div>
+      </sc-if>
+      <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:11px;animation:rsUp .35s ease">
+          <sc-if value="{{storyEmoji}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:96px;line-height:1">{{storyEmoji}}</div>
+          </sc-if>
+          <sc-if value="{{artEl}}" hint-placeholder-val="{{false}}">
+            <div style="background:#2e2b25;padding:11px;border-radius:10px;box-shadow:0 14px 32px rgba(32,30,29,.3)">{{artEl}}</div>
+          </sc-if>
+          <sc-if value="{{artCap}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">{{artCap}}</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- 목표 색 견본. 실험 단계에서는 내 비커 색을 바로 옆에 같은 크기로 붙여
+           둘을 눈으로 견주게 한다(지침 4.5 예측 후 확인) -->
+      <sc-if value="{{showSwatch}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;gap:min(6vw,30px);align-items:flex-start;justify-content:center;margin-bottom:12px;flex:none">
+          <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+              <div class="rs-swatch" style="background:{{myColor}};box-shadow:{{beakerRing}};transition:background .18s,box-shadow .25s"></div>
+              <div style="font-size:14px;font-weight:800;color:#8c491a">My color {{beakerAmt}}</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:24px;color:#645c50;align-self:center;padding-bottom:22px">vs</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div class="rs-swatch" style="background:{{tgtColor}}"></div>
+            <div style="font-size:14px;font-weight:800;color:#645c50">Target color · sunset orange</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isChips}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;width:100%;min-height:0">
+        <sc-if value="{{madeList}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:11px 18px;max-width:96%;animation:rsPop .35s ease">
+            <div style="font-size:14px;font-weight:800;color:#645c50">🧪 The amounts I made</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+              <sc-for list="{{madeList}}" as="m" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:8px;background:#fff;border:2.5px solid #f6a06b;border-radius:999px;padding:6px 14px">
+                  <span style="width:20px;height:20px;border-radius:999px;border:2px solid #201e1d;background:{{m.color}};display:inline-block"></span>
+                  <span style="font-size:17px;font-weight:800;color:#8c491a">{{m.t}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:11px;justify-content:center;max-width:760px;animation:rsUp .3s ease;flex:none">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+            <button onClick="{{c.pick}}" style="min-height:60px;padding:14px 24px;border-radius:999px;border:3px solid {{c.bd}};background:{{c.bg}};color:{{c.fg}};font-size:18.5px;cursor:pointer;max-width:100%;text-align:left;line-height:1.4">{{c.t}}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{obsMine}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;gap:18px;align-items:flex-end;justify-content:center;animation:rsPop .35s ease">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:min(100px,23vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{obsMine}}"></div>
+              <div style="font-size:13.5px;font-weight:800;color:#8c491a">My guess</div>
+            </div>
+            <div style="font-size:22px;color:#645c50;padding-bottom:26px">vs</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:min(100px,23vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}}"></div>
+              <div style="font-size:13.5px;font-weight:800;color:#645c50">Target color</div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{chipHint}}" hint-placeholder-val="{{false}}">
+          <div style="font-size:15px;font-weight:700;color:#645c50;text-align:center;max-width:620px;flex:none">{{chipHint}}</div>
+        </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+        <div onPointerDown="{{padDown}}" onPointerMove="{{padMove}}" onPointerUp="{{padUp}}" onPointerCancel="{{padUp}}" style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;touch-action:none">
+
+          <div class="rs-labrow" style="flex:1;min-height:0;display:flex;gap:12px;justify-content:center;align-items:stretch;flex-wrap:nowrap;width:100%">
+
+          <!-- 컵으로 탐색하는 실험 — 10mL 컵을 한 개씩 부어 몇 컵 대 몇 컵인지를 먼저 본다 -->
+          <sc-if value="{{isCupLab}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:stretch;min-height:0;flex:1;max-width:430px">
+            <sc-for list="{{cupPaints}}" as="q" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:9px">
+                <div style="width:96px;flex:none;text-align:right;line-height:1.25">
+                  <div style="font-size:14.5px;color:{{q.ink}}">{{q.tag}}{{q.name}}</div>
+                  <div style="font-size:20px;font-weight:800;color:{{q.ink}}">{{q.n}} cups</div>
+                  <div style="font-size:12px;font-weight:800;color:#645c50">{{q.amt}}mL</div>
+                </div>
+                <div style="flex:1;min-height:54px;display:flex;flex-wrap:wrap;gap:4px;align-items:flex-end;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:14px;padding:6px 8px">
+                  <sc-for list="{{q.cups}}" as="cu" hint-placeholder-count="3">
+                    <div style="width:26px;height:38px;border:3px solid #201e1d;border-top-width:2px;border-radius:0 0 9px 9px;background:#f9f4ed;position:relative;overflow:hidden;flex:none">
+                      <div style="position:absolute;left:0;right:0;bottom:0;height:74%;background:{{q.color}}"></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display:flex;gap:6px;flex:none">
+                  <button onClick="{{q.sub}}" aria-label="Take out one cup of {{q.name}}" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{q.btnOp}};pointer-events:{{q.btnPe}}">−</button>
+                  <button onClick="{{q.add}}" aria-label="Pour in one cup of {{q.name}}" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{q.btnOp}};pointer-events:{{q.btnPe}}">＋</button>
+                </div>
+              </div>
+            </sc-for>
+            <div style="font-size:12.5px;font-weight:800;color:#645c50;text-align:center">One cup holds 10mL</div>
+          </div>
+          </sc-if>
+
+          <sc-if value="{{isSlider}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;gap:6px;justify-content:center;align-items:stretch;min-height:0">
+            <sc-for list="{{paints}}" as="p" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px;order:{{p.order}};min-height:0">
+                <div style="font-size:17px;color:{{p.ink}};flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">{{p.tag}}{{p.name}} {{p.amt}}mL</div>
+                <div onPointerDown="{{p.down}}" role="slider" aria-label="Amount of {{p.name}} paint" aria-valuenow="{{p.amt}}" style="position:relative;flex:1;min-height:130px;width:min(20vw,84px);border-radius:16px;border:3.5px solid {{p.barBd}};background:#f9f4ed;overflow:hidden;cursor:{{p.cursor}};touch-action:none;box-shadow:inset 0 3px 8px rgba(32,30,29,.08)">
+                  <div style="position:absolute;left:0;right:0;bottom:0;height:{{p.pct}}%;background:{{p.color}};transition:height .07s linear"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:{{p.pct}}%;height:5px;background:rgba(255,255,255,.9);opacity:{{p.handleOp}}"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:calc({{p.pct}}% - 13px);display:flex;justify-content:center;pointer-events:none;opacity:{{p.handleOp}}">
+                    <div style="width:40px;height:22px;border-radius:999px;background:#f9f4ed;border:2.5px solid #201e1d;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">⇅</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;flex:none;align-items:center">
+                  <button onClick="{{p.minus}}" aria-label="Take 10mL of {{p.name}} away" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{p.btnOp}};pointer-events:{{p.btnPe}}">−</button>
+                  <button onClick="{{p.plus}}" aria-label="Add 10mL of {{p.name}}" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{p.btnOp}};pointer-events:{{p.btnPe}}">＋</button>
+                </div>
+              </div>
+            </sc-for>
+
+            <sc-if value="{{ruler}}" hint-placeholder-val="{{false}}">
+            <div style="order:1;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:0">
+              <div style="font-size:11.5px;font-weight:800;color:#645c50;flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">mL</div>
+              <div style="position:relative;flex:1;min-height:130px;width:42px;border-left:3px solid #c0b6a5;border-right:3px solid #c0b6a5">
+                <sc-for list="{{ruler}}" as="t" hint-placeholder-count="6">
+                  <div style="position:absolute;left:0;right:0;bottom:{{t.at}}%;height:0;display:flex;align-items:center;justify-content:center">
+                    <div style="position:absolute;left:0;width:{{t.len}}px;height:{{t.th}}px;background:{{t.col}}"></div>
+                    <div style="position:absolute;right:0;width:{{t.len}}px;height:{{t.th}}px;background:{{t.col}}"></div>
+                    <div style="font-size:10.5px;font-weight:800;color:#474238;line-height:1;background:#f5ead8;padding:0 2px;display:{{t.show}}">{{t.n}}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="height:46px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#645c50;text-align:center;line-height:1.25;width:60px">the ＋ button<br>10mL at a time</div>
+            </div>
+            </sc-if>
+          </div>
+          </sc-if>
+
+          <div style="display:flex;flex-direction:column;gap:8px;justify-content:center;align-items:stretch;width:214px;flex:none">
+            <div style="background:#f9f4ed;border:3px solid #f6a06b;border-radius:18px;padding:9px 12px;display:flex;flex-direction:column;gap:5px;box-shadow:0 4px 12px rgba(246,160,107,.2)">
+              <sc-if value="{{sumHypo}}" hint-placeholder-val="{{false}}">
+                <div style="font-size:12.5px;font-weight:800;color:#645c50;line-height:1.35">🔬 My hypothesis<br><span style="font-size:14px;color:#8c491a">{{sumHypo}}</span></div>
+              </sc-if>
+              <div style="font-size:12.5px;font-weight:800;color:#645c50;line-height:1.35">🧪 What is in there now</div>
+              <div style="font-size:19px;line-height:1.3;color:#201e1d">
+                <span style="color:#c0392b">Red {{redAmt}}</span><span style="font-size:14px;color:#645c50">mL</span>
+                <span style="color:#645c50"> : </span>
+                <span style="color:#b3921e">Yellow {{yelAmt}}</span><span style="font-size:14px;color:#645c50">mL</span>
+              </div>
+              <sc-if value="{{simpleRatio}}" hint-placeholder-val="{{false}}">
+                <div style="font-size:15px;color:#8c491a;background:#fff2eb;border-radius:999px;padding:3px 10px;text-align:center">{{simpleRatio}}</div>
+              </sc-if>
+            </div>
+            <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
+            <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">Empty it</button>
+            <sc-if value="{{canChangeHypo}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{openHypo}}" style="min-height:48px;padding:11px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:15.5px;color:#8c491a;cursor:pointer">🔬 Change my hypothesis</button>
+            </sc-if>
+          </div>
+          </div>
+
+          <!-- 수첩 — 기록하기로 확인된 양이 차곡차곡 쌓여 실험 내내 남는다 -->
+          <sc-if value="{{noteRows}}" hint-placeholder-val="{{false}}">
+            <div style="flex:none;display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;background:#fffdf6;border:3px solid #f6a06b;border-radius:20px;padding:8px 13px;box-shadow:0 3px 10px rgba(246,160,107,.18)">
+              <div style="font-size:12px;font-weight:800;color:#8c491a;flex:none;line-height:1.25">📓 My<br>notebook</div>
+              <sc-for list="{{noteRows}}" as="r" hint-placeholder-count="0">
+                <div style="display:flex;align-items:center;gap:7px;background:#f9f4ed;border:2.5px solid #dcd3c4;border-radius:999px;padding:5px 13px;flex:none">
+                  <span style="font-size:12px;font-weight:800;color:#645c50">{{r.no}}</span>
+                  <span style="width:19px;height:19px;border-radius:999px;border:2px solid #201e1d;background:{{r.color}};display:inline-block;flex:none"></span>
+                  <span style="font-size:15px;font-weight:800;color:#8c491a;white-space:nowrap">{{r.t}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- 실험 기록 — 시도할 때마다 남는 자취. 기록이 있을 때만 띠가 보인다 -->
+          <sc-if value="{{labLog}}" hint-placeholder-val="{{false}}">
+            <div style="flex:none;display:flex;gap:6px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;background:#f9f4ed;border:2px solid #dcd3c4;border-radius:20px;padding:7px 12px">
+              <div style="font-size:11.5px;font-weight:800;color:#645c50;flex:none">📓 Experiment log</div>
+              <sc-for list="{{labLog}}" as="l" hint-placeholder-count="0">
+                <div style="font-size:12.5px;font-weight:800;padding:4px 9px;border-radius:999px;background:{{l.bg}};color:{{l.fg}};border:2px solid {{l.bd}};flex:none">{{l.t}}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isDemo}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;animation:rsUp .3s ease;width:100%">
+          <div style="display:flex;gap:min(7vw,44px);justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{demos}}" as="d" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="display:flex;gap:7px;align-items:flex-end;min-height:56px">
+                  <sc-for list="{{d.cups}}" as="cup" hint-placeholder-count="1">
+                    <button onClick="{{cup.pour}}" aria-label="Pour in 20mL of yellow" style="width:44px;height:{{cup.h}}px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 12px 12px;background:#f9f4ed;cursor:{{cup.cur}};padding:0;position:relative;overflow:hidden;opacity:{{cup.op}};animation:{{cup.anim}};transform-origin:bottom right">
+                      <div style="position:absolute;left:0;right:0;bottom:0;height:{{cup.fill}}%;background:rgb(250,215,45)"></div>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="font-size:12px;font-weight:800;color:#645c50">{{d.left}} yellow beakers left · tap to pour</div>
+                <div style="position:relative;width:min(124px,30vw);aspect-ratio:1/1.25">
+                  <sc-if value="{{d.streaming}}" hint-placeholder-val="{{false}}">
+                    <div style="position:absolute;left:50%;top:-44px;width:13px;height:54px;margin-left:-6px;background:linear-gradient(to bottom,rgba(250,215,45,.35),rgb(250,215,45));border-radius:999px;transform-origin:top;animation:rsStream .75s ease;z-index:2"></div>
+                  </sc-if>
+                  <div style="position:absolute;inset:0;border:6px solid #201e1d;border-top-width:3px;border-radius:0 0 22px 22px;overflow:hidden;background:#f9f4ed">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{d.pct}}%;background:{{d.color}};transition:height .75s ease,background .75s ease"></div>
+                    <div style="position:absolute;left:0;right:0;bottom:{{d.pct}}%;height:{{d.layerH}}%;background:rgb(250,215,45);opacity:{{d.layerOp}};transition:height .55s ease,opacity .45s ease,bottom .75s ease"></div>
+                  </div>
+                </div>
+                <div style="font-size:15px">{{d.label}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:#645c50;text-align:center;max-width:560px;line-height:1.55">Tap the small beaker <b>(20mL of yellow)</b> to pour it into the big one. Both beakers have exactly 20mL of red!</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isCups}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:11px;animation:rsUp .3s ease;width:100%">
+          <div class="rs-fit" style="display:flex;gap:min(7vw,38px);justify-content:center;flex-wrap:wrap;align-items:flex-start">
+            <sc-for list="{{cupCols}}" as="q" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+                <div style="font-size:16px;color:{{q.ink}}">{{q.name}} beaker</div>
+                <div style="display:flex;gap:10px;align-items:flex-end">
+                  <div style="position:relative;width:64px;height:150px;border:5px solid #201e1d;border-top-width:2px;border-radius:0 0 18px 18px;overflow:hidden;background:#f9f4ed;flex:none;box-shadow:{{q.ring}};transition:box-shadow .2s">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{q.pct}}%;background:{{q.color}};transition:height .35s ease"></div>
+                    <sc-for list="{{cupTicks}}" as="t" hint-placeholder-count="4">
+                      <div style="position:absolute;left:0;right:0;bottom:{{t.at}}%;height:{{t.h}};background:{{t.bg}};box-shadow:0 1px 0 rgba(249,244,237,.55)"></div>
+                    </sc-for>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:none">
+                    <div style="font-size:19px;color:#645c50;line-height:1">→</div>
+                    <button onClick="{{q.pour}}" aria-label="Move {{cupUnitML}}mL of {{q.name}} into a cup" style="width:54px;height:{{cupBtnH}};border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 15px 15px;background:#f9f4ed;cursor:{{q.cur}};opacity:{{q.op}};padding:0;display:flex;align-items:center;justify-content:center;font-size:25px;color:#8c491a">＋</button>
+                    <div style="font-size:12.5px;font-weight:800;color:#645c50;text-align:center;line-height:1.3">{{cupUnitML}}mL cup = {{cupUnitCells}} marks<br>Tap to pour it across</div>
+                  </div>
+                </div>
+                <div style="font-size:14px;font-weight:800;color:#645c50">{{q.left}}mL still in the beaker <span style="font-size:11.5px;color:#a19786">· one mark is 10mL</span></div>
+                <div style="display:flex;gap:5px;align-items:flex-end;justify-content:center;min-height:58px;min-width:186px;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:16px;padding:7px 9px;box-shadow:{{q.ring}};transition:box-shadow .2s">
+                  <sc-for list="{{q.cups}}" as="cu" hint-placeholder-count="2">
+                    <div style="width:30px;height:{{cupIconH}};border:3px solid #201e1d;border-top-width:2px;border-radius:0 0 10px 10px;background:#f9f4ed;position:relative;overflow:hidden;flex:none;animation:{{cu.anim}}">
+                      <div style="position:absolute;left:0;right:0;bottom:0;height:74%;background:{{q.color}}"></div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="font-size:16.5px;color:{{q.ink}};background:{{q.countBg}};border:2.5px solid {{q.countBd}};border-radius:999px;padding:4px 14px">{{q.count}}</div>
+                <!-- 기호 병치(지침 4.2) — 조작 대상 바로 곁에서 수치와 컵 수가 함께 바뀐다 -->
+                <div style="display:flex;align-items:center;gap:7px;background:#fffdf6;border:3px solid {{q.countBd}};border-radius:14px;padding:5px 12px;box-shadow:{{q.ring}};transition:box-shadow .2s">
+                  <span style="font-size:11.5px;font-weight:800;color:#a19786">Poured across</span>
+                  <span style="font-size:19px;color:{{q.ink}};font-variant-numeric:tabular-nums">{{q.symMl}}</span>
+                  <span style="font-size:15px;color:#a19786">=</span>
+                  <span style="font-size:19px;color:{{q.ink}};font-variant-numeric:tabular-nums">{{q.symCup}}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- 두 조작 대상을 견준 비 기호 — 컵을 옮길 때마다 아래 줄이 함께 바뀐다.
+               간단히 한 비는 앱이 먼저 적어 주지 않는다(아래 선택 과제에서 학습자가 옮긴다). -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:5px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:18px;padding:8px 20px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:12.5px;font-weight:800;color:#645c50">Left in the beaker</span>
+              <span style="font-size:20px;color:#201e1d;font-variant-numeric:tabular-nums"><span style="color:#c0392b">{{cupSymMlR}}</span> : <span style="color:#b3921e">{{cupSymMlY}}</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:12.5px;font-weight:800;color:#645c50">Cups filled</span>
+              <span style="font-size:22px;color:#201e1d;font-variant-numeric:tabular-nums"><span style="color:#c0392b">{{cupSymCupR}}</span> : <span style="color:#b3921e">{{cupSymCupY}}</span></span>
+            </div>
+          </div>
+
+          <sc-if value="{{cupSum}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:22px;color:#56633f;background:#f0fae1;border:3.5px solid #ccdbb2;border-radius:20px;padding:9px 22px;animation:rsPop .35s ease;text-align:center">{{cupSum}}</div>
+          </sc-if>
+
+          <sc-if value="{{cupChips}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:9px;width:100%;animation:rsUp .3s ease">
+              <div style="font-size:17.5px;color:#8c491a">So what is the ratio of red to yellow?</div>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:700px">
+                <sc-for list="{{cupChips}}" as="c" hint-placeholder-count="3">
+                  <button onClick="{{c.pick}}" style="min-height:58px;padding:13px 22px;border-radius:999px;border:3px solid {{c.bd}};background:{{c.bg}};color:{{c.fg}};font-size:18px;cursor:pointer">{{c.t}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{cupBackOn}}" hint-placeholder-val="{{false}}">
+            <button onClick="{{cupBack}}" style="min-height:46px;padding:10px 20px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:15px;color:#645c50;cursor:pointer;opacity:{{cupBackOp}}">↩ Put one cup back (once only)</button>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isDots}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease">
+          <div style="display:flex;gap:10px">
+            <sc-for list="{{dotPal}}" as="q" hint-placeholder-count="2">
+              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 22px;border-radius:999px;border:4px solid {{q.bd}};background:#f9f4ed;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:420px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:24px;padding:16px">
+            <sc-for list="{{dots}}" as="dd" hint-placeholder-count="5">
+              <button onClick="{{dd.tap}}" aria-label="dots" style="width:min(15vw,58px);aspect-ratio:1;border-radius:999px;border:3px {{dd.bs}} {{dd.bd}};background:{{dd.bg}};cursor:pointer;padding:0"></button>
+            </sc-for>
+          </div>
+          <div style="font-size:18px;color:#645c50">Red {{dotR}} · Yellow {{dotY}}</div>
+          <sc-if value="{{dotMix}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;animation:rsPop .4s ease">
+              <div style="width:96px;height:96px;border-radius:999px;border:4px solid #201e1d;background:{{dotMix}};filter:blur(1px)"></div>
+              <div style="font-size:13.5px;font-weight:800;color:#645c50">My dots seen from far away</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isGrid}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;flex:none">
+            <sc-for list="{{pots}}" as="q" hint-placeholder-count="2">
+              <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:4px solid {{q.bd}};background:{{q.bg}};font-size:17px;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
+            </sc-for>
+            <button onClick="{{gridClear}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">Clear them all</button>
+          </div>
+          <sc-if value="{{showBrush}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:10px;align-items:center">
+              <sc-for list="{{brushes}}" as="b" hint-placeholder-count="2">
+                <button onClick="{{b.pick}}" style="min-height:56px;padding:10px 18px;border-radius:999px;border:4px solid {{b.bd}};background:{{b.bg}};font-size:15.5px;color:#8c491a;cursor:pointer;display:flex;align-items:center;gap:8px"><span style="font-size:{{b.ic}}px;line-height:1">🖌️</span>{{b.name}}</button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div style="font-size:17px;color:#645c50;flex:none">{{gridCount}}</div>
+          <div onPointerDown="{{gridDown}}" onPointerUp="{{gridUp}}" onPointerCancel="{{gridUp}}" class="rs-fit" style="flex:none;display:grid;grid-template-columns:repeat({{gridCols}},minmax(0,1fr));grid-template-rows:repeat({{gridRows}},minmax(0,1fr));gap:{{gridGap}}px;width:{{gridW}}px;height:{{gridH}}px;max-width:96%;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:10px;touch-action:none">
+            <sc-for list="{{cells}}" as="c" hint-placeholder-count="5">
+              <div onPointerEnter="{{c.over}}" onPointerDown="{{c.tap}}" style="min-width:0;min-height:0;border-radius:{{gridRad}}px;background:{{c.bg}};cursor:pointer"></div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
+          <div style="font-size:48px;line-height:1">📝</div>
+          <!-- 내가 한 조작을 그대로 되불러 놓는다 — 이 가운데 하나를 예로 들어 적게 한다 -->
+          <sc-if value="{{refRecall}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:11px 18px;max-width:min(640px,94vw)">
+              <div style="font-size:13.5px;font-weight:800;color:#645c50">🧪 What I tried</div>
+              <div style="display:flex;gap:9px;flex-wrap:wrap;justify-content:center">
+                <sc-for list="{{refRecall}}" as="m" hint-placeholder-count="3">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:3px;background:#fffdf6;border:2.5px solid #f6a06b;border-radius:16px;padding:6px 13px">
+                    <div style="display:flex;align-items:center;gap:7px">
+                      <span style="width:19px;height:19px;border-radius:999px;border:2px solid #201e1d;background:{{m.color}};display:inline-block;flex:none"></span>
+                      <span style="font-size:16px;font-weight:800;color:#8c491a;white-space:nowrap">{{m.t}}</span>
+                    </div>
+                    <div style="font-size:11.5px;font-weight:700;color:#a19786">{{m.cap}}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">Take one thing you <b>tried for yourself</b> and write one line about <b>the Color secret (ratio and rate)</b>!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="e.g. When I poured 40mL of yellow into 20mL of red …" aria-label="In my own words" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <sc-if value="{{pctArt}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:16px;align-items:flex-end;justify-content:center;margin-bottom:10px">
+              <sc-for list="{{pctArt}}" as="v" hint-placeholder-count="3">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <div style="position:relative;width:{{v.w}}px;height:96px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 14px 14px;overflow:hidden;background:#f9f4ed">
+                    <div style="position:absolute;left:0;right:0;bottom:0;height:{{v.h}}%;background:{{v.c}}"></div>
+                  </div>
+                  <div style="font-size:14px;font-weight:800;color:#645c50">{{v.t}}</div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{blankArt}}" hint-placeholder-val="{{false}}">
+            <div style="flex:1 1 auto;min-height:0;display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);gap:2px;aspect-ratio:1;width:auto;max-width:min(90%,240px);background:#f9f4ed;border:3px solid #dcd3c4;border-radius:16px;padding:8px">
+              <sc-for list="{{blankArt}}" as="c" hint-placeholder-count="0">
+                <div style="min-width:0;min-height:0;border-radius:2px;background:{{c.bg}}"></div>
+              </sc-for>
+            </div>
+          </sc-if>
+          <div data-card-panel="1" style="flex:none;background:#f9f4ed;border:3.5px solid #f6a06b;border-radius:24px;padding:15px 20px;max-width:720px;width:min(96%,720px);box-shadow:0 8px 22px rgba(246,160,107,.25)">
+            <sc-if value="{{cardTitle}}" hint-placeholder-val="{{false}}">
+              <div style="font-size:20px;color:#8c491a;margin-bottom:8px">{{cardTitle}}</div>
+            </sc-if>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+              <div style="font-size:19px;font-weight:700;line-height:2.3;text-wrap:pretty">
+                <sc-for list="{{r.tokens}}" as="tk" hint-placeholder-count="3">
+                  <span data-blank="{{tk.key}}" onClick="{{tk.tap}}" style="display:{{tk.disp}};min-width:{{tk.minw}};min-height:{{tk.minh}};padding:{{tk.pad}};margin:{{tk.mar}};border-radius:{{tk.rad}};border-bottom:{{tk.bb}};background:{{tk.bg}};color:{{tk.fg}};text-align:center;vertical-align:middle;cursor:{{tk.cur}};outline:{{tk.out}};font-family:{{tk.ff}}">{{tk.t}}</span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{wrongMix}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:18px;align-items:flex-end;justify-content:center;animation:rsPop .3s ease;flex:none">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:min(90px,20vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{wrongMix}}"></div>
+                <div style="font-size:13px;font-weight:800;color:#8c491a">the color of {{wrongRatio}}</div>
+              </div>
+              <div style="font-size:20px;color:#645c50;padding-bottom:24px">vs</div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <div style="width:min(90px,20vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d;background:{{tgtColor}}"></div>
+                <div style="font-size:13px;font-weight:800;color:#645c50">Target color</div>
+              </div>
+            </div>
+          </sc-if>
+          <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
+            <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
+              <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:#8c491a">{{b.t}}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:640px;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:7px 18px">✋ Take a word, <b>hold it down with your finger or mouse and drag it</b> onto the blank</div>
+        </div>
+      </sc-if>
+
+      <!-- 조작 직후 발문(지침 5.1) — 조작물은 그대로 둔 채, 그 아래에서 어떻게·왜·기호를 묻는다 -->
+      <sc-if value="{{probeRows}}" hint-placeholder-val="{{false}}">
+        <div style="flex:none;width:min(760px,96%);background:#fffdf6;border:3.5px solid #f6a06b;border-radius:22px;padding:13px 18px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;gap:11px">
+          <div style="font-size:17px;color:#8c491a">{{probeTitle}}</div>
+          <sc-for list="{{probeRows}}" as="row" hint-placeholder-count="3">
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <div style="font-size:16.5px;font-weight:700;color:#474238;line-height:1.45"><b>{{row.no}}</b> {{row.q}}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{row.opts}}" as="o" hint-placeholder-count="2">
+                  <button onClick="{{o.pick}}" style="min-height:46px;padding:9px 16px;border-radius:14px;border:2.5px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}};font-size:16px;cursor:{{o.cur}};text-align:left;line-height:1.4;max-width:100%">{{o.t}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:15px;animation:rsPop .5s ease">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .45s ease">
+            <div style="width:min(260px,80vw);border-radius:var(--radius-md);overflow:hidden;border:4px solid var(--color-accent-500);box-shadow:var(--shadow-lg);background:var(--color-neutral-100)">
+              <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:14px;text-align:center;padding:6px">🃏 The Color secret card</div>
+              <div style="padding:var(--space-3);display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:15px;font-weight:800;text-align:center;line-height:1.6">{{cardConcept}}</div>
+                <div style="display:flex;gap:10px;justify-content:center">
+                  <sc-for list="{{cardDigits}}" as="d" hint-placeholder-count="2">
+                    <div style="font-size:44px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 22px;line-height:1.3">{{d.d}}</div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">These are the first two digits of the golden ratio. Remember them in order, left to right!</div>
+          </div>
+          <a href="SoundRoom.dc.html" onClick="{{goNext}}" style="min-height:64px;display:flex;align-items:center;padding:18px 36px;border-radius:999px;background:#c67139;color:#f9f4ed;font-size:21px;box-shadow:0 8px 20px rgba(198,113,57,.35)">🎼 On to the Sound Secret →</a>
+          <a href="index.html" onClick="{{goNext}}" style="font-size:15px;font-weight:700;color:#8c491a;text-decoration:underline">🏠 Back to the start</a>
+        </div>
+      </sc-if>
+
+      </div>
+
+      <!-- 이동 막대 — 무대 카드 아래층에 고정(과제 영역이 길어져도 가려지지 않음) -->
+      <div class="rs-nav">
+        <div class="rs-nav-in">
+        <button onClick="{{prev}}" aria-label="Back" style="min-height:48px;padding:10px 18px;border-radius:999px;border:3px solid var(--color-neutral-300);background:var(--color-neutral-100);font-size:15px;color:var(--color-neutral-700);cursor:pointer;opacity:{{prevOp}}">← Back</button>
+        <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+          <sc-if value="{{liveBadge}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:14.5px;line-height:1.35;padding:8px 14px;border-radius:999px;background:{{liveBg}};color:{{liveFg}};border:3px solid {{liveBd}};animation:rsPop .3s ease;text-align:center">{{liveBadge}}</div>
+          </sc-if>
+          <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+            <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
+          </sc-if>
+        </div>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+  <button onClick="{{primary}}" style="min-height:50px;padding:11px 26px;border-radius:999px;border:none;background:{{primaryBg}};color:var(--color-neutral-100);font-size:18px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.3)">{{primaryLabel}}</button>
+        </sc-if>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{voicePanel}}" hint-placeholder-val="{{false}}">
+    <div onClick="{{closeVoices}}" style="position:fixed;inset:0;z-index:80;background:rgba(32,30,29,.5);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div onClick="{{stopProp}}" style="width:min(96vw,620px);max-height:88dvh;background:#f9f4ed;border:4px solid #f6a06b;border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(32,30,29,.34);min-height:0">
+        <div style="display:flex;align-items:center;gap:10px;flex:none">
+          <div style="font-size:20px;color:#8c491a">🎙️ Character voices</div>
+          <button onClick="{{closeVoices}}" aria-label="Close" style="margin-left:auto;width:44px;height:44px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:17px;cursor:pointer">✕</button>
+        </div>
+        <sc-if value="{{noMaleVoice}}" hint-placeholder-val="{{false}}">
+          <div style="flex:none;font-size:14px;color:#8c491a;background:#ffe1d0;border:2.5px solid #f6a06b;border-radius:16px;padding:11px 13px;line-height:1.6">This device has no English <b>male</b> voice ({{voiceCount}} installed, all female). Male characters need pre-made audio files — <b>tts</b> see the notes in that folder.</div>
+        </sc-if>
+        <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{voiceRows}}" as="r" hint-placeholder-count="4">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff2eb;border:2px solid #ffe1d0;border-radius:18px;padding:10px 12px">
+            <div style="min-width:118px">
+              <div style="font-size:16px;color:#201e1d">{{r.name}}</div>
+              <div style="font-size:12px;color:#645c50">{{r.tone}}</div>
+            </div>
+            <select onChange="{{r.change}}" aria-label="{{r.name}} voice" style="flex:1 1 200px;min-width:0;min-height:46px;font-family:inherit;font-size:15px;border:3px solid #dcd3c4;border-radius:999px;padding:8px 12px;background:#f9f4ed;color:#201e1d">
+              <sc-for list="{{r.opts}}" as="o" hint-placeholder-count="2">
+                <option value="{{o.v}}" selected="{{o.sel}}">{{o.t}}</option>
+              </sc-for>
+            </select>
+            <button onClick="{{r.test}}" style="min-height:46px;padding:10px 16px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-size:15px;color:#8c491a;cursor:pointer">▶ Listen</button>
+          </div>
+        </sc-for>
+        </div>
+        <button onClick="{{closeVoices}}" style="flex:none;min-height:52px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:18px;cursor:pointer">All chosen</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{hypoOpts}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;inset:0;z-index:70;background:rgba(32,30,29,.44);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div style="width:min(96vw,600px);max-height:86dvh;overflow:auto;background:#f0fae1;border:4px solid #ccdbb2;border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;box-shadow:0 20px 50px rgba(32,30,29,.34)">
+        <div style="font-size:19px;color:#56633f;text-align:center">🔬 Pick a new hypothesis</div>
+        <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">The ones proved wrong have been crossed off</div>
+        <div style="display:flex;flex-wrap:wrap;gap:9px;justify-content:center">
+          <sc-for list="{{hypoOpts}}" as="h" hint-placeholder-count="3">
+            <button onClick="{{h.pick}}" style="min-height:54px;padding:12px 19px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-size:16.5px;color:#8c491a;cursor:pointer;display:flex;align-items:center;gap:9px"><span style="flex:none;width:26px;height:26px;border-radius:999px;border:3px solid #201e1d;background:{{h.color}}"></span>{{h.t}}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{closeHypo}}" style="min-height:48px;padding:11px 22px;border-radius:999px;border:3px solid #ccdbb2;background:#f9f4ed;font-size:15.5px;color:#56633f;cursor:pointer">Leave it as it is</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+      <div style="background:#f9f4ed;border:4px solid {{toastBd}};border-radius:24px;padding:17px 21px;box-shadow:0 16px 44px rgba(32,30,29,.28);display:flex;gap:13px;align-items:flex-start">
+        <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
+        <div style="min-width:0">
+          <div style="font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:#474238;margin-top:4px">{{toastBody}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{closeToast}}" aria-label="Close" style="margin-left:auto;flex:none;width:40px;height:40px;border-radius:999px;border:2px solid #dcd3c4;background:#f9f4ed;font-size:16px;cursor:pointer">✕</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  PRIM = { 'Red':[230,40,55], 'Yellow':[250,215,45] };
+  MAX = 500;                  /* 막대 상한 — 큰 양까지 같은 비를 만들어 볼 수 있게 500mL까지 연다 */
+  STEP_ML = 10;               /* ＋− 버튼이 한 번에 더하고 빼는 양 — 앞 실험에서 쓴 컵 하나와 같다 */
+  SNAP_ML = 5;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼보다 잘게 양을 정할 수 있다 */
+  CUP_ML = 10;                /* 실험 단계에서 한 번에 붓는 컵의 양 */
+  CUP_LAB_MAX = 12;           /* 컵으로 탐색하는 실험에서 한 물감에 부을 수 있는 최대 컵 수 */
+  TGT = [1,2];
+  /* 실험 단계의 lockR — 빨강을 이 양으로 담아 두고 잠근다(노랑만 움직인다).
+     세 번의 실험이 점점 열린다:
+       1) 빨강 20 잠금 — 시범에서 쓴 그 양. 찾을 것은 노랑 하나뿐이라 출발이 막히지 않는다.
+       2) 빨강 40 잠금 — 빨강이 두 배가 되었을 때 노랑은 어떻게 되어야 하는지만 남긴다.
+       3) 잠금 없음   — 두 양을 스스로 정해 같은 색을 만든다.
+     비를 지키는 일을 앱이 대신하지 않으면서(지침 1.5·3.3), 다룰 변인을 하나부터 늘려 간다. */
+  LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+  LOG_TK = 'ratiosense-2026';
+  LAB = 'colorV3en';
+
+  state = {
+    i: 0, amt: { 'Red':0, 'Yellow':0 }, found: [], hypo: null, obs: null,
+    picks: {}, solved: {}, refText:'', probe:{}, cupFlash:null, dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
+    cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
+    toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
+    labLog: [], wallDone: 0, failed: [], hypoPick: false,
+    voiceMap: {}, voicePanel: false,
+    tmpNum: {},
+    cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null,
+    cmpSpin: 0,   /* 색팽이를 돌린 횟수 — 값이 바뀌면 회전이 처음부터 다시 돈다 */
+  };
+
+  /* 단위화 조작 — 양과 컵의 크기는 단계마다 다르다(step.src · step.unit).
+     20:40을 20mL 컵으로, 30:60을 30mL 컵으로, 40:80을 40mL 컵으로 옮겨 담으면
+     양이 달라져도 언제나 1컵 : 2컵이 되어 같은 비가 손으로 드러난다.
+     아래 값은 단계가 지정하지 않았을 때의 기본값이다. */
+  UNIT_ML = 20;
+  CUP_SRC = { r: 20, y: 40 }; /* 옮겨 담을 물감 양 */
+  /* 세 회차의 비커를 같은 자로 그린다 — 상한을 회차마다 바꾸면 20mL와 40mL가 같은 높이로 보여
+     기준량이 커지는 것이 눈에 들어오지 않는다. 가장 많은 양(80mL)에 맞춰 고정한다. */
+  CUP_CAP = 80;
+  TICK_ML = 10;               /* 비커에 긋는 눈금 한 칸 — 컵이 몇 칸인지 세어 볼 수 있게 한다 */
+  CUP_ASK = 'So the red came to one cup and the yellow to two. The amounts are just the same, but change the unit you count in and new numbers appear. So what is the ratio of red to yellow? Choose below.';
+
+  get STEPS() {
+    return [
+      { k:'story', who:'ratio', emoji:'🎨',
+        lines:['Hello! I am Ratia, and we are going to find the Secret of Ratio together.',
+               'This is the Color room. A painter and a scientist are waiting, and they need your help.',
+               'Shall we solve it together?'],
+        btn:'Start exploring! →' },
+      { k:'story', who:'munch', art:'../v4/scream_half.jpg', artAlt:'a painting left unfinished',
+        artCap:'The sunset sky was left half painted',
+        lines:['Hello there. I am Munch, a painter. I still have the sunset sky of The Scream to paint, but my paint has dried up.',
+               'Munsell the scientist said he would make the orange for me. Will you help too?'],
+        btn:'Yes, I will help!' },
+      { k:'story', who:'munsell', art:'../v4/munsell_circle.jpg', artBig:1,
+        artAlt:'Munsell’s 20-hue color circle — twenty colors from red and orange through yellow, green, blue and purple, arranged in a ring with their names and values',
+        artCap:'The 20-hue color circle Munsell made',
+        lines:['Hello, good to meet you. I am Munsell, a scientist who studies color.',
+               'I am the one who put together this color circle.',
+               'Shall we make Munch’s sunset color together?'],
+        hi:'Let us find it by experiment.', btn:'Yes! I will help you!' },
+      { k:'chips', who:'munsell', need:2,
+        say:'What decides a color? Find the two that do. You may tap the others to check as well.',
+        hint:'Tap the ones you think are wrong too · you can tap again',
+        chips:[ {t:'which paints you use', ok:1, fb:'Which paints you use does decide the color.'},
+                {t:'the order you mix them', ok:0, fb:'Once everything is mixed the order makes no difference. Shall we think again?'},
+                {t:'the size of the brush', ok:0, fb:'The brush size matters when you paint, not when you mix. Shall we think again?'},
+                {t:'how much of each paint', ok:1, fb:'How much you put in decides the color too.'} ] },
+      { k:'chips', who:'munsell', need:1, swatch:true,
+        say:'So which paints do we need? Look carefully at the target color and make a guess.',
+        chips:[ {t:'red + yellow', ok:1, fb:'That is right. Those are the two.'},
+                {t:'red + blue', ok:0, fb:'Red and blue mixed together make purple. Shall we think again?'},
+                {t:'yellow + blue', ok:0, fb:'Yellow and blue mixed together make green. Shall we think again?'} ] },
+      { k:'chips', who:'munsell', need:1,
+        say:'Good. So how much of each paint should go in?',
+        chips:[ {t:'We have to find out by experiment', ok:1, fb:'Exactly. We need an experiment.'},
+                {t:'Any amount will do', ok:0, fb:'Change the amount and the color changes with it. Shall we check by experiment?'},
+                {t:'The more the better', ok:0, fb:'Even with a lot of paint, a different ratio gives a different color. Shall we check by experiment?'} ] },
+      { k:'demo', who:'munsell',
+        say:'I have put 20mL of red into both beakers below. Now we add different amounts of yellow: 20mL on the left, 60mL on the right. Watch what happens to the color.',
+        btn:'Got it!' },
+      { k:'chips', who:'munsell', need:1, mark:'obs', swatch:true,
+        say:'A scientist makes a hypothesis before experimenting — a guess about what will happen. Look hard at the target color. Which paint looks like there is more of it? Choose, and we will test that hypothesis straight away.',
+        hint:'A good hypothesis comes from looking, not guessing · you can choose again',
+        chips:[ {t:'🔴 There looks to be more red', v:'r', ok:1, fb:'With more red you get a deep, reddish orange like this. Shall we put it beside the target color?'},
+                {t:'🟡 There looks to be more yellow', v:'y', ok:1, fb:'With more yellow you get a bright, light orange like this. Shall we put it beside the target color?'},
+                {t:'🟠 They look about the same', v:'s', ok:1, fb:'Half and half gives an orange right in the middle. Shall we put it beside the target color?'} ] },
+      /* 네 번의 실험 — 다루는 단위와 변인을 차례로 연다.
+         1·2는 10mL 컵으로 세면서 관계를 찾고(몇 컵 대 몇 컵), 3·4는 막대로 양을 자유롭게 정한다. */
+      { k:'lab', mode:'find', unit:'cup', who:'munsell', run:'Record it', lockR:20,
+        say:'To make the target color I have poured two cups of red, 10mL each. How many 10mL cups of yellow should go in? Pour it the way your hypothesis says. I will tell you the moment it matches the target.',
+        hi:'Tap ＋ on the yellow side to pour one cup at a time' },
+      { k:'lab', mode:'more', unit:'cup', who:'munsell', run:'Record it', lockR:40,
+        say:'Perfect. But can we make the same color with different amounts? This time I poured four cups of red, 10mL each. How many 10mL cups of yellow will give the same color as before?',
+        hi:'The red has doubled · how many cups of yellow?' },
+      { k:'lab', mode:'more', who:'munsell', run:'Record it',
+        say:'You found the target color with 20 red and 40 yellow. Now make it with different amounts. Set the amounts with the sliders, and record it when you find it.',
+        hi:'Mission · make the target color with amounts different from the two you already made · the sliders go up to 500mL' },
+      /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
+         안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
+         답은 어른이 말해 주지 않는다 — 다인이 말대로 직접 만들어 보고, 그 결과를 근거로
+         학습자가 설명을 완성한 뒤에야 '무엇이 그대로였나'를 한 마디로 모은다. */
+      { k:'story', who:'kid', emoji:'🙋',
+        lines:['Wait a moment!',
+               'What if you added 30mL of red to the 20mL of red,',
+               'and 30mL of yellow to the 40mL of yellow? That would make 50 red and 70 yellow.',
+               'If you add the same amount to both, do you still get the same color?'],
+        btn:'Good question! →' },
+      /* 오개념을 말로 반박하지 않는다 — 다인이가 말한 그대로 손으로 만들어 보고,
+         목표색 옆에 나란히 놓아 달라진다는 것을 눈으로 확인하게 한다. */
+      { k:'lab', mode:'trap', unit:'cup', who:'munsell', run:'Check it',
+        startR:20, startY:40, trapA:50, trapB:70,
+        say:'What a good question! Let us show it by experiment. The beaker holds 20mL of red and 40mL of yellow. Add 30mL to each side, just as Dain said. Will it match the target color?',
+        hi:'Pour three more cups of red and three more of yellow' },
+      { k:'blank', id:'why', who:'munsell', demo:'cups',
+        say:'Shall we look at the picture below? We added the same amount to red:yellow, and the color came out different. Drag the word cards to finish an explanation for your friend.' },
+      /* 실험과 다인이의 반례를 모두 겪은 뒤에 묻는다 — 더해도 안 되고 곱하면 되는 까닭을
+         한 마디로 모으는 자리다. */
+      /* 단위화(재합성) — 세 번 되풀이한다. 양에 맞춰 묶는 단위를 바꾸면
+         20:40도, 30:60도, 40:80도 모두 1컵 : 2컵이 되어 같은 비가 손으로 드러난다.
+         앱이 대신 약분해 보여 주던 자리를 학습자의 조작이 대신한다. */
+      { k:'cups', who:'munsell', src:{ r:20, y:40 }, unit:20, ask:true,
+        say:'Here are the 20mL of red and 40mL of yellow you found by experiment. This time I will give you a slightly bigger cup that holds 20mL. If you move all the paint from both beakers into these cups, how many cups will each one fill? Tap the cups and move it across yourself.',
+        hi:'Tap an empty cup and 20mL moves across from the beaker',
+        probe:{ title:'🤔 Let us look back at what you just did', rows:[
+          { q:'How did it come out as 1 cup and 2 cups?', opts:[
+            { t:'I moved both beakers across using 20mL cups', ok:1 },
+            { t:'I took some red out and put more yellow in', ok:0, fb:'Not one drop was taken out or added. All that changed was the unit you counted in.' } ] },
+          { q:'The amounts did not change, so why did the new numbers 1 and 2 appear?', opts:[
+            { t:'Because we counted in bundles of 20mL', ok:1 },
+            { t:'Because there was less paint', ok:0, fb:'The paint only moved from beaker to cup — none of it went away.' },
+            { t:'Because the cup is smaller than the beaker', ok:0, fb:'A smaller cup on its own does not give you 1 and 2. Shall we look again at what size bundle you counted in?' } ] },
+          { q:'Which symbols say what you just did with your hands?', opts:[
+            { t:'20 : 40 = 1 : 2', ok:1 },
+            { t:'20 + 40 = 60', ok:0, fb:'That is the two amounts added together. What we did was compare them, was it not?' },
+            { t:'40 − 20 = 20', ok:0, fb:'That is the difference between the two amounts. What we did was compare them, was it not?' } ] } ] } },
+      { k:'cups', who:'munsell', src:{ r:40, y:80 }, unit:40,
+        say:'Last one. Move 40mL of red and 80mL of yellow into cups that hold 40mL. How many cups to how many cups this time?',
+        hi:'One cup holds 40mL' },
+      { k:'chips', who:'munsell', need:1,
+        say:'Every one of them was the same color, whatever the amounts. Simplified, they all came to 1 to 2. What should we write in the notebook?',
+        chips:[ {t:'Write “red : yellow = 1 : 2” in the notebook', ok:1, fb:'Whatever the amounts, keep this ratio and you get the same color.'},
+                {t:'Write “red 20mL, yellow 40mL” in the notebook', ok:0, fb:'Write down only the amounts and it is no use when you want to make more. Shall we think again?'} ] },
+      /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
+         앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
+      { k:'blank', id:'letter', who:'munsell', demo:'recipe',
+        say:'Now write to Munch and tell him what ratio of red to yellow makes the color. Hold the number cards below and drag them onto the blanks.' },
+      /* 찾은 비를 큰 통에 그대로 옮겨 쓰는 자리 — 빨강 50mL는 이미 담겨 있고,
+         노랑을 10mL 컵으로 부어 학습자가 1 : 2를 스스로 지킨다. */
+      { k:'lab', mode:'wall', unit:'cup', who:'munch', run:'Done', lockR:50,
+        say:'So mixing red and yellow 1 to 2 gives that color. Thank you for working it out! I have put 50mL of red in the big tub. How much yellow should go in?',
+        hi:'Pour the yellow with the 10mL cup' },
+      { k:'story', who:'munch', art:'../v4/scream.jpg', artCap:'Edvard Munch, The Scream',
+        lines:['I painted the sunset with the color you gave me, and it is finished.',
+               'Thank you so much!'],
+        btn:'Next →' },
+      /* 시냐크로 넘어가기 전, 안내자가 여기까지를 한 번 매듭짓는다 */
+      { k:'story', who:'ratio', emoji:'🎨',
+        lines:['So far you have helped Munch and Munsell and worked out the secret of ratio in mixing color. Well done!',
+               'Now we are going to make color a different way.',
+               'They say the Secret of Ratio is hiding here too. Shall we go and find it?'],
+        btn:'Yes please! →' },
+      /* 시냐크 소개 — 시냐크 본인의 점묘화 대표작을 그대로 보여 준다. */
+      { k:'story', who:'signac', art:'../v4/signac_feneon.jpg', art2:'../v4/signac_incomplete.jpg', art2Wash:1,
+        artCap:'Paul Signac, Portrait of Félix Fénéon (1890)  ·  Woman with a Parasol — unfinished, with the orange missing',
+        lines:['Hello. I am Signac, a painter who makes color out of dots.',
+               'Right now I am mixing the orange I need for Woman with a Parasol.',
+               'Will you help me make the color, dot by dot?'],
+        btn:'Yes!' },
+      { k:'dots', who:'signac',
+        say:'I want an orange made of 2 reds and 3 yellows. Pick a paint at the top, then tap an empty square below to place a dot. Tap it again to rub a dot out.',
+        hi:'5 dots · red : yellow = 2 : 3',
+        probe:{ title:'🤔 Let us look back at the dots you just placed', rows:[
+          { q:'How did this orange come about?', opts:[
+            { t:'I placed 2 red dots and 3 yellow dots', ok:1 },
+            { t:'I placed any five dots at all', ok:0, fb:'Dots placed at random do not give this orange. Shall we count how many of each color you placed?' } ] },
+          { q:'Why does the number of dots decide the color?', opts:[
+            { t:'Because it fixes each color’s share of the whole', ok:1 },
+            { t:'Because more dots make a deeper color', ok:0, fb:'However many dots you place, the same ratio gives the same orange. Shall we think again?' } ] },
+          { q:'Which symbols say what your dots show?', opts:[
+            { t:'red : yellow = 2 : 3', ok:1 },
+            { t:'red : yellow = 3 : 2', ok:0, fb:'The red dots go first, the yellow dots second. Shall we check the order?' },
+            { t:'red : whole = 2 : 3', ok:0, fb:'The whole is five. What you compared just now was red against yellow, was it not?' } ] } ] } },
+      { k:'grid', n:10, who:'signac',
+        say:'Here is a new orange. Show red to yellow as 2 to 3 across ten squares — 4 red and 6 yellow.',
+        hi:'red : yellow = 2 : 3' },
+      { k:'grid', n:100, who:'signac', say:'Last of all, try a hundred squares. With the big brush you can paint a whole row at a time!', hi:'red : yellow = 2 : 3',
+        probe:{ title:'🤔 Let us look back at the hundred squares you painted', rows:[
+          { q:'How did you paint the hundred squares?', opts:[
+            { t:'I split them into 40 red and 60 yellow', ok:1 },
+            { t:'I painted squares here and there, one at a time', ok:0, fb:'Where you paint them can vary. What decides the color is how many squares of each. Shall we count again?' } ] },
+          { q:'The squares went from ten to a hundred, so why is it the same orange?', opts:[
+            { t:'Because however many squares there are, red to yellow stays 2 to 3', ok:1 },
+            { t:'Because more squares made the color deeper', ok:0, fb:'The color stayed the same with more squares, did it not? Shall we look again at what did not change?' } ] },
+          { q:'Which symbols say what you painted on the hundred squares?', opts:[
+            { t:'40 : 60 = 2 : 3', ok:1 },
+            { t:'40 : 100 = 2 : 3', ok:0, fb:'40 and 100 compares red with the whole. Right now we are comparing red with yellow.' },
+            { t:'40 + 60 = 100', ok:0, fb:'That is the two numbers added together. What we did was compare them, was it not?' } ] } ] } },
+      /* 개수 대비 — 여기까지는 칸이 늘어나도 비가 그대로여서 개수를 세어도 답이 맞았다.
+         칸 수가 많은 쪽이 오히려 비는 작은 사례를 견주게 하여 개수로 판단하는 습관을
+         드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
+      { k:'chips', who:'signac', need:1, demo:'cmp',
+        say:'Does placing more red and yellow dots make the color redder? Compare the two pictures. Which orange is the redder one?',
+        chips:[ {t:'A — because it has more red squares, eight of them', ok:0,
+                 fb:'It does have more red, eight squares. But it also has twelve yellow. Shall we compare red’s share of the whole?'},
+                {t:'B — because red takes up a bigger share', ok:1,
+                 fb:'That is right. What decides the color is not the number of squares but the share of the whole.'},
+                {t:'They are exactly the same', ok:0,
+                 fb:'A is eight out of twenty, B is three out of six. Which one is more than half?'} ] },
+      { k:'story', who:'signac', art:'../v4/signac_painting.jpg', artCap:'Woman with a Parasol — finished!',
+        lines:['However many more dots there were, red to yellow stayed 2 to 3!',
+               'Thank you for letting me practise the color I wanted and get my painting done.'],
+        btn:'Next →' },
+      /* 레시오 재등장 — 시냐크 파트가 끝나고 안내자가 다시 나오는 첫 지점.
+         곧바로 발문을 던지지 않고, 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
+      { k:'story', who:'ratio', emoji:'🎨',
+        lines:['You made orange out of dots with Signac. Well done!',
+               'Now shall we look at rate?'],
+        btn:'Yes please! →' },
+      { k:'blank', id:'cells', who:'ratio',
+        say:'Of the 100 squares, 40 are painted red. What is red’s share of all 100 squares? Hold the words below with your finger or mouse, drag them and drop them on the blanks.' },
+      { k:'blank', id:'pct', who:'ratio',
+        say:'Here is another one. If 40mL of red and 60mL of yellow make 100mL of orange, what per cent of the whole is each color?' },
+      /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
+         화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3). */
+      { k:'reflect', who:'ratio',
+        say:'Think back over everything you did. You made the target color by pouring 40mL of yellow into 20mL of red, and when the red grew to 40mL you poured 80mL of yellow. Moved into cups it always came to 1 cup against 2 cups, and whether you placed five dots or painted a hundred squares, each color kept the same share. Using what you did here in the Color room, explain why different amounts still gave the same color.',
+        hi:'The amounts you made are still below · write about one of them' },
+      /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
+         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
+      { k:'blank', id:'secret', who:'ratio',
+        say:'I have read what you wrote. You have studied ratio with paint and cups, with dots and squares. Now let us pull it together. Drag the word cards into the blanks.' },
+      { k:'finish', who:'ratio',
+        say:'You found the Color secret! You have earned the card numbers 1 and 6, in that order. Keep them safe!',
+        hi:'Room complete! Card numbers 1 · 6 are yours' }
+    ];
+  }
+
+  /* 단계 인덱스 참조 — 단계를 넣고 빼도 어긋나지 않도록 종류로 찾아 캐시한다 */
+  _stepIdx(name, fn) {
+    this._sidx = this._sidx || {};
+    if (this._sidx[name] == null) this._sidx[name] = this.STEPS.findIndex(fn);
+    return this._sidx[name];
+  }
+  get I_FIND()   { return this._stepIdx('find',   s => s.k === 'lab' && s.mode === 'find'); }
+  /* 가설을 세우는 단계 = 관찰(mark:'obs')을 골라 그것이 곧 가설이 되는 단계 */
+  get I_HYPO()   { return this._stepIdx('hypo',   s => s.mark === 'hypo' || s.mark === 'obs'); }
+  get I_CUPS()   { return this._stepIdx('cups',   s => s.k === 'cups'); }
+  /* 가설 배너의 끝 경계 — 먼셀·뭉크 구간(가설을 세우고 검증하는 구간)이 끝나고
+     시냐크가 처음 나오는 단계부터는 배너를 내린다. 예전 경계(레시피 카드 단계)와 같은 지점이다. */
+  get I_SIGNAC() { return this._stepIdx('signac', s => s.who === 'signac'); }
+
+  WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
+    /* 레시오 = 방 안내자(밝은 여성 목소리, vhyeri). 초상(ratio_portrait.jpg)으로 표시.
+       원본 이미지에 이미 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1 → 이중 테두리 방지).
+       emoji는 이미지를 불러오지 못했을 때 보여 줄 대체 표시로 남겨 둔다. */
+    ratio:    { name:'Ratia', role:'your guide to the Secret of Ratio', emoji:'🎨',
+                img:'../v4/ratio_portrait.jpg', imgBare:1, tone:'a bright guiding voice',
+                male:0, slot:0, pitch:1.06, pitchF:1.06, rate:1.04, gap:160 },
+    /* 젊은 남자(뭉크) → 중년남자1(먼셀, 가장 낮고 차분) → 중년남자2(시냐크, 밝고 빠름) */
+    /* pitchF = 남성 음성이 없는 기기용 값. 0.4처럼 과하게 낮추면 기계음이 되므로
+       0.78~0.94 범위에서 속도·호흡으로 캐릭터를 구분한다. */
+    munch:    { name:'Munch the painter', role:'a painter trying to finish his picture', img:'../v4/munch.jpg', tone:'young man',
+                male:1, slot:0, pitch:1.02, pitchF:0.92, rate:1.10, gap:190 },
+    munsell:  { name:'Munsell the scientist', role:'a researcher who mixes color by ratio', img:'../v4/munsell_base.png', tone:'older man 1 · low and calm',
+                male:1, slot:1, pitch:0.68, pitchF:0.78, rate:0.96, gap:240 },
+    /* 다인 = 오개념을 직접 물어 오는 또래 아이(아동 목소리 ndain).
+       어른이 대신 "이런 오해가 있다"고 말해 주지 않고 아이가 스스로 묻게 해 함께 따져 보는 자리를 만든다. */
+    kid:      { name:'Dain', role:'a friend who is curious about color', emoji:'🙋', tone:'child\'s voice',
+                male:0, slot:2, pitch:1.28, pitchF:1.28, rate:1.02, gap:170 },
+    /* 시냐크 초상도 레시오와 같은 규격의 원형 초상(signac_portrait.jpg, 640×640).
+       원본에 이미 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1 → 이중 테두리 방지). */
+    signac:   { name:'Signac the painter', role:'a painter who makes color out of dots', emoji:'🖌️',
+                img:'../v4/signac_portrait.jpg', imgBare:1, tone:'older man 2 · bright and lively',
+                male:1, slot:2, pitch:0.86, pitchF:0.86, rate:1.22, gap:110 },
+    narrator: { name:'Guide', role:'the voice that reads the questions aloud', emoji:'📣', tone:'female narration',
+                male:0, slot:0, pitch:1.18, pitchF:1.18, rate:1.06, gap:150 }
+  };
+
+  /* 가설은 세 가지만 — 어느 쪽이 많은지에 따라 하나씩 고른다 */
+  HYPOS = [['2','1','more red'], ['1','2','more yellow'], ['1','1','about the same']];
+
+  BLANKS = {
+    cells: { art:true, rows:[
+        ['Out of the whole that is ', {a:'40'}, ' %'],
+        ['As a fraction that is ', {a:'40/100'}],
+        ['As a decimal that is ', {a:'0.4'}] ],
+      bank:['40','40/100','0.4','60','0.6'] },
+    pct: { rows:[
+        ['Red is ', {a:'40'}, ' %'],
+        ['Yellow is ', {a:'60'}, ' %'] ],
+      bank:['40','60','50','100'] },
+    /* 뭉크에게 보내는 편지 — 찾은 비를 학습자가 자기 손으로 적어 건넨다.
+       두 빈칸(letter-1-1 · letter-1-3)에 놓은 수로 섞은 색을 목표색 옆에 띄워 준다(지침 5.2). */
+    letter: { card:true, title:'✉️ Dear Mr Munch', rows:[
+        ['Mr Munch, I have found the sunset orange!'],
+        ['Mix red and yellow in a ratio of ', {a:'1'}, ' to ', {a:'2'}, ' and you will have it.'],
+        ['Keep that ratio and any amount will give the very same color.'] ],
+      bank:['1','2','3','4'] },
+    /* 다인이의 오개념에 해 줄 설명 — 컵 그림(2:4 · 5:7 · 4:8)을 근거로 학습자가 완성한다 */
+    why: { card:true, title:'📝 What I would tell Dain', rows:[
+        ['If you ', {a:'add'}, ' the same amount to both paints, the color changes.'],
+        ['To keep the same color you have to ', {a:'multiply'}, ' both amounts by the same number.'] ],
+      bank:['add','multiply','subtract','divide'] },
+    /* 방의 마무리 정리 카드. 없어진 '레시피 카드' 단계의 몫(노을빛 주황 = 빨강 1 : 노랑 2)까지
+       이 한 장에 담아, 구체적인 레시피와 일반화된 결론을 나란히 적게 한다. */
+    secret: { card:true, title:'📝 The Color secret, in one sentence', rows:[
+        ['Even when the ', {a:'amount'}, ' of the two paints is different, if the '],
+        ['Even when the ', {a:'ratio'}, ' is the same you get the same color.'] ],
+      bank:['amount','ratio','difference','count'] },
+    /* 카드 문제 — 이 방을 통과해야 비밀 카드의 숫자를 받는다.
+       base·equiv 두 장은 예전 비의 비밀에 모아 두었던 색깔 카드를 옮겨 온 것이고,
+       cup·denser 두 장은 없어진 마트의 비밀 문제를 색의 맥락으로 바꾼 것이다
+       ('묶음 가격 ÷ 개수 = 1개 값' → '전체 mL ÷ 컵 수 = 한 컵의 양',
+        '어느 가게가 싼가' → '어느 주황이 더 붉은가'). */
+  };
+  /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 앞 두 자리를 1 과 6, 두 장으로 차례로 받는다.
+     예전에는 참여를 시작하기만 해도 '1.'을 거저 주었는데, 그 자리까지 이 방에서 찾아내게 했다. */
+  CONCEPT = 'Different amounts, same ratio — the same color!';
+  DIGITS = [ { id:'color1', d:'1' }, { id:'color2', d:'6' } ];
+
+  mix(a) {
+    const ks = Object.keys(a).filter(k => a[k] > 0);
+    const t = ks.reduce((s,k) => s + a[k], 0);
+    if (!t) return [252,250,245];
+    const o = [0,0,0];
+    ks.forEach(k => { const w = a[k]/t, p = this.PRIM[k]; for (let i=0;i<3;i++) o[i] += p[i]*w; });
+    return o.map(v => Math.round(v));
+  }
+  rgb(a) { return 'rgb(' + a[0] + ',' + a[1] + ',' + a[2] + ')'; }
+  gcd(a,b) { return b ? this.gcd(b, a%b) : a; }
+
+  ac() {
+    if (!this._ac) {
+      const C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      this._ac = new C();
+      this._bus = this._ac.createGain(); this._bus.gain.value = 0.5;
+      const comp = this._ac.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.ratio.value = 6;
+      this._bus.connect(comp); comp.connect(this._ac.destination);
+    }
+    if (this._ac.state === 'suspended') this._ac.resume();
+    return this._ac;
+  }
+  sfx(kind) {
+    if (this.state.audio === 'mute') return;
+    const now = performance.now();
+    if (now - (this._lastSfx||0) < 60) return;
+    this._lastSfx = now;
+    const c = this.ac(); if (!c) return;
+    const t = c.currentTime, duck = this._speaking ? 0.35 : 1;
+    const n = (f, at, dur, vol, type) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t+at);
+      g.gain.setValueAtTime(0.0001, t+at);
+      g.gain.linearRampToValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+0.02);
+      g.gain.setValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+at+dur);
+      o.connect(g); g.connect(this._bus); o.start(t+at); o.stop(t+at+dur+0.05);
+    };
+    if (kind === 'tap') n(720, 0, 0.09, 0.08);
+    else if (kind === 'pour') n(260 + Math.random()*90, 0, 0.07, 0.05, 'triangle');
+    /* 정답: 4음이 부드럽게 이어 올라가는 "딩동댕" */
+    else if (kind === 'ok') {
+      [[523.25,0,0.30],[659.25,0.105,0.30],[783.99,0.21,0.34],[1046.5,0.315,0.62]]
+        .forEach((s,i) => { n(s[0], s[1], s[2], 0.115 - i*0.008, 'sine'); n(s[0]*2, s[1], s[2]*0.7, 0.026, 'sine'); });
+    }
+    else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
+    else if (kind === 'card') { [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i) => n(f, i*0.085, 0.5, 0.1 - i*0.008)); }
+    else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+  }
+
+  ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+
+  /* 캐릭터별로 서로 다른 voice를 명시적으로 매핑 */
+  voicePool() {
+    if (this._pool !== undefined) return this._pool;
+    let vs = [];
+    try { vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().indexOf('en') === 0); } catch(e) {}
+    if (!vs.length) { this._pool = null; return null; }
+    const FEM = /female|woman|zira|samantha|susan|hazel|jenny|aria|michelle|ava|allison|karen|moira|tessa|fiona|serena|catherine|\bemma\b|\bamy\b/i;
+    const MALE = /\bman\b|\bmale\b|david|mark|guy|george|james|ryan|daniel|alex|fred|thomas|oliver|brian|\beric\b|christopher|roger/i;
+    const named = vs.filter(v => MALE.test(v.name));
+    const unknown = vs.filter(v => named.indexOf(v) < 0 && !FEM.test(v.name));
+    const female = vs.filter(v => named.indexOf(v) < 0 && unknown.indexOf(v) < 0);
+    const male = named.concat(unknown);
+    const assign = {};
+    ['munch','munsell','signac'].forEach((k, idx) => {
+      assign[k] = male.length ? male[idx % male.length] : (female[0] || vs[0]);
+    });
+    assign.narrator = female[0] || (male.length > 1 ? male[male.length-1] : (male[0] || vs[0]));
+    /* 교사가 지정한 목소리가 있으면 그것을 우선한다 */
+    const pick = this.state.voiceMap || {};
+    Object.keys(pick).forEach(k => {
+      const v = vs.find(x => x.name === pick[k]);
+      if (v) assign[k] = v;
+    });
+    this._pool = { all: vs, male, female, assign };
+    return this._pool;
+  }
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut+1).trim());
+        s = s.slice(cut+1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
+  stopVoice() {
+    clearTimeout(this._sayT);
+    this._vtok = (this._vtok||0) + 1;
+    this._speaking = false;
+    try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
+    try { speechSynthesis.cancel(); } catch(e) {}
+  }
+  /* Korean numeral reading is not needed here: a ratio is spoken as "2 to 3". */
+  speak(text, who) {
+    this.stopVoice();
+    this._speakStamp = Date.now();
+    if (this.state.audio !== 'full') return;
+    const raw = (text === null || text === undefined) ? '' :
+      (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
+    const txt = raw
+      .replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu, '')
+      /* A ratio written with a colon is spoken as "to": 2:3 → "2 to 3".
+         Units are spelled out so the voice does not read them letter by letter.
+         No word boundary before the unit: it has to catch "20mL" as well as "mL". */
+      .replace(/°/g, ' degrees ')
+      .replace(/([A-Za-z0-9.]+)\s*:\s*([A-Za-z0-9.]+)/g, '$1 to $2')
+      .replace(/mL\b/g, ' milliliters ').replace(/cm\b/g, ' centimeters ')
+      .replace(/Hz\b/g, ' hertz ')
+      .replace(/\s+/g, ' ').replace(/ ([.,!?])/g, '$1').trim();
+    if (!txt || txt === '[object Object]') return;
+    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    const man = window.RS_TTS;
+    if (man && man[key]) {
+      try {
+        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+           브라우저에 남은 옛 음성이 재생되지 않는다. */
+        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+        a.volume = 0.95; this._mp3 = a; this._speaking = true;
+        a.onended = () => { this._speaking = false; };
+        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
+        return;
+      } catch(e) {}
+    }
+    this._speakSynth(txt, who);
+  }
+  _speakSynth(txt, who) {
+    if (!('speechSynthesis' in window)) return;
+    const parts = this.chunks(txt);
+    const tok = this._vtok;
+    const cfg = this.WHO[who] || this.WHO.narrator;
+    const pool = this.voicePool();
+    const v = pool ? pool.assign[who] : null;
+    /* 배정된 voice가 성별과 어긋나면 pitch/rate만으로 구분되도록 폴백 */
+    const isMale = !!(pool && v && pool.male.indexOf(v) >= 0);
+    let pitch = (cfg.male && !isMale) ? cfg.pitchF : cfg.pitch;
+    if (!cfg.male && isMale) pitch = 1.5;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      const u = new SpeechSynthesisUtterance(parts[i]);
+      u.lang = 'en-US';
+      if (v) u.voice = v;
+      u.pitch = Math.max(0.1, Math.min(2, pitch));
+      u.rate = Math.max(0.5, Math.min(2, cfg.rate || 1.05));
+      u.volume = 1;
+      let advanced = false;
+      const go = () => { if (advanced || tok !== this._vtok) return; advanced = true; setTimeout(() => step(i+1), cfg.gap || 150); };
+      u.onend = go; u.onerror = go;
+      try { speechSynthesis.speak(u); } catch(e) { go(); }
+    };
+    step(0);
+  }
+
+  /* ── 내 말로 정리 (reflect) — 지침 4.4 단계 끝 언어 성찰 과제 ── */
+  submitReflect() {
+    const v = (this.state.refText || '').trim();
+    if (!v) { this.toast('✏️', 'One line is plenty', 'Say it your own way!'); return; }
+    this.plog('reflect', { room:'color', text: v.slice(0,300) });
+    this.markSolved();
+    this.sfx('ok');
+    this.go(1);
+  }
+
+  plog(ev, data) {
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    try {
+      if (this._user === 'guest') return;
+      this._q = this._q || [];
+      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+        seq: ++this._seq, clientTs:new Date().toISOString(),
+        eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+      if (this._q.length >= 10) this.flush();
+    } catch(e) {}
+  }
+  /* ── 로그 전송: 중복 적재 방지 ──
+     ① _sending 플래그 — fetch가 진행 중이면 새 POST를 만들지 않는다(동시 flush 차단)
+     ② 꺼낸 배치는 _inflight에 "전송 중"으로 보관 → 성공하면 폐기, 진짜 네트워크 실패일 때만 큐로 되돌려 재시도(자료 유실 방지)
+     ③ 전송이 확인된 eventId는 _sentSet에 남겨 다시 보내지 않는다(visibilitychange+pagehide 이중 beacon 차단)
+     ④ 배치를 만들 때 같은 eventId가 이미 있으면 제외한다
+     fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해(CORS 등) 실패로 오인하고
+     재전송하는 일을 막고, 페이지가 닫혀도 요청이 끝까지 나가게 한다. */
+  _logMark(ids) {
+    this._sentSet = this._sentSet || {}; this._sentIds = this._sentIds || [];
+    for (let i = 0; i < ids.length; i++) if (!this._sentSet[ids[i]]) { this._sentSet[ids[i]] = 1; this._sentIds.push(ids[i]); }
+    while (this._sentIds.length > 800) delete this._sentSet[this._sentIds.shift()];
+  }
+  _logBatch(max) {
+    this._sentSet = this._sentSet || {};
+    const q = this._q || [], batch = [], seen = {};
+    while (q.length && batch.length < max) {
+      const r = q.shift();
+      if (!r || !r.eventId || this._sentSet[r.eventId] || seen[r.eventId]) continue; /* 이미 보냈거나 배치 내 중복 */
+      seen[r.eventId] = 1; batch.push(r);
+    }
+    return batch;
+  }
+  flush(beacon) {
+    try {
+      if (!this._q || !this._q.length) return;
+      const useBeacon = !!(beacon && navigator.sendBeacon);
+      if (!useBeacon && this._sending) return;
+      const batch = this._logBatch(50);
+      if (!batch.length) return;
+      const ids = batch.map(r => r.eventId);
+      const body = JSON.stringify({ token:this.LOG_TK, records:batch });
+      this._inflight = this._inflight || {};
+      this._bid = (this._bid || 0) + 1;
+      const bid = 'b' + this._bid;
+      this._inflight[bid] = batch;
+      if (useBeacon) {
+        let ok = false;
+        try { ok = navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' })); } catch(e) { ok = false; }
+        delete this._inflight[bid];
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+        return;
+      }
+      this._sending = true;
+      const settle = (ok) => {
+        delete this._inflight[bid];
+        this._sending = false;
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+      };
+      fetch(this.LOG_EP, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain' }, body })
+        .then(() => settle(true), () => settle(false));
+    } catch(e) { this._sending = false; }
+  }
+  ukey(b) { return b + ':' + (this._user || 'anon'); }
+
+  componentDidMount() {
+    this._seq = 0;
+    this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
+    let audio = 'full';
+    try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
+    let cards = 0;
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    let voiceMap = {};
+    try { voiceMap = JSON.parse(localStorage.getItem('rs3_voices') || '{}') || {}; } catch(e) {}
+    this.setState({ audio, cards, voiceMap });
+    try { speechSynthesis.onvoiceschanged = () => { this._pool = undefined; }; } catch(e) {}
+    this._flushT = setInterval(() => this.flush(), 5000);
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    document.addEventListener('visibilitychange', this._hide);
+    this._pageHide = () => this.flush(true);
+    addEventListener('pagehide', this._pageHide);
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+    this._ptUp = (e) => { if (this._pts) this._pts.delete(e.pointerId); };
+    addEventListener('pointerup', this._ptUp, true);
+    addEventListener('pointercancel', this._ptUp, true);
+    this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
+    this._sayT = setTimeout(() => this.sayStep(0), 500);
+  }
+  componentWillUnmount() {
+    clearInterval(this._flushT); clearInterval(this._wd);
+    document.removeEventListener('visibilitychange', this._hide);
+    removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerup', this._ptUp, true);
+    removeEventListener('pointercancel', this._ptUp, true);
+    clearTimeout(this._tT); clearTimeout(this._autoT); clearTimeout(this._pourT); clearTimeout(this._cupT);
+    this.stopVoice(); this.flush(true);
+  }
+
+  /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
+     who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
+     초상 뒤에 이모지를 깔아 두고, 이미지 로드에 실패하면 이미지를 감춰 이모지가 대신 보이게 한다. */
+  coachPortrait(who) {
+    const bare = !!who.imgBare;
+    return React.createElement('div', { key: who.img,
+      style: { position:'relative', width:'100%', height:'100%', borderRadius:'999px', overflow:'hidden',
+               border: bare ? 'none' : '3px solid var(--color-neutral-300)' } },
+      /* 대체 표시 — 초상 아래에 깔린 이모지 원. 초상이 뜨면 완전히 가려지고, 로드에 실패하면 드러난다 */
+      React.createElement('div', { key:'fb',
+        style: { position:'absolute', inset:'0', borderRadius:'999px',
+                 background:'var(--color-accent-200)', display:'flex', alignItems:'center',
+                 justifyContent:'center', fontSize:'27px',
+                 border: bare ? '3px solid var(--color-accent-400)' : 'none' } }, who.emoji || ''),
+      React.createElement('img', { key:'p', src: who.img, alt: '',
+        onError: (e) => { try { e.currentTarget.style.display = 'none'; } catch(err) {} },
+        style: { position:'absolute', inset:'0', width:'100%', height:'100%',
+                 objectFit:'cover', display:'block' } })
+    );
+  }
+
+  sayStep(i) {
+    const s = this.STEPS[i];
+    if (!s) return;
+    this.speak(s.k === 'story' ? s.lines.join(' ') : s.say, s.who);
+  }
+
+  /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  /* kind='quiet' — 소리 없이 띄우는 알림.
+     가설처럼 아직 맞고 틀림을 가릴 수 없는 선택에는 정답 소리를 내지 않는다. */
+  toast(icon, title, body, kind, hold) {
+    if (kind !== 'quiet') this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    clearTimeout(this._tT);
+    this.setState({ toast: { icon, title, body, kind } });
+    const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
+    this._tT = setTimeout(close, 3000);
+  }
+
+  go(d) {
+    const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
+    if (n === this.state.i) return;
+    this.stopVoice();
+    clearTimeout(this._tT); clearTimeout(this._autoT);
+    this._wasHit = false;
+    this._pts = new Map();
+    this.setState({ i:n, toast:null, amt:this.startAmt(n), labLog:[],
+      cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
+      tmpNum:{},
+      cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
+    if (this.STEPS[n].k === 'finish') setTimeout(() => this.awardDigit(), 350);
+    this.plog('nav', { to:n });
+    this._sayT = setTimeout(() => this.sayStep(n), 380);
+  }
+
+  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
+     네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
+  awardDigit() {
+    let got = [];
+    try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+    /* 두 자리를 적힌 차례 그대로 넣는다 — 1 을 먼저, 6 을 그다음에 */
+    this.DIGITS.forEach(D => { if (got.indexOf(D.id) < 0) got.push(D.id); });
+    try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
+    this.plog('card', { id: this.DIGITS.map(d => d.id).join('+'), digit: this.DIGITS.map(d => d.d).join('') });
+    this.setState({ cards: got.length });
+  }
+
+  /* 자막 다듬기 —
+     (1) 인물 이름은 작은따옴표로 감싸 대사 속에서 눈에 띄게 한다(이미 감싼 것은 그대로 둔다).
+     (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
+     화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
+     '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
+  NAMES = ['Eratosthenes','Signac','Ratia','Munsell','Munch'];
+  markNames(t) {
+    let s = String(t);
+    this.NAMES.forEach(n => {
+      s = s.replace(new RegExp("(?<!['‘’\\w])" + n + "(?!['‘’\\w])", 'g'),
+                    "'" + n + "'");
+    });
+    return s;
+  }
+  wrapSay(t) {
+    if (!t) return '';
+    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+  }
+
+  markSolved() {
+    const s = Object.assign({}, this.state.solved);
+    s[this.state.i] = true;
+    this.setState({ solved: s });
+  }
+  autoNext(ms) {
+    clearTimeout(this._autoT);
+    /* 조작 직후 발문(probe)이 남아 있으면 저절로 넘어가지 않는다 — 조작 화면에서 묻는 것이 이 발문의 자리다 */
+    const st = this.STEPS[this.state.i] || {};
+    if (st.probe && !this.probeOk(st)) return;
+    this._autoT = setTimeout(() => this.go(1), ms || 2300);
+  }
+
+  /* ── 조작 직후 발문 (probe) — 지침 5.1 ──
+     과제를 해결한 그 화면에서, 조작물을 그대로 둔 채 세 가지를 묻는다.
+     어떻게 했는가 · 왜 그렇게 되었는가 · 그 경험이 기호와 어떻게 이어지는가.
+     답을 요구하는 물음이 아니라 추론을 요구하는 물음이므로, 틀려도 막지 않고 되물어 준다. */
+  probeKey(ri) { return this.state.i + '-' + ri; }
+  probeOk(st) {
+    if (!st || !st.probe) return true;
+    const P = this.state.probe || {};
+    for (let ri = 0; ri < st.probe.rows.length; ri++) if (P[this.probeKey(ri)] == null) return false;
+    return true;
+  }
+  probePick(ri, oi) {
+    const st = this.STEPS[this.state.i] || {};
+    if (!st.probe) return;
+    const row = st.probe.rows[ri], o = row.opts[oi];
+    this.plog('probe', { row: ri, pick: oi, ok: o.ok ? 1 : 0, q: row.q.slice(0,60) });
+    if (!o.ok) {
+      this.sfx('oops');
+      this.toast('🤔', 'Try once more!', o.fb || 'Shall we look at it again and think?');
+      return;
+    }
+    const P = Object.assign({}, this.state.probe); P[this.probeKey(ri)] = oi;
+    this.setState({ probe: P });
+    this.sfx('ok');
+  }
+
+  confetti() {
+    try {
+      for (let i=0;i<26;i++) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:-16px;width:11px;height:17px;border-radius:3px;z-index:200;pointer-events:none;animation:rsFall linear forwards';
+        d.style.left = (4 + Math.random()*92) + 'vw';
+        d.style.background = ['#c67139','#f6a06b','#7a8a5e','#d67f48','#8c491a','#ccdbb2'][i%6];
+        d.style.animationDelay = (Math.random()*0.5) + 's';
+        d.style.animationDuration = (1.3 + Math.random()*1.1) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 3200);
+      }
+    } catch(e) {}
+  }
+
+  /* 카드가 도감(헤더 배지)으로 날아가 꽂히는 연출 */
+  flyCard() {
+    try {
+      const src = document.querySelector('[data-card-panel]');
+      const dst = document.querySelector('[data-cards-badge]');
+      if (!src || !dst) return;
+      const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+      const el = document.createElement('div');
+      el.textContent = '🃏';
+      el.style.cssText = 'position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:104px;height:142px;border-radius:16px;border:4px solid #f6a06b;background:#f9f4ed;box-shadow:0 16px 40px rgba(32,30,29,.34);font-size:46px';
+      el.style.left = (a.left + a.width/2 - 52) + 'px';
+      el.style.top = (a.top + a.height/2 - 71) + 'px';
+      document.body.appendChild(el);
+      const dx = (b.left + b.width/2) - (a.left + a.width/2);
+      const dy = (b.top + b.height/2) - (a.top + a.height/2);
+      const anim = el.animate([
+        { transform:'translate(0,0) scale(1) rotate(0deg)', opacity:1 },
+        { transform:'translate(' + (dx*0.45) + 'px,' + (dy*0.45 - 70) + 'px) scale(.72) rotate(-14deg)', opacity:1, offset:0.55 },
+        { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.12) rotate(8deg)', opacity:.25 }
+      ], { duration: 1150, easing:'cubic-bezier(.5,.05,.35,1)' });
+      anim.onfinish = () => {
+        el.remove();
+        try {
+          dst.animate([{ transform:'scale(1)' }, { transform:'scale(1.34)' }, { transform:'scale(1)' }], { duration:520, easing:'ease-out' });
+        } catch(e) {}
+      };
+    } catch(e) {}
+  }
+
+  setAmt(name, v) {
+    const amt = Object.assign({}, this.state.amt);
+    amt[name] = Math.max(0, Math.min(this.MAX, Math.round(v/this.SNAP_ML)*this.SNAP_ML));
+    if (amt[name] !== this.state.amt[name]) {
+      this.sfx('pour'); this.setState({ amt });
+      this.hitCue(amt['Red'], amt['Yellow']);
+    }
+  }
+  colDown(name) {
+    return (e) => {
+      const el = e.currentTarget;
+      try { el.setPointerCapture(e.pointerId); } catch(err) {}
+      this.padDown(e);
+      const r = el.getBoundingClientRect();
+      const apply = (cy) => { this.setAmt(name, (r.bottom - cy) / r.height * this.MAX); };
+      apply(e.clientY);
+      const mv = (ev) => apply(ev.clientY);
+      const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
+      el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    };
+  }
+  padDown(e) {
+    this._pts = this._pts || new Map();
+    if (this._pts.has(e.pointerId)) return;
+    this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  }
+  padMove(e) {
+    if (!this._pts || !this._pts.has(e.pointerId)) return;
+    this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
+    /* 두 손가락으로 함께 늘리는 조작은 두지 않는다. 앱이 두 양에 같은 배율을 곱해
+       비를 대신 지켜 주면, 관계를 지키는 일이 학습자에게 남지 않기 때문이다(지침 1.5·3.3). */
+  }
+  padUp(e) {
+    if (this._pts) this._pts.delete(e.pointerId);
+  }
+
+  /* 단계에 들어설 때 비커에 담겨 있는 양 — 빨강을 잠근 단계는 그 양이 담긴 채로 시작한다 */
+  startAmt(n) {
+    const st = this.STEPS[n];
+    /* 다인이의 방식을 따져 보는 단계처럼, 앞에서 찾은 양이 담긴 채로 시작해야 하는 곳이 있다 */
+    if (st && st.k === 'lab' && (st.startR || st.startY)) return { 'Red': st.startR || 0, 'Yellow': st.startY || 0 };
+    return { 'Red': this.lockR(st), 'Yellow': 0 };
+  }
+  /* 이 단계에서 빨강이 잠겨 있는 양(0이면 잠기지 않음) */
+  lockR(st) { return (st && st.k === 'lab' && st.lockR) ? st.lockR : 0; }
+
+  goalMet(a, b) {
+    const st = this.STEPS[this.state.i];
+    if (!st || st.k !== 'lab') return false;
+    if (!(a > 0 && b > 0)) return false;
+    const ratio = a * this.TGT[1] === b * this.TGT[0];
+    if (st.mode === 'trap') return a === st.trapA && b === st.trapB;
+    /* 목표색에 닿는 순간 바로 알려 준다 — 기록하기를 눌러야만 알 수 있게 두면,
+       막대를 옮겨 색을 맞추는 조작과 '맞았다'는 앎이 서로 떨어져 버린다. */
+    if (st.mode === 'more' && this.state.found.some(f => f[0] === a && f[1] === b)) return false;
+    return ratio;
+  }
+  hitCue(a, b) {
+    const t = this.goalMet(a, b);
+    if (t && !this._wasHit) { this._lastSfx = 0; this.sfx('ok'); }
+    this._wasHit = t;
+  }
+
+  runLab() {
+    const st = this.STEPS[this.state.i];
+    const a = this.state.amt['Red'], b = this.state.amt['Yellow'];
+    if (!(a > 0 && b > 0)) { this.toast('🤔', 'You need both of them', 'You need both red and yellow before anything can mix. Shall we put both in and try?'); return; }
+    const ok = a * this.TGT[1] === b * this.TGT[0];
+    const g = this.gcd(a,b);
+    this.plog('lab', { mode:st.mode, a, b, ok });
+    this.setState({ labLog: this.state.labLog.concat([{ a, b, ok }]).slice(-6) });
+
+    if (st.mode === 'trap') {
+      if (a === st.trapA && b === st.trapB) {
+        this.markSolved();
+        this.toast('🔍', 'You added the same amount to each', 'You added 30mL to the red and 30mL to the yellow, exactly the same, and the color changed. Put it beside the target color and compare.', 'ok');
+        this.autoNext(4200);
+        return;
+      }
+      this.toast('🤔', 'Red ' + st.trapA + 'mL · yellow ' + st.trapB + 'mL — let us set it to that', 'Shall we add 30mL to the red and 30mL to the yellow, just as Dain said?');
+      return;
+    }
+    if (!ok) {
+      const tr = (a/g) + ':' + (b/g);
+      if (st.mode === 'find' && this.state.hypo && tr === this.state.hypo) {
+        const failed = this.state.failed.slice();
+        if (failed.indexOf(this.state.hypo) < 0) failed.push(this.state.hypo);
+        this.plog('hypo_fail', { hypo: this.state.hypo });
+        this.setState({ failed, hypoPick: true });
+        this.toast('🔬', 'You found out the hypothesis was wrong!', 'Crossing off a wrong hypothesis is an important discovery too. Choose a new one below.', 'ok');
+        return;
+      }
+      /* 단계적 힌트(지침 6.5) — 문구는 v3 피드백 기준(관찰 권유형, 평가·추궁 표현 없음), 단계 구조만 추가 */
+      const needY = a * this.TGT[1] > b * this.TGT[0]; /* 참이면 노랑이 모자라다 */
+      const log = this.state.labLog;
+      const prev = log.length >= 2 ? log[log.length - 2] : null;
+      const additive = !!(prev && a > prev.a && b > prev.b && (a - prev.a) === (b - prev.b));
+      /* 빨강이 잠긴 단계에서는 빨강을 더 넣어 보라고 할 수 없다 — 노랑을 늘리고 줄이는 말로만 안내한다 */
+      const lk = this.lockR(st);
+      const dirHint = lk
+        ? (needY ? 'More yellow makes the color lighter and brighter. Shall we add a little more?'
+                 : 'That looks like a little too much yellow. Shall we take some out?')
+        : (needY ? 'More yellow makes the color lighter and brighter. Shall we add a little more?'
+                 : 'More red makes the color deeper and redder. Shall we add a little more?');
+      this.toast('🤔', 'Not the target color yet', this.hintNext('lab' + this.state.i, [
+        'Not the target color yet. Shall we put your color beside the target and compare?',
+        additive ? 'Adding the same amount to both changes the ratio. Shall we think about multiplying instead?' : dirHint,
+        lk ? 'Change the yellow one cup at a time and you can see which way the color goes. Shall we try it slowly?'
+           : 'Change one paint at a time with the ＋ button, 10mL at a step, and you can see which way the color goes. Shall we try it slowly?'
+      ]));
+      return;
+    }
+    if (st.mode === 'find') {
+      const hit = this.state.hypo === (a/g) + ':' + (b/g);
+      this.setState({ found: [[a,b]] });
+      this.markSolved();
+      this.autoNext(3200);
+      this.toast('✅', 'Found it! That is the target color',
+        (this.state.hypo ? (hit ? 'Your hypothesis was spot on — a real scientist! ' : 'It came out differently from your hypothesis, but the experiment settled it. ') : '') +
+        'Red ' + a + ' : yellow ' + b, 'ok');
+      return;
+    }
+    if (st.mode === 'more') {
+      const key = a + ':' + b;
+      if (this.state.found.some(f => f[0]+':'+f[1] === key)) { this.toast('🤔', 'You have already tried those amounts', 'Try some new amounts!'); return; }
+      const found = this.state.found.concat([[a,b]]);
+      this.setState({ found, amt: this.startAmt(this.state.i) });
+      this.markSolved(); this.confetti();
+      const g0 = this.gcd(found[0][0], found[0][1]), g1 = this.gcd(a, b);
+      this.toast('🎉', 'Success! Different amounts, the same color',
+        'First time ' + found[0][0] + ' : ' + found[0][1] + '  →  this time ' + a + ' : ' + b
+        + '  ·  simplified, both come to ' + (a/g1) + ' : ' + (b/g1) + '!', 'ok');
+      this.autoNext(3600);
+      return;
+    }
+    if (st.mode === 'wall') {
+      this.setState({ wallDone: this.state.wallDone + 1 });
+      this.markSolved(); this.confetti();
+      this.toast('🎨', 'The big tub is full!',
+        'Red ' + a + 'mL : yellow ' + b + 'mL — simplified that is ' + (a/g) + ' : ' + (b/g) + ', exactly the ratio you found at the start!', 'ok');
+      this.autoNext(3400);
+      return;
+    }
+  }
+  /* 비우기는 단계가 시작될 때의 상태로 되돌린다 — 첫 실험에서는 먼셀의 시범을 이어받은
+     출발점(빨강만 담긴 비커)이 남아, 비우고 다시 해도 다시 막히지 않는다. */
+  clearLab() { this.sfx('tap'); this._wasHit = false; this.setState({ amt: this.startAmt(this.state.i) }); }
+
+  /* 지침 6.5 — 재시도 횟수·오답 내용에 따른 단계적 힌트 (정답 직접 노출 금지) */
+  hintNext(key, stages) {
+    this._tries = this._tries || {};
+    const n = (this._tries[key] = (this._tries[key] || 0) + 1);
+    return stages[Math.min(n, stages.length) - 1];
+  }
+
+
+  pourCup(side) {
+    if (this.state.pouring) return;
+    const max = side === 'a' ? 1 : 3;
+    if (this.state.demoP[side] >= max) return;
+    this.sfx('pour');
+    this.setState({ pouring: side });
+    clearTimeout(this._pourT);
+    this._pourT = setTimeout(() => {
+      const p = Object.assign({}, this.state.demoP);
+      p[side] = p[side] + 1;
+      this.setState({ demoP: p, pouring: null });
+      if (p.a >= 1 && p.b >= 3) {
+        this.markSolved();
+        this.plog('demo', { done:1 });
+        setTimeout(() => { this.toast('😮', 'And yet the red is 20mL in both!', 'One yellow beaker and three yellow beakers give completely different colors. You have to look at both amounts!', 'ok'); this.autoNext(3400); }, 450);
+      }
+    }, 780);
+  }
+
+  /* ── 단위화(재합성) 조작 ──
+     빨강 20mL·노랑 40mL를 20mL 컵으로 옮겨 담아 학습자가 1컵 : 2컵을 손으로 만들어 낸다.
+     모으는 조작이 중심이므로 되돌리기(컵→비커)는 단계당 1회만 허용한다. */
+  cupStep() { return this.STEPS[this.state.i] || {}; }
+  cupSrc() { return this.cupStep().src || this.CUP_SRC; }
+  cupUnit() { return this.cupStep().unit || this.UNIT_ML; }
+  cupCap() { return this.CUP_CAP; }
+  cupMax(side) { return this.cupSrc()[side] / this.cupUnit(); }
+  cupCount(side) { return side === 'r' ? this.state.cupR : this.state.cupY; }
+  cupDone() { return this.state.cupR >= this.cupMax('r') && this.state.cupY >= this.cupMax('y'); }
+
+  cupPour(side) {
+    const S = this.state;
+    if (S.cupPick) return;
+    const n = this.cupCount(side);
+    if (n >= this.cupMax(side)) {
+      this.toast('🤔', 'This beaker is empty now', 'That beaker is empty. Shall we move the paint from the other one too?');
+      return;
+    }
+    this.sfx('pour');
+    const ns = { cupSeq: S.cupSeq.concat([side]), cupFlash: side };
+    ns[side === 'r' ? 'cupR' : 'cupY'] = n + 1;
+    this.setState(ns);
+    /* 조작 대상(비커·컵)과 그 곁의 기호를 같은 순간에 함께 강조한다 — 지침 4.2 */
+    clearTimeout(this._flashT);
+    this._flashT = setTimeout(() => this.setState({ cupFlash: null }), 750);
+    const r = side === 'r' ? n + 1 : S.cupR, y = side === 'y' ? n + 1 : S.cupY;
+    this.plog('cup', { act:'pour', c:side, r, y });
+    if (r >= this.cupMax('r') && y >= this.cupMax('y')) {
+      clearTimeout(this._cupT);
+      const u = this.cupUnit(), ask = !!this.cupStep().ask;
+      this._cupT = setTimeout(() => {
+        this.plog('cup_done', { r, y, unit:u });
+        if (ask) {
+          this.speak(this.CUP_ASK, 'munsell');
+          /* 확인 과제 선택지를 가리지 않도록 3초 뒤 닫는다(낭독은 이어진다) */
+          this.toast('🥛', 'Red ' + r + ' cups · yellow ' + y + ' cups!',
+            'The amount of paint has not changed, but counting in units of ' + u + 'mL brings out new numbers. Choose the ratio below.', 'ok');
+          return;
+        }
+        /* 되풀이 회차 — 비를 다시 묻지 않는다. 또 1컵 : 2컵이 나왔다는 것만 확인하고 넘어간다 */
+        this.markSolved(); this.confetti();
+        this.toast('🥛', 'Again, red ' + r + ' cups · yellow ' + y + ' cups!',
+          'Different amounts, but bundle them into the right cups and it is 1 to 2 all over again.', 'ok');
+        this.autoNext(3400);
+      }, 460);
+    }
+  }
+
+  cupBack() {
+    const S = this.state;
+    if (S.cupPick) return;
+    if (S.cupUndo >= 1) {
+      this.toast('🤔', 'You can only undo once', 'Shall we gather it into cups this time and count how many there are?');
+      return;
+    }
+    if (!S.cupSeq.length) { this.toast('🤔', 'Nothing has been moved yet', 'Shall we move it into the cups first?'); return; }
+    this.sfx('tap');
+    const seq = S.cupSeq.slice(), side = seq.pop();
+    const n = this.cupCount(side);
+    const ns = { cupSeq: seq, cupUndo: S.cupUndo + 1 };
+    ns[side === 'r' ? 'cupR' : 'cupY'] = Math.max(0, n - 1);
+    this.setState(ns);
+    const r = side === 'r' ? Math.max(0, n - 1) : S.cupR, y = side === 'y' ? Math.max(0, n - 1) : S.cupY;
+    this.plog('cup', { act:'undo', c:side, r, y });
+    this.toast('↩️', 'One cup went back into the beaker', 'That is as far as undo goes. Now shall we gather it into cups and count?');
+  }
+
+  /* 컵을 다 옮기기 전에 '다음'을 누르면 나오는 단계적 힌트(지침 6.5) */
+  cupGateHint() {
+    const S = this.state;
+    if (!this.cupDone()) {
+      const rest = (this.cupMax('r') - S.cupR) + (this.cupMax('y') - S.cupY);
+      this.toast('🤔', 'There is still paint in the beaker', this.hintNext('cupMove', [
+        'There is still paint in the beaker. Shall we move the rest into cups as well?',
+        rest > 3 ? 'There is more left in the yellow beaker. Shall we carry on with the yellow?'
+                 : 'Almost there. Shall we move the last of it and empty the beaker?',
+        'One cup holds only ' + this.cupUnit() + 'mL. Empty one beaker right out before starting the other and it is easier to count.'
+      ]));
+      return;
+    }
+    this.toast('🤔', 'Now say the ratio in cups', this.hintNext('cupRatio', [
+      'Every cup is filled. Shall we point at the red cups and the yellow cups and count them one by one?',
+      'In a ratio the red cups come first and the yellow cups second. Shall we choose in that order?',
+      'Do not add the two counts together — set the count for each color side by side.'
+    ]));
+  }
+
+  cupAnswer(o) {
+    if (this.state.cupPick) return;
+    this.plog('cup_ratio', { t:o.t, ok: !!o.ok });
+    if (o.ok) {
+      this.setState({ cupPick: o.v });
+      this.markSolved();
+      this.confetti();
+      this.toast('✅', 'red : yellow = 1 : 2',
+        'Bundle 20mL and 40mL into 20mL cups and you get 1 cup and 2 cups. The amounts never changed, but changing the unit brought 1 : 2 into view!', 'ok');
+      this.autoNext(3400);
+      return;
+    }
+    /* 고른 오답의 성격(순서 뒤집기 / 전체와 헷갈리기)에 맞춰 2단계 힌트를 갈라 준다 */
+    this.toast('🤔', 'Shall we count once more', this.hintNext('cupRatio', [
+      'Point at each cup as you count. Shall we count the red cups and the yellow cups again?',
+      o.v === 'swap' ? 'In a ratio the red cups come first and the yellow cups second. Shall we check the order?'
+                     : 'It is not the two counts added together — it is how many cups of each color. Shall we count just the yellow cups again?',
+      'Put the red cup count first and the yellow cup count second. Shall we look at the cups and choose?'
+    ]));
+  }
+
+  dotTap(i) {
+    return () => {
+      const d = this.state.dots.slice();
+      d[i] = (d[i] === this.state.dotSel) ? 0 : this.state.dotSel;
+      this.sfx('tap');
+      this.setState({ dots: d, dotMix: null });
+      const r = d.filter(x => x === 1).length, y = d.filter(x => x === 2).length;
+      if (r + y === 5) {
+        clearTimeout(this._dotT);
+        this._dotT = setTimeout(() => this.dotCheck(), 420);
+      }
+    };
+  }
+  dotCheck() {
+    const d = this.state.dots;
+    const r = d.filter(x => x === 1).length, y = d.filter(x => x === 2).length;
+    if (r + y < 5) return;
+    const p1 = this.PRIM['Red'], p2 = this.PRIM['Yellow'];
+    const avg = [0,1,2].map(k => Math.round((p1[k]*r + p2[k]*y)/5));
+    this.setState({ dotMix: this.rgb(avg) });
+    this.plog('dots', { r, y, ok: r*3 === y*2 });
+    if (r*3 === y*2) { this.markSolved(); this.toast('✅', 'Orange made of dots!', 'Red ' + r + ' : yellow ' + y + ' = 2 : 3 — you made orange out of a ratio of dots!', 'ok'); this.autoNext(3200); }
+    else { this.toast('🤔', 'Not that orange yet', 'Right now it is red ' + r + ' : yellow ' + y + '. Shall we change the number of dots and try again?'); }
+  }
+
+  gridCells() {
+    const n = this.STEPS[this.state.i].n;
+    if (this.state.cells.length !== n) return new Array(n).fill('');
+    return this.state.cells;
+  }
+  paintCell(i) {
+    const n = this.STEPS[this.state.i].n;
+    const cells = this.gridCells().slice();
+    if (this.state.bsize === 10 && n === 100) {
+      const r0 = Math.floor(i/10)*10;
+      for (let k=r0;k<r0+10;k++) cells[k] = this.state.pot;
+    } else cells[i] = this.state.pot;
+    this.sfx('pour');
+    this.setState({ cells });
+    const r = cells.filter(c => c === 'r').length, y = cells.filter(c => c === 'y').length;
+    if (r + y === n && !this._gLock) {
+      this._gLock = true;
+      setTimeout(() => {
+        this._gLock = false;
+        this.plog('grid', { n, r, y, ok: r*3 === y*2 });
+        if (r*3 === y*2) { this.markSolved(); this.toast('✅', 'Well done!', 'Red ' + r + ' squares · yellow ' + y + ' squares = 2 : 3!', 'ok'); this.autoNext(3200); }
+        else {
+          /* 지침 5.1·6.5 — 재시도에 따라 단계적으로 구체화되는 힌트(정답 칸 수는 끝까지 비노출) */
+          const diff = Math.round(n*2/5) - r;
+          this.toast('🤔', 'Not 2 : 3 yet', this.hintNext('grid' + n, [
+            'Right now it is red ' + r + ' squares · yellow ' + y + ' squares. Shall we put it beside the target 2 : 3 and compare?',
+            diff > 0 ? 'That looks a little short of red for 2 : 3. Shall we add red and paint again?'
+                     : 'That looks a little heavy on red for 2 : 3. Shall we take red away and paint again?',
+            '2 : 3 means two bundles of red and three of yellow, so five bundles in all. How about splitting the squares into five equal bundles?'
+          ]));
+        }
+      }, 320);
+    }
+  }
+
+  /* 백분율 문제에서 쓰는 비커 그림 — 빨강 40 · 노랑 60이 섞여 주황 100이 된다 */
+  /* 10mL 컵으로 세어 보는 시연 — 학습자가 실제로 만든 세 가지를 나란히 놓는다.
+     2:4(실험 1) · 5:7(다인이 방식) · 4:8(실험 2) */
+  /* 물감 만드는 법 — 수첩에 적은 1 : 2를 그대로 만들어 뭉크에게 건넨다 */
+  recipeEl() {
+    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
+    const beaker = (k, w, h, c, cap) => R.createElement('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px' } },
+      R.createElement('div', { key:'b', style:{ position:'relative', width:w+'px', height:'86px',
+        border:'4px solid ' + ink, borderTopWidth:'2px', borderRadius:'0 0 13px 13px', overflow:'hidden',
+        background:'var(--color-neutral-100)' } },
+        R.createElement('div', { key:'f', style:{ position:'absolute', left:0, right:0, bottom:0,
+          height:h+'%', background:c } })),
+      R.createElement('div', { key:'c', style:{ fontSize:'13.5px', fontWeight:800, color:'var(--color-neutral-700)' } }, cap));
+    const plus = (k, t) => R.createElement('div', { key:k, style:{ fontSize:'26px', color:'var(--color-neutral-600)', paddingBottom:'22px' } }, t);
+    const mixed = this.rgb(this.mix({ 'Red':20, 'Yellow':40 }));
+    return R.createElement('div', { key:'recipe',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'14px' } },
+      /* 만드는 법 카드 */
+      R.createElement('div', { key:'card',
+        style:{ background:'var(--color-neutral-100)', border:'4px solid var(--color-accent-500)',
+          borderRadius:'18px', padding:'12px 26px', boxShadow:'var(--shadow-md)', textAlign:'center' } },
+        R.createElement('div', { key:'t', style:{ fontSize:'14px', fontWeight:800, color:'var(--color-accent-700)' } }, '📝 How to make the paint'),
+        R.createElement('div', { key:'r', style:{ fontSize:'24px', fontWeight:800, marginTop:'4px' } },
+          'red : yellow = ', R.createElement('span', { key:'n', style:{ color:'var(--color-accent-700)' } }, '1 : 2'))),
+      /* 섞기 */
+      R.createElement('div', { key:'mix', style:{ display:'flex', gap:'12px', alignItems:'flex-end', justifyContent:'center', flexWrap:'wrap' } },
+        beaker('r', 46, 33, this.rgb(P['Red']), 'red 20mL'),
+        plus('p', '+'),
+        beaker('y', 46, 67, this.rgb(P['Yellow']), 'yellow 40mL'),
+        plus('e', '='),
+        beaker('o', 62, 100, mixed, 'sunset orange 60mL')));
+  }
+
+  /* 개수 대비 그림(지침 2.8) — 칸 수는 ㉮가 많지만 빨강의 몫은 ㉯가 크다.
+     보기를 고르기 전에는 칸만 보이고, 고른 뒤에 두 주황을 섞어 나란히 드러낸다. */
+  cmpGridsEl() {
+    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
+    const shown = !!(this.state.picks[this.state.i] || []).length;
+    const cell = (k, c) => R.createElement('div', { key:k,
+      style:{ width:'26px', height:'26px', border:'2px solid ' + ink, background:c, boxSizing:'border-box' } });
+    const panel = (k, tag, cols, red, yel) => {
+      const tot = red + yel;
+      return R.createElement('div', { key:k,
+        style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px',
+          background:'var(--color-neutral-100)', border:'3px solid var(--color-neutral-300)',
+          borderRadius:'18px', padding:'12px 16px' } },
+        R.createElement('div', { key:'t', style:{ fontSize:'19px', fontWeight:800, color:'var(--color-accent-700)' } }, tag),
+        R.createElement('div', { key:'g',
+          style:{ display:'grid', gridTemplateColumns:'repeat(' + cols + ', 26px)', gap:'2px' } },
+          Array.from({ length:red }, (_, i) => cell('r'+i, this.rgb(P['Red']))).concat(
+          Array.from({ length:yel }, (_, i) => cell('y'+i, this.rgb(P['Yellow']))))),
+        R.createElement('div', { key:'c', style:{ fontSize:'15px', fontWeight:800, color:'var(--color-neutral-700)' } },
+          tot + ' squares, of which red is ' + red + ' squares'),
+        /* 점의 몫을 그대로 부채꼴로 만든 색팽이. 빠르게 돌리면 두 색이 섞여 한 색으로 보이고,
+           그때 ㉯ 쪽이 더 붉다는 것이 눈으로 드러난다(잔상 혼합). */
+        shown ? R.createElement('div', { key:'m' + this.state.cmpSpin,
+          style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'6px' } },
+          R.createElement('div', { key:'w', style:{ position:'relative', width:'86px', height:'86px' } },
+            R.createElement('div', { key:'d',
+              style:{ position:'absolute', inset:0, borderRadius:'999px', border:'4px solid ' + ink,
+                background:'conic-gradient(' + this.rgb(P['Red']) + ' 0deg ' + (red / tot * 360).toFixed(1) + 'deg, '
+                  + this.rgb(P['Yellow']) + ' ' + (red / tot * 360).toFixed(1) + 'deg 360deg)',
+                animation:'rsSpin .085s linear infinite' } }),
+            R.createElement('div', { key:'b',
+              style:{ position:'absolute', inset:0, borderRadius:'999px', border:'4px solid ' + ink,
+                background:this.rgb(this.mix({ 'Red': red*10, 'Yellow': yel*10 })), opacity:0,
+                animation:'rsBlend .55s ease-out .75s forwards' } })),
+          R.createElement('div', { key:'p', style:{ fontSize:'14px', fontWeight:800, color:'var(--color-accent-700)' } },
+            'red is ' + Math.round(red / tot * 100) + '%')) : null);
+    };
+    const grids = R.createElement('div', { key:'row',
+      style:{ display:'flex', gap:'20px', alignItems:'flex-start', justifyContent:'center', flexWrap:'wrap' } },
+      panel('a', '㉮', 5, 8, 12),
+      panel('b', '㉯', 3, 3, 3));
+    if (!shown) return grids;
+    return R.createElement('div', { key:'cmp',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'10px' } },
+      grids,
+      R.createElement('button', { key:'again',
+        onClick: () => { this.sfx('tap'); this.setState({ cmpSpin: this.state.cmpSpin + 1 }); },
+        style:{ minHeight:'46px', padding:'10px 20px', borderRadius:'999px', border:'3px solid #dcd3c4',
+          background:'#f9f4ed', fontFamily:'inherit', fontSize:'15px', color:'#8c491a', cursor:'pointer' } },
+        '🌀 Spin the color top again'));
+  }
+
+  cupRowsEl() {
+    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
+    const cup = (k, c) => R.createElement('span', { key:k, style:{ display:'inline-block', width:'13px', height:'19px',
+      margin:'0 2px 2px 0', borderRadius:'0 0 4px 4px', border:'2px solid ' + ink, borderTopWidth:'1px', background:c } });
+    /* 색 동그라미를 크게 잡는다 — 이 그림의 몫은 두 색이 같은지 다른지를 눈으로 가리는 것이다 */
+    const card = (k, r, y, cap, ok) => R.createElement('div', { key:k,
+      style:{ display:'flex', alignItems:'center', gap:'11px',
+        background:'var(--color-neutral-100)', border:'3px solid ' + (ok === false ? '#f6a06b' : (ok ? '#ccdbb2' : 'var(--color-neutral-300)')),
+        borderRadius:'18px', padding:'9px 13px' } },
+      R.createElement('div', { key:'s', style:{ flex:'none', width:'72px', height:'72px', borderRadius:'999px',
+        border:'4px solid ' + ink, background:this.rgb(this.mix({ 'Red': r*10, 'Yellow': y*10 })) } }),
+      R.createElement('div', { key:'x', style:{ display:'flex', flexDirection:'column', gap:'4px', minWidth:0 } },
+        R.createElement('div', { key:'c', style:{ display:'flex', flexWrap:'wrap', maxWidth:'188px' } },
+          Array.from({ length:r }, (_, i) => cup('r'+i, this.rgb(P['Red']))).concat(
+          Array.from({ length:y }, (_, i) => cup('y'+i, this.rgb(P['Yellow']))))),
+        R.createElement('div', { key:'m', style:{ fontSize:'14.5px', fontWeight:800, color:'var(--color-neutral-700)', whiteSpace:'nowrap' } },
+          'Red ' + r + ' cups : yellow ' + y + ' cups'),
+        R.createElement('div', { key:'t', style:{ fontSize:'13px', fontWeight:800, lineHeight:1.35,
+          color: ok === false ? '#8c491a' : (ok ? '#56633f' : 'var(--color-neutral-700)') } }, cap)));
+    const col = (k, items) => R.createElement('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', gap:'8px' } }, items);
+    /* 왼쪽에 같은 색 둘(2:4 · 4:8), 오른쪽에 다른 색 하나(5:7)를 놓아 나란히 견주게 한다 */
+    return R.createElement('div', { key:'cups',
+      style:{ display:'flex', gap:'14px', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } },
+      col('L', [ card('a', 2, 4, 'The ratio we found'),
+                 card('c', 4, 8, 'Double them both — the same color!', true) ]),
+      col('R', [ card('b', 5, 7, 'Add three cups to each\nand the color changes', false) ]));
+  }
+
+  pctBeakers() {
+    const P = this.PRIM;
+    return [
+      { t:'red 40mL', w:52, h:40, c:this.rgb(P['Red']) },
+      { t:'yellow 60mL', w:52, h:60, c:this.rgb(P['Yellow']) },
+      { t:'orange 100mL', w:66, h:100, c:this.rgb(this.mix({ 'Red':40, 'Yellow':60 })) }
+    ];
+  }
+
+  blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
+  blankKeys() {
+    const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
+    def.rows.forEach((row, ri) => row.forEach((tk, ti) => { if (typeof tk === 'object') keys.push({ key: id+'-'+ri+'-'+ti, a: tk.a }); }));
+    return keys;
+  }
+  place(word) {
+    const keys = this.blankKeys();
+    const blanks = Object.assign({}, this.state.blanks);
+    let target = this.state.selBlank && !blanks[this.state.selBlank]
+      ? keys.find(k => k.key === this.state.selBlank)
+      : keys.find(k => !blanks[k.key]);
+    if (!target) return;
+    if (target.a !== word && !this.state.selBlank) {
+      const other = keys.find(k => !blanks[k.key] && k.a === word);
+      if (other) target = other;
+    }
+    if (target.a === word) {
+      blanks[target.key] = word;
+      const used = Object.assign({}, this.state.used);
+      const uk = this.STEPS[this.state.i].id + '|' + word;
+      used[uk] = (used[uk] || 0) + 1;
+      const tmpC = Object.assign({}, this.state.tmpNum);
+      delete tmpC[target.key];
+      this.sfx('ok');
+      this.setState({ blanks, used, selBlank: null, tmpNum: tmpC });
+      if (keys.every(k => blanks[k.key])) {
+        setTimeout(() => {
+          const id = this.STEPS[this.state.i].id;
+          this.plog('blank', { id });
+          this.markSolved();
+          if (id === 'secret') {
+            /* 카드 보상은 비의 비밀으로 이동 — 학습 정리 활동만 유지 */
+            this.confetti();
+            this.toast('✅', 'All wrapped up!', 'You have put the Color secret into words. Head back and carry on with the next adventure!', 'ok');
+            this.autoNext(3200);
+          } else {
+            this.confetti();
+            this.toast('✅', 'Finished!', 'Very well done.', 'ok');
+            this.autoNext(3200);
+          }
+        }, 320);
+      }
+    } else {
+      const stId = this.STEPS[this.state.i].id;
+      /* 지침 5.2 — 정리 카드의 비(빨강 2 : 노랑 5)에 놓인 오답 숫자는 거부하지 않고
+         배치를 허용하고, 그 값으로 섞은 색을 보여 감각 증거로 확인하게 한다.
+         (없어진 '레시피 카드' 단계에서 쓰던 피드백을 그대로 옮겨 왔다) */
+      if (stId === 'secret' && /^\d+$/.test(word) && /^\d+$/.test(target.a)) {
+        const tmp = Object.assign({}, this.state.tmpNum);
+        tmp[target.key] = word;
+        this.sfx('pour');
+        this.plog('recipe_wrong', { key: target.key, v: word });
+        this.setState({ tmpNum: tmp, selBlank: null });
+        /* 문구는 v3의 오답 색 표시 피드백 기준 + 단계 구조 */
+        this.toast('🎨', 'These amounts give a color like this', this.hintNext('recipe', [
+          'Those amounts give a color like this. Shall we compare it with the target?',
+          word === '3' ? 'The same difference but a different ratio gives a different color. Shall we think in terms of how many times instead?'
+                       : 'Simplify the ⭕ amounts in your log and you have a hint. Shall we look again?',
+          'Simplify the ⭕ records and they always come to the same ratio. Shall we put that ratio down again?'
+        ]));
+        return;
+      }
+      this.sfx('oops');
+      this.toast('🤔', 'Try once more!', 'Shall we try a different card?');
+    }
+  }
+  chipDown(word) {
+    return (e) => {
+      if (e.button === 1 || e.button === 2) return;
+      const src = e.currentTarget;
+      const g = document.createElement('div');
+      g.textContent = word;
+      g.style.cssText = "position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:18px;border:3px solid #f6a06b;background:#f9f4ed;font-size:19.5px;color:#8c491a;opacity:.94;transform:translate(-50%,-50%)";
+      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+      document.body.appendChild(g);
+      let moved = false;
+      const mv = (ev) => { moved = true; g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
+      const up = (ev) => {
+        document.removeEventListener('pointermove', mv);
+        document.removeEventListener('pointerup', up);
+        g.remove();
+        if (!moved) return;
+        const el = document.elementFromPoint(ev.clientX, ev.clientY);
+        const slot = el && el.closest ? el.closest('[data-blank]') : null;
+        if (slot && slot.getAttribute('data-blank')) {
+          this.setState({ selBlank: slot.getAttribute('data-blank') });
+          setTimeout(() => this.place(word), 0);
+        }
+      };
+      document.addEventListener('pointermove', mv);
+      document.addEventListener('pointerup', up);
+      try { src.releasePointerCapture(e.pointerId); } catch(err) {}
+    };
+  }
+
+  setVoice(who, name) {
+    const vm = Object.assign({}, this.state.voiceMap);
+    if (name) vm[who] = name; else delete vm[who];
+    try { localStorage.setItem('rs3_voices', JSON.stringify(vm)); } catch(e) {}
+    this._pool = undefined;
+    this.setState({ voiceMap: vm });
+    setTimeout(() => this.speak(this.WHO[who].name + ' here. ' + (who === 'narrator' ? 'I will read the questions for you.' : 'Nice to meet you!'), who), 60);
+  }
+
+  cycleAudio() {
+    const order = ['full','sfx','mute'];
+    const next = order[(order.indexOf(this.state.audio) + 1) % 3];
+    if (next !== 'full') this.stopVoice();
+    try { localStorage.setItem('rs3_audio', next); } catch(e) {}
+    this.setState({ audio: next });
+    if (next === 'full') this._sayT = setTimeout(() => this.sayStep(this.state.i), 150);
+    else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
+  }
+
+  renderVals() {
+    /* 화면이 낮을수록 그림 높이 한도를 줄인다 */
+    const _vh = (typeof innerHeight === 'number') ? innerHeight : 900;
+    const artMax = (base) => Math.round(base * (_vh < 820 ? 0.70 : (_vh < 900 ? 0.85 : 1))) + 'vh';
+    const S = this.state, st = this.STEPS[S.i], who = this.WHO[st.who] || this.WHO.narrator;
+    const tgt = this.rgb(this.mix({ 'Red': this.TGT[0], 'Yellow': this.TGT[1] }));
+    const a = S.amt['Red'], b = S.amt['Yellow'];
+    const g = (a > 0 && b > 0) ? this.gcd(a,b) : 0;
+    const solved = !!S.solved[S.i];
+    const isLab = st.k === 'lab';
+
+    const v = {
+      pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
+      stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
+      cards: S.cards,
+      audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
+      audioTitle: S.audio === 'full' ? 'Voice + sound effects' : (S.audio === 'sfx' ? 'Sound effects only' : 'Sound off'),
+      cycleAudio: () => this.cycleAudio(),
+      stopProp: (e) => e.stopPropagation(),
+      openVoices: () => { this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
+      closeVoices: () => { this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
+      voicePanel: S.voicePanel,
+      voiceRows: S.voicePanel ? (() => {
+        const pool = this.voicePool();
+        const list = pool ? pool.all : [];
+        return ['munch','munsell','signac'].map(k => {
+          const w = this.WHO[k];
+          const cur = S.voiceMap[k] || ((pool && pool.assign[k]) ? pool.assign[k].name : '');
+          return {
+            key: k, name: w.name, tone: w.tone,
+            img: w.img || '', emoji: w.emoji || '',
+            cur,
+            opts: list.map(v => ({ v: v.name, t: v.name.replace(/\s*-\s*Korean.*$/i, '').replace(/\(Korean\)/i, '').trim(), sel: v.name === cur })),
+            change: (e) => this.setVoice(k, e.target.value),
+            test: () => this.speak(k === 'narrator' ? 'I will read the questions for you.' : (w.name + ' here. Nice to meet you!'), k)
+          };
+        });
+      })() : null,
+      voiceCount: (() => { const p = this.voicePool(); return p ? p.all.length : 0; })(),
+      noMaleVoice: (() => { const p = this.voicePool(); return !!(p && p.male.length === 0); })(),
+      mp3Count: (() => { try { return Object.keys(window.RS_TTS || {}).length; } catch(e) { return 0; } })(),
+      coachImgEl: who.img ? this.coachPortrait(who) : null,
+      /* 그림 높이는 화면 높이에 맞춰 줄인다 — 노트북에서 자막이 길어도 그림과 버튼이 잘리지 않게 */
+      artEl: st.art2 ? React.createElement('div', { key:'arts',
+        style:{ display:'flex', gap:'12px', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } }, [
+          React.createElement('img', { src: st.art, alt: st.artAlt || '', key: st.art,
+            style:{ display:'block', maxWidth:'min(240px,40vw)', maxHeight:artMax(34), borderRadius:'3px' } }),
+          React.createElement('img', { src: st.art2, alt:'', key: st.art2,
+            className: st.art2Wash ? 'washed' : undefined,
+            style:{ display:'block', maxWidth:'min(240px,40vw)', maxHeight:artMax(34), borderRadius:'3px' } })
+        ]) : st.art ? React.createElement('img', { src: st.art, alt: st.artAlt || st.artCap || '', key: st.art,
+        className: st.artWash ? 'washed' : undefined,
+        style: st.artCrop
+          ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
+          /* artBig: 색상환처럼 글씨를 읽어야 하는 도해는 더 크게(자막·버튼을 밀어내지 않는 범위) */
+          : st.artBig
+            ? { display:'block', maxWidth:'min(380px,68vw)', maxHeight:artMax(38), width:'auto', height:'auto', borderRadius:'3px' }
+            : { display:'block', maxWidth:'min(360px,72vw)', maxHeight:artMax(42), borderRadius:'3px' } }) : null,
+      /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
+      coachEmoji: who.img ? '' : (who.emoji || ''),
+      coachName: who.name,
+      coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n') : this.wrapSay(st.say),
+      coachHi: (st.k === 'lab' && st.mode === 'find') ? '' : (st.hi || ''),
+      /* 가설 상시 배너: 선택 시점부터 실험·확인·정리 단계 내내 상단 고정 */
+      /* 가설은 수가 아니라 관찰한 말로 들고 다닌다. 양을 적어 두면 컵으로 단위화하기도 전에
+         비를 수로 먼저 건네주는 셈이고, 목표색을 눈으로 견주는 일도 사라진다. */
+      hypoBanner: (() => {
+        if (!S.hypo || S.i < this.I_HYPO || S.i >= this.I_SIGNAC) return '';
+        const hp = S.hypo.split(':');
+        let desc = '';
+        this.HYPOS.forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; });
+        return (desc || 'The hypothesis I made') + (S.failed.length ? '  (crossed off: ' + S.failed.length + ')' : '');
+      })(),
+      /* 가설의 색 견본 — 그 가설대로 섞으면 나올 색. 배너에서 목표색과 나란히 놓인다 */
+      hypoColor: (() => {
+        if (!S.hypo || S.i < this.I_HYPO || S.i >= this.I_SIGNAC) return '';
+        const hp = S.hypo.split(':');
+        return this.rgb(this.mix({ 'Red': hp[0]*10, 'Yellow': hp[1]*10 }));
+      })(),
+      replay: () => this.sayStep(S.i),
+      tgtColor: tgt,
+      /* 목표 색 견본: 가설을 세우는 7·8단계와 실험(lab) 단계 모두 같은 형태로 상시 제시 */
+      showSwatch: !!st.swatch || isLab,
+      isStory: st.k === 'story' && !st.demo,
+      storyDemo: ((st.k === 'story' || st.k === 'blank') && st.demo === 'cups') ? this.cupRowsEl()
+        : (((st.k === 'story' || st.k === 'blank') && st.demo === 'recipe') ? this.recipeEl()
+        : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null)), isChips: st.k === 'chips', isLab,
+      isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
+      isReflect: st.k === 'reflect', refText: S.refText,
+      /* 정리 단계에 학습자 자신의 조작 기록을 다시 띄운다 — 「비밀」을 허공에서 떠올리지 않고
+         자기가 만든 양을 근거로 말하게 하는 발판이다(지침 5.3). */
+      refRecall: st.k === 'reflect' ? (() => {
+        const list = S.found.map(f => ({
+          t: 'Red ' + f[0] + ' : yellow ' + f[1],
+          cap: 'Amounts made by experiment',
+          color: this.rgb(this.mix({ 'Red': f[0], 'Yellow': f[1] }))
+        }));
+        list.push({ t: '1 cup : 2 cups', cap: 'when moved into cups', color: tgt });
+        list.push({ t: 'red 40 squares : yellow 60 squares', cap: 'when painted on a hundred squares',
+          color: this.rgb(this.mix({ 'Red': 40, 'Yellow': 60 })) });
+        return list;
+      })() : null,
+      refInput: (e) => this.setState({ refText: e.target.value }),
+      isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      /* 마침 카드 — 이 방은 황금비의 앞 두 자리를 차례로 준다 */
+      cardConcept: this.CONCEPT,
+      cardDigits: this.DIGITS.map(x => ({ d: x.d })),
+      artCap: st.artCap || '',
+      storyEmoji: st.emoji || '',
+      prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
+      toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
+      toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
+      toastBd: S.toast && S.toast.kind === 'ok' ? '#ccdbb2' : '#f6a06b',
+      closeToast: () => this.setState({ toast: null }),
+      goNext: () => { this.plog('complete', {}); try { const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done'))||'[]'); if (d.indexOf('color') < 0) { d.push('color'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); } } catch(e) {} }
+    };
+
+    if (st.k === 'chips') {
+      /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 견주게 한다 */
+      v.pctArt = null;
+      v.madeList = (st.mark || S.found.length < 2) ? null
+        : S.found.map(f => ({ t: f[0] + ' : ' + f[1], color: this.rgb(this.mix({ 'Red': f[0], 'Yellow': f[1] })) }));
+      let list = st.chips || [];
+      if (st.mark === 'hypo') {
+        list = this.HYPOS.map(o => ({ t: o[2], v: o[0]+':'+o[1], ok:1 }));
+      }
+      const picked = S.picks[S.i] || [];
+      const needed = st.need || 1;
+      v.chips = list.map((c, ci) => {
+        const done = picked.indexOf(ci) >= 0;
+        const good = c.ok && done;
+        const chosen = (st.mark === 'obs' && S.obs === c.v) || (st.mark === 'hypo' && S.hypo === c.v);
+        return {
+          t: c.t,
+          bd: chosen ? '#8c491a' : (good ? '#ccdbb2' : '#f6a06b'),
+          bg: chosen ? '#ffe1d0' : (good ? '#f0fae1' : '#f9f4ed'),
+          fg: good && !chosen ? '#56633f' : '#8c491a',
+          pick: () => {
+            const p = picked.indexOf(ci) >= 0 ? picked : picked.concat([ci]);
+            const picks = Object.assign({}, S.picks); picks[S.i] = p;
+            const ns = { picks };
+            if (st.mark === 'obs') {
+              ns.obs = c.v;
+              /* 고른 관찰이 곧 가설이 된다 — 빨강 더 많음 2:1, 노랑 더 많음 1:2, 비슷함 1:1 */
+              const H = { r:'2:1', y:'1:2', s:'1:1' };
+              ns.hypo = H[c.v] || '1:1'; ns.failed = [];
+            }
+            if (st.mark === 'hypo') { ns.hypo = c.v; ns.failed = []; }
+            this.setState(ns);
+            this.plog('pick', { step: S.i, t: c.t, ok: !!c.ok });
+            if (c.ok) {
+              const okCount = p.filter(x => list[x] && list[x].ok).length;
+              /* 가설은 실험 전이라 옳고 그름을 가릴 수 없다 — 정답 표시와 소리 없이 세운 가설만 되짚어 준다 */
+              const quiet = (st.mark === 'hypo' || st.mark === 'obs');
+              const ic = quiet ? '📝' : '✅';
+              const tt = quiet ? (st.mark === 'obs' ? 'So that is what you observed' : 'You made a hypothesis') : c.t;
+              const bd = quiet ? (st.mark === 'obs' ? (c.fb || '') : (c.t + ' — now check it by experiment!')) : (c.fb || '');
+              if (okCount >= needed) {
+                this.markSolved();
+                this.toast(ic, tt, bd, quiet ? 'quiet' : 'ok');
+                this.autoNext(3000);
+              } else this.toast(ic, tt, (quiet ? bd : (c.fb || '') + ' Find one more!'), quiet ? 'quiet' : 'ok');
+            } else this.toast('💡', 'A hint from Munsell', c.fb || '');
+          }
+        };
+      });
+      v.chipHint = st.hint || '';
+      if (st.mark === 'obs' && S.obs) {
+        const PV = { r:{ 'Red':3, 'Yellow':2 }, y:{ 'Red':2, 'Yellow':5 }, s:{ 'Red':1, 'Yellow':1 } };
+        v.obsMine = this.rgb(this.mix(PV[S.obs] || PV.s));
+      } else v.obsMine = null;
+    }
+
+    if (isLab) {
+      v.myColor = this.rgb(this.mix(S.amt));
+      v.myPct = Math.min(94, (a + b) / (this.MAX * 1.4) * 94);
+      v.redAmt = a; v.yelAmt = b;
+      /* 간단히 한 비는 학습자가 단위화(10mL 컵) 단계에서 직접 만들어 낸 뒤에만 보인다.
+         그 전 실험(find·more·trap)에서는 앱이 대신 약분해 주지 않고, 그 뒤(wall)부터
+         조작 곁에 놓인 참조 표상으로만 제시한다. */
+      v.simpleRatio = (g && S.i > this.I_CUPS) ? ('Simplified that is ' + (a/g) + ' : ' + (b/g)) : '';
+      /* 기록하기 버튼 위 요약 박스: 가설 + 현재 양(실시간) */
+      v.beakerAmt = (a || b) ? (a + ' : ' + b) : '';
+      /* 실험 상자의 가설 줄도 배너와 같이 말로만 적는다 — 넣을 양은 학습자가 정한다 */
+      v.sumHypo = (() => {
+        if (!S.hypo) return '';
+        const hp = S.hypo.split(':');
+        let desc = '';
+        this.HYPOS.forEach(o => { if (o[0] === hp[0] && o[1] === hp[1]) desc = o[2]; });
+        return desc || 'The hypothesis I made';
+      })();
+      v.runLabel = st.run || 'Record it';
+      v.runLab = () => this.runLab();
+      v.clearLab = () => this.clearLab();
+      v.padDown = (e) => this.padDown(e); v.padMove = (e) => this.padMove(e); v.padUp = (e) => this.padUp(e);
+      /* 잠긴 물감은 막대·＋−를 모두 막고 자물쇠로 표시한다. 눌러 보면 왜 잠겼는지 알려 준다. */
+      const lockR = this.lockR(st);
+      v.paints = ['Red','Yellow'].map((nm, idx) => {
+        const lk = !!(lockR && nm === 'Red');
+        return {
+          name: nm, amt: S.amt[nm], ink: nm === 'Red' ? '#8c491a' : '#56633f',
+          color: this.rgb(this.PRIM[nm]),
+          order: idx === 0 ? 0 : 2,
+          pct: S.amt[nm] / this.MAX * 100,
+          tag: lk ? '🔒 ' : '',
+          barBd: lk ? '#dcd3c4' : '#c0b6a5',
+          cursor: lk ? 'not-allowed' : 'ns-resize',
+          btnOp: lk ? 0.3 : 1,
+          btnPe: lk ? 'none' : 'auto',
+          handleOp: (lk || !(S.amt[nm] > 0)) ? 0 : 1,
+          down: lk ? (() => this.toast('🔒', 'The red is already poured',
+                        'Munsell has already poured the red. You decide how many cups of yellow go in.'))
+                   : this.colDown(nm),
+          plus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] + this.STEP_ML)),
+          minus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] - this.STEP_ML))
+        };
+      });
+      /* 눈금선은 20mL마다, 숫자 라벨은 100mL마다 (상한이 500이라 10mL 눈금은 너무 촘촘하다) */
+      const ticks = [];
+      for (let m = 20; m <= this.MAX; m += 20) {
+        const big = m % 100 === 0;
+        ticks.push({ n: m, at: m / this.MAX * 100, len: big ? 13 : 7,
+          th: big ? 2 : 1, col: big ? '#a19786' : '#c0b6a5',
+          show: big ? 'block' : 'none' });
+      }
+      /* 눈금 자는 실험 단계 내내 보여 준다. 넣은 양을 눈금으로 읽어 두어야
+         뒤에서 그 값을 비로 옮겨 적을 수 있다. */
+      v.ruler = ticks;
+
+      /* 컵으로 탐색하는 실험(unit:'cup')에서는 막대 대신 10mL 컵을 한 개씩 붓는다.
+         양을 눈금에서 읽는 대신 컵을 세게 되어, 몇 컵 대 몇 컵인지가 먼저 보인다. */
+      const cupUnit = st.unit === 'cup';
+      v.isCupLab = cupUnit; v.isSlider = !cupUnit;
+      if (cupUnit) {
+        v.ruler = null;
+        v.cupPaints = v.paints.map(q => {
+          const nm = q.name, cur = S.amt[nm], n = Math.round(cur / this.CUP_ML), lk = !!(lockR && nm === 'Red');
+          return {
+            name: nm, ink: q.ink, color: q.color, amt: cur, n: n, tag: q.tag,
+            cups: new Array(n).fill(0).map((_, i) => ({ i: i })),
+            btnOp: q.btnOp, btnPe: q.btnPe,
+            add: lk ? (() => {}) : (() => this.setAmt(nm, Math.min(this.CUP_LAB_MAX * this.CUP_ML, cur + this.CUP_ML))),
+            sub: lk ? (() => {}) : (() => this.setAmt(nm, cur - this.CUP_ML))
+          };
+        });
+        v.paints = [];
+      } else v.cupPaints = [];
+      const goal = this.goalMet(a, b);
+      const hypoHit = !!(S.hypo && g && ((a/g) + ':' + (b/g)) === S.hypo);
+      const dup = st.mode === 'more' && S.found.some(f => f[0] === a && f[1] === b);
+      const goalMsg = st.mode === 'trap' ? '✅ These are the amounts Dain talked about! ' + (st.run || 'Check it') + ' to check'
+                    : (st.mode === 'more' ? '✨ Exactly the color you made before! ' : '✨ Exactly the target color! ')
+                      + (st.run || 'Record it') + ' to check';
+      /* 내 색 원의 그림자. 목표 색에 닿으면 초록 테, 내 가설과 같은 비면 주황 테가 둘린다 */
+      /* 색을 견주는 원에는 그림자를 두지 않는다 — 평평한 색면이라야 두 색을 곧바로 비교할 수 있다 */
+      const baseRing = 'none';
+      /* 다인이의 말대로 만들어 보는 단계에서는 내 색에 어떤 테도 두르지 않는다.
+         목표색과 나란히 놓고 눈으로 견주는 것이 이 단계의 몫인데,
+         원 둘레에 색 띠가 있으면 두 색을 견주기가 어려워진다. */
+      const isTrap = st.mode === 'trap';
+      const trapHit = goal && isTrap;
+      v.beakerRing = isTrap ? baseRing
+                   : (goal ? '0 0 0 7px #ccdbb2'
+                   : (hypoHit ? '0 0 0 7px #ffc6a5' : baseRing));
+      /* 이미 만든 양에 다시 닿으면 초록으로 알려 주지 않는다 — 새 양을 찾는 일이 이 단계의 몫이다 */
+      v.liveBadge = goal ? goalMsg
+                  : (dup ? '🤔 You have made these amounts already · try making the same color a different way'
+                  : (hypoHit ? '🔬 The very ratio in your hypothesis! ' + (st.run || 'Record it') + ' to check' : ''));
+      v.liveBg = (goal && !trapHit) ? '#f0fae1' : '#fff2eb';
+      v.liveFg = (goal && !trapHit) ? '#56633f' : '#8c491a';
+      v.liveBd = (goal && !trapHit) ? '#ccdbb2' : '#f6a06b';
+      const allH = [];
+      this.HYPOS.forEach(o => allH.push(o));
+      v.canChangeHypo = st.mode === 'find' && !!S.hypo && !S.hypoPick && !solved;
+      v.openHypo = () => { this.sfx('tap'); this.setState({ hypoPick: true }); };
+      v.closeHypo = () => { this.sfx('tap'); this.setState({ hypoPick: false }); };
+      /* 새 가설도 수가 아니라 말과 색으로 고른다 — 어느 쪽이 더 많다고 보는지,
+         그렇게 섞으면 어떤 색이 될지를 목표색과 견주어 고르게 한다. */
+      v.hypoOpts = (st.mode === 'find' && S.hypoPick)
+        ? allH.filter(o => S.failed.indexOf(o[0] + ':' + o[1]) < 0).map(o => ({
+            t: o[2],
+            color: this.rgb(this.mix({ 'Red': o[0]*10, 'Yellow': o[1]*10 })),
+            pick: () => {
+              this.sfx('ok');
+              this.setState({ hypo: o[0] + ':' + o[1], hypoPick: false, amt: this.startAmt(S.i) });
+              this.plog('hypo_rev', { pick: o[0] + ':' + o[1] });
+              this.toast('🔬', 'You made a new hypothesis', o[2] + ' — now put it to the test!', 'ok');
+            }
+          }))
+        : null;
+      /* 수첩 — 기록하기를 눌러 확인된 양만 쌓이고, 실험 단계 내내 그대로 남는다.
+         시도 자취(labLog)는 단계가 바뀌면 지워지지만 수첩은 지워지지 않는다. */
+      v.noteRows = S.found.length ? S.found.map((f, i) => ({
+        no: (i + 1) + '.',
+        t: 'Red ' + f[0] + 'mL : yellow ' + f[1] + 'mL',
+        color: this.rgb(this.mix({ 'Red': f[0], 'Yellow': f[1] }))
+      })) : null;
+      v.labLog = S.labLog.length ? S.labLog.map(l => ({
+        t: (l.ok ? '⭕ ' : '❌ ') + l.a + ':' + l.b,
+        bg: l.ok ? '#f0fae1' : '#fff2eb', fg: l.ok ? '#56633f' : '#8c491a',
+        bd: l.ok ? '#ccdbb2' : '#ffc6a5'
+      })) : null;
+    }
+
+    if (st.k === 'demo') {
+      const mk = (side, cups) => {
+        const poured = S.demoP[side], yellow = poured * 20;
+        return {
+          pct: 24 + poured * 19,
+          color: this.rgb(this.mix(yellow ? { 'Red':20, 'Yellow':yellow } : { 'Red':20 })),
+          label: yellow ? ('red 20 : yellow ' + yellow) : 'red 20 (yellow 0)',
+          left: cups - poured,
+          /* 붓는 동안 노랑이 위에 쌓였다가(레이어), 부은 뒤 섞인 색으로 합쳐진다 */
+          layerH: S.pouring === side ? 15 : 0,
+          layerOp: S.pouring === side ? 1 : 0,
+          streaming: S.pouring === side,
+          cups: new Array(cups).fill(0).map((_, ci) => ({
+            h: 56, fill: ci < poured ? 0 : 74,
+            op: ci < poured ? 0.35 : 1,
+            cur: ci < poured ? 'default' : 'pointer',
+            anim: (S.pouring === side && ci === poured) ? 'rsTilt .78s ease' : 'none',
+            pour: () => this.pourCup(side)
+          }))
+        };
+      };
+      v.demos = [ mk('a', 1), mk('b', 3) ];
+    }
+
+    if (st.k === 'cups') {
+      const done = this.cupDone();
+      /* 눈금은 10mL마다 긋고, 그 회차의 컵 크기에 해당하는 칸에는 굵은 선을 둔다.
+         20mL 컵은 두 칸, 30mL 컵은 세 칸, 40mL 컵은 네 칸임이 눈금으로 세어진다. */
+      v.cupTicks = [];
+      const uML = this.cupUnit(), cap = this.cupCap(), src = this.cupSrc();
+      v.cupUnitML = uML;
+      v.cupUnitCells = uML / this.TICK_ML;
+      for (let m = this.TICK_ML; m < cap; m += this.TICK_ML) {
+        const big = m % uML === 0;
+        v.cupTicks.push({ at: m / cap * 100, h: big ? '3px' : '1.5px',
+          bg: big ? 'rgba(32,30,29,.55)' : 'rgba(32,30,29,.2)' });
+      }
+      /* 컵 그림도 그 회차의 크기에 맞춰 커진다 — 20mL 컵과 40mL 컵이 같은 크기면 안 된다 */
+      v.cupIconH = Math.round(uML * 1.15) + 'px';
+      v.cupBtnH = Math.round(uML * 1.55) + 'px';
+      v.cupCols = [
+        { side:'r', name:'Red', key:'Red' },
+        { side:'y', name:'Yellow', key:'Yellow' }
+      ].map(c => {
+        const n = this.cupCount(c.side), max = this.cupMax(c.side);
+        const left = src[c.side] - n * uML;
+        const full = n >= max;
+        return {
+          name: c.name,
+          ink: c.side === 'r' ? '#8c491a' : '#56633f',
+          color: this.rgb(this.PRIM[c.key]),
+          pct: left / cap * 100,
+          left,
+          op: (full || S.cupPick) ? 0.35 : 1,
+          cur: (full || S.cupPick) ? 'default' : 'pointer',
+          count: full ? (c.name + ' ' + src[c.side] + 'mL = ' + n + ' cups') : (c.name + ' ' + n + ' cups'),
+          countBg: full ? '#f0fae1' : '#fff2eb',
+          countBd: full ? '#ccdbb2' : '#ffc6a5',
+          pour: () => this.cupPour(c.side),
+          /* 방금 옮겨 담은 쪽 — 조작 대상과 곁의 기호에 같은 색 고리를 동시에 켠다 */
+          ring: S.cupFlash === c.side ? ('0 0 0 6px ' + (c.side === 'r' ? 'rgba(192,57,43,.35)' : 'rgba(179,146,30,.4)')) : 'none',
+          /* 옮긴 양과 컵 수 — 컵을 하나 옮길 때마다 둘이 함께 바뀐다 */
+          symMl: (n * uML) + 'mL',
+          symCup: n + ' cups',
+          cups: new Array(n).fill(0).map((_, ci) => ({ anim: ci === n - 1 ? 'rsPop .3s ease' : 'none' }))
+        };
+      });
+      /* ── 기호 병치(지침 4.2 · 4.1) ──
+         조작 대상 바로 곁에 그 양의 수치를, 두 열 아래에 두 양을 견준 비 기호를 함께 띄운다.
+         컵을 옮길 때마다 수와 기호가 같이 바뀌고, 방금 조작한 쪽은 기호와 조작 대상이
+         같은 순간에 같은 색 고리로 강조된다. 간단히 한 비는 앱이 먼저 말하지 않는다. */
+      v.cupSymMlR = src.r + 'mL'; v.cupSymMlY = src.y + 'mL';
+      v.cupSymCupR = this.cupCount('r') + ' cups'; v.cupSymCupY = this.cupCount('y') + ' cups';
+      v.cupSum = done ? ('Red ' + this.cupMax('r') + ' cups  :  yellow ' + this.cupMax('y') + ' cups') : '';
+      v.cupBackOn = !S.cupPick;
+      v.cupBackOp = S.cupUndo >= 1 ? 0.4 : 1;
+      v.cupBack = () => this.cupBack();
+      v.cupChips = (done && this.cupStep().ask) ? [
+        { t:'red : yellow = 1 : 2', v:'ok', ok:1 },
+        { t:'red : yellow = 2 : 1', v:'swap', ok:0 },
+        { t:'red : yellow = 1 : 3', v:'whole', ok:0 }
+      ].map(o => ({
+        t: o.t,
+        bd: S.cupPick === o.v ? '#ccdbb2' : '#f6a06b',
+        bg: S.cupPick === o.v ? '#f0fae1' : '#f9f4ed',
+        fg: S.cupPick === o.v ? '#56633f' : '#8c491a',
+        pick: () => this.cupAnswer(o)
+      })) : null;
+    }
+
+    if (st.k === 'dots') {
+      const p1 = this.PRIM['Red'], p2 = this.PRIM['Yellow'];
+      v.dotPal = [
+        { name:'Red paint', color:this.rgb(p1), bd: S.dotSel === 1 ? '#201e1d' : '#dcd3c4', pick: () => { this.sfx('tap'); this.setState({ dotSel:1 }); } },
+        { name:'Yellow paint', color:this.rgb(p2), bd: S.dotSel === 2 ? '#201e1d' : '#dcd3c4', pick: () => { this.sfx('tap'); this.setState({ dotSel:2 }); } }
+      ];
+      v.dots = S.dots.map((d, i) => ({
+        bg: d === 1 ? this.rgb(p1) : (d === 2 ? this.rgb(p2) : '#f9f4ed'),
+        bd: d ? '#a19786' : '#c0b6a5', bs: d ? 'solid' : 'dashed',
+        tap: this.dotTap(i)
+      }));
+      v.dotR = S.dots.filter(x => x === 1).length;
+      v.dotY = S.dots.filter(x => x === 2).length;
+      v.dotMix = S.dotMix;
+    }
+
+    if (st.k === 'grid') {
+      const n = st.n, cells = this.gridCells();
+      /* 칸 크기를 먼저 정하고 격자 크기를 픽셀로 확정한다(파생 크기를 쓰면 flex/aspect-ratio가
+         서로 충돌해 칸이 찌그러진다). 100칸은 10×10 백판 모형이 한 화면에 들어와야 하므로
+         화면 높이에 맞춰 칸을 줄인다 — 스크롤을 내리지 않고 백판 전체를 보게 한다. */
+      const vh = (typeof innerHeight === 'number') ? innerHeight : 900;
+      const tier = vh < 820 ? 2 : (vh < 900 ? 1 : 0);
+      const cell = n === 100 ? [34, 28, 22][tier] : [62, 56, 50][tier];
+      const gap = n === 100 ? [3, 2, 2][tier] : [6, 5, 5][tier];
+      const chrome = 26;
+      v.gridCols = n <= 10 ? 5 : 10;
+      v.gridRows = Math.ceil(n / v.gridCols);
+      v.gridGap = gap;
+      v.gridW = v.gridCols * cell + (v.gridCols - 1) * gap + chrome;
+      v.gridH = v.gridRows * cell + (v.gridRows - 1) * gap + chrome;
+      v.gridRad = n === 100 ? 4 : 8;
+      v.showBrush = n === 100;
+      v.brushes = [
+        { name:'Small brush (1 square)', ic:17, bd: S.bsize === 1 ? '#201e1d' : '#dcd3c4', bg: S.bsize === 1 ? '#ffe1d0' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ bsize:1 }); } },
+        { name:'Big brush (10 squares)', ic:32, bd: S.bsize === 10 ? '#201e1d' : '#dcd3c4', bg: S.bsize === 10 ? '#ffe1d0' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ bsize:10 }); } }
+      ];
+      v.pots = [
+        { name:'Red paint', color:this.rgb(this.PRIM['Red']), bd: S.pot === 'r' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'r' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'r' }); } },
+        { name:'Yellow paint', color:this.rgb(this.PRIM['Yellow']), bd: S.pot === 'y' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'y' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'y' }); } }
+      ];
+      const r = cells.filter(c => c === 'r').length, y = cells.filter(c => c === 'y').length;
+      v.gridCount = 'Red ' + r + ' squares · yellow ' + y + ' squares · left ' + (n - r - y) + ' squares';
+      v.cells = cells.map((c, i) => ({
+        bg: c === 'r' ? this.rgb(this.PRIM['Red']) : (c === 'y' ? this.rgb(this.PRIM['Yellow']) : '#eee7db'),
+        tap: () => { this._gdown = true; this.paintCell(i); },
+        over: () => { if (this._gdown) this.paintCell(i); }
+      }));
+      v.gridDown = () => { this._gdown = true; };
+      v.gridUp = () => { this._gdown = false; };
+      v.gridClear = () => { this.sfx('tap'); this.setState({ cells: new Array(n).fill('') }); };
+    }
+
+    if (st.k === 'blank') {
+      v.pctArt = st.id === 'pct' ? this.pctBeakers() : null;
+      const def = this.blankDef();
+      v.cardTitle = def.title || '';
+      v.rows = def.rows.map((row, ri) => ({
+        tokens: row.map((tk, ti) => {
+          if (typeof tk === 'string')
+            return { t: tk, key:'', disp:'inline', minw:'0', minh:'0', pad:'0', mar:'0', rad:'0', bb:'none', bg:'transparent', fg:'#201e1d', cur:'default', out:'none', ff:'inherit' };
+          const key = st.id + '-' + ri + '-' + ti, filled = S.blanks[key], sel = S.selBlank === key;
+          const tmpv = (S.tmpNum || {})[key];
+          return {
+            t: filled || tmpv || '', key, disp:'inline-block', minw:'86px', minh:'40px',
+            pad:'2px 12px', mar:'0 4px', rad:'12px 12px 0 0',
+            bb: '4px solid ' + (filled ? '#7a8a5e' : (tmpv ? '#d67f48' : '#f6a06b')),
+            bg: filled ? '#f0fae1' : (tmpv ? '#ffc6a5' : (sel ? '#ffc6a5' : '#ffe1d0')),
+            fg: filled ? '#56633f' : '#8c491a', cur:'pointer',
+            out: sel ? '3px dashed #8c491a' : 'none',
+            ff:'inherit',
+            tap: () => {
+              if (filled) return;
+              if (tmpv) {
+                const tmp = Object.assign({}, this.state.tmpNum);
+                delete tmp[key];
+                this.sfx('tap');
+                this.setState({ tmpNum: tmp, selBlank: key });
+                return;
+              }
+              this.sfx('tap'); this.setState({ selBlank: key });
+            }
+          };
+        })
+      }));
+      const seen = {};
+      v.bank = def.bank.map((w) => {
+        seen[w] = (seen[w] || 0) + 1;
+        const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
+        return { t: w, vis: hidden ? 'hidden' : 'visible', down: this.chipDown(w) };
+      });
+      v.blankArt = def.art
+        ? new Array(100).fill(0).map((_, i) => ({ bg: i < 40 ? this.rgb(this.PRIM['Red']) : this.rgb(this.PRIM['Yellow']) }))
+        : null;
+      /* 지침 5.2 — 오답 값이 놓이면 그 값으로 섞은 색을 표시 */
+      v.wrongMix = null; v.wrongRatio = '';
+      if (st.id === 'letter') {
+        const tv = S.tmpNum || {};
+        const n1 = S.blanks['letter-1-1'] || tv['letter-1-1'];
+        const n2 = S.blanks['letter-1-3'] || tv['letter-1-3'];
+        if (n1 && n2 && (tv['letter-1-1'] || tv['letter-1-3'])) {
+          v.wrongMix = this.rgb(this.mix({ 'Red': +n1, 'Yellow': +n2 }));
+          v.wrongRatio = 'Red ' + n1 + ' : yellow ' + n2;
+        }
+      }
+    }
+
+    /* 조작 직후 발문 — 과제를 해결한 뒤에만, 그 조작 화면 안에서 펼친다 */
+    const probeOk = this.probeOk(st);
+    v.probeTitle = (st.probe && solved) ? (st.probe.title || '🤔 Let us look back at what you just did') : '';
+    v.probeRows = (st.probe && solved) ? st.probe.rows.map((row, ri) => {
+      const sel = (S.probe || {})[this.probeKey(ri)];
+      return {
+        q: row.q,
+        no: (ri + 1) + '.',
+        opts: row.opts.map((o, oi) => ({
+          t: o.t,
+          pick: () => this.probePick(ri, oi),
+          bd: sel === oi ? '#ccdbb2' : '#dcd3c4',
+          bg: sel === oi ? '#f0fae1' : '#fffdf6',
+          fg: sel === oi ? '#56633f' : '#645c50',
+          cur: sel == null ? 'pointer' : 'default'
+        }))
+      };
+    }) : null;
+
+    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect'].indexOf(st.k) >= 0) && !this._guest;
+    const gateOk = solved && probeOk;
+    /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
+    v.primaryLabel = st.k === 'story' ? (st.btn || 'Next →') : (st.k === 'reflect' ? 'Submit! →' : 'Next →');
+    v.showPrimary = st.k !== 'finish';
+    v.primaryBg = (!needsSolve || gateOk) ? '#c67139' : '#c0b6a5';
+    v.footHint = (needsSolve && !gateOk && !v.liveBadge)
+      ? (solved ? 'Answer the question below and you can go on' : 'Solve this and you can go on') : '';
+    v.primary = () => {
+      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
+      if (st.k === 'finish') { this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null, refText:'', probe:{} }); return; }
+      if (needsSolve && !gateOk) {
+        this.sfx('oops');
+        if (solved && !probeOk) { this.toast('🤔', 'Almost there!', 'Answer the question below, then move on.'); return; }
+        if (st.k === 'cups') { this.cupGateHint(); return; }
+        this.toast('🤔', 'Almost there!', 'Finish this one first, then move on.'); return;
+      }
+      this.sfx('tap'); this.go(1);
+    };
+    return v;
+  }
+}
+
+</script>
+</body>
+</html>

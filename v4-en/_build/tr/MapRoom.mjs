@@ -1,0 +1,265 @@
+/* 지도의 방 번역.
+   에라토스테네스의 말투는 한국어판에서 옛 학자의 예스러운 말씨(…하오/…라오)다.
+   영어에서는 같은 어미가 없으므로, 나이 든 학자가 젊은 벗에게 말하듯
+   조금 격식 있고 차분한 문장으로 옮겼다.
+
+   <b>를 사이에 둔 조각은 이어 붙었을 때 한 문장이 되도록 맞추었다. */
+export default {
+  '홈으로': 'Home',
+  '지도의 비밀': 'The Map Secret',
+  '소리 설정': 'Sound settings',
+  '대사 다시 듣기': 'Say that again',
+  '이전': 'Back',
+  '← 이전': '← Back',
+  '다음 →': 'Next →',
+  '닫기': 'Close',
+  '다시 한번!': 'Try once more!',
+  '조금만 더!': 'Almost there!',
+  '음성 + 효과음': 'Voice + sound effects',
+  '효과음만': 'Sound effects only',
+  '소리 끔': 'Sound off',
+
+  /* 인물 */
+  '레시오': 'Ratia',
+  '비의 비밀 탐색 안내자': 'your guide to the Secret of Ratio',
+  '에라토스테네스': 'Eratosthenes',
+  '지구를 처음 잰 옛 학자': 'the scholar who first measured the Earth',
+  '시냐크': 'Signac',
+  '먼셀': 'Munsell',
+  '뭉크': 'Munch',
+  '안내': 'Guide',
+  '문제를 읽어 주는 목소리': 'the voice that reads the questions aloud',
+
+  /* 들머리 */
+  '안녕하세요! 저는 \\\'비(比)\\\'의 비밀 탐색을 돕는 안내자, 레시오예요. 이 방은 지도의 비밀 방이에요. 지도와 실제 거리를 여러 가지 방법으로 견주어 보면서 비의 비밀을 함께 찾아볼 거예요. 우리 함께 세 번째 비밀을 풀러 가볼까요?':
+    'Hello! I am Ratia, your guide on the hunt for the Secret of Ratio. This is the Map room. We will compare maps with real distances in all sorts of ways and find the secret together. Shall we go and solve the third secret?',
+  /* “지도 속에 숨은 [비]의 비밀을 함께 찾아봐요!” */
+  '지도 속에 숨은': "Let's find the secret of",
+  '비': 'ratio',
+  '의 비밀을 함께 찾아봐요!': ' hidden inside a map!',
+  '🗺️ 지도의 비밀 — 탐험 시작!': '🗺️ The Map Secret — off we go!',
+  '탐험 시작! →': 'Start exploring! →',
+
+  /* 축척 */
+  '지도는 넓은 땅을 종이 위에 담으려고 실제 거리를 일정한 비율로 줄여서 그린 그림이에요. 얼마나 줄였는지를 나타낸 것이 축척이에요. 지도 오른쪽 아래를 보면 축척 1 대 10,000이라고 적혀 있죠? 지도에서 1만큼이 실제로는 10,000만큼이라는 뜻이에요.':
+    'A map is a picture of a wide piece of land squeezed onto paper, with every real distance shrunk by the same ratio. The scale tells you how much it was shrunk. Look at the bottom right of the map — it says the scale is 1 to 10,000. That means 1 on the map is 10,000 in real life.',
+  '알겠어요! →': 'Got it! →',
+  '축척이 1 대 10,000인 지도예요. 지도에서 1센티미터는 실제로 몇 센티미터일까요?':
+    'This map has a scale of 1 to 10,000. On the map, 1 centimetre stands for how many centimetres in real life?',
+  '📏 축척 1 : 10,000': '📏 Scale 1 : 10,000',
+  '지도에 다리가 3센티미터로 그려져 있어요. 실제 다리는 얼마나 길까요?':
+    'The bridge is drawn 3 centimetres long on the map. How long is the real bridge?',
+  '🌉 다리': '🌉 The bridge',
+  '지도에서 1cm = 실제 10,000cm': 'On the map 1cm = 10,000cm in real life',
+  '다리': 'bridge',
+  '도로': 'road',
+  '한 칸': 'one square',
+  '길이': 'length',
+  '거리': 'distance',
+  '지도에서 한 칸은 실제로 몇 미터일까요? 칸 위의 100m를 다시 볼까요?':
+    'How many metres is one square in real life? Shall we look again at the 100m above the squares?',
+  '한 칸 100m를 칸 수만큼 반복하면 실제 길이가 돼요. 몇 번 반복할까요?':
+    'Repeat one square of 100m as many times as there are squares and you get the real length. How many times is that?',
+  'cm로 된 답은 실제 거리가 아니에요. m로 바뀐 답을 찾아볼까요?':
+    'An answer in cm is not the real distance here. Shall we look for the answer written in m?',
+  '맞았어요! ': "That's right! ",
+  '지도 ': 'On the map ',
+  'm! 100m 단위를 ': 'm! That is 100m repeated ',
+  '번 반복한 길이예요.': ' times over.',
+
+  /* 확대 */
+  '지도를 복사기로 더 잘 보이게 확대했어요. 백이십 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?':
+    'We put the map through a copier to make it easier to see. Blown up to one hundred and twenty per cent, how many centimetres long is the bridge?',
+  '마지막으로 이백 퍼센트로 확대하면 다리는 몇 센티미터가 될까요?':
+    'Last one — blown up to two hundred per cent, how many centimetres long is the bridge?',
+  '지도를 ': 'Stretching the map to ',
+  '%로 늘이면 지도 위 길이도 그만큼 늘어나요.': '% stretches the length on the map by just as much.',
+  '%는 ': '% means ',
+  '배예요. 3cm의 ': ' times. So what is ',
+  '배는 얼마일까요?': ' times 3cm?',
+  '을 계산해 골라 보세요.': ' — work it out and choose.',
+  ' — 지도를 확대해도 실제 다리는 그대로예요!': ' — however big you blow the map up, the real bridge stays the same!',
+  '%로 확대하면, 다리는 몇 cm가 될까요?': '%, how many cm long is the bridge?',
+
+  '지도의 비밀을 잘 알아봤어요! 이번에는 비를 이용해서 지도가 아닌 지구의 비밀도 풀어봐요! 위대한 수학자가 기다리고 있답니다.':
+    'You have worked out the secret of maps! Now let us use ratio to solve a secret that is not on paper — the secret of the Earth itself. A great mathematician is waiting for you.',
+  '좋아요! →': 'Yes please! →',
+
+  /* 에라토스테네스 */
+  '젊은 벗이여! 만나서 반갑소. 나는 옛 그리스의 수학자, \'에라토스테네스\' 라오. 내가 신기한 소식을 하나 들었소.':
+    'My young friend! I am glad to meet you. I am Eratosthenes, a mathematician of ancient Greece. I have heard a most curious piece of news.',
+  '🏛️ 2,200년 전 그리스 — 에라토스테네스를 만났어요': '🏛️ Greece, 2,200 years ago — you have met Eratosthenes',
+  '🏛️ 기원전 3세기 · 알렉산드리아': '🏛️ 3rd century BC · Alexandria',
+  '를 만났어요!': ' is here to meet you!',
+  '그 소식이 궁금해요! →': 'Tell me the news! →',
+  '다음 컷 →': 'Next panel →',
+  '🎬 에라토스테네스 이야기 영상 보기': '🎬 Watch the story of Eratosthenes',
+
+  '남쪽 도시 시에네에서는 여름 한낮, 정오가 되면 그림자가 하나도 생기지 않는다고 하오. 해가 바로 머리 꼭대기에 있어 햇빛이 막대와 나란히 내려오기 때문이지. 막대와 햇빛이 이루는 각이 0도라는 뜻이라오.':
+    'In Syene, the city to the south, they say that at noon on a summer day no shadow falls at all. The sun stands straight overhead, so its light comes down alongside the stick. The angle between stick and sunlight is zero degrees.',
+  '그런데 같은 시각, 북쪽 알렉산드리아에서는 막대에 그림자가 생긴단 말이오. 각을 재어 보니 7.2도였소. 같은 햇빛인데 각이 다르다니, 지구가 평평하다면 있을 수 없는 일이지요.':
+    'Yet at that very hour, in Alexandria to the north, the stick does cast a shadow. I measured the angle: 7.2 degrees. The same sunlight, and a different angle — that could never happen if the Earth were flat.',
+  '내가 지구를 다 걸어 잴 수는 없지 않겠소? 다만, 시에네와 알렉산드리아 두 도시의 거리는 내가 잴 수 있소. 그 거리는 800km였소.':
+    'I could hardly walk right around the Earth to measure it. But the distance between Syene and Alexandria I could measure, and it was 800km.',
+  '둥근 원 전체는 360도. 360을 7.2도로 나누면 50이 나온다오. 7.2도 대 360도는 곧 1 대 50이라오. 그렇다면 1 대 50은 800킬로미터 대 지구 둘레. 나와 함께 지구의 둘레를 계산해보겠소?':
+    'A full circle is 360 degrees. Divide 360 by 7.2 and you get 50. So 7.2 degrees to 360 degrees is 1 to 50. And that means 1 to 50 is also 800 kilometres to the circumference of the Earth. Will you work out the circumference with me?',
+  '🌍 지구 둘레 — 1 : 50 = 800km : ?': '🌍 The Earth’s circumference — 1 : 50 = 800km : ?',
+  '비로 계산해 보기! ✏️': 'Work it out with ratio! ✏️',
+
+  '같은 날 같은 시각인데, 어째서 한쪽에만 그림자가 생겼겠소?':
+    'The same day, the same hour — so why did a shadow fall in one place only?',
+  '지구가 둥글기 때문이다': 'Because the Earth is round',
+  '그날만 해가 기울었기 때문이다': 'Because the sun happened to be tilted that day',
+  '막대를 기울여 꽂았기 때문이다': 'Because the stick was planted at a slant',
+  '그렇소! 지구가 둥글기 때문이오': 'Just so! Because the Earth is round',
+  '땅이 둥글게 굽어 있으니 두 도시의 막대는 서로 다른 쪽을 향한다오. 그래서 나는 지구가 둥근 원이라고 생각하기로 했소.':
+    'The ground curves, so the two sticks point in different directions. That is why I decided the Earth must be a round circle.',
+  '두 막대는 모두 땅에 똑바로 세웠고, 해도 하나뿐이오. 그렇다면 두 도시에서 다른 것은 무엇이겠소?':
+    'Both sticks stand straight up from the ground, and there is only one sun. So what is it that differs between the two cities?',
+  '땅이 평평하다면 두 막대는 같은 쪽을 향해 서 있을 것이오. 그러면 그림자도 똑같아야 하지 않겠소?':
+    'If the ground were flat, both sticks would point the same way. Then surely the shadows would be the same too?',
+  '땅의 모양을 바꾸어 그려 보시오. 땅이 어떤 모양이라야 두 막대가 서로 다른 쪽을 향하게 되겠소?':
+    'Try drawing the ground a different shape. What shape must it be for the two sticks to point in different directions?',
+
+  '7.2° : 360° 을 간단히 하면 어떤 비가 되겠소?': 'Put 7.2° : 360° in its simplest form. What ratio do you get?',
+  '바로 그 비라오! 7.2° : 360° = 1 : 50': 'That is the very ratio! 7.2° : 360° = 1 : 50',
+  '두 도시 사이의 각은 한 바퀴의 50분의 1이오. 그러니 두 도시 사이 거리도 지구 둘레의 50분의 1이 된다오.':
+    'The angle between the two cities is one fiftieth of a full turn. So the distance between them must be one fiftieth of the Earth’s circumference.',
+  '비를 간단히 할 때는 두 수를 같은 수로 나누면 되오. 여기서는 앞의 수 7.2로 나누어 보시오.':
+    'To simplify a ratio you divide both numbers by the same number. Here, try dividing by the first number, 7.2.',
+  '7.2 ÷ 7.2 는 1이오. 그러면 360 ÷ 7.2 는 얼마가 되겠소? 방금 내 이야기 속에 그 수가 있었다오.':
+    '7.2 ÷ 7.2 is 1. So what is 360 ÷ 7.2? That number was in my story a moment ago.',
+  '7.2를 열 번 더하면 72이고, 72가 다섯 번이면 360이오. 그러니 7.2가 모두 몇 번 들어가는지 세어 보시오.':
+    'Ten lots of 7.2 make 72, and five lots of 72 make 360. So count how many 7.2s fit in altogether.',
+
+  '1 : 50 = 800km : ( ? ) — 지구 한 바퀴는 몇 km이겠소?':
+    '1 : 50 = 800km : ( ? ) — how many km is once around the Earth?',
+  '지구는 거의 40,000km — 맞았소! 🌍': 'The Earth is very nearly 40,000km — you have it! 🌍',
+  '2,200년 전에 그림자와 두 도시 사이 거리만으로 구한 값이라오. 오늘날 재어 본 지구 둘레와 거의 같다오.':
+    'Worked out 2,200 years ago from nothing but a shadow and the distance between two cities. It is very close to the circumference we measure today.',
+  '앞의 비 1 : 50에서 1이 800이 되려면 몇 배를 한 것이겠소? 왼쪽에 한 일은 오른쪽에도 똑같이 해야 하오.':
+    'In the ratio 1 : 50, what did you multiply the 1 by to make it 800? Whatever you do on the left you must do on the right.',
+  '1에 800을 곱해 800이 되었으니, 50에도 똑같이 800을 곱해야 비가 지켜진다오.':
+    'You multiplied 1 by 800 to get 800, so you must multiply 50 by 800 as well, or the ratio is broken.',
+  '50 × 800을 차근차근 세어 보시오. 800의 열 배가 8,000이니, 그것을 다시 다섯 배 하면 되오.':
+    'Work 50 × 800 out step by step. Ten lots of 800 make 8,000, and then take five of those.',
+
+  /* 지구 둘레 화면 */
+  '지구의 둘레 구하기!': 'Finding the circumference of the Earth!',
+  '두 도시 그림자 각도의 차이': 'Difference in shadow angle between the two cities',
+  ': 원 전체': ': the whole circle',
+  '두 도시 사이가': 'If the two cities are',
+  '일 때, 지구 한 바퀴는 몇 km일까요?': ' apart, how many km is once around the Earth?',
+  '에라토스테네스가 남긴 셈 — 800km × 50 = 40,000km':
+    'The working Eratosthenes left us — 800km × 50 = 40,000km',
+
+  /* 만화 컷 */
+  '막대와 햇빛 0°': 'stick and sunlight 0°',
+  '그림자 7.2°': 'shadow 7.2°',
+  '막대와 햇빛 7.2°': 'stick and sunlight 7.2°',
+  '컷 3 · 내가 잴 수 있는 것 — 두 도시 사이': 'Panel 3 · What I can measure — the gap between two cities',
+  '지구 전체를': 'I cannot walk',
+  '걸어 잴 수는 없소': 'right around the Earth',
+  '알렉산드리아': 'Alexandria',
+  '시에네': 'Syene',
+  '두 도시 사이는': 'But the gap between the cities',
+  '잴 수 있소!': 'I can measure!',
+  '컷 4 · 각도의 비 — 7.2°와 360°': 'Panel 4 · A ratio of angles — 7.2° and 360°',
+  '지구 한 바퀴 = 360°': 'Once around the Earth = 360°',
+  '시에네에서는 정오에 그림자가 0° — 우물 바닥까지 햇빛이 곧게 들어온다오':
+    'At noon in Syene the shadow is 0° — the sunlight reaches straight down to the bottom of the well',
+  '땅이 둥글게 굽어 있어 두 막대가 서로 다른 쪽을 향한 것이오 — 지구는 둥근 원!':
+    'The ground curves, so the two sticks point different ways — the Earth is a round circle!',
+  '같은 날 같은 시각인데, 알렉산드리아의 막대에는 그림자가 7.2° 생겼소':
+    'Same day, same hour, and yet the stick in Alexandria casts a shadow of 7.2°',
+  '지구 전체는 걸어서 잴 수 없지만, 두 도시 사이 800km는 잴 수 있었소':
+    'I could not walk around the whole Earth, but the 800km between the two cities I could measure',
+  '360 ÷ 7.2 = 50 — 7.2° : 360° = 1 : 50, 그러니 1 : 50 = 800km : 지구의 둘레!':
+    '360 ÷ 7.2 = 50 — so 7.2° : 360° = 1 : 50, and therefore 1 : 50 = 800km : the Earth’s circumference!',
+  '한 바퀴 360° 가운데 두 도시가 벌어진 각은 7.2° — 이 둘의 비를 구해 봅시다':
+    'Out of a full 360°, the two cities are 7.2° apart — let us find the ratio of those two',
+  '\">축척 1 : 10,000</text>': '">Scale 1 : 10,000</text>',
+  '<text x=\"156\" y=\"48\" style=\"font-size:12px;font-weight:800;fill:var(--color-neutral-800)\">시에네</text>':
+    '<text x="150" y="48" style="font-size:12px;font-weight:800;fill:var(--color-neutral-800)">Syene</text>',
+  '<text x=\"30\" y=\"82\" style=\"font-size:12px;font-weight:800;fill:var(--color-neutral-800)\">알렉산드리아</text>':
+    '<text x="22" y="82" style="font-size:12px;font-weight:800;fill:var(--color-neutral-800)">Alexandria</text>',
+  '<text x=\"150\" y=\"292\" text-anchor=\"middle\" style=\"font-size:15px;font-weight:800;fill:var(--color-neutral-700)\">지구 한 바퀴 = 360° = ? km</text>':
+    '<text x="150" y="292" text-anchor="middle" style="font-size:15px;font-weight:800;fill:var(--color-neutral-700)">Once around the Earth = 360° = ? km</text>',
+
+  /* 세 방 잇기 */
+  '잠깐만요! 색깔의 방과 소리의 방에서 찾은 1 대 2, 그리고 이 방에서 찾은 1 대 50을 나란히 놓아 봤어요. 세 방에서 찾은 것은 어떤 점이 같을까요? 아래에서 골라 보세요.':
+    'Hold on a moment! Here is the 1 to 2 you found in the Color room and the Sound room, side by side with the 1 to 50 you found in this one. What do all three have in common? Choose below.',
+  '🎨 색깔 · 🎵 소리 · 🗺️ 지도 — 세 방에서 만난 비를 견주어요':
+    '🎨 Color · 🎵 Sound · 🗺️ Map — comparing the ratios from all three rooms',
+  '🎨 색깔의 방': '🎨 The Color room',
+  '빨강과 노랑의 양': 'amounts of red and yellow',
+  '🎵 소리의 방': '🎵 The Sound room',
+  '두 음의 진동수': 'vibrations of two notes',
+  '🗺️ 지도의 방': '🗺️ The Map room',
+  '7.2도와 360도 · 800km와 지구 둘레': '7.2° and 360° · 800km and the Earth’s circumference',
+  '세 방에서 찾은 것은': 'What do all three rooms',
+  '어떤 점이 같을까요?': 'have in common?',
+  '세 방 모두 크기가 달라져도 비가 같으면 관계가 그대로였어요':
+    'In all three, the sizes changed but the relationship held as long as the ratio stayed the same',
+  '맞아요! 물감의 양이 달라도, 진동수가 달라도, 지도의 크기가 달라도 비만 같으면 관계는 그대로였어요.':
+    'Exactly! Different amounts of paint, different vibrations, different map sizes — as long as the ratio was the same, the relationship held.',
+  '세 방 모두 수가 클수록 정확해졌어요': 'In all three, bigger numbers made things more accurate',
+  '수가 크다고 색이 붉어지거나 지도가 정확해지지는 않았지요. 다시 한번 생각해볼까요?':
+    'Bigger numbers did not make the color redder or the map more accurate. Shall we think again?',
+  '지도는 색이나 소리와 상관이 없어요': 'Maps have nothing to do with color or sound',
+  '세 방에서 모두 두 양을 견주는 비가 나왔어요. 그 점을 다시 견주어 볼까요?':
+    'All three rooms gave you a ratio comparing two quantities. Shall we look at that again?',
+  '세 방이 이어졌어요!': 'The three rooms link up!',
+
+  /* 내 말로 정리 */
+  '지도에서 다리의 길이를 구하고, 지도를 확대해 보고, 지구의 둘레까지 구해 보았지요. 이 가운데 하나를 골라 봐요. 그때 무엇을 했고 왜 그렇게 구할 수 있었는지 한 줄로 적어 주세요.':
+    'You worked out the length of a bridge from a map, you blew the map up, and you even found the circumference of the Earth. Pick one of those. Write one line about what you did and why it worked.',
+  '다리 길이 · 확대 · 지구 둘레 — 그중 하나를 예로 들어 적어요':
+    'Bridge length · zooming in · the Earth’s circumference — write about one of them',
+  /* “내가 [직접 구해 본 것]을 하나 예로 들어서, [지도의 비밀(축척)]을 한 줄 적어 보세요!” */
+  '내가': 'Take one thing you',
+  '직접 구해 본 것': 'worked out for yourself',
+  '을 하나 예로 들어서,': ' and write one line about',
+  '지도의 비밀(축척)': 'the secret of maps (scale)',
+  '을 한 줄 적어 보세요!': '!',
+  '예) 지도에서 3센티미터인 다리가 …': 'e.g. The bridge that is 3 centimetres on the map …',
+  '내 말로 정리': 'In my own words',
+  '한 줄이면 충분해요 — 내 말로 적어 봐요!': 'One line is plenty — say it your own way!',
+
+  /* 비밀 카드 */
+  '여러분이 적은 내용을 잘 보았어요. 지도와 확대, 지구의 둘레로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.':
+    'I have read what you wrote. You have studied ratio through maps, zooming and the circumference of the Earth. Now let us pull it together. Drag the word cards into the blanks.',
+  '🃏 지도의 비밀 카드 — 빈칸 채우기': '🃏 The Map secret card — fill in the blanks',
+  '🃏 지도의 비밀 카드': '🃏 The Map secret card',
+  '지도는 실제 거리를 일정한 ': 'A map shows real distance shrunk by one steady ',
+  '비율': 'ratio',
+  ' 로 줄여 나타낸 것이다.': '.',
+  '축척 1:10,000은 실제 거리를 ': 'A scale of 1:10,000 shrinks real distance to one ',
+  ' 분의 1로 줄인 것이다.': 'th of its size.',
+  '✋ 낱말을': '✋ Take a word,',
+  '손가락이나 마우스로 누른 채 끌어서': 'hold it down with your finger or mouse and drag it',
+  '빈칸 위에 놓아 주세요': 'onto the blank',
+  '지도가 실제 거리를 무엇으로 줄였는지 떠올려 볼까요?': 'Think back — what did the map shrink real distance by?',
+  '축척 1:10,000은 실제를 몇 분의 1로 줄인 걸까요? 콜론 뒤의 수를 볼까요?':
+    'A scale of 1:10,000 shrinks the real thing to one what-th of its size? Look at the number after the colon.',
+  '다른 카드를 놓아 볼까요? 문장을 소리 내어 읽어 보면 알맞은 낱말이 보여요.':
+    'Shall we try a different card? Read the sentence out loud and the right word will stand out.',
+  '정리 완성!': 'All wrapped up!',
+  '지도의 비밀을 문장으로 정리했어요. 허브로 돌아가 다음 탐험을 이어가요!':
+    'You have put the Map secret into words. Head back and carry on with the next adventure!',
+  '지도의 비밀을 모두 찾아냈어요!': 'You have found every part of the Map secret!',
+  '지도는 실제 거리를 일정한 비율로 줄인 것!': 'A map is the real distance shrunk by one steady ratio!',
+  '지도의 비밀을 잘 찾아냈어요! 카드 숫자 8을 얻었어요! 잘 기억해두세요!':
+    'You found the Map secret! You have earned the card number 8. Keep it safe!',
+  '🎉 탐험 완료 — 카드 숫자 8 획득': '🎉 Room complete — card number 8 is yours',
+  '황금비의 마지막 자리예요!': 'This is the last digit of the golden ratio!',
+  '📝 마지막 방으로 이어가기 →': '📝 On to the last room →',
+  '🏠 허브로 돌아가기': '🏠 Back to the start',
+
+  /* 진행 안내 */
+  '제출! →': 'Submit! →',
+  '빈칸을 모두 채우면 다음으로 갈 수 있어요': 'Fill in every blank and you can go on',
+  '알맞은 답을 고르면 다음으로 갈 수 있어요': 'Choose the right answer and you can go on',
+  '문제를 해결하면 다음으로 갈 수 있어요': 'Solve this and you can go on',
+  '지금 문제를 해결하고 넘어가요.': 'Finish this one first, then move on.',
+};
