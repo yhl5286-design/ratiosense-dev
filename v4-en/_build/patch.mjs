@@ -21,8 +21,9 @@ function rules(file) {
   const r = [];
 
   /* ── 1. 문서 언어 ── */
+  /* 허브는 lang="ko", 방 파일은 그냥 <html>이다. 줄바꿈이 CRLF라 \n만 보면 헛나간다. */
   r.push([/<html lang="ko">/g, '<html lang="en">', 0]);
-  r.push([/<html>\n/g, '<html lang="en">\n', 0]);
+  r.push([/<html>(\r?\n)/g, '<html lang="en">$1', 0]);
 
   /* ── 2. 자산 경로 → ../v4/ ── */
   r.push([/<script src="\.\/support\.js"><\/script>/g, '<script src="../v4/support.js"></script>', room ? 1 : 0]);
@@ -119,5 +120,6 @@ export function patch(file, src) {
   if (/this\.SINO\(/.test(out)) throw new Error(file + ': SINO 호출이 남았습니다');
   if (/ko-KR/.test(out)) throw new Error(file + ': ko-KR이 남았습니다');
   if (/한자어/.test(out)) throw new Error(file + ': 없어진 한국어 음성 코드를 설명하는 주석이 남았습니다');
+  if (!/<html lang="en">/.test(out)) throw new Error(file + ': <html lang="en">이 붙지 않았습니다');
   return { out, report };
 }
