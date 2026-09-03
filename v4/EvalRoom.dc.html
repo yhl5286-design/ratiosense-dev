@@ -92,6 +92,8 @@ button{font-family:inherit}
     <section class="rs-stage">
 
       <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <!-- 마지막 화면에서는 안내자가 말하지 않는다 — 화면이 스스로 정리해 보인다 -->
+      <sc-if value="{{showCoach}}" hint-placeholder-val="{{true}}">
       <div class="rs-sub">
         <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
           <div class="rs-sub-who">{{coachImgEl}}</div>
@@ -112,6 +114,7 @@ button{font-family:inherit}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
       </div>
+      </sc-if>
 
       <div class="rs-play">
 
@@ -195,31 +198,82 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
-      <!-- 다섯 방에서 만난 비를 한자리에 모아 '비의 비밀'에 답한다 -->
+      <!-- 마지막 화면 — 안내자가 말하지 않는다. 그동안 한 활동을 그대로 펼쳐 놓고,
+           그것이 모두 하나의 비로 이어져 있었음을 화면이 스스로 보인다.
+           누를 것은 없다. 완료 기록은 이 화면에 들어오는 순간 go()에서 남긴다. -->
       <sc-if value="{{isWrap}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0;max-width:740px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsUp .35s ease;margin:auto 0;max-width:1000px;padding:6px 0">
 
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">색깔</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">물감의 비</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎵</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">소리</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">음정의 비</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🥁</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">리듬</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">리듬의 비</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🗺️</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">지도</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">축척의 비</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🌍</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">지구</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">그림자의 비</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">✨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">황금비</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">1 : 1.618</span></div>
+          <div style="font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:23px;color:var(--color-neutral-900)">우리가 한 것</div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;width:100%">
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="wrap_color.jpg" alt="빨강 2컵과 노랑 4컵을 부어 목표색을 만든 화면" style="width:100%;display:block">
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🎨 색깔</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">물감의 비 20 : 40 = 1 : 2</div>
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="wrap_sound.jpg" alt="도와 솔을 함께 눌러 물결 무늬를 살펴본 화면" style="width:100%;display:block">
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🎵 소리</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">진동수의 비 2 : 3</div>
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="wrap_rhythm.jpg" alt="북과 트라이앵글의 간격을 정해 리듬을 만든 화면" style="width:100%;display:block">
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🥁 리듬</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">두 간격의 비 1 : 2</div>
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="wrap_map.jpg" alt="축척 1 대 10,000인 지도에서 실제 거리를 구한 화면" style="width:100%;display:block">
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🗺️ 지도</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">축척의 비 1 : 10,000</div>
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="wrap_earth.jpg" alt="그림자의 각과 두 도시 사이 거리로 지구 둘레를 구한 화면" style="width:100%;display:block">
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🌍 지구</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">그림자의 비 1 : 50</div>
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="wrap_phi.jpg" alt="기준 막대를 늘여도 두 막대의 비가 그대로인 황금비 화면" style="width:100%;display:block">
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">✨ 황금비</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">1 : 1.618</div>
+              </figcaption>
+            </figure>
+
           </div>
 
           <div style="font-size:20px;font-weight:800;color:var(--color-neutral-700)">↓</div>
 
-          <div style="font-size:22px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:12px 28px;text-align:center">
-            모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
+          <div style="font-size:22px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:10px 26px;text-align:center">
+            여섯 가지 모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
           </div>
 
-          <div style="font-size:16px;font-weight:700;line-height:1.85;text-align:center;color:var(--color-neutral-800);max-width:660px">
-            우리 주변 곳곳에 언제나 <b>비</b>가 숨어 있다는 것 — 그것이 <b>비의 비밀</b>이에요.<br>
-            이제 비의 비밀을 알았으니, 주변을 잘 관찰하면서 비를 찾아보세요!
+          <div style="font-size:15.5px;font-weight:700;line-height:1.75;text-align:center;color:var(--color-neutral-800);max-width:720px">
+            물감과 소리, 리듬과 지도, 지구와 황금비 — 서로 달라 보이지만
+            모두 <b>두 양을 견주는 비</b> 하나로 이어져 있었어요.<br>
+            세상에는 아직 만나지 못한 <b>비와 비율의 비밀</b>이 훨씬 더 많이 숨어 있어요.
           </div>
 
-          <a href="index.html" onClick="{{goNext}}" class="rs-pill2" style="min-height:52px;padding:13px 26px;font-size:17px">🏠 여기서 마치고 허브로</a>
+          <div style="font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:27px;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:4px solid var(--color-accent-2-400);border-radius:999px;padding:8px 36px;margin-top:2px">
+            수고했어요!
+          </div>
+
         </div>
       </sc-if>
 
@@ -311,9 +365,9 @@ class Component extends DCLogic {
         hi:'🎉 여정 완주 — 비 감각의 달인!' },
       /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
          소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
-      { k:'wrap',
-        say:'여러분은 지금까지 색깔과 소리, 리듬, 지도, 지구의 비밀을 확인하고 황금비까지 찾아냈어요. 그러면 비의 비밀은 무엇일까요? 우리 주변 곳곳에 언제나 \'비\'가 숨어 있다는 것, 그것이 비의 비밀이랍니다. 이제 비의 비밀을 알았으니 주변을 잘 관찰하면서 비를 찾아내고 함께 많은 것을 알아보세요!',
-        hi:'🔎 다섯 방의 비를 한자리에 — 비의 비밀' }
+      /* 마지막 화면에는 안내자의 말을 두지 않는다. 그동안 한 활동을 화면에 펼쳐
+         스스로 읽게 하고, 말로 결론을 먼저 알려 주지 않는다(지침 6.4). */
+      { k:'wrap' }
     ];
   }
 
@@ -617,6 +671,17 @@ class Component extends DCLogic {
     const n = (this._tries[key] = (this._tries[key] || 0) + 1);
     return stages[Math.min(n, stages.length) - 1];
   }
+  /* 방을 마쳤다는 기록 — 연구 로그와 진행 표시. 여러 번 불려도 한 번만 남는다. */
+  finishRoom() {
+    if (this._finished) return;
+    this._finished = true;
+    this.plog('complete', {});
+    try {
+      const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+      if (d.indexOf('eval') < 0) { d.push('eval'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+    } catch(e) {}
+  }
+
   go(d) {
     const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
     if (n === this.state.i) return;
@@ -627,6 +692,9 @@ class Component extends DCLogic {
     if (this.STEPS[n].k === 'finale') {
       setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
     }
+    /* 마지막 화면에는 누를 것이 없다. 들어오는 순간 완료를 기록해 두어야
+       학습자가 그대로 창을 닫아도 활동 완료가 로그에 남는다. */
+    if (this.STEPS[n].k === 'wrap') this.finishRoom();
     this.setState(patch);
     this.plog('nav', { to:n });
     setTimeout(() => this.sayStep(n), 380);
@@ -836,6 +904,8 @@ class Component extends DCLogic {
       isStory: st.k === 'story',
       isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi',
       isWrap: st.k === 'wrap',
+      /* 마지막 화면에서는 말풍선을 통째로 감춘다 */
+      showCoach: st.k !== 'wrap',
       phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
       doorCards: null, doorSlots: null, doorPad: null,
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
@@ -843,13 +913,7 @@ class Component extends DCLogic {
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
       toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
       closeToast: () => this.setState({ toast: null }),
-      goNext: () => {
-        this.plog('complete', {});
-        try {
-          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
-          if (d.indexOf('eval') < 0) { d.push('eval'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
-        } catch(e) {}
-      }
+      goNext: () => this.finishRoom()
     };
 
     if (st.k === 'door') {
