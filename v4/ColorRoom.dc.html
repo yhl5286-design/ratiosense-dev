@@ -699,6 +699,10 @@ class Component extends DCLogic {
   LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
   LOG_TK = 'ratiosense-2026';
   LAB = 'colorV3';
+  /* 궤적 표본 — 0으로 두면 slide_move만 멈추고 방향 전환·드래그 요약은 그대로 남는다.
+     10~20명 표본에서는 켜 두어도 전체 3만 행대로 시트 한도의 1%에 못 미친다. */
+  TRACE = 1;
+  TRACE_MS = 300;
 
   state = {
     i: 0, amt: { '빨강':0, '노랑':0 }, found: [], hypo: null, obs: null,
@@ -1178,21 +1182,32 @@ class Component extends DCLogic {
   submitReflect() {
     const v = (this.state.refText || '').trim();
     if (!v) { this.toast('✏️', '한 줄이면 충분해요', '내 말로 적어 봐요!'); return; }
-    this.plog('reflect', { room:'color', text: v.slice(0,300) });
+    this.plog('reflect', { room:'color', text: v.slice(0,300),
+      ms: this._refT0 ? (Date.now() - this._refT0) : -1,
+      edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
     this.sfx('ok');
     this.go(1);
   }
 
+  /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
+     step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
+     t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
   plog(ev, data) {
-    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    var d = data || {};
+    try {
+      var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
+      d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
+    } catch(e) {}
+    this._lastAct = Date.now();
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
       this._q = this._q || [];
-      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:'',
         seq: ++this._seq, clientTs:new Date().toISOString(),
         eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
-        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
       if (this._q.length >= 10) this.flush();
     } catch(e) {}
   }
@@ -1252,6 +1267,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this._seq = 0;
+    this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
+    this._lastAct = Date.now();
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
@@ -1272,15 +1289,97 @@ class Component extends DCLogic {
     this._ptUp = (e) => { if (this._pts) this._pts.delete(e.pointerId); };
     addEventListener('pointerup', this._ptUp, true);
     addEventListener('pointercancel', this._ptUp, true);
+
+    /* ── 무조작 정지 ── 15초 넘게 아무 조작이 없으면 한 구간당 한 번만 남긴다.
+       바로 앞에 focus:0이 없는 idle이라야 "화면을 보며 생각한 정지"로 읽을 수 있다. */
+    this._idleT = setInterval(() => {
+      const gap = Date.now() - (this._lastAct || 0);
+      if (gap > 15000 && !this._idleFlag) { this._idleFlag = 1; this.plog('idle', { ms: gap }); }
+      if (gap <= 15000) this._idleFlag = 0;
+    }, 5000);
+
+    /* ── 화면 이탈 ── 체류 시간에서 빼야 할 구간을 가른다. 기존 _hide는 flush 전용이라 그대로 둔다. */
+    this._vis = () => this.plog('focus', { v: document.visibilityState === 'visible' ? 1 : 0 });
+    document.addEventListener('visibilitychange', this._vis);
+
+    /* ── 비활성 영역 탭 ── 이 앱은 핸들러를 속성이 아니라 props로 묶으므로 [onclick] 선택자가 듣지 않는다.
+       커서 모양과 태그로 판정한다. 정상 조작 20회에 0건이어야 하며, 1건이라도 나오면 깊이를 늘린다. */
+    this._dead = (e) => {
+      try {
+        let el = e.target, hit = false;
+        for (let i = 0; el && i < 8; i++, el = el.parentElement) {
+          if (/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) { hit = true; break; }
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.hasAttribute('data-blank'))) { hit = true; break; }
+          const cs = getComputedStyle(el);
+          if (cs.cursor === 'pointer' || cs.cursor === 'grab' || cs.touchAction === 'none') { hit = true; break; }
+        }
+        /* tg — 무엇을 눌렀는지. 좌표만으로는 화면이 바뀐 뒤 되짚기 어렵고,
+           오탐을 가려낼 때도 이 한 글자가 있어야 판정 규칙을 고칠 수 있다. */
+        if (!hit) this.plog('deadtap', { x: Math.round(e.clientX), y: Math.round(e.clientY),
+          tg: (e.target && e.target.tagName) || '', cl: ((e.target && e.target.className) || '').toString().slice(0, 20) });
+      } catch(err) {}
+    };
+    addEventListener('pointerdown', this._dead, true);
+
+    /* ── 영상 시각 맞추기 ── 오른쪽 위 모서리를 1.5초 누르면 조용히 기준점을 찍는다.
+       화면에는 아무 표시도 하지 않는다(학습자에게 보이면 안 되는 장치다). 진동이 유일한 확인 신호다. */
+    this._syncDown = (e) => {
+      if (e.clientX < innerWidth - 80 || e.clientY > 80) return;
+      this._syncT = setTimeout(() => {
+        this.plog('sync', { wall: new Date().toISOString() });
+        /* 노트북에는 진동이 없다. 모서리에 작은 점을 잠깐 띄워 연구자만 알아보게 한다.
+           학습자의 과제 영역을 가리지 않고, 0.5초 뒤 스스로 사라진다. */
+        try {
+          navigator.vibrate && navigator.vibrate(30);
+          const dot = document.createElement('div');
+          dot.style.cssText = 'position:fixed;top:6px;right:6px;width:9px;height:9px;border-radius:999px;' +
+            'background:#c67139;opacity:.85;z-index:2147483647;pointer-events:none';
+          document.body.appendChild(dot);
+          setTimeout(() => dot.remove(), 500);
+        } catch(err) {}
+      }, 1500);
+    };
+    this._syncUp = () => clearTimeout(this._syncT);
+    addEventListener('pointerdown', this._syncDown, true);
+    addEventListener('pointerup', this._syncUp, true);
+    addEventListener('pointercancel', this._syncUp, true);
+
+    /* ── 화면을 키우려는 시도 ── 노트북에서는 두 손가락 벌리기가 pointerdown 두 개로 오지 않는다.
+       트랙패드 확대는 ctrlKey가 붙은 wheel, 자판은 Ctrl +/-/0 이다.
+       뜻은 터치의 pinch_try와 다르다 — 화면 배율을 바꾸려는 것이므로 「글씨·그림이 작다」는
+       사용성 신호로 읽고, 두 양을 함께 늘리려는 곱셈적 조작의 증거로는 쓰지 않는다.
+       한 손짓이 wheel을 수십 번 내므로 1.2초에 한 번만 남긴다. */
+    this._zoomHit = (how) => {
+      const now = Date.now();
+      if (now - (this._zoomAt || 0) < 1200) return;
+      this._zoomAt = now;
+      let sc = 1; try { sc = (visualViewport && visualViewport.scale) || 1; } catch(e) {}
+      this.plog('zoom_try', { how: how, sc: Math.round(sc * 100) / 100, dpr: Math.round((devicePixelRatio || 1) * 100) / 100 });
+    };
+    this._wheelZ = (e) => { if (e.ctrlKey) this._zoomHit('pinch'); };
+    addEventListener('wheel', this._wheelZ, { passive: true, capture: true });
+    this._keyZ = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0', 'Add', 'Subtract'].indexOf(e.key) >= 0) this._zoomHit('key');
+    };
+    addEventListener('keydown', this._keyZ, true);
+
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
-    clearInterval(this._flushT); clearInterval(this._wd);
+    clearInterval(this._flushT); clearInterval(this._wd); clearInterval(this._idleT);
     document.removeEventListener('visibilitychange', this._hide);
+    document.removeEventListener('visibilitychange', this._vis);
     removeEventListener('pagehide', this._pageHide);
     removeEventListener('pointerup', this._ptUp, true);
     removeEventListener('pointercancel', this._ptUp, true);
+    removeEventListener('pointerdown', this._dead, true);
+    removeEventListener('pointerdown', this._syncDown, true);
+    removeEventListener('pointerup', this._syncUp, true);
+    removeEventListener('pointercancel', this._syncUp, true);
+    removeEventListener('wheel', this._wheelZ, true);
+    removeEventListener('keydown', this._keyZ, true);
+    clearTimeout(this._syncT);
     clearTimeout(this._tT); clearTimeout(this._autoT); clearTimeout(this._pourT); clearTimeout(this._cupT);
     this.stopVoice(); this.flush(true);
   }
@@ -1315,7 +1414,10 @@ class Component extends DCLogic {
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
   /* kind='quiet' — 소리 없이 띄우는 알림.
      가설처럼 아직 맞고 틀림을 가릴 수 없는 선택에는 정답 소리를 내지 않는다. */
+  /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
+     본문은 남기지 않고 제목 40자만 남긴다. */
   toast(icon, title, body, kind, hold) {
+    this.plog('toast', { k: kind || 'info', ttl: String(title || '').slice(0, 40) });
     if (kind !== 'quiet') this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
@@ -1453,10 +1555,43 @@ class Component extends DCLogic {
     } catch(e) {}
   }
 
-  setAmt(name, v) {
+  /* 포인터 이동을 전부 남기지 않는다. 방향이 바뀐 시점과 TRACE 간격 표본만 남긴다 —
+     목표를 지나쳐 되돌아온 횟수(rev)가 탐색적 지연과 조작적 어려움을 가르는 1순위 지표다. */
+  /* 양을 정하는 길은 둘이다 — 막대를 끄는 것과 ＋/− 를 누르는 것.
+     둘을 한데 적으면 안 된다. ＋를 열 번 누른 아이와 막대를 열 번 오간 아이는
+     같은 값에 닿아도 전혀 다른 일을 한 것이기 때문이다. 앞은 한 눈금씩 세어 올린
+     가법적 조작이고, 뒤는 목표를 겨냥해 오간 탐색이다.
+     그래서 끌기만 궤적(slide_*)으로 적고, 단추는 nudge로 따로 적는다. */
+  setAmt(name, v, src) {
     const amt = Object.assign({}, this.state.amt);
-    amt[name] = Math.max(0, Math.min(this.MAX, Math.round(v/this.SNAP_ML)*this.SNAP_ML));
-    if (amt[name] !== this.state.amt[name]) {
+    const prev = this.state.amt[name];
+    const next = Math.max(0, Math.min(this.MAX, Math.round(v/this.SNAP_ML)*this.SNAP_ML));
+    amt[name] = next;
+    if (next !== prev) {
+      if (src && src !== 'drag') {
+        /* src — btn은 10mL 눈금 단추, cup은 10mL 컵을 옮겨 담는 단위화 조작이다.
+           컵은 「몇 컵 대 몇 컵」으로 세는 조작이라 눈금 단추와도 뜻이 다르다. */
+        this.plog('nudge', { p:name, src:src, from:prev, to:next, d:next > prev ? 1 : -1,
+          oR:amt['빨강'], oY:amt['노랑'] });
+      } else {
+        this._trk = this._trk || {};
+        const t = this._trk[name] = this._trk[name] || { dir:0, rev:0, n:0, lo:prev, hi:prev, snap:0 };
+        const dir = next > prev ? 1 : -1;
+        if (t.dir && dir !== t.dir) {
+          t.rev++;
+          this.plog('slide_rev', { p:name, at:prev, to:next, rev:t.rev });
+        }
+        t.dir = dir; t.n++;
+        t.lo = Math.min(t.lo, next); t.hi = Math.max(t.hi, next);
+        /* 궤적 표본 — TRACE=0이면 멈춘다. 방향 전환과 드래그 요약은 그래도 남는다. */
+        if (this.TRACE) {
+          const now = Date.now();
+          if (now - t.snap >= this.TRACE_MS) {
+            t.snap = now;
+            this.plog('slide_move', { p:name, v:next, oR:amt['빨강'], oY:amt['노랑'] });
+          }
+        }
+      }
       this.sfx('pour'); this.setState({ amt });
       this.hitCue(amt['빨강'], amt['노랑']);
     }
@@ -1467,10 +1602,28 @@ class Component extends DCLogic {
       try { el.setPointerCapture(e.pointerId); } catch(err) {}
       this.padDown(e);
       const r = el.getBoundingClientRect();
-      const apply = (cy) => { this.setAmt(name, (r.bottom - cy) / r.height * this.MAX); };
+      const t0 = Date.now();
+      const from = this.state.amt[name];
+      this._trk = this._trk || {}; delete this._trk[name];   /* 드래그마다 궤적을 새로 잰다 */
+      const apply = (cy) => { this.setAmt(name, (r.bottom - cy) / r.height * this.MAX, 'drag'); };
       apply(e.clientY);
       const mv = (ev) => apply(ev.clientY);
-      const up = () => { el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up); };
+      const up = () => {
+        el.removeEventListener('pointermove', mv); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+        const t = (this._trk && this._trk[name]) || { rev:0, n:0, lo:from, hi:from };
+        /* gap — 다른 물감을 마지막으로 놓은 뒤 경과 ms. 두 슬라이더를 번갈아 짧게 오가면
+           두 양을 함께 맞추려는 협응으로 읽는다(설계원리 1). 처음이면 -1. */
+        const other = name === '빨강' ? '노랑' : '빨강';
+        this._lastSlide = this._lastSlide || {};
+        /* 한 물감을 놓고 다른 물감을 「잡기까지」의 간격을 잰다(t0 기준).
+           끝난 시각으로 재면 이번 드래그에 걸린 시간이 통째로 섞여 들어가,
+           곧장 이어서 맞춘 아이도 오래 뜸들인 것처럼 보인다. */
+        const gap = this._lastSlide[other] ? (t0 - this._lastSlide[other]) : -1;
+        this._lastSlide[name] = Date.now();
+        this.plog('slide_end', { p:name, from:from, to:this.state.amt[name],
+          rev:t.rev, n:t.n, lo:t.lo, hi:t.hi, ms:Date.now() - t0, gap:gap,
+          oR:this.state.amt['빨강'], oY:this.state.amt['노랑'] });
+      };
       el.addEventListener('pointermove', mv); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
     };
   }
@@ -1483,10 +1636,17 @@ class Component extends DCLogic {
     if (!this._pts || !this._pts.has(e.pointerId)) return;
     this._pts.set(e.pointerId, { x:e.clientX, y:e.clientY });
     /* 두 손가락으로 함께 늘리는 조작은 두지 않는다. 앱이 두 양에 같은 배율을 곱해
-       비를 대신 지켜 주면, 관계를 지키는 일이 학습자에게 남지 않기 때문이다(지침 1.5·3.3). */
+       비를 대신 지켜 주면, 관계를 지키는 일이 학습자에게 남지 않기 때문이다(지침 1.5·3.3).
+       다만 그 시도 자체는 두 양을 함께 배로 늘리려는 조작의 발현이므로 기록만 한다.
+       동작은 그대로 없다 — 한 제스처당 한 번만 남는다. */
+    if (this._pts.size >= 2 && !this._pinchFlag) {
+      this._pinchFlag = 1;
+      this.plog('pinch_try', { n:this._pts.size, r:this.state.amt['빨강'], y:this.state.amt['노랑'] });
+    }
   }
   padUp(e) {
     if (this._pts) this._pts.delete(e.pointerId);
+    if (!this._pts || this._pts.size < 2) this._pinchFlag = 0;
   }
 
   /* 단계에 들어설 때 비커에 담겨 있는 양 — 빨강을 잠근 단계는 그 양이 담긴 채로 시작한다 */
@@ -2055,8 +2215,11 @@ class Component extends DCLogic {
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
       stopProp: (e) => e.stopPropagation(),
-      openVoices: () => { this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
-      closeVoices: () => { this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
+      /* 이 패널은 화면을 통째로 덮는다(inset:0, z-index:80). 실수로 열고 닫는 법을 못 찾으면
+         학습자는 그동안 아무것도 못 한다. 그 시간이 로그에는 이유 없는 idle로만 남아
+         「화면을 보며 생각한 정지」로 잘못 읽힌다. 열고 닫은 때를 남겨 그 구간을 가려낸다. */
+      openVoices: () => { this.plog('overlay', { o:'voice', v:1 }); this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
+      closeVoices: () => { if (this.state.voicePanel) this.plog('overlay', { o:'voice', v:0 }); this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
       voicePanel: S.voicePanel,
       voiceRows: S.voicePanel ? (() => {
         const pool = this.voicePool();
@@ -2138,7 +2301,15 @@ class Component extends DCLogic {
           color: this.rgb(this.mix({ '빨강': 40, '노랑': 60 })) });
         return list;
       })() : null,
-      refInput: (e) => this.setState({ refText: e.target.value }),
+    /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
+       이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
+      refInput: (e) => {
+        const s = e.target.value;
+        if (!this._refT0) this._refT0 = Date.now();
+        this._refN = (this._refN || 0) + 1;
+        this._refMax = Math.max(this._refMax || 0, s.length);
+        this.setState({ refText: s });
+      },
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
       /* 마침 카드 — 이 방은 황금비의 앞 두 자리를 차례로 준다 */
       cardConcept: this.CONCEPT,
@@ -2249,8 +2420,8 @@ class Component extends DCLogic {
           down: lk ? (() => this.toast('🔒', '빨강은 이미 부었어요',
                         '빨강 물감은 먼셀이 이미 부어 두었어요. 노랑을 몇 컵 부을지 정해 봐요.'))
                    : this.colDown(nm),
-          plus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] + this.STEP_ML)),
-          minus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] - this.STEP_ML))
+          plus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] + this.STEP_ML, 'btn')),
+          minus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] - this.STEP_ML, 'btn'))
         };
       });
       /* 눈금선은 20mL마다, 숫자 라벨은 100mL마다 (상한이 500이라 10mL 눈금은 너무 촘촘하다) */
@@ -2277,8 +2448,8 @@ class Component extends DCLogic {
             name: nm, ink: q.ink, color: q.color, amt: cur, n: n, tag: q.tag,
             cups: new Array(n).fill(0).map((_, i) => ({ i: i })),
             btnOp: q.btnOp, btnPe: q.btnPe,
-            add: lk ? (() => {}) : (() => this.setAmt(nm, Math.min(this.CUP_LAB_MAX * this.CUP_ML, cur + this.CUP_ML))),
-            sub: lk ? (() => {}) : (() => this.setAmt(nm, cur - this.CUP_ML))
+            add: lk ? (() => {}) : (() => this.setAmt(nm, Math.min(this.CUP_LAB_MAX * this.CUP_ML, cur + this.CUP_ML), 'cup')),
+            sub: lk ? (() => {}) : (() => this.setAmt(nm, cur - this.CUP_ML, 'cup'))
           };
         });
         v.paints = [];
@@ -2310,8 +2481,11 @@ class Component extends DCLogic {
       const allH = [];
       this.HYPOS.forEach(o => allH.push(o));
       v.canChangeHypo = st.mode === 'find' && !!S.hypo && !S.hypoPick && !solved;
-      v.openHypo = () => { this.sfx('tap'); this.setState({ hypoPick: true }); };
-      v.closeHypo = () => { this.sfx('tap'); this.setState({ hypoPick: false }); };
+      /* 가설을 다시 고르는 화면도 덮는 창이다 — 목소리 패널과 같은 이유로 여닫이를 남긴다.
+         다만 이쪽은 실수가 아니라 「가설을 바꿔 볼까」 하는 판단이므로, 열어만 보고 그대로
+         둔 것과 실제로 바꾼 것(hypo_rev)을 견주면 망설임을 읽을 수 있다. */
+      v.openHypo = () => { this.plog('overlay', { o:'hypo', v:1 }); this.sfx('tap'); this.setState({ hypoPick: true }); };
+      v.closeHypo = () => { this.plog('overlay', { o:'hypo', v:0, kept:1 }); this.sfx('tap'); this.setState({ hypoPick: false }); };
       /* 새 가설도 수가 아니라 말과 색으로 고른다 — 어느 쪽이 더 많다고 보는지,
          그렇게 섞으면 어떤 색이 될지를 목표색과 견주어 고르게 한다. */
       v.hypoOpts = (st.mode === 'find' && S.hypoPick)
@@ -2566,7 +2740,10 @@ class Component extends DCLogic {
       ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '';
     v.primary = () => {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
-      if (st.k === 'finish') { this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null, refText:'', probe:{} }); return; }
+      /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
+         직전 nav로 단계를 역추적하면 여기서 사슬이 끊겨 뒤의 이벤트가 모두 마지막 단계로 잘못 붙는다.
+         restart를 남겨 그 자리를 표시한다. 다시 시작한 것 자체도 사용성 자료다. */
+      if (st.k === 'finish') { this.plog('restart', { from: S.i }); this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null, refText:'', probe:{} }); return; }
       if (needsSolve && !gateOk) {
         this.sfx('oops');
         if (solved && !probeOk) { this.toast('🤔', '조금만 더!', '아래 물음에 답하고 넘어가요.'); return; }

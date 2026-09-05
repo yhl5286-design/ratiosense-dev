@@ -494,15 +494,24 @@ class Component extends DCLogic {
   }
 
   /* ── 로그: pilot.evalV3.* (v3 eval 스키마 유지) ── */
+  /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
+     step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
+     t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
   plog(ev, data) {
-    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    var d = data || {};
+    try {
+      var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
+      d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
+    } catch(e) {}
+    this._lastAct = Date.now();
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
       this._q = this._q || [];
-      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:'',
         seq: ++this._seq, clientTs:new Date().toISOString(),
         eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
-        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
       if (this._q.length >= 10) this.flush();
     } catch(e) {}
   }
@@ -562,6 +571,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this._seq = 0;
+    this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
+    this._lastAct = Date.now();
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
@@ -588,13 +599,95 @@ class Component extends DCLogic {
     /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
     this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
     addEventListener('pagehide', this._pageHide);
+
+    /* ── 무조작 정지 ── 15초 넘게 아무 조작이 없으면 한 구간당 한 번만 남긴다.
+       바로 앞에 focus:0도 overlay 열림도 없는 idle이라야 "화면을 보며 생각한 정지"로 읽을 수 있다. */
+    this._idleT = setInterval(() => {
+      const gap = Date.now() - (this._lastAct || 0);
+      if (gap > 15000 && !this._idleFlag) { this._idleFlag = 1; this.plog('idle', { ms: gap }); }
+      if (gap <= 15000) this._idleFlag = 0;
+    }, 5000);
+
+    /* ── 화면 이탈 ── 체류 시간에서 빼야 할 구간을 가른다. 기존 _hide는 flush 전용이라 그대로 둔다. */
+    this._vis = () => this.plog('focus', { v: document.visibilityState === 'visible' ? 1 : 0 });
+    document.addEventListener('visibilitychange', this._vis);
+
+    /* ── 비활성 영역 탭 ── 이 앱은 핸들러를 속성이 아니라 props로 묶으므로 [onclick] 선택자가 듣지 않는다.
+       커서 모양과 태그로 판정한다. 정상 조작 20회에 0건이어야 하며, 1건이라도 나오면 깊이를 늘린다.
+       tg·cl은 무엇을 눌렀는지 — 좌표만으로는 화면이 바뀐 뒤 오탐을 가려낼 수 없다. */
+    this._dead = (e) => {
+      try {
+        let el = e.target, hit = false;
+        for (let i = 0; el && i < 8; i++, el = el.parentElement) {
+          if (/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) { hit = true; break; }
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.hasAttribute('data-blank'))) { hit = true; break; }
+          const cs = getComputedStyle(el);
+          if (cs.cursor === 'pointer' || cs.cursor === 'grab' || cs.touchAction === 'none') { hit = true; break; }
+        }
+        if (!hit) this.plog('deadtap', { x: Math.round(e.clientX), y: Math.round(e.clientY),
+          tg: (e.target && e.target.tagName) || '', cl: ((e.target && e.target.className) || '').toString().slice(0, 20) });
+      } catch(err) {}
+    };
+    addEventListener('pointerdown', this._dead, true);
+
+    /* ── 영상 시각 맞추기 ── 오른쪽 위 모서리를 1.5초 누르면 조용히 기준점을 찍는다.
+       화면에는 아무 표시도 하지 않는다(학습자에게 보이면 안 되는 장치다). 진동이 유일한 확인 신호다. */
+    this._syncDown = (e) => {
+      if (e.clientX < innerWidth - 80 || e.clientY > 80) return;
+      this._syncT = setTimeout(() => {
+        this.plog('sync', { wall: new Date().toISOString() });
+        /* 노트북에는 진동이 없다. 모서리에 작은 점을 잠깐 띄워 연구자만 알아보게 한다.
+           학습자의 과제 영역을 가리지 않고, 0.5초 뒤 스스로 사라진다. */
+        try {
+          navigator.vibrate && navigator.vibrate(30);
+          const dot = document.createElement('div');
+          dot.style.cssText = 'position:fixed;top:6px;right:6px;width:9px;height:9px;border-radius:999px;' +
+            'background:#c67139;opacity:.85;z-index:2147483647;pointer-events:none';
+          document.body.appendChild(dot);
+          setTimeout(() => dot.remove(), 500);
+        } catch(err) {}
+      }, 1500);
+    };
+    this._syncUp = () => clearTimeout(this._syncT);
+    addEventListener('pointerdown', this._syncDown, true);
+    addEventListener('pointerup', this._syncUp, true);
+    addEventListener('pointercancel', this._syncUp, true);
+
+    /* ── 화면을 키우려는 시도 ── 노트북에서는 두 손가락 벌리기가 pointerdown 두 개로 오지 않는다.
+       트랙패드 확대는 ctrlKey가 붙은 wheel, 자판은 Ctrl +/-/0 이다.
+       뜻은 터치의 pinch_try와 다르다 — 화면 배율을 바꾸려는 것이므로 「글씨·그림이 작다」는
+       사용성 신호로 읽고, 두 양을 함께 늘리려는 곱셈적 조작의 증거로는 쓰지 않는다.
+       한 손짓이 wheel을 수십 번 내므로 1.2초에 한 번만 남긴다. */
+    this._zoomHit = (how) => {
+      const now = Date.now();
+      if (now - (this._zoomAt || 0) < 1200) return;
+      this._zoomAt = now;
+      let sc = 1; try { sc = (visualViewport && visualViewport.scale) || 1; } catch(e) {}
+      this.plog('zoom_try', { how: how, sc: Math.round(sc * 100) / 100, dpr: Math.round((devicePixelRatio || 1) * 100) / 100 });
+    };
+    this._wheelZ = (e) => { if (e.ctrlKey) this._zoomHit('pinch'); };
+    addEventListener('wheel', this._wheelZ, { passive: true, capture: true });
+    this._keyZ = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0', 'Add', 'Subtract'].indexOf(e.key) >= 0) this._zoomHit('key');
+    };
+    addEventListener('keydown', this._keyZ, true);
+
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
     clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
+    clearInterval(this._idleT);
     document.removeEventListener('visibilitychange', this._hide);
+    document.removeEventListener('visibilitychange', this._vis);
     removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerdown', this._dead, true);
+    removeEventListener('pointerdown', this._syncDown, true);
+    removeEventListener('pointerup', this._syncUp, true);
+    removeEventListener('pointercancel', this._syncUp, true);
+    removeEventListener('wheel', this._wheelZ, true);
+    removeEventListener('keydown', this._keyZ, true);
+    clearTimeout(this._syncT);
     this.stopVoice(); this.flush(true);
   }
 
@@ -633,7 +726,10 @@ class Component extends DCLogic {
   }
   autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3000); }
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
+     본문은 남기지 않고 제목 40자만 남긴다. t는 plog가 붙이는 경과 ms이므로 제목은 ttl에 담는다. */
   toast(icon, title, body, kind, hold) {
+    this.plog('toast', { k: kind || 'info', ttl: String(title || '').slice(0, 40) });
     this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
@@ -953,6 +1049,9 @@ class Component extends DCLogic {
       if (last) {
         this.stopVoice();
         this._tries = {};
+        /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
+           직전 nav로 단계를 역추적하면 여기서 사슬이 끊긴다. */
+        this.plog('restart', { from: this.state.i });
         this.setState({ i:0, solved:{}, doorVal:'', doorOpen:false, toast:null });
         setTimeout(() => this.sayStep(0), 380);
         return;

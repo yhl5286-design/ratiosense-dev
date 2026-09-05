@@ -364,7 +364,7 @@ button{font-family:inherit}
           <div style="width:min(680px,94%)">{{slRuler}}</div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center;width:min(680px,94%)">
             <span class="rs-peg"></span>
-            <input type="range" min="20" max="110" step="1" value="{{slL}}" onChange="{{slInput}}" aria-label="줄 길이" class="rs-string" style="--p:{{slPct}}%">
+            <input type="range" min="20" max="110" step="1" value="{{slL}}" onChange="{{slInput}}" onPointerUp="{{slEnd}}" onPointerCancel="{{slEnd}}" aria-label="줄 길이" class="rs-string" style="--p:{{slPct}}%">
             <span class="rs-peg"></span>
           </div>
 
@@ -654,6 +654,10 @@ class Component extends DCLogic {
   LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
   LOG_TK = 'ratiosense-2026';
   LAB = 'soundV3';
+  /* 궤적 표본 — 0으로 두면 harp_drag만 멈추고 방향 전환·끌기 요약은 그대로 남는다.
+     색깔 방과 같은 값을 쓴다(두 방의 해상도가 다르면 방끼리 견줄 수 없다). */
+  TRACE = 1;
+  TRACE_MS = 300;
 
   /* ── 구버전 sound.html의 순정률·하프 데이터 (그대로 이식) ── */
   ITV = ['완전1도(같은 음)','장2도','장3도','완전4도','완전5도','장6도','장7도','완전8도(옥타브)'];
@@ -1090,15 +1094,24 @@ class Component extends DCLogic {
   }
 
   /* ── 로그: 구버전과 같은 시트·이벤트 이름 (pilot.soundV3.*) ── */
+  /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
+     step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
+     t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
   plog(ev, data) {
-    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    var d = data || {};
+    try {
+      var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
+      d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
+    } catch(e) {}
+    this._lastAct = Date.now();
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
       this._q = this._q || [];
-      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:'',
         seq: ++this._seq, clientTs:new Date().toISOString(),
         eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
-        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
       if (this._q.length >= 10) this.flush();
     } catch(e) {}
   }
@@ -1168,6 +1181,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this._seq = 0;
+    this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
+    this._lastAct = Date.now();
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
     /* 식별 번호(연구자 부여 코드)만 사용 — 구버전 rs3_user 그대로. 성명·이메일·계정은 어디서도 수집하지 않는다.
        번호가 없으면 구버전과 동일하게 index로 보낸다('guest'는 로그 미전송). */
@@ -1197,6 +1212,87 @@ class Component extends DCLogic {
     this._pageHide = () => this.flush(true);
     addEventListener('pagehide', this._pageHide);
     this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+
+    /* ── 무조작 정지 ── 15초 넘게 아무 조작이 없으면 한 구간당 한 번만 남긴다.
+       바로 앞에 focus:0도 overlay 열림도 없는 idle이라야 "화면을 보며 생각한 정지"로 읽을 수 있다. */
+    this._idleT = setInterval(() => {
+      const gap = Date.now() - (this._lastAct || 0);
+      if (gap > 15000 && !this._idleFlag) { this._idleFlag = 1; this.plog('idle', { ms: gap }); }
+      if (gap <= 15000) this._idleFlag = 0;
+    }, 5000);
+
+    /* ── 화면 이탈 ── 체류 시간에서 빼야 할 구간을 가른다. 기존 _hide는 flush 전용이라 그대로 둔다. */
+    this._vis = () => this.plog('focus', { v: document.visibilityState === 'visible' ? 1 : 0 });
+    document.addEventListener('visibilitychange', this._vis);
+
+    /* ── 비활성 영역 탭 ── 이 앱은 핸들러를 속성이 아니라 props로 묶으므로 [onclick] 선택자가 듣지 않는다.
+       커서 모양과 태그로 판정한다. 정상 조작 20회에 0건이어야 하며, 1건이라도 나오면 깊이를 늘린다.
+       tg·cl은 무엇을 눌렀는지 — 좌표만으로는 화면이 바뀐 뒤 오탐을 가려낼 수 없다. */
+    this._dead = (e) => {
+      try {
+        let el = e.target, hit = false;
+        for (let i = 0; el && i < 8; i++, el = el.parentElement) {
+          if (/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) { hit = true; break; }
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.hasAttribute('data-blank'))) { hit = true; break; }
+          const cs = getComputedStyle(el);
+          if (cs.cursor === 'pointer' || cs.cursor === 'grab' || cs.touchAction === 'none') { hit = true; break; }
+        }
+        if (!hit) this.plog('deadtap', { x: Math.round(e.clientX), y: Math.round(e.clientY),
+          tg: (e.target && e.target.tagName) || '', cl: ((e.target && e.target.className) || '').toString().slice(0, 20) });
+      } catch(err) {}
+    };
+    addEventListener('pointerdown', this._dead, true);
+
+    /* ── 영상 시각 맞추기 ── 오른쪽 위 모서리를 1.5초 누르면 조용히 기준점을 찍는다.
+       화면에는 아무 표시도 하지 않는다(학습자에게 보이면 안 되는 장치다). 진동이 유일한 확인 신호다. */
+    this._syncDown = (e) => {
+      if (e.clientX < innerWidth - 80 || e.clientY > 80) return;
+      this._syncT = setTimeout(() => {
+        this.plog('sync', { wall: new Date().toISOString() });
+        /* 노트북에는 진동이 없다. 모서리에 작은 점을 잠깐 띄워 연구자만 알아보게 한다.
+           학습자의 과제 영역을 가리지 않고, 0.5초 뒤 스스로 사라진다. */
+        try {
+          navigator.vibrate && navigator.vibrate(30);
+          const dot = document.createElement('div');
+          dot.style.cssText = 'position:fixed;top:6px;right:6px;width:9px;height:9px;border-radius:999px;' +
+            'background:#c67139;opacity:.85;z-index:2147483647;pointer-events:none';
+          document.body.appendChild(dot);
+          setTimeout(() => dot.remove(), 500);
+        } catch(err) {}
+      }, 1500);
+    };
+    this._syncUp = () => clearTimeout(this._syncT);
+    addEventListener('pointerdown', this._syncDown, true);
+    addEventListener('pointerup', this._syncUp, true);
+    addEventListener('pointercancel', this._syncUp, true);
+
+    /* ── 화면을 키우려는 시도 ── 노트북에서는 두 손가락 벌리기가 pointerdown 두 개로 오지 않는다.
+       트랙패드 확대는 ctrlKey가 붙은 wheel, 자판은 Ctrl +/-/0 이다.
+       뜻은 터치의 pinch_try와 다르다 — 화면 배율을 바꾸려는 것이므로 「글씨·그림이 작다」는
+       사용성 신호로 읽고, 두 양을 함께 늘리려는 곱셈적 조작의 증거로는 쓰지 않는다.
+       한 손짓이 wheel을 수십 번 내므로 1.2초에 한 번만 남긴다. */
+    this._zoomHit = (how) => {
+      const now = Date.now();
+      if (now - (this._zoomAt || 0) < 1200) return;
+      this._zoomAt = now;
+      let sc = 1; try { sc = (visualViewport && visualViewport.scale) || 1; } catch(e) {}
+      this.plog('zoom_try', { how: how, sc: Math.round(sc * 100) / 100, dpr: Math.round((devicePixelRatio || 1) * 100) / 100 });
+    };
+    this._wheelZ = (e) => { if (e.ctrlKey) this._zoomHit('pinch'); };
+    addEventListener('wheel', this._wheelZ, { passive: true, capture: true });
+    this._keyZ = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0', 'Add', 'Subtract'].indexOf(e.key) >= 0) this._zoomHit('key');
+    };
+    addEventListener('keydown', this._keyZ, true);
+
+    /* 끌고 있는 중인지 — 자판 감시 타이머가 끌기 도중에 끼어들어
+       마우스 조작을 자판 조작(kb:1)으로 잘못 적는 것을 막는다. */
+    this._ptrD = () => { this._ptrDown = 1; };
+    this._ptrU = () => { this._ptrDown = 0; };
+    addEventListener('pointerdown', this._ptrD, true);
+    addEventListener('pointerup', this._ptrU, true);
+    addEventListener('pointercancel', this._ptrU, true);
+
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     this._sayT = setTimeout(() => this.sayStep(0), 500);
     const tick = () => { this._raf = requestAnimationFrame(tick); this._frame(); };
@@ -1209,8 +1305,20 @@ class Component extends DCLogic {
     this._clsStop();
     if (this._raf) cancelAnimationFrame(this._raf);
     this.harpDroneOff();
+    clearInterval(this._idleT);
     document.removeEventListener('visibilitychange', this._hide);
+    document.removeEventListener('visibilitychange', this._vis);
     removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerdown', this._dead, true);
+    removeEventListener('pointerdown', this._syncDown, true);
+    removeEventListener('pointerup', this._syncUp, true);
+    removeEventListener('pointercancel', this._syncUp, true);
+    removeEventListener('pointerdown', this._ptrD, true);
+    removeEventListener('pointerup', this._ptrU, true);
+    removeEventListener('pointercancel', this._ptrU, true);
+    removeEventListener('wheel', this._wheelZ, true);
+    removeEventListener('keydown', this._keyZ, true);
+    clearTimeout(this._syncT);
     this.stopVoice(); this.flush(true);
   }
 
@@ -1292,7 +1400,10 @@ class Component extends DCLogic {
     this.sfx('ok');
   }
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
+     본문은 남기지 않고 제목 40자만 남긴다. t는 plog가 붙이는 경과 ms이므로 제목은 ttl에 담는다. */
   toast(icon, title, body, kind, hold) {
+    this.plog('toast', { k: kind || 'info', ttl: String(title || '').slice(0, 40) });
     if (kind !== 'quiet') this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
@@ -1865,10 +1976,29 @@ class Component extends DCLogic {
     return this.svgEl('0 0 ' + W + ' ' + H, { width:'100%', display:'block' }, g, 'rul' + L);
   }
 
+  /* 줄 길이 — 하프와 같은 조작이므로 같은 모양으로 남긴다(str_rev · str_move · str_end).
+     지금까지는 뜯어본 순간(strlen)만 남아, 어디를 오가다 그 자리를 골랐는지가 빠져 있었다. */
   slSet(L) {
+    const prev = this.state.slL;
     this.setState({ slL: L });
     const now = Date.now();
+    if (L !== prev) {
+      const t = this._sTrk = this._sTrk || { dir:0, rev:0, n:0, lo:prev, hi:prev, snap:0, t0:now, from:prev };
+      const dir = L > prev ? 1 : -1;
+      if (t.dir && dir !== t.dir) { t.rev++; this.plog('str_rev', { at: prev, to: L, rev: t.rev }); }
+      t.dir = dir; t.n++;
+      t.lo = Math.min(t.lo, L); t.hi = Math.max(t.hi, L);
+      if (this.TRACE && now - t.snap >= this.TRACE_MS) { t.snap = now; this.plog('str_move', { L: L }); }
+      clearTimeout(this._sKbT);
+      if (!this._ptrDown) this._sKbT = setTimeout(() => this.slEndLog(1), 900);
+    }
     if (now - (this._lastP||0) > 200) { this._lastP = now; this.slDoPluck(); }
+  }
+  slEndLog(kb) {
+    const t = this._sTrk; if (!t) return;
+    this._sTrk = null; clearTimeout(this._sKbT);
+    this.plog('str_end', { kb: kb ? 1 : 0, from: t.from, to: this.state.slL,
+      rev: t.rev, cnt: t.n, lo: t.lo, hi: t.hi, ms: Date.now() - t.t0 });
   }
   slDoPluck() {
     const L = this.state.slL;
@@ -1944,17 +2074,52 @@ class Component extends DCLogic {
       d.o.stop(t + 0.24);
     } catch(e) {}
   }
-  /* 슬라이더 조작 — 상태 갱신 + 드론 주파수 추종. 로그는 600ms 스로틀. */
+  /* 슬라이더 조작 — 상태 갱신 + 드론 주파수 추종.
+     색깔 방의 막대와 같은 모양으로 남긴다. 설계원리 2는 같은 관계를 색과 소리로 만나게 하는
+     것이므로, 두 방의 로그가 같은 종류의 판단을 지지해야 방끼리 견줄 수 있다.
+       harp_drag — 궤적 표본(TRACE_MS 간격). 색깔 방의 slide_move에 해당한다.
+       harp_rev  — 방향 전환. 목표를 지나쳐 되돌아온 횟수가 탐색과 조작 어려움을 가른다.
+       harp_end  — 끌기 요약(harpSlideEnd에서). 색깔 방의 slide_end에 해당한다.
+     자판 화살표로 값을 바꾸면 pointerup이 없어 harp_end가 남지 않는다. 그때는 궤적만 남는다. */
   harpSlide(L) {
+    const prev = this.state.harpL;
     this.setState({ harpL: L });
     this.harpDrone(Math.round(440 * this.HBASE / L));
     const st = this.STEPS[this.state.i];
     const now = Date.now();
-    if (now - (this._lastHD || 0) > 600) {
-      this._lastHD = now;
-      const p = this.HP[st.i];
-      this.plog('harp_drag', { n: p.n, L, cells: Math.round(L / this.hUnit(st.i) * 100) / 100 });
+    const p = this.HP[st.i];
+
+    if (L !== prev) {
+      const t = this._hTrk = this._hTrk || { dir:0, rev:0, n:0, lo:prev, hi:prev, snap:0, t0:now, from:prev };
+      const dir = L > prev ? 1 : -1;
+      if (t.dir && dir !== t.dir) {
+        t.rev++;
+        this.plog('harp_rev', { n: p.n, at: prev, to: L, rev: t.rev });
+      }
+      t.dir = dir; t.n++;
+      t.lo = Math.min(t.lo, L); t.hi = Math.max(t.hi, L);
+      if (this.TRACE && now - t.snap >= this.TRACE_MS) {
+        t.snap = now;
+        this.plog('harp_drag', { n: p.n, L, cells: Math.round(L / this.hUnit(st.i) * 100) / 100 });
+      }
+      /* 값이 0.9초 멎으면 끝난 것으로 본다 — 자판으로 움직인 경우를 위한 길이다.
+         끌기로 끝나면 pointerup이 먼저 와서 이 타이머는 취소된다. */
+      clearTimeout(this._hKbT);
+      if (!this._ptrDown) this._hKbT = setTimeout(() => this.harpEndLog(1), 900);
     }
+  }
+  /* 끌기가 끝났다 — 요약을 남기고 궤적을 닫는다.
+     kb — 자판(화살표)으로 움직인 뒤 스스로 닫힌 경우. 노트북에서는 pointerup이 오지 않으므로
+     이 길이 없으면 자판 조작은 요약이 통째로 빠진다. */
+  harpEndLog(kb) {
+    const t = this._hTrk; if (!t) return;
+    this._hTrk = null;
+    const st = this.STEPS[this.state.i];
+    const p = this.HP[st.i] || {};
+    clearTimeout(this._hKbT);
+    this.plog('harp_end', { n: p.n, kb: kb ? 1 : 0, from: t.from, to: this.state.harpL,
+      rev: t.rev, cnt: t.n, lo: t.lo, hi: t.hi, ms: Date.now() - t.t0,
+      cells: Math.round(this.state.harpL / this.hUnit(st.i) * 100) / 100 });
   }
 
   harpPluck() {
@@ -2095,7 +2260,9 @@ class Component extends DCLogic {
   refGo() {
     const v = (this.state.refText || '').trim();
     if (!v) { this.toastRetry('한 줄이면 충분해요 — 내 말로 적어 봐요!'); return; }
-    this.plog('reflect', { room:'sound', text: v.slice(0,300) });
+    this.plog('reflect', { room:'sound', text: v.slice(0,300),
+      ms: this._refT0 ? (Date.now() - this._refT0) : -1,
+      edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
     this.toastOk('제출 완료!', '내 말로 정리한 소리의 비밀이 저장됐어요.');
     this.autoNext(3000);
@@ -2751,8 +2918,10 @@ class Component extends DCLogic {
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
       stopProp: (e) => e.stopPropagation(),
-      openVoices: () => { this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
-      closeVoices: () => { this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
+      /* 이 패널은 화면을 통째로 덮는다. 실수로 열고 닫는 법을 못 찾으면 그 시간이
+         이유 없는 idle로만 남아 「생각한 정지」로 잘못 읽힌다. 여닫이를 남겨 그 구간을 가려낸다. */
+      openVoices: () => { this.plog('overlay', { o:'voice', v:1 }); this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
+      closeVoices: () => { if (this.state.voicePanel) this.plog('overlay', { o:'voice', v:0 }); this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
       voicePanel: S.voicePanel,
       voiceRows: S.voicePanel ? (() => {
         const pool = this.voicePool();
@@ -2995,6 +3164,7 @@ class Component extends DCLogic {
       v.slRuler = this.slRulerSvg(L);
       v.slTag = L === 72 ? '(기준 라 ★)' : (L < 50 ? '(아주 높은 소리!)' : (L < 72 ? '(높은 소리!)' : (L > 84 ? '(아주 낮은 소리!)' : '(낮은 소리!)')));
       v.slInput = (e) => this.slSet(+e.target.value);
+      v.slEnd = () => this.slEndLog(0);
       v.slPluck = () => { this.plog('strlen', { L: this.state.slL }); this.slDoPluck(); };
       v.rp = this.repVals(L, 72, '내 줄 길이 : 라 줄 72cm(기준)', false);
     }
@@ -3021,7 +3191,7 @@ class Component extends DCLogic {
       v.harpPct = Math.round((S.harpL - 36) / 36 * 100);
       v.harpLTxt = (+S.harpL).toFixed(1).replace(/\.0$/, '') + 'cm';
       v.harpSlide = (e) => this.harpSlide(+e.target.value);
-      v.harpSlideEnd = () => this.harpDroneOff();
+      v.harpSlideEnd = () => { this.harpEndLog(); this.harpDroneOff(); };
       v.tBase = () => { this.harpDroneOff(); this.pluckT(440); };
       v.tBoth = () => { this.harpDroneOff(); this.chord(440, Math.round(440 * 72 / S.harpL), 2); };
       v.tPluck = () => this.harpPluck();
@@ -3072,7 +3242,15 @@ class Component extends DCLogic {
 
     if (st.k === 'reflect') {
       v.refText = S.refText;
-      v.refInput = (e) => this.setState({ refText: e.target.value });
+    /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
+       이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
+      v.refInput = (e) => {
+        const s = e.target.value;
+        if (!this._refT0) this._refT0 = Date.now();
+        this._refN = (this._refN || 0) + 1;
+        this._refMax = Math.max(this._refMax || 0, s.length);
+        this.setState({ refText: s });
+      };
       v.refGo = () => this.refGo();
     }
 
@@ -3146,6 +3324,9 @@ class Component extends DCLogic {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.refGo(); return; }
       if (st.k === 'finish') {
         this.stopVoice();
+        /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
+           직전 nav로 단계를 역추적하면 여기서 사슬이 끊겨 뒤의 이벤트가 모두 마지막 단계로 잘못 붙는다. */
+        this.plog('restart', { from: this.state.i });
         this.setState({ i:0, solved:{}, rates:{}, blanks:{}, used:{}, hb:{}, hbUsed:{},
           refText:'', bridgePick:null, probe:{},
           polyStage:'listen', heardDrum:false, heardTri:false, heardBoth:false, polyFeel:'',

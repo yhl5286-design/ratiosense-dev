@@ -135,9 +135,10 @@ function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).sli
    ④ 배치를 만들 때 같은 eventId가 이미 있으면 제외
    fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해 실패로 오인하고 재전송하는 일을 막는다 */
 const LOG={q:[],sent:{},sentIds:[],inflight:{},bid:0,sending:false,sess:uid(),seq:0};
+const HUB_T0=Date.now();   /* 허브에 머문 시간의 기준 */
 function plog(code,ev,data){try{
   if(!code||code==='guest')return; /* 게스트는 미전송 */
-  LOG.q.push({_t:'events',schemaVersion:'1',sessionId:LOG.sess,userCode:code,userName:'',
+  LOG.q.push({_t:'events',schemaVersion:'2',sessionId:LOG.sess,userCode:code,userName:'',
     seq:++LOG.seq,clientTs:new Date().toISOString(),eventId:uid(),
     tab:'hubV3',eventType:'pilot.hubV3.'+ev,payload:JSON.stringify(data||{})});
   flushLog();
@@ -171,7 +172,9 @@ function flushLog(beacon){try{
 }catch(e){LOG.sending=false;}}
 setInterval(()=>flushLog(),5000);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushLog(true);});
-addEventListener('pagehide',()=>flushLog(true));
+/* 허브를 떠나는 때 — 체류 시간을 남기고 큐를 마저 보낸다.
+   plog가 큐에 넣은 뒤 같은 손짓으로 flush까지 해야 마지막 한 건이 유실되지 않는다. */
+addEventListener('pagehide',()=>{plog(getUser(),'exit',{ms:Date.now()-HUB_T0,done:getDone()});flushLog(true);});
 
 function saveUser(code){try{localStorage.setItem('rs3_user',JSON.stringify({code,ts:Date.now()}));}catch(e){}}
 function getUser(){try{return (JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){return '';}}
@@ -213,6 +216,15 @@ function refresh(){
     const lk=$(g.lock); if(lk)lk.style.display=g.open?'none':'inline-flex';
     if(g.open){c.setAttribute('href',g.href);c.onclick=null;}
     else{c.removeAttribute('href');c.onclick=e=>{e.preventDefault();};}});
+  /* 방으로 떠나는 때를 남긴다 — 방 진입 순서와 허브 체류가 이것으로만 복원된다.
+     잠긴 방을 눌러 본 것(open:0)도 남긴다. 열리지 않는 카드를 거듭 누르는 것은
+     게이트 규칙을 이해하지 못했다는 뜻이므로 그 자체가 사용성 자료다. */
+  document.querySelectorAll('a.room,.room').forEach(c=>{
+    if(c.__lg)return; c.__lg=1;
+    c.addEventListener('click',()=>{
+      const r=c.getAttribute('data-r')||'';
+      plog(getUser(),'room_open',{room:r,open:opened[r]?1:0,done:getDone(),ms:Date.now()-HUB_T0});
+    },true);});
   /* 비의 비밀은 허브에 두지 않는다 — 지도의 비밀을 마치면 그 화면에서 바로 이어진다 */
   document.querySelectorAll('.room').forEach(a=>{
     a.classList.remove('next-room');
