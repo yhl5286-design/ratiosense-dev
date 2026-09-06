@@ -97,7 +97,7 @@ button{font-family:inherit}
     <div style="flex:none;display:flex;justify-content:center;padding:4px 10px;background:#f9f4ed;border-bottom:2px solid #eee7db">
       <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:#8c491a;background:#fff2eb;border:2px solid #ffc6a5;border-radius:999px;padding:3px 14px;white-space:nowrap;overflow:hidden;max-width:96%">
         <span style="overflow:hidden;text-overflow:ellipsis">🔬 내 가설: {{hypoBanner}}</span>
-        <!-- 가설의 색과 목표색을 배너에서 맞대어 둔다 — 수 대신 눈으로 견주는 단서 -->
+        <!-- 가설의 색과 목표색을 배너에서 맞대어 둔다 — 수 대신 눈으로 비교하는 단서 -->
         <span style="flex:none;width:20px;height:20px;border-radius:999px;border:2.5px solid #201e1d;background:{{hypoColor}}"></span>
         <span style="flex:none;font-size:11.5px;font-weight:800;color:#645c50">목표색</span>
         <span style="flex:none;width:20px;height:20px;border-radius:999px;border:2.5px solid #201e1d;background:{{tgtColor}}"></span>
@@ -151,7 +151,7 @@ button{font-family:inherit}
       </sc-if>
 
       <!-- 목표 색 견본. 실험 단계에서는 내 비커 색을 바로 옆에 같은 크기로 붙여
-           둘을 눈으로 견주게 한다(지침 4.5 예측 후 확인) -->
+           둘을 눈으로 비교하게 한다(지침 4.5 예측 후 확인) -->
       <sc-if value="{{showSwatch}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;gap:min(6vw,30px);align-items:flex-start;justify-content:center;margin-bottom:12px;flex:none">
           <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
@@ -397,7 +397,7 @@ button{font-family:inherit}
             </sc-for>
           </div>
 
-          <!-- 두 조작 대상을 견준 비 기호 — 컵을 옮길 때마다 아래 줄이 함께 바뀐다.
+          <!-- 두 조작 대상을 비교한 비 기호 — 컵을 옮길 때마다 아래 줄이 함께 바뀐다.
                간단히 한 비는 앱이 먼저 적어 주지 않는다(아래 선택 과제에서 학습자가 옮긴다). -->
           <div style="display:flex;flex-direction:column;align-items:center;gap:5px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:18px;padding:8px 20px">
             <div style="display:flex;align-items:center;gap:9px">
@@ -498,7 +498,7 @@ button{font-family:inherit}
             </div>
           </sc-if>
           <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 해 본 것</b>을 하나 예로 들어서, <b>색깔의 비밀(비와 비율)</b>을 한 줄 적어 보세요!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="예) 빨강 20mL에 노랑 40mL를 부었을 때 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="활동을 하고 나니 (  )을 알게 되었어요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
         </div>
       </sc-if>
 
@@ -591,7 +591,6 @@ button{font-family:inherit}
             <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">황금비의 앞 두 자리예요. 왼쪽부터 차례로 기억해 두세요!</div>
           </div>
           <a href="SoundRoom.dc.html" onClick="{{goNext}}" style="min-height:64px;display:flex;align-items:center;padding:18px 36px;border-radius:999px;background:#c67139;color:#f9f4ed;font-size:21px;box-shadow:0 8px 20px rgba(198,113,57,.35)">🎼 소리의 비밀로 이어가기 →</a>
-          <a href="index.html" onClick="{{goNext}}" style="font-size:15px;font-weight:700;color:#8c491a;text-decoration:underline">🏠 허브로 돌아가기</a>
         </div>
       </sc-if>
 
@@ -684,9 +683,9 @@ button{font-family:inherit}
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
 class Component extends DCLogic {
   PRIM = { '빨강':[230,40,55], '노랑':[250,215,45] };
-  MAX = 500;                  /* 막대 상한 — 큰 양까지 같은 비를 만들어 볼 수 있게 500mL까지 연다 */
-  STEP_ML = 10;               /* ＋− 버튼이 한 번에 더하고 빼는 양 — 앞 실험에서 쓴 컵 하나와 같다 */
-  SNAP_ML = 5;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼보다 잘게 양을 정할 수 있다 */
+  MAX = 200;                  /* 막대 상한 — 눈금이 촘촘히 보이도록 200mL까지만 연다 */
+  STEP_ML = 1;                /* ＋− 버튼이 한 번에 더하고 빼는 양 — 1mL씩 미세하게 맞춘다 */
+  SNAP_ML = 1;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼과 같이 1mL */
   CUP_ML = 10;                /* 실험 단계에서 한 번에 붓는 컵의 양 */
   CUP_LAB_MAX = 12;           /* 컵으로 탐색하는 실험에서 한 물감에 부을 수 있는 최대 컵 수 */
   TGT = [1,2];
@@ -747,13 +746,6 @@ class Component extends DCLogic {
                '이렇게 색상환을 만든 사람이지.',
                '나와 함께 뭉크의 노을색을 만들어볼까?'],
         hi:'실험으로 함께 찾아보자.', btn:'좋아요! 도와드릴게요!' },
-      { k:'chips', who:'munsell', need:2,
-        say:'색을 결정하는 것은 무엇일까? 이 중 두 가지를 찾아봐. 아닌 것도 눌러서 확인해도 좋아.',
-        hint:'아닌 것 같은 것도 눌러 보세요 · 다시 눌러도 괜찮아요',
-        chips:[ {t:'물감의 종류', ok:1, fb:'어떤 물감을 쓰는지가 색을 정해.'},
-                {t:'섞는 순서', ok:0, fb:'다 섞이고 나면 순서는 상관없단다. 다시 한번 생각해볼까?'},
-                {t:'붓의 크기', ok:0, fb:'붓의 크기는 칠할 때 필요한 것이란다. 다시 한번 생각해볼까?'},
-                {t:'각 물감의 양', ok:1, fb:'얼마나 넣는지도 색을 정해.'} ] },
       { k:'chips', who:'munsell', need:1, swatch:true,
         say:'그럼 어떤 색의 물감이 필요할까? 목표색을 잘 관찰해보고 추측해 봐.',
         chips:[ {t:'빨강 + 노랑', ok:1, fb:'맞아. 이 두 가지야.'},
@@ -769,30 +761,28 @@ class Component extends DCLogic {
         btn:'알겠어요!' },
       { k:'chips', who:'munsell', need:1, mark:'obs', swatch:true,
         say:'과학자는 실험 전에 가설을 세워. 가설은 어떻게 될지 미리 예상해 보는 것이란다. 목표색을 잘 봐. 어떤 색이 더 많아 보이니? 고르면 그 가설대로 바로 실험해 볼 거야.',
-        hint:'좋은 가설은 찍는 게 아니라 관찰에서 나와요 · 다시 골라도 괜찮아요',
+        hint:'어떤 색이 더 많아 보이는지 잘 관찰해 보세요',
         chips:[ {t:'🔴 빨강이 더 많아 보여요', v:'r', ok:1, fb:'빨강이 많으면 이렇게 진하고 붉은 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
                 {t:'🟡 노랑이 더 많아 보여요', v:'y', ok:1, fb:'노랑이 많으면 이렇게 밝고 환한 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'},
                 {t:'🟠 둘이 비슷해 보여요', v:'s', ok:1, fb:'반반이면 딱 중간 주황이 된단다. 목표색과 나란히 놓고 비교해 볼까?'} ] },
       /* 네 번의 실험 — 다루는 단위와 변인을 차례로 연다.
          1·2는 10mL 컵으로 세면서 관계를 찾고(몇 컵 대 몇 컵), 3·4는 막대로 양을 자유롭게 정한다. */
       { k:'lab', mode:'find', unit:'cup', who:'munsell', run:'기록하기', lockR:20,
-        say:'목표색을 만들기 위해 빨강 물감 10mL씩 두 컵을 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 할까? 네 가설대로 부어 보렴. 목표색과 똑같아지면 바로 알려 줄게.',
+        say:'목표색을 만들기 위해 빨강 물감 10mL씩 두 컵을 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 할까? 1컵씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!',
         hi:'노랑 쪽 ＋를 눌러 한 컵씩 부어요' },
       { k:'lab', mode:'more', unit:'cup', who:'munsell', run:'기록하기', lockR:40,
         say:'완벽해. 그런데 같은 색을 다른 양으로도 만들 수 있을까? 이번에는 빨강 물감을 10mL씩 네 컵 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 아까와 같은 색이 될까?',
         hi:'빨강이 두 배가 되었어요 · 노랑은 몇 컵일까요' },
       { k:'lab', mode:'more', who:'munsell', run:'기록하기',
         say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 슬라이더로 양을 정하고, 찾으면 기록해 둬.',
-        hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기 · 슬라이더는 500mL까지' },
+        hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기 · ＋－는 1mL씩 움직여요' },
       /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
          안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
          답은 어른이 말해 주지 않는다 — 다인이 말대로 직접 만들어 보고, 그 결과를 근거로
          학습자가 설명을 완성한 뒤에야 '무엇이 그대로였나'를 한 마디로 모은다. */
       { k:'story', who:'kid', emoji:'🙋',
-        lines:['잠시만요!',
-               '만약 빨강 물감 20mL에도 빨강 30mL를 더 넣고,',
-               '노랑 40mL에도 노랑 30mL를 더하면 빨강 50, 노랑 70이 되잖아요?',
-               '이렇게 같은 양을 더해도 같은 색이 나오나요?'],
+        lines:['만약에 각 물감에 같은 양을 더해도 같은 색이 나오나요?',
+               '빨강 20에도 빨강 30mL를 더 넣고, 노랑 40에도 노랑 30mL를 더 넣는다면요.'],
         btn:'그러게요? →' },
       /* 오개념을 말로 반박하지 않는다 — 다인이가 말한 그대로 손으로 만들어 보고,
          목표색 옆에 나란히 놓아 달라진다는 것을 눈으로 확인하게 한다. */
@@ -801,7 +791,7 @@ class Component extends DCLogic {
         say:'좋은 질문이야! 실험으로 보여 주자. 비커에는 빨강 20mL와 노랑 40mL가 들어 있어. 다인이 말대로 양쪽에 30mL씩 더 넣어 봐. 목표색과 같아질까?',
         hi:'빨강도 세 컵, 노랑도 세 컵 더 부어요' },
       { k:'blank', id:'why', who:'munsell', demo:'cups',
-        say:'아래 그림을 같이 볼까? 빨강:노랑에 같은 양을 각각 더했어. 그런데 다른 색이 되었지. 친구에게 뭐라고 설명해 주면 좋을지 낱말 카드를 끌어서 완성해 봐.' },
+        say:'아래 그림을 같이 볼까? 왼쪽은 두 양에 같은 수를 곱했고, 오른쪽은 두 양에 같은 양을 더했어. 다인이에게 해 줄 설명을 낱말 카드를 끌어서 완성해 봐.' },
       /* 실험과 다인이의 반례를 모두 겪은 뒤에 묻는다 — 더해도 안 되고 곱하면 되는 까닭을
          한 마디로 모으는 자리다. */
       /* 단위화(재합성) — 세 번 되풀이한다. 양에 맞춰 묶는 단위를 바꾸면
@@ -809,7 +799,12 @@ class Component extends DCLogic {
          앱이 대신 약분해 보여 주던 자리를 학습자의 조작이 대신한다. */
       { k:'cups', who:'munsell', src:{ r:20, y:40 }, unit:20, ask:true,
         say:'실험으로 찾은 빨강 20mL와 노랑 40mL를 다시 가져왔어. 이번에는 조금 더 큰 20mL짜리 컵을 줄게. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐.',
-        hi:'빈 컵을 누르면 비커에서 20mL가 옮겨져요',
+        hi:'빈 컵을 누르면 비커에서 20mL가 옮겨져요' },
+      /* 조작을 끝낸 뒤 되짚는 자리를 따로 둔다 — 옮겨 담기와 성찰이 한 화면에 겹치지 않게 한다.
+         먼셀이 대사로 물어 화면이 바뀐 까닭을 학습자가 알 수 있게 한다. */
+      { k:'probe', who:'munsell',
+        say:'방금 한 일을 함께 짚어 볼까? 물감은 한 방울도 더하거나 덜지 않았는데 새로운 수가 보였어. 아래 세 물음에 답해 보렴.',
+        hi:'🤔 방금 한 일을 짚어 봐요',
         probe:{ title:'🤔 방금 한 일을 짚어 볼까', rows:[
           { q:'어떻게 해서 1컵과 2컵이 되었나요?', opts:[
             { t:'20mL짜리 컵으로 두 비커를 모두 옮겨 담았어요', ok:1 },
@@ -820,10 +815,10 @@ class Component extends DCLogic {
             { t:'컵이 비커보다 작기 때문이에요', ok:0, fb:'컵이 작다는 것만으로는 1과 2가 나오지 않는단다. 무엇을 한 묶음으로 세었는지 다시 볼까?' } ] },
           { q:'손으로 옮긴 이 일을 기호로 쓰면 어느 것일까요?', opts:[
             { t:'20 : 40 = 1 : 2', ok:1 },
-            { t:'20 + 40 = 60', ok:0, fb:'두 양을 더한 값이란다. 우리가 한 일은 두 양을 견주어 본 것이지?' },
-            { t:'40 − 20 = 20', ok:0, fb:'두 양의 차란다. 우리가 한 일은 두 양을 견주어 본 것이지?' } ] } ] } },
+            { t:'20 + 40 = 60', ok:0, fb:'두 양을 더한 값이란다. 우리가 한 일은 두 양을 비교해 본 것이지?' },
+            { t:'40 − 20 = 20', ok:0, fb:'두 양의 차란다. 우리가 한 일은 두 양을 비교해 본 것이지?' } ] } ] } },
       { k:'cups', who:'munsell', src:{ r:40, y:80 }, unit:40,
-        say:'마지막이야. 빨강 40mL와 노랑 80mL를 40mL짜리 컵으로 옮겨 담아 봐. 이번에도 몇 컵 대 몇 컵이 될까?',
+        say:'이번에는 빨강 40mL를 기준으로 해 보자. 40mL짜리 컵으로 나눠 담아 보면 몇 컵 대 몇 컵이 나올까?',
         hi:'컵 하나는 40mL예요' },
       { k:'chips', who:'munsell', need:1,
         say:'양이 달라도 전부 같은 색이었어. 모두 간단히 하면 언제나 1 대 2였어. 수첩에는 뭐라고 적으면 좋을까?',
@@ -856,8 +851,8 @@ class Component extends DCLogic {
                '같이 점을 찍으며 색을 만드는 걸 도와주겠니?'],
         btn:'좋아요!' },
       { k:'dots', who:'signac',
-        say:'나는 빨강 2개와 노랑 3개가 섞인 주황을 만들고 싶어. 위에서 물감을 고르고 아래 빈 칸을 누르면 점이 찍혀. 잘못 찍었으면 한 번 더 누르면 지워져.',
-        hi:'점 5개 · 빨강 : 노랑 = 2 : 3',
+        say:'나는 빨강과 노랑의 비가 2 대 3으로 주황을 만들고 싶어. 5칸을 기준으로 빨강과 노랑을 점 찍어서 표현해 봐. 색을 먼저 누르고 칸을 누르면 그 색으로 칸이 색칠돼. 한 번 더 누르면 지워진단다.',
+        hi:'점 5칸 — 비를 지켜 찍어 봐요',
         probe:{ title:'🤔 방금 찍은 점을 짚어 볼까', rows:[
           { q:'어떻게 해서 이 주황이 되었나요?', opts:[
             { t:'빨강 점 2개와 노랑 점 3개를 찍었어요', ok:1 },
@@ -868,11 +863,11 @@ class Component extends DCLogic {
           { q:'내가 찍은 점을 기호로 쓰면 어느 것일까요?', opts:[
             { t:'빨강 : 노랑 = 2 : 3', ok:1 },
             { t:'빨강 : 노랑 = 3 : 2', ok:0, fb:'앞에는 빨강 점 수, 뒤에는 노랑 점 수를 놓는 거야. 순서를 다시 볼까?' },
-            { t:'빨강 : 전체 = 2 : 3', ok:0, fb:'전체는 다섯 개야. 지금 견준 건 빨강과 노랑이지?' } ] } ] } },
+            { t:'빨강 : 전체 = 2 : 3', ok:0, fb:'전체는 다섯 개야. 지금 비교한 건 빨강과 노랑이지?' } ] } ] } },
       { k:'grid', n:10, who:'signac',
-        say:'이번엔 새로운 주황이야. 빨강 대 노랑을 2 대 3으로, 열 칸에 나타내 줘. 빨강 4칸, 노랑 6칸이야.',
+        say:'이번에도 빨강 : 노랑을 2 대 3으로 주황을 만들 거야. 이번에는 10칸에 색칠해 줘.',
         hi:'빨강 : 노랑 = 2 : 3' },
-      { k:'grid', n:100, who:'signac', say:'마지막으로 백 칸에 도전해 봐, 큰 붓을 쓰면 한 줄씩 칠할 수 있어!', hi:'빨강 : 노랑 = 2 : 3',
+      { k:'grid', n:100, who:'signac', say:'이번에는 100칸을 색칠할 거야. 빨강 : 노랑 = 2 : 3이 되도록 100칸을 색칠해 줘.', hi:'큰 붓을 쓰면 한 줄씩 칠할 수 있어요',
         probe:{ title:'🤔 방금 칠한 백 칸을 짚어 볼까', rows:[
           { q:'백 칸을 어떻게 칠했나요?', opts:[
             { t:'빨강 40칸, 노랑 60칸으로 나누어 칠했어요', ok:1 },
@@ -882,37 +877,34 @@ class Component extends DCLogic {
             { t:'칸이 많아져서 색이 더 진해졌기 때문이에요', ok:0, fb:'칸이 많아져도 색은 그대로였지? 무엇이 변하지 않았는지 다시 볼까?' } ] },
           { q:'백 칸에 칠한 것을 기호로 쓰면 어느 것일까요?', opts:[
             { t:'40 : 60 = 2 : 3', ok:1 },
-            { t:'40 : 100 = 2 : 3', ok:0, fb:'40과 100은 빨강과 전체를 견준 거야. 지금은 빨강과 노랑을 견주고 있지?' },
-            { t:'40 + 60 = 100', ok:0, fb:'두 수를 더한 값이야. 우리가 한 일은 두 양을 견주어 본 것이지?' } ] } ] } },
+            { t:'40 : 100 = 2 : 3', ok:0, fb:'40과 100은 빨강과 전체를 비교한 거야. 지금은 빨강과 노랑을 비교하고 있지?' },
+            { t:'40 + 60 = 100', ok:0, fb:'두 수를 더한 값이야. 우리가 한 일은 두 양을 비교해 본 것이지?' } ] } ] } },
       /* 개수 대비 — 여기까지는 칸이 늘어나도 비가 그대로여서 개수를 세어도 답이 맞았다.
-         칸 수가 많은 쪽이 오히려 비는 작은 사례를 견주게 하여 개수로 판단하는 습관을
+         칸 수가 많은 쪽이 오히려 비는 작은 사례를 비교하게 하여 개수로 판단하는 습관을
          드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
-      { k:'chips', who:'signac', need:1, demo:'cmp',
-        say:'빨강과 노랑 점을 많이 찍는다고 색이 더 붉어질까? 두 그림을 비교해봐. 어느 쪽 주황이 더 붉을까?',
-        chips:[ {t:'㉮ — 빨강 칸이 여덟 칸으로 더 많으니까', ok:0,
-                 fb:'빨강 칸은 여덟 칸으로 더 많아. 그런데 노랑도 열두 칸이나 있지. 전체에서 빨강이 차지하는 몫을 견주어 볼까?'},
-                {t:'㉯ — 빨강이 차지하는 몫이 더 크니까', ok:1,
-                 fb:'맞아. 칸 수가 아니라 전체에서 차지하는 몫이 색을 정하는 거야.'},
-                {t:'둘이 똑같아', ok:0,
-                 fb:'㉮는 스무 칸 중 여덟 칸, ㉯는 여섯 칸 중 세 칸이야. 반이 넘는 쪽은 어느 쪽일까?'} ] },
       { k:'story', who:'signac', art:'signac_painting.jpg', artCap:'「양산을 든 여인」 완성!',
         lines:['점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3이었지!',
                '내가 원하던 색을 연습해보고 그림을 그릴 수 있게 만들어줘서 고마워.'],
         btn:'다음 →' },
+      /* 시냐크가 작별한 뒤이므로 이 물음은 안내자 레시오가 던진다 */
+      { k:'chips', who:'ratio', need:1, demo:'cmp',
+        say:'빨강과 노랑 점을 많이 찍는다고 색이 더 붉어질까요? 두 그림을 비교해 보세요. 어느 쪽 주황이 더 붉을까요?',
+        chips:[ {t:'㉮ — 빨강 칸이 여덟 칸으로 더 많으니까', ok:0,
+                 fb:'빨강 칸은 여덟 칸으로 더 많아요. 그런데 노랑도 열두 칸이나 있지요. 전체에서 빨강이 차지하는 몫을 비교해 볼까요?'},
+                {t:'㉯ — 빨강이 차지하는 몫이 더 크니까', ok:1,
+                 fb:'맞아요. 칸 수가 아니라 전체에서 차지하는 몫이 색을 정하는 거예요.'},
+                {t:'둘이 똑같아', ok:0,
+                 fb:'㉮는 스무 칸 중 여덟 칸, ㉯는 여섯 칸 중 세 칸이에요. 반이 넘는 쪽은 어느 쪽일까요?'} ] },
       /* 레시오 재등장 — 시냐크 파트가 끝나고 안내자가 다시 나오는 첫 지점.
          곧바로 발문을 던지지 않고, 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
-      { k:'story', who:'ratio', emoji:'🎨',
-        lines:['시냐크와 함께 점을 찍어 주황을 표현해냈군요! 잘했어요!',
-               '지금부터는 비율을 공부해볼까요?'],
-        btn:'좋아요! →' },
       { k:'blank', id:'cells', who:'ratio',
-        say:'100칸 중 빨강으로 칠해진 칸은 40칸이에요. 전체 100칸에 대한 빨강의 비율은 얼마일까요? 아래 낱말을 손가락이나 마우스로 누른 채 끌어서, 빈칸 위에 놓아 주세요.' },
+        say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체 100에 대해 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
       { k:'blank', id:'pct', who:'ratio',
-        say:'이어서 비율 문제예요. 만약 물감 빨강 40mL, 노랑 60mL을 넣어 주황 100mL를 만들었다면, 각 색깔은 전체의 몇 퍼센트일까요?' },
+        say:'이번에는 뭉크처럼 액체로 섞어서 물감을 만들었어요. 빨강 물감 40mL와 노랑 물감 60mL를 섞었어요. 주황 100mL가 이렇게 만들어졌어요. 각 물감은 전체(주황)의 몇 퍼센트일까요?' },
       /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
          화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3). */
       { k:'reflect', who:'ratio',
-        say:'지금까지 한 일을 떠올려 봐요. 빨강 20mL에 노랑 40mL를 부어 목표색을 만들었고, 빨강이 40mL로 늘었을 때는 노랑을 80mL 부었지요. 컵으로 옮겨 담으니 언제나 1컵 대 2컵이었고, 점 다섯 개를 찍을 때도 백 칸을 칠할 때도 두 색이 차지하는 몫은 그대로였어요. 색깔의 방에서 했던 경험을 바탕으로 왜 양이 달라져도 같은 색이 되었는지 여러분이 설명해 보세요.',
+        say:'내가 만든 양 가운데 하나를 골라, 그 양이 왜 목표색이 되었는지 설명해 보세요.',
         hi:'아래에 내가 만든 양이 남아 있어요 · 그중 하나를 예로 들어 적어요' },
       /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
          앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
@@ -972,10 +964,11 @@ class Component extends DCLogic {
 
   BLANKS = {
     cells: { art:true, rows:[
-        ['전체의 ', {a:'40'}, ' %'],
-        ['분수로 나타내면 ', {a:'40/100'}],
-        ['소수로 나타내면 ', {a:'0.4'}] ],
-      bank:['40','40/100','0.4','60','0.6'] },
+        ['빨강은 ', {a:'100'}, ' 분의 ', {a:'40'}, ' 이다.'],
+        ['100이 전체이므로 비율은 전체의 ', {a:'40'}, ' %이다.'],
+        ['분수로 나타내면 ', {a:'40'}, ' / ', {a:'100'}, ' 이다.'],
+        ['이 비율을 소수로 나타내면 ', {a:'0.4'}, ' 이다.'] ],
+      bank:['40','100','0.4','60','0.6','4'] },
     pct: { rows:[
         ['빨강은 전체의 ', {a:'40'}, ' %'],
         ['노랑은 전체의 ', {a:'60'}, ' %'] ],
@@ -989,7 +982,6 @@ class Component extends DCLogic {
       bank:['1','2','3','4'] },
     /* 다인이의 오개념에 해 줄 설명 — 컵 그림(2:4 · 5:7 · 4:8)을 근거로 학습자가 완성한다 */
     why: { card:true, title:'📝 다인이에게 해 줄 설명', rows:[
-        ['두 물감에 같은 양의 물감을 ', {a:'더하면'}, ' 처음과 물감의 색이 달라져요.'],
         ['같은 색 물감을 만들려면 두 양에 같은 수를 ', {a:'곱해야'}, ' 해요.'] ],
       bank:['더하면','곱해야','빼면','나눠야'] },
     /* 방의 마무리 정리 카드. 없어진 '레시피 카드' 단계의 몫(노을빛 주황 = 빨강 1 : 노랑 2)까지
@@ -1421,8 +1413,12 @@ class Component extends DCLogic {
     if (kind !== 'quiet') this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
+    /* 성공 피드백은 저절로 닫지 않는다 — 읽을 시간을 학습자가 정한다.
+       닫으려면 ✕를 누르거나 다음 화면으로 넘어가면 된다(go에서 지운다).
+       나머지 안내는 6초 뒤에 닫는다 — 3초로는 두 줄을 다 읽기 어렵다. */
+    if (kind === 'ok') return;
     const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
-    this._tT = setTimeout(close, 3000);
+    this._tT = setTimeout(close, 6000);
   }
 
   go(d) {
@@ -1482,7 +1478,8 @@ class Component extends DCLogic {
     /* 조작 직후 발문(probe)이 남아 있으면 저절로 넘어가지 않는다 — 조작 화면에서 묻는 것이 이 발문의 자리다 */
     const st = this.STEPS[this.state.i] || {};
     if (st.probe && !this.probeOk(st)) return;
-    this._autoT = setTimeout(() => this.go(1), ms || 2300);
+    /* 저절로 넘기지 않는다 — 피드백을 읽고 「다음 →」을 눌러 넘어가게 한다.
+       markSolved()가 이미 불린 뒤이므로 이동 단추는 열려 있다. */
   }
 
   /* ── 조작 직후 발문 (probe) — 지침 5.1 ──
@@ -1688,7 +1685,7 @@ class Component extends DCLogic {
     if (st.mode === 'trap') {
       if (a === st.trapA && b === st.trapB) {
         this.markSolved();
-        this.toast('🔍', '같은 양을 더해 보았어요', '빨강에도 30mL, 노랑에도 30mL를 똑같이 더했는데 색이 달라졌어요. 목표색과 나란히 놓고 견주어 봐요.', 'ok');
+        this.toast('🔍', '같은 양을 더해 보았어요', '같은 양을 더하면 이전과 색이 같아 보이나요? 목표색과 나란히 놓고 비교해 봐요.', 'ok');
         this.autoNext(4200);
         return;
       }
@@ -2044,32 +2041,29 @@ class Component extends DCLogic {
   }
 
   cupRowsEl() {
-    const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
-    const cup = (k, c) => R.createElement('span', { key:k, style:{ display:'inline-block', width:'13px', height:'19px',
-      margin:'0 2px 2px 0', borderRadius:'0 0 4px 4px', border:'2px solid ' + ink, borderTopWidth:'1px', background:c } });
-    /* 색 동그라미를 크게 잡는다 — 이 그림의 몫은 두 색이 같은지 다른지를 눈으로 가리는 것이다 */
-    const card = (k, r, y, cap, ok) => R.createElement('div', { key:k,
-      style:{ display:'flex', alignItems:'center', gap:'11px',
-        background:'var(--color-neutral-100)', border:'3px solid ' + (ok === false ? '#f6a06b' : (ok ? '#ccdbb2' : 'var(--color-neutral-300)')),
-        borderRadius:'18px', padding:'9px 13px' } },
-      R.createElement('div', { key:'s', style:{ flex:'none', width:'72px', height:'72px', borderRadius:'999px',
-        border:'4px solid ' + ink, background:this.rgb(this.mix({ '빨강': r*10, '노랑': y*10 })) } }),
-      R.createElement('div', { key:'x', style:{ display:'flex', flexDirection:'column', gap:'4px', minWidth:0 } },
-        R.createElement('div', { key:'c', style:{ display:'flex', flexWrap:'wrap', maxWidth:'188px' } },
-          Array.from({ length:r }, (_, i) => cup('r'+i, this.rgb(P['빨강']))).concat(
-          Array.from({ length:y }, (_, i) => cup('y'+i, this.rgb(P['노랑']))))),
-        R.createElement('div', { key:'m', style:{ fontSize:'14.5px', fontWeight:800, color:'var(--color-neutral-700)', whiteSpace:'nowrap' } },
-          '빨강 ' + r + '컵 : 노랑 ' + y + '컵'),
-        R.createElement('div', { key:'t', style:{ fontSize:'13px', fontWeight:800, lineHeight:1.35,
-          color: ok === false ? '#8c491a' : (ok ? '#56633f' : 'var(--color-neutral-700)') } }, cap)));
-    const col = (k, items) => R.createElement('div', { key:k,
-      style:{ display:'flex', flexDirection:'column', gap:'8px' } }, items);
-    /* 왼쪽에 같은 색 둘(2:4 · 4:8), 오른쪽에 다른 색 하나(5:7)를 놓아 나란히 견주게 한다 */
+    const R = React, ink = 'var(--color-neutral-800)';
+    /* 가운데에 목표색을 두고 좌우에 두 사례를 나란히 놓는다.
+       왼쪽 40 : 80 은 두 양에 같은 수를 곱한 것이라 목표색과 같고,
+       오른쪽 50 : 70 은 두 양에 같은 양을 더한 것이라 목표색과 다르다.
+       컵 그림과 컵 수 표시는 뺐다 — 이 그림의 몫은 세 색을 눈으로 비교하는 것뿐이다. */
+    const card = (k, amt, label, cap, ok, big) => R.createElement('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'7px',
+        background:'var(--color-neutral-100)',
+        border:'3px solid ' + (ok === false ? '#f6a06b' : (ok ? '#ccdbb2' : 'var(--color-neutral-400)')),
+        borderRadius:'18px', padding:'12px 14px', width:'150px' } },
+      R.createElement('div', { key:'s', style:{ flex:'none',
+        width: big ? '104px' : '88px', height: big ? '104px' : '88px', borderRadius:'999px',
+        border:'4px solid ' + ink, background:this.rgb(this.mix(amt)) } }),
+      R.createElement('div', { key:'m', style:{ fontSize:'15px', fontWeight:800,
+        color:'var(--color-neutral-800)', textAlign:'center' } }, label),
+      R.createElement('div', { key:'t', style:{ fontSize:'13px', fontWeight:800, lineHeight:1.4,
+        color: ok === false ? '#8c491a' : (ok ? '#56633f' : 'var(--color-neutral-700)'),
+        textAlign:'center' } }, cap));
     return R.createElement('div', { key:'cups',
-      style:{ display:'flex', gap:'14px', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } },
-      col('L', [ card('a', 2, 4, '우리가 찾은 비'),
-                 card('c', 4, 8, '2배씩 늘리면 — 같은 색!', true) ]),
-      col('R', [ card('b', 5, 7, '세 컵씩 똑같이 더하면\n색이 달라요', false) ]));
+      style:{ display:'flex', gap:'12px', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } },
+      card('L', { '빨강':40, '노랑':80 }, '빨강 40 : 노랑 80', '두 양에 같은 수를 곱했어요', true),
+      card('C', { '빨강':this.TGT[0], '노랑':this.TGT[1] }, '목표색', '우리가 찾던 색', null, true),
+      card('R', { '빨강':50, '노랑':70 }, '빨강 50 : 노랑 70', '두 양에 같은 양을 더했어요', false));
   }
 
   pctBeakers() {
@@ -2115,7 +2109,7 @@ class Component extends DCLogic {
           if (id === 'secret') {
             /* 카드 보상은 비의 비밀으로 이동 — 학습 정리 활동만 유지 */
             this.confetti();
-            this.toast('✅', '정리 완성!', '색깔의 비밀을 문장으로 정리했어요. 허브로 돌아가 다음 탐험을 이어가요!', 'ok');
+            this.toast('✅', '정리 완성!', '색깔의 비밀을 문장으로 정리했어요. 이제 다음 방으로 이어가요!', 'ok');
             this.autoNext(3200);
           } else {
             this.confetti();
@@ -2264,7 +2258,7 @@ class Component extends DCLogic {
       coachHi: (st.k === 'lab' && st.mode === 'find') ? '' : (st.hi || ''),
       /* 가설 상시 배너: 선택 시점부터 실험·확인·정리 단계 내내 상단 고정 */
       /* 가설은 수가 아니라 관찰한 말로 들고 다닌다. 양을 적어 두면 컵으로 단위화하기도 전에
-         비를 수로 먼저 건네주는 셈이고, 목표색을 눈으로 견주는 일도 사라진다. */
+         비를 수로 먼저 건네주는 셈이고, 목표색을 눈으로 비교하는 일도 사라진다. */
       hypoBanner: (() => {
         if (!S.hypo || S.i < this.I_HYPO || S.i >= this.I_SIGNAC) return '';
         const hp = S.hypo.split(':');
@@ -2325,7 +2319,7 @@ class Component extends DCLogic {
     };
 
     if (st.k === 'chips') {
-      /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 견주게 한다 */
+      /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 비교하게 한다 */
       v.pctArt = null;
       v.madeList = (st.mark || S.found.length < 2) ? null
         : S.found.map(f => ({ t: f[0] + ' : ' + f[1], color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] })) }));
@@ -2424,12 +2418,13 @@ class Component extends DCLogic {
           minus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] - this.STEP_ML, 'btn'))
         };
       });
-      /* 눈금선은 20mL마다, 숫자 라벨은 100mL마다 (상한이 500이라 10mL 눈금은 너무 촘촘하다) */
+      /* 눈금선은 10mL마다, 숫자 라벨은 50mL마다. 상한을 200으로 낮춘 만큼 칸이 넓어져
+         1mL씩 맞출 때도 지금 어디쯤인지 눈으로 읽을 수 있다. */
       const ticks = [];
-      for (let m = 20; m <= this.MAX; m += 20) {
-        const big = m % 100 === 0;
-        ticks.push({ n: m, at: m / this.MAX * 100, len: big ? 13 : 7,
-          th: big ? 2 : 1, col: big ? '#a19786' : '#c0b6a5',
+      for (let m = 10; m <= this.MAX; m += 10) {
+        const big = m % 50 === 0;
+        ticks.push({ n: m, at: m / this.MAX * 100, len: big ? 18 : 10,
+          th: big ? 3 : 2, col: big ? '#8c8172' : '#b5aa99',
           show: big ? 'block' : 'none' });
       }
       /* 눈금 자는 실험 단계 내내 보여 준다. 넣은 양을 눈금으로 읽어 두어야
@@ -2461,11 +2456,11 @@ class Component extends DCLogic {
                     : (st.mode === 'more' ? '✨ 앞에서 만든 색과 똑같아요! ' : '✨ 목표 색과 똑같아요! ')
                       + (st.run || '기록하기') + '를 눌러요';
       /* 내 색 원의 그림자. 목표 색에 닿으면 초록 테, 내 가설과 같은 비면 주황 테가 둘린다 */
-      /* 색을 견주는 원에는 그림자를 두지 않는다 — 평평한 색면이라야 두 색을 곧바로 비교할 수 있다 */
+      /* 색을 비교하는 원에는 그림자를 두지 않는다 — 평평한 색면이라야 두 색을 곧바로 비교할 수 있다 */
       const baseRing = 'none';
       /* 다인이의 말대로 만들어 보는 단계에서는 내 색에 어떤 테도 두르지 않는다.
-         목표색과 나란히 놓고 눈으로 견주는 것이 이 단계의 몫인데,
-         원 둘레에 색 띠가 있으면 두 색을 견주기가 어려워진다. */
+         목표색과 나란히 놓고 눈으로 비교하는 것이 이 단계의 몫인데,
+         원 둘레에 색 띠가 있으면 두 색을 비교하기가 어려워진다. */
       const isTrap = st.mode === 'trap';
       const trapHit = goal && isTrap;
       v.beakerRing = isTrap ? baseRing
@@ -2483,11 +2478,11 @@ class Component extends DCLogic {
       v.canChangeHypo = st.mode === 'find' && !!S.hypo && !S.hypoPick && !solved;
       /* 가설을 다시 고르는 화면도 덮는 창이다 — 목소리 패널과 같은 이유로 여닫이를 남긴다.
          다만 이쪽은 실수가 아니라 「가설을 바꿔 볼까」 하는 판단이므로, 열어만 보고 그대로
-         둔 것과 실제로 바꾼 것(hypo_rev)을 견주면 망설임을 읽을 수 있다. */
+         둔 것과 실제로 바꾼 것(hypo_rev)을 비교하면 망설임을 읽을 수 있다. */
       v.openHypo = () => { this.plog('overlay', { o:'hypo', v:1 }); this.sfx('tap'); this.setState({ hypoPick: true }); };
       v.closeHypo = () => { this.plog('overlay', { o:'hypo', v:0, kept:1 }); this.sfx('tap'); this.setState({ hypoPick: false }); };
       /* 새 가설도 수가 아니라 말과 색으로 고른다 — 어느 쪽이 더 많다고 보는지,
-         그렇게 섞으면 어떤 색이 될지를 목표색과 견주어 고르게 한다. */
+         그렇게 섞으면 어떤 색이 될지를 목표색과 비교해 고르게 한다. */
       v.hypoOpts = (st.mode === 'find' && S.hypoPick)
         ? allH.filter(o => S.failed.indexOf(o[0] + ':' + o[1]) < 0).map(o => ({
             t: o[2],
@@ -2582,7 +2577,7 @@ class Component extends DCLogic {
         };
       });
       /* ── 기호 병치(지침 4.2 · 4.1) ──
-         조작 대상 바로 곁에 그 양의 수치를, 두 열 아래에 두 양을 견준 비 기호를 함께 띄운다.
+         조작 대상 바로 곁에 그 양의 수치를, 두 열 아래에 두 양을 비교한 비 기호를 함께 띄운다.
          컵을 옮길 때마다 수와 기호가 같이 바뀌고, 방금 조작한 쪽은 기호와 조작 대상이
          같은 순간에 같은 색 고리로 강조된다. 간단히 한 비는 앱이 먼저 말하지 않는다. */
       v.cupSymMlR = src.r + 'mL'; v.cupSymMlY = src.y + 'mL';
@@ -2713,8 +2708,8 @@ class Component extends DCLogic {
 
     /* 조작 직후 발문 — 과제를 해결한 뒤에만, 그 조작 화면 안에서 펼친다 */
     const probeOk = this.probeOk(st);
-    v.probeTitle = (st.probe && solved) ? (st.probe.title || '🤔 방금 한 일을 짚어 볼까') : '';
-    v.probeRows = (st.probe && solved) ? st.probe.rows.map((row, ri) => {
+    v.probeTitle = (st.probe && (solved || st.k === 'probe')) ? (st.probe.title || '🤔 방금 한 일을 짚어 볼까') : '';
+    v.probeRows = (st.probe && (solved || st.k === 'probe')) ? st.probe.rows.map((row, ri) => {
       const sel = (S.probe || {})[this.probeKey(ri)];
       return {
         q: row.q,
@@ -2730,8 +2725,8 @@ class Component extends DCLogic {
       };
     }) : null;
 
-    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect'].indexOf(st.k) >= 0) && !this._guest;
-    const gateOk = solved && probeOk;
+    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect','probe'].indexOf(st.k) >= 0) && !this._guest;
+    const gateOk = (st.k === 'probe') ? probeOk : (solved && probeOk);
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
     v.showPrimary = st.k !== 'finish';
