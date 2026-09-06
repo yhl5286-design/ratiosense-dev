@@ -280,10 +280,10 @@ button{font-family:inherit}
 
             <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);flex:none">
               <table class="table" style="font-size:15px">
-                <thead><tr><th>음</th><th>음정</th><th>진동수 비 (도 : 음)</th></tr></thead>
+                <thead><tr><th>음</th><th>진동수 비 (도 : 음)</th></tr></thead>
                 <tbody>
                   <sc-for list="{{itvRows}}" as="r" hint-placeholder-count="8">
-                    <tr style="background:{{r.bg}}"><td style="font-weight:800">{{r.n}}</td><td>{{r.itv}}</td><td style="color:var(--color-accent-700)">{{r.ratio}}</td></tr>
+                    <tr style="background:{{r.bg}}"><td style="font-weight:800">{{r.n}}</td><td style="color:var(--color-accent-700)">{{r.ratio}}</td></tr>
                   </sc-for>
                 </tbody>
               </table>
@@ -355,6 +355,12 @@ button{font-family:inherit}
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
           {{polyEl}}
           <div class="rs-dial" style="text-align:center;font-size:16px">{{polyMsg}}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isPanflute}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          {{pfEl}}
         </div>
       </sc-if>
 
@@ -480,12 +486,12 @@ button{font-family:inherit}
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:52px;line-height:1">📝</div>
           <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 듣고 해 본 것</b>을 하나 예로 들어서, <b>소리의 비밀</b>을 한 줄 적어 보세요!</div>
-          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="예) 라 줄을 반으로 줄였더니 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="활동을 하고 나니 (  )을 알게 되었어요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
           <button onClick="{{refGo}}" class="rs-pill">제출!</button>
         </div>
       </sc-if>
 
-      <!-- 감각 잇기(지침 2.3) — 색깔의 방 1 : 2와 소리의 방 1 : 2를 나란히 놓고 견주게 한다 -->
+      <!-- 감각 잇기(지침 2.3) — 색깔의 방 1 : 2와 소리의 방 1 : 2를 나란히 놓고 비교하게 한다 -->
       <sc-if value="{{isBridge}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;animation:rsUp .3s ease;margin:auto 0">
           <div style="display:flex;gap:min(5vw,26px);align-items:stretch;justify-content:center;flex-wrap:wrap">
@@ -556,8 +562,7 @@ button{font-family:inherit}
             </div>
             <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">황금비의 셋째 자리예요. 기억해 두세요!</div>
           </div>
-          <a href="MapRoom.dc.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🗺️ 지도의 비밀로 이어가기 →</a>
-          <a href="index.html" onClick="{{goNext}}" style="font-size:15px;font-weight:700;color:var(--color-accent-700);text-decoration:underline">🏠 허브로 돌아가기</a>
+          <a href="MapRoom.dc.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🗺️ 지도의 비밀로 이어가기 →</a>
         </div>
       </sc-if>
 
@@ -677,7 +682,6 @@ class Component extends DCLogic {
   /* 음정에 따른 분류 보기: 1차 = 완전음정(1·4·5·8도) vs 장음정(2·3·6·7도),
      2차 = 장음정을 비가 간단한 방(미·라) / 복잡한 방(레·시)으로 재분류 */
   CLS = [
-    { n:'도',  r:'1:1',  room1:'perfect' },
     { n:'레',  r:'8:9',  room1:'major', room2:'complex' },
     { n:'미',  r:'4:5',  room1:'major', room2:'simple' },
     { n:'파',  r:'3:4',  room1:'perfect' },
@@ -699,11 +703,24 @@ class Component extends DCLogic {
      비는 앱이 먼저 말하지 않는다 — 학습자가 격자에서 간격을 세어 찾아낸다.
      r12(1:2)는 도와 한 옥타브 높은 도, r23(2:3)은 도와 솔의 진동수 비다. */
   PN = 12; PSTEP = 0.4;
+  /* 기제 비교(why) 화면만 격자를 30칸으로 넓히고 더 빠르게 재생한다.
+     8 : 9는 72칸, 8 : 15는 120칸을 가야 만나므로 30칸 안에서는 끝내 만나지 않는다.
+     그 「만나지 않음」을 눈으로 보이게 하는 것이 이 화면의 몫이다. */
+  PN_WHY = 30; PSTEP_WHY = 0.22;
   POLY = { r12:{ d:1, t:2 }, r23:{ d:2, t:3 } };
-  /* 어울림의 기제 비교 — 간단한 비일수록 다시 만나기까지 걸리는 칸이 짧다 */
-  /* 견주어 볼 세 리듬 — 간단한 비부터 복잡한 비 순서. 모두 화음에서 만난 진동수 비다. */
+  /* 어울림의 기제 비교 — 잘 어울리는 두 비와 부딪히는 두 비를 둘씩 짝지어 놓는다.
+     모두 화음에서 만난 진동수 비다. */
   WHY = [ { d:1, t:2, note:'한 옥타브 높은 도' }, { d:2, t:3, note:'솔' },
-          { d:3, t:4, note:'파' }, { d:8, t:9, note:'레' } ];
+          { d:8, t:9, note:'레' }, { d:8, t:15, note:'시' } ];
+  /* ── 팬플룻 공방 ──
+     라(440Hz) 관을 60cm로 잡으면 나머지 길이가 진동수의 비로 정해진다.
+       L(음) = 60 x 440 / f(음)
+     도 100 · 레 88.9 · 미 80 · 파 75 · 솔 66.7 · 라 60 · 시 53.3 (cm)
+     진동수가 클수록 관이 짧다 — 두 비가 서로 뒤집힌다는 것을 일곱 관으로 확인한다. */
+  PF_BASE = 60;          /* 기준 관: 라 440Hz */
+  PF_BASE_F = 440;
+  PF_MINCM = 45; PF_MAXCM = 110;   /* 관 그림의 높이를 잡는 범위 */
+
   /* 트라이앵글 배음 — 정수배가 아닌 비화음 배음이라 금속성으로 들린다 */
   TRI_P = [1, 2.13, 3.38, 4.79, 6.11, 7.42, 9.03];
   /* ③ 연결 문항 — 기본은 소리 방 안(화음↔리듬↔하프)에서 잇는다.
@@ -732,8 +749,8 @@ class Component extends DCLogic {
     };
   }
   WHYQ = [ { t:'비가 간단할수록 두 소리가 더 빨리 다시 만나요', ok:1 },
-           { t:'비가 복잡할수록 더 빨리 다시 만나요', ok:0, fb:'8 : 9는 비가 가장 복잡했는데, 12칸 안에서 한 번도 만나지 못했어요. 다시 비교해 볼까요?' },
-           { t:'다시 만나는 것은 비와 상관없어요', ok:0, fb:'1 : 2와 8 : 9의 만나는 칸을 나란히 놓고 견주어 볼까요? 두 리듬이 아주 달랐어요.' } ];
+           { t:'비가 복잡할수록 더 빨리 다시 만나요', ok:0, fb:'8 : 9와 8 : 15는 비가 복잡해서 30칸 안에서 한 번도 만나지 못했어요. 다시 비교해 볼까요?' },
+           { t:'다시 만나는 것은 비와 상관없어요', ok:0, fb:'1 : 2와 8 : 9의 만나는 칸을 나란히 놓고 비교해 볼까요? 두 리듬이 아주 달랐어요.' } ];
 
   /* 디자인 토큰 참조 — hex 하드코딩 대신 styles.css 변수를 문자열로 사용 */
   C = {
@@ -750,6 +767,7 @@ class Component extends DCLogic {
 
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
+    pfMade:{ '라':1 }, pfCur:'',     /* 팬플룻 — 라 관은 기준이라 처음부터 만들어져 있다 */
     voiceMap:{}, voicePanel:false, pressKey:-1,
     rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
     vibHit:[], vibCur:-1,
@@ -773,85 +791,46 @@ class Component extends DCLogic {
       { k:'story', emoji:'🎼', cap:'소리의 비밀을 찾아봅시다!',
         /* 색깔 방을 마쳤다면 앞 방에서 만든 표상을 먼저 되짚어 준다 —
            친숙한 색 표상이 낯선 음정 표상을 해석하는 발판이 된다. */
-        lines: this.didColor()
-          ? ['이 방은 소리의 비밀을 알아내는 방이에요.',
-             '색깔 방에서는 물감의 양을 비로 맞추어 주황을 만들었지요. 이번에는 같은 비를 귀로 찾아볼 거예요.',
-             '아름다운 소리의 비밀을 찾으러 가볼까요?']
-          : ['이 방은 소리의 비밀을 알아내는 방이에요.',
-             '아름다운 소리의 비밀을 찾으러 가볼까요?'],
+        lines: ['이 방은 소리의 비밀을 알아내는 방이에요.',
+                '이 방에서는 소리를 집중해서 잘 들어야 비밀을 잘 느낄 수 있어요.',
+                '집중해서 제 설명을 잘 듣고 하나씩 탐험해 보아요!'],
         btn:'시작하기 →' },
       { k:'vib',
-        say:'건반을 눌러 소리의 떨림을 느껴 보세요! 높은 음일수록 현의 길이가 짧고, 현이 빠르게 떨려요. 여덟 건반을 모두 눌러 소리를 들어 보세요.',
+        say:'건반을 하나씩 눌러 보세요. 소리를 들으면서 줄이 떨리는 모습을 함께 보세요. 음이 높아지면 무엇이 달라지나요? 도부터 차례로 눌러 보세요.',
         hi:'실제는 더 빠르지만 구분하기 쉽도록 천천히 보여드려요' }
     ];
     st.push({ k:'harmx',
-      say:'도와 다른 음을 함께 눌러 보세요. 어울리는 소리를 듣고 물결 무늬를 본 다음 별점을 매겨 보세요. 일곱 음을 모두 평가하면 다음으로 가요.',
+      say:'소리는 공기가 떨리면서 물결처럼 퍼져 나가요. 1초 동안 몇 번 떨리는지를 센 것이 진동수이고, 단위는 헤르츠라고 해요. 떨림이 빠를수록 진동수가 크고 소리도 높아요. 이제 도와 다른 음을 함께 눌러 보세요. 소리를 듣고 물결 무늬를 본 다음 별점을 매겨 보세요. 일곱 음을 모두 평가하면 다음으로 가요.',
       hi:'아무 순서나 괜찮아요 · 정답은 없어요 — 내 귀가 기준! 별점을 주면 그 음의 진동수 비가 열려요' });
     st.push({ k:'rooms' });
     st.push({ k:'table',
       say:'음정 표 완성! 도부터 한 옥타브 높은 도까지 다 들어봤어요. 1 대 2, 2 대 3, 3 대 4처럼 비가 간단할수록 두 소리가 더 잘 어울려요!',
       hi:'▶ 분류 시작을 눌러 기준 분류를 한 번 보고, 내가 나눈 방과 비교해 보세요' });
     st.push({ k:'story', emoji:'🥁', 
-      lines:['잘 어울리는 두 음의 비밀은 진동수의 비가 간단하다는 것까지 알아봤어요.',
-             '그런데 왜 하필 간단한 비여야 잘 어울릴까요?',
-             '저와 함께 리듬을 듣고, 보고, 만들면서 그 이유까지 찾아봐요!'],
+      lines:['진동수의 비가 간단할수록 두 음이 잘 어울렸어요.',
+             '이번에는 리듬 활동을 하면서 그 이유를 알아봐요.'],
       btn:'리듬 실험실로! →' });
     st.push({ k:'poly', p:'r12',
-      say:'먼저 아무것도 알려 주지 않고 리듬을 들려줄게요. 북만, 트라이앵글만, 그리고 함께 들어 보고 두 소리가 잘 맞아떨어지는지 느껴 보세요.',
+      say:'먼저 북소리를 들어 보세요. 그다음 트라이앵글만. 마지막으로 두 소리를 함께 들어 보고 두 소리가 어떻게 들리는지 선택해 봐요.',
       hi:'🥁 북 · 🔺 트라이앵글 — 귀가 먼저예요' });
     st.push({ k:'poly', p:'why',
-      say:'여러 리듬을 차례로 들어 보세요. 두 소리가 다시 만나기까지 몇 칸이 걸리는지, 어떤 리듬일 때 두 소리가 자주 만나는지 비교해보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요.',
-      hi:'세 리듬의 만나는 칸을 비교해요' });
-    st.push({ k:'poly', p:'mine',
-      say:'이번에는 여러분이 직접 간격을 정해 봐요. 북과 트라이앵글이 몇 칸마다 울릴지 골라 재생하면, 두 소리가 몇 칸마다 다시 만나는지 알 수 있어요. 한 번 시도해 보고 다음으로 가요.',
-      hi:'🎛️ 내가 정한 간격 — 한 번 시도해 봐요',
-      probe:{ title:'🤔 방금 만든 리듬을 짚어 볼까', rows:[
-        { q:'두 소리가 다시 만나는 칸을 어떻게 찾았나요?', opts:[
-          { t:'북과 트라이앵글의 간격을 정하고 재생해서 만나는 칸을 세었어요', ok:1 },
-          { t:'소리를 듣지 않고 숫자만 골랐어요', ok:0, fb:'귀로 듣고 눈으로 세어 보아야 언제 다시 만나는지 알 수 있어요. 한 번 더 재생해 볼까요?' } ] },
-        { q:'왜 어떤 간격에서는 두 소리가 더 자주 만났을까요?', opts:[
-          { t:'두 간격의 비가 간단할수록 더 빨리 다시 만나기 때문이에요', ok:1 },
-          { t:'간격이 짧을수록 무조건 자주 만나기 때문이에요', ok:0, fb:'3칸과 4칸보다 2칸과 4칸이 더 빨리 만났지요. 간격의 길이만으로는 정해지지 않아요.' } ] },
-        { q:'내가 정한 두 간격을 기호로 나타내면 어느 것일까요?', opts:[
-          { t:'북의 칸 수 : 트라이앵글의 칸 수', ok:1 },
-          { t:'북의 칸 수 ＋ 트라이앵글의 칸 수', ok:0, fb:'두 수를 더한 값이에요. 우리가 한 일은 두 간격을 견주어 본 것이지요?' },
-          { t:'북의 칸 수 － 트라이앵글의 칸 수', ok:0, fb:'두 수의 차예요. 우리가 한 일은 두 간격을 견주어 본 것이지요?' } ] } ] } });
-    st.push({ k:'strlen',
-      say:'리듬으로 비를 잘 느껴봤나요? 재밌죠? 이번에는 비율을 이용해서 악기를 만들어보려고 해요. 먼저 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.' });
-    this.HP.forEach((p, i) => {
-      if (p.ph === 1) st.push({ k:'harp', i,
-        say:(i === 0 ? '라 음 440Hz는 악기를 조율하는 기준 음이에요. ' : '') +
-            '라 줄이 72센티미터일 때 ' + p.n + ' 줄은 몇 센티미터일까요? 슬라이더를 움직여 소리를 들으며 찾아보세요.',
-        hi:'하프 공방 1부 · 귀로 찾기 ' + (i + 1) + ' / ' + this.HP1 + ' · 72cm를 기준으로 몇 칸인지도 확인해요' });
-      else st.push({ k:'harp', i,
-        say:'이번에는 귀 대신 칸으로 구해 봐요. ' + p.n + ' 줄은 ' + p.b + '칸 중 ' + p.a + '칸이에요. 72센티미터를 ' + p.b + '등분하면 한 칸은 몇 센티미터일까요? 한 칸을 먼저 구하고, 그 다음 ' + p.a + '칸의 길이를 구해 보세요.',
-        hi:'하프 공방 2부 · 칸으로 계산하기 ' + (i + 1 - this.HP1) + ' / ' + (this.HP.length - this.HP1),
-        probe: (i === this.HP.length - 1) ? { title:'🤔 방금 만든 줄을 짚어 볼까', rows:[
-          { q:'이 줄의 길이를 어떻게 구했나요?', opts:[
-            { t:'72센티미터를 ' + p.b + '등분해 한 칸을 구하고, 그 ' + p.a + '칸의 길이를 구했어요', ok:1 },
-            { t:'슬라이더를 아무 데나 놓고 소리만 들었어요', ok:0, fb:'2부는 귀 대신 칸으로 구하는 자리예요. 한 칸의 길이부터 다시 구해 볼까요?' } ] },
-          { q:'왜 줄을 짧게 하면 소리가 높아질까요?', opts:[
-            { t:'줄이 짧을수록 더 빠르게 떨리기 때문이에요', ok:1 },
-            { t:'줄이 짧을수록 소리가 작아지기 때문이에요', ok:0, fb:'소리의 크기가 아니라 높이가 달라졌지요. 첫 단계에서 본 떨림을 다시 떠올려 볼까요?' } ] },
-          { q:'라 줄과 이 줄의 길이를 기호로 쓰면 어느 것일까요?', opts:[
-            { t:'라 : ' + p.n + ' = ' + p.b + ' : ' + p.a, ok:1 },
-            { t:'라 : ' + p.n + ' = ' + p.a + ' : ' + p.b, ok:0, fb:'앞에는 라 줄의 칸 수, 뒤에는 ' + p.n + ' 줄의 칸 수를 놓아요. 순서를 다시 볼까요?' },
-            { t:'72 － ' + Math.round(72 * p.a / p.b) + ' = ' + (72 - Math.round(72 * p.a / p.b)), ok:0, fb:'두 길이의 차예요. 우리가 한 일은 두 길이를 견주어 본 것이지요?' } ] } ] } : null });
-    });
-    /* 감각 사이를 잇는 자리(지침 2.3) — 색깔의 방에서 만든 1 : 2와 소리의 방에서 찾은 1 : 2를
-       나란히 놓고, 두 방에서 만난 것이 같은 구조임을 학습자가 직접 확인하게 한다.
-       화자가 먼저 답을 말하지 않는다 — 고른 뒤에야 되짚어 준다. */
-    st.push({ k:'bridge', who:'ratio',
-      say:'잠깐만요! 색깔의 방에서 찾은 1 대 2와, 소리의 방에서 찾은 1 대 2를 나란히 놓아 봤어요. 두 방에서 찾은 것은 어떤 점이 같을까요? 아래에서 골라 보세요.',
-      hi:'🎨 색깔의 방 · 🎵 소리의 방 — 두 방에서 만난 비를 견주어요' });
+      say:'네 가지 리듬을 차례로 들어 보세요. 30칸 안에서 두 소리가 다시 만나는 리듬은 어느 것일까요? 만나는 칸을 세어 비교해 보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요.',
+      hi:'네 리듬의 만나는 칸을 비교해요' });
+    /* ── 팬플룻 만들기 — 하프 공방(줄 길이 등분)을 대신한다 ──
+       라 음(440Hz·65cm)을 기준으로, 만들고 싶은 음의 버튼을 누르면
+       진동수의 비로 관의 길이가 정해진다. 관 길이 x 진동수가 늘 일정하다는 것을
+       일곱 관을 차례로 만들며 손으로 확인한다. */
+    st.push({ k:'panflute', who:'ratio',
+      say:'이번에는 갈대 관을 잘라 팬플룻을 만들어 봐요. 라 음은 65센티미터 관에서 나요. 만들고 싶은 음을 누르면 라와의 진동수 비로 관의 길이가 정해져요. 도부터 시까지 일곱 관을 모두 만들어 보세요.',
+      hi:'🎵 갈대 관을 잘라 도레미파솔라시를 만들어요' });
     /* 「내 말로 정리」는 앞서 귀로 듣고 손으로 해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
     st.push({ k:'reflect', who:'ratio',
-      say:'건반의 떨림, 잘 어울리던 두 음, 리듬이 다시 만나던 칸, 나누어 만든 하프 줄. 이 가운데 하나를 골라 봐요. 그때 무엇을 했고 왜 그런 소리가 났는지 한 줄로 적어 주세요.',
-      hi:'건반 · 별점 · 리듬 · 하프 — 그중 하나를 예로 들어 적어요' });
+      say:'이 방에서는 건반의 떨림, 화음, 리듬, 팬플룻 만들기 등 다양한 활동을 해 보았어요. 이런 활동을 하고 난 뒤 알게 된 사실을 적어 보세요.',
+      hi:'활동을 하고 나니 (  )을 알게 되었어요' });
     /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
        앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
     st.push({ k:'blank', id:'secret', who:'ratio',
-      say:'여러분이 적은 내용을 잘 보았어요. 건반과 리듬, 하프 줄로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
+      say:'소리의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
     st.push({ k:'finish', who:'ratio',
       say:'소리의 비밀을 잘 찾아냈어요! 카드 숫자 1을 얻었어요! 잘 기억해두세요!',
       hi:'탐색 완료! 카드 숫자 1 획득' });
@@ -878,7 +857,7 @@ class Component extends DCLogic {
        '어느 가게가 싼가' → '어느 비가 더 잘 어울리는가' */
     secret: { card:true, title:'🃏 소리의 비밀 카드', rows:[
         ['두 음의 진동수의 비가 더 ', {a:'간단한'}, ' 비일수록 더 잘 어울린다.'],
-        ['줄의 길이와 음 높이의 관계는 서로 ', {a:'반대'}, ' 이다.'] ],
+        ['관의 길이와 음 높이의 관계는 서로 ', {a:'반대'}, ' 이다.'] ],
       bank:['간단한','반대','복잡한','비례'] }
   };
   /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 셋째 자리 */
@@ -949,7 +928,7 @@ class Component extends DCLogic {
     if (this.state.audio === 'mute') return;
     const du = d || 1.8;
     try { const c = this.ac();
-      [[fA,'sine',.18],[fB,'triangle',.15]].forEach(([f,ty,v]) => {
+      [[fA,'triangle',.12],[fB,'triangle',.20*Math.sqrt(fB/fA)]].forEach(([f,ty,v]) => {
         const o = c.createOscillator(), g = c.createGain();
         o.type=ty; o.frequency.value=f; o.connect(g); g.connect(c.destination);
         g.gain.setValueAtTime(0, c.currentTime);
@@ -1377,7 +1356,7 @@ class Component extends DCLogic {
     /* 조작 직후 발문(probe)이 남아 있으면 저절로 넘어가지 않는다 — 조작 화면에서 묻는 것이 이 발문의 자리다 */
     const st = this.STEPS[this.state.i] || {};
     if (st.probe && !this.probeOk(st)) return;
-    this._autoT = setTimeout(() => this.go(1), ms || 3000);
+    /* 저절로 넘기지 않는다 — 피드백을 읽고 「다음 →」을 눌러 넘어가게 한다. */
   }
 
   /* ── 조작 직후 발문 (probe) — 지침 5.1 ──
@@ -1407,8 +1386,10 @@ class Component extends DCLogic {
     if (kind !== 'quiet') this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
+    /* 성공 피드백은 저절로 닫지 않는다 — 읽을 시간을 학습자가 정한다. 닫으려면 ✕를 누르거나 다음 화면으로 넘어가면 된다. */
+    if (kind === 'ok') return;
     const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
-    this._tT = setTimeout(close, 3000);
+    this._tT = setTimeout(close, 6000);
   }
   toastOk(title, body) { this.plog('success', { slide: this.state.i }); this.toast('✅', title, body, 'ok'); }
   toastRetry(body) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', '다시 한번!', body); }
@@ -1773,11 +1754,126 @@ class Component extends DCLogic {
     } catch(e) {}
   }
   lcm(a, b) { return a * b / this.gcd2(a, b); }
+
+  /* ── 팬플룻 공방 ── */
+  pfNotes() { return this.NOTES.slice(0, 7); }          /* 도~시 일곱 음 */
+  pfLen(f) { return this.PF_BASE * this.PF_BASE_F / f; }
+  pfLenS(f) { return String(Math.round(this.pfLen(f) * 10) / 10); }
+  /* 진동수의 비(라 : 음)를 기약분수로 — 관 길이의 비는 이것을 뒤집은 것이다 */
+  pfRatio(f) {
+    const g = this.gcd2(this.PF_BASE_F, f);
+    return { a: this.PF_BASE_F / g, b: f / g };
+  }
+  /* 팬플룻 음색 — 부드러운 어택 + 사인 + 2배음 + 비브라토 + 입김 소리 */
+  pfTone(f, at, gain) {
+    if (this.state.audio === 'mute') return;
+    const c = this.ac(); if (!c) return;
+    const t = (at == null ? c.currentTime + 0.05 : at), dur = 1.2, vol = gain || 0.2;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.09);
+    g.gain.setValueAtTime(vol, t + dur - 0.3);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    g.connect(this._bus);
+    const o1 = c.createOscillator(); o1.type = 'sine'; o1.frequency.value = f;
+    o1.connect(g); o1.start(t); o1.stop(t + dur);
+    const o2 = c.createOscillator(); o2.type = 'sine'; o2.frequency.value = f * 2;
+    const g2 = c.createGain(); g2.gain.value = 0.12;
+    o2.connect(g2); g2.connect(g); o2.start(t); o2.stop(t + dur);
+    const lfo = c.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 5;
+    const lg = c.createGain(); lg.gain.value = f * 0.006;
+    lfo.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency);
+    lfo.start(t + 0.15); lfo.stop(t + dur);
+    /* 관을 부는 입김 — 팬플룻다운 「후」 소리 */
+    const nb = Math.max(1, Math.floor(c.sampleRate * dur));
+    const buf = c.createBuffer(1, nb, c.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < nb; i++) d[i] = Math.random() * 2 - 1;
+    const src = c.createBufferSource(); src.buffer = buf;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f * 1.8; bp.Q.value = 3;
+    const ng = c.createGain();
+    ng.gain.setValueAtTime(0.0001, t);
+    ng.gain.linearRampToValueAtTime(0.07, t + 0.05);
+    ng.gain.exponentialRampToValueAtTime(0.025, t + 0.3);
+    ng.gain.setValueAtTime(0.025, t + dur - 0.2);
+    ng.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    src.connect(bp); bp.connect(ng); ng.connect(g);
+    src.start(t); src.stop(t + dur);
+  }
+  pfMake(name) {
+    if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; }
+    const n = this.noteByName(name); if (!n) return;
+    const made = Object.assign({}, this.state.pfMade); made[name] = 1;
+    this.plog('pf_make', { note: name, f: n[1], cm: Math.round(this.pfLen(n[1]) * 10) / 10 });
+    this.pfTone(n[1]);
+    this.setState({ pfMade: made, pfCur: name });
+    if (this.pfNotes().every(x => made[x[0]])) {
+      this.markSolved();
+      this.toast('🎵', '팬플룻 완성!', '일곱 관을 모두 만들었어요. 진동수가 클수록 관이 짧아졌지요? 전체 연주를 눌러 들어 보세요.', 'ok');
+    }
+  }
+  pfPlayAll() {
+    if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; }
+    const c = this.ac(); if (!c) return;
+    const t0 = c.currentTime + 0.1;
+    this.pfNotes().forEach((n, i) => { if (this.state.pfMade[n[0]]) this.pfTone(n[1], t0 + i * 0.62, 0.2); });
+    this.plog('pf_playall', {});
+  }
+  panfluteEl() {
+    const R = React, S = this.state, C = this.C;
+    const el = (t, a, ...k) => R.createElement(t, a, ...k);
+    const span = this.PF_MAXCM - this.PF_MINCM;
+    /* 관 — 만든 것은 갈대색, 아직 만들지 않은 것은 점선 */
+    const tubes = this.pfNotes().map((n) => {
+      const nm = n[0], made = !!S.pfMade[nm], L = this.pfLen(n[1]);
+      const h = Math.round(46 + (L - this.PF_MINCM) / span * 150);
+      return el('div', { key:'t'+nm, onClick: () => this.pfMake(nm),
+        style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', cursor:'pointer' } },
+        el('div', { key:'c', style:{ fontSize:'11.5px', fontWeight:800, minHeight:'15px',
+          color: made ? C.a700 : C.n500 } }, made ? this.pfLenS(n[1]) + 'cm' : ''),
+        el('div', { key:'b', style:{ width:'30px', height:h + 'px', borderRadius:'6px 6px 0 0',
+          border: made ? '3px solid #8B6914' : '3px dashed ' + C.n400,
+          background: made ? 'linear-gradient(90deg,#C8952A,#EFC053,#C8952A)' : C.n200,
+          boxShadow: (S.pfCur === nm) ? '0 0 0 4px ' + C.a300 : 'none' } }),
+        el('div', { key:'n', style:{ fontSize:'16px', fontWeight:800,
+          color: made ? C.txt : C.n500 } }, nm));
+    });
+    const kids = [
+      el('div', { key:'inst', className:'rs-fit',
+        style:{ display:'flex', gap:'7px', alignItems:'flex-end', justifyContent:'center',
+          padding:'12px 14px 0', background:'linear-gradient(180deg,#FFF8E6,#FFEDB0)',
+          border:'3px solid #E8D090', borderRadius:'18px 18px 0 0' } }, tubes),
+      el('div', { key:'base', style:{ width:'min(430px,92vw)', height:'13px',
+        background:'linear-gradient(180deg,#7A5210,#A8751C,#7A5210)', borderRadius:'0 0 8px 8px' } })
+    ];
+    /* 방금 만든 관의 계산 — 진동수의 비를 뒤집으면 길이의 비가 된다 */
+    if (S.pfCur) {
+      const n = this.noteByName(S.pfCur), r = this.pfRatio(n[1]);
+      kids.push(el('div', { key:'calc', className:'rs-dial',
+        style:{ textAlign:'center', fontSize:'16px', lineHeight:1.8, maxWidth:'min(96vw,720px)' } },
+        '라 : ' + S.pfCur + ' 의 진동수 비는 ' + this.PF_BASE_F + ' : ' + n[1] + ' = ' + r.a + ' : ' + r.b + '이에요.',
+        el('br', { key:'b1' }),
+        '관 길이는 이 비를 뒤집어요 — ' + r.b + ' : ' + r.a + '.',
+        el('br', { key:'b2' }),
+        '라 관 ' + this.PF_BASE + 'cm의 ' + r.a + '/' + r.b + '배 = ' + this.pfLenS(n[1]) + 'cm'));
+    }
+    const left = this.pfNotes().filter(n => !S.pfMade[n[0]]).length;
+    kids.push(el('div', { key:'btns',
+      style:{ display:'flex', gap:'8px', flexWrap:'wrap', justifyContent:'center', marginTop:'4px' } },
+      this.pfNotes().map(n => this.pBtn('k'+n[0], (S.pfMade[n[0]] ? '✓ ' : '') + n[0],
+        () => this.pfMake(n[0]), S.pfMade[n[0]] ? 'rs-pill2' : 'rs-pill',
+        { minHeight:'48px', fontSize:'17px', padding:'9px 20px' }, n[0] + ' 관 만들기'))
+        .concat([ this.pBtn('all', '🎵 전체 연주', () => this.pfPlayAll(), 'rs-pill2',
+          { minHeight:'48px', fontSize:'16px', padding:'9px 18px' }, '만든 관을 차례로 불어 보기') ])));
+    kids.push(this.pCap('need', left ? ('만들 관이 ' + left + '개 남았어요 — 음을 눌러 관을 만들어요')
+      : '일곱 관을 모두 만들었어요! 전체 연주를 들어 보세요', left ? C.n700 : C.a700, 16));
+    return el('div', { key:'pf',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'10px', width:'100%' } }, kids);
+  }
   polyP(st) { const s = st || this.STEPS[this.state.i]; return this.POLY[s.p] || null; }
-  /* 12칸 안에서 두 소리가 다시 만나는 칸 (최소공배수의 배수) */
-  meetCells(p) {
-    const m = this.lcm(p.d, p.t), out = [];
-    for (let b = m; b <= this.PN; b += m) out.push(b);
+  /* 격자 안에서 두 소리가 다시 만나는 칸 (최소공배수의 배수) */
+  meetCells(p, nCells) {
+    const m = this.lcm(p.d, p.t), out = [], N = nCells || this.PN;
+    for (let b = m; b <= N; b += m) out.push(b);
     return out;
   }
   /* mode = 'drum'(북만) | 'tri'(트라이앵글만) | 'both'(함께)
@@ -1789,7 +1885,8 @@ class Component extends DCLogic {
     const p = def || this.polyP(st);
     if (!p || !p.d || !p.t) return;
     const c = this.ac();
-    const N = this.PN, STEP = this.PSTEP;
+    const why = String(tag || '').indexOf('why') === 0;
+    const N = why ? this.PN_WHY : this.PN, STEP = why ? this.PSTEP_WHY : this.PSTEP;
     const t0 = (c ? c.currentTime : 0) + 0.12;   /* 전체 시퀀스가 공유하는 기준 시각 */
     const sched = [];
     for (let b = 1; b <= N; b++) {
@@ -1881,7 +1978,7 @@ class Component extends DCLogic {
       this.toastOk('같은 2 : 3이에요!', '화음에서 도와 솔의 진동수 비가 2 : 3이었어요 — 그 비가 리듬으로도 나타났어요.');
     }
   }
-  /* ④ 기제 — 세 리듬을 견주어 '간단한 비일수록 빨리 다시 만난다'를 찾는다 */
+  /* ④ 기제 — 세 리듬을 비교해 '간단한 비일수록 빨리 다시 만난다'를 찾는다 */
   whyPlay(i) {
     if (this.narrating()) { this.toast('🔇', '설명이 끝난 뒤에 눌러 주세요', '지금 누르면 소리가 겹쳐 잘 들리지 않아요.'); return; } this.playPoly('both', this.WHY[i], 'why' + i); }
   polyWhy(ix) {
@@ -2269,14 +2366,14 @@ class Component extends DCLogic {
   }
 
   /* ── 감각 잇기 (bridge) — 지침 2.3 ──
-     색과 소리에서 만난 1 : 2를 견주게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
+     색과 소리에서 만난 1 : 2를 비교하게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
   BRIDGE = [
     { t:'두 방 모두 양이 달라져도 비가 같으면 결과가 같았어요', ok:1,
       fb:'맞아요! 물감의 양이 달라도 비가 1 대 2면 같은 색이었고, 진동수가 달라도 비가 1 대 2면 한 옥타브였어요. 두 방 모두 비가 정하고 있었지요.' },
     { t:'두 방 모두 수가 클수록 더 좋아졌어요', ok:0,
       fb:'물감을 많이 넣는다고 더 붉어지지 않았고, 진동수가 높다고 더 잘 어울리지도 않았지요. 다시 한번 생각해볼까요?' },
     { t:'색과 소리는 서로 상관이 없어요', ok:0,
-      fb:'두 방에서 모두 1 대 2라는 같은 비가 나왔어요. 그 점을 다시 견주어 볼까요?' }
+      fb:'두 방에서 모두 1 대 2라는 같은 비가 나왔어요. 그 점을 다시 비교해 볼까요?' }
   ];
   bridgePick(ix) {
     const o = this.BRIDGE[ix];
@@ -2351,7 +2448,7 @@ class Component extends DCLogic {
           this.plog('summary', { no: 1, a: keys.map(k => blanks[k.key]) });
           this.markSolved();
           this.confetti();
-          this.toast('✅', '정리 완성!', '소리의 비밀을 문장으로 정리했어요. 허브로 돌아가 다음 탐험을 이어가요!', 'ok');
+          this.toast('✅', '정리 완성!', '소리의 비밀을 문장으로 정리했어요. 이제 다음 방으로 이어가요!', 'ok');
           this.autoNext(3200);
         }, 320);
       }
@@ -2645,9 +2742,9 @@ class Component extends DCLogic {
   }
   /* 12칸 한 줄 — intv 간격마다 악기 아이콘, 나머지 칸은 번호(세기 위한 눈금) */
   polyRow(key, intv, o) {
-    const R = React, size = o.size || 36;
+    const R = React, size = o.size || 36, N = o.n || this.PN;
     return R.createElement('div', { key, style:{ whiteSpace:'nowrap', lineHeight:0 } },
-      Array.from({ length: this.PN }, (_, x) => {
+      Array.from({ length: N }, (_, x) => {
         const b = x + 1, on = intv > 0 && b % intv === 0, isCur = o.cur === b;
         const isMeet = !!(o.meet && o.meet.indexOf(b) >= 0);
         return R.createElement('span', { key:b, style:{
@@ -2775,7 +2872,7 @@ class Component extends DCLogic {
     return R.createElement('div', { key:'poly',
       style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'var(--space-2)', width:'100%' } }, kids);
   }
-  /* ④ 기제 + 단위화 — 세 리듬을 견주고, 12칸을 다른 단위로 다시 센다 */
+  /* ④ 기제 + 단위화 — 세 리듬을 비교하고, 12칸을 다른 단위로 다시 센다 */
   /* 내가 정한 간격으로 만들기 — 충분히 탐색하도록 독립 단계로 두고 조작을 크게 그린다 */
   /* 12칸 단위화 — 충분히 만져 보도록 독립 단계로 둔다 */
   polyUnitEl() {
@@ -2855,11 +2952,11 @@ class Component extends DCLogic {
     const cards = this.WHY.map((w, i) => {
       const tag = 'why' + i, played = !!S.whyPlayed[tag];
       const cur = S.polyTag === tag ? S.polyBeat : 0;
-      const meet = this.meetCells(w);
+      const meet = this.meetCells(w, this.PN_WHY);
       const lc = this.lcm(w.d, w.t);
       const cap = !played ? '들어 보세요'
         : (meet.length ? ('✅ ' + meet.join('칸, ') + '칸에서 함께! — ' + lc + '칸마다 다시 만나요')
-                       : ('❌ 12칸 안에서는 한 번도 만나지 못해요 (' + lc + '칸을 가야 만나요)'));
+                       : ('❌ ' + this.PN_WHY + '칸 안에서는 한 번도 만나지 못해요 (' + lc + '칸을 가야 만나요)'));
       return R.createElement('div', { key:tag,
         style:{ background:this.C.n100, border:'3px solid ' + (played ? this.C.a400 : this.C.n300),
           borderRadius:'var(--radius-md)', padding:'var(--space-2)', display:'flex', flexDirection:'column',
@@ -2869,8 +2966,8 @@ class Component extends DCLogic {
           w.note ? R.createElement('span', { key:'n', style:{ fontSize:'13px', fontWeight:700, color:this.C.n600 } }, '(화음의 ' + w.note + ')') : null,
           this.pBtn('p', (played ? '✓ ' : '') + '▶ 듣기', () => this.whyPlay(i), 'rs-pill2',
             { minHeight:'38px', fontSize:'13px', padding:'5px 14px' }, w.d + ' 대 ' + w.t + ' 리듬 듣기')),
-        this.polyRow('d', w.d, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100, meet, size:22, nums:false }),
-        this.polyRow('t', w.t, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100, meet, size:22, nums:false }),
+        this.polyRow('d', w.d, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100, meet, size:13, nums:false, n:this.PN_WHY }),
+        this.polyRow('t', w.t, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100, meet, size:13, nums:false, n:this.PN_WHY }),
         this.pCap('c', cap, played ? (meet.length ? this.C.a700 : this.C.n700) : this.C.n600, 13.5));
     });
     kids.push(R.createElement('div', { key:'cards', className:'rs-fit',
@@ -2878,10 +2975,10 @@ class Component extends DCLogic {
 
     const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
     if (!allPlayed) {
-      kids.push(this.pCap('need', '세 리듬을 모두 들어 보세요. 두 소리가 다시 만나는 칸이 어떻게 달라지나요?', this.C.n700, 16));
+      kids.push(this.pCap('need', '네 리듬을 모두 들어 보세요. 30칸 안에서 두 소리가 다시 만나는 리듬은 어느 것인가요?', this.C.n700, 16));
     } else if (S.whyPick < 0) {
       kids.push(R.createElement('div', { key:'q', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', animation:'rsPop .3s ease' } },
-        this.pCap('t', '🤔 세 리듬을 견주어 보면 무엇을 알 수 있나요?', this.C.txt, 17),
+        this.pCap('t', '🤔 네 리듬을 비교해 보면 무엇을 알 수 있나요?', this.C.txt, 17),
         R.createElement('div', { key:'o', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center', maxWidth:'760px' } },
           this.WHYQ.map((o, ix) => this.pBtn('o'+ix, o.t, () => this.polyWhy(ix), 'rs-chip', { fontSize:'16px' })))));
     } else {
@@ -2948,6 +3045,7 @@ class Component extends DCLogic {
       isStory: st.k === 'story', storyEmoji: st.emoji || '', storyCap: st.cap || '',
       isVib: st.k === 'vib', isHarmx: st.k === 'harmx', isRooms: st.k === 'rooms',
       isTable: st.k === 'table', isPoly: st.k === 'poly', isStrlen: st.k === 'strlen',
+      isPanflute: st.k === 'panflute', pfEl: null,
       isSweep: st.k === 'sweep', isHarp: st.k === 'harp', isReflect: st.k === 'reflect',
       isBridge: st.k === 'bridge',
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
@@ -3012,17 +3110,16 @@ class Component extends DCLogic {
       /* 지침 4.1 — 감각 탐색이 먼저, 수치는 뒤. 여덟 건반을 모두 들어 보기 전에는
          진동수 수치를 감추고 줄 길이·떨림 속도의 질적 서술만 보여 준다(파형 그림은 그대로).
          여덟 건반을 다 들은 뒤에 같은 자리에서 진동수가 열린다. */
-      const numOn = solved || S.vibHit.length >= 8;
+      /* 이 단계에서는 진동수 수치를 아예 띄우지 않는다. 줄 길이와 떨림의 빠르기만 느끼게 하고,
+         진동수와 헤르츠는 다음 단계(물결 무늬가 나오는 화음 화면)에서 처음 꺼낸다. */
       if (S.vibCur < 0) v.vibHz = '건반을 눌러 보세요';
       else {
         const n = this.NOTES[S.vibCur];
-        v.vibHz = numOn
-          ? (n[0] + ' — 1초에 ' + n[1] + '번 떨려요 (' + n[0] + '의 진동수 : ' + n[1] + 'Hz)')
-          : (S.vibCur === 0 ? '도 — 줄이 가장 길고, 가장 느리게 떨려요'
-                            : n[0] + ' — 도보다 줄이 짧고, 더 빠르게 떨려요');
+        v.vibHz = (S.vibCur === 0 ? '도 — 줄이 가장 길고, 가장 느리게 떨려요'
+                                  : n[0] + ' — 도보다 줄이 짧고, 더 빠르게 떨려요');
         v.vibWaveEl = this.vibWaveSvg(S.vibCur);
       }
-      if (solved) { v.liveBadge = '🎹 여덟 건반을 모두 들어봤어요! 이제 건반을 누르면 진동수가 보여요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      if (solved) { v.liveBadge = '🎹 여덟 건반을 모두 들어봤어요!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
       else if (S.vibHit.length > 0) { v.liveBadge = '들어본 건반 ' + S.vibHit.length + ' / 8'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
     }
 
@@ -3035,8 +3132,7 @@ class Component extends DCLogic {
         const n = this.NOTES[cur], a = n[3], b = n[2];
         const rev = !!S.rates[n[0]];
         if (rev) { v.hxRes = '도 : ' + n[0] + ' = 264Hz : ' + n[1] + 'Hz'; v.hxRatio = a + ' : ' + b; }
-        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울려요 — 아래 물결 무늬를 관찰해 보세요!'; }
-        v.hxItv = this.ITV[cur];
+        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울릴 때 얼마나 잘 어울리나요? 무늬를 보고 두 음이 얼마나 자주 만나는지 살펴보세요.'; }
         v.hxWaveMsg = rev
           ? '(도) 초록 물결 ' + a + '번 + (' + n[0] + ') 주황 물결 ' + b + '번마다 반복되는 무늬가 생겨요!'
           : '두 물결이 만드는 무늬가 얼마나 자주 반복되나요? 잘 보고 별점을 매겨 봐요!';
@@ -3091,9 +3187,11 @@ class Component extends DCLogic {
       }
     }
 
+    if (st.k === 'panflute') { v.pfEl = this.panfluteEl(); }
+
     if (st.k === 'table') {
       v.itvRows = this.NOTES.map((m, i) => ({
-        n: (i === 0 ? '★' : '') + m[0], itv: this.ITV[i], ratio: m[3] + ' : ' + m[2],
+        n: (i === 0 ? '★' : '') + m[0], ratio: m[3] + ' : ' + m[2],
         bg: this.PERF.indexOf(i) >= 0 ? this.C.a100 : 'transparent'
       }));
       /* 음정에 따른 분류 보기 */
@@ -3136,10 +3234,10 @@ class Component extends DCLogic {
           : (solved ? '단위가 커지면 횟수가 줄어요 — 6은 2로도 3으로도 딱 묶여요!'
           : (S.whyPick >= 0 ? '12칸을 2칸 단위·3칸 단위로 다시 세어 보고, 풀기까지 해 봐요!'
           : (allPlayed ? '세 리듬을 다 들었어요! 무엇을 알 수 있는지 골라 봐요.'
-          : '세 리듬을 차례로 들으며, 다시 만나는 칸을 견주어 봐요!')));
+          : '네 리듬을 차례로 들으며, 다시 만나는 칸을 비교해 봐요!')));
         if (!solved) v.footHintOverride = S.whyPick >= 0
           ? '2칸씩·3칸씩 묶고, 풀기까지 하면 완료!'
-          : (allPlayed ? '세 리듬을 견주어 알 수 있는 것을 골라요' : '세 리듬을 모두 들어 보세요');
+          : (allPlayed ? '네 리듬을 비교해 알 수 있는 것을 골라요' : '네 리듬을 모두 들어 보세요');
         if (solved) { v.liveBadge = '✅ 완료! 아래에서 간격을 바꿔 더 만들어 보고 다음으로 가요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
         else if (S.whyPick >= 0) { v.liveBadge = '🔎 간단한 비일수록 빨리 다시 만나요'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
       } else {
@@ -3310,7 +3408,7 @@ class Component extends DCLogic {
       };
     }) : null;
 
-    const needsSolve = (['vib','harmx','rooms','table','poly','harp','reflect','blank','bridge'].indexOf(st.k) >= 0) && !this._guest;
+    const needsSolve = (['vib','harmx','rooms','table','poly','panflute','reflect','blank'].indexOf(st.k) >= 0) && !this._guest;
     const gateOk = solved && probeOk;
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
