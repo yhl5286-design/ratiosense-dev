@@ -187,14 +187,23 @@ button{font-family:inherit}
       </sc-if>
 
       <sc-if value="{{isFinale}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0;max-width:720px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0;max-width:940px">
           <div style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-4)">
             <span style="font-size:19px;color:var(--color-accent-700)">1 · 6 · 1 · 8 →</span>
             <span style="font-size:30px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 18px">1.618</span>
             <span style="font-size:19px;color:var(--color-accent-2-700)">황금비 φ!</span>
           </div>
           {{phiArt}}
-          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">모양에서도, 자연에서도, 수에서도 같은 값 <b>1.618</b>이 나와요.<br>여러분이 색과 소리와 지도에서 찾은 것처럼 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
+          <!-- 황금비에서 이름을 딴 전시에 나온 그림. 캔버스가 황금사각형이라는 뜻은 아니다 -->
+          <div style="display:flex;gap:min(4vw,20px);align-items:center;justify-content:center;flex-wrap:wrap;background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-3);max-width:min(96vw,860px)">
+            <img src="gris_cafe.jpg" alt="후안 그리스, 「카페의 남자」 — 도형으로 나눈 입체파 그림" style="width:min(190px,44vw);height:auto;border-radius:12px;border:3px solid var(--color-neutral-800);display:block">
+            <div style="font-size:15px;font-weight:700;line-height:1.85;color:var(--color-neutral-800);max-width:420px;min-width:min(280px,90vw)">
+              1912년 파리에서 화가들이 <b>「황금분할」</b>이라는 이름으로 전시를 열었어요.<br>
+              황금비에서 따온 이름이지요.<br>
+              후안 그리스, 「카페의 남자」(1912)
+            </div>
+          </div>
+          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">모양에서도, 자연에서도, 수에서도, 그림에서도 같은 값 <b>1.618</b>이 나와요.<br>여러분이 색과 소리와 지도에서 찾은 것처럼 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
         </div>
       </sc-if>
 
@@ -224,11 +233,34 @@ button{font-family:inherit}
               </figcaption>
             </figure>
 
+            <!-- 「내가 정한 간격」 단계를 없앴으므로 그 화면 사진(wrap_rhythm.jpg)은 쓰지 않는다.
+                 실제로 한 활동 — 북과 트라이앵글을 함께 듣고 다시 만나는 칸을 센 것 — 을 그대로 그린다. -->
             <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
-              <img src="wrap_rhythm.jpg" alt="북과 트라이앵글의 간격을 정해 리듬을 만든 화면" style="width:100%;display:block">
+              <div style="padding:14px 10px 10px;background:#f4f1ea" aria-label="북은 한 칸마다, 트라이앵글은 두 칸마다 울려 두 칸마다 함께 만나는 격자">
+                <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:5px">
+                  <span style="font-size:15px;width:22px;text-align:right">🥁</span>
+                  <span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-400);background:var(--color-accent-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-600);background:var(--color-accent-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-400);background:var(--color-accent-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-600);background:var(--color-accent-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-400);background:var(--color-accent-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-600);background:var(--color-accent-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;justify-content:center">
+                  <span style="font-size:15px;width:22px;text-align:right">🔺</span>
+                  <span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-neutral-300);background:var(--color-neutral-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-2-500);background:var(--color-accent-2-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-neutral-300);background:var(--color-neutral-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-2-500);background:var(--color-accent-2-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-neutral-300);background:var(--color-neutral-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-2-500);background:var(--color-accent-2-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span>
+                </div>
+                <div style="text-align:center;font-size:13px;font-weight:800;color:var(--color-accent-700);margin-top:8px">두 칸마다 함께 만나요</div>
+              </div>
               <figcaption style="padding:6px 8px 8px;text-align:center">
                 <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🥁 리듬</div>
                 <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">두 간격의 비 1 : 2</div>
+              </figcaption>
+            </figure>
+
+            <!-- 팬플룻 — 하프 공방을 대신해 새로 넣은 활동 -->
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <div style="padding:14px 10px 10px;background:linear-gradient(180deg,#FFF8E6,#FFEDB0);display:flex;align-items:flex-end;justify-content:center;gap:5px;min-height:104px" aria-label="진동수가 클수록 관이 짧아지는 팬플룻">
+                <span style="display:inline-block;width:17px;height:86px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:77px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:69px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:65px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:57px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:52px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:46px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span>
+              </div>
+              <figcaption style="padding:6px 8px 8px;text-align:center">
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🎵 팬플룻</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">관 길이의 비 3 : 5</div>
               </figcaption>
             </figure>
 
@@ -261,12 +293,12 @@ button{font-family:inherit}
           <div style="font-size:20px;font-weight:800;color:var(--color-neutral-700)">↓</div>
 
           <div style="font-size:22px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:10px 26px;text-align:center">
-            여섯 가지 모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
+            일곱 가지 모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
           </div>
 
           <div style="font-size:15.5px;font-weight:700;line-height:1.75;text-align:center;color:var(--color-neutral-800);max-width:720px">
             물감과 소리, 리듬과 지도, 지구와 황금비 — 서로 달라 보이지만
-            모두 <b>두 양을 견주는 비</b> 하나로 이어져 있었어요.<br>
+            모두 <b>두 양을 비교하는 비</b> 하나로 이어져 있었어요.<br>
             세상에는 아직 만나지 못한 <b>비와 비율의 비밀</b>이 훨씬 더 많이 숨어 있어요.
           </div>
 
@@ -348,21 +380,13 @@ class Component extends DCLogic {
 
   get STEPS() {
     return [
-      { k:'story',
-        lines:['드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리와 지도에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요.',
-               '카드에 적힌 숫자를 차례로 눌러 마지막 문을 열어 봐요!'],
-        btn:'문 앞으로 →' },
+      /* 문 앞에서 말하고 문 앞에서 누른다 — 안내와 조작을 한 화면에 둔다 */
       { k:'door',
-        say:'카드 네 장이 모두 모였어요! 색깔, 소리, 지도 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
+        say:'드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리와 지도에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요. 색깔, 소리, 지도 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
         hi:'🔐 마지막 문 — 카드의 숫자를 차례로' },
-      /* 1.618을 수로만 외우고 끝내지 않는다 — 1 : 1.618이 무엇을 뜻하는지
-         기준 막대를 직접 늘여 보며 확인하고, 그 뒤에 황금비를 기록한다. */
-      { k:'phi',
-        say:'황금비 1.618은 그냥 한 개의 수가 아니라 1 대 1.618이라는 비예요. 기준이 되는 길이를 1이라고 할 때, 황금비의 길이는 그 1.618배랍니다. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요?',
-        hi:'📏 기준을 여러 번 바꿔 가며 두 막대를 견주어 봐요' },
       { k:'finale',
-        say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 수학에서는 세 가지가 대표적이에요. 가로가 세로의 1.618배인 황금사각형은 정사각형을 떼어내도 남은 조각이 또 같은 모양이 되고, 정오각형은 대각선을 한 변으로 나누면 꼭 1.618이 나와요. 앞의 두 수를 더해 나가는 피보나치 수도 이웃한 두 수의 비가 점점 1.618에 가까워진답니다. 색과 소리와 지도에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
-        hi:'🎉 여정 완주 — 비 감각의 달인!' },
+        say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요? 색과 소리와 지도에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
+        hi:'🎉 여정 완주 — 기준을 바꿔 가며 두 막대를 비교해 봐요' },
       /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
          소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
       /* 마지막 화면에는 안내자의 말을 두지 않는다. 그동안 한 활동을 화면에 펼쳐
@@ -724,7 +748,7 @@ class Component extends DCLogic {
     const t = s.k === 'story' ? s.lines.join(' ') : s.say;
     if (t) this.speak(t, 'ratio');
   }
-  autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3000); }
+  autoNext(ms) { clearTimeout(this._autoT); /* 저절로 넘기지 않는다 — 피드백을 읽고 「다음 →」을 눌러 넘어가게 한다. */ }
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
   /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
      본문은 남기지 않고 제목 40자만 남긴다. t는 plog가 붙이는 경과 ms이므로 제목은 ttl에 담는다. */
@@ -733,8 +757,12 @@ class Component extends DCLogic {
     this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
+    /* 성공 피드백은 저절로 닫지 않는다 — 읽을 시간을 학습자가 정한다.
+       닫으려면 ✕를 누르거나 다음 화면으로 넘어가면 된다(go에서 지운다).
+       나머지 안내는 6초 뒤에 닫는다 — 3초로는 두 줄을 다 읽기 어렵다. */
+    if (kind === 'ok') return;
     const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
-    this._tT = setTimeout(close, 3000);
+    this._tT = setTimeout(close, 6000);
   }
   toastOk(t, b) { this.plog('success', { slide: this.state.i }); this.toast('✅', t, b, 'ok'); }
   toastRetry(b) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', '다시 한번!', b); }
@@ -998,7 +1026,7 @@ class Component extends DCLogic {
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story',
-      isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi',
+      isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi' || st.k === 'finale',
       isWrap: st.k === 'wrap',
       /* 마지막 화면에서는 말풍선을 통째로 감춘다 */
       showCoach: st.k !== 'wrap',
@@ -1019,7 +1047,7 @@ class Component extends DCLogic {
       v.doorGo = () => this.doorTry();
     }
 
-    if (st.k === 'phi') {
+    if (st.k === 'phi' || st.k === 'finale') {
       const b = S.phiBase, g = Math.round(b * this.PHI * 10) / 10;
       /* 두 막대는 같은 자로 그린다 — 기준이 최대일 때 황금비 막대가 화면을 꽉 채우도록 */
       const span = this.PHI_MAX * this.PHI;
