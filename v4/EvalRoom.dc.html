@@ -712,6 +712,7 @@ class Component extends DCLogic {
     removeEventListener('wheel', this._wheelZ, true);
     removeEventListener('keydown', this._keyZ, true);
     clearTimeout(this._syncT);
+    clearInterval(this._doorIv);
     this.stopVoice(); this.flush(true);
   }
 
@@ -976,7 +977,18 @@ class Component extends DCLogic {
       this.sfx('win'); this.confetti();
       this.toast('🔓', '1.618 — 황금비!', '카드의 숫자를 이으니 황금비 φ가 되었어요! 문이 열립니다!', 'ok', true);
       this.speak('1.618, 황금비를 찾았어요! 문이 열립니다!', 'ratio');
-      setTimeout(() => this.go(1), 2600);
+      /* 2.6초로 못 박아 두면 말이 끝나기 전에 화면이 바뀌어 낭독이 잘린다.
+         go()가 stopVoice()를 부르기 때문이다. 낭독이 끝나기를 기다렸다가 넘어간다.
+         소리를 끈 학습자와 낭독이 시작되지 않은 경우를 위해 최소 2.6초, 최대 15초를 둔다. */
+      clearInterval(this._doorIv);
+      const t0 = Date.now();
+      this._doorIv = setInterval(() => {
+        const waited = Date.now() - t0;
+        if (waited < 2600) return;
+        if (this._speaking && waited < 15000) return;
+        clearInterval(this._doorIv); this._doorIv = null;
+        this.go(1);
+      }, 250);
     } else {
       this.sfx('oops');
       this.setState({ doorVal: '' });
