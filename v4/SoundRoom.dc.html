@@ -2790,7 +2790,7 @@ class Component extends DCLogic {
     }
     const html = '<line x1="16" y1="' + midY + '" x2="' + (W-16) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>'
       + '<path d="' + dd + '" style="fill:none;stroke:' + this.C.g600 + ';stroke-width:3;stroke-linecap:round"/>'
-      + '<text x="' + (W/2) + '" y="116" text-anchor="middle" style="font-size:13px;font-weight:700;fill:' + this.C.n600 + '">' + n[0] + '의 떨림 모양 — 높은 음일수록 물결이 촘촘해요</text>';
+      + '<text x="' + (W/2) + '" y="116" text-anchor="middle" style="font-size:13px;font-weight:700;fill:' + this.C.n600 + '">' + n[0] + '의 떨림 모양</text>';
     return this.svgEl('0 0 560 120', { width:'min(560px,86vw)', display:'block' }, html, 'vibwave' + i);
   }
   /* 도+누른 음 두 물결 — drawHX 이식 (한 묶음 띠 + 5.2초 위상 순환 + 1.5초 유지) */
