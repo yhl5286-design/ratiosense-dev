@@ -272,7 +272,6 @@ button{font-family:inherit}
                   </div>
                 </sc-for>
               </div>
-              <div style="height:46px;flex:none;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:800;color:#645c50;text-align:center;line-height:1.25;width:60px">＋ 버튼<br>10mL씩</div>
             </div>
             </sc-if>
           </div>
@@ -968,7 +967,7 @@ class Component extends DCLogic {
         ['100이 전체이므로 비율은 전체의 ', {a:'40'}, ' %이다.'],
         ['분수로 나타내면 ', {a:'40'}, ' / ', {a:'100'}, ' 이다.'],
         ['이 비율을 소수로 나타내면 ', {a:'0.4'}, ' 이다.'] ],
-      bank:['40','100','0.4','60','0.6','4'] },
+      bank:['40','40','40','100','100','0.4','60','0.6','4'] },
     pct: { rows:[
         ['빨강은 전체의 ', {a:'40'}, ' %'],
         ['노랑은 전체의 ', {a:'60'}, ' %'] ],
@@ -1718,7 +1717,7 @@ class Component extends DCLogic {
         '아직 목표 색이 아니란다. 내 색과 목표 색을 나란히 놓고 비교해 볼까?',
         additive ? '두 물감에 같은 양을 더하면 비가 달라진단다. 몇 배로 늘리는 방법을 생각해 볼까?' : dirHint,
         lk ? '노랑만 한 컵씩 바꾸면 색이 변하는 방향이 보인단다. 천천히 시험해 볼까?'
-           : '한 물감만 ＋ 버튼으로 10mL씩 바꾸면 색이 변하는 방향이 보인단다. 천천히 시험해 볼까?'
+           : '한 물감만 조금씩 바꾸면 색이 변하는 방향이 보인단다. 천천히 시험해 볼까?'
       ]));
       return;
     }
@@ -2725,7 +2724,7 @@ class Component extends DCLogic {
       };
     }) : null;
 
-    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect','probe'].indexOf(st.k) >= 0) && !this._guest;
+    const needsSolve = ['chips','lab','demo','cups','dots','grid','blank','reflect','probe'].indexOf(st.k) >= 0;
     const gateOk = (st.k === 'probe') ? probeOk : (solved && probeOk);
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
