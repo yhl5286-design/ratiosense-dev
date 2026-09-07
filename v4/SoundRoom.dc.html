@@ -177,6 +177,9 @@ button{font-family:inherit}
           <sc-if value="{{vibWaveEl}}" hint-placeholder-val="{{false}}">
             <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:6px 10px">{{vibWaveEl}}</div>
           </sc-if>
+          <sc-if value="{{vibQEl}}" hint-placeholder-val="{{false}}">
+            <div style="width:100%;display:flex;justify-content:center;margin-top:6px">{{vibQEl}}</div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -803,7 +806,7 @@ class Component extends DCLogic {
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfPhase:'explore', pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
     voiceMap:{}, voicePanel:false, pressKey:-1,
     rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
-    vibHit:[], vibCur:-1,
+    vibHit:[], vibCur:-1, vibAns:{},
     hxCur:-1,
     roomStage:'collect', grpWaveN:null,
     polyStage:'listen', polyBeat:0, polyPlaying:false, polyTag:'',
@@ -1488,7 +1491,7 @@ class Component extends DCLogic {
     this._vibT = 0; this._vibLast = null;
     const st = this.STEPS[n];
     const patch = { i:n, toast:null, pressKey:-1,
-      vibHit: this.state.solved[n] ? this.state.vibHit : [], vibCur:-1,
+      vibHit: this.state.solved[n] ? this.state.vibHit : [], vibCur:-1, vibAns: this.state.solved[n] ? this.state.vibAns : {},
       hxCur:-1,
       clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
       grpWaveN:null, polyBeat:0, polyPlaying:false,
@@ -1622,7 +1625,46 @@ class Component extends DCLogic {
     this.plog('key', { n: n[0] });
     const hit = this.state.vibHit.indexOf(i) >= 0 ? this.state.vibHit : this.state.vibHit.concat([i]);
     this.setState({ vibHit: hit, vibCur: i });
-    if (hit.length >= 8 && !this.state.solved[this.state.i]) this.markSolved();
+    /* 여덟 건반을 다 눌렀다고 바로 통과시키지 않는다 — 아래 두 물음에 답해야 한다 */
+  }
+
+  /* 눌러 본 것을 말로 모으는 물음. 줄의 길이와 떨림의 빠르기를 따로 묻는 것은
+     두 가지가 함께 달라진다는 것을 각각 확인하게 하기 위해서다(지침 5.1·5.3). */
+  VIBQ = [
+    { id:'len', q:'음이 점점 높아질수록 줄의 길이는 어떤가요?',
+      opts:[ { t:'길어져요', ok:0, fb:'도와 도′의 줄을 나란히 놓고 다시 보아요. 높은 도의 줄이 더 길던가요?' },
+             { t:'짧아져요', ok:1 },
+             { t:'그대로예요', ok:0, fb:'도부터 차례로 다시 눌러 보며 줄의 길이가 어떻게 달라지는지 보아요.' } ] },
+    { id:'spd', q:'음이 점점 높아질수록 줄의 떨림 속도는 어떤가요?',
+      opts:[ { t:'느려져요', ok:0, fb:'도와 도′를 이어서 눌러 보아요. 높은 도의 줄이 더 천천히 떨리던가요?' },
+             { t:'빨라져요', ok:1 },
+             { t:'그대로예요', ok:0, fb:'도와 도′를 이어서 눌러 보며 떨리는 빠르기를 견주어 보아요.' } ] }
+  ];
+  vibPick(qid, ix) {
+    if (this.narrating()) this.stopVoice();
+    const q = this.VIBQ.find(x => x.id === qid), o = q.opts[ix];
+    this.plog('vib_q', { q: qid, pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.sfx('oops'); this.toast('🤔', '다시 살펴볼까요?', o.fb); return; }
+    const a = Object.assign({}, this.state.vibAns); a[qid] = ix;
+    this.sfx('ok');
+    this.setState({ vibAns: a });
+    if (this.VIBQ.every(x => a[x.id] != null) && !this.state.solved[this.state.i]) {
+      this.markSolved();
+      this.toastOk('맞아요! 🎻', '음이 높아질수록 줄은 짧아지고 떨림은 빨라져요. 두 가지가 함께 달라지지요.');
+    }
+  }
+  vibQuizEl() {
+    const R = React, C = this.C, A = this.state.vibAns || {};
+    const el = (t, at, ...k) => R.createElement(t, at, ...k);
+    return el('div', { key:'vq', style:{ display:'flex', flexDirection:'column', alignItems:'center',
+      gap:'10px', width:'100%', animation:'rsPop .35s ease' } },
+      this.VIBQ.map(q => el('div', { key:q.id, style:{ display:'flex', flexDirection:'column',
+        alignItems:'center', gap:'7px' } },
+        this.pCap('q' + q.id, q.q, A[q.id] != null ? C.g700 : C.txt, 17.5),
+        el('div', { key:'o', style:{ display:'flex', gap:'9px', flexWrap:'wrap', justifyContent:'center' } },
+          q.opts.map((o, ix) => this.pBtn('o' + ix, (A[q.id] === ix ? '✓ ' : '') + o.t,
+            () => { if (A[q.id] == null) this.vibPick(q.id, ix); }, 'rs-chip',
+            { fontSize:'16px', opacity: (A[q.id] != null && A[q.id] !== ix) ? 0.45 : 1 }))))));
   }
 
   /* ── 2) 화음 미션 (harmx) ── */
@@ -3343,12 +3385,15 @@ class Component extends DCLogic {
       if (S.vibCur < 0) v.vibHz = '건반을 눌러 보세요';
       else {
         const n = this.NOTES[S.vibCur];
-        v.vibHz = (S.vibCur === 0 ? '도 — 줄이 가장 길고, 가장 느리게 떨려요'
-                                  : n[0] + ' — 도보다 줄이 짧고, 더 빠르게 떨려요');
+        /* 레부터 도′까지는 「도보다 짧고 빠르게」 같은 서술을 붙이지 않는다.
+           그 관계는 여덟 건반을 다 눌러 본 뒤 학습자가 물음에 답하며 스스로 말한다. */
+        v.vibHz = (S.vibCur === 0 ? '도 — 줄이 가장 길고, 가장 느리게 떨려요' : n[0]);
         v.vibWaveEl = this.vibWaveSvg(S.vibCur);
       }
-      if (solved) { v.liveBadge = '🎹 여덟 건반을 모두 들어봤어요!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      if (solved) { v.liveBadge = '🎹 줄의 길이와 떨림을 알아냈어요!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      else if (S.vibHit.length >= 8) { v.liveBadge = '🎹 여덟 건반을 모두 들어봤어요! 아래 물음에 답해 보세요'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
       else if (S.vibHit.length > 0) { v.liveBadge = '들어본 건반 ' + S.vibHit.length + ' / 8'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
+      v.vibQEl = (S.vibHit.length >= 8) ? this.vibQuizEl() : null;
     }
 
     if (st.k === 'harmx') {
@@ -3673,7 +3718,7 @@ class Component extends DCLogic {
           polyStage:'listen', heardDrum:false, heardTri:false, heardBoth:false, polyFeel:'',
           pickD:0, pickT:0, polyFound:false, linkPick:-1, whyPlayed:{}, whyPick:-1, myD:0, myT:0, myMeet:null,
           grpDone:{}, grpUndone:false, grpMode:0,
-          vibHit:[], vibCur:-1, hDone:0, roomStage:'collect', toast:null });
+          vibHit:[], vibCur:-1, vibAns:{}, hDone:0, roomStage:'collect', toast:null });
         setTimeout(() => this.sayStep(0), 380);
         return;
       }
