@@ -846,7 +846,7 @@ class Component extends DCLogic {
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
     st.push({ k:'hz', p:'unit',
       say:'소리는 물체가 떨려서 나요. 1초 동안 몇 번 떨리는지를 진동수라고 하고, 헤르츠라는 단위로 세요. 각 음의 진동수를 도의 진동수와 비교해 보아요. 모든 음을 11로 나눌 수 있어서 11헤르츠로 나누어 나타냈어요. 11헤르츠를 한 칸으로 나타내면 도와 다른 음의 관계를 이렇게 나타낼 수 있어요.',
-      hi:'📊 칸을 세어 도와 다른 음의 비를 하나씩 찾아보세요' });
+      hi:'📊 ▶로 도와 함께 들어 보며 칸과 비를 견주어 보세요' });
     st.push({ k:'story', emoji:'🥁', 
       lines:['진동수의 비가 간단할수록 두 음이 잘 어울렸어요.',
              '이번에는 리듬 활동을 하면서 그 이유를 알아봐요.'],
@@ -2092,7 +2092,7 @@ class Component extends DCLogic {
     const bar = (key, f, cells, col, bg) => {
       const w = f / TOP * MAXW, gap = 1;
       const cw = (w - gap * (cells - 1)) / cells;
-      return el('div', { key:key, style:{ display:'flex', gap:gap + 'px', height:'19px' } },
+      return el('div', { key:key, style:{ display:'flex', gap:gap + 'px', height:'14px' } },
         Array.from({ length: cells }, (_, i) => el('div', { key:i, style:{
           width: cw + 'px', height:'100%', background: bg, flex:'none',
           border:'1px solid ' + col, borderRadius:'2px' } })));
@@ -2112,7 +2112,7 @@ class Component extends DCLogic {
       const nm = n[0], f = n[1], g = this.gcd2(BASE, f);
       const ua = BASE / U, ub = f / U, ra = BASE / g, rb = f / g;
       return el('div', { key:'r' + i, style:{ display:'flex', alignItems:'center', gap:'8px',
-        padding:'5px 6px', borderRadius:'8px',
+        padding:'2px 6px', borderRadius:'8px',
         background: i === 0 ? C.a100 : (i % 2 ? 'transparent' : C.n100) } },
         el('div', { key:'n', style:{ width:W.n + 'px', flex:'none', fontSize:'16px', fontWeight:800 } }, nm),
         /* 진동수를 알아보는 갈래에서는 눌러 본 음만 수가 드러난다 — 하나씩 채워 간다 */
@@ -2120,18 +2120,16 @@ class Component extends DCLogic {
           color: (isU || heard[nm]) ? C.n700 : C.n400, textAlign:'right' } },
           (isU || heard[nm]) ? (f + 'Hz') : '? Hz'),
         isU ? el('div', { key:'bars', style:{ width:W.bar + 'px', flex:'none',
-          display:'flex', flexDirection:'column', gap:'3px' } },
+          display:'flex', flexDirection:'column', gap:'2px' } },
           bar('d', BASE, bars === 'unit' ? ua : ra, C.g500, C.g100),
           bar('x', f, bars === 'unit' ? ub : rb, C.a500, C.a100)) : null,
         isU ? el('div', { key:'rt', style:{ width:W.r + 'px', flex:'none', fontSize:'14.5px', fontWeight:800,
-          color: (i === 0 || (S.hzRatio || {})[nm]) ? C.a700 : C.n400, textAlign:'center' } },
+          color:C.a700, textAlign:'center' } },
           (i === 0) ? '1 : 1'
-                    : ((S.hzRatio || {})[nm]
-                        ? (bars === 'unit' ? (ua + ' : ' + ub + ' = ' + ra + ' : ' + rb) : (ra + ' : ' + rb))
-                        : '?') ) : null,
+                    : (bars === 'unit' ? (ua + ' : ' + ub + ' = ' + ra + ' : ' + rb) : (ra + ' : ' + rb)) ) : null,
         el('div', { key:'p', style:{ width:W.p + 'px', flex:'none', display:'flex', justifyContent:'center' } },
           this.pBtn('p' + i, (heard[nm] ? '✓' : '▶'), () => this.hzPlay(i, mode), 'rs-pill2',
-            { minHeight:'34px', fontSize:'13px', padding:'4px 12px' },
+            { minHeight:'28px', fontSize:'12.5px', padding:'2px 11px' },
             isU ? ('도와 ' + nm + ' 함께 듣기') : (nm + ' 들어 보기'))));
     });
 
@@ -2141,13 +2139,15 @@ class Component extends DCLogic {
     if (isU) kids.push(this.pBtn('tg', bars === 'unit' ? '↺ 도를 기준으로 묶어 보기' : '🔍 11Hz짜리 같은 칸으로 재어 보기',
       () => { this.sfx('tap'); const to = bars === 'unit' ? 'pair' : 'unit';
         this.plog('hz_bars', { to }); this.setState({ hzBars: to }); },
-      'rs-pill2', { minHeight:'42px', fontSize:'15px', padding:'8px 18px' }));
+      'rs-pill2', { minHeight:'36px', fontSize:'14px', padding:'6px 16px' }));
     if (left) kids.push(this.pCap('t', isU
       ? ('▶를 눌러 도와 함께 들어 보세요 — ' + left + '개 남았어요.')
       : ('▶를 눌러 진동수를 알아보세요 — ' + left + '개 남았어요.'), C.n700, 15.5));
-    else kids.push(isU ? this.hzRatioEl() : this.hzQuizEl('freq'));
+    else kids.push(this.pCap('t', isU
+      ? '여덟 음을 모두 들었어요. 칸이 적은 비일수록 잘 어울렸지요?'
+      : '여덟 음의 진동수를 모두 알아봤어요.', C.a700, 16));
     return el('div', { key:'hz', className:'rs-fit',
-      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', width:'100%' } }, kids);
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px', width:'100%' } }, kids);
   }
   hzPlay(i, mode) {
     if (this.narrating()) this.stopVoice();   /* 조작하면 안내를 멈춘다 */
@@ -2161,6 +2161,11 @@ class Component extends DCLogic {
     const h = Object.assign({}, this.state[key] || {}); h[n[0]] = 1;
     const patch = {}; patch[key] = h;
     this.setState(patch);
+    if (this.NOTES.every(x => h[x[0]]) && !this.state.solved[this.state.i]) {
+      this.markSolved();
+      this.toastOk('여덟 음을 모두 들었어요! 🎧',
+        '도와 도′는 1 대 2, 도와 솔은 2 대 3이에요. 칸이 적은 비일수록 잘 어울렸지요?');
+    }
   }
   panfluteEl() {
     const R = React, S = this.state, C = this.C;
@@ -2239,7 +2244,7 @@ class Component extends DCLogic {
       kids.push(this.pCap('d', '라 관은 기준이라 이미 있고, 레 관은 36을 27등분해야 해서 딱 떨어지지 않아 미리 만들어 두었어요.', C.n600, 13.5));
     }
     return el('div', { key:'pf',
-      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', width:'100%' } }, kids);
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px', width:'100%' } }, kids);
   }
 
   polyP(st) { const s = st || this.STEPS[this.state.i]; return this.POLY[s.p] || null; }
