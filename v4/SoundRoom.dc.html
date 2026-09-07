@@ -3651,7 +3651,7 @@ class Component extends DCLogic {
       };
     }) : null;
 
-    const needsSolve = ['vib','harmx','rooms','table','hz','poly','panflute','reflect','blank'].indexOf(st.k) >= 0;
+    const needsSolve = (['vib','harmx','rooms','table','hz','poly','panflute','reflect','blank'].indexOf(st.k) >= 0) && !this._guest;
     const gateOk = solved && probeOk;
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
