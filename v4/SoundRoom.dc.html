@@ -3321,36 +3321,10 @@ class Component extends DCLogic {
 
     if (stage === 'link') kids.push(this.polyWhereEl(st.p));
 
-    if (stage === 'done') {
-      const card = [];
-      if (st.p === 'r23') {
-        const sol = S.rates['솔'] || 0;
-        card.push(this.pCap('t', '🔗 같은 비를 또 만났어요', this.C.a700, 18));
-        card.push(R.createElement('div', { key:'m', style:{ fontSize:'19px', lineHeight:1.8, textAlign:'center' } },
-          '🎹 화음 — 도 : 솔 = 264Hz : 396Hz = ',
-          R.createElement('b', { key:'b', style:{ color:this.C.a700 } }, '2 : 3')));
-        card.push(this.pCap('x', '도가 2번 떨리는 동안 솔은 3번 떨려요. 그래서 짧은 주기로 자꾸 다시 만나지요 — 리듬에서 두 소리가 6칸마다 다시 만난 것과 똑같아요.', this.C.n700, 16));
-        /* 앞 방을 마친 학습자에게만 — 물감의 양과 소리의 떨림이 같은 비였음을 나란히 놓는다 */
-        if (this.didColor()) card.push(this.pCap('cx', '🎨 색깔 방에서 만든 빨강 2 : 노랑 3도 같은 비였어요. 물감의 양에서도, 소리의 떨림에서도 2 : 3이에요 — 재료는 달라도 비는 같아요.', this.C.a700, 16));
-        if (sol) card.push(this.pCap('s', '내가 솔에 준 별점: ' + '★'.repeat(sol) + '☆'.repeat(5 - sol), this.C.g700, 15));
-        card.push(R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
-          this.pBtn('c1', '🎹 도와 솔 함께 듣기', () => { this.plog('poly_cross', { task:'r23', kind:'chord' }); this.chord(264, 396, 2); }),
-          this.pBtn('c2', '🥁 리듬으로 다시 듣기', () => this.playPoly('both'))));
-      } else {
-        card.push(this.pCap('t', '🔗 리듬에서 찾은 비를 화음으로 확인해요', this.C.a700, 18));
-        card.push(R.createElement('div', { key:'m', style:{ fontSize:'19px', lineHeight:1.8, textAlign:'center' } },
-          '🎹 도와 한 옥타브 높은 도의 진동수 비 = ',
-          R.createElement('b', { key:'b', style:{ color:this.C.a700 } }, '1 : 2')));
-        card.push(this.pCap('x', '눌러서 화음으로도, 리듬으로도 들어 보세요. 두 소리는 두 칸마다 다시 만나요.', this.C.n700, 16));
-        card.push(R.createElement('div', { key:'b', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
-          this.pBtn('c1', '🎹 도와 높은 도 함께 듣기', () => { this.plog('poly_cross', { task:'r12', kind:'chord' }); this.chord(264, 528, 2); }),
-          this.pBtn('c2', '🥁 리듬으로 다시 듣기', () => this.playPoly('both'))));
-      }
-      kids.push(R.createElement('div', { key:'done',
-        style:{ background:this.C.n100, border:'3px solid ' + this.C.g300, borderRadius:'var(--radius-lg)',
-          padding:'var(--space-3)', display:'flex', flexDirection:'column', gap:'8px',
-          maxWidth:'min(96vw,720px)', animation:'rsPop .35s ease' } }, card));
-    }
+    /* 마무리 카드는 없앴다. 바로 위 연결 문항이 이미 같은 일을 한다 —
+       네 자리를 나란히 놓고 화음을 들려주며 같은 비를 잇게 하므로,
+       그 아래에 같은 말을 한 번 더 적을 까닭이 없다. */
+
     return R.createElement('div', { key:'poly',
       style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'var(--space-2)', width:'100%' } }, kids);
   }
@@ -3746,7 +3720,7 @@ class Component extends DCLogic {
       } else {
         const p = this.polyP(st);
         v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
-          : (S.polyStage === 'done' ? ('같은 ' + p.d + ' : ' + p.t + '이 화음에도, 리듬에도 있었어요!')
+          : (S.polyStage === 'done' ? ('같은 ' + p.d + ' : ' + p.t + '가 화음에도, 리듬에도 있었어요!')
           : (S.polyStage === 'link' ? '이 비를 앞에서 어디서 만났는지 떠올려 봐요!'
           : (S.polyStage === 'find' ? '칸을 세어 보세요 — 각 악기는 몇 칸마다 울리나요?'
           : ((S.heardDrum && S.heardTri && S.heardBoth) ? '잘 들었나요? 느낌을 골라 봐요.'
