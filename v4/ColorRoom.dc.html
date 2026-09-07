@@ -2375,7 +2375,7 @@ class Component extends DCLogic {
       /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 비교하게 한다 */
       v.pctArt = null;
       /* 점 그림을 비교하는 화면(demo:'cmp')은 2 대 3을 다루므로,
-         1 대 2 실험에서 만든 양을 함께 띄우면 무엇을 견주는지 흐려진다 */
+         1 대 2 실험에서 만든 양을 함께 띄우면 무엇을 비교하는지 흐려진다 */
       v.madeList = (st.mark || st.demo === 'cmp' || S.found.length < 2) ? null
         : S.found.map(f => ({ t: f[0] + ' : ' + f[1], color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] })) }));
       let list = st.chips || [];

@@ -844,7 +844,7 @@ class Component extends DCLogic {
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
     st.push({ k:'hz', p:'unit',
       say:'소리는 물체가 떨려서 나요. 1초 동안 몇 번 떨리는지를 진동수라고 하고, 헤르츠라는 단위로 세요. 각 음의 진동수를 도의 진동수와 비교해 보아요. 모든 음을 11로 나눌 수 있어서 11헤르츠로 나누어 나타냈어요. 11헤르츠를 한 칸으로 나타내면 도와 다른 음의 관계를 이렇게 나타낼 수 있어요.',
-      hi:'📊 ▶로 도와 함께 들어 보며 칸과 비를 견주어 보세요' });
+      hi:'📊 ▶로 도와 함께 들어 보며 칸과 비를 비교해 보세요' });
     st.push({ k:'story', emoji:'🥁', 
       lines:['진동수의 비가 간단할수록 두 음이 잘 어울렸어요.',
              '이번에는 리듬 활동을 하면서 그 이유를 알아봐요.'],
@@ -1636,7 +1636,7 @@ class Component extends DCLogic {
     { id:'spd', q:'음이 점점 높아질수록 줄의 떨림 속도는 어떤가요?',
       opts:[ { t:'느려져요', ok:0, fb:'도와 도′를 이어서 눌러 보아요. 높은 도의 줄이 더 천천히 떨리던가요?' },
              { t:'빨라져요', ok:1 },
-             { t:'그대로예요', ok:0, fb:'도와 도′를 이어서 눌러 보며 떨리는 빠르기를 견주어 보아요.' } ] }
+             { t:'그대로예요', ok:0, fb:'도와 도′를 이어서 눌러 보며 떨리는 빠르기를 비교해 보아요.' } ] }
   ];
   vibPick(qid, ix) {
     if (this.narrating()) this.stopVoice();
@@ -2007,7 +2007,7 @@ class Component extends DCLogic {
     freq: { q:'도′의 진동수는 도의 진동수의 몇 배인가요?',
       opts:[ { t:'두 배', ok:1 },
              { t:'네 배', ok:0, fb:'도는 264Hz, 도′는 528Hz예요. 264를 몇 번 더하면 528이 될까요?' },
-             { t:'여덟 배', ok:0, fb:'도는 264Hz, 도′는 528Hz예요. 표에서 두 수를 나란히 놓고 견주어 보아요.' } ] }
+             { t:'여덟 배', ok:0, fb:'도는 264Hz, 도′는 528Hz예요. 표에서 두 수를 나란히 놓고 비교해 보아요.' } ] }
   };
   /* 7단계 — 레부터 도′까지 「도와 ○○는 몇 대 몇인가요?」를 차례로 묻는다.
      보기는 모두 이 방에서 나오는 비여서, 찍어 맞히기보다 칸을 세어 줄이는 편이 빠르다. */
@@ -2398,7 +2398,7 @@ class Component extends DCLogic {
     if (!right) {
       this.sfx('oops');
       this.toast('🤔', '여기는 다른 비예요',
-        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. 비커의 높이를 다시 견주어 볼까요?')
+        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. 비커의 높이를 다시 비교해 볼까요?')
                          : (w.cap + '을 한 번 더 들어 보고, 지금 리듬과 같은 비인지 생각해 볼까요?'));
       return;
     }
@@ -3287,10 +3287,10 @@ class Component extends DCLogic {
     if (stage === 'listen') {
       if (heardAll) {
         kids.push(R.createElement('div', { key:'feel', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', animation:'rsPop .3s ease' } },
-          this.pCap('q', '🤔 함께 들으니 어떻던가요? 정답은 없어요 — 내 귀가 기준!', this.C.txt, 17),
+          this.pCap('q', '북과 트라이앵글을 함께 들을 때 어떤 느낌인가요?', this.C.txt, 17),
           R.createElement('div', { key:'ch', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center' } },
-            this.pBtn('f1', '🙂 딱딱 잘 맞아떨어져요', () => this.polyFeelPick('match'), 'rs-chip'),
-            this.pBtn('f2', '😕 자꾸 어긋나는 것 같아요', () => this.polyFeelPick('off'), 'rs-chip'))));
+            this.pBtn('f1', '🙂 잘 어울려요!', () => this.polyFeelPick('match'), 'rs-chip'),
+            this.pBtn('f2', '😕 어색해요!', () => this.polyFeelPick('off'), 'rs-chip'))));
       } else {
         kids.push(this.pCap('need', '북만, 트라이앵글만, 그리고 함께 — 세 가지를 모두 들어 보세요.', this.C.n700, 16));
       }
