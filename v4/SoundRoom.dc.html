@@ -193,7 +193,7 @@ button{font-family:inherit}
             </div>
             <sc-if value="{{showRate}}" hint-placeholder-val="{{false}}">
               <div style="flex:0 1 330px;min-width:270px;background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);text-align:left;box-shadow:var(--shadow-sm);animation:rsPop .35s ease">
-                <div style="font-size:18px;line-height:1.5">도와 {{hxName}}의 어울림 — 내 귀에는 <span style="color:var(--color-accent-700)">5점 만점에 몇 점</span>?</div>
+                <div style="font-size:18px;line-height:1.5">별을 눌러 <span style="color:var(--color-accent-700)">점수</span>를 주세요</div>
                 <div style="display:flex;gap:4px;margin-top:8px">
                   <sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
                     <button onClick="{{s.tap}}" aria-label="{{s.n}}점" class="rs-star" style="opacity:{{s.op}}">★</button>
@@ -802,7 +802,7 @@ class Component extends DCLogic {
 
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
-    hzHeard:{},
+    hzHeard:{}, hzHeardF:{}, hzAns:{},
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfPhase:'explore', pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
     voiceMap:{}, voicePanel:false, pressKey:-1,
     rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
@@ -844,9 +844,12 @@ class Component extends DCLogic {
       hi:'▶ 분류 시작을 눌러 기준 분류를 한 번 보고, 내가 나눈 방과 비교해 보세요' });
     /* 진동수를 처음으로 수로 다루는 자리 — 여덟 음의 헤르츠와 도에 대한 비를 함께 보인다.
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
-    st.push({ k:'hz',
-      say:'소리는 공기가 떨리면서 물결처럼 퍼져 나가요. 1초 동안 몇 번 떨리는지를 센 것이 진동수이고, 단위는 헤르츠라고 해요. 떨림이 빠를수록 진동수가 크고 소리도 높아요. 여덟 음을 한꺼번에 비교하려면 모두를 잴 수 있는 같은 자가 필요해요. 그래서 여덟 음을 모두 11헤르츠짜리 칸으로 재었어요. 오른쪽에는 그 칸을 같은 수로 묶어 줄인 비도 함께 적었어요.',
-      hi:'📊 11Hz짜리 같은 칸으로 여덟 음을 모두 재었어요 · ▶로 도와 함께 들어 보세요' });
+    st.push({ k:'hz', p:'freq',
+      say:'소리는 물체가 떨려서 나요. 몇 번 떨리는지를 나타낸 것을 진동수라고 해요. 1초 동안 몇 번 떨리는지를 헤르츠라는 단위로 세요. 진동수가 클수록 음이 높아요. 도부터 도′까지 여덟 음의 진동수를 알아봐요.',
+      hi:'▶를 누르면 그 음이 울리고 진동수가 나타나요 · 여덟 음을 모두 눌러 보세요' });
+    st.push({ k:'hz', p:'unit',
+      say:'이번에는 각 음의 진동수를 도의 진동수와 비교해 보아요. 여덟 음의 진동수를 모두 11로 나눌 수 있어서, 11헤르츠짜리 칸으로 재어 나타냈어요.',
+      hi:'📊 11Hz짜리 같은 칸으로 재었어요 · ▶로 도와 함께 들어 보세요' });
     st.push({ k:'story', emoji:'🥁', 
       lines:['진동수의 비가 간단할수록 두 음이 잘 어울렸어요.',
              '이번에는 리듬 활동을 하면서 그 이유를 알아봐요.'],
@@ -1988,13 +1991,52 @@ class Component extends DCLogic {
      짝마다 다른 자를 쓰면 도가 줄마다 다른 칸 수로 보여 단위화가 아니게 된다.
      간단한 비는 「24 : 27 = 8 : 9」처럼 등식으로 함께 적어, 같은 수로 묶으면 줄어든다는 것을 보인다. */
   hzUnit() { return 11; }
-  hzEl() {
+  /* 두 물음. 화면에 답이 적혀 있지 않은 것만 묻는다. */
+  HZQ = {
+    freq: { q:'도′의 진동수는 도의 진동수의 몇 배인가요?',
+      opts:[ { t:'두 배', ok:1 },
+             { t:'네 배', ok:0, fb:'도는 264Hz, 도′는 528Hz예요. 264를 몇 번 더하면 528이 될까요?' },
+             { t:'여덟 배', ok:0, fb:'도는 264Hz, 도′는 528Hz예요. 표에서 두 수를 나란히 놓고 견주어 보아요.' } ] },
+    unit: { q:'칸이 적은 비를 이루는 두 음은 함께 들으면 어떻던가요?',
+      opts:[ { t:'잘 어울려요', ok:1 },
+             { t:'서로 부딪혀요', ok:0, fb:'도와 도′는 24칸 대 48칸이었어요. 앞에서 별점을 줄 때 그 소리가 어땠는지 떠올려 볼까요?' },
+             { t:'다르지 않아요', ok:0, fb:'도와 도′, 그리고 도와 시를 이어서 들어 보아요. 두 소리가 같게 들리던가요?' } ] }
+  };
+  hzPick(mode, ix) {
+    if (this.narrating()) this.stopVoice();
+    const q = this.HZQ[mode], o = q.opts[ix];
+    this.plog('hz_q', { mode, pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.sfx('oops'); this.toast('🤔', '다시 살펴볼까요?', o.fb); return; }
+    const a = Object.assign({}, this.state.hzAns || {}); a[mode] = ix;
+    this.sfx('ok');
+    this.setState({ hzAns: a });
+    if (!this.state.solved[this.state.i]) {
+      this.markSolved();
+      this.toastOk('맞아요! 🎧', mode === 'freq'
+        ? '도가 한 번 떨릴 때 도′는 두 번 떨려요. 이 관계를 다음 화면에서 칸으로 재어 볼 거예요.'
+        : '칸이 적을수록, 곧 비가 간단할수록 두 음이 잘 어울렸어요.');
+    }
+  }
+  hzQuizEl(mode) {
+    const R = React, C = this.C, A = this.state.hzAns || {};
+    const el = (t, at, ...k) => R.createElement(t, at, ...k);
+    const q = this.HZQ[mode];
+    return el('div', { key:'hq', style:{ display:'flex', flexDirection:'column', alignItems:'center',
+      gap:'8px', animation:'rsPop .35s ease' } },
+      this.pCap('q', q.q, A[mode] != null ? C.g700 : C.txt, 17.5),
+      el('div', { key:'o', style:{ display:'flex', gap:'9px', flexWrap:'wrap', justifyContent:'center' } },
+        q.opts.map((o, ix) => this.pBtn('o' + ix, (A[mode] === ix ? '✓ ' : '') + o.t,
+          () => { if (A[mode] == null) this.hzPick(mode, ix); }, 'rs-chip',
+          { fontSize:'16px', opacity: (A[mode] != null && A[mode] !== ix) ? 0.45 : 1 }))));
+  }
+  hzEl(mode) {
     const R = React, C = this.C, S = this.state;
     const el = (t, at, ...k) => R.createElement(t, at, ...k);
     const BASE = this.NOTES[0][1], TOP = this.NOTES[7][1];
     const MAXW = 400, U = this.hzUnit();
     const W = { n:34, f:60, bar:MAXW, r:136, p:48 };
-    const heard = S.hzHeard || {};
+    const isU = (mode !== 'freq');
+    const heard = (isU ? S.hzHeard : S.hzHeardF) || {};
 
     const bar = (key, f, cells, col, bg) => {
       const w = f / TOP * MAXW, gap = 1;
@@ -2010,8 +2052,8 @@ class Component extends DCLogic {
       borderBottom:'2px solid ' + C.n300 } },
       el('span', { key:'a', style:{ width:W.n + 'px', flex:'none' } }, '음'),
       el('span', { key:'b', style:{ width:W.f + 'px', flex:'none', textAlign:'right' } }, '진동수'),
-      el('span', { key:'c', style:{ width:W.bar + 'px', flex:'none' } }, '11Hz짜리 같은 칸으로 재기 (위 초록 = 도)'),
-      el('span', { key:'d', style:{ width:W.r + 'px', flex:'none', textAlign:'center' } }, '두 음의 비'),
+      isU ? el('span', { key:'c', style:{ width:W.bar + 'px', flex:'none' } }, '11Hz짜리 같은 칸으로 재기 (위 초록 = 도)') : null,
+      isU ? el('span', { key:'d', style:{ width:W.r + 'px', flex:'none', textAlign:'center' } }, '두 음의 비') : null,
       el('span', { key:'e', style:{ width:W.p + 'px', flex:'none', textAlign:'center' } }, '듣기'));
 
     const rows = this.NOTES.map((n, i) => {
@@ -2021,40 +2063,44 @@ class Component extends DCLogic {
         padding:'5px 6px', borderRadius:'8px',
         background: i === 0 ? C.a100 : (i % 2 ? 'transparent' : C.n100) } },
         el('div', { key:'n', style:{ width:W.n + 'px', flex:'none', fontSize:'16px', fontWeight:800 } }, nm),
+        /* 진동수를 알아보는 갈래에서는 눌러 본 음만 수가 드러난다 — 하나씩 채워 간다 */
         el('div', { key:'f', style:{ width:W.f + 'px', flex:'none', fontSize:'13.5px', fontWeight:800,
-          color:C.n700, textAlign:'right' } }, f + 'Hz'),
-        el('div', { key:'bars', style:{ width:W.bar + 'px', flex:'none',
+          color: (isU || heard[nm]) ? C.n700 : C.n400, textAlign:'right' } },
+          (isU || heard[nm]) ? (f + 'Hz') : '? Hz'),
+        isU ? el('div', { key:'bars', style:{ width:W.bar + 'px', flex:'none',
           display:'flex', flexDirection:'column', gap:'3px' } },
           bar('d', BASE, ua, C.g500, C.g100),
-          bar('x', f, ub, C.a500, C.a100)),
-        el('div', { key:'rt', style:{ width:W.r + 'px', flex:'none', fontSize:'14.5px', fontWeight:800,
-          color:C.a700, textAlign:'center' } }, ua + ' : ' + ub + ' = ' + ra + ' : ' + rb),
+          bar('x', f, ub, C.a500, C.a100)) : null,
+        isU ? el('div', { key:'rt', style:{ width:W.r + 'px', flex:'none', fontSize:'14.5px', fontWeight:800,
+          color:C.a700, textAlign:'center' } }, ua + ' : ' + ub + ' = ' + ra + ' : ' + rb) : null,
         el('div', { key:'p', style:{ width:W.p + 'px', flex:'none', display:'flex', justifyContent:'center' } },
-          this.pBtn('p' + i, (heard[nm] ? '✓' : '▶'), () => this.hzPlay(i), 'rs-pill2',
-            { minHeight:'34px', fontSize:'13px', padding:'4px 12px' }, '도와 ' + nm + ' 함께 듣기')));
+          this.pBtn('p' + i, (heard[nm] ? '✓' : '▶'), () => this.hzPlay(i, mode), 'rs-pill2',
+            { minHeight:'34px', fontSize:'13px', padding:'4px 12px' },
+            isU ? ('도와 ' + nm + ' 함께 듣기') : (nm + ' 들어 보기'))));
     });
 
     const left = this.NOTES.filter(n => !heard[n[0]]).length;
+    const kids = [ el('div', { key:'tbl', style:{ display:'flex', flexDirection:'column', width:'100%',
+        maxWidth: isU ? 'min(97vw,740px)' : 'min(97vw,460px)' } }, [head].concat(rows)) ];
+    if (left) kids.push(this.pCap('t', isU
+      ? ('▶를 눌러 도와 함께 들어 보세요 — ' + left + '개 남았어요.')
+      : ('▶를 눌러 진동수를 알아보세요 — ' + left + '개 남았어요.'), C.n700, 15.5));
+    else kids.push(this.hzQuizEl(isU ? 'unit' : 'freq'));
     return el('div', { key:'hz', className:'rs-fit',
-      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'6px', width:'100%' } },
-      el('div', { key:'tbl', style:{ display:'flex', flexDirection:'column', width:'100%',
-        maxWidth:'min(97vw,740px)' } }, [head].concat(rows)),
-      this.pCap('t', left
-        ? ('▶를 눌러 도와 함께 들어 보세요 — ' + left + '개 남았어요.')
-        : '여덟 음을 모두 들었어요. 칸이 적은 비일수록 잘 어울렸지요?',
-        left ? C.n700 : C.a700, 15.5));
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', width:'100%' } }, kids);
   }
-  hzPlay(i) {
+  hzPlay(i, mode) {
     if (this.narrating()) this.stopVoice();   /* 조작하면 안내를 멈춘다 */
+    const isU = (mode !== 'freq');
     const n = this.NOTES[i], f = n[1];
-    this.plog('hz_play', { note: n[0], f: f });
-    if (i === 0) this.tone(f, 0, 1.4); else this.chord(this.NOTES[0][1], f, 1.8);
-    const h = Object.assign({}, this.state.hzHeard || {}); h[n[0]] = 1;
-    this.setState({ hzHeard: h });
-    if (this.NOTES.every(x => h[x[0]]) && !this.state.solved[this.state.i]) {
-      this.markSolved();
-      this.toastOk('여덟 음을 모두 들었어요! 🎧', '같은 자로 재니 도는 24칸, 높은 도는 48칸 — 꼭 두 배였지요?');
-    }
+    this.plog('hz_play', { note: n[0], f: f, mode: mode || 'unit' });
+    if (!isU) this.tone(f, 0, 1.4);
+    else if (i === 0) this.tone(f, 0, 1.4);
+    else this.chord(this.NOTES[0][1], f, 1.8);
+    const key = isU ? 'hzHeard' : 'hzHeardF';
+    const h = Object.assign({}, this.state[key] || {}); h[n[0]] = 1;
+    const patch = {}; patch[key] = h;
+    this.setState(patch);
   }
   panfluteEl() {
     const R = React, S = this.state, C = this.C;
@@ -2805,7 +2851,10 @@ class Component extends DCLogic {
     const W = 680, padL = 50, padR = 30, top = 54, bottom = 220;
     const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 8, plotW = W - padL - padR;
     const bandW = plotW * 0.42, bx0 = padL, bx1 = padL + bandW;
-    const CYC = 5200, HOLD = 1500, t = performance.now() - this._ph0, per = CYC + HOLD;
+    /* 별점을 주기 전에는 물결을 멈춰 둔다. 흐르는 그림에서는 어디까지가 한 무늬인지
+       눈이 붙잡을 데가 없다. 점수를 준 뒤에 흐르게 하여 되풀이를 보게 한다(지침 1.3·4.2). */
+    const frozen = (cur > 0 && !rev);
+    const CYC = 5200, HOLD = 1500, t = frozen ? 0 : (performance.now() - this._ph0), per = CYC + HOLD;
     const k = Math.floor(t / per), r = Math.min((t - k * per) / CYC, 1);
     const ph = (k + r) * 2 * Math.PI;
     const P = [];
@@ -3405,7 +3454,7 @@ class Component extends DCLogic {
         const n = this.NOTES[cur], a = n[3], b = n[2];
         const rev = !!S.rates[n[0]];
         if (rev) { v.hxRes = '도 : ' + n[0] + ' = 264Hz : ' + n[1] + 'Hz'; v.hxRatio = a + ' : ' + b; }
-        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울릴 때 얼마나 잘 어울리나요? 무늬를 보고 두 음이 얼마나 자주 만나는지 살펴보세요.'; }
+        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'은','는') + ' 얼마나 잘 어울리나요? (5점 만점)'; }
         v.hxWaveMsg = rev
           ? '(도) 초록 물결 ' + a + '번 + (' + n[0] + ') 주황 물결 ' + b + '번마다 반복되는 무늬가 생겨요!'
           : '두 물결이 만드는 무늬가 얼마나 자주 반복되나요? 잘 보고 별점을 매겨 봐요!';
@@ -3460,7 +3509,7 @@ class Component extends DCLogic {
       }
     }
 
-    if (st.k === 'hz') { v.hzEl = this.hzEl(); }
+    if (st.k === 'hz') { v.hzEl = this.hzEl(st.p || 'unit'); }
 
     if (st.k === 'panflute') {
       v.pfEl = this.panfluteEl();
