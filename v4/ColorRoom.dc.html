@@ -712,6 +712,7 @@ class Component extends DCLogic {
     tmpNum: {},
     cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null,
     cmpSpin: 0,   /* 색팽이를 돌린 횟수 — 값이 바뀌면 회전이 처음부터 다시 돈다 */
+    cmpTried: 0,  /* 답하기 전에 색팽이를 돌려 보았는가 */
   };
 
   /* 단위화 조작 — 양과 컵의 크기는 단계마다 다르다(step.src · step.unit).
@@ -963,11 +964,11 @@ class Component extends DCLogic {
 
   BLANKS = {
     cells: { art:true, rows:[
-        ['빨강은 ', {a:'100'}, ' 분의 ', {a:'40'}, ' 이다.'],
-        ['100이 전체이므로 비율은 전체의 ', {a:'40'}, ' %이다.'],
-        ['분수로 나타내면 ', {a:'40'}, ' / ', {a:'100'}, ' 이다.'],
-        ['이 비율을 소수로 나타내면 ', {a:'0.4'}, ' 이다.'] ],
-      bank:['40','40','40','100','100','0.4','60','0.6','4'] },
+        ['빨강은 전체 100 중의 ', {a:'40'}, ' 칸이다.'],
+        ['전체 100 중의 ', {a:'40'}, ' 이므로 분수로 나타내면 ', {a:'40'}, ' / ', {a:'100'}, ' 이다.'],
+        ['소수로 나타내면 ', {a:'0.4'}, ' 이다.'],
+        ['빨강이 전체에서 차지하는 비율은 ', {a:'0.4'}, ' 이다.'] ],
+      bank:['40','40','40','100','100','0.4','0.4','60','0.6','4'] },
     pct: { rows:[
         ['빨강은 전체의 ', {a:'40'}, ' %'],
         ['노랑은 전체의 ', {a:'60'}, ' %'] ],
@@ -1991,7 +1992,10 @@ class Component extends DCLogic {
      보기를 고르기 전에는 칸만 보이고, 고른 뒤에 두 주황을 섞어 나란히 드러낸다. */
   cmpGridsEl() {
     const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
-    const shown = !!(this.state.picks[this.state.i] || []).length;
+    /* 답을 고르기 전에도 색팽이를 돌려 볼 수 있다 — 눈으로 먼저 확인하고 답하게 한다.
+       다만 「빨강이 몇 %」라는 수치는 답을 고른 뒤에 드러낸다(지침 4.1). */
+    const picked = !!(this.state.picks[this.state.i] || []).length;
+    const shown = picked || !!this.state.cmpTried;
     const cell = (k, c) => R.createElement('div', { key:k,
       style:{ width:'26px', height:'26px', border:'2px solid ' + ink, background:c, boxSizing:'border-box' } });
     const panel = (k, tag, cols, red, yel) => {
@@ -2021,22 +2025,24 @@ class Component extends DCLogic {
               style:{ position:'absolute', inset:0, borderRadius:'999px', border:'4px solid ' + ink,
                 background:this.rgb(this.mix({ '빨강': red*10, '노랑': yel*10 })), opacity:0,
                 animation:'rsBlend .55s ease-out .75s forwards' } })),
-          R.createElement('div', { key:'p', style:{ fontSize:'14px', fontWeight:800, color:'var(--color-accent-700)' } },
-            '빨강이 ' + Math.round(red / tot * 100) + '%')) : null);
+          R.createElement('div', { key:'p', style:{ fontSize:'14px', fontWeight:800,
+            color: picked ? 'var(--color-accent-700)' : 'var(--color-neutral-600)' } },
+            picked ? ('빨강이 ' + Math.round(red / tot * 100) + '%') : '어느 쪽이 더 붉은가요?')) : null);
     };
     const grids = R.createElement('div', { key:'row',
       style:{ display:'flex', gap:'20px', alignItems:'flex-start', justifyContent:'center', flexWrap:'wrap' } },
       panel('a', '㉮', 5, 8, 12),
       panel('b', '㉯', 3, 3, 3));
-    if (!shown) return grids;
     return R.createElement('div', { key:'cmp',
       style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'10px' } },
       grids,
       R.createElement('button', { key:'again',
-        onClick: () => { this.sfx('tap'); this.setState({ cmpSpin: this.state.cmpSpin + 1 }); },
+        onClick: () => { this.sfx('tap');
+          this.plog('cmp_spin', { first: shown ? 0 : 1 });
+          this.setState({ cmpTried: 1, cmpSpin: this.state.cmpSpin + 1 }); },
         style:{ minHeight:'46px', padding:'10px 20px', borderRadius:'999px', border:'3px solid #dcd3c4',
           background:'#f9f4ed', fontFamily:'inherit', fontSize:'15px', color:'#8c491a', cursor:'pointer' } },
-        '🌀 색팽이 다시 돌리기'));
+        shown ? '🌀 색팽이 다시 돌리기' : '🌀 색팽이를 돌려 보기'));
   }
 
   cupRowsEl() {
@@ -2320,7 +2326,9 @@ class Component extends DCLogic {
     if (st.k === 'chips') {
       /* 실험에서 만든 양들을 그대로 보여 주어, 무엇이 그대로였는지 눈으로 비교하게 한다 */
       v.pctArt = null;
-      v.madeList = (st.mark || S.found.length < 2) ? null
+      /* 점 그림을 비교하는 화면(demo:'cmp')은 2 대 3을 다루므로,
+         1 대 2 실험에서 만든 양을 함께 띄우면 무엇을 견주는지 흐려진다 */
+      v.madeList = (st.mark || st.demo === 'cmp' || S.found.length < 2) ? null
         : S.found.map(f => ({ t: f[0] + ' : ' + f[1], color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] })) }));
       let list = st.chips || [];
       if (st.mark === 'hypo') {
