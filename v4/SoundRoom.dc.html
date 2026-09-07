@@ -802,7 +802,7 @@ class Component extends DCLogic {
 
   state = {
     i:0, audio:'full', cards:0, toast:null, solved:{},
-    hzHeard:{}, hzHeardF:{}, hzAns:{}, hzRatio:{}, hzBars:'pair',
+    hzHeard:{}, hzHeardF:{}, hzAns:{}, hzRatio:{}, hzBars:'pair', linkGot:{},
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfPhase:'explore', pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
     voiceMap:{}, voicePanel:false, pressKey:-1,
     rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
@@ -852,13 +852,13 @@ class Component extends DCLogic {
              '이번에는 리듬 활동을 하면서 그 이유를 알아봐요.'],
       btn:'리듬 실험실로! →' });
     st.push({ k:'poly', p:'r12',
-      say:'먼저 북소리를 들어 보세요. 그다음 트라이앵글만. 마지막으로 두 소리를 함께 들어 보고 두 소리가 어떻게 들리는지 선택해 봐요.',
-      hi:'🥁 북 · 🔺 트라이앵글 — 귀가 먼저예요' });
+      say:'먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 두 소리를 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.',
+      hi:'🥁 북만 · 🔺 트라이앵글만 · ▶ 함께 — 세 가지를 모두 들어 보세요' });
     /* 같은 형식으로 2 : 3을 한 번 더 — 이 비는 색깔의 방에서 시냐크와 만든 주황의 비이기도 하다.
        비는 여기서도 앱이 먼저 말하지 않는다. 칸을 세어 학습자가 찾아낸 뒤 연결 문항으로 잇는다. */
     st.push({ k:'poly', p:'r23',
-      say:'이번에는 다른 리듬이에요. 북만, 트라이앵글만 들어 본 다음 함께 들어 보세요. 두 소리가 몇 칸마다 다시 만나는지 세어 보고, 이 비를 앞에서 만난 적이 있는지도 떠올려 보세요.',
-      hi:'🥁 북 · 🔺 트라이앵글 — 이번 비는 무엇일까요?' });
+      say:'이번에는 다른 리듬이에요. 먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.',
+      hi:'🥁 북만 · 🔺 트라이앵글만 · ▶ 함께 — 이번 비는 무엇일까요?' });
     st.push({ k:'poly', p:'why',
       say:'네 가지 리듬을 차례로 들어 보세요. 30칸 안에서 두 소리가 다시 만나는 리듬은 어느 것일까요? 만나는 칸을 세어 비교해 보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요.',
       hi:'네 리듬의 만나는 칸을 비교해요' });
@@ -2336,7 +2336,82 @@ class Component extends DCLogic {
     }
   }
   /* ③ 연결 — 찾아낸 비를 앞 방에서 만난 비와 잇는다 */
-  polyLink(ix) {
+  /* ── 찾은 비를 오늘 만난 자리와 잇기 ──
+     같은 비가 물감의 양에서도, 두 음의 진동수에서도, 리듬의 칸에서도 똑같이 나타난다는 것을
+     한 화면에서 보게 한다. 물감은 비커 그림으로, 음은 함께 듣기로 보이고 들려주므로
+     학습자는 겉모습이 다른 세 소재를 같은 비로 묶게 된다(지침 2.2).
+     맞는 자리가 둘이므로 둘을 다 찾아야 넘어간다. */
+  WHERE = [
+    { id:'munch',  cap:'뭉크의 주황',        kind:'mix',   a:1, b:2, ok:'r12' },
+    { id:'signac', cap:'시냐크의 주황',      kind:'mix',   a:2, b:3, ok:'r23' },
+    { id:'octave', cap:'낮은 도와 높은 도',  kind:'sound', f:528,    ok:'r12' },
+    { id:'fifth',  cap:'도와 솔',            kind:'sound', f:396,    ok:'r23' }
+  ];
+  polyWhere(task, id) {
+    if (this.narrating()) this.stopVoice();
+    const w = this.WHERE.find(x => x.id === id);
+    const got = Object.assign({}, this.state.linkGot || {});
+    const key = task + '|' + id;
+    if (got[key]) return;
+    const right = (w.ok === task);
+    this.plog('poly_link', { task, pick: id, ok: right ? 1 : 0, cross: (w.kind === 'mix') ? 1 : 0 });
+    if (!right) {
+      this.sfx('oops');
+      this.toast('🤔', '여기는 다른 비예요',
+        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. 비커의 높이를 다시 견주어 볼까요?')
+                         : (w.cap + '을 한 번 더 들어 보고, 지금 리듬과 같은 비인지 생각해 볼까요?'));
+      return;
+    }
+    got[key] = 1;
+    this.sfx('ok');
+    this.setState({ linkGot: got });
+    const need = this.WHERE.filter(x => x.ok === task);
+    if (need.every(x => got[task + '|' + x.id])) {
+      this.markSolved();
+      this.setState({ polyStage: 'done' });
+      const r = this.POLY[task];
+      this.toastOk('두 자리를 모두 찾았어요! 🔗',
+        '물감의 양에서도, 두 음의 떨림에서도 같은 ' + r.d + ' 대 ' + r.t + '이 나타났어요. 소재는 달라도 비는 같아요.');
+    }
+  }
+  polyWhereEl(task) {
+    const R = React, C = this.C, S = this.state;
+    const el = (t, at, ...k) => R.createElement(t, at, ...k);
+    const got = S.linkGot || {};
+    const RED = 'rgb(230,40,55)', YEL = 'rgb(250,215,45)';
+    const beaker = (h, col) => el('div', { key:'b' + col, style:{ position:'relative', width:'30px', height:'74px',
+      border:'3px solid ' + C.n800, borderTopWidth:'1.5px', borderRadius:'0 0 9px 9px', overflow:'hidden',
+      background:C.n100 } },
+      el('div', { key:'f', style:{ position:'absolute', left:0, right:0, bottom:0,
+        height: h + '%', background: col } }));
+    const card = (w) => {
+      const done = !!got[task + '|' + w.id];
+      const body = (w.kind === 'mix')
+        ? el('div', { key:'m', style:{ display:'flex', gap:'8px', alignItems:'flex-end' } },
+            beaker(Math.round(w.a / (w.a + w.b) * 100 * 1.35), RED),
+            beaker(Math.round(w.b / (w.a + w.b) * 100 * 1.35), YEL))
+        : el('div', { key:'s', style:{ display:'flex', alignItems:'center', height:'74px' } },
+            this.pBtn('p', '▶ 함께 듣기', (e) => { if (e && e.stopPropagation) e.stopPropagation();
+              this.chord(this.NOTES[0][1], w.f, 1.8); this.plog('link_listen', { id: w.id }); },
+              'rs-pill2', { minHeight:'40px', fontSize:'14px', padding:'6px 14px' }));
+      return el('button', { key:w.id, onClick: () => this.polyWhere(task, w.id),
+        style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'7px',
+          padding:'11px 14px', borderRadius:'18px', cursor:'pointer', fontFamily:'inherit',
+          border:'3.5px solid ' + (done ? C.g500 : C.n300),
+          background: done ? C.g100 : C.n100, minWidth:'132px' } },
+        body,
+        el('div', { key:'c', style:{ fontSize:'14.5px', fontWeight:800,
+          color: done ? C.g700 : C.n700 } }, (done ? '✓ ' : '') + w.cap));
+    };
+    const n = this.WHERE.filter(w => w.ok === task && got[task + '|' + w.id]).length;
+    const rr = this.POLY[task];
+    return el('div', { key:'where', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'9px' } },
+      this.pCap('q', rr.d + ' : ' + rr.t + '의 비를 오늘 어디서 보았나요? 맞는 것을 모두 클릭해 보세요. ('
+        + n + ' / 2)', C.txt, 17),
+      el('div', { key:'row', style:{ display:'flex', gap:'11px', flexWrap:'wrap', justifyContent:'center',
+        maxWidth:'780px' } }, this.WHERE.map(card)));
+  }
+  polyLinkOld(ix) {
     const st = this.STEPS[this.state.i], q = this.LINKQ[st.p], o = q.opts[ix];
     /* cross=1 — 앞 방(색깔)의 비와 이은 응답. 방을 넘나든 연결이 일어났는지 따로 남긴다. */
     this.plog('poly_link', { task: st.p, pick: ix, ok: o.ok ? 1 : 0, cross: o.cross ? 1 : 0 });
@@ -3204,13 +3279,7 @@ class Component extends DCLogic {
         R.createElement('b', { key:'r', style:{ color:this.C.a700, fontSize:'24px' } }, p.d + ' : ' + p.t)));
     }
 
-    if (stage === 'link') {
-      const q = this.LINKQ[st.p];
-      kids.push(R.createElement('div', { key:'link', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px' } },
-        this.pCap('q', q.q, this.C.txt, 17),
-        R.createElement('div', { key:'o', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center', maxWidth:'760px' } },
-          q.opts.map((o, ix) => this.pBtn('o'+ix, o.t, () => this.polyLink(ix), 'rs-chip', { fontSize:'16px' })))));
-    }
+    if (stage === 'link') kids.push(this.polyWhereEl(st.p));
 
     if (stage === 'done') {
       const card = [];
