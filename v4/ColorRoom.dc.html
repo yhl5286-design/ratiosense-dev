@@ -498,8 +498,7 @@ button{font-family:inherit}
               </div>
             </div>
           </sc-if>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">물감의 <b>양이 달라도 색이 같았던 까닭</b>을 자기 말로 적어 보세요. 정답은 없어요!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="양이 달라도 (  )이 같으면 같은 색이 나와요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
         </div>
       </sc-if>
 
@@ -915,16 +914,16 @@ class Component extends DCLogic {
       /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
          화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3). */
       { k:'reflect', who:'ratio',
-        say:'여러분은 뭉크·먼셀과 함께 빨강과 노랑을 1 대 2로 섞어 주황을 만들었고, 시냐크와 함께는 2 대 3으로 섞어 주황을 만들었어요. 두 번 모두 물감의 양은 여러 가지였는데 색은 늘 같았지요. 무엇이 그대로였기에 색이 같았을까요? 자기 말로 적어 보세요.',
-        hi:'정답은 없어요 · 한 줄이라도 적으면 제출할 수 있어요' },
+        say:'두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 무엇을 알아야 할까요? 여러분의 생각을 적어 보세요.',
+        hi:'' },
       /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
          앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
       { k:'blank', id:'secret', who:'ratio',
-        say:'여러분이 적은 내용을 잘 보았어요. 물감과 컵, 점과 칸으로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 첫째 장은 비에 대한 정리예요. 낱말 카드를 놓아 빈칸을 채우면 비밀 카드 숫자를 한 자리 받아요.',
-        hi:'🃏 정리 카드 ① — 완성하면 비밀 카드 숫자 한 자리' },
+        say:'여러분이 적은 내용을 잘 보았어요. 물감과 컵, 점과 칸으로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 첫째 장은 비에 대한 정리예요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
+        hi:'📝 정리 카드 ① — 비' },
       { k:'blank', id:'secret2', who:'ratio',
-        say:'둘째 장은 비율에 대한 정리예요. 비는 두 양을 비교한 것이었고, 비율은 전체를 기준으로 삼아 그 가운데 얼마인지를 나타낸 것이었지요. 이 장까지 채우면 남은 한 자리를 받아요.',
-        hi:'🃏 정리 카드 ② — 완성하면 남은 한 자리' },
+        say:'둘째 장은 비율에 대한 정리예요. 비는 두 양을 비교한 것이었고, 비율은 전체를 기준으로 삼아 그 가운데 얼마인지를 나타낸 것이었지요.',
+        hi:'📝 정리 카드 ② — 비율' },
       { k:'finish', who:'ratio',
         say:'색깔의 비밀을 잘 찾아냈어요! 정리 카드 두 장으로 카드 숫자 1과 6을 차례로 얻었지요. 잘 기억해두세요!',
         hi:'탐색 완료! 카드 숫자 1 · 6 획득' }
@@ -2159,13 +2158,11 @@ class Component extends DCLogic {
           this.plog('blank', { id });
           this.markSolved();
           if (id === 'secret' || id === 'secret2') {
-            /* 정리 카드 한 장을 채울 때마다 비밀 카드 숫자를 한 자리씩 준다 */
-            const ix = (id === 'secret') ? 0 : 1;
-            this.awardDigit(ix);
+            /* 카드 보상은 마무리 화면에서 한꺼번에 준다 — 여기서는 정리 활동만 한다 */
             this.confetti();
-            this.toast('🃏', '비밀 카드 숫자 ' + this.DIGITS[ix].d + ' 획득!',
-              ix === 0 ? '비에 대한 정리를 마쳤어요. 이 숫자를 기억해 두고, 둘째 장으로 가요!'
-                       : '비율에 대한 정리까지 마쳤어요. 두 숫자를 차례로 기억해 두세요!', 'ok');
+            this.toast('✅', '정리 완성!',
+              id === 'secret' ? '비에 대한 정리를 마쳤어요. 둘째 장으로 가요!'
+                              : '비율에 대한 정리까지 마쳤어요. 이제 다음 방으로 이어가요!', 'ok');
             this.autoNext(3200);
           } else {
             this.confetti();
