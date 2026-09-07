@@ -866,7 +866,7 @@ class Component extends DCLogic {
        진동수의 비로 관의 길이가 정해진다. 관 길이 x 진동수가 늘 일정하다는 것을
        일곱 관을 차례로 만들며 손으로 확인한다. */
     st.push({ k:'panflute', who:'ratio',
-      say:'이번에는 갈대 관을 잘라 팬플룻을 만들어 봐요. 먼저 슬라이더를 움직여 보세요. 길이를 바꾸면 곧바로 소리가 나요. 그 다음에는 라 관을 등분해서 다른 음의 관을 만들 거예요.',
+      say:'이번에는 갈대 관을 잘라 팬플룻을 만들어 봐요. 먼저 갈대 막대 위의 가위를 끌어 길이를 바꿔 보세요. 길이를 바꾸면 곧바로 소리가 나요. 그 다음에는 라 관을 등분해서 다른 음의 관을 만들 거예요.',
       hi:'🎋 갈대 관을 잘라 도레미파솔라시도를 만들어요' });
     /* 「내 말로 정리」는 앞서 귀로 듣고 손으로 해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
     st.push({ k:'reflect', who:'ratio',
@@ -2230,16 +2230,34 @@ class Component extends DCLogic {
             color: k === t.num ? C.a700 : C.n500, whiteSpace:'nowrap' } }, k + '칸'));
       }
     }
-    kids.push(el('div', { key:'reed', style:{ position:'relative', width: W + 'px', height:'62px',
-      maxWidth:'94vw', marginTop:'8px' } },
+    /* 커터를 직접 끌어 자를 자리를 정한다. 갈대 막대 어디를 눌러도 그 자리로 옮겨 간다.
+       손이 움직이는 동안 길이와 소리와 칸 수가 함께 바뀐다(지침 1.1·1.3). */
+    const dragTo = (ev) => {
+      const box = ev.currentTarget.getBoundingClientRect();
+      const x = Math.max(0, Math.min(box.width, ev.clientX - box.left));
+      this.pfSlide(this.PF_MINCM + x / box.width * span);
+    };
+    const fit = t && Math.abs(S.pfCut - this.pfLen(this.noteByName(t.n)[1])) <= 0.6;
+    kids.push(el('div', { key:'reed',
+      onPointerDown: (ev) => { this._pfDrag = true;
+        try { ev.currentTarget.setPointerCapture(ev.pointerId); } catch (e) {}
+        dragTo(ev); },
+      onPointerMove: (ev) => { if (this._pfDrag) dragTo(ev); },
+      onPointerUp: () => { this._pfDrag = false; },
+      onPointerCancel: () => { this._pfDrag = false; },
+      style:{ position:'relative', width: W + 'px', height:'78px',
+        maxWidth:'94vw', marginTop:'8px', touchAction:'none', cursor:'ew-resize' } },
       el('div', { key:'rod', style:{ position:'absolute', left:'0', bottom:'0', width: W + 'px',
         height:'13px', borderRadius:'4px', background:C.n200, border:'2px solid ' + C.n400 } }),
       el('div', { key:'fill', style:{ position:'absolute', left:'0', bottom:'0',
         width: cw(S.pfCut) + 'px', height:'13px', borderRadius:'4px 0 0 4px',
         background:'linear-gradient(90deg,#C8952A,#EFC053)' } }),
       marks,
-      el('div', { key:'cut', style:{ position:'absolute', left: cw(S.pfCut) + 'px', bottom:'-4px',
-        width:'3px', height:'34px', background:C.a700 } })));
+      el('div', { key:'cut', style:{ position:'absolute', left: cw(S.pfCut) + 'px', bottom:'-6px',
+        width:'3px', height:'38px', background: fit ? C.g600 : C.a700 } }),
+      el('div', { key:'grip', style:{ position:'absolute', left: cw(S.pfCut) + 'px', bottom:'46px',
+        transform:'translateX(-50%)', fontSize:'20px', lineHeight:1, userSelect:'none',
+        filter: fit ? 'none' : 'grayscale(.25)' } }, '✂️')));
 
     /* 국면에 따른 안내와 문제 */
     /* 라 관과 지금 관의 길이를 막대로 나란히 놓는다. 두 막대의 길이 비가 곧 두 관의 비이고,
@@ -2261,7 +2279,13 @@ class Component extends DCLogic {
       rbar('a', base, C.g500, C.g100, '라 관'),
       rbar('b', cur, C.a500, C.a100, '지금 관'),
       this.pCap('r', '라 관 : 지금 관 = ' + this.numS(base) + ' : ' + this.numS(cur)
-        + (simple ? ('  =  ' + ra + ' : ' + rb) : ''), C.a700, 15)));
+        + (simple ? ('  =  ' + ra + ' : ' + rb) : ''), C.a700, 15),
+      /* 등분 눈금을 쓰는 동안에는 지금 자리가 몇 칸째인지도 함께 보인다 */
+      t ? this.pCap('k', (function (u) {
+            const k = cur / u;
+            return '한 칸 = ' + this.numS(u) + 'cm  ·  지금 자리 '
+              + (Math.abs(k - Math.round(k)) < 0.02 ? (Math.round(k) + '칸') : '눈금 사이');
+          }).call(this, this.PF_BASE / t.den), C.n600, 14) : null));
 
     if (S.pfPhase === 'explore') {
       kids.push(this.pCap('x', '슬라이더를 움직여 관의 길이를 바꿔 보세요. 길이가 달라지면 소리가 어떻게 되나요? ('
@@ -3661,7 +3685,11 @@ class Component extends DCLogic {
       v.pfHear = () => this.pfHear();
       v.pfCutNow = () => this.pfCutNow();
       v.pfPlayAll = () => this.pfPlayAll();
-      v.pfCanCut = S.pfPhase === 'make' && !!S.pfSel;
+      /* 눈금이 목표 자리에 닿았을 때에만 자를 수 있다. 아무 데서나 잘라 놓고
+         맞았는지 보는 대신, 맞춘 다음에 자르게 한다(지침 1.4). */
+      const _t = this.pfTask();
+      v.pfCanCut = S.pfPhase === 'make' && !!S.pfSel && !!_t
+        && Math.abs(S.pfCut - this.pfLen(this.noteByName(_t.n)[1])) <= 0.6;
       v.pfCanAll = this.PF_MAKE.some(x => S.pfMade[x.n]);
       v.pfRead = '지금 관의 길이 ' + this.numS(S.pfCut) + 'cm  ·  이 관에서 나는 소리 '
                + Math.round(this.pfFreqAt(S.pfCut)) + 'Hz';
