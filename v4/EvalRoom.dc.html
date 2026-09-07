@@ -1065,7 +1065,7 @@ class Component extends DCLogic {
     }
 
     const last = S.i === this.STEPS.length - 1;
-    const needsSolve = (st.k === 'door') && !this._guest;
+    const needsSolve = (st.k === 'door');
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
       : (last ? '처음으로' : (st.k === 'finale' ? '비의 비밀은? →' : '다음 →'));
     v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';

@@ -1436,9 +1436,9 @@ class Component extends DCLogic {
       });
     }
 
-    /* 게스트(자유 탐색): needsSolve 게이트 무시 — 과제 미해결이어도 '다음' 활성. 실제 학습자는 순차 잠금 유지 */
+    /* 활동 게이트는 게스트에게도 적용한다 — 검토자가 학습자와 같은 흐름을 겪어야 한다. 방을 오가는 순서 잠금만 게스트에게 풀어 둔다 */
     const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect','bridge'].indexOf(st.k) >= 0) || !!st.quiz;
-    const gate = needsSolve && !solved && !this._guest;
+    const gate = needsSolve && !solved;
     v.showPrimary = st.k !== 'finish';
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
       : (st.k === 'movie' ? '그 소식이 궁금해요! →'
