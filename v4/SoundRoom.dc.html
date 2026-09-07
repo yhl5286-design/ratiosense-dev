@@ -722,7 +722,7 @@ class Component extends DCLogic {
     p2:'이제 장음정 방을 비가 간단한 방과 복잡한 방으로 다시 나눠요.',
     done:'기준 분류가 완성됐어요! 여러분이 별점으로 나눈 방과 비교해 보세요. 어떤 점이 같고 다른가요?'
   };
-  SND_DUR = 1.6;
+  SND_DUR = 1.15;   /* 건반 하나를 눌렀을 때 울리는 길이(초) — 여덟 음을 차례로 눌러 보기에 알맞게 */
   DECAY = Math.pow(0.02, 1/(60*1.6));
 
   /* ── 리듬(폴리리듬) = 화음의 슬로모션 ──
@@ -2971,7 +2971,7 @@ class Component extends DCLogic {
     }
     const html = '<line x1="16" y1="' + midY + '" x2="' + (W-16) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>'
       + '<path d="' + dd + '" style="fill:none;stroke:' + this.C.g600 + ';stroke-width:3;stroke-linecap:round"/>'
-      + '<text x="' + (W/2) + '" y="116" text-anchor="middle" style="font-size:13px;font-weight:700;fill:' + this.C.n600 + '">' + n[0] + '의 떨림 모양</text>';
+      + '<text x="' + (W/2) + '" y="116" text-anchor="middle" style="font-size:13px;font-weight:700;fill:' + this.C.n600 + '">' + '떨림 모양</text>';
     return this.svgEl('0 0 560 120', { width:'min(560px,86vw)', display:'block' }, html, 'vibwave' + i);
   }
   /* 도+누른 음 두 물결 — drawHX 이식 (한 묶음 띠 + 5.2초 위상 순환 + 1.5초 유지) */
@@ -3560,9 +3560,9 @@ class Component extends DCLogic {
       if (S.vibCur < 0) v.vibHz = '건반을 눌러 보세요';
       else {
         const n = this.NOTES[S.vibCur];
-        /* 레부터 도′까지는 「도보다 짧고 빠르게」 같은 서술을 붙이지 않는다.
-           그 관계는 여덟 건반을 다 눌러 본 뒤 학습자가 물음에 답하며 스스로 말한다. */
-        v.vibHz = (S.vibCur === 0 ? '도 — 줄이 가장 길고, 가장 느리게 떨려요' : n[0]);
+        /* 누른 음의 이름도 설명도 띄우지 않는다. 줄의 길이와 떨림만 눈으로 보고,
+           그 관계는 여덟 건반을 다 눌러 본 뒤 물음에 답하며 학습자가 스스로 말한다. */
+        v.vibHz = '';
         v.vibWaveEl = this.vibWaveSvg(S.vibCur);
       }
       if (solved) { v.liveBadge = '🎹 줄의 길이와 떨림을 알아냈어요!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
