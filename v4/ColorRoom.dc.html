@@ -496,8 +496,8 @@ button{font-family:inherit}
               </div>
             </div>
           </sc-if>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 해 본 것</b>을 하나 예로 들어서, <b>색깔의 비밀(비와 비율)</b>을 한 줄 적어 보세요!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="활동을 하고 나니 (  )을 알게 되었어요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <div class="rs-dial" style="font-size:19px;text-align:left;max-width:min(620px,92vw);line-height:1.6">① 물감의 <b>양이 달라도 색이 같았던 까닭</b>을 한 줄로 적어 보세요.<br>② <b>빨강을 30mL</b> 넣는다면 노랑은 몇 mL를 넣어야 <b>뭉크의 주황</b>(1 대 2)이 될까요? 그렇게 생각한 까닭도 함께 적어요.</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="① 양이 달라도 (  )이 같으면 같은 색이 나와요.&#10;② 빨강이 30mL이면 노랑은 (  )mL예요. 왜냐하면…" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
         </div>
       </sc-if>
 
@@ -904,8 +904,8 @@ class Component extends DCLogic {
       /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
          화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3). */
       { k:'reflect', who:'ratio',
-        say:'내가 만든 양 가운데 하나를 골라, 그 양이 왜 목표색이 되었는지 설명해 보세요.',
-        hi:'아래에 내가 만든 양이 남아 있어요 · 그중 하나를 예로 들어 적어요' },
+        say:'여러분은 뭉크·먼셀과 함께 빨강과 노랑을 1 대 2로 섞어 주황을 만들었고, 시냐크와 함께는 2 대 3으로 섞어 주황을 만들었어요. 두 번 모두 물감의 양은 여러 가지였는데 색은 늘 같았지요. 무엇이 그대로였기에 색이 같았을까요? 아래 두 물음에 자기 말로 답해 보세요.',
+        hi:'① 무엇이 그대로였는지 ② 빨강이 30mL이면 노랑은 몇 mL인지와 그 까닭' },
       /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
          앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
       { k:'blank', id:'secret', who:'ratio',
@@ -2289,7 +2289,7 @@ class Component extends DCLogic {
       isReflect: st.k === 'reflect', refText: S.refText,
       /* 정리 단계에 학습자 자신의 조작 기록을 다시 띄운다 — 「비밀」을 허공에서 떠올리지 않고
          자기가 만든 양을 근거로 말하게 하는 발판이다(지침 5.3). */
-      refRecall: st.k === 'reflect' ? (() => {
+      refRecall: (st.k === 'reflect' && st.recall) ? (() => {
         const list = S.found.map(f => ({
           t: '빨강 ' + f[0] + ' : 노랑 ' + f[1],
           cap: '실험으로 만든 양',
