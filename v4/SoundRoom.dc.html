@@ -110,7 +110,6 @@ button{font-family:inherit}
     <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
     <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
-    <button onClick="{{openVoices}}" aria-label="목소리 고르기" title="캐릭터 목소리 고르기" class="rs-round">🎙️</button>
   </header>
 
   <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
@@ -634,34 +633,6 @@ button{font-family:inherit}
     </div>
   </sc-if>
 
-  <sc-if value="{{voicePanel}}" hint-placeholder-val="{{false}}">
-    <div onClick="{{closeVoices}}" style="position:fixed;inset:0;z-index:80;background:color-mix(in srgb,var(--color-neutral-900) 50%,transparent);display:flex;align-items:center;justify-content:center;padding:16px">
-      <div onClick="{{stopProp}}" style="width:min(96vw,620px);max-height:88dvh;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-4);display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow-lg);min-height:0">
-        <div style="display:flex;align-items:center;gap:10px;flex:none">
-          <div style="font-size:20px;color:var(--color-accent-700)">🎙️ 캐릭터 목소리</div>
-          <button onClick="{{closeVoices}}" aria-label="닫기" class="rs-round" style="margin-left:auto;width:44px;height:44px;font-size:17px">✕</button>
-        </div>
-        <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px">
-          <sc-for list="{{voiceRows}}" as="r" hint-placeholder-count="2">
-            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--color-accent-100);border:2px solid var(--color-accent-200);border-radius:var(--radius-md);padding:10px 12px">
-              <div style="min-width:118px">
-                <div style="font-size:16px;color:var(--color-text)">{{r.name}}</div>
-                <div style="font-size:12px;color:var(--color-neutral-700)">{{r.tone}}</div>
-              </div>
-              <select onChange="{{r.change}}" aria-label="{{r.name}} 목소리" style="flex:1 1 200px;min-width:0;min-height:46px;font-family:inherit;font-size:15px;border:3px solid var(--color-neutral-300);border-radius:999px;padding:8px 12px;background:var(--color-neutral-100);color:var(--color-text)">
-                <sc-for list="{{r.opts}}" as="o" hint-placeholder-count="2">
-                  <option value="{{o.v}}" selected="{{o.sel}}">{{o.t}}</option>
-                </sc-for>
-              </select>
-              <button onClick="{{r.test}}" class="rs-pill2" style="min-height:46px;font-size:15px">▶ 들어보기</button>
-            </div>
-          </sc-for>
-        </div>
-        <button onClick="{{closeVoices}}" class="rs-pill" style="flex:none;min-height:52px;font-size:18px">다 골랐어요</button>
-      </div>
-    </div>
-  </sc-if>
-
   <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
     <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
       <div style="background:var(--color-neutral-100);border:4px solid {{toastBd}};border-radius:var(--radius-lg);padding:17px 21px;box-shadow:var(--shadow-lg);display:flex;gap:13px;align-items:flex-start">
@@ -810,7 +781,7 @@ class Component extends DCLogic {
     i:0, audio:'full', cards:0, toast:null, solved:{},
     hzHeard:{}, hzHeardF:{}, hzAns:{}, hzRatio:{}, hzBars:'pair', linkGot:{},
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
-    voiceMap:{}, voicePanel:false, pressKey:-1,
+    voiceMap:{}, pressKey:-1,
     rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
     vibHit:[], vibCur:-1, vibAns:{},
     hxCur:-1,
@@ -3520,25 +3491,6 @@ class Component extends DCLogic {
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
       stopProp: (e) => e.stopPropagation(),
-      /* 이 패널은 화면을 통째로 덮는다. 실수로 열고 닫는 법을 못 찾으면 그 시간이
-         이유 없는 idle로만 남아 「생각한 정지」로 잘못 읽힌다. 여닫이를 남겨 그 구간을 가려낸다. */
-      openVoices: () => { this.plog('overlay', { o:'voice', v:1 }); this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
-      closeVoices: () => { if (this.state.voicePanel) this.plog('overlay', { o:'voice', v:0 }); this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
-      voicePanel: S.voicePanel,
-      voiceRows: S.voicePanel ? (() => {
-        const pool = this.voicePool();
-        const list = pool ? pool.all : [];
-        return ['ratio'].map(k => {
-          const w = this.WHO[k];
-          const cur = S.voiceMap[k] || ((pool && pool.assign[k]) ? pool.assign[k].name : '');
-          return {
-            key: k, name: w.name, tone: w.tone, cur,
-            opts: list.map(vv => ({ v: vv.name, t: vv.name.replace(/\s*-\s*Korean.*$/i, '').replace(/\(Korean\)/i, '').trim(), sel: vv.name === cur })),
-            change: (e) => this.setVoice(k, e.target.value),
-            test: () => this.speak(k === 'narrator' ? '문제를 읽어 줄게요.' : '레시오예요. 반가워요!', k)
-          };
-        });
-      })() : null,
       coachImgEl: who.img ? this.coachPortrait(who) : null,
       /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
       coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name,

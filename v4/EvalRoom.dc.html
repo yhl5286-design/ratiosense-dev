@@ -253,14 +253,14 @@ button{font-family:inherit}
               </figcaption>
             </figure>
 
-            <!-- 팬플룻 — 하프 공방을 대신해 새로 넣은 활동 -->
+            <!-- 하프 공방 — 라 줄 72cm를 등분해 다른 줄의 길이를 구한 활동 -->
             <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
-              <div style="padding:14px 10px 10px;background:linear-gradient(180deg,#FFF8E6,#FFEDB0);display:flex;align-items:flex-end;justify-content:center;gap:5px;min-height:104px" aria-label="진동수가 클수록 관이 짧아지는 팬플룻">
-                <span style="display:inline-block;width:17px;height:86px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:77px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:69px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:65px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:57px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:52px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span><span style="display:inline-block;width:17px;height:46px;border-radius:4px 4px 0 0;border:2px solid #8B6914;background:linear-gradient(90deg,#C8952A,#EFC053,#C8952A)"></span>
+              <div style="padding:14px 10px 10px;background:linear-gradient(180deg,#3A3128,#201E1D);display:flex;align-items:flex-start;justify-content:center;gap:11px;min-height:104px" aria-label="줄이 짧을수록 소리가 높은 하프">
+                <span style="display:inline-block;width:3px;height:86px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:78px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:71px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:64px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:58px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:52px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:47px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span>
               </div>
               <figcaption style="padding:6px 8px 8px;text-align:center">
-                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🎵 팬플룻</div>
-                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">관 길이의 비 3 : 5</div>
+                <div style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">🎻 하프</div>
+                <div style="font-size:14px;font-weight:800;color:var(--color-accent-700)">줄 길이의 비 2 : 3</div>
               </figcaption>
             </figure>
 
@@ -321,7 +321,9 @@ button{font-family:inherit}
             <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
           </sc-if>
         </div>
-        <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+                <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </sc-if>
         </div>
       </div>
     </section>
@@ -1078,24 +1080,17 @@ class Component extends DCLogic {
 
     const last = S.i === this.STEPS.length - 1;
     const needsSolve = (st.k === 'door') && !this._guest;
+    /* 마지막 화면에는 누를 것을 두지 않는다. 40분 안에 세 방을 마쳐야 하는데
+       처음으로 돌아가는 길이 열려 있으면 자료가 흐트러진다. */
+    v.showPrimary = !last;
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
-      : (last ? '처음으로' : (st.k === 'finale' ? '비의 비밀은? →' : '다음 →'));
+      : (st.k === 'finale' ? '비의 비밀은? →' : '다음 →');
     v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
     v.footHint = (needsSolve && !solved)
       ? (st.k === 'door' ? '카드의 숫자로 문을 열면 다음으로 갈 수 있어요'
         : '문제를 해결하면 다음으로 갈 수 있어요')
       : '';
     v.primary = () => {
-      if (last) {
-        this.stopVoice();
-        this._tries = {};
-        /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
-           직전 nav로 단계를 역추적하면 여기서 사슬이 끊긴다. */
-        this.plog('restart', { from: this.state.i });
-        this.setState({ i:0, solved:{}, doorVal:'', doorOpen:false, toast:null });
-        setTimeout(() => this.sayStep(0), 380);
-        return;
-      }
       if (needsSolve && !solved) { this.sfx('oops'); this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return; }
       this.sfx('tap'); this.go(1);
     };

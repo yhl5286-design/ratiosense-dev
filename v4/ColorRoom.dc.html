@@ -90,7 +90,6 @@ button{font-family:inherit}
     <div style="flex:none;font-size:13px;font-weight:800;color:#645c50;white-space:nowrap">{{stepLabel}}</div>
     <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">{{audioIcon}}</button>
-    <button onClick="{{openVoices}}" aria-label="목소리 고르기" title="캐릭터 목소리 고르기" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">🎙️</button>
   </header>
 
   <sc-if value="{{hypoBanner}}" hint-placeholder-val="{{false}}">
@@ -625,36 +624,6 @@ button{font-family:inherit}
     </section>
   </main>
 
-  <sc-if value="{{voicePanel}}" hint-placeholder-val="{{false}}">
-    <div onClick="{{closeVoices}}" style="position:fixed;inset:0;z-index:80;background:rgba(32,30,29,.5);display:flex;align-items:center;justify-content:center;padding:16px">
-      <div onClick="{{stopProp}}" style="width:min(96vw,620px);max-height:88dvh;background:#f9f4ed;border:4px solid #f6a06b;border-radius:26px;padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(32,30,29,.34);min-height:0">
-        <div style="display:flex;align-items:center;gap:10px;flex:none">
-          <div style="font-size:20px;color:#8c491a">🎙️ 캐릭터 목소리</div>
-          <button onClick="{{closeVoices}}" aria-label="닫기" style="margin-left:auto;width:44px;height:44px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:17px;cursor:pointer">✕</button>
-        </div>
-        <sc-if value="{{noMaleVoice}}" hint-placeholder-val="{{false}}">
-          <div style="flex:none;font-size:14px;color:#8c491a;background:#ffe1d0;border:2.5px solid #f6a06b;border-radius:16px;padding:11px 13px;line-height:1.6">이 기기에는 한국어 <b>남성</b> 목소리가 없어요(설치된 {{voiceCount}}개 모두 여성). 남자 목소리는 미리 만든 음성 파일이 있어야 나옵니다 — <b>tts</b> 폴더의 안내를 봐 주세요.</div>
-        </sc-if>
-        <div style="flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px">
-        <sc-for list="{{voiceRows}}" as="r" hint-placeholder-count="4">
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff2eb;border:2px solid #ffe1d0;border-radius:18px;padding:10px 12px">
-            <div style="min-width:118px">
-              <div style="font-size:16px;color:#201e1d">{{r.name}}</div>
-              <div style="font-size:12px;color:#645c50">{{r.tone}}</div>
-            </div>
-            <select onChange="{{r.change}}" aria-label="{{r.name}} 목소리" style="flex:1 1 200px;min-width:0;min-height:46px;font-family:inherit;font-size:15px;border:3px solid #dcd3c4;border-radius:999px;padding:8px 12px;background:#f9f4ed;color:#201e1d">
-              <sc-for list="{{r.opts}}" as="o" hint-placeholder-count="2">
-                <option value="{{o.v}}" selected="{{o.sel}}">{{o.t}}</option>
-              </sc-for>
-            </select>
-            <button onClick="{{r.test}}" style="min-height:46px;padding:10px 16px;border-radius:999px;border:3px solid #f6a06b;background:#f9f4ed;font-size:15px;color:#8c491a;cursor:pointer">▶ 들어보기</button>
-          </div>
-        </sc-for>
-        </div>
-        <button onClick="{{closeVoices}}" style="flex:none;min-height:52px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:18px;cursor:pointer">다 골랐어요</button>
-      </div>
-    </div>
-  </sc-if>
 
   <sc-if value="{{hypoOpts}}" hint-placeholder-val="{{false}}">
     <div style="position:fixed;inset:0;z-index:70;background:rgba(32,30,29,.44);display:flex;align-items:center;justify-content:center;padding:16px">
@@ -718,7 +687,6 @@ class Component extends DCLogic {
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
     labLog: [], wallDone: 0, failed: [], hypoPick: false,
-    voiceMap: {}, voicePanel: false,
     tmpNum: {},
     cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null,
     cmpSpin: 0,   /* 색팽이를 돌린 횟수 — 값이 바뀌면 회전이 처음부터 다시 돈다 */
@@ -2267,30 +2235,6 @@ class Component extends DCLogic {
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
       stopProp: (e) => e.stopPropagation(),
-      /* 이 패널은 화면을 통째로 덮는다(inset:0, z-index:80). 실수로 열고 닫는 법을 못 찾으면
-         학습자는 그동안 아무것도 못 한다. 그 시간이 로그에는 이유 없는 idle로만 남아
-         「화면을 보며 생각한 정지」로 잘못 읽힌다. 열고 닫은 때를 남겨 그 구간을 가려낸다. */
-      openVoices: () => { this.plog('overlay', { o:'voice', v:1 }); this.sfx('tap'); this._pool = undefined; this.voicePool(); this.setState({ voicePanel: true }); },
-      closeVoices: () => { if (this.state.voicePanel) this.plog('overlay', { o:'voice', v:0 }); this.stopVoice(); this.sfx('tap'); this.setState({ voicePanel: false }); },
-      voicePanel: S.voicePanel,
-      voiceRows: S.voicePanel ? (() => {
-        const pool = this.voicePool();
-        const list = pool ? pool.all : [];
-        return ['munch','munsell','signac'].map(k => {
-          const w = this.WHO[k];
-          const cur = S.voiceMap[k] || ((pool && pool.assign[k]) ? pool.assign[k].name : '');
-          return {
-            key: k, name: w.name, tone: w.tone,
-            img: w.img || '', emoji: w.emoji || '',
-            cur,
-            opts: list.map(v => ({ v: v.name, t: v.name.replace(/\s*-\s*Korean.*$/i, '').replace(/\(Korean\)/i, '').trim(), sel: v.name === cur })),
-            change: (e) => this.setVoice(k, e.target.value),
-            test: () => this.speak(k === 'narrator' ? '문제를 읽어 줄게요.' : (w.name + '이야. 반가워!'), k)
-          };
-        });
-      })() : null,
-      voiceCount: (() => { const p = this.voicePool(); return p ? p.all.length : 0; })(),
-      noMaleVoice: (() => { const p = this.voicePool(); return !!(p && p.male.length === 0); })(),
       mp3Count: (() => { try { return Object.keys(window.RS_TTS || {}).length; } catch(e) { return 0; } })(),
       coachImgEl: who.img ? this.coachPortrait(who) : null,
       /* 그림 높이는 화면 높이에 맞춰 줄인다 — 노트북에서 자막이 길어도 그림과 버튼이 잘리지 않게 */
@@ -2811,7 +2755,6 @@ class Component extends DCLogic {
       /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
          직전 nav로 단계를 역추적하면 여기서 사슬이 끊겨 뒤의 이벤트가 모두 마지막 단계로 잘못 붙는다.
          restart를 남겨 그 자리를 표시한다. 다시 시작한 것 자체도 사용성 자료다. */
-      if (st.k === 'finish') { this.plog('restart', { from: S.i }); this.stopVoice(); this.setState({ i:0, solved:{}, picks:{}, blanks:{}, used:{}, found:[], failed:[], hypo:null, obs:null, refText:'', probe:{} }); return; }
       if (needsSolve && !gateOk) {
         this.sfx('oops');
         if (solved && !probeOk) { this.toast('🤔', '조금만 더!', '아래 물음에 답하고 넘어가요.'); return; }
