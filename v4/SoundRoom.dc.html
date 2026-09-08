@@ -487,11 +487,19 @@ button{font-family:inherit}
 
           <sc-if value="{{harpTuned}}" hint-placeholder-val="{{false}}">
             <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsPop .35s ease">
+              <!-- 왜 그런지를 먼저 짚고, 그다음에 얼마인지를 셈한다. 예전에는 「왜 라보다
+                   길어질까?」를 덮는 창으로 따로 열게 했는데, 열어 보지 않으면 까닭을 모른 채
+                   식만 읽고 넘어가게 된다(지침 6.4). -->
               <div style="background:var(--color-accent-2-100);border:3px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);max-width:760px;width:min(96%,760px);font-size:19px;line-height:1.9;text-align:center">
+                <div style="font-size:18px;font-weight:700;line-height:1.7">{{helpWhy}}</div>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:12px 0 4px">
+                  <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">떨리는 빠르기 (진동수)</div><div style="font-size:24px;font-family:inherit">라 : {{harpN}} = {{harpA}} : {{harpB}}</div></div>
+                  <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">줄의 길이</div><div style="font-size:24px;color:var(--color-accent-700)">라 : {{harpN}} = {{harpB}} : {{harpA}}</div></div>
+                </div>
+                <div style="height:2px;background:var(--color-accent-2-300);margin:14px 0 10px"></div>
                 <div>🎯 귀로 찾은 <b>{{harpN}}</b> 줄은 <b style="color:var(--color-accent-2-700)">{{harpCells}}</b>이에요!</div>
                 <div>{{harpDivTxt}} = <b style="color:var(--color-accent-2-700)">{{harpUnit}}cm</b></div>
                 <div>그 한 칸이 <b>{{harpA}}칸</b>이니까 → {{harpUnit}} × {{harpA}} = <b style="color:var(--color-accent-2-700)">{{harpTot}}cm</b></div>
-                <button onClick="{{openHelp}}" class="rs-pill2" style="min-height:40px;font-size:14px;padding:6px 14px;margin-top:6px">{{harpWhyBtn}}</button>
               </div>
               <div class="rs-fit">{{harpEl}}</div>
             </div>
@@ -631,9 +639,7 @@ button{font-family:inherit}
           <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">떨리는 빠르기 (진동수)</div><div style="font-size:24px;font-family:inherit">라 : {{harpN}} = {{harpA}} : {{harpB}}</div></div>
           <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">줄의 길이</div><div style="font-size:24px;color:var(--color-accent-700)">라 : {{harpN}} = {{harpB}} : {{harpA}}</div></div>
         </div>
-        <div style="font-size:16px;color:var(--color-neutral-700);font-weight:700">↑ 두 비는 숫자가 <b style="color:var(--color-accent-700)">뒤집혀</b> 있어요 (거꾸로 관계)</div>
         <div style="background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-3);font-size:17px;font-weight:700;line-height:1.7">{{helpWhy}}</div>
-        <div style="font-size:20px;font-family:inherit">{{harpFormula}} = <b style="color:var(--color-accent-700)">?</b> cm</div>
         <button onClick="{{closeHelp}}" class="rs-pill" style="align-self:center">닫기</button>
       </div>
     </div>
@@ -3827,7 +3833,6 @@ class Component extends DCLogic {
       v.tBaseTxt = '🔊 기준 라 줄(' + this.HBASE + 'cm) 듣기';
       v.tGoalTxt = '🎯 찾을 ' + p.n + ' 음 미리 듣기';
       v.harpDivTxt = this.HBASE + 'cm를 ' + p.b + '등분하면 → 한 칸 = ' + this.HBASE + ' ÷ ' + p.b;
-      v.harpFormula = p.n + ' 줄의 길이 = ' + this.HBASE + ' × ' + p.a + '/' + p.b + ' ';
       v.harpCells = '라 줄 ' + p.b + '칸에 견주어 ' + p.a + '칸';
       v.harpWhyBtn = '❓ 왜 라보다 ' + (this.hLen(st.i) < this.HBASE ? '짧아질까' : '길어질까') + '?';
       v.harpUnit = unitS; v.harpTot = this.exS(st.i);
@@ -3854,9 +3859,12 @@ class Component extends DCLogic {
       const hMax = Math.max(this.HBASE, this.hLen(st.i));
       v.helpBasePct = Math.round(this.HBASE / hMax * 1000) / 10;
       v.helpPct = Math.round(this.hLen(st.i) / hMax * 1000) / 10;
-      v.helpWhy = (this.hLen(st.i) < this.HBASE)
-        ? (p.n + ' 줄은 라보다 높은 소리예요. 높은 소리는 빨리 떨리니까 줄은 더 짧아야 해요. 그래서 답도 ' + this.HBASE + '보다 작은 값이 나와요!')
-        : (p.n + ' 줄은 라보다 낮은 소리예요. 낮은 소리는 천천히 떨리니까 줄은 더 길어야 해요. 그래서 답도 ' + this.HBASE + '보다 큰 값이 나와요!');
+      /* 설명은 한 문장으로 둔다. 위의 두 카드가 이미 4 : 3과 3 : 4를 나란히 보여 주므로,
+         말은 그 둘이 뒤집힌 까닭만 짚으면 된다(지침 6.4 — 화면이 보여 준 것을 말로
+         되풀이하지 않는다). 예전에는 높낮이·떨림·길이를 세 마디로 풀어 길었다. */
+      const jd = (n) => ('136780'.indexOf(String(n).slice(-1)) >= 0);   /* 끝자리 소리에 받침이 있나 */
+      v.helpWhy = '줄의 길이와 떨리는 속도는 반대예요. 진동수가 ' + p.a + ' : ' + p.b
+        + '이면 줄은 반대로 ' + p.b + ' : ' + p.a + (jd(p.a) ? '이' : '가') + ' 됩니다.';
       v.harpEl = this.harpGraphic(S.hDone);
       if (ph === 1) {
         v.rulerEl = this.harpRulerSvg(st.i, S.harpL, S.harpTuned);
