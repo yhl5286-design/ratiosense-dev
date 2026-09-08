@@ -2752,9 +2752,8 @@ class Component extends DCLogic {
           ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '');
     v.primary = () => {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
-      /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
-         직전 nav로 단계를 역추적하면 여기서 사슬이 끊겨 뒤의 이벤트가 모두 마지막 단계로 잘못 붙는다.
-         restart를 남겨 그 자리를 표시한다. 다시 시작한 것 자체도 사용성 자료다. */
+      /* 마지막 화면에는 처음부터 다시 하는 길을 두지 않는다(네 방 공통).
+         40분 안에 세 방을 마쳐야 하므로 되돌아가는 길을 만들지 않는다. */
       if (needsSolve && !gateOk) {
         this.sfx('oops');
         if (solved && !probeOk) { this.toast('🤔', '조금만 더!', '아래 물음에 답하고 넘어가요.'); return; }

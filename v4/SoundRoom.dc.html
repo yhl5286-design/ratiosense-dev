@@ -3901,20 +3901,9 @@ class Component extends DCLogic {
     if (v.footHintOverride && !solved) v.footHint = v.footHintOverride;
     v.primary = () => {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.refGo(); return; }
-      if (st.k === 'finish') {
-        this.stopVoice();
-        /* 처음부터 다시 하기 — go()를 거치지 않으므로 nav가 남지 않는다.
-           직전 nav로 단계를 역추적하면 여기서 사슬이 끊겨 뒤의 이벤트가 모두 마지막 단계로 잘못 붙는다. */
-        this.plog('restart', { from: this.state.i });
-        this.setState({ i:0, solved:{}, rates:{}, blanks:{}, used:{}, hb:{}, hbUsed:{},
-          refText:'', bridgePick:null, probe:{},
-          polyStage:'listen', heardDrum:false, heardTri:false, heardBoth:false, polyFeel:'',
-          pickD:0, pickT:0, polyFound:false, linkPick:-1, whyPlayed:{}, whyPick:-1, myD:0, myT:0, myMeet:null,
-          grpDone:{}, grpUndone:false, grpMode:0,
-          vibHit:[], vibCur:-1, vibAns:{}, hDone:0, roomStage:'collect', toast:null });
-        setTimeout(() => this.sayStep(0), 380);
-        return;
-      }
+      /* 마지막 화면에는 처음부터 다시 하는 길을 두지 않는다(네 방 공통).
+         showPrimary가 finish에서 거짓이라 이 단추 자체가 뜨지 않으며,
+         40분 안에 세 방을 마쳐야 하므로 되돌아가는 길을 만들지 않는다. */
       if (needsSolve && !gateOk) {
         this.sfx('oops');
         this.toast('🤔', '조금만 더!', (solved && !probeOk) ? '아래 물음에 답하고 넘어가요.' : '지금 문제를 해결하고 넘어가요.');
