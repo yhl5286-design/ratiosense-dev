@@ -448,11 +448,10 @@ button{font-family:inherit}
 
           <sc-if value="{{harpEar}}" hint-placeholder-val="{{false}}">
             <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);max-width:760px;width:min(96%,760px);text-align:center">
-              <div style="display:flex;gap:8px;margin:0 0 8px;flex-wrap:wrap;justify-content:center">
-                <button onClick="{{tBase}}" class="rs-pill2">{{tBaseTxt}}</button>
-                <button onClick="{{tGoal}}" class="{{tGoalCls}}">{{tGoalTxt}}</button>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center;margin-top:30px">
+              <!-- 미리 듣기 단추 둘을 걷어내고, 도부터 라까지의 음이 놓이는 자리를
+                   슬라이더 아래 눈금으로 보인다. 찾을 음(미)만 비워 두어, 그 자리를
+                   양옆 음 사이에서 스스로 가늠하게 한다(지침 4.2). -->
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center;margin-top:30px;margin-bottom:34px">
                 <span class="rs-peg" style="height:44px"></span>
                 <!-- 손잡이가 그 음의 자리에 닿으면 슬라이더 위에 바로 표시한다 -->
                 <div style="position:relative;flex:1;min-width:0;max-width:min(420px,58vw);display:flex;align-items:center">
@@ -461,6 +460,12 @@ button{font-family:inherit}
                   <div style="position:absolute;left:11px;right:11px;top:0;bottom:0;pointer-events:none">
                     <div style="position:absolute;left:{{harpPct}}%;top:-14px;bottom:-14px;width:4px;margin-left:-2px;border-radius:2px;background:{{harpLineBg}};box-shadow:{{harpLineSh}};transition:background .12s;z-index:2"></div>
                     <div style="position:absolute;left:{{harpPct}}%;top:-34px;transform:translateX(-50%);display:{{harpLineTag}};font-size:13px;font-weight:800;color:var(--color-neutral-100);background:var(--color-accent-2-700);border-radius:999px;padding:3px 13px;white-space:nowrap;box-shadow:var(--shadow-md);animation:rsPop .25s ease;z-index:3">🎯 {{harpN}} 자리</div>
+                    <sc-for list="{{harpNotes}}" as="nt" hint-placeholder-count="5">
+                      <div style="position:absolute;left:{{nt.pct}}%;top:calc(100% + 3px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:2px">
+                        <div style="width:2px;height:9px;border-radius:1px;background:{{nt.col}}"></div>
+                        <div style="font-size:12.5px;font-weight:800;white-space:nowrap;color:{{nt.col}}">{{nt.t}}</div>
+                      </div>
+                    </sc-for>
                   </div>
                 </div>
                 <span class="rs-peg" style="height:44px"></span>
@@ -468,9 +473,6 @@ button{font-family:inherit}
               <div style="display:flex;justify-content:center;margin-top:6px">
                 <div style="font-size:19px;font-weight:800;text-align:center;color:{{harpLFg}};background:{{harpLBg}};border:2.5px solid {{harpLBd}};border-radius:var(--radius-md);padding:3px 16px;transition:background .15s,color .15s">{{harpLTxt}}</div>
               </div>
-              <sc-if value="{{harpNeedGoal}}" hint-placeholder-val="{{false}}">
-                <div style="font-size:16px;font-weight:800;color:var(--color-accent-700);background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:6px 14px;margin-top:7px;display:inline-block">{{harpNeedGoal}}</div>
-              </sc-if>
               <sc-if value="{{harpHit}}" hint-placeholder-val="{{false}}">
                 <div style="font-size:16px;font-weight:800;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:6px 14px;margin-top:7px;display:inline-block;animation:rsPop .3s ease">{{harpHitTxt}}</div>
               </sc-if>
@@ -817,7 +819,7 @@ class Component extends DCLogic {
     grpDone:{}, grpUndone:false, grpMode:0,
     slL:60, swB:40,
     clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
-    harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 찾을 음과 같은 소리가 나는 자리를 찾아보세요!',
+    harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 아래 음 표시를 보고 찾을 음의 자리를 가늠해 보세요!',
     hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
     refText:'', bridgePick:null, probe:{},
     blanks:{}, used:{}
@@ -1526,7 +1528,7 @@ class Component extends DCLogic {
       hxCur:-1,
       clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
       grpWaveN:null, polyBeat:0, polyPlaying:false,
-      harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 찾을 음과 같은 소리가 나는 자리를 찾아보세요!',
+      harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 아래 음 표시를 보고 찾을 음의 자리를 가늠해 보세요!',
       hb:{}, hbUsed:{}, selBlank:null, helpOpen:false };
     if (st.k === 'rooms') patch.roomStage = this.NM().some(x => !this.state.rates[x]) ? 'miss' : 'collect';
     if (st.k === 'poly') {
@@ -2685,6 +2687,9 @@ class Component extends DCLogic {
      2부: 한 칸 길이(60÷b) → 반복(×a) → 곱셈식(60×a/b) 3단 과제. */
   /* 찾을 음을 먼저 귀에 담게 한다. 목표 소리를 모른 채 슬라이더를 움직이면
      「어느 자리가 맞는가」를 귀로 가릴 수 없어 눈금만 보고 맞히게 된다(지침 1.2). */
+  /* ⚠ 닿지 않는다 — 「찾을 음 미리 듣기」 단추를 걷어내면서 부르는 곳이 없어졌다.
+     harp_goal 로그도 따라서 남지 않으므로 이벤트 대장에서 옮겨야 한다.
+     되살릴 때를 위해 남겨 둔다. */
   harpGoal() {
     if (this.narrating()) this.stopVoice();   /* 조작하면 안내를 멈춘다 */
     const p = this.HP[this.STEPS[this.state.i].i];
@@ -2791,7 +2796,7 @@ class Component extends DCLogic {
      않는다 — 무엇을 찾는지 모른 채 우연히 맞는 것을 막는다. */
   harpPluck() {
     const st = this.STEPS[this.state.i];
-    if (!this.state.harpGoalHeard || this.state.harpTuned) return;
+    if (this.state.harpTuned) return;
     const p = this.HP[st.i], ex = this.hLen(st.i), L = this.state.harpL;
     const unit = this.hUnit(st.i), unitS = this.hUnitS(st.i), exS = this.exS(st.i);
     const off = L - ex;
@@ -3832,8 +3837,6 @@ class Component extends DCLogic {
       /* 글 사이에 {{ }}를 끼우면 앞뒤로 빈칸이 붙어 「라 줄( 60 cm)」처럼 벌어진다.
          한 덩어리 문장은 여기서 만들어 통째로 넘긴다. */
       v.harpBaseCm = this.HBASE + 'cm';
-      v.tBaseTxt = '🔊 기준 라 줄(' + this.HBASE + 'cm) 듣기';
-      v.tGoalTxt = '🎯 찾을 ' + p.n + ' 음 미리 듣기';
       v.harpDivTxt = this.HBASE + 'cm를 ' + p.b + '등분하면 → 한 칸 = ' + this.HBASE + ' ÷ ' + p.b;
       /* 찾은 결과만 말하지 않고 「그래서 어떻게 셈하는가」까지 한 문장에 담는다 —
          아래 두 줄의 나눗셈·곱셈이 어디서 나온 것인지 이 문장이 이어 준다(지침 5.3). */
@@ -3853,11 +3856,14 @@ class Component extends DCLogic {
       v.harpSlide = (e) => this.harpSlide(+e.target.value);
       /* 손을 뗄 때 판정한다 — 뜯기 단추가 없어졌다 */
       v.harpSlideEnd = () => { this.harpEndLog(); this.harpDroneOff(); this.harpPluck(); };
-      v.tBase = () => { this.harpDroneOff(); this.pluckT(440); };
-      v.tGoal = () => this.harpGoal();
-      v.tGoalCls = S.harpGoalHeard ? 'rs-pill2' : 'rs-pill';
-      v.harpNeedGoal = (!S.harpGoalHeard && !S.harpTuned)
-        ? ('먼저 🎯 찾을 ' + p.n + ' 음 미리 듣기를 눌러 어떤 소리를 찾는지 들어 보세요') : '';
+      /* 도부터 라까지 여섯 음 가운데 찾을 음만 빼고 자리를 보인다.
+         줄 길이는 진동수에 반비례하므로 L = 기준길이 × 440 ÷ 진동수 다. */
+      v.harpNotes = this.NOTES.slice(0, 6).filter(n => n[0] !== p.n).map(n => {
+        const NL2 = this.HBASE * 440 / n[1];
+        const base = n[0] === '라';
+        return { t: base ? '라 ★' : n[0], col: base ? this.C.g700 : this.C.n600,
+                 pct: Math.round((NL2 - this.HMIN) / (this.HMAX - this.HMIN) * 1000) / 10 };
+      }).filter(x => x.pct >= 0 && x.pct <= 100);
       v.tuneMsg = S.tuneMsg;
       v.openHelp = () => { this.setState({ helpOpen: true }); this.plog('harphelp', { n: p.n }); };
       /* 두 막대를 같은 자로 잰다 — 내 줄이 라보다 길 수 있으므로 긴 쪽을 100으로 둔다 */
