@@ -451,7 +451,6 @@ button{font-family:inherit}
               <div style="display:flex;gap:8px;margin:0 0 8px;flex-wrap:wrap;justify-content:center">
                 <button onClick="{{tBase}}" class="rs-pill2">{{tBaseTxt}}</button>
                 <button onClick="{{tGoal}}" class="{{tGoalCls}}">{{tGoalTxt}}</button>
-                <button onClick="{{tBoth}}" class="rs-pill2">🎵 라와 함께 듣기</button>
               </div>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center;margin-top:30px">
                 <span class="rs-peg" style="height:44px"></span>
@@ -815,7 +814,7 @@ class Component extends DCLogic {
     grpDone:{}, grpUndone:false, grpMode:0,
     slL:60, swB:40,
     clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
-    harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 기준 라와 함께 들어 어울리는 자리를 찾아보세요!',
+    harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 찾을 음과 같은 소리가 나는 자리를 찾아보세요!',
     hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
     refText:'', bridgePick:null, probe:{},
     blanks:{}, used:{}
@@ -1524,7 +1523,7 @@ class Component extends DCLogic {
       hxCur:-1,
       clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
       grpWaveN:null, polyBeat:0, polyPlaying:false,
-      harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 기준 라와 함께 들어 어울리는 자리를 찾아보세요!',
+      harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 찾을 음과 같은 소리가 나는 자리를 찾아보세요!',
       hb:{}, hbUsed:{}, selBlank:null, helpOpen:false };
     if (st.k === 'rooms') patch.roomStage = this.NM().some(x => !this.state.rates[x]) ? 'miss' : 'collect';
     if (st.k === 'poly') {
@@ -3848,7 +3847,6 @@ class Component extends DCLogic {
       /* 손을 뗄 때 판정한다 — 뜯기 단추가 없어졌다 */
       v.harpSlideEnd = () => { this.harpEndLog(); this.harpDroneOff(); this.harpPluck(); };
       v.tBase = () => { this.harpDroneOff(); this.pluckT(440); };
-      v.tBoth = () => { this.harpDroneOff(); this.chord(440, Math.round(440 * this.HBASE / S.harpL), 2); };
       v.tGoal = () => this.harpGoal();
       v.tGoalCls = S.harpGoalHeard ? 'rs-pill2' : 'rs-pill';
       v.harpNeedGoal = (!S.harpGoalHeard && !S.harpTuned)
