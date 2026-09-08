@@ -2746,6 +2746,9 @@ class Component extends DCLogic {
     this.setState({ harpL: L });
     this.harpDrone(Math.round(440 * this.HBASE / L));
     const st = this.STEPS[this.state.i];
+    /* 딱 맞는 자리를 지나는 순간 그 자리에서 멈춰 준다. 손을 뗄 때까지 기다리면
+       맞는 자리에 닿고도 모르고 지나친다. */
+    if (Math.abs(L - this.hLen(st.i)) < 1e-6) setTimeout(() => this.harpPluck(), 0);
     const now = Date.now();
     const p = this.HP[st.i];
 
@@ -2791,34 +2794,35 @@ class Component extends DCLogic {
     if (!this.state.harpGoalHeard || this.state.harpTuned) return;
     const p = this.HP[st.i], ex = this.hLen(st.i), L = this.state.harpL;
     const unit = this.hUnit(st.i), unitS = this.hUnitS(st.i), exS = this.exS(st.i);
-    if (Math.abs(L - ex) > this.HTOL) { this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
-      '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 찾을 음을 다시 듣고 견주어 볼까요?',
-      (L - ex) > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
-                   : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
-      '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
-    ]) }); return; }
+    const off = L - ex;
+    if (Math.abs(off) >= 1e-6) {
+      /* 아직 그 자리가 아니다. 가까우면 「거의 다 왔어요」로만 알리고 힌트는 아끼며,
+         멀면 단계적 힌트를 한 걸음 내보낸다(지침 6.5). 정답 수치는 어느 쪽에도 적지 않는다. */
+      if (Math.abs(off) <= this.HTOL) {
+        this.setState({ tuneMsg: '🔎 거의 다 왔어요! ' + (off > 0 ? '조금만 더 짧게' : '조금만 더 길게') + ' 움직여 보세요.' });
+        return;
+      }
+      this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
+        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 찾을 음을 다시 듣고 견주어 볼까요?',
+        off > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
+                : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
+        '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
+      ]) });
+      return;
+    }
     this.harpDroneOff();
     this.plog('harp_tune', { n: p.n, L });
-    const diff = L - ex;
-    if (Math.abs(diff) <= this.HTOL) {
-      /* 판정 통과 → 칸 수 확정. 감각(귀) 뒤에 단위화가 따라온다. */
+    /* 딱 맞았다 → 칸 수 확정. 감각(귀) 뒤에 단위화가 따라온다. */
+    {
       this.plog('harp_cells', { n: p.n, b: p.b, a: p.a, unit, len: ex, L });
       this.setState({ harpL: ex, harpTuned: true, hDone: st.i + 1,
-        tuneMsg: '🎯 귀로 찾았어요! 한 칸 ' + unitS + 'cm짜리로 ' + p.a + '칸 — ' + exS + 'cm예요.' });
+        tuneMsg: '🎯 맞아요! 한 칸 ' + unitS + 'cm짜리로 ' + p.a + '칸 — ' + exS + 'cm예요.' });
       this.markSolved();
       this.hintReset('harpear' + st.i);
       this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm',
         this.HBASE + 'cm를 ' + p.b + '등분하면 한 칸이 ' + unitS + 'cm — 그 ' + p.a + '칸이 ' + exS + 'cm예요!');
       this.speak('귀로 찾았어요! ' + this.HBASE + '센티미터를 ' + p.b + '등분하면 한 칸이 ' + unitS +
                  '센티미터, 그 ' + p.a + '칸이 ' + exS + '센티미터예요.', 'ratio');
-    } else {
-      /* 단계적 힌트(지침 6.5): 사실 안내 → 방향 → 전략. 정답 수치는 노출하지 않는다. */
-      this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
-        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 목표 소리와 내 줄 소리를 번갈아 들어 볼까요?',
-        diff > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
-                 : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
-        '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
-      ]) });
     }
   }
 
@@ -3883,7 +3887,8 @@ class Component extends DCLogic {
         v.harpLineBg = on ? 'var(--color-accent-2-700)' : 'transparent';
         v.harpLineSh = on ? '0 0 0 2px var(--color-neutral-100), 0 2px 8px rgba(0,0,0,.25)' : 'none';
         v.harpLineTag = on ? 'block' : 'none';
-        v.harpHitTxt = v.harpHit ? '🎯 바로 이 자리예요! 손을 떼면 ' + this.exS(st.i) + 'cm로 맞춰 줄게요' : '';
+        /* 정답 길이를 미리 적어 주면 귀로 찾을 까닭이 없어진다 — 가까이 왔다는 것만 알린다 */
+        v.harpHitTxt = v.harpHit ? '🔎 거의 다 왔어요! 소리를 견주며 조금씩 움직여 보세요' : '';
         v.harpLBg = v.harpHit ? this.C.g100 : 'transparent';
         v.harpLFg = v.harpHit ? this.C.g700 : 'var(--color-text)';
         v.harpLBd = v.harpHit ? this.C.g300 : 'transparent';
