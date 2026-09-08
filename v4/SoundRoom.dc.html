@@ -173,6 +173,9 @@ button{font-family:inherit}
       <sc-if value="{{isVib}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;flex:none">
           <div class="rs-dial" style="font-size:22px;text-align:center">{{vibHz}}</div>
+          <sc-if value="{{vibMsg}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:15px;font-weight:800;color:var(--color-accent-700);background:var(--color-accent-100);border:2px solid var(--color-accent-300);border-radius:var(--radius-md);padding:4px 14px;animation:rsPop .2s ease">🔎 {{vibMsg}}</div>
+          </sc-if>
           <sc-if value="{{vibWaveEl}}" hint-placeholder-val="{{false}}">
             <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:6px 10px">{{vibWaveEl}}</div>
           </sc-if>
@@ -447,8 +450,8 @@ button{font-family:inherit}
             <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-lg);padding:var(--space-3);max-width:760px;width:min(96%,760px);text-align:center">
               <div style="display:flex;gap:8px;margin:0 0 8px;flex-wrap:wrap;justify-content:center">
                 <button onClick="{{tBase}}" class="rs-pill2">🔊 기준 라 줄(72cm) 듣기</button>
-                <button onClick="{{tPluck}}" class="rs-pill2">♪ 내 줄 뜯어 확인하기</button>
-                <button onClick="{{tBoth}}" class="rs-pill">🎵 라와 함께 듣기</button>
+                <button onClick="{{tGoal}}" class="{{tGoalCls}}">🎯 찾을 {{harpN}} 음 미리 듣기</button>
+                <button onClick="{{tBoth}}" class="rs-pill2">🎵 라와 함께 듣기</button>
               </div>
               <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center">
                 <span class="rs-peg" style="height:44px"></span>
@@ -466,6 +469,9 @@ button{font-family:inherit}
               <div style="display:flex;justify-content:center;margin-top:6px">
                 <div style="font-size:19px;font-weight:800;text-align:center;color:{{harpLFg}};background:{{harpLBg}};border:2.5px solid {{harpLBd}};border-radius:var(--radius-md);padding:3px 16px;transition:background .15s,color .15s">{{harpLTxt}}</div>
               </div>
+              <sc-if value="{{harpNeedGoal}}" hint-placeholder-val="{{false}}">
+                <div style="font-size:16px;font-weight:800;color:var(--color-accent-700);background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:6px 14px;margin-top:7px;display:inline-block">{{harpNeedGoal}}</div>
+              </sc-if>
               <sc-if value="{{harpHit}}" hint-placeholder-val="{{false}}">
                 <div style="font-size:16px;font-weight:800;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:6px 14px;margin-top:7px;display:inline-block;animation:rsPop .3s ease">{{harpHitTxt}}</div>
               </sc-if>
@@ -788,7 +794,7 @@ class Component extends DCLogic {
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
     voiceMap:{}, pressKey:-1,
     rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
-    vibHit:[], vibCur:-1, vibAns:{},
+    vibHit:[], vibCur:-1, vibAns:{}, vibMsg:'',
     hxCur:-1,
     roomStage:'collect', grpWaveN:null,
     polyStage:'listen', polyBeat:0, polyPlaying:false, polyTag:'',
@@ -798,7 +804,7 @@ class Component extends DCLogic {
     grpDone:{}, grpUndone:false, grpMode:0,
     slL:72, swB:48,
     clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
-    harpL:72, harpTuned:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 기준 라와 함께 들어 어울리는 자리를 찾아보세요!',
+    harpL:72, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 기준 라와 함께 들어 어울리는 자리를 찾아보세요!',
     hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
     refText:'', bridgePick:null, probe:{},
     blanks:{}, used:{}
@@ -826,7 +832,7 @@ class Component extends DCLogic {
     /* 진동수를 처음으로 수로 다루는 자리 — 여덟 음의 헤르츠와 도에 대한 비를 함께 보인다.
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
     st.push({ k:'hz', p:'unit',
-      say:'1초 동안 몇 번 떨리는지를 진동수라고 하고, 헤르츠라는 단위로 세요. 각 음의 진동수를 도를 기준으로 나타내어 봤어요. 도의 진동수와 다른 음의 진동수의 관계를 비로 나타내 봤어요. 모든 진동수를 같이 나눌 수 있는 수가 11이라서 11헤르츠로 약분할 수 있어요. 궁금하면 눌러 보세요.',
+      say:'1초 동안 떨리는 수를 진동수라고 해요. 단위는 헤르츠예요. 각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요. 11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요. 궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.',
       hi:'📊 ▶로 도와 함께 들어 보며 칸과 비를 비교해 보세요' });
     st.push({ k:'story', emoji:'🥁', 
       lines:['진동수의 비가 간단할수록 두 음이 잘 어울렸어요.',
@@ -873,9 +879,9 @@ class Component extends DCLogic {
             { t:'라 : ' + p.n + ' = ' + p.a + ' : ' + p.b, ok:0, fb:'앞에는 라 줄의 칸 수, 뒤에는 ' + p.n + ' 줄의 칸 수를 놓아요. 순서를 다시 볼까요?' },
             { t:'72 － ' + Math.round(72 * p.a / p.b) + ' = ' + (72 - Math.round(72 * p.a / p.b)), ok:0, fb:'두 길이의 차예요. 우리가 한 일은 두 길이를 비교해 본 것이지요?' } ] } ] } : null;
       if (p.ph === 1) st.push({ k:'harp', i, probe,
-        say:(i === 0 ? '라 음 440Hz는 악기를 조율하는 기준 음이에요. ' : '') +
-            '라 줄이 72센티미터일 때 ' + p.n + ' 줄은 몇 센티미터일까요? 슬라이더를 움직이며 소리를 듣고, ' + p.n + ' 소리가 나는 자리에서 멈춰 보세요. '
-            + '아래 눈금에 72센티미터를 ' + p.b + '등분한 칸이 있어요. 내 줄이 몇 칸인지도 확인해 보세요.',
+        say:'라 음을 기준으로 악기를 조율해 보세요. 라 음이 440Hz일 때 ' + p.n + ' 음은 '
+            + Math.round(440 * p.b / p.a) + 'Hz예요. 라와 ' + p.n + '의 비는 ' + p.a + ' 대 ' + p.b + '예요. '
+            + '슬라이더를 움직이면서 ' + p.n + ' 소리가 날 때 멈춰 보세요.',
         hi:'🎻 하프 공방 · 72cm를 ' + p.b + '등분한 눈금에서 내 줄이 몇 칸인지 확인해요' });
       else st.push({ k:'harp', i, probe,
         say:'이번에는 귀 대신 칸으로 구해 봐요. ' + p.n + ' 줄은 ' + p.b + '칸 중 ' + p.a + '칸이에요. 72센티미터를 ' + p.b + '등분하면 한 칸은 몇 센티미터일까요? 한 칸을 먼저 구하고, 그 다음 ' + p.a + '칸의 길이를 구해 보세요.',
@@ -1503,11 +1509,11 @@ class Component extends DCLogic {
     this._vibT = 0; this._vibLast = null;
     const st = this.STEPS[n];
     const patch = { i:n, toast:null, pressKey:-1,
-      vibHit: this.state.solved[n] ? this.state.vibHit : [], vibCur:-1, vibAns: this.state.solved[n] ? this.state.vibAns : {},
+      vibHit: this.state.solved[n] ? this.state.vibHit : [], vibCur:-1, vibAns: this.state.solved[n] ? this.state.vibAns : {}, vibMsg:'',
       hxCur:-1,
       clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
       grpWaveN:null, polyBeat:0, polyPlaying:false,
-      harpL:72, harpTuned:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 기준 라와 함께 들어 어울리는 자리를 찾아보세요!',
+      harpL:72, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 기준 라와 함께 들어 어울리는 자리를 찾아보세요!',
       hb:{}, hbUsed:{}, selBlank:null, helpOpen:false };
     if (st.k === 'rooms') patch.roomStage = this.NM().some(x => !this.state.rates[x]) ? 'miss' : 'collect';
     if (st.k === 'poly') {
@@ -1625,10 +1631,17 @@ class Component extends DCLogic {
       this.sfx('oops');
       const prev = this.NOTES[this._vibLast][0];
       this.plog('vib_early', { from: prev, to: this.NOTES[i][0] });
-      this.toast('🔎', '천천히 살펴보세요',
-        prev + '의 떨림이 아직 남아 있어요. 줄이 어떻게 흔들리는지 끝까지 보고 나서 다음 음을 눌러 봐요.');
+      /* 화면 아래에 뜨는 토스트로 알리면 정작 보아야 할 물결을 가린다. 게다가 빠르게
+         잇달아 누르면 6초 타이머가 그때마다 새로 걸려 안내가 걷히지 않았다.
+         떨림이 남은 동안만 건반 아래에 작게 띄우고, 떨림이 잦아들면 스스로 걷힌다. */
+      clearTimeout(this._vibMsgT);
+      this.setState({ vibMsg: prev + '의 떨림이 아직 남아 있어요 — 끝까지 보고 나서 눌러 봐요' });
+      const left = Math.max(300, this.SND_DUR * 1000 - (now - this._vibT) + 200);
+      this._vibMsgT = setTimeout(() => this.setState({ vibMsg: '' }), left);
       return;
     }
+    clearTimeout(this._vibMsgT);
+    if (this.state.vibMsg) this.setState({ vibMsg: '' });
     this._vibT = now; this._vibLast = i;
     const n = this.NOTES[i];
     this._f1 = n[1]; this._w1env = 1; this._plucks[i] = 1;
@@ -2153,7 +2166,7 @@ class Component extends DCLogic {
     const left = this.NOTES.filter(n => !heard[n[0]]).length;
     const kids = [ el('div', { key:'tbl', style:{ display:'flex', flexDirection:'column', width:'100%',
         maxWidth: isU ? 'min(97vw,740px)' : 'min(97vw,460px)' } }, [head].concat(rows)) ];
-    if (isU) kids.push(this.pBtn('tg', bars === 'unit' ? '↺ 도를 기준으로 묶어 보기' : '🔍 11Hz짜리 같은 칸으로 재어 보기',
+    if (isU) kids.push(this.pBtn('tg', bars === 'unit' ? '↺ 도를 기준으로 묶어 보기' : '🔍 11헤르츠로 나누어 보기',
       () => { this.sfx('tap'); const to = bars === 'unit' ? 'pair' : 'unit';
         this.plog('hz_bars', { to }); this.setState({ hzBars: to }); },
       'rs-pill2', { minHeight:'36px', fontSize:'14px', padding:'6px 16px' }));
@@ -2503,6 +2516,10 @@ class Component extends DCLogic {
     this.plog('poly_why', { pick: ix, ok: o.ok ? 1 : 0 });
     if (!o.ok) { this.toast('🤔', '다시 한번!', o.fb, 'quiet'); return; }
     this.setState({ whyPick: ix });
+    /* 통과는 이 물음으로 정해진다. 예전에는 12칸 묶기·풀기를 마쳐야 통과였으나
+       그 조작이 화면에서 빠지면서, 누를 것이 없는데 통과 조건만 남아 실제 학습자는
+       이 단계를 넘어갈 수 없었다(게스트는 그냥 넘어가 드러나지 않았다). */
+    this.markSolved();
     this.toast('📝', '이렇게 정리했어요',
       '1 : 2는 두 칸마다, 2 : 3은 여섯 칸마다 — 8 : 9는 열두 칸 안에서 한 번도 만나지 못했어요.', 'quiet');
   }
@@ -2642,12 +2659,15 @@ class Component extends DCLogic {
   /* ── 7) 하프 공방 (harp) — 목표음 440×b/a, 조율 판정 ±1.5cm 그대로 ──
      1부: 실시간 드론(슬라이더 조작 중 연속 재생) + 등분 칸 눈금 → 귀로 찾고 칸을 읽는다.
      2부: 한 칸 길이(72÷b) → 반복(×a) → 곱셈식(72×a/b) 3단 과제. */
+  /* 찾을 음을 먼저 귀에 담게 한다. 목표 소리를 모른 채 슬라이더를 움직이면
+     「어느 자리가 맞는가」를 귀로 가릴 수 없어 눈금만 보고 맞히게 된다(지침 1.2). */
   harpGoal() {
     if (this.narrating()) this.stopVoice();   /* 조작하면 안내를 멈춘다 */
     const p = this.HP[this.STEPS[this.state.i].i];
     this.harpDroneOff();
     this.pluckT(Math.round(440 * p.b / p.a));
     this.plog('harp_goal', { n: p.n });
+    this.setState({ harpGoalHeard: true });
   }
 
   /* 실시간 드론 — 오실레이터를 드래그당 1개만 만들고 주파수만 갱신(노드 폭증 방지).
@@ -2738,12 +2758,22 @@ class Component extends DCLogic {
       cells: Math.round(this.state.harpL / this.hUnit(st.i) * 100) / 100 });
   }
 
+  /* 손을 뗄 때 판정한다 — 예전에는 「내 줄 뜯어 확인하기」 단추를 눌러야 했다.
+     움직이며 귀로 찾는 자리인데 확인만 단추로 하게 하면, 소리를 듣다 말고 손을
+     옮겨야 해서 찾는 흐름이 끊겼다(지침 1.3). 목표음을 아직 듣지 않았으면 판정하지
+     않는다 — 무엇을 찾는지 모른 채 우연히 맞는 것을 막는다. */
   harpPluck() {
     const st = this.STEPS[this.state.i];
+    if (!this.state.harpGoalHeard || this.state.harpTuned) return;
     const p = this.HP[st.i], ex = this.hLen(st.i), L = this.state.harpL;
     const unit = this.hUnit(st.i), unitS = this.hUnitS(st.i), exS = this.exS(st.i);
+    if (Math.abs(L - ex) > this.HTOL) { this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
+      '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 찾을 음을 다시 듣고 견주어 볼까요?',
+      (L - ex) > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
+                   : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
+      '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
+    ]) }); return; }
     this.harpDroneOff();
-    this.pluckT(Math.round(440 * 72 / L));
     this.plog('harp_tune', { n: p.n, L });
     const diff = L - ex;
     if (Math.abs(diff) <= this.HTOL) {
@@ -3487,21 +3517,9 @@ class Component extends DCLogic {
         this.pCap('t', '🤔 네 리듬을 비교해 보면 무엇을 알 수 있나요?', this.C.txt, 17),
         R.createElement('div', { key:'o', style:{ display:'flex', gap:'10px', flexWrap:'wrap', justifyContent:'center', maxWidth:'760px' } },
           this.WHYQ.map((o, ix) => this.pBtn('o'+ix, o.t, () => this.polyWhy(ix), 'rs-chip', { fontSize:'16px' })))));
-    } else {
-      const sol = S.rates['솔'] || 0, re = S.rates['레'] || 0;
-      const star = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
-      kids.push(R.createElement('div', { key:'rev',
-        style:{ background:this.C.a100, border:'3px solid ' + this.C.a300, borderRadius:'var(--radius-md)',
-          padding:'var(--space-2) var(--space-3)', maxWidth:'min(96vw,760px)', fontSize:'16px',
-          fontWeight:700, lineHeight:1.75, textAlign:'center', animation:'rsPop .3s ease' } },
-        '진동수도 똑같아요. 비가 간단할수록 두 떨림이 더 빨리 다시 만나서, 귀에 잘 어울리게 들려요.',
-        R.createElement('br', { key:'b' }),
-        (sol && re && sol > re)
-          ? ('여러분도 솔(2 : 3)에 ' + star(sol) + ', 레(8 : 9)에 ' + star(re) + '을 주었지요!')
-          : '실제 음악에서도 2 : 3인 솔은 잘 어울리는 음, 8 : 9인 레는 잘 어울리지 않는 음으로 꼽혀요!'));
-
-
     }
+    /* 답한 뒤에 결론을 한 번 더 풀어 주던 상자는 뺐다. 학습자가 방금 고른 보기가
+       그 결론이므로, 앱이 뒤이어 같은 말을 하면 스스로 말한 것을 덮어쓴다(지침 5.3). */
     return R.createElement('div', { key:'why',
       style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'var(--space-2)', width:'100%' } }, kids);
   }
@@ -3530,7 +3548,7 @@ class Component extends DCLogic {
       coachHi: '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story', storyEmoji: st.emoji || '', storyCap: st.cap || '',
-      isVib: st.k === 'vib', isHarmx: st.k === 'harmx', isRooms: st.k === 'rooms',
+      isVib: st.k === 'vib', isHarmx: st.k === 'harmx', isRooms: st.k === 'rooms', vibMsg:'',
       isTable: st.k === 'table', isPoly: st.k === 'poly', isStrlen: st.k === 'strlen',
       isHz: st.k === 'hz', hzEl: null,
       isPanflute: st.k === 'panflute', pfEl: null,
@@ -3602,6 +3620,7 @@ class Component extends DCLogic {
          여덟 건반을 다 들은 뒤에 같은 자리에서 진동수가 열린다. */
       /* 이 단계에서는 진동수 수치를 아예 띄우지 않는다. 줄 길이와 떨림의 빠르기만 느끼게 하고,
          진동수와 헤르츠는 다음 단계(물결 무늬가 나오는 화음 화면)에서 처음 꺼낸다. */
+      v.vibMsg = S.vibMsg || '';
       if (S.vibCur < 0) v.vibHz = '건반을 눌러 보세요';
       else {
         const n = this.NOTES[S.vibCur];
@@ -3742,15 +3761,11 @@ class Component extends DCLogic {
       } else if (st.p === 'why') {
         const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
         v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
-          : (solved ? '단위가 커지면 횟수가 줄어요 — 6은 2로도 3으로도 딱 묶여요!'
-          : (S.whyPick >= 0 ? '12칸을 2칸 단위·3칸 단위로 다시 세어 보고, 풀기까지 해 봐요!'
-          : (allPlayed ? '세 리듬을 다 들었어요! 무엇을 알 수 있는지 골라 봐요.'
-          : '네 리듬을 차례로 들으며, 다시 만나는 칸을 비교해 봐요!')));
-        if (!solved) v.footHintOverride = S.whyPick >= 0
-          ? '2칸씩·3칸씩 묶고, 풀기까지 하면 완료!'
-          : (allPlayed ? '네 리듬을 비교해 알 수 있는 것을 골라요' : '네 리듬을 모두 들어 보세요');
-        if (solved) { v.liveBadge = '✅ 완료! 아래에서 간격을 바꿔 더 만들어 보고 다음으로 가요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
-        else if (S.whyPick >= 0) { v.liveBadge = '🔎 간단한 비일수록 빨리 다시 만나요'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
+          : (solved ? '' 
+          : (allPlayed ? '네 리듬을 다 들었어요! 무엇을 알 수 있는지 골라 봐요.'
+          : '네 리듬을 차례로 들으며, 다시 만나는 칸을 비교해 봐요!'));
+        if (!solved) v.footHintOverride = allPlayed ? '네 리듬을 비교해 알 수 있는 것을 골라요' : '네 리듬을 모두 들어 보세요';
+        if (solved) { v.liveBadge = '✅ 완료 — 다음으로 가요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
       } else {
         const p = this.polyP(st);
         v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
@@ -3799,10 +3814,14 @@ class Component extends DCLogic {
       v.harpPct = Math.round((S.harpL - 36) / 36 * 100);
       v.harpLTxt = (+S.harpL).toFixed(1).replace(/\.0$/, '') + 'cm';
       v.harpSlide = (e) => this.harpSlide(+e.target.value);
-      v.harpSlideEnd = () => { this.harpEndLog(); this.harpDroneOff(); };
+      /* 손을 뗄 때 판정한다 — 뜯기 단추가 없어졌다 */
+      v.harpSlideEnd = () => { this.harpEndLog(); this.harpDroneOff(); this.harpPluck(); };
       v.tBase = () => { this.harpDroneOff(); this.pluckT(440); };
       v.tBoth = () => { this.harpDroneOff(); this.chord(440, Math.round(440 * 72 / S.harpL), 2); };
-      v.tPluck = () => this.harpPluck();
+      v.tGoal = () => this.harpGoal();
+      v.tGoalCls = S.harpGoalHeard ? 'rs-pill2' : 'rs-pill';
+      v.harpNeedGoal = (!S.harpGoalHeard && !S.harpTuned)
+        ? ('먼저 🎯 찾을 ' + p.n + ' 음 미리 듣기를 눌러 어떤 소리를 찾는지 들어 보세요') : '';
       v.tuneMsg = S.tuneMsg;
       v.openHelp = () => { this.setState({ helpOpen: true }); this.plog('harphelp', { n: p.n }); };
       v.helpPct = Math.round(p.a / p.b * 1000) / 10;
