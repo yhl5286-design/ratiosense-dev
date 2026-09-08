@@ -522,8 +522,8 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:52px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 듣고 해 본 것</b>을 하나 예로 들어서, <b>소리의 비밀</b>을 한 줄 적어 보세요!</div>
-          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="활동을 하고 나니 (  )을 알게 되었어요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">친구에게 <b>소리에 숨겨진 비밀</b>을 하나 알려 준다면, 뭐라고 말해 줄 건가요?</div>
+          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="친구야, 소리는 (  )이야!" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
           <button onClick="{{refGo}}" class="rs-pill">제출!</button>
         </div>
       </sc-if>
@@ -902,8 +902,8 @@ class Component extends DCLogic {
     });
     /* 「내 말로 정리」는 앞서 귀로 듣고 손으로 해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
     st.push({ k:'reflect', who:'ratio',
-      say:'이 방에서는 건반의 떨림, 화음, 리듬, 하프 줄 만들기 등 다양한 활동을 해 보았어요. 이런 활동을 하고 난 뒤 알게 된 사실을 적어 보세요.',
-      hi:'활동을 하고 나니 (  )을 알게 되었어요' });
+      say:'이 방에서는 각 음의 떨림, 줄의 길이, 진동수, 리듬을 통해 소리에 숨겨진 비밀을 알아봤어요. 친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?',
+      hi:'📝 친구에게 알려 줄 소리의 비밀 한 가지' });
     /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
        앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
     st.push({ k:'blank', id:'secret', who:'ratio',
