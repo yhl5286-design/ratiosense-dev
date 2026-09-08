@@ -841,7 +841,7 @@ class Component extends DCLogic {
       say:'이번에는 다른 리듬이에요. 먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.',
       hi:'🥁 북만 · 🔺 트라이앵글만 · ▶ 함께 — 이번 비는 무엇일까요?' });
     st.push({ k:'poly', p:'why',
-      say:'네 가지 리듬을 차례로 들어 보세요. 12칸 안에서 두 소리가 다시 만나는 리듬은 어느 것일까요? 만나는 칸을 세어 비교해 보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요.',
+      say:'다음 네 가지 리듬을 차례대로 들어 보면서, 두 소리가 같이 만나는 횟수를 세어 보세요.',
       hi:'네 리듬의 만나는 칸을 비교해요' });
     /* 들은 것을 손으로 옮겨 보는 자리 — 간격을 스스로 정하고 만나는 칸을 확인한다.
        앞 화면까지는 주어진 리듬을 들었고, 여기서는 학습자가 리듬을 만든다(지침 1.1·1.4). */
@@ -3278,6 +3278,23 @@ class Component extends DCLogic {
         } }, on ? o.icon : (o.nums === false ? '' : String(b)));
       }));
   }
+  /* 두 소리가 같은 칸에서 겹치는 자리 — 북 줄과 트라이앵글 줄을 세로로 묶어 표시한다.
+     칸마다 테두리만 따로 두면 「위에도 켜지고 아래에도 켜졌다」로 읽힐 뿐, 둘이 같은
+     순간에 겹쳤다는 것이 드러나지 않는다. 한 테두리로 두 칸을 함께 감싸야 「만났다」가
+     보인다(지침 4.2 — 관계는 말로 알려 주지 말고 화면에서 드러나게 한다).
+     칸 하나가 차지하는 폭은 size + 여백 4 다. 테두리는 box-sizing: border-box 라
+     width 안에 들어가므로 더하지 않는다 — 더했다가 표시가 오른쪽으로 밀려
+     이웃 카드 위로 넘쳤다. */
+  polyMeetEl(rows, meet, size) {
+    const R = React, adv = size + 4;
+    const marks = (meet || []).map(b => R.createElement('div', { key:'m' + b, style:{
+      position:'absolute', left:((b - 1) * adv + 1) + 'px', top:'1px',
+      width:(size + 2) + 'px', height:(2 * adv - 2) + 'px',
+      border:'3px solid ' + this.C.a700, borderRadius:'9px',
+      boxShadow:'0 0 0 2px ' + this.C.n100, pointerEvents:'none', zIndex:2 } }));
+    return R.createElement('div', { key:'meetwrap', style:{ position:'relative', display:'inline-block' } },
+      rows[0], rows[1], marks);
+  }
   polyEl() {
     const st = this.STEPS[this.state.i];
     if (st.p === 'unit') return this.polyUnitEl();
@@ -3453,8 +3470,10 @@ class Component extends DCLogic {
           w.note ? R.createElement('span', { key:'n', style:{ fontSize:'13px', fontWeight:700, color:this.C.n600 } }, '(화음의 ' + w.note + ')') : null,
           this.pBtn('p', (played ? '✓ ' : '') + '▶ 듣기', () => this.whyPlay(i), 'rs-pill2',
             { minHeight:'38px', fontSize:'13px', padding:'5px 14px' }, w.d + ' 대 ' + w.t + ' 리듬 듣기')),
-        this.polyRow('d', w.d, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100, meet, size:13, nums:false, n:this.PN_WHY }),
-        this.polyRow('t', w.t, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100, meet, size:13, nums:false, n:this.PN_WHY }),
+        this.polyMeetEl([
+          this.polyRow('d', w.d, { cur, icon:'🥁', bdOn:this.C.a400, bgOn:this.C.a100, meet, size:26, nums:false, n:this.PN_WHY }),
+          this.polyRow('t', w.t, { cur, icon:'🔺', bdOn:this.C.g500, bgOn:this.C.g100, meet, size:26, nums:false, n:this.PN_WHY })
+        ], played ? meet : [], 26),
         this.pCap('c', cap, played ? (meet.length ? this.C.a700 : this.C.n700) : this.C.n600, 13.5));
     });
     kids.push(R.createElement('div', { key:'cards', className:'rs-fit',
