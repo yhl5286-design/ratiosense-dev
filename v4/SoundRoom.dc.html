@@ -497,11 +497,10 @@ button{font-family:inherit}
                   <div style="background:var(--color-bg);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3)"><div style="font-size:14px;color:var(--color-neutral-700);font-weight:700">줄의 길이</div><div style="font-size:24px;color:var(--color-accent-700)">라 : {{harpN}} = {{harpB}} : {{harpA}}</div></div>
                 </div>
                 <div style="height:2px;background:var(--color-accent-2-300);margin:14px 0 10px"></div>
-                <div>🎯 귀로 찾은 <b>{{harpN}}</b> 줄은 <b style="color:var(--color-accent-2-700)">{{harpCells}}</b>이에요!</div>
+                <div>🎯 {{harpHow}}</div>
                 <div>{{harpDivTxt}} = <b style="color:var(--color-accent-2-700)">{{harpUnit}}cm</b></div>
                 <div>그 한 칸이 <b>{{harpA}}칸</b>이니까 → {{harpUnit}} × {{harpA}} = <b style="color:var(--color-accent-2-700)">{{harpTot}}cm</b></div>
               </div>
-              <div class="rs-fit">{{harpEl}}</div>
             </div>
           </sc-if>
 
@@ -3830,7 +3829,11 @@ class Component extends DCLogic {
       v.tBaseTxt = '🔊 기준 라 줄(' + this.HBASE + 'cm) 듣기';
       v.tGoalTxt = '🎯 찾을 ' + p.n + ' 음 미리 듣기';
       v.harpDivTxt = this.HBASE + 'cm를 ' + p.b + '등분하면 → 한 칸 = ' + this.HBASE + ' ÷ ' + p.b;
-      v.harpCells = '라 줄 ' + p.b + '칸에 견주어 ' + p.a + '칸';
+      /* 찾은 결과만 말하지 않고 「그래서 어떻게 셈하는가」까지 한 문장에 담는다 —
+         아래 두 줄의 나눗셈·곱셈이 어디서 나온 것인지 이 문장이 이어 준다(지침 5.3). */
+      const jsl = (n) => ('136780'.indexOf(String(n).slice(-1)) >= 0 ? '을' : '를');
+      v.harpHow = p.n + ' 줄은 라 줄이 ' + p.b + '칸일 때 ' + p.a + '칸이니까 '
+        + p.b + '칸으로 나눈 다음 다시 ' + p.a + jsl(p.a) + ' 곱해요!';
       v.harpWhyBtn = '❓ 왜 라보다 ' + (this.hLen(st.i) < this.HBASE ? '짧아질까' : '길어질까') + '?';
       v.harpUnit = unitS; v.harpTot = this.exS(st.i);
       v.harpIntro = st.i === 0;
@@ -3862,7 +3865,9 @@ class Component extends DCLogic {
       const jd = (n) => ('136780'.indexOf(String(n).slice(-1)) >= 0);   /* 끝자리 소리에 받침이 있나 */
       v.helpWhy = '줄의 길이와 떨리는 속도는 반대예요. 진동수가 ' + p.a + ' : ' + p.b
         + '이면 줄은 반대로 ' + p.b + ' : ' + p.a + (jd(p.a) ? '이' : '가') + ' 됩니다.';
-      v.harpEl = this.harpGraphic(S.hDone);
+      /* 완성된 하프 그림(harpGraphic)은 화면에서 뺐다 — 이 단계는 라와 미 두 줄의
+         길이를 견주는 자리인데, 악기 그림이 그 아래에 또 나와 화면이 길어지고
+         눈이 눈금에서 떠났다. 함수는 남겨 둔다. */
       if (ph === 1) {
         v.rulerEl = this.harpRulerSvg(st.i, S.harpL, S.harpTuned);
         const cells = S.harpL / unit;
