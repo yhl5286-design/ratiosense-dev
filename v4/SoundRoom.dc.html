@@ -395,12 +395,12 @@ button{font-family:inherit}
           <div style="width:min(680px,94%)">{{slRuler}}</div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:nowrap;justify-content:center;width:min(680px,94%)">
             <span class="rs-peg"></span>
-            <input type="range" min="20" max="110" step="1" value="{{slL}}" onChange="{{slInput}}" onPointerUp="{{slEnd}}" onPointerCancel="{{slEnd}}" aria-label="줄 길이" class="rs-string" style="--p:{{slPct}}%">
+            <input type="range" min="40" max="144" step="1" value="{{slL}}" onChange="{{slInput}}" onPointerUp="{{slEnd}}" onPointerCancel="{{slEnd}}" aria-label="줄 길이" class="rs-string" style="--p:{{slPct}}%">
             <span class="rs-peg"></span>
           </div>
 
           <div class="rs-dial" style="font-size:23px;text-align:center">줄 길이 <span style="color:var(--color-accent-700)">{{slL}}cm</span> <span style="font-size:19px;color:var(--color-neutral-700)">(진동수 {{slF}}Hz)</span></div>
-          <button onClick="{{slPluck}}" class="rs-pill">♪ 줄 뜯기</button>
+          <div style="font-size:16px;font-weight:700;color:var(--color-neutral-700)">손잡이를 잡고 움직이는 동안 소리가 이어져요</div>
         </div>
       </sc-if>
 
@@ -700,11 +700,14 @@ class Component extends DCLogic {
      비는 앱이 먼저 말하지 않는다 — 학습자가 격자에서 간격을 세어 찾아낸다.
      r12(1:2)는 도와 한 옥타브 높은 도, r23(2:3)은 도와 솔의 진동수 비다. */
   PN = 12; PSTEP = 0.4;
-  /* 기제 비교(why) 화면만 격자를 24칸으로 넓힌다.
-     1 : 2는 2칸, 2 : 3은 6칸, 3 : 4는 12칸마다 만나지만 8 : 9는 72칸을 가야 만나
-     24칸 안에서는 끝내 만나지 않는다.
+  /* 기제 비교(why) 화면의 격자는 12칸이다. 칸이 1 : 2는 2칸, 2 : 3은 6칸,
+     3 : 4는 12칸마다 만나고 8 : 9는 72칸을 가야 만나 12칸 안에서는 끝내 만나지 않는다.
+     네 리듬이 2칸 · 6칸 · 12칸 · 못 만남으로 갈리므로, 12칸이면 대비가 그대로 살아 있다.
+     한때 24칸으로 넓혔으나 네 리듬을 다 듣기에 길고, 칸이 작아져 만나는 자리를 세기
+     어려웠다. 칸 시간은 0.45초로 늦춘다 — 북과 트라이앵글이 겹치는 순간을 귀로
+     가려내려면 칸 사이가 벌어져 있어야 한다.
      그 「만나지 않음」을 눈으로 보이게 하는 것이 이 화면의 몫이다. */
-  PN_WHY = 24; PSTEP_WHY = 0.3;
+  PN_WHY = 12; PSTEP_WHY = 0.45;
   POLY = { r12:{ d:1, t:2 }, r23:{ d:2, t:3 } };
   /* 어울림의 기제 비교 — 잘 어울리는 두 비와 부딪히는 두 비를 둘씩 짝지어 놓는다.
      모두 화음에서 만난 진동수 비다. */
@@ -761,7 +764,7 @@ class Component extends DCLogic {
     };
   }
   WHYQ = [ { t:'비가 간단할수록 두 소리가 더 빨리 다시 만나요', ok:1 },
-           { t:'비가 복잡할수록 더 빨리 다시 만나요', ok:0, fb:'8 : 9는 비가 복잡해서 24칸 안에서 한 번도 만나지 못했어요. 1 : 2는 2칸마다 만났지요. 다시 비교해 볼까요?' },
+           { t:'비가 복잡할수록 더 빨리 다시 만나요', ok:0, fb:'8 : 9는 비가 복잡해서 12칸 안에서 한 번도 만나지 못했어요. 1 : 2는 2칸마다 만났지요. 다시 비교해 볼까요?' },
            { t:'다시 만나는 것은 비와 상관없어요', ok:0, fb:'1 : 2와 8 : 9의 만나는 칸을 나란히 놓고 비교해 볼까요? 두 리듬이 아주 달랐어요.' } ];
 
   /* 디자인 토큰 참조 — hex 하드코딩 대신 styles.css 변수를 문자열로 사용 */
@@ -836,7 +839,7 @@ class Component extends DCLogic {
       say:'이번에는 다른 리듬이에요. 먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.',
       hi:'🥁 북만 · 🔺 트라이앵글만 · ▶ 함께 — 이번 비는 무엇일까요?' });
     st.push({ k:'poly', p:'why',
-      say:'네 가지 리듬을 차례로 들어 보세요. 24칸 안에서 두 소리가 다시 만나는 리듬은 어느 것일까요? 만나는 칸을 세어 비교해 보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요.',
+      say:'네 가지 리듬을 차례로 들어 보세요. 12칸 안에서 두 소리가 다시 만나는 리듬은 어느 것일까요? 만나는 칸을 세어 비교해 보세요. 왜 간단한 비가 잘 어울리는지 보일 거예요.',
       hi:'네 리듬의 만나는 칸을 비교해요' });
     /* 들은 것을 손으로 옮겨 보는 자리 — 간격을 스스로 정하고 만나는 칸을 확인한다.
        앞 화면까지는 주어진 리듬을 들었고, 여기서는 학습자가 리듬을 만든다(지침 1.1·1.4). */
@@ -2418,7 +2421,7 @@ class Component extends DCLogic {
     if (!right) {
       this.sfx('oops');
       this.toast('🤔', '여기는 다른 비예요',
-        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. 비커의 높이를 다시 비교해 볼까요?')
+        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. 빨강 칸과 노랑 칸을 다시 세어 볼까요?')
                          : (w.cap + '을 한 번 더 들어 보고, 지금 리듬과 같은 비인지 생각해 볼까요?'));
       return;
     }
@@ -2439,17 +2442,19 @@ class Component extends DCLogic {
     const el = (t, at, ...k) => R.createElement(t, at, ...k);
     const got = S.linkGot || {};
     const RED = 'rgb(230,40,55)', YEL = 'rgb(250,215,45)';
-    const beaker = (h, col) => el('div', { key:'b' + col, style:{ position:'relative', width:'30px', height:'74px',
-      border:'3px solid ' + C.n800, borderTopWidth:'1.5px', borderRadius:'0 0 9px 9px', overflow:'hidden',
-      background:C.n100 } },
-      el('div', { key:'f', style:{ position:'absolute', left:0, right:0, bottom:0,
-        height: h + '%', background: col } }));
+    /* 색깔 방에서 시냐크와 칸을 색칠해 비를 찾았으므로, 여기서도 같은 칸 그림으로 보인다.
+       비커의 높이는 눈대중으로 견주어야 했지만 칸은 세면 그만이라, 「빨강 2칸 노랑 3칸」이
+       곧 2 : 3으로 읽힌다. 수는 적지 않는다 — 세어 찾아내는 것이 이 문항의 몫이다. */
+    const cells = (a, b) => el('div', { key:'g', style:{ display:'flex',
+      border:'3px solid ' + C.n800, borderRadius:'8px', overflow:'hidden' } },
+      Array.from({ length: a + b }, (_, i) => el('div', { key:i, style:{ width:'24px', height:'24px',
+        background: (i < a) ? RED : YEL,
+        borderLeft: i ? '1.5px solid ' + C.n800 : 'none' } })));
     const card = (w) => {
       const done = !!got[task + '|' + w.id];
       const body = (w.kind === 'mix')
-        ? el('div', { key:'m', style:{ display:'flex', gap:'8px', alignItems:'flex-end' } },
-            beaker(Math.round(w.a / (w.a + w.b) * 100 * 1.35), RED),
-            beaker(Math.round(w.b / (w.a + w.b) * 100 * 1.35), YEL))
+        ? el('div', { key:'m', style:{ display:'flex', alignItems:'center', height:'74px' } },
+            cells(w.a, w.b))
         : el('div', { key:'s', style:{ display:'flex', alignItems:'center', height:'74px' } },
             this.pBtn('p', '▶ 함께 듣기', (e) => { if (e && e.stopPropagation) e.stopPropagation();
               this.chord(this.NOTES[0][1], w.f, 1.8); this.plog('link_listen', { id: w.id }); },
@@ -2568,9 +2573,9 @@ class Component extends DCLogic {
   /* 줄 위에 놓는 자 — 지금 우는 줄이 몇 cm인지 눈금으로 읽는다 */
   slRulerSvg(L) {
     const W = 680, H = 42, x0 = 24, x1 = W - 24, span = x1 - x0;
-    const at = (cm) => x0 + span * (cm - 20) / 90;
+    const at = (cm) => x0 + span * (cm - 40) / 104;
     let g = '<line x1="' + x0 + '" y1="30" x2="' + x1 + '" y2="30" style="stroke:var(--color-neutral-500);stroke-width:2"/>';
-    for (let cm = 20; cm <= 110; cm += 10) {
+    for (let cm = 40; cm <= 144; cm += 20) {
       const x = at(cm);
       g += '<line x1="' + x.toFixed(1) + '" y1="20" x2="' + x.toFixed(1) + '" y2="30" style="stroke:var(--color-neutral-500);stroke-width:2"/>';
       g += '<text x="' + x.toFixed(1) + '" y="15" text-anchor="middle" style="font-size:11px;font-weight:700;fill:var(--color-neutral-600)">' + cm + '</text>';
@@ -2597,20 +2602,21 @@ class Component extends DCLogic {
       clearTimeout(this._sKbT);
       if (!this._ptrDown) this._sKbT = setTimeout(() => this.slEndLog(1), 900);
     }
-    if (now - (this._lastP||0) > 200) { this._lastP = now; this.slDoPluck(); }
+    /* 뜯어서 한 번 울리는 대신, 움직이는 동안 소리가 이어지게 한다.
+       길이를 바꾸는 손과 높이가 달라지는 귀가 같은 순간에 맞물려야
+       「길수록 낮다」가 몸으로 잡힌다(지침 1.2·1.3). 13·14단계 하프와 같은 방식이다. */
+    this.harpDrone(Math.round(440 * 72 / L), 0.07);
   }
   slEndLog(kb) {
+    this.harpDroneOff();
     const t = this._sTrk; if (!t) return;
     this._sTrk = null; clearTimeout(this._sKbT);
+    /* 뜯기 단추가 없어졌으므로 strlen 은 끌기를 마친 자리에 남긴다 —
+       「어느 길이에서 들었나」라는 뜻은 그대로다(이벤트 대장 유지). */
+    this.plog('strlen', { L: this.state.slL });
     this.plog('str_end', { kb: kb ? 1 : 0, from: t.from, to: this.state.slL,
       rev: t.rev, cnt: t.n, lo: t.lo, hi: t.hi, ms: Date.now() - t.t0 });
   }
-  slDoPluck() {
-    const L = this.state.slL;
-    this.strPluck(Math.round(440 * 72 / L));
-    this._wiggleY('[data-str="sl"]');
-  }
-
   /* ── 6) 동치 스윕 (sweep) — 두 줄 3:2 유지, 같은 배율 ── */
   swSet(b) {
     this.setState({ swB: b });
@@ -2642,8 +2648,9 @@ class Component extends DCLogic {
 
   /* 실시간 드론 — 오실레이터를 드래그당 1개만 만들고 주파수만 갱신(노드 폭증 방지).
      주파수 갱신은 30ms 스로틀, 조작이 멎으면 620ms 뒤 자동 페이드아웃. */
-  harpDrone(f) {
+  harpDrone(f, vol) {
     if (this.state.audio === 'mute') return;
+    const G = vol || 0.12;
     const c = this.ac(); if (!c) return;
     if (!this._dr) {
       try {
@@ -2651,7 +2658,7 @@ class Component extends DCLogic {
         o.type = 'triangle'; o.frequency.setValueAtTime(f, c.currentTime);
         lp.type = 'lowpass'; lp.frequency.value = 4600; lp.Q.value = 0.6;
         g.gain.setValueAtTime(0.0001, c.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.12, c.currentTime + 0.06);
+        g.gain.exponentialRampToValueAtTime(G, c.currentTime + 0.06);
         o.connect(lp); lp.connect(g); g.connect(c.destination);
         o.start();
         this._dr = { o, g };
@@ -3451,7 +3458,7 @@ class Component extends DCLogic {
 
     const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
     if (!allPlayed) {
-      kids.push(this.pCap('need', '네 리듬을 모두 들어 보세요. 24칸 안에서 두 소리가 다시 만나는 리듬은 어느 것인가요?', this.C.n700, 16));
+      kids.push(this.pCap('need', '네 리듬을 모두 들어 보세요. 12칸 안에서 두 소리가 다시 만나는 리듬은 어느 것인가요?', this.C.n700, 16));
     } else if (S.whyPick < 0) {
       kids.push(R.createElement('div', { key:'q', style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'8px', animation:'rsPop .3s ease' } },
         this.pCap('t', '🤔 네 리듬을 비교해 보면 무엇을 알 수 있나요?', this.C.txt, 17),
@@ -3739,12 +3746,11 @@ class Component extends DCLogic {
     if (st.k === 'strlen') {
       const L = S.slL, f = Math.round(440 * 72 / L);
       v.slL = L; v.slF = f; v.slW = Math.round(L * 6);
-      v.slPct = Math.round((L - 20) / 90 * 100);
+      v.slPct = Math.round((L - 40) / 104 * 100);
       v.slRuler = this.slRulerSvg(L);
-      v.slTag = L === 72 ? '(기준 라 ★)' : (L < 50 ? '(아주 높은 소리!)' : (L < 72 ? '(높은 소리!)' : (L > 84 ? '(아주 낮은 소리!)' : '(낮은 소리!)')));
+      v.slTag = L === 72 ? '(기준 라 ★)' : (L < 58 ? '(아주 높은 소리!)' : (L < 72 ? '(높은 소리!)' : (L > 104 ? '(아주 낮은 소리!)' : '(낮은 소리!)')));
       v.slInput = (e) => this.slSet(+e.target.value);
       v.slEnd = () => this.slEndLog(0);
-      v.slPluck = () => { this.plog('strlen', { L: this.state.slL }); this.slDoPluck(); };
       v.rp = this.repVals(L, 72, '내 줄 길이 : 라 줄 72cm(기준)', false);
     }
 
