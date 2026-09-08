@@ -190,8 +190,8 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:48px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">내가 <b>직접 구해 본 것</b>을 하나 예로 들어서, <b>지도의 비밀(축척)</b>을 한 줄 적어 보세요!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="활동을 하고 나니 (  )을 알게 되었어요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">여러분이 직접 <b>지도를 만든다면</b>, 무엇을 <b>조사</b>하고 무엇을 <b>이용</b>해야 할까요? 한 줄로 적어 보세요!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="(  )을 조사하고, (  )을 이용해서 지도를 만들 거예요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
         </div>
       </sc-if>
 
@@ -443,10 +443,12 @@ class Component extends DCLogic {
       { k:'prop', who:'eratos', sid:'m-prop', quiz:'prop',
         say:'원 전체 360도를 7.2도로 나누면 50이라오. 1 대 50은 두 도시 대 지구 전체. 1 대 50은 800킬로미터 대 지구 둘레. 이제 비를 이용하여 지구의 둘레를 계산해 보시오.',
         hi:'🌍 지구 둘레 — 1 : 50 = 800km : ?' },
-      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
+      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3).
+         되짚기에 그치지 않고 「내가 지도를 만든다면」으로 옮겨 물어, 축척을 새 상황에
+         옮겨 쓰게 한다 — 조사할 것(실제 거리)과 이용할 것(축척)을 스스로 대게 한다. */
       { k:'reflect', who:'ratio',
-        say:'이 방에서는 축척으로 실제 거리 구하기, 지도 확대하기, 지구 둘레 구하기 등 다양한 활동을 해 보았어요. 이런 활동을 하고 난 뒤 알게 된 사실을 적어 보세요.',
-        hi:'활동을 하고 나니 (  )을 알게 되었어요' },
+        say:'이 방에서는 축척으로 실제 거리 구하기, 지도 확대하기, 지구 둘레 구하기 등 다양한 활동을 해 보았어요. 그럼 여러분이 직접 지도를 만든다면, 무엇을 조사하고 무엇을 이용해야 할까요? 생각을 적어 보세요.',
+        hi:'🗺️ 내가 지도를 만든다면 — 무엇을 조사하고 무엇을 이용할까' },
       /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
          앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
       { k:'blank', id:'secret', who:'ratio',
