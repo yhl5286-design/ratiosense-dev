@@ -3537,10 +3537,8 @@ class Component extends DCLogic {
     kids.push(R.createElement('div', { key:'cards', className:'rs-fit',
       style:{ display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap', maxWidth:'94vw' } }, cards));
 
-    const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
-    if (!allPlayed) {
-      kids.push(this.pCap('need', '네 리듬을 차례대로 들어 보며, 두 소리가 같이 만나는 횟수를 세어 보세요.', this.C.n700, 16));
-    }
+    /* 카드 아래 안내는 진행 문구(polyMsg) 한 줄로만 둔다. 여기에 또 한 줄을 두면
+       같은 자리에 같은 말이 두 번 뜬다. */
     /* 「무엇을 알 수 있나요」 세 지 선다와, 답한 뒤에 결론을 다시 풀어 주던 상자를
        모두 뺐다. 네 리듬의 묶음 개수가 여섯·둘·하나·없음으로 갈려 화면에 이미
        드러나므로, 결론을 보기로 집어 고르게 하면 본 것을 말로 옮기는 대신
@@ -3784,9 +3782,8 @@ class Component extends DCLogic {
         if (!solved) v.footHintOverride = '간격을 고르고 한 번 재생하면 다음으로 갈 수 있어요';
         if (solved) { v.liveBadge = '✅ 확인했어요 — 다음으로 가요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
       } else if (st.p === 'why') {
-        const allPlayed = this.WHY.every((w, i) => S.whyPlayed['why' + i]);
         v.polyMsg = S.polyPlaying ? '잘 들어 보세요…'
-          : (solved ? '' : '네 리듬을 차례로 들으며, 묶인 자리가 몇 군데인지 비교해 봐요!');
+          : (solved ? '' : '두 소리가 같이 만나는 횟수를 세어 보세요.');
         if (!solved) v.footHintOverride = '네 리듬을 모두 들어 보세요';
         if (solved) { v.liveBadge = '✅ 완료 — 다음으로 가요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
       } else {
