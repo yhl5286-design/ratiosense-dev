@@ -20,7 +20,16 @@ const TYPE = {
 };
 
 http.createServer((req, res) => {
-  let p = decodeURIComponent(url.parse(req.url).pathname);
+  /* 주소가 깨져 있어도 서버가 내려가지 않게 한다 — decodeURIComponent 는 퍼센트 인코딩이
+     어긋난 요청 하나에도 URIError 를 던지고, 그 예외가 서버 전체를 멈춘다.
+     한글 파일 이름을 인코딩하지 않고 부르면 바로 이 일이 난다(2026-09-11). */
+  let p;
+  try {
+    p = decodeURIComponent(url.parse(req.url).pathname);
+  } catch (e) {
+    res.writeHead(400, {'Content-Type':'text/plain; charset=utf-8'}).end('주소가 깨졌습니다: ' + req.url);
+    return;
+  }
   if (p.endsWith('/')) p += 'index.html';
   const file = path.join(ROOT, p);
   if (!file.startsWith(ROOT)) { res.writeHead(403).end('forbidden'); return; }

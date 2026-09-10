@@ -9,4 +9,5 @@ _versions/
 
 # 화면 확인용 임시 사본 — 저장소에 올리지 않습니다
 v4/_shot.html
+v4/_preview_*.html
 v4/_미리보기_*.html
