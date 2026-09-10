@@ -2475,7 +2475,7 @@ class Component extends DCLogic {
     const got = S.linkGot || {};
     const RED = 'rgb(230,40,55)', YEL = 'rgb(250,215,45)';
     /* 색깔 방에서 시냐크와 칸을 색칠해 비를 찾았으므로, 여기서도 같은 칸 그림으로 보인다.
-       비커의 높이는 눈대중으로 견주어야 했지만 칸은 세면 그만이라, 「빨강 2칸 노랑 3칸」이
+       비커의 높이는 눈대중으로 비교해야 했지만 칸은 세면 그만이라, 「빨강 2칸 노랑 3칸」이
        곧 2 : 3으로 읽힌다. 수는 적지 않는다 — 세어 찾아내는 것이 이 문항의 몫이다. */
     const cells = (a, b) => el('div', { key:'g', style:{ display:'flex',
       border:'3px solid ' + C.n800, borderRadius:'8px', overflow:'hidden' } },
@@ -2808,7 +2808,7 @@ class Component extends DCLogic {
         return;
       }
       this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
-        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 찾을 음을 다시 듣고 견주어 볼까요?',
+        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 찾을 음을 다시 듣고 비교해 볼까요?',
         off > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
                 : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
         '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
@@ -3877,7 +3877,7 @@ class Component extends DCLogic {
       v.helpWhy = '줄의 길이와 떨리는 속도는 반대예요. 진동수가 ' + p.a + ' : ' + p.b
         + '이면 줄은 반대로 ' + p.b + ' : ' + p.a + (jd(p.a) ? '이' : '가') + ' 됩니다.';
       /* 완성된 하프 그림(harpGraphic)은 화면에서 뺐다 — 이 단계는 라와 미 두 줄의
-         길이를 견주는 자리인데, 악기 그림이 그 아래에 또 나와 화면이 길어지고
+         길이를 비교하는 자리인데, 악기 그림이 그 아래에 또 나와 화면이 길어지고
          눈이 눈금에서 떠났다. 함수는 남겨 둔다. */
       if (ph === 1) {
         v.rulerEl = this.harpRulerSvg(st.i, S.harpL, S.harpTuned);
@@ -3894,7 +3894,7 @@ class Component extends DCLogic {
         v.harpLineSh = on ? '0 0 0 2px var(--color-neutral-100), 0 2px 8px rgba(0,0,0,.25)' : 'none';
         v.harpLineTag = on ? 'block' : 'none';
         /* 정답 길이를 미리 적어 주면 귀로 찾을 까닭이 없어진다 — 가까이 왔다는 것만 알린다 */
-        v.harpHitTxt = v.harpHit ? '🔎 거의 다 왔어요! 소리를 견주며 조금씩 움직여 보세요' : '';
+        v.harpHitTxt = v.harpHit ? '🔎 거의 다 왔어요! 소리를 비교하며 조금씩 움직여 보세요' : '';
         v.harpLBg = v.harpHit ? this.C.g100 : 'transparent';
         v.harpLFg = v.harpHit ? this.C.g700 : 'var(--color-text)';
         v.harpLBd = v.harpHit ? this.C.g300 : 'transparent';

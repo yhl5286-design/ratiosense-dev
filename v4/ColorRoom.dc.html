@@ -565,6 +565,154 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
+      <!-- 표 만들기 — 수첩의 기록을 학습자가 손으로 옮겨 담는다(지침 1.1·3.4) -->
+      <sc-if value="{{isTbl}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;gap:22px;align-items:flex-start;justify-content:center;flex-wrap:wrap;animation:rsUp .3s ease">
+          <div style="display:flex;flex-direction:column;gap:9px;align-items:stretch">
+            <div style="font-size:13px;font-weight:800;color:#645c50;text-align:center">📓 나의 수첩</div>
+            <sc-for list="{{tblCards}}" as="c" hint-placeholder-count="3">
+              <button onClick="{{c.pick}}" style="display:flex;align-items:center;gap:9px;min-height:54px;padding:11px 17px;border-radius:18px;border:3px solid {{c.bd}};background:{{c.bg}};font-size:17px;color:#8c491a;cursor:pointer;visibility:{{c.vis}};white-space:nowrap"><span style="width:20px;height:20px;border-radius:999px;border:2px solid #201e1d;background:{{c.color}};flex:none"></span>{{c.t}}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:13px 16px">
+            <div style="display:flex;gap:9px;padding-bottom:8px">
+              <div style="width:112px;text-align:center;font-size:13.5px;font-weight:800;color:{{cRed}}">빨강 (mL)</div>
+              <div style="width:112px;text-align:center;font-size:13.5px;font-weight:800;color:{{cYel}}">노랑 (mL)</div>
+            </div>
+            <sc-for list="{{tblRows}}" as="r" hint-placeholder-count="3">
+              <div onClick="{{r.drop}}" style="display:flex;gap:9px;margin-bottom:8px;cursor:{{r.cur}}">
+                <div style="width:112px;height:54px;display:flex;align-items:center;justify-content:center;border:3px {{r.bs}} {{r.bd}};background:{{r.bg}};border-radius:14px;font-size:22px;font-weight:800;color:#8c491a">{{r.r}}</div>
+                <div style="width:112px;height:54px;display:flex;align-items:center;justify-content:center;border:3px {{r.bs}} {{r.bd}};background:{{r.bg}};border-radius:14px;font-size:22px;font-weight:800;color:#8c491a">{{r.y}}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 표 채우기 — 빨강은 적혀 있고 노랑을 학습자가 채운다(지침 3.4) -->
+      <sc-if value="{{isFill}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease">
+          <div style="display:flex;flex-direction:column;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:13px 18px">
+            <div style="display:flex;gap:9px;padding-bottom:8px">
+              <div style="width:104px;text-align:center;font-size:13.5px;font-weight:800;color:{{cRed}}">빨강 (칸)</div>
+              <div style="width:104px;text-align:center;font-size:13.5px;font-weight:800;color:{{cYel}}">노랑 (칸)</div>
+            </div>
+            <sc-for list="{{fillRows}}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;gap:9px;margin-bottom:8px;align-items:center">
+                <div style="width:104px;height:50px;display:flex;align-items:center;justify-content:center;border:3px solid #dcd3c4;background:#f9f4ed;border-radius:14px;font-size:21px;font-weight:800;color:{{cRed}}">{{r.a}}</div>
+                <button onClick="{{r.drop}}" aria-label="노랑 칸" style="width:104px;height:50px;border:3px {{r.bs}} {{r.bd}};background:{{r.bg}};border-radius:14px;font-size:21px;font-weight:800;font-family:inherit;color:{{cYel}};cursor:pointer">{{r.v}}</button>
+                <div style="width:34px;font-size:11.5px;font-weight:800;color:#a19786">{{r.cap}}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+            <sc-for list="{{fillCards}}" as="c" hint-placeholder-count="5">
+              <button onClick="{{c.pick}}" style="min-width:62px;min-height:52px;padding:11px 18px;border-radius:16px;border:3px solid {{c.bd}};background:{{c.bg}};font-size:21px;font-weight:800;font-family:inherit;color:#8c491a;cursor:pointer;visibility:{{c.vis}}">{{c.t}}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{fillNote}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);text-align:center;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:6px 16px;max-width:min(460px,92vw)">{{fillNote}}</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- 격자에 점 찍기 — 표의 줄과 격자의 점이 서로 이어져 있다(지침 3.5) -->
+      <sc-if value="{{isPlot}}" hint-placeholder-val="{{false}}">
+        <div class="rs-fit" style="display:flex;gap:20px;align-items:flex-start;justify-content:center;flex-wrap:wrap;animation:rsUp .3s ease">
+          <div style="display:flex;flex-direction:column;gap:7px;align-items:stretch">
+            <div style="display:flex;gap:7px">
+              <div style="width:78px;text-align:center;font-size:12.5px;font-weight:800;color:{{cRed}}">빨강 ({{plotUnit}})</div>
+              <div style="width:78px;text-align:center;font-size:12.5px;font-weight:800;color:{{cYel}}">노랑 ({{plotUnit}})</div>
+            </div>
+            <sc-for list="{{plotRows}}" as="r" hint-placeholder-count="3">
+              <div onClick="{{r.pick}}" style="display:flex;gap:7px;cursor:{{r.cur}}">
+                <div style="width:78px;height:46px;display:flex;align-items:center;justify-content:center;border:3px solid {{r.bd}};background:{{r.bg}};border-radius:13px;font-size:19px;font-weight:800;color:#8c491a">{{r.r}}</div>
+                <div style="width:78px;height:46px;display:flex;align-items:center;justify-content:center;border:3px solid {{r.bd}};background:{{r.bg}};border-radius:13px;font-size:19px;font-weight:800;color:#8c491a">{{r.y}}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{plotLineBtn}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{plotLineGo}}" style="min-height:52px;margin-top:5px;padding:12px 16px;border-radius:16px;border:3px solid #c67139;background:#ffe1d0;font-size:16.5px;color:#8c491a;cursor:pointer;animation:rsPop .35s ease">📏 선으로 이어 보기</button>
+            </sc-if>
+            <sc-if value="{{predMix}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;gap:13px;align-items:flex-end;justify-content:center;margin-top:9px;animation:rsPop .35s ease">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <div style="width:60px;height:60px;border-radius:999px;border:4px solid #201e1d;background:{{predMix}}"></div>
+                  <div style="font-size:11.5px;font-weight:800;color:#8c491a;white-space:nowrap">{{predLabel}}</div>
+                </div>
+                <div style="font-size:16px;color:#645c50;padding-bottom:22px">vs</div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                  <div style="width:60px;height:60px;border-radius:999px;border:4px solid #201e1d;background:{{predRef}}"></div>
+                  <div style="font-size:11.5px;font-weight:800;color:#645c50">{{predRefName}}</div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="position:relative;width:{{plotOW}}px;height:{{plotOH}}px">
+              <sc-for list="{{plotYTicks}}" as="t" hint-placeholder-count="4">
+                <button onClick="{{t.pick}}" aria-label="노랑 눈금" style="position:absolute;left:0;top:{{t.top}};width:33px;height:22px;padding:0;text-align:right;font-size:12.5px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};border:none;border-radius:7px;cursor:pointer;transform:translateY(-50%)">{{t.t}}</button>
+              </sc-for>
+              <sc-for list="{{plotXTicks}}" as="t" hint-placeholder-count="4">
+                <button onClick="{{t.pick}}" aria-label="빨강 눈금" style="position:absolute;left:{{t.left}};bottom:0;min-width:24px;height:22px;padding:0 4px;font-size:12.5px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};border:none;border-radius:7px;cursor:pointer;transform:translateX(-50%)">{{t.t}}</button>
+              </sc-for>
+              <div style="position:absolute;left:{{plotLeft}}px;top:0;width:{{plotW}}px;height:{{plotH}}px;background:#fffdf6;border-left:3px solid #645c50;border-bottom:3px solid #645c50;background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCell}}px)">
+                <sc-if value="{{gxOn}}" hint-placeholder-val="{{false}}">
+                  <div style="position:absolute;left:{{gxLeft}};top:0;bottom:0;width:3px;margin-left:-1px;background:{{cRed}};opacity:.55;animation:rsBlend .3s ease"></div>
+                </sc-if>
+                <sc-if value="{{gyOn}}" hint-placeholder-val="{{false}}">
+                  <div style="position:absolute;top:{{gyTop}};left:0;right:0;height:3px;margin-top:-1px;background:{{cYel}};opacity:.65;animation:rsBlend .3s ease"></div>
+                </sc-if>
+                <sc-if value="{{plotLineOn}}" hint-placeholder-val="{{false}}">
+                  <div style="position:absolute;left:0;bottom:-2px;width:{{lineLen}};height:4px;border-radius:999px;background:#c67139;transform-origin:0 50%;transform:{{lineRot}};animation:rsBlend .55s ease"></div>
+                </sc-if>
+                <sc-for list="{{plotHits}}" as="h" hint-placeholder-count="9">
+                  <button onClick="{{h.tap}}" aria-label="격자 자리" style="position:absolute;left:{{h.left}};top:{{h.top}};width:{{h.sz}};height:{{h.sz}};border-radius:999px;border:{{h.bd}};background:{{h.bg}};padding:0;cursor:pointer"></button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="font-size:12.5px;font-weight:800;color:#645c50">가로 → <span style="color:{{cRed}}">빨강 ({{plotUnit}})</span> · 세로 ↑ <span style="color:{{cYel}}">노랑 ({{plotUnit}})</span></div>
+            <div style="font-size:12px;font-weight:700;color:#a19786">{{plotDemo}}</div>
+            <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);text-align:center;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:6px 16px;max-width:min(420px,90vw)">{{plotHint}}</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 식 세우기 — 표에서 읽은 배수를 학습자가 스스로 기호로 적는다(지침 4.3) -->
+      <sc-if value="{{isRule}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease">
+          <div style="display:flex;flex-direction:column;gap:10px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:20px;padding:15px 22px">
+            <sc-for list="{{ruleRows}}" as="r" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:10px;font-size:23px;font-weight:800;color:#8c491a">
+                <span style="width:54px;text-align:right">{{r.a}}</span>
+                <span style="color:#645c50">×</span>
+                <button onClick="{{r.drop}}" aria-label="곱하는 수" style="width:64px;height:54px;border-radius:14px;border:3px {{r.bs}} {{r.bd}};background:{{r.bg}};font-size:23px;font-weight:800;color:#8c491a;cursor:pointer;font-family:inherit">{{r.v}}</button>
+                <span style="color:#645c50">=</span>
+                <span style="width:54px;text-align:left">{{r.b}}</span>
+              </div>
+            </sc-for>
+            <div style="height:2px;background:#dcd3c4;margin:3px 0"></div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;font-size:23px;font-weight:800;color:#8c491a">
+              <span>노랑</span><span style="color:#645c50">=</span><span>빨강</span><span style="color:#645c50">×</span>
+              <button onClick="{{ruleMainDrop}}" aria-label="빨강에 곱하는 수" style="width:64px;height:54px;border-radius:14px;border:3px {{ruleMainBs}} {{ruleMainBd}};background:{{ruleMainBg}};font-size:23px;font-weight:800;color:#8c491a;cursor:pointer;font-family:inherit">{{ruleMain}}</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+            <sc-for list="{{ruleCards}}" as="c" hint-placeholder-count="5">
+              <button onClick="{{c.pick}}" style="min-width:64px;min-height:54px;padding:11px 20px;border-radius:16px;border:3px solid {{c.bd}};background:{{c.bg}};font-size:22px;font-weight:800;color:#8c491a;cursor:pointer;font-family:inherit">{{c.t}}</button>
+            </sc-for>
+          </div>
+          <!-- 식을 세운 뒤 — 빨강을 움직이면 노랑이 따라온다(지침 3.5) -->
+          <sc-if value="{{ruleLiveOn}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;align-items:center;gap:13px;background:#fffdf6;border:3px solid #f6a06b;border-radius:22px;padding:10px 18px;animation:rsPop .4s ease;flex-wrap:wrap;justify-content:center">
+              <button onClick="{{ruleDown}}" aria-label="빨강 줄이기" style="width:48px;height:48px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:23px;color:#8c491a;cursor:pointer;font-family:inherit">−</button>
+              <div style="font-size:19.5px;font-weight:800;color:#8c491a;white-space:nowrap">빨강 {{ruleLiveR}}mL → 노랑 {{ruleLiveY}}mL</div>
+              <button onClick="{{ruleUp}}" aria-label="빨강 늘리기" style="width:48px;height:48px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:23px;color:#8c491a;cursor:pointer;font-family:inherit">＋</button>
+              <span style="width:46px;height:46px;border-radius:999px;border:3px solid #201e1d;background:{{ruleLiveColor}};flex:none"></span>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
       <!-- 조작 직후 발문(지침 5.1) — 조작물은 그대로 둔 채, 그 아래에서 어떻게·왜·기호를 묻는다 -->
       <sc-if value="{{probeRows}}" hint-placeholder-val="{{false}}">
         <div style="flex:none;width:min(760px,96%);background:#fffdf6;border:3.5px solid #f6a06b;border-radius:22px;padding:13px 18px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;gap:11px">
@@ -667,6 +815,9 @@ class Component extends DCLogic {
   CUP_ML = 10;                /* 실험 단계에서 한 번에 붓는 컵의 양 */
   CUP_LAB_MAX = 12;           /* 컵으로 탐색하는 실험에서 한 물감에 부을 수 있는 최대 컵 수 */
   TGT = [1,2];
+  /* 글자에 쓰는 물감 색 — 노랑을 그대로 쓰면 밝은 바탕에 묻혀 읽히지 않아 짙게 내린다 */
+  C_RED = '#d3242f';
+  C_YEL = '#a87c00';
   /* 실험 단계의 lockR — 빨강을 이 양으로 담아 두고 잠근다(노랑만 움직인다).
      세 번의 실험이 점점 열린다:
        1) 빨강 20 잠금 — 시범에서 쓴 그 양. 찾을 것은 노랑 하나뿐이라 출발이 막히지 않는다.
@@ -688,6 +839,12 @@ class Component extends DCLogic {
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
     labLog: [], wallDone: 0, failed: [], hypoPick: false,
     tmpNum: {},
+    /* 표·격자·식 — tbl은 표의 줄마다 놓인 수첩 기록의 번호,
+       plot은 격자에 찍은 점, rule은 곱셈식의 빈칸에 놓인 수다. */
+    tbl: [null,null,null], tblSel: null,
+    plot: [], plotSel: null, plotLine: 0, plotPred: null, plotGx: null, plotGy: null, plotAt: null,
+    rule: {}, ruleSel: null, ruleLive: 0,
+    fill: {}, fillSel: null,
     cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null,
     cmpSpin: 0,   /* 색팽이를 돌린 횟수 — 값이 바뀌면 회전이 처음부터 다시 돈다 */
     cmpTried: 0,  /* 답하기 전에 색팽이를 돌려 보았는가 */
@@ -778,6 +935,12 @@ class Component extends DCLogic {
       { k:'cups', who:'munsell', src:{ r:20, y:40 }, unit:20, ask:true,
         say:'실험으로 찾은 빨강 20mL와 노랑 40mL를 다시 가져왔어. 이번에는 조금 더 큰 20mL짜리 컵을 줄게. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐.',
         hi:'빈 컵을 누르면 비커에서 20mL가 옮겨져요' },
+      /* 「:」 기호를 들이는 자리 — 학습자가 20mL 컵으로 1컵과 2컵을 제 손으로 만들어 낸 바로 뒤이고,
+         이어지는 되짚기가 그 기호를 처음 요구하는 자리다. 약속(무엇을 앞에 놓고 어떻게 적는가)은
+         알려 주되, 그 약속대로 적는 일은 학습자가 한다(지침 3.1·4.3). */
+      { k:'blank', id:'sym', who:'munsell', demo:'sym',
+        say:'네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 기준이 되는 양을 앞에, 비교하는 양을 뒤에 놓고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
+        hi:'📝 앞에는 기준이 되는 양, 뒤에는 비교하는 양' },
       /* 조작을 끝낸 뒤 되짚는 자리를 따로 둔다 — 옮겨 담기와 성찰이 한 화면에 겹치지 않게 한다.
          먼셀이 대사로 물어 화면이 바뀐 까닭을 학습자가 알 수 있게 한다. */
       { k:'probe', who:'munsell',
@@ -815,6 +978,34 @@ class Component extends DCLogic {
         lines:['네가 준 물감으로 노을을 칠해 완성했어.',
                '정말 고마워!'],
         btn:'다음 →' },
+      /* ── 표·격자·식 ──
+         실험에서 학습자가 손으로 만든 세 쌍(S.found)을 한자리에 모아
+         표 → 격자 → 식으로 옮겨 간다. 값을 새로 받지 않고 학습자가 제 손으로
+         만든 양을 그대로 쓴다. 구체적인 표상을 차례로 줄여 형식적 표기로
+         나아가되(지침 3.1) 옮기는 일은 모두 학습자가 하고(지침 3.4),
+         표의 줄과 격자의 점은 서로 이어져 한쪽을 누르면 다른 쪽이 함께 빛난다(지침 3.5). */
+      { k:'tbl', who:'munsell',
+        say:'우리가 한 실험을 한자리에 모아 볼까? 수첩에 적어 둔 기록을 표로 옮겨 담아 보자. 빨강이 가장 적은 것부터 차례로 놓으면 돼.',
+        hi:'📋 수첩 카드를 눌러 고른 다음, 표의 줄을 눌러 놓아요',
+        probe:{ title:'🤔 표로 늘어놓고 나서', rows:[
+          { q:'표로 늘어놓으니 무엇이 보이나요?', opts:[
+            { t:'빨강이 늘어나면 노랑도 함께 늘어나요', ok:1 },
+            { t:'빨강이 늘어나도 노랑은 그대로예요', ok:0, fb:'표의 두 줄을 위아래로 비교해 볼까? 빨강이 늘어난 줄에서 노랑은 어떻게 되었지?' },
+            { t:'빨강이 늘어나면 노랑은 줄어들어요', ok:0, fb:'맨 위 줄과 맨 아래 줄의 노랑을 비교해 볼까? 어느 쪽이 더 많지?' } ] },
+          { q:'세 줄 모두에서 똑같은 것은 무엇인가요?', opts:[
+            { t:'노랑이 언제나 빨강의 2배예요', ok:1 },
+            { t:'노랑이 언제나 빨강보다 20mL 많아요', ok:0, fb:'맨 아래 줄에서도 그럴까? 줄마다 노랑에서 빨강을 빼 보렴.' },
+            { t:'세 줄이 저마다 달라요', ok:0, fb:'줄마다 노랑을 빨강으로 나누어 볼까? 같은 수가 나오는지 확인해 보렴.' } ] } ] } },
+      { k:'plot', who:'munsell',
+        say:'이번에는 표의 기록을 격자 위에 점으로 찍어 보자. 첫 줄은 내가 미리 찍어 두었어. 아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다. 나머지 줄도 찍어 볼래?',
+        hi:'📍 아래 빨강 눈금 하나, 왼쪽 노랑 눈금 하나 — 두 번만 누르면 돼요' },
+      { k:'rule', who:'munsell',
+        say:'마지막이야. 표의 줄마다 빨강에 얼마를 곱하면 노랑이 될까? 숫자 카드를 눌러 고른 다음 빈칸을 눌러 놓아 보렴.',
+        hi:'✖️ 숫자 카드를 눌러 고른 다음 빈칸을 눌러요',
+        probe:{ title:'🤔 두 가지로 적어 보았어', rows:[
+          { q:'「빨강 : 노랑 = 1 : 2」와 「노랑 = 빨강 × 2」는 어떤 사이일까요?', opts:[
+            { t:'같은 관계를 다르게 적은 것이에요', ok:1 },
+            { t:'서로 다른 관계예요', ok:0, fb:'빨강이 1이면 노랑은 2였지? 「빨강 × 2」의 빨강 자리에 1을 넣으면 얼마가 될까?' } ] } ] } },
       /* 시냐크로 넘어가기 전, 안내자가 여기까지를 한 번 매듭짓는다 */
       { k:'story', who:'ratio', emoji:'🎨',
         lines:['지금까지 \'뭉크\'와 \'먼셀\'을 도와 색을 만드는 비의 비밀을 알아냈어요. 정말 수고했어요!',
@@ -873,8 +1064,33 @@ class Component extends DCLogic {
                  fb:'맞아요. 칸 수가 아니라 전체에서 차지하는 몫이 색을 정하는 거예요.'},
                 {t:'둘이 똑같아', ok:0,
                  fb:'㉮는 스무 칸 중 여덟 칸, ㉯는 여섯 칸 중 세 칸이에요. 반이 넘는 쪽은 어느 쪽일까요?'} ] },
-      /* 레시오 재등장 — 시냐크 파트가 끝나고 안내자가 다시 나오는 첫 지점.
-         곧바로 발문을 던지지 않고, 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
+      /* ── 2 : 3 에서도 같은 일을 해 본다 ──
+         1 : 2에서 표와 격자로 본 것이 그 비에만 해당하는 일이 아님을 확인하는 자리다.
+         점 다섯 칸에 찍은 2 : 3을 첫 줄로 두고 그 배수를 채운 뒤, 같은 격자에 찍어
+         이번에도 점들이 한 선 위에 놓이는 것을 본다(지침 2.2·3.5). */
+      { k:'fill', who:'ratio', pairs:[[2,3],[4,6],[6,9],[8,12]],
+        cards:['6','9','12','5','8','10'], note:'첫 줄은 시냐크와 함께 다섯 칸에 찍은 그 비예요',
+        say:'시냐크와 만든 주황을 표로 옮겨 볼게요. 첫 줄은 다섯 칸에 찍은 빨강 2 : 노랑 3이에요. 빨강 칸이 4, 6, 8로 늘어나면 노랑은 몇 칸이어야 같은 주황이 될까요? 숫자 카드를 눌러 채워 보세요.',
+        hi:'✖️ 빨강과 노랑을 같은 수로 곱해야 같은 비가 돼요',
+        probe:{ title:'🤔 표를 채우고 나서', rows:[
+          { q:'빨강이 2에서 4로 늘어날 때 노랑은 어떻게 되었나요?', opts:[
+            { t:'3에서 6으로 — 빨강과 똑같이 2배가 되었어요', ok:1 },
+            { t:'3에서 5로 — 둘 다 2씩 늘었어요', ok:0, fb:'2씩 더하면 2 : 3이 4 : 5가 되지요. 표를 다시 볼까요? 노랑은 6이었어요.' } ] },
+          { q:'이 표의 네 줄은 모두 어떤 비인가요?', opts:[
+            { t:'모두 2 : 3과 같은 비예요', ok:1 },
+            { t:'줄마다 다른 비예요', ok:0, fb:'줄마다 노랑을 빨강으로 나누어 볼까요? 4와 6, 6과 9, 8과 12 모두 간단히 하면 무엇이 되나요?' } ] } ] } },
+      { k:'plot', who:'ratio', pairs:[[2,3],[4,6],[6,9],[8,12]],
+        gu:1, gk:1.5, gfloor:0, gpred:[10,15], gsx:2, gsy:3, unitName:'칸', cmpName:'시냐크의 주황',
+        say:'이번에도 표를 격자 위에 점으로 찍어 볼까요? 첫 점은 찍어 두었어요. 아래 빨강 눈금과 왼쪽 노랑 눈금을 눌러 나머지도 찍어 보세요.',
+        hi:'📍 아래 빨강 눈금 하나, 왼쪽 노랑 눈금 하나 — 두 번만 누르면 돼요',
+        probe:{ title:'🤔 1 : 2 때와 비교해 볼까', rows:[
+          { q:'2 : 3의 점들도 어떻게 놓였나요?', opts:[
+            { t:'1 : 2 때처럼 한 곧은 선 위에 놓였어요', ok:1 },
+            { t:'여기저기 흩어져 놓였어요', ok:0, fb:'네 점을 이어 볼까요? 「선으로 이어 보기」를 눌러 보세요.' } ] },
+          { q:'1 : 2의 선과 2 : 3의 선은 무엇이 다를까요?', opts:[
+            { t:'기울어진 정도가 달라요 — 비가 다르면 선도 달라져요', ok:1 },
+            { t:'아무 차이가 없어요', ok:0, fb:'1 : 2는 빨강 한 칸에 노랑이 두 칸씩 올라갔지요. 2 : 3은 몇 칸씩 올라갔나요?' } ] } ] } },
+      /* 비율로 넘어가기 전, 안내자가 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
       { k:'blank', id:'cells', who:'ratio',
         say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체 100에 대해 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
       { k:'blank', id:'pct', who:'ratio',
@@ -960,6 +1176,12 @@ class Component extends DCLogic {
         ['이 비만 지키면 양이 얼마든 언제나 같은 색이 나와요.'] ],
       bank:['1','2','3','4'] },
     /* 다인이의 오개념에 해 줄 설명 — 컵 그림(2:4 · 5:7 · 4:8)을 근거로 학습자가 완성한다 */
+    /* 「:」 기호를 처음 들이는 자리. 약속은 알려 주되(위 그림), 그 약속대로 적는 일은 학습자가 한다. */
+    sym: { card:true, title:'📝 비를 적는 법', rows:[
+        ['두 양을 비교하여 나타낸 것을 ', {a:'비'}, ' 라고 해요.'],
+        ['기준이 되는 양을 ', {a:'앞'}, ' 에, 비교하는 양을 ', {a:'뒤'}, ' 에 놓아요.'],
+        ['빨강 1컵과 노랑 2컵을 비교하면 ', {a:'1'}, ' : ', {a:'2'}, ' 라고 적어요.'] ],
+      bank:['비','앞','뒤','1','2','양','옆','3'] },
     why: { card:true, title:'📝 다인이에게 해 줄 설명', rows:[
         ['같은 색 물감을 만들려면 두 양에 같은 수를 ', {a:'곱해야'}, ' 해요.'] ],
       bank:['더하면','곱해야','빼면','나눠야'] },
@@ -1435,6 +1657,8 @@ class Component extends DCLogic {
       cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
       tmpNum:{},
       cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
+    /* 격자 화면에 들어서면 첫 점을 예시로 찍어 둔다 — 다른 비의 격자면 새로 연다 */
+    if (this.STEPS[n].k === 'plot') { const open = this.plotOpen(n); if (open) this.setState(open); }
     if (this.STEPS[n].k === 'finish') setTimeout(() => this.awardDigit(), 350);
     this.plog('nav', { to:n });
     this._sayT = setTimeout(() => this.sayStep(n), 380);
@@ -1965,6 +2189,32 @@ class Component extends DCLogic {
   /* 10mL 컵으로 세어 보는 시연 — 학습자가 실제로 만든 세 가지를 나란히 놓는다.
      2:4(실험 1) · 5:7(다인이 방식) · 4:8(실험 2) */
   /* 물감 만드는 법 — 수첩에 적은 1 : 2를 그대로 만들어 뭉크에게 건넨다 */
+  /* 「:」 기호를 처음 들이는 그림 — 기준이 되는 양을 앞에, 비교하는 양을 뒤에.
+     학습자가 방금 20mL 컵으로 만들어 낸 1컵과 2컵을 그대로 가리킨다(지침 3.1·3.3). */
+  symEl() {
+    const R = React, ink = 'var(--color-neutral-800)';
+    const side = (k, n, cap, role, c) => R.createElement('div', { key:k,
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px' } },
+      R.createElement('div', { key:'c', style:{ width:'54px', height:'54px', borderRadius:'999px',
+        border:'4px solid ' + ink, background:c } }),
+      R.createElement('div', { key:'t', style:{ fontSize:'15px', fontWeight:800, color:'var(--color-neutral-700)' } }, cap),
+      R.createElement('div', { key:'n', style:{ fontSize:'30px', fontWeight:800, color:'#8c491a', lineHeight:1.1 } }, n),
+      R.createElement('div', { key:'r', style:{ fontSize:'13px', fontWeight:800, color:'#c67139',
+        background:'#ffe1d0', border:'2.5px solid #f6a06b', borderRadius:'999px', padding:'3px 11px' } }, role));
+    const colon = R.createElement('div', { key:'col',
+      style:{ fontSize:'56px', fontWeight:800, color:'#c67139', padding:'0 6px',
+              lineHeight:'54px', alignSelf:'flex-start' } }, ':');
+    return R.createElement('div', { key:'sym',
+      style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'9px' } },
+      R.createElement('div', { key:'row', style:{ display:'flex', gap:'14px', alignItems:'center', justifyContent:'center' } },
+        side('a', '1', '빨강 1컵', '기준이 되는 양', this.rgb(this.PRIM['빨강'])),
+        colon,
+        side('b', '2', '노랑 2컵', '비교하는 양', this.rgb(this.PRIM['노랑']))),
+      R.createElement('div', { key:'read', style:{ fontSize:'17px', fontWeight:800, color:'var(--color-neutral-700)',
+        background:'var(--color-neutral-100)', border:'2.5px solid var(--color-neutral-300)',
+        borderRadius:'999px', padding:'6px 18px' } }, '1 : 2 라고 쓰고 「1 대 2」라고 읽어요'));
+  }
+
   recipeEl() {
     const R = React, P = this.PRIM, ink = 'var(--color-neutral-800)';
     const beaker = (k, w, h, c, cap) => R.createElement('div', { key:k,
@@ -2081,6 +2331,239 @@ class Component extends DCLogic {
       { t:'노랑 60mL', w:52, h:60, c:this.rgb(P['노랑']) },
       { t:'주황 100mL', w:66, h:100, c:this.rgb(this.mix({ '빨강':40, '노랑':60 })) }
     ];
+  }
+
+  /* ── 표·격자·식 (지침 3.1·3.4·3.5·4.3) ────────────────────────────────
+     세 단계가 함께 쓰는 재료는 수첩(S.found)이다. 실험에서 학습자가 「기록하기」로
+     확인한 세 쌍이 그대로 표의 세 줄이 되고, 격자의 세 점이 되고, 식의 세 줄이 된다. */
+
+  /* 수첩의 기록 — 실험을 건너뛰고 들어온 게스트에게는 화면이 비지 않도록 시범 값을 채운다 */
+  notes() {
+    const out = this.state.found.filter(p => p && p[0] > 0 && p[1] > 0).slice(0, 3);
+    [[20,40],[40,80],[30,60]].forEach(b => {
+      if (out.length < 3 && !out.some(p => p[0] === b[0])) out.push(b);
+    });
+    return out;
+  }
+  /* 빨강이 적은 것부터 — 표의 정답 차례이자 격자·식이 쓰는 차례다 */
+  tblAns(idx) {
+    /* 단계가 값을 직접 지고 있으면 그것을 쓴다 — 시냐크의 2 : 3 활동이 그렇다.
+       그렇지 않으면 학습자가 실험에서 기록한 수첩을 쓴다.
+       idx 를 주면 그 단계의 값을 본다 — 화면을 옮기는 중에는 state.i 가 아직 옛 값이다. */
+    const st = this.STEPS[(idx == null) ? this.state.i : idx] || {};
+    if (st.pairs) return st.pairs.map(p => p.slice());
+    return this.notes().slice().sort((a,b) => a[0] - b[0]);
+  }
+
+  tblPick(ni) {
+    if (this.state.tbl.indexOf(ni) >= 0) return;
+    this.sfx('tap');
+    this.setState({ tblSel: this.state.tblSel === ni ? null : ni });
+  }
+  tblPlace(ri) {
+    const S = this.state, ni = S.tblSel;
+    if (S.tbl[ri] != null) return;
+    if (ni == null) { this.toast('👆', '수첩 카드를 먼저 골라요', '왼쪽 수첩에서 옮길 기록을 눌러 주세요.'); return; }
+    const note = this.notes()[ni], ok = note[0] === this.tblAns()[ri][0];
+    this.plog('tbl_place', { row: ri, r: note[0], ok: ok ? 1 : 0 });
+    /* 지침 5.1 — 어느 줄이 맞는지 알려 주지 않고 무엇을 다시 볼지만 가리킨다 */
+    if (!ok) {
+      this.toast('🤔', '이 줄은 아닌 것 같아', this.hintNext('tbl', [
+        '빨강이 가장 적은 기록을 맨 위에 놓아 볼까?',
+        '세 기록의 빨강만 먼저 비교해 보렴. 어느 것이 가장 적지?',
+        '빨강이 적은 것부터 위에서 아래로 차례로 놓는 거란다.'
+      ]));
+      return;
+    }
+    const tbl = S.tbl.slice(); tbl[ri] = ni;
+    this.setState({ tbl, tblSel: null });
+    this.sfx('ok');
+    if (tbl.every(x => x != null)) {
+      this.plog('tbl_done', {});
+      this.markSolved(); this.confetti();
+      this.toast('📋', '표가 완성됐어요!', '세 번의 실험이 한자리에 모였어요. 아래 물음에 답해 볼까요?', 'ok');
+    }
+  }
+
+  /* 격자의 자 — 두 축의 한 칸을 같은 양으로 둔다. 그래야 노랑이 빨강의 두 배라는 것이
+     칸 수로 그대로 드러난다. 학습자가 만든 양이 크면 한 칸을 키워 격자가 지나치게 커지지 않게 한다. */
+  plotGeo() {
+    const st = this.STEPS[this.state.i] || {};
+    const rows = this.tblAns(), mr = rows[rows.length - 1][0];
+    /* 한 칸의 양·노랑 배수·예측할 자리는 단계가 정할 수 있다. 정하지 않으면
+       색깔 실험(빨강 : 노랑 = 1 : 2, mL)에 맞춘 값을 쓴다. */
+    const u = st.gu || (mr <= 60 ? 10 : (mr <= 140 ? 20 : 40));
+    const k = st.gk || 2;
+    /* 오른쪽에 한 칸 남긴다 — 예측할 자리다. 물감 실험에서는 빨강 50·노랑 100까지 언제나 연다. */
+    const floor = (st.gfloor != null) ? st.gfloor : 50;
+    const pred = st.gpred || null;
+    const rmax = Math.max(floor, pred ? pred[0] : 0, Math.ceil(mr / u) * u + u);
+    const ymax = Math.max(pred ? pred[1] : 0, Math.ceil(rmax * k / u) * u);
+    return { u, k, rmax, ymax, pred: pred || [rmax, rmax * k],
+             cx: Math.round(rmax / u) + 1, cy: Math.round(ymax / u) + 1,
+             sx: st.gsx || ((Math.round(rmax / u) + 1) > 8 ? 2 : 1),
+             sy: st.gsy || ((Math.round(ymax / u) + 1) > 9 ? 2 : 1),
+             cell: (rmax / u <= 6) ? 30 : 26 };
+  }
+  /* 지금 찍을 차례 — 학습자가 줄을 고르지 않아도 아직 안 찍은 첫 줄이 차례가 된다.
+     줄을 눌러 차례를 바꿀 수도 있다. */
+  plotCur() {
+    if (this.state.plotSel != null) return this.state.plotSel;
+    const ans = this.tblAns();
+    for (let i = 0; i < ans.length; i++)
+      if (!this.state.plot.some(p => p.ok && p.r === ans[i][0] && p.y === ans[i][1])) return i;
+    return null;
+  }
+  plotRowPick(ri) {
+    if (this.state.plot.some(p => p.ok && p.row === ri)) return;
+    this.sfx('tap'); this.plog('plot_pick', { row: ri });
+    this.setState({ plotSel: this.state.plotSel === ri ? null : ri });
+  }
+  /* 격자에 들어설 때 부른다. 같은 격자로 되돌아온 것이면 찍어 둔 점을 그대로 두고,
+     다른 격자(1 : 2 → 2 : 3)면 새로 열면서 첫 점을 예시로 찍어 둔다.
+     찍는 방법을 한 번 보여 준 뒤에 나머지를 학습자에게 맡기는 자리다. */
+  plotOpen(n) {
+    if (this.state.plotAt === n) return null;
+    const a = this.tblAns(n)[0];
+    return { plotAt: n, plot: [{ r: a[0], y: a[1], ok: 1, row: 0, demo: 1 }],
+             plotSel: null, plotLine: 0, plotPred: null, plotGx: null, plotGy: null };
+  }
+  plotDone() {
+    const P = this.state.plot;
+    return this.tblAns().every(a => P.some(p => p.ok && p.r === a[0] && p.y === a[1]));
+  }
+  plotTap(r, y) {
+    const S = this.state;
+    const clearG = { plotGx: null, plotGy: null };
+    if (S.plot.some(p => p.r === r && p.y === y)) { this.setState(clearG); return; }
+    /* 예측 — 세 점을 이어 선을 본 뒤에는, 아직 만들어 보지 않은 자리를 찾게 한다 */
+    if (S.plotLine) {
+      const gp = this.plotGeo().pred, pr = gp[0], ok = (r === gp[0] && y === gp[1]);
+      this.plog('plot_predict', { r, y, ok: ok ? 1 : 0 });
+      if (!ok) {
+        this.setState(Object.assign({ plot: S.plot.concat([{ r, y, ok: 0 }]) }, clearG));
+        this.toast('🤔', '거기는 선에서 벗어났어', this.hintNext('pred' + S.i, [
+          '빨강 ' + pr + ' 자리에서 곧게 위로 올라가 선과 만나는 곳을 찾아볼까?',
+          '노랑은 언제나 빨강의 두 배였지? 빨강이 ' + pr + '이면 노랑은 얼마일까?',
+          '가로 ' + pr + ' 자리에서 세로 눈금을 세어 올라가 보렴.'
+        ]));
+        return;
+      }
+      this.setState(Object.assign({ plot: S.plot.concat([{ r, y, ok: 1 }]), plotPred: { r, y } }, clearG));
+      this.markSolved(); this.confetti();
+      const un = (this.STEPS[S.i] || {}).unitName || 'mL';
+      this.toast('🎯', '선 위의 새 자리를 찾았어요!',
+        '빨강 ' + r + un + '와 노랑 ' + y + un + ' — 아직 만들어 보지 않은 양인데도 같은 색이 나와요!', 'ok');
+      return;
+    }
+    const ri = this.plotCur();
+    if (ri == null) { this.setState(clearG); return; }
+    const ans = this.tblAns()[ri], ok = (r === ans[0] && y === ans[1]);
+    this.plog(ok ? 'plot_hit' : 'plot_miss', { row: ri, r, y });
+    /* 지침 5.2 — 잘못 찍은 자리에는 그 양으로 섞은 색을 그대로 남겨, 다른 색이 나온다는 것을 눈으로 보게 한다 */
+    if (!ok) {
+      this.setState(Object.assign({ plot: S.plot.concat([{ r, y, ok: 0 }]) }, clearG));
+      this.toast('🤔', '그 자리가 아니야', this.hintNext('plot' + S.i, [
+        '지금 찍을 차례는 빨강 ' + ans[0] + ' · 노랑 ' + ans[1] + '이란다. 아래 눈금에서 ' + ans[0] + '을 눌러 볼까?',
+        '아래 빨강 눈금에서 ' + ans[0] + ', 왼쪽 노랑 눈금에서 ' + ans[1] + '을 누르면 된단다.',
+        '표의 진한 줄이 지금 찍을 차례란다. 그 두 수를 눈금에서 눌러 보렴.'
+      ]));
+      return;
+    }
+    const plot = S.plot.concat([{ r, y, ok: 1, row: ri }]);
+    this.setState(Object.assign({ plot, plotSel: null }, clearG));
+    this.sfx('ok');
+    if (this.tblAns().every(a => plot.some(p => p.ok && p.r === a[0] && p.y === a[1])))
+      this.toast('📍', '점을 다 찍었어요!', '아래 「선으로 이어 보기」를 눌러 볼까요?', 'ok');
+  }
+  /* 눈금 숫자를 눌러 안내선을 세운다 — 어느 값에 선을 세울지는 학습자가 정하므로
+     도구가 두 값을 대신 맞추어 주는 것이 아니라, 누를 자리를 겨누기 쉽게 돕기만 한다(지침 1.4). */
+  plotGuide(axis, val) {
+    this.sfx('tap');
+    this.plog('plot_guide', { axis, v: val });
+    const gx = axis === 'x' ? (this.state.plotGx === val ? null : val) : this.state.plotGx;
+    const gy = axis === 'y' ? (this.state.plotGy === val ? null : val) : this.state.plotGy;
+    this.setState({ plotGx: gx, plotGy: gy });
+    /* 두 눈금이 모두 정해지면 만나는 자리에 저절로 찍힌다 — 작은 교차점을 따로 겨누지 않아도 된다.
+       안내선이 눈에 들어온 뒤에 찍히도록 잠깐 늦춘다. */
+    if (gx != null && gy != null) setTimeout(() => this.plotTap(gx, gy), 300);
+  }
+  plotLineGo() {
+    if (!this.plotDone() || this.state.plotLine) return;
+    this.plog('plot_line', {});
+    this.setState({ plotLine: 1 });
+    this.toast('📏', '점이 모두 한 선 위에 있어요!',
+      '양이 달라도 빨강과 노랑의 비가 같으면 모두 이 선 위에 놓여요. 이번에는 선 위의 빨강 '
+      + this.plotGeo().pred[0] + ' 자리를 찾아 눌러 볼까요?', 'ok');
+  }
+
+  /* 표의 빈칸 채우기 — 빨강은 적혀 있고 노랑을 학습자가 채운다.
+     첫 줄은 예시로 채워 두고, 나머지를 비의 규칙으로 채우게 한다. */
+  fillPick(w) { this.sfx('tap'); this.setState({ fillSel: this.state.fillSel === w ? null : w }); }
+  fillPlace(ri) {
+    const S = this.state, w = S.fillSel;
+    if (ri === 0 || S.fill['f' + ri]) return;
+    if (w == null) { this.toast('👆', '숫자 카드를 먼저 골라요', '아래에서 놓을 수를 눌러 주세요.'); return; }
+    const ans = this.tblAns(), ok = (+w === ans[ri][1]);
+    this.plog('fill_try', { row: ri, v: w, ok: ok ? 1 : 0 });
+    if (!ok) {
+      this.toast('🤔', '그 수는 아닌 것 같아', this.hintNext('fill', [
+        '첫 줄을 볼까? 빨강 ' + ans[0][0] + '일 때 노랑은 ' + ans[0][1] + '이었지. 빨강이 ' + ans[ri][0] + '이면 노랑은 얼마일까?',
+        '빨강이 ' + (ans[ri][0] / ans[0][0]) + '배가 되었으니 노랑도 같은 만큼 늘어나야 한단다.',
+        '빨강과 노랑을 같은 수로 곱해야 같은 비가 된다고 했지? 다시 세어 볼까?'
+      ]));
+      return;
+    }
+    const fill = Object.assign({}, S.fill); fill['f' + ri] = w;
+    this.sfx('ok');
+    this.setState({ fill, fillSel: null });
+    if (ans.every((a, i) => i === 0 || fill['f' + i])) {
+      this.plog('fill_done', {});
+      this.markSolved(); this.confetti();
+      this.toast('📋', '표를 다 채웠어요!', '빨강이 늘어나는 만큼 노랑도 함께 늘어났지요? 아래 물음에 답해 볼까요?', 'ok');
+    }
+  }
+
+  RULE_CARDS = ['1','2','3','10','20'];
+  rulePick(w) { this.sfx('tap'); this.setState({ ruleSel: this.state.ruleSel === w ? null : w }); }
+  ruleRowsDone() { return [0,1,2].every(i => this.state.rule['r' + i]); }
+  rulePlace(key) {
+    const S = this.state, w = S.ruleSel;
+    if (S.rule[key]) return;
+    if (w == null) { this.toast('👆', '숫자 카드를 먼저 골라요', '아래에서 놓을 수를 눌러 주세요.'); return; }
+    if (key === 'main' && !this.ruleRowsDone()) {
+      this.toast('👆', '줄부터 채워요', '위의 세 줄을 먼저 채우고 나서 아래 식을 세워 볼까요?');
+      return;
+    }
+    const ok = (w === '2');
+    this.plog('rule_try', { key, v: w, ok: ok ? 1 : 0 });
+    /* 지침 5.1 — 답을 주지 않고, 놓은 수로 계산하면 무엇이 되는지를 되짚어 준다 */
+    if (!ok) {
+      const a = this.tblAns()[key === 'main' ? 0 : +key.slice(1)];
+      this.toast('🤔', '그 수로는 맞지 않아', this.hintNext('rule', [
+        key === 'main' ? '위의 세 줄에 놓은 수를 다시 볼까?'
+                       : (a[0] + '에 ' + w + '을 곱하면 ' + (a[0] * +w) + '이 된단다. 노랑은 ' + a[1] + '이었지?'),
+        '노랑을 빨강으로 나누어 보면 얼마가 될까?',
+        '빨강이 두 배가 되면 노랑도 두 배가 되었지? 그 배수를 놓아 보렴.'
+      ]));
+      return;
+    }
+    const rule = Object.assign({}, S.rule); rule[key] = w;
+    this.sfx('ok');
+    if (key !== 'main') { this.setState({ rule, ruleSel: null }); return; }
+    this.plog('rule_set', { v: w });
+    this.setState({ rule, ruleSel: null, ruleLive: this.tblAns()[0][0] });
+    this.markSolved(); this.confetti();
+    this.toast('✖️', '식을 세웠어요!',
+      '노랑 = 빨강 × 2 — 이제 빨강을 정하기만 하면 노랑을 알 수 있어요. 아래에서 움직여 볼까요?', 'ok');
+  }
+  /* 식을 세우고 나면 빨강을 움직여 노랑이 따라오는 것을 확인한다(지침 3.5) */
+  ruleMove(d) {
+    const g = this.plotGeo();
+    const v = Math.min(g.rmax, Math.max(g.u, (this.state.ruleLive || 0) + d * g.u));
+    if (v === this.state.ruleLive) return;
+    this.sfx('tap'); this.plog('rule_live', { r: v });
+    this.setState({ ruleLive: v });
   }
 
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
@@ -2268,8 +2751,9 @@ class Component extends DCLogic {
       showSwatch: !!st.swatch || isLab,
       isStory: st.k === 'story' && !st.demo,
       storyDemo: ((st.k === 'story' || st.k === 'blank') && st.demo === 'cups') ? this.cupRowsEl()
+        : (((st.k === 'story' || st.k === 'blank') && st.demo === 'sym') ? this.symEl()
         : (((st.k === 'story' || st.k === 'blank') && st.demo === 'recipe') ? this.recipeEl()
-        : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null)), isChips: st.k === 'chips', isLab,
+        : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null))), isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
       isReflect: st.k === 'reflect', refText: S.refText,
       /* 정리 단계에 학습자 자신의 조작 기록을 다시 띄운다 — 「비밀」을 허공에서 떠올리지 않고
@@ -2295,6 +2779,7 @@ class Component extends DCLogic {
         this.setState({ refText: s });
       },
       isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      isTbl: st.k === 'tbl', isPlot: st.k === 'plot', isRule: st.k === 'rule', isFill: st.k === 'fill',
       /* 마침 카드 — 이 방은 황금비의 앞 두 자리를 차례로 준다 */
       cardConcept: this.CONCEPT,
       cardDigits: this.DIGITS.map(x => ({ d: x.d })),
@@ -2706,6 +3191,171 @@ class Component extends DCLogic {
       }
     }
 
+    /* ── 표·격자·식 ── */
+    if (st.k === 'tbl' || st.k === 'plot' || st.k === 'rule' || st.k === 'fill') {
+      const ans = this.tblAns();
+      const col = (p) => this.rgb(this.mix({ '빨강': p[0], '노랑': p[1] }));
+      v.cRed = this.C_RED; v.cYel = this.C_YEL;
+
+      if (st.k === 'tbl') {
+        const notes = this.notes();
+        v.tblCards = notes.map((p, ni) => ({
+          t: '빨강 ' + p[0] + ' : 노랑 ' + p[1], color: col(p),
+          vis: S.tbl.indexOf(ni) >= 0 ? 'hidden' : 'visible',
+          bd: S.tblSel === ni ? '#8c491a' : '#f6a06b',
+          bg: S.tblSel === ni ? '#ffe1d0' : '#f9f4ed',
+          pick: () => this.tblPick(ni)
+        }));
+        v.tblRows = ans.map((a, ri) => {
+          const ni = S.tbl[ri], p = (ni == null) ? null : notes[ni];
+          return {
+            r: p ? String(p[0]) : '', y: p ? String(p[1]) : '',
+            bg: p ? '#f0fae1' : '#fffdf6', bd: p ? '#ccdbb2' : '#dcd3c4',
+            bs: p ? 'solid' : 'dashed', cur: p ? 'default' : 'pointer',
+            drop: () => this.tblPlace(ri)
+          };
+        });
+      }
+
+      if (st.k === 'plot') {
+        const g = this.plotGeo(), PAD_L = 40, PAD_B = 24;
+        const done = this.plotDone();
+        v.plotW = (g.cx - 1) * g.cell; v.plotH = (g.cy - 1) * g.cell;
+        v.plotOW = v.plotW + PAD_L; v.plotOH = v.plotH + PAD_B;
+        v.plotLeft = PAD_L;
+        v.plotCell = g.cell;
+        const curRow = this.plotCur();
+        v.plotRows = ans.map((a, ri) => {
+          const put = S.plot.some(p => p.ok && p.r === a[0] && p.y === a[1]);
+          return {
+            r: String(a[0]), y: String(a[1]),
+            bg: curRow === ri ? '#ffe1d0' : (put ? '#f0fae1' : '#fffdf6'),
+            bd: curRow === ri ? '#8c491a' : (put ? '#ccdbb2' : '#dcd3c4'),
+            cur: put ? 'default' : 'pointer',
+            pick: () => this.plotRowPick(ri)
+          };
+        });
+        /* 눈금이 만나는 자리 — 학습자가 누를 곳. 찍힌 점은 그 양으로 섞은 색으로 채운다.
+           손가락으로도 겨눌 수 있도록 34px로 넓힌다. */
+        const HIT = 34, HOF = Math.round(HIT / 2);
+        const hits = [];
+        for (let ix = 0; ix < g.cx; ix++) for (let iy = 0; iy < g.cy; iy++) {
+          const r = ix * g.u, y = iy * g.u;
+          const put = S.plot.find(p => p.r === r && p.y === y);
+          const cross = (S.plotGx === r && S.plotGy === y);
+          hits.push({
+            left: (ix * g.cell - HOF) + 'px', top: ((g.cy - 1 - iy) * g.cell - HOF) + 'px',
+            sz: HIT + 'px',
+            bg: put ? col([r, y]) : (cross ? 'rgba(198,113,57,.22)' : 'transparent'),
+            bd: put ? (put.ok ? (put.demo ? '3px dashed #8c491a' : '3px solid #201e1d') : '3px dashed #a19786')
+                    : (cross ? '3px solid #c67139' : '2px solid transparent'),
+            tap: () => this.plotTap(r, y)
+          });
+        }
+        v.plotHits = hits;
+        /* 눈금 숫자 — 물감 색으로 적어 가로가 빨강, 세로가 노랑임을 색으로 알아보게 한다.
+           노랑은 그대로 쓰면 바탕에 묻혀 읽히지 않으므로 짙게 내린 노랑을 쓴다.
+           숫자를 누르면 그 값에 안내선이 서서 만나는 자리를 겨누기 쉬워진다. */
+        const skipX = g.sx, skipY = g.sy;
+        const xt = [], yt = [];
+        for (let ix = 0; ix < g.cx; ix += skipX) {
+          const r = ix * g.u;
+          xt.push({ t: String(r), left: (PAD_L + ix * g.cell) + 'px',
+                    fg: S.plotGx === r ? '#ffffff' : this.C_RED,
+                    bg: S.plotGx === r ? this.C_RED : 'transparent',
+                    pick: () => this.plotGuide('x', r) });
+        }
+        for (let iy = 0; iy < g.cy; iy += skipY) {
+          const y = iy * g.u;
+          yt.push({ t: String(y), top: ((g.cy - 1 - iy) * g.cell) + 'px',
+                    fg: S.plotGy === y ? '#ffffff' : this.C_YEL,
+                    bg: S.plotGy === y ? this.C_YEL : 'transparent',
+                    pick: () => this.plotGuide('y', y) });
+        }
+        v.plotXTicks = xt; v.plotYTicks = yt;
+        /* 안내선 — 학습자가 고른 눈금에만 선다 */
+        v.gxOn = S.plotGx != null ? 1 : 0;
+        v.gyOn = S.plotGy != null ? 1 : 0;
+        v.gxLeft = ((S.plotGx || 0) / g.u * g.cell) + 'px';
+        v.gyTop = (v.plotH - (S.plotGy || 0) / g.u * g.cell) + 'px';
+        v.plotLineBtn = (done && !S.plotLine) ? 1 : 0;
+        v.plotLineGo = () => this.plotLineGo();
+        v.plotLineOn = S.plotLine ? 1 : 0;
+        if (S.plotLine) {
+          v.lineLen = Math.round(Math.sqrt(v.plotW * v.plotW + v.plotH * v.plotH)) + 'px';
+          v.lineRot = 'rotate(' + (-Math.atan2(v.plotH, v.plotW) * 180 / Math.PI).toFixed(2) + 'deg)';
+        }
+        v.predMix = S.plotPred ? col([S.plotPred.r, S.plotPred.y]) : null;
+        v.predLabel = S.plotPred ? ('빨강 ' + S.plotPred.r + ' : 노랑 ' + S.plotPred.y) : '';
+        /* 나란히 놓고 비교할 색은 표 첫 줄로 섞은 색이다 —
+           1 : 2 격자에서는 그것이 곧 뭉크의 목표 색이고, 2 : 3 격자에서는 시냐크의 주황이다. */
+        v.predRef = col(ans[0]);
+        v.predRefName = st.cmpName || '목표 색';
+        /* 아직 찍지 않은 첫 줄 — 안내 문구에서 그 줄의 두 수를 그대로 불러 준다 */
+        const todo = ans.find(a => !S.plot.some(p => p.ok && p.r === a[0] && p.y === a[1]));
+        const demo0 = ans[0];
+        v.plotHint = S.plotLine
+          ? (S.plotPred ? '두 색이 똑같지요? 만들어 보지 않은 양인데도 같은 색이 나와요'
+                        : '📍 선 위에서 빨강 ' + g.pred[0] + ' 자리를 찾아 눌러 보세요')
+          : (done ? '📏 점을 다 찍었어요 — 선으로 이어 볼까요?'
+                  : (todo ? '📍 지금 찍을 차례는 빨강 ' + todo[0] + ' · 노랑 ' + todo[1]
+                            + ' — 아래 빨강 눈금과 왼쪽 노랑 눈금에서 그 수를 누르면 점이 찍혀요'
+                          : '📍 눈금 숫자를 눌러 보세요'));
+        const un = st.unitName || 'mL';
+        v.plotUnit = un;
+        v.plotDemo = '점선 동그라미(빨강 ' + demo0[0] + ' · 노랑 ' + demo0[1] + ')는 미리 찍어 둔 예시예요';
+      }
+
+      if (st.k === 'fill') {
+        v.fillRows = ans.map((a, ri) => {
+          const put = (ri === 0) ? String(a[1]) : (S.fill['f' + ri] || '');
+          return {
+            a: String(a[0]), v: put,
+            bg: put ? (ri === 0 ? '#f9f4ed' : '#f0fae1') : '#fffdf6',
+            bd: put ? (ri === 0 ? '#dcd3c4' : '#ccdbb2') : '#f6a06b',
+            bs: put ? 'solid' : 'dashed',
+            cap: ri === 0 ? '예시' : '',
+            drop: () => this.fillPlace(ri)
+          };
+        });
+        v.fillCards = (st.cards || []).map(w => ({
+          t: w, pick: () => this.fillPick(w),
+          bd: S.fillSel === w ? '#8c491a' : '#f6a06b',
+          bg: S.fillSel === w ? '#ffe1d0' : '#f9f4ed',
+          vis: Object.keys(S.fill).some(k => S.fill[k] === w) ? 'hidden' : 'visible'
+        }));
+        v.fillNote = st.note || '';
+      }
+
+      if (st.k === 'rule') {
+        v.ruleRows = ans.map((a, ri) => {
+          const put = S.rule['r' + ri];
+          return {
+            a: String(a[0]), b: String(a[1]), v: put || '',
+            bg: put ? '#f0fae1' : '#fffdf6', bd: put ? '#ccdbb2' : '#f6a06b',
+            bs: put ? 'solid' : 'dashed',
+            drop: () => this.rulePlace('r' + ri)
+          };
+        });
+        v.ruleMain = S.rule.main || '';
+        v.ruleMainBg = S.rule.main ? '#f0fae1' : '#fffdf6';
+        v.ruleMainBd = S.rule.main ? '#ccdbb2' : (this.ruleRowsDone() ? '#f6a06b' : '#dcd3c4');
+        v.ruleMainBs = S.rule.main ? 'solid' : 'dashed';
+        v.ruleMainDrop = () => this.rulePlace('main');
+        v.ruleCards = this.RULE_CARDS.map(w => ({
+          t: w, pick: () => this.rulePick(w),
+          bd: S.ruleSel === w ? '#8c491a' : '#f6a06b',
+          bg: S.ruleSel === w ? '#ffe1d0' : '#f9f4ed'
+        }));
+        v.ruleLiveOn = S.rule.main ? 1 : 0;
+        v.ruleLiveR = String(S.ruleLive || 0);
+        v.ruleLiveY = String((S.ruleLive || 0) * 2);
+        v.ruleLiveColor = S.ruleLive ? col([S.ruleLive, S.ruleLive * 2]) : 'transparent';
+        v.ruleDown = () => this.ruleMove(-1);
+        v.ruleUp = () => this.ruleMove(1);
+      }
+    }
+
     /* 조작 직후 발문 — 과제를 해결한 뒤에만, 그 조작 화면 안에서 펼친다 */
     const probeOk = this.probeOk(st);
     v.probeTitle = (st.probe && (solved || st.k === 'probe')) ? (st.probe.title || '🤔 방금 한 일을 짚어 볼까') : '';
@@ -2725,7 +3375,7 @@ class Component extends DCLogic {
       };
     }) : null;
 
-    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect','probe'].indexOf(st.k) >= 0) && !this._guest;
+    const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect','probe','tbl','plot','rule','fill'].indexOf(st.k) >= 0) && !this._guest;
     const gateOk = (st.k === 'probe') ? probeOk : (solved && probeOk);
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
