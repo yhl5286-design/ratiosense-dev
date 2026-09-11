@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609110729"></script>
+<script src="tts/manifest.js?v=202609110746"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -883,13 +883,13 @@ class Component extends DCLogic {
              '그런데 왜 간단한 비가 더 잘 어울릴까요? 이번에는 리듬으로 알아봐요.'],
       btn:'리듬 실험실로! →' });
     st.push({ k:'poly', p:'r12',
-      say:'먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 두 소리를 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.',
-      hi:'🥁 북만 · 🔺 트라이앵글만 · ▶ 함께 — 세 가지를 모두 들어 보세요' });
+      say:'북과 트라이앵글을 함께 들어 보세요. 두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요.',
+      hi:'▶ 함께 듣기를 눌러 보세요' });
     /* 같은 형식으로 2 : 3을 한 번 더 — 이 비는 색깔의 방에서 시냐크와 만든 주황의 비이기도 하다.
        비는 여기서도 앱이 먼저 말하지 않는다. 칸을 세어 학습자가 찾아낸 뒤 연결 문항으로 잇는다. */
     st.push({ k:'poly', p:'r23',
-      say:'이번에는 다른 리듬이에요. 먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.',
-      hi:'🥁 북만 · 🔺 트라이앵글만 · ▶ 함께 — 이번 비는 무엇일까요?' });
+      say:'이번에는 다른 리듬이에요. 두 소리를 함께 들어 보고, 아까와 어떻게 다른지 느껴 보세요.',
+      hi:'▶ 함께 듣기 — 이번 비는 무엇일까요?' });
     st.push({ k:'poly', p:'why',
       say:'다음 네 가지 리듬을 차례대로 들어 보면서, 두 소리가 같이 만나는 횟수를 세어 보세요.',
       hi:'네 리듬의 만나는 칸을 비교해요' });
@@ -3406,18 +3406,28 @@ class Component extends DCLogic {
     const R = React, S = this.state, p = this.polyP(st), stage = S.polyStage;
     const cur = S.polyTag === 'main' ? S.polyBeat : 0;
     const meet = this.meetCells(p);
-    const heardAll = S.heardDrum && S.heardTri && S.heardBoth;
+    /* 처음에는 함께 한 번만 들으면 된다(2026-09-11). 북만·트라이앵글만은 칸을 세는
+       자리에서 다시 나오므로, 듣기 단계에서 세 번 듣게 하면 같은 일을 두 번 시키는 셈이다. */
+    const heardAll = S.heardBoth;
     const kids = [];
 
+    /* 듣기 단계에서는 「함께 듣기」 하나만 크게 둔다. 악기를 갈라 듣는 일은 칸을 셀 때라야
+       쓸모가 있으므로 그때 나타난다. */
+    const solo = (stage !== 'listen');
+    const playBtns = [];
+    if (solo) {
+      playBtns.push(this.pBtn('bd', (S.heardDrum ? '✓ ' : '') + '🥁 북만 듣기', () => this.playPoly('drum')));
+      playBtns.push(this.pBtn('bt', (S.heardTri ? '✓ ' : '') + '🔺 트라이앵글만 듣기', () => this.playPoly('tri')));
+    }
+    playBtns.push(this.pBtn('bb', (S.heardBoth ? '✓ ' : '') + '▶ 함께 듣기', () => this.playPoly('both'), 'rs-pill',
+      solo ? { minHeight:'48px', fontSize:'16px', padding:'10px 22px' }
+           : { minHeight:'58px', fontSize:'19px', padding:'14px 34px' }));
     kids.push(R.createElement('div', { key:'play', style:{ display:'flex', gap:'8px', justifyContent:'center', flexWrap:'wrap' } },
-      this.pBtn('bd', (S.heardDrum ? '✓ ' : '') + '🥁 북만 듣기', () => this.playPoly('drum')),
-      this.pBtn('bt', (S.heardTri ? '✓ ' : '') + '🔺 트라이앵글만 듣기', () => this.playPoly('tri')),
-      this.pBtn('bb', (S.heardBoth ? '✓ ' : '') + '▶ 함께 듣기', () => this.playPoly('both'), 'rs-pill',
-        { minHeight:'48px', fontSize:'16px', padding:'10px 22px' })));
+      playBtns));
 
     const box = [];
     if (stage === 'listen') {
-      box.push(this.pCap('c0', '🎧 지금은 소리만 — 두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요', this.C.a700, 16));
+      box.push(this.pCap('c0', '🎧 지금은 소리만 — 두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요. 악기를 갈라 듣는 것은 다음 자리에서 해요', this.C.a700, 16));
       box.push(this.polyRow('r0', 0, { cur, icon:'', bdOn:this.C.n300, bgOn:this.C.n100 }));
     } else {
       box.push(R.createElement('div', { key:'l1', style:{ fontSize:'15px', fontWeight:700, textAlign:'left' } }, '🥁 북'));
@@ -3441,7 +3451,7 @@ class Component extends DCLogic {
             this.pBtn('f1', '🙂 잘 어울려요!', () => this.polyFeelPick('match'), 'rs-chip'),
             this.pBtn('f2', '😕 어색해요!', () => this.polyFeelPick('off'), 'rs-chip'))));
       } else {
-        kids.push(this.pCap('need', '북만, 트라이앵글만, 그리고 함께 — 세 가지를 모두 들어 보세요.', this.C.n700, 16));
+        kids.push(this.pCap('need', '▶ 함께 듣기를 눌러 두 소리를 들어 보세요.', this.C.n700, 16));
       }
     }
 
@@ -3835,11 +3845,11 @@ class Component extends DCLogic {
           : (S.polyStage === 'done' ? ('같은 ' + p.d + ' : ' + p.t + '가 화음에도, 리듬에도 있었어요!')
           : (S.polyStage === 'link' ? '이 비를 앞에서 어디서 만났는지 떠올려 봐요!'
           : (S.polyStage === 'find' ? '칸을 세어 보세요 — 각 악기는 몇 칸마다 울리나요?'
-          : ((S.heardDrum && S.heardTri && S.heardBoth) ? '잘 들었나요? 느낌을 골라 봐요.'
+          : (S.heardBoth ? '잘 들었나요? 느낌을 골라 봐요.'
           : '아직 비는 알려 주지 않았어요 — 먼저 귀로 들어 봐요!'))));
         if (!solved) v.footHintOverride = S.polyStage === 'link' ? '이 비를 앞에서 만난 곳을 고르면 완료!'
           : (S.polyStage === 'find' ? '두 악기가 몇 칸마다 울리는지 세어 보세요'
-          : '북만, 트라이앵글만, 함께 — 세 가지를 다 들어 보세요');
+          : '▶ 함께 듣기를 눌러 보세요');
         if (S.polyStage === 'done') { v.liveBadge = '🔗 ' + p.d + ' : ' + p.t + ' — 화음에서도 만난 비예요'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
       }
     }

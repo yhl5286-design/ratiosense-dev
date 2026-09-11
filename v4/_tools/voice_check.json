@@ -1,5 +1,5 @@
 {
- "ver": "202609110729",
+ "ver": "202609110746",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1365,8 +1365,8 @@
     {
      "step": 9,
      "who": "ratio",
-     "text": "먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 두 소리를 함께 들어 보세요.",
-     "key": "b408h7",
+     "text": "북과 트라이앵글을 함께 들어 보세요.",
+     "key": "hgsdzm",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1374,8 +1374,8 @@
     {
      "step": 9.001,
      "who": "ratio",
-     "text": "세 가지를 모두 들어야 다음 물음이 나와요.",
-     "key": "11mr8h2",
+     "text": "두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요.",
+     "key": "1vm5de4",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1392,17 +1392,8 @@
     {
      "step": 10.001,
      "who": "ratio",
-     "text": "먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요.",
-     "key": "dwvilj",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 10.002,
-     "who": "ratio",
-     "text": "세 가지를 모두 들어야 다음 물음이 나와요.",
-     "key": "11mr8h2",
+     "text": "두 소리를 함께 들어 보고, 아까와 어떻게 다른지 느껴 보세요.",
+     "key": "1srp61",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
