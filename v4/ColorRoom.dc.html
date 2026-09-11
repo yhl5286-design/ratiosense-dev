@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609110649"></script>
+<script src="tts/manifest.js?v=202609110729"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -867,8 +867,7 @@ class Component extends DCLogic {
     return [
       { k:'story', who:'ratio', emoji:'🎨',
         lines:['안녕하세요! 저는 비의 비밀을 함께 찾을 레시오예요.',
-               '여기는 색깔의 비밀 방이에요. 도움이 필요한 화가와 과학자가 기다리고 있어요.',
-               '함께 풀어 볼까요?'],
+               '여기 색깔의 비밀 방에는 화가와 과학자가 기다리고 있어요. 함께 풀어 볼까요?'],
         btn:'탐험 시작! →' },
       { k:'story', who:'munch', art:'scream_half.jpg', artAlt:'칠하다 만 그림',
         artCap:'노을 진 하늘을 칠하다 말았어요',
@@ -878,20 +877,9 @@ class Component extends DCLogic {
       { k:'story', who:'munsell', art:'munsell_circle.jpg', artBig:1,
         artAlt:'먼셀 20색상환 — 빨강·주황·노랑·초록·파랑·보라 스무 가지 색이 원을 이루며 이름과 색 값이 적혀 있다',
         artCap:'먼셀이 만든 20색상환',
-        lines:['안녕? 만나서 반가워. 나는 색깔을 연구하는 과학자 먼셀이야.',
-               '이렇게 색상환을 만든 사람이지.',
+        lines:['안녕? 만나서 반가워. 나는 색깔을 연구하는 과학자 먼셀이야. 이 색상환을 만든 사람이지.',
                '나와 함께 뭉크의 노을색을 만들어볼까?'],
         hi:'실험으로 함께 찾아보자.', btn:'좋아요! 도와드릴게요!' },
-      { k:'chips', who:'munsell', need:1, swatch:true,
-        say:'그럼 어떤 색의 물감이 필요할까? 목표색을 잘 관찰해보고 추측해 봐.',
-        chips:[ {t:'빨강 + 노랑', ok:1, fb:'맞아. 이 두 가지야.'},
-                {t:'빨강 + 파랑', ok:0, fb:'빨강과 파랑이 섞이면 보라색이 된단다. 다시 한번 생각해볼까?'},
-                {t:'노랑 + 파랑', ok:0, fb:'노랑과 파랑이 섞이면 초록색이 된단다. 다시 한번 생각해볼까?'} ] },
-      { k:'chips', who:'munsell', need:1,
-        say:'좋아. 그럼 각각 물감의 양은 얼마나 넣어야 할까?',
-        chips:[ {t:'실험으로 알아내야 해요', ok:1, fb:'바로 그거야. 실험이 필요해.'},
-                {t:'아무 양이나 괜찮아요', ok:0, fb:'넣는 양이 달라지면 색도 달라진단다. 실험으로 확인해 볼까?'},
-                {t:'많이 넣을수록 좋아요', ok:0, fb:'양이 많아도 두 물감의 비가 다르면 색이 달라진단다. 실험으로 확인해 볼까?'} ] },
       { k:'demo', who:'munsell',
         say:'아래 두 비커에 빨강 물감을 20mL 넣었어. 여기에 노랑 물감을 다르게 넣어볼거야. 왼쪽에는 20mL, 오른쪽은 60mL 넣어서 색을 확인해봐.',
         btn:'알겠어요!' },
@@ -963,10 +951,6 @@ class Component extends DCLogic {
       { k:'blank', id:'sym', who:'munsell', demo:'sym',
         say:'두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 기준이 되는 양을 앞에, 비교하는 양을 뒤에 놓고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
         hi:'📝 앞에는 기준이 되는 양, 뒤에는 비교하는 양' },
-      { k:'chips', who:'munsell', need:1,
-        say:'양이 달라도 전부 같은 색이었어. 모두 간단히 하면 언제나 1 대 2였어. 수첩에는 뭐라고 적으면 좋을까?',
-        chips:[ {t:'수첩에 「빨강 : 노랑 = 1 : 2」로 적기', ok:1, fb:'양이 얼마든 이 비만 지키면 같은 색이 나와.'},
-                {t:'수첩에 「빨강 20mL, 노랑 40mL」라고 적기', ok:0, fb:'양만 적어 두면 더 많이 만들 때는 쓸 수 없단다. 다시 한번 생각해볼까?'} ] },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
          앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
       { k:'blank', id:'letter', who:'munsell', demo:'recipe',
@@ -1001,12 +985,13 @@ class Component extends DCLogic {
       { k:'plot', who:'munsell',
         say:'이번에는 표의 기록을 격자 위에 점으로 찍어 보자. 첫 줄은 내가 미리 찍어 두었어. 아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다. 나머지 줄도 찍어 볼래?',
         hi:'📍 아래 빨강 눈금 하나, 왼쪽 노랑 눈금 하나 — 두 번만 누르면 돼요' },
-      /* 시냐크로 넘어가기 전, 안내자가 여기까지를 한 번 매듭짓는다 */
-      { k:'story', who:'ratio', emoji:'🎨',
-        lines:['지금까지 \'뭉크\'와 \'먼셀\'을 도와 색을 만드는 비의 비밀을 알아냈어요. 정말 수고했어요!',
-               '이번에는 다른 방법으로 색을 만들어 볼 거예요.',
-               '이때도 비의 비밀이 숨어 있대요. 같이 알아볼까요?'],
-        btn:'좋아요! →' },
+      { k:'rule', who:'munsell',
+        say:'마지막이야. 표의 줄마다 빨강에 얼마를 곱하면 노랑이 될까? 숫자 카드를 눌러 고른 다음 빈칸을 눌러 놓아 보렴.',
+        hi:'✖️ 숫자 카드를 눌러 고른 다음 빈칸을 눌러요',
+        probe:{ title:'🤔 두 가지로 적어 보았어', rows:[
+          { q:'「빨강 : 노랑 = 1 : 2」와 「노랑 = 빨강 × 2」는 어떤 사이일까요?', opts:[
+            { t:'같은 관계를 다르게 적은 것이에요', ok:1 },
+            { t:'서로 다른 관계예요', ok:0, fb:'빨강이 1이면 노랑은 2였지? 「빨강 × 2」의 빨강 자리에 1을 넣으면 얼마가 될까?' } ] } ] } },
       /* 시냐크 소개 — 시냐크 본인의 점묘화 대표작을 그대로 보여 준다. */
       { k:'story', who:'signac', art:'signac_feneon.jpg', art2:'signac_incomplete.jpg', art2Wash:1,
         artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890)  ·  「양산을 든 여인」 — 주황이 빠진 미완성',
@@ -1044,8 +1029,7 @@ class Component extends DCLogic {
          칸 수가 많은 쪽이 오히려 비는 작은 사례를 비교하게 하여 개수로 판단하는 습관을
          드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
       { k:'story', who:'signac', art:'signac_painting.jpg', artCap:'「양산을 든 여인」 완성!',
-        lines:['점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3이었지!',
-               '내가 원하던 색을 연습해보고 그림을 그릴 수 있게 만들어줘서 고마워.'],
+        lines:['점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3이었지! 덕분에 그림을 완성했어, 고마워.'],
         btn:'다음 →' },
       /* 시냐크가 작별한 뒤이므로 이 물음은 안내자 레시오가 던진다 */
       { k:'chips', who:'ratio', need:1, demo:'cmp',
