@@ -42,12 +42,24 @@ function make(name, done) {
 function lines(name, done) {
   const room = make(name, done), out = [];
   (room.STEPS || []).forEach((s, i) => {
-    const raw = s.k === 'story' ? (s.lines || []).join(' ') : s.say;
+    /* story라도 lines가 없으면 say를 읽는다 — 지도의 방은 sayStep이 언제나 say를 쓴다.
+       예전에는 story를 무조건 lines로만 보아 지도 1·5단계가 통째로 빠졌다. */
+    const raw = (s.k === 'story' && s.lines && s.lines.length) ? s.lines.join(' ') : s.say;
     const t = norm(raw, name);
     if (!t) return;
     const who = name === 'EvalRoom' ? 'ratio' : (s.who || 'ratio');
     out.push({ step: i, who, text: t, key: ttsKey(who + '|' + t) });
   });
+  /* 소리 방 4단계(rooms)는 STEPS에 say가 없고 roomsSay(stage)가 네 갈래를 만든다.
+     넷 다 학습자가 듣는 대사이므로 모두 뽑는다. */
+  if (name === 'SoundRoom' && typeof room.roomsSay === 'function') {
+    const idx = (room.STEPS || []).findIndex(s => s.k === 'rooms');
+    ['miss', 'collect', 'rooms', 'done'].forEach((stage, j) => {
+      const t = norm(room.roomsSay(stage), name);
+      if (t) out.push({ step: (idx < 0 ? 3 : idx) + j * 0.01, who: 'ratio', text: t,
+                        key: ttsKey('ratio|' + t) });
+    });
+  }
   /* STEPS 밖에서 부르는 대사 — 색깔 방의 컵 세기 물음 */
   if (name === 'ColorRoom' && room.CUP_ASK) {
     const t = norm(room.CUP_ASK, name);

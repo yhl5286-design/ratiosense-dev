@@ -257,17 +257,7 @@ button{font-family:inherit}
           <sc-if value="{{vidOpen}}" hint-placeholder-val="{{false}}">
             <video onEnded="{{movieEnd}}" src="eratos.mp4?v=2" controls playsinline preload="metadata" style="width:min(560px,88vw);border-radius:var(--radius-md);border:3px solid var(--color-neutral-300);background:var(--color-neutral-900)"></video>
           </sc-if>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .45s ease">
-            <div style="width:min(260px,80vw);border-radius:var(--radius-md);overflow:hidden;border:4px solid var(--color-accent-500);box-shadow:var(--shadow-lg);background:var(--color-neutral-100)">
-              <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:14px;text-align:center;padding:6px">🃏 지도의 비밀 카드</div>
-              <div style="padding:var(--space-3);display:flex;flex-direction:column;align-items:center;gap:8px">
-                <div style="font-size:15px;font-weight:800;text-align:center;line-height:1.6">지도는 실제 거리를 일정한 비율로 줄인 것!</div>
-                <div style="font-size:44px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 26px;line-height:1.3">8</div>
-              </div>
-            </div>
-            <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">황금비의 마지막 자리예요!</div>
-          </div>
-          <a href="EvalRoom.dc.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">📝 마지막 방으로 이어가기 →</a>
+          <a href="index.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🏠 처음 화면으로 →</a>
         </div>
       </sc-if>
 
@@ -453,8 +443,8 @@ class Component extends DCLogic {
         say:'지도의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
         hi:'🃏 지도의 비밀 카드 — 빈칸 채우기' },
       { k:'finish', who:'ratio',
-        say:'지도의 비밀을 잘 찾아냈어요! 카드 숫자 8을 얻었어요! 잘 기억해두세요!',
-        hi:'🎉 탐험 완료 — 카드 숫자 8 획득' }
+        say:'지도의 비밀을 잘 찾아냈어요! 축척으로 실제 거리를 구하고, 그림자의 비로 지구 둘레까지 재어 보았어요!',
+        hi:'🎉 지도의 비밀 — 심화 학습 완료' }
     ];
   }
 
@@ -816,7 +806,7 @@ class Component extends DCLogic {
     clearTimeout(this._tT); clearTimeout(this._autoT);
     const patch = { i:n, toast:null, selBlank:null };
     if (this.STEPS[n].k === 'zoom') { patch.zPhase = 0; patch.zVal = 100; }
-    if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); this.awardDigit(); }, 350);
+    if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
     this.setState(patch);
     this.plog('nav', { to:n });
     this._sayT = setTimeout(() => this.sayStep(n), 380);
@@ -1180,8 +1170,10 @@ class Component extends DCLogic {
     this.toast('🔗', '세 방이 이어졌어요!', o.fb, 'ok');
   }
 
-  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
-     네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
+  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣던 자리.
+     2026-09-11부터 지도의 비밀은 심화 학습이라 본 흐름 밖에 있고, 카드는 색깔·소리
+     두 방에서 네 장을 모두 받는다. 그래서 이 함수를 부르지 않는다.
+     심화를 다시 본 흐름에 넣는다면 부르는 자리를 되살리고 소리의 방에서 8을 빼야 한다. */
   awardDigit() {
     const D = this.DIGIT;
     let got = [];

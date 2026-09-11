@@ -1,0 +1,94 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RatioSense 완주 시간·로그 측정</title>
+<!--
+  방을 iframe에 띄우고 끝까지 걸어가며 두 가지를 잰다.
+  ① 실제로 걸리는 시간 — 낭독이 끝나고 화면이 가라앉기까지를 잰다(진짜 측정값)
+  ② plog 이벤트 — 앱이 iframe 안에서 부모에게 보내는 pilotLog를 그대로 받는다
+     (게스트여도 보내므로 연구용 시트에 아무것도 쌓이지 않는다)
+
+  조작에 걸리는 시간은 잴 수 없다(사람이 해야 한다). 화면 유형별 예상치를 따로 더한다.
+  ?room=ColorRoom 처럼 방을 지정한다. 끝나면 window.RESULT에 결과가 담긴다.
+-->
+<body style="font:13px/1.5 ui-monospace,monospace;margin:0">
+<div id="hud" style="position:fixed;top:0;left:0;right:0;background:#111;color:#0f0;padding:6px 10px;z-index:9">준비…</div>
+<iframe id="fr" style="position:absolute;top:32px;left:0;width:1150px;height:900px;border:0"></iframe>
+<script>
+const Q = new URLSearchParams(location.search);
+const ROOM = Q.get('room') || 'ColorRoom';
+const SETTLE = +(Q.get('settle') || 900);   /* 화면이 가라앉았다고 볼 무동작 시간 */
+const CAP = +(Q.get('cap') || 400);          /* 단계 최대 대기(초 아님, ×100ms) */
+
+const events = [];      /* {ms, ev, data} */
+const screens = [];     /* {i, sk, waitMs} */
+let t0 = 0;
+
+addEventListener('message', e => {
+  const d = e.data;
+  if (!d || d.type !== 'pilotLog') return;
+  events.push({ ms: Date.now() - t0, ev: d.event, data: d.data });
+});
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function doc() { return document.getElementById('fr').contentDocument; }
+function win() { return document.getElementById('fr').contentWindow; }
+
+/* 화면 머리말의 「n / N」 */
+function pos() {
+  const d = doc(); if (!d) return null;
+  const m = (d.body.innerText || '').match(/(\d+)\s*\/\s*(\d+)/);
+  return m ? { i: +m[1], n: +m[2] } : null;
+}
+
+/* 「다음 →」 · 「제출! →」 · 「다음 방으로」 단추 */
+function nextBtn() {
+  const d = doc(); if (!d) return null;
+  const bs = [...d.querySelectorAll('button')];
+  return bs.find(b => /다음|제출|시작|들어가기/.test(b.textContent || '')) || null;
+}
+
+/* 낭독이 끝나고 화면이 조용해질 때까지 기다린다 — 마지막 이벤트 뒤 SETTLE ms */
+async function settle() {
+  let last = events.length, quiet = 0;
+  for (let k = 0; k < CAP; k++) {
+    await sleep(100);
+    const speaking = (() => { try { return win().speechSynthesis && win().speechSynthesis.speaking; } catch (e) { return false; } })();
+    if (events.length !== last) { last = events.length; quiet = 0; continue; }
+    if (speaking) { quiet = 0; continue; }
+    quiet += 100;
+    if (quiet >= SETTLE) return k * 100;
+  }
+  return CAP * 100;
+}
+
+async function run() {
+  const fr = document.getElementById('fr');
+  /* 게스트로 들어가 잠금 화면을 건너뛴다 */
+  fr.src = ROOM + '.dc.html?code=guest';
+  await new Promise(r => fr.onload = r);
+  try { win().localStorage.setItem('rs3_user', JSON.stringify({ code: 'guest', ts: Date.now() })); } catch (e) {}
+  fr.src = ROOM + '.dc.html?code=guest';
+  await new Promise(r => fr.onload = r);
+  await sleep(1200);
+  t0 = Date.now();
+
+  const hud = document.getElementById('hud');
+  let guard = 0;
+  while (guard++ < 120) {
+    const p = pos();
+    const waited = await settle();
+    screens.push({ i: p ? p.i : -1, n: p ? p.n : -1, waitMs: waited });
+    hud.textContent = `${ROOM}  ${p ? p.i + '/' + p.n : '?'}  대기 ${(waited/1000).toFixed(1)}s  · 이벤트 ${events.length}`;
+    if (p && p.i >= p.n) break;
+    const b = nextBtn();
+    if (!b) { hud.textContent += '  ← 다음 단추를 못 찾음'; break; }
+    b.click();
+    await sleep(250);
+  }
+  window.RESULT = { room: ROOM, totalMs: Date.now() - t0, screens, events };
+  window.DONE = 1;
+  hud.textContent = `끝 — ${ROOM} 화면 ${screens.length}개 · 낭독·전환 합계 ${((Date.now()-t0)/1000).toFixed(1)}초 · 이벤트 ${events.length}건`;
+}
+run();
+</script>

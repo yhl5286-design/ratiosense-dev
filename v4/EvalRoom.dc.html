@@ -59,10 +59,14 @@ button{font-family:inherit}
 .rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
 .rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
 .rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
-/* 마지막 화면의 활동 카드 — 일곱 장이 네 칸 두 줄로 앉게 칸 수를 못 박는다.
+/* 마지막 화면의 활동 카드 — 다섯 장이 세 칸 두 줄로 앉게 칸 수를 못 박는다.
    auto-fit에 맡기면 창이 조금만 좁아져도 세 칸 세 줄이 되어 화면 밖으로 넘친다. */
-.rs-wrapgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%}
-@media (max-width:860px){.rs-wrapgrid{grid-template-columns:repeat(3,1fr);gap:10px}}
+.rs-wrapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+/* 그림 높이를 묶어 두 줄이 고르게 앉게 한다 — 한 장이라도 길면 그 줄 전체가 따라 커져
+   아래 맺음말이 화면 밖으로 밀린다. contain이라 그림은 잘리지 않고 여백만 생긴다. */
+.rs-wrapgrid figure>img{max-height:196px;object-fit:contain;background:var(--color-neutral-100)}
+.rs-wrapgrid figure>div{max-height:196px;overflow:hidden}
+@media (max-width:860px){.rs-wrapgrid{grid-template-columns:repeat(2,1fr);gap:10px}}
 @media (max-width:600px){.rs-wrapgrid{grid-template-columns:repeat(2,1fr);gap:9px}}
 .rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
 .rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
@@ -199,7 +203,7 @@ button{font-family:inherit}
             <span style="font-size:19px;color:var(--color-accent-2-700)">황금비 φ!</span>
           </div>
           {{phiArt}}
-          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">모양에서도, 수에서도 같은 값 <b>1.618</b>이 나와요.<br>여러분이 색과 소리와 지도에서 찾은 것처럼 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
+          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">모양에서도, 수에서도 같은 값 <b>1.618</b>이 나와요.<br>여러분이 색과 소리에서 찾은 것처럼 — 세상은 <b>비의 비밀</b>로 가득해요!</div>
         </div>
       </sc-if>
 
@@ -260,21 +264,7 @@ button{font-family:inherit}
               </figcaption>
             </figure>
 
-            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
-              <img src="wrap_map.jpg" alt="축척 1 대 10,000인 지도에서 실제 거리를 구한 화면" style="width:100%;display:block">
-              <figcaption style="padding:6px 9px 8px;text-align:center">
-                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">🗺️ 지도</div>
-                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">축척의 비 1 : 10,000</div>
-              </figcaption>
-            </figure>
 
-            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
-              <img src="wrap_earth.jpg" alt="그림자의 각과 두 도시 사이 거리로 지구 둘레를 구한 화면" style="width:100%;display:block">
-              <figcaption style="padding:6px 9px 8px;text-align:center">
-                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">🌍 지구</div>
-                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">그림자의 비 1 : 50</div>
-              </figcaption>
-            </figure>
 
             <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
               <img src="wrap_phi.jpg" alt="기준 막대를 늘여도 두 막대의 비가 그대로인 황금비 화면" style="width:100%;display:block">
@@ -289,11 +279,11 @@ button{font-family:inherit}
           <div style="font-size:17px;font-weight:800;color:var(--color-neutral-700);line-height:1">↓</div>
 
           <div style="font-size:21px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:6px 22px;text-align:center">
-            일곱 가지 모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
+            다섯 가지 모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
           </div>
 
           <div style="font-size:14.5px;font-weight:700;line-height:1.5;text-align:center;color:var(--color-neutral-800);max-width:min(980px,94%)">
-            물감과 소리, 리듬과 지도, 지구와 황금비 — 서로 달라 보이지만
+            물감과 소리, 리듬과 줄 길이와 황금비 — 서로 달라 보이지만
             모두 <b>두 양을 비교하는 비</b> 하나로 이어져 있었어요.<br>
             세상에는 아직 만나지 못한 <b>비와 비율의 비밀</b>이 훨씬 더 많이 숨어 있어요.
           </div>
@@ -354,8 +344,8 @@ class Component extends DCLogic {
   CARDS = [
     { id:'color1', digit:'1', room:'🎨 색깔의 비밀 ①', concept:'양이 달라도 비가 같으면 같은 색!' },
     { id:'color2', digit:'6', room:'🎨 색깔의 비밀 ②', concept:'양이 달라도 비가 같으면 같은 색!' },
-    { id:'sound',  digit:'1', room:'🎼 소리의 비밀',   concept:'진동수의 비가 간단할수록 어울리는 화음!' },
-    { id:'map',    digit:'8', room:'🗺️ 지도의 비밀',   concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' }
+    { id:'sound1', digit:'1', room:'🎼 소리의 비밀 ①', concept:'진동수의 비가 간단할수록 어울리는 화음!' },
+    { id:'sound2', digit:'8', room:'🎼 소리의 비밀 ②', concept:'줄의 길이를 간단한 비로 나누면 어울리는 음!' }
   ];
   WHO = {
     /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
@@ -380,10 +370,10 @@ class Component extends DCLogic {
     return [
       /* 문 앞에서 말하고 문 앞에서 누른다 — 안내와 조작을 한 화면에 둔다 */
       { k:'door',
-        say:'드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리와 지도에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요. 색깔, 소리, 지도 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
+        say:'드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리의 방에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요. 색깔, 소리 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
         hi:'🔐 마지막 문 — 카드의 숫자를 차례로' },
       { k:'finale',
-        say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요? 색과 소리와 지도에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
+        say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요? 색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
         hi:'🎉 여정 완주 — 기준을 바꿔 가며 두 막대를 비교해 봐요' },
       /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
          소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
