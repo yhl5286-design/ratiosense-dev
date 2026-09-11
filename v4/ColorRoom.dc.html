@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202608270500"></script>
+<script src="tts/manifest.js?v=202609110649"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -655,7 +655,7 @@ button{font-family:inherit}
               <sc-for list="{{plotXTicks}}" as="t" hint-placeholder-count="4">
                 <button onClick="{{t.pick}}" aria-label="빨강 눈금" style="position:absolute;left:{{t.left}};bottom:0;min-width:24px;height:22px;padding:0 4px;font-size:12.5px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};border:none;border-radius:7px;cursor:pointer;transform:translateX(-50%)">{{t.t}}</button>
               </sc-for>
-              <div style="position:absolute;left:{{plotLeft}}px;top:0;width:{{plotW}}px;height:{{plotH}}px;background:#fffdf6;border-left:3px solid #645c50;border-bottom:3px solid #645c50;background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCell}}px)">
+              <div style="position:absolute;left:{{plotLeft}}px;top:0;width:{{plotW}}px;height:{{plotH}}px;background:#fffdf6;border-left:5px solid {{cYel}};border-bottom:5px solid {{cRed}};background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCell}}px)">
                 <sc-if value="{{gxOn}}" hint-placeholder-val="{{false}}">
                   <div style="position:absolute;left:{{gxLeft}};top:0;bottom:0;width:3px;margin-left:-1px;background:{{cRed}};opacity:.55;animation:rsBlend .3s ease"></div>
                 </sc-if>
@@ -1001,13 +1001,6 @@ class Component extends DCLogic {
       { k:'plot', who:'munsell',
         say:'이번에는 표의 기록을 격자 위에 점으로 찍어 보자. 첫 줄은 내가 미리 찍어 두었어. 아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다. 나머지 줄도 찍어 볼래?',
         hi:'📍 아래 빨강 눈금 하나, 왼쪽 노랑 눈금 하나 — 두 번만 누르면 돼요' },
-      { k:'rule', who:'munsell',
-        say:'마지막이야. 표의 줄마다 빨강에 얼마를 곱하면 노랑이 될까? 숫자 카드를 눌러 고른 다음 빈칸을 눌러 놓아 보렴.',
-        hi:'✖️ 숫자 카드를 눌러 고른 다음 빈칸을 눌러요',
-        probe:{ title:'🤔 두 가지로 적어 보았어', rows:[
-          { q:'「빨강 : 노랑 = 1 : 2」와 「노랑 = 빨강 × 2」는 어떤 사이일까요?', opts:[
-            { t:'같은 관계를 다르게 적은 것이에요', ok:1 },
-            { t:'서로 다른 관계예요', ok:0, fb:'빨강이 1이면 노랑은 2였지? 「빨강 × 2」의 빨강 자리에 1을 넣으면 얼마가 될까?' } ] } ] } },
       /* 시냐크로 넘어가기 전, 안내자가 여기까지를 한 번 매듭짓는다 */
       { k:'story', who:'ratio', emoji:'🎨',
         lines:['지금까지 \'뭉크\'와 \'먼셀\'을 도와 색을 만드는 비의 비밀을 알아냈어요. 정말 수고했어요!',
@@ -1091,7 +1084,7 @@ class Component extends DCLogic {
             { t:'아무 차이가 없어요', ok:0, fb:'1 : 2는 빨강 한 칸에 노랑이 두 칸씩 올라갔지요. 2 : 3은 몇 칸씩 올라갔나요?' } ] } ] } },
       /* 비율로 넘어가기 전, 안내자가 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
       { k:'blank', id:'cells', who:'ratio',
-        say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체 100에 대해 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
+        say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체 100 가운데 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
       /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
          화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3). */
       { k:'reflect', who:'ratio',
@@ -1321,7 +1314,20 @@ class Component extends DCLogic {
     try { speechSynthesis.cancel(); } catch(e) {}
   }
   /* 비를 읽을 때 쓰는 한자어 수 — 1은 '한'이 아니라 '일'로 읽혀야 한다 */
-  SINO(v) { const S = ['영','일','이','삼','사','오','육','칠','팔','구','십']; return +v <= 10 ? S[+v] : v; }
+  /* 비를 소리로 낼 때 쓰는 한자어 수 — 「1 대 2」를 「한 대 둘」이 아니라 「일 대 이」로 읽힌다.
+     만 단위까지 읽는다. 축척 1 : 10,000은 「일 대 만」이다(2026-09-11 연구자 결정).
+     네 방과 _tools/make_voice_check.mjs에 같은 규칙이 있다 — 한쪽만 고치면 음성 키가 어긋난다. */
+  SINO(v) {
+    const D = ['영','일','이','삼','사','오','육','칠','팔','구'];
+    const n = +String(v).replace(/,/g, '');
+    if (!isFinite(n) || n < 0 || n > 99999999 || String(v).indexOf('.') >= 0) return v;
+    if (n === 0) return '영';
+    const u4 = (x) => { const u = ['천','백','십',''], d = [1000,100,10,1]; let s = '';
+      for (let i = 0; i < 4; i++) { const q = Math.floor(x / d[i]) % 10;
+        if (q) s += ((q === 1 && i < 3) ? '' : D[q]) + u[i]; } return s; };
+    const man = Math.floor(n / 10000), rest = n % 10000;
+    return (man ? ((man === 1 ? '' : u4(man)) + '만') : '') + (rest ? u4(rest) : '');
+  }
   speak(text, who) {
     this.stopVoice();
     this._speakStamp = Date.now();
@@ -1340,26 +1346,46 @@ class Component extends DCLogic {
       .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
       /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
          「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      .replace(/(?<![\d.])([\d,]+)\s*대\s*([\d,]+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
       .replace(/mL/g, ' 밀리리터 ').replace(/\s+/g, ' ').trim();
     if (!txt || txt === '[object Object]') return;
-    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
+       CLOVA에는 쉼 표기(SSML·break)가 없어 문장 사이 호흡을 이렇게밖에 낼 수 없다.
+       한 문장만 고치면 그 문장만 다시 만들면 된다.
+       ⚠ 문장 나누기(SENT)는 _tools/make_voice_check.mjs와 같아야 한다 — 다르면 음성 키가 어긋난다. */
+    const parts = this.SENT(txt);
+    if (!parts.length) return;
     const man = window.RS_TTS;
-    if (man && man[key]) {
-      try {
-        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
-           브라우저에 남은 옛 음성이 재생되지 않는다. */
-        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
-        a.volume = 0.95; this._mp3 = a; this._speaking = true;
-        a.onended = () => { this._speaking = false; };
-        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
-        return;
-      } catch(e) {}
-    }
-    this._speakSynth(txt, who);
+    const tok = this._vtok;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      /* 문장 사이 숨 — 한 덩어리로 합성할 때 뭉개지던 호흡을 여기서 낸다 */
+      const nextGap = () => { if (tok === this._vtok) this._sayT = setTimeout(() => step(i + 1), 200); };
+      const key = this.ttsKey((who||'ratio') + '|' + parts[i]);
+      if (man && man[key]) {
+        try {
+          /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+             브라우저에 남은 옛 음성이 재생되지 않는다. */
+          const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+          a.volume = 0.95; this._mp3 = a;
+          a.onended = nextGap;
+          a.play().catch(() => { this._mp3 = null; this._speakSynth(parts[i], who, nextGap); });
+          return;
+        } catch(e) {}
+      }
+      /* mp3가 없는 문장만 브라우저 음성으로 읽고 다음 문장으로 넘어간다 */
+      this._speakSynth(parts[i], who, nextGap);
+    };
+    step(0);
   }
-  _speakSynth(txt, who) {
-    if (!('speechSynthesis' in window)) return;
+
+  /* 낭독을 문장으로 나눈다 — 마침표·물음표·느낌표 뒤에 공백이 있을 때만 자른다.
+     「1.618」처럼 소수점 뒤에는 공백이 없어 잘리지 않는다. */
+  SENT(t) { return String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean); }
+  _speakSynth(txt, who, done) {
+    if (!('speechSynthesis' in window)) { if (done) done(); return; }
     const parts = this.chunks(txt);
     const tok = this._vtok;
     const cfg = this.WHO[who] || this.WHO.narrator;
@@ -1372,7 +1398,7 @@ class Component extends DCLogic {
     this._speaking = true;
     const step = (i) => {
       if (tok !== this._vtok) return;
-      if (i >= parts.length) { this._speaking = false; return; }
+      if (i >= parts.length) { if (done) done(); else this._speaking = false; return; }
       const u = new SpeechSynthesisUtterance(parts[i]);
       u.lang = 'ko-KR';
       if (v) u.voice = v;
@@ -1975,7 +2001,10 @@ class Component extends DCLogic {
       return;
     }
     if (st.mode === 'wall') {
-      this.setState({ wallDone: this.state.wallDone + 1 });
+      /* 큰 통에서 만든 양도 수첩에 남긴다 — 뒤의 표·격자가 이 값을 쓴다 */
+      const fw = this.state.found.some(f => f[0] === a && f[1] === b)
+        ? this.state.found : this.state.found.concat([[a, b]]);
+      this.setState({ wallDone: this.state.wallDone + 1, found: fw });
       this.markSolved(); this.confetti();
       this.toast('🎨', '큰 통 가득 완성!',
         '빨강 ' + a + 'mL : 노랑 ' + b + 'mL — 간단히 하면 ' + (a/g) + ' : ' + (b/g) + ', 처음 찾은 비 그대로예요!', 'ok');
@@ -2340,9 +2369,11 @@ class Component extends DCLogic {
 
   /* 수첩의 기록 — 실험을 건너뛰고 들어온 게스트에게는 화면이 비지 않도록 시범 값을 채운다 */
   notes() {
-    const out = this.state.found.filter(p => p && p[0] > 0 && p[1] > 0).slice(0, 3);
-    [[20,40],[40,80],[30,60]].forEach(b => {
-      if (out.length < 3 && !out.some(p => p[0] === b[0])) out.push(b);
+    /* 네 쌍이다 — 실험 세 번에 뭉크의 큰 통(50 : 100)까지. 큰 통도 학습자가 제 손으로
+       노랑을 부어 만든 양이므로 표·격자에 함께 올린다(2026-09-11). */
+    const out = this.state.found.filter(p => p && p[0] > 0 && p[1] > 0).slice(0, 4);
+    [[20,40],[30,60],[40,80],[50,100]].forEach(b => {
+      if (out.length < 4 && !out.some(p => p[0] === b[0])) out.push(b);
     });
     return out;
   }
@@ -3266,14 +3297,16 @@ class Component extends DCLogic {
         for (let ix = 0; ix < g.cx; ix += skipX) {
           const r = ix * g.u;
           xt.push({ t: String(r), left: (PAD_L + ix * g.cell) + 'px',
-                    fg: S.plotGx === r ? '#ffffff' : this.C_RED,
+                    /* 숫자는 검정이라야 잘 보인다 — 축이 무슨 색인지는 축 선과 이름이 알려 준다.
+                       고른 눈금만 축 색 바탕에 흰 글씨로 뒤집는다. */
+                    fg: S.plotGx === r ? '#ffffff' : '#201e1d',
                     bg: S.plotGx === r ? this.C_RED : 'transparent',
                     pick: () => this.plotGuide('x', r) });
         }
         for (let iy = 0; iy < g.cy; iy += skipY) {
           const y = iy * g.u;
           yt.push({ t: String(y), top: ((g.cy - 1 - iy) * g.cell) + 'px',
-                    fg: S.plotGy === y ? '#ffffff' : this.C_YEL,
+                    fg: S.plotGy === y ? '#ffffff' : '#201e1d',
                     bg: S.plotGy === y ? this.C_YEL : 'transparent',
                     pick: () => this.plotGuide('y', y) });
         }

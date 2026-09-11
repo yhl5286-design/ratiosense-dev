@@ -65,6 +65,9 @@
   #codeShow .cbox.cur{background:var(--color-neutral-100);border-color:var(--color-accent)}
   .padhint{font-size:13px;font-weight:700;color:var(--color-neutral-600);margin-bottom:var(--space-2)}
   .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-2)}
+/* 첫 칸(E·S)은 둘뿐이므로 크게 둘로 나눠 놓는다 — 고를 것이 적어야 헤매지 않는다 */
+.pad.heads{grid-template-columns:repeat(2,1fr);gap:var(--space-3)}
+.pad.heads button{min-height:96px;font-size:44px}
   .padrow{display:grid;grid-template-columns:1fr 1.3fr;gap:var(--space-2);margin-top:var(--space-2)}
   .pad button{font-family:inherit;font-weight:700;font-size:21px;min-height:48px;padding:var(--space-2) 0;
     border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);background:var(--color-neutral-100);
@@ -87,7 +90,7 @@
   <div class="sub">방마다 숨어 있는 <b>비(比)의 비밀</b>을 찾아가는 비율 탐험!<br>비밀 카드를 모아 마지막 문을 열어요</div>
   <div class="chiprow">
     <span class="mychip" id="chip" style="display:none">🙋 <span id="chipNo"></span></span>
-    <span class="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(색깔의 방 두 장, 소리·지도 한 장씩)</span></span>
+    <span class="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(색깔의 방 두 장, 소리의 방 두 장)</span></span>
     <button class="ghost" id="chgBtn" style="display:none">코드 바꾸기</button>
     <span class="guestnote" id="guestNote">🔎 게스트 모드 — 활동 기록이 남지 않아요</span>
   </div>
@@ -102,11 +105,11 @@
 <div id="loginOv">
   <div class="lg">
     <h2>🙋 내 코드를 눌러 주세요</h2>
-    <div class="hint">연구자에게 받은 <b>4자리 코드</b>를 눌러 주세요 (예: HQ3T)</div>
+    <div class="hint">연구자에게 받은 <b>내 코드</b>를 눌러 주세요 (예: S01)</div>
     <div id="codeShow" aria-live="polite" aria-label="입력한 코드">
-      <span class="cbox"></span><span class="cbox"></span><span class="cbox"></span><span class="cbox"></span>
+      <span class="cbox"></span><span class="cbox"></span><span class="cbox"></span>
     </div>
-    <div class="padhint">글자를 누르면 칸이 채워져요</div>
+    <div class="padhint" id="padHint">먼저 앞 글자를 눌러 주세요</div>
     <div class="pad" id="padGrid"></div>
     <div class="padrow">
       <button class="del" data-k="del">← 지우기</button><button class="go" data-k="go">시작!</button>
@@ -117,7 +120,7 @@
 </div>
 
 <script>
-/* 허브 — 식별 코드(연구자가 부여한 4자리 영문 대문자+숫자)만 사용, 성명·이메일·계정 미수집.
+/* 허브 — 식별 코드(연구자가 부여한 E01·S01 꼴의 세 글자)만 사용, 성명·이메일·계정 미수집.
    저장 키·형식은 구버전 v3와 동일: rs3_user {code,ts}, rs3_done:<code>, rs3_cards:<code> */
 /* 심화 학습 — 지도의 비밀은 사용성 평가 범위 밖이다. 평가 때는 학생도 전문가도 게스트도
    색깔·소리 두 방만 한다. 모두가 같은 활동을 해야 로그·관찰·SUS를 견줄 수 있기 때문이다.
@@ -125,11 +128,14 @@
 const DEEP=false;
 const LOG_EP='https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
 const LOG_TK='ratiosense-2026';
-/* 허용 문자 — 혼동하기 쉬운 글자·숫자(B I L O S Z / 0 1 2 5 8)는 제외 */
-const CODE_LETTERS='ACDEFGHJKMNPQRTUVWXY';
-const CODE_DIGITS='34679';
-const CODE_CHARS=CODE_LETTERS+CODE_DIGITS;
-const CODE_RE=new RegExp('^['+CODE_CHARS+']{4}$');
+/* 식별 코드 — 앞 글자 하나 + 두 자리 수(2026-09-11 개정).
+   E = 전문가(E01~), S = 학생(S01~). 예전에는 네 자리에 스무 글자를 섞어 눌러야 해
+   키패드에 단추가 스물다섯 개였고 아이들이 헤맸다. 이제 앞 글자는 둘 중 하나,
+   뒤 두 칸은 숫자뿐이라 잘못 누를 자리가 거의 없다. */
+const CODE_HEADS='ES';
+const CODE_DIGITS='0123456789';
+const CODE_CHARS=CODE_HEADS+CODE_DIGITS;
+const CODE_RE=/^[ES][0-9]{2}$/;
 const $=s=>document.querySelector(s);
 function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
@@ -188,9 +194,9 @@ function getCards(){try{return JSON.parse(localStorage.getItem(uk('rs3_cards'))|
 
 let code='';
 function paint(){const b=$('#codeShow').children;
-  for(let i=0;i<4;i++){const el=b[i];el.textContent=code[i]||'';
+  for(let i=0;i<b.length;i++){const el=b[i];el.textContent=code[i]||'';
     el.className='cbox'+(code[i]?' filled':(i===code.length?' cur':''));}}
-function openLogin(){code='';paint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
+function openLogin(){code='';paint();padPaint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
 function showChip(code){
   $('#chipNo').textContent=code==='guest'?'게스트':code;
   $('#chip').style.display='inline-block';
@@ -236,23 +242,42 @@ function refresh(){
     if(dn.includes(a.dataset.r)){const s=document.createElement('span');s.className='donechk';s.textContent='✅';a.appendChild(s);}
     if(!guest&&a.dataset.r===next&&opened[a.dataset.r])a.classList.add('next-room');});
 }
-/* 화면 키패드 — 허용 문자만 생성(글자 20 + 숫자 5) */
-(function(){const pg=$('#padGrid');
-  CODE_CHARS.split('').forEach(ch=>{const b=document.createElement('button');
-    b.type='button';b.dataset.k=ch;b.textContent=ch;
-    if(CODE_DIGITS.indexOf(ch)>=0)b.className='num';
-    pg.appendChild(b);});})();
+/* 화면 키패드 — 누를 차례에 맞는 단추만 띄운다.
+   첫 칸이면 E·S 둘만, 그 뒤로는 0~9만. 고를 것이 적어야 아이가 헤매지 않는다. */
+function padPaint(){
+  const pg=$('#padGrid'); if(!pg) return;
+  const first=(code.length===0);
+  pg.classList.toggle('heads',first);
+  pg.innerHTML='';
+  (first?CODE_HEADS:CODE_DIGITS).split('').forEach(ch=>{
+    const b=document.createElement('button');
+    b.type='button'; b.dataset.k=ch; b.textContent=ch;
+    if(!first) b.className='num';
+    pg.appendChild(b);});
+  const h=$('#padHint');
+  if(h) h.textContent = first ? '먼저 앞 글자를 눌러 주세요 — 전문가는 E, 학생은 S'
+                              : '이제 숫자 두 개를 눌러 주세요';
+}
 function submitCode(){
   if($('#loginOv').style.display!=='flex')return; /* Enter+클릭이 겹쳐 두 번 들어오는 것 차단 */
   const v=code.toUpperCase();
-  if(!CODE_RE.test(v)){$('#lgErr').textContent='연구자에게 받은 4자리 코드를 입력해 주세요';return;}
+  if(!CODE_RE.test(v)){$('#lgErr').textContent='연구자에게 받은 코드를 눌러 주세요 — 앞 글자 하나(E 또는 S)와 숫자 두 개예요';return;}
   saveUser(v);showChip(v);$('#loginOv').style.display='none';plog(v,'login',{});refresh();}
 function press(k){
   if(k==='del'){code=code.slice(0,-1);}
   else if(k==='go'){submitCode();return;}
-  else if(code.length<4){code+=String(k).toUpperCase();}
-  $('#lgErr').textContent='';paint();}
-$('#padGrid').onclick=e=>{const b=e.target.closest('button');if(b)press(b.dataset.k);};
+  else if(code.length<3){
+    const ch=String(k).toUpperCase();
+    /* 차례에 맞지 않는 글자는 받지 않는다 — 첫 칸은 E·S, 뒤 두 칸은 숫자 */
+    const ok = code.length===0 ? CODE_HEADS.indexOf(ch)>=0 : CODE_DIGITS.indexOf(ch)>=0;
+    if(!ok){$('#lgErr').textContent = code.length===0
+      ? '앞 글자는 E 또는 S예요' : '뒤 두 칸은 숫자예요';return;}
+    code+=ch;
+  }
+  $('#lgErr').textContent='';paint();padPaint();
+  /* 세 칸이 다 차면 바로 들어간다 — 「시작!」을 한 번 더 누르지 않아도 된다 */
+  if(code.length===3) setTimeout(submitCode,180);}
+$('#padGrid').addEventListener('click',e=>{const b=e.target.closest('button');if(b)press(b.dataset.k);});
 document.querySelectorAll('.padrow button').forEach(b=>b.onclick=()=>press(b.dataset.k));
 /* 크롬북·태블릿 외장 키보드 입력도 그대로 받는다(소문자는 자동으로 대문자 변환) */
 addEventListener('keydown',e=>{
@@ -263,7 +288,7 @@ addEventListener('keydown',e=>{
   const ch=e.key.toUpperCase();
   e.preventDefault();
   if(CODE_CHARS.indexOf(ch)>=0)press(ch);
-  else $('#lgErr').textContent='코드에 쓰지 않는 글자예요. 화면에 있는 글자 중에서 눌러 주세요';});
+  else $('#lgErr').textContent='코드에 쓰지 않는 글자예요. 화면에 있는 단추를 눌러 주세요';});
 $('#guestBtn').onclick=()=>{saveUser('guest');showChip('guest');$('#loginOv').style.display='none';refresh();};
 $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');}catch(e){}
   $('#chip').style.display='none';$('#chgBtn').style.display='none';$('#guestNote').style.display='none';openLogin();};

@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202608270500"></script>
+<script src="tts/manifest.js?v=202609110649"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -871,7 +871,7 @@ class Component extends DCLogic {
             { t:Math.max(this.HBASE, Math.round(this.HBASE * p.a / p.b)) + ' － ' + Math.min(this.HBASE, Math.round(this.HBASE * p.a / p.b)) + ' = ' + Math.abs(this.HBASE - Math.round(this.HBASE * p.a / p.b)), ok:0, fb:'두 길이의 차예요. 우리가 한 일은 두 길이를 비교해 본 것이지요?' } ] } ] } : null;
       if (p.ph === 1) st.push({ k:'harp', i, probe,
         say:'라 음을 기준으로 악기를 조율해 보세요. 라 음이 440Hz일 때 ' + p.n + ' 음은 '
-            + Math.round(440 * p.b / p.a) + 'Hz예요. 라와 ' + p.n + '의 비는 ' + p.a + ' 대 ' + p.b + '예요. '
+            + Math.round(440 * p.b / p.a) + 'Hz예요. 라와 ' + p.n + '의 비는 ' + p.a + ' 대 ' + p.b + '이에요. '
             + '슬라이더를 움직이면서 ' + p.n + ' 소리가 날 때 멈춰 보세요.',
         hi:'🎻 하프 공방 · ' + this.HBASE + 'cm를 ' + p.b + '등분한 눈금에서 내 줄이 몇 칸인지 확인해요' });
       else st.push({ k:'harp', i, probe,
@@ -904,7 +904,7 @@ class Component extends DCLogic {
        일곱 관을 차례로 만들며 손으로 확인한다. */
     /* 「내 말로 정리」는 앞서 귀로 듣고 손으로 해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
     st.push({ k:'reflect', who:'ratio',
-      say:'이 방에서는 각 음의 떨림, 진동수, 줄의 길이, 리듬을 통해 소리에 숨겨진 비밀을 알아봤어요. 친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?',
+      say:'이 방에서는 각 음의 떨림, 진동수, 줄의 길이, 리듬에서 소리에 숨겨진 비밀을 알아봤어요. 친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?',
       hi:'📝 친구에게 알려 줄 소리의 비밀 한 가지' });
     /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
        앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
@@ -1123,7 +1123,20 @@ class Component extends DCLogic {
     try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
     try { speechSynthesis.cancel(); } catch(e) {}
   }
-  SINO(v) { const S = ['영','일','이','삼','사','오','육','칠','팔','구','십']; return +v <= 10 ? S[+v] : v; }
+  /* 비를 소리로 낼 때 쓰는 한자어 수 — 「1 대 2」를 「한 대 둘」이 아니라 「일 대 이」로 읽힌다.
+     만 단위까지 읽는다. 축척 1 : 10,000은 「일 대 만」이다(2026-09-11 연구자 결정).
+     네 방과 _tools/make_voice_check.mjs에 같은 규칙이 있다 — 한쪽만 고치면 음성 키가 어긋난다. */
+  SINO(v) {
+    const D = ['영','일','이','삼','사','오','육','칠','팔','구'];
+    const n = +String(v).replace(/,/g, '');
+    if (!isFinite(n) || n < 0 || n > 99999999 || String(v).indexOf('.') >= 0) return v;
+    if (n === 0) return '영';
+    const u4 = (x) => { const u = ['천','백','십',''], d = [1000,100,10,1]; let s = '';
+      for (let i = 0; i < 4; i++) { const q = Math.floor(x / d[i]) % 10;
+        if (q) s += ((q === 1 && i < 3) ? '' : D[q]) + u[i]; } return s; };
+    const man = Math.floor(n / 10000), rest = n % 10000;
+    return (man ? ((man === 1 ? '' : u4(man)) + '만') : '') + (rest ? u4(rest) : '');
+  }
   speak(text, who) {
     this.stopVoice();
     this._speakStamp = Date.now();
@@ -1142,26 +1155,46 @@ class Component extends DCLogic {
       .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
       /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
          「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      .replace(/(?<![\d.])([\d,]+)\s*대\s*([\d,]+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
       .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
     if (!txt || txt === '[object Object]') return;
-    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
+       CLOVA에는 쉼 표기(SSML·break)가 없어 문장 사이 호흡을 이렇게밖에 낼 수 없다.
+       한 문장만 고치면 그 문장만 다시 만들면 된다.
+       ⚠ 문장 나누기(SENT)는 _tools/make_voice_check.mjs와 같아야 한다 — 다르면 음성 키가 어긋난다. */
+    const parts = this.SENT(txt);
+    if (!parts.length) return;
     const man = window.RS_TTS;
-    if (man && man[key]) {
-      try {
-        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
-           브라우저에 남은 옛 음성이 재생되지 않는다. */
-        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
-        a.volume = 0.95; this._mp3 = a; this._speaking = true;
-        a.onended = () => { this._speaking = false; };
-        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
-        return;
-      } catch(e) {}
-    }
-    this._speakSynth(txt, who);
+    const tok = this._vtok;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      /* 문장 사이 숨 — 한 덩어리로 합성할 때 뭉개지던 호흡을 여기서 낸다 */
+      const nextGap = () => { if (tok === this._vtok) this._sayT = setTimeout(() => step(i + 1), 200); };
+      const key = this.ttsKey((who||'ratio') + '|' + parts[i]);
+      if (man && man[key]) {
+        try {
+          /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+             브라우저에 남은 옛 음성이 재생되지 않는다. */
+          const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+          a.volume = 0.95; this._mp3 = a;
+          a.onended = nextGap;
+          a.play().catch(() => { this._mp3 = null; this._speakSynth(parts[i], who, nextGap); });
+          return;
+        } catch(e) {}
+      }
+      /* mp3가 없는 문장만 브라우저 음성으로 읽고 다음 문장으로 넘어간다 */
+      this._speakSynth(parts[i], who, nextGap);
+    };
+    step(0);
   }
-  _speakSynth(txt, who) {
-    if (!('speechSynthesis' in window)) return;
+
+  /* 낭독을 문장으로 나눈다 — 마침표·물음표·느낌표 뒤에 공백이 있을 때만 자른다.
+     「1.618」처럼 소수점 뒤에는 공백이 없어 잘리지 않는다. */
+  SENT(t) { return String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean); }
+  _speakSynth(txt, who, done) {
+    if (!('speechSynthesis' in window)) { if (done) done(); return; }
     const parts = this.chunks(txt);
     const tok = this._vtok;
     const cfg = this.WHO[who] || this.WHO.ratio;
@@ -1170,7 +1203,7 @@ class Component extends DCLogic {
     this._speaking = true;
     const step = (i) => {
       if (tok !== this._vtok) return;
-      if (i >= parts.length) { this._speaking = false; return; }
+      if (i >= parts.length) { if (done) done(); else this._speaking = false; return; }
       const u = new SpeechSynthesisUtterance(parts[i]);
       u.lang = 'ko-KR';
       if (v) u.voice = v;

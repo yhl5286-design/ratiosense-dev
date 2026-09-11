@@ -10,18 +10,30 @@ const V4 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 /* 비를 한자어로 읽는 방 — 앱의 speak()에 같은 규칙이 들어 있는 방만 적는다.
    규칙이 없는 방에까지 적용하면 이미 만들어 둔 mp3의 키와 어긋난다. */
 const SINO_ROOMS = new Set(['ColorRoom', 'EvalRoom', 'SoundRoom', 'MapRoom']);  /* 2026-08-27 네 방 모두 규칙 보유 */
-const SINO = v => { const S = ['영','일','이','삼','사','오','육','칠','팔','구','십']; return +v <= 10 ? S[+v] : v; };
+const SINO = v => {  /* 만 단위까지 읽는다 — 네 방의 SINO와 같아야 한다 */
+  const D = ['영','일','이','삼','사','오','육','칠','팔','구'];
+  const n = +String(v).replace(/,/g, '');
+  if (!isFinite(n) || n < 0 || n > 99999999 || String(v).indexOf('.') >= 0) return v;
+  if (n === 0) return '영';
+  const u4 = (x) => { const u = ['천','백','십',''], d = [1000,100,10,1]; let s = '';
+    for (let i = 0; i < 4; i++) { const q = Math.floor(x / d[i]) % 10;
+      if (q) s += ((q === 1 && i < 3) ? '' : D[q]) + u[i]; } return s; };
+  const man = Math.floor(n / 10000), rest = n % 10000;
+  return (man ? ((man === 1 ? '' : u4(man)) + '만') : '') + (rest ? u4(rest) : '');
+};
 const norm = (raw, room) => {
   const t = raw == null ? '' : (typeof raw === 'string' ? raw : (Array.isArray(raw) ? raw.join(' ') : String(raw)));
   let x = t.replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '');
   if (SINO_ROOMS.has(room)) {
     x = x.replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')   /* 빨강:노랑 → 빨강 대 노랑 */
              .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => SINO(a) + ' 대 ' + b)
-         .replace(/(?<![\d.])(\d+)\s*대\s*(\d+)(?![.\d]|,\d)/g, (mm, a, b) => SINO(a) + ' 대 ' + SINO(b));  /* 10,000은 건드리지 않는다 */
+         .replace(/(?<![\d.])([\d,]+)\s*대\s*([\d,]+)(?![.\d])/g, (mm, a, b) => SINO(a) + ' 대 ' + SINO(b));  /* 10,000은 건드리지 않는다 */
   }
   return x.replace(/mL/g, ' 밀리리터 ').replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ')
           .replace(/\s+/g, ' ').trim();
 };
+/* 낭독을 문장으로 나눈다 — 네 방의 SENT와 같아야 한다 */
+const SENT = t => String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
 const ttsKey = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
 
 function make(name, done) {
@@ -48,22 +60,25 @@ function lines(name, done) {
     const t = norm(raw, name);
     if (!t) return;
     const who = name === 'EvalRoom' ? 'ratio' : (s.who || 'ratio');
-    out.push({ step: i, who, text: t, key: ttsKey(who + '|' + t) });
+    /* 문장마다 따로 합성한다(2026-09-11) — 앱의 speak()가 문장 단위로 재생하므로
+       키도 문장 단위여야 한다. 나누는 규칙은 네 방의 SENT와 같다. */
+    SENT(t).forEach((p, j) => out.push({
+      step: i + j * 0.001, who, text: p, key: ttsKey(who + '|' + p) }));
   });
   /* 소리 방 4단계(rooms)는 STEPS에 say가 없고 roomsSay(stage)가 네 갈래를 만든다.
      넷 다 학습자가 듣는 대사이므로 모두 뽑는다. */
   if (name === 'SoundRoom' && typeof room.roomsSay === 'function') {
     const idx = (room.STEPS || []).findIndex(s => s.k === 'rooms');
     ['miss', 'collect', 'rooms', 'done'].forEach((stage, j) => {
-      const t = norm(room.roomsSay(stage), name);
-      if (t) out.push({ step: (idx < 0 ? 3 : idx) + j * 0.01, who: 'ratio', text: t,
-                        key: ttsKey('ratio|' + t) });
+      SENT(norm(room.roomsSay(stage), name)).forEach((p, k) => out.push({
+        step: (idx < 0 ? 3 : idx) + j * 0.01 + k * 0.001, who: 'ratio', text: p,
+        key: ttsKey('ratio|' + p) }));
     });
   }
   /* STEPS 밖에서 부르는 대사 — 색깔 방의 컵 세기 물음 */
   if (name === 'ColorRoom' && room.CUP_ASK) {
-    const t = norm(room.CUP_ASK, name);
-    out.push({ step: 11.5, who: 'munsell', text: t, key: ttsKey('munsell|' + t) });
+    SENT(norm(room.CUP_ASK, name)).forEach((p, j) => out.push({
+      step: 11.5 + j * 0.001, who: 'munsell', text: p, key: ttsKey('munsell|' + p) }));
   }
   return out.sort((a, b) => a.step - b.step);
 }

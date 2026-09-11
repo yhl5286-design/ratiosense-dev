@@ -1,5 +1,5 @@
 {
- "ver": "202608270500",
+ "ver": "202609110649",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -9,8 +9,44 @@
     {
      "step": 0,
      "who": "ratio",
-     "text": "안녕하세요! 저는 비의 비밀을 함께 찾을 레시오예요. 여기는 색깔의 비밀 방이에요. 도움이 필요한 화가와 과학자가 기다리고 있어요. 함께 풀어 볼까요?",
-     "key": "6ymss2",
+     "text": "안녕하세요!",
+     "key": "jt7gc0",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 0.001,
+     "who": "ratio",
+     "text": "저는 비의 비밀을 함께 찾을 레시오예요.",
+     "key": "1ca8ufs",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 0.002,
+     "who": "ratio",
+     "text": "여기는 색깔의 비밀 방이에요.",
+     "key": "bq9vba",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 0.003,
+     "who": "ratio",
+     "text": "도움이 필요한 화가와 과학자가 기다리고 있어요.",
+     "key": "nqs1i3",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 0.004,
+     "who": "ratio",
+     "text": "함께 풀어 볼까요?",
+     "key": "5jyqef",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -18,8 +54,44 @@
     {
      "step": 1,
      "who": "munch",
-     "text": "안녕? 나는 화가 뭉크야. 「절규」의 노을 진 하늘을 칠해야 하는데 물감이 말라 버렸어. 과학자 먼셀이 주황색을 만들어 주겠다고 했어. 너도 도와줄래?",
-     "key": "kmg9l2",
+     "text": "안녕?",
+     "key": "1spb1gm",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 1.001,
+     "who": "munch",
+     "text": "나는 화가 뭉크야.",
+     "key": "ls6gff",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 1.002,
+     "who": "munch",
+     "text": "「절규」의 노을 진 하늘을 칠해야 하는데 물감이 말라 버렸어.",
+     "key": "15oymz7",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 1.003,
+     "who": "munch",
+     "text": "과학자 먼셀이 주황색을 만들어 주겠다고 했어.",
+     "key": "52h9z",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 1.004,
+     "who": "munch",
+     "text": "너도 도와줄래?",
+     "key": "w2sv",
      "cast": "화가 뭉크",
      "speaker": "njooahn",
      "reg": true
@@ -27,8 +99,44 @@
     {
      "step": 2,
      "who": "munsell",
-     "text": "안녕? 만나서 반가워. 나는 색깔을 연구하는 과학자 먼셀이야. 이렇게 색상환을 만든 사람이지. 나와 함께 뭉크의 노을색을 만들어볼까?",
-     "key": "1uorf61",
+     "text": "안녕?",
+     "key": "1pvp3cr",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 2.001,
+     "who": "munsell",
+     "text": "만나서 반가워.",
+     "key": "1rkccsr",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 2.002,
+     "who": "munsell",
+     "text": "나는 색깔을 연구하는 과학자 먼셀이야.",
+     "key": "9z0z9v",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 2.003,
+     "who": "munsell",
+     "text": "이렇게 색상환을 만든 사람이지.",
+     "key": "j02nhg",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 2.004,
+     "who": "munsell",
+     "text": "나와 함께 뭉크의 노을색을 만들어볼까?",
+     "key": "foymry",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -36,8 +144,17 @@
     {
      "step": 3,
      "who": "munsell",
-     "text": "그럼 어떤 색의 물감이 필요할까? 목표색을 잘 관찰해보고 추측해 봐.",
-     "key": "y9qpoo",
+     "text": "그럼 어떤 색의 물감이 필요할까?",
+     "key": "1x6qq93",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 3.001,
+     "who": "munsell",
+     "text": "목표색을 잘 관찰해보고 추측해 봐.",
+     "key": "93ojp2",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -45,8 +162,17 @@
     {
      "step": 4,
      "who": "munsell",
-     "text": "좋아. 그럼 각각 물감의 양은 얼마나 넣어야 할까?",
-     "key": "1ejyh1p",
+     "text": "좋아.",
+     "key": "1pvw8ew",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 4.001,
+     "who": "munsell",
+     "text": "그럼 각각 물감의 양은 얼마나 넣어야 할까?",
+     "key": "1cl1l64",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -54,8 +180,26 @@
     {
      "step": 5,
      "who": "munsell",
-     "text": "아래 두 비커에 빨강 물감을 20 밀리리터 넣었어. 여기에 노랑 물감을 다르게 넣어볼거야. 왼쪽에는 20 밀리리터 , 오른쪽은 60 밀리리터 넣어서 색을 확인해봐.",
-     "key": "mpqjdy",
+     "text": "아래 두 비커에 빨강 물감을 20 밀리리터 넣었어.",
+     "key": "1qta5xv",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 5.001,
+     "who": "munsell",
+     "text": "여기에 노랑 물감을 다르게 넣어볼거야.",
+     "key": "g094kh",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 5.002,
+     "who": "munsell",
+     "text": "왼쪽에는 20 밀리리터 , 오른쪽은 60 밀리리터 넣어서 색을 확인해봐.",
+     "key": "slxbro",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -63,8 +207,44 @@
     {
      "step": 6,
      "who": "munsell",
-     "text": "과학자는 실험 전에 가설을 세워. 가설은 어떻게 될지 미리 예상해 보는 것이란다. 목표색을 잘 봐. 어떤 색이 더 많아 보이니? 고르면 그 가설대로 바로 실험해 볼 거야.",
-     "key": "12ga1st",
+     "text": "과학자는 실험 전에 가설을 세워.",
+     "key": "92l162",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 6.001,
+     "who": "munsell",
+     "text": "가설은 어떻게 될지 미리 예상해 보는 것이란다.",
+     "key": "s3kmlm",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 6.002,
+     "who": "munsell",
+     "text": "목표색을 잘 봐.",
+     "key": "sqxrl3",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 6.003,
+     "who": "munsell",
+     "text": "어떤 색이 더 많아 보이니?",
+     "key": "k24zfh",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 6.004,
+     "who": "munsell",
+     "text": "고르면 그 가설대로 바로 실험해 볼 거야.",
+     "key": "17eo2dj",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -72,17 +252,62 @@
     {
      "step": 7,
      "who": "munsell",
-     "text": "목표색을 만들기 위해 빨강 물감 10 밀리리터 씩 두 컵을 부었어. 노랑 물감은 10 밀리리터 씩 몇 컵을 부어야 할까? 1컵씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!",
-     "key": "180lqo8",
+     "text": "목표색을 만들기 위해 빨강 물감 10 밀리리터 씩 두 컵을 부었어.",
+     "key": "59n08j",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 7.001,
+     "who": "munsell",
+     "text": "노랑 물감은 10 밀리리터 씩 몇 컵을 부어야 할까?",
+     "key": "hfweg9",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 7.002,
+     "who": "munsell",
+     "text": "1컵씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!",
+     "key": "1ow64nm",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 8,
      "who": "munsell",
-     "text": "완벽해. 그런데 같은 색을 다른 양으로도 만들 수 있을까? 이번에는 빨강 물감을 10 밀리리터 씩 네 컵 부었어. 노랑 물감은 10 밀리리터 씩 몇 컵을 부어야 아까와 같은 색이 될까?",
-     "key": "d85dmi",
+     "text": "완벽해.",
+     "key": "1iftq9m",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 8.001,
+     "who": "munsell",
+     "text": "그런데 같은 색을 다른 양으로도 만들 수 있을까?",
+     "key": "3ock3",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 8.002,
+     "who": "munsell",
+     "text": "이번에는 빨강 물감을 10 밀리리터 씩 네 컵 부었어.",
+     "key": "1l78ypb",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 8.003,
+     "who": "munsell",
+     "text": "노랑 물감은 10 밀리리터 씩 몇 컵을 부어야 아까와 같은 색이 될까?",
+     "key": "901lfp",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -90,8 +315,26 @@
     {
      "step": 9,
      "who": "munsell",
-     "text": "빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 슬라이더로 양을 정하고, 찾으면 기록해 둬.",
-     "key": "1sl4rp8",
+     "text": "빨강 20, 노랑 40으로 목표색을 찾았지?",
+     "key": "1ptl3vq",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 9.001,
+     "who": "munsell",
+     "text": "이번에는 다른 양으로 목표색을 만들어 봐.",
+     "key": "7q4p7a",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 9.002,
+     "who": "munsell",
+     "text": "슬라이더로 양을 정하고, 찾으면 기록해 둬.",
+     "key": "1a24tho",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -99,17 +342,62 @@
     {
      "step": 10,
      "who": "kid",
-     "text": "만약 같은 양만큼 물감을 더하면 어떻게 되나요? 빨강도 30을 더 넣고, 노랑도 30을 더 넣으면 아까랑 같은 색이 나오나요?",
-     "key": "voxiuk",
+     "text": "만약 같은 양만큼 물감을 더하면 어떻게 되나요?",
+     "key": "1gh5ecu",
      "cast": "다인",
      "speaker": "ndain",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 10.001,
+     "who": "kid",
+     "text": "빨강도 30을 더 넣고, 노랑도 30을 더 넣으면 아까랑 같은 색이 나오나요?",
+     "key": "2n8l8d",
+     "cast": "다인",
+     "speaker": "ndain",
+     "reg": true
     },
     {
      "step": 11,
      "who": "munsell",
-     "text": "좋은 질문이야! 실험으로 보여 주자. 비커에는 빨강 20 밀리리터 와 노랑 40 밀리리터 가 들어 있어. 다인이 말대로 양쪽에 30 밀리리터 씩 더 넣어 봐. 목표색과 같아질까?",
-     "key": "1eprf28",
+     "text": "좋은 질문이야!",
+     "key": "1p9pb4b",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.001,
+     "who": "munsell",
+     "text": "실험으로 보여 주자.",
+     "key": "86tayn",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.002,
+     "who": "munsell",
+     "text": "비커에는 빨강 20 밀리리터 와 노랑 40 밀리리터 가 들어 있어.",
+     "key": "17muotp",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.003,
+     "who": "munsell",
+     "text": "다인이 말대로 양쪽에 30 밀리리터 씩 더 넣어 봐.",
+     "key": "7xjmli",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.004,
+     "who": "munsell",
+     "text": "목표색과 같아질까?",
+     "key": "qjma5b",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -117,8 +405,35 @@
     {
      "step": 11.5,
      "who": "munsell",
-     "text": "빨강은 한 컵, 노랑은 두 컵이 되었구나. 같은 양인데 세는 단위를 바꾸니 새로운 수가 보이지? 그러면 빨강과 노랑의 비는 어떻게 될까? 아래에서 골라 봐.",
-     "key": "1xy9lba",
+     "text": "빨강은 한 컵, 노랑은 두 컵이 되었구나.",
+     "key": "7pywqb",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.501,
+     "who": "munsell",
+     "text": "같은 양인데 세는 단위를 바꾸니 새로운 수가 보이지?",
+     "key": "14od8yu",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.502,
+     "who": "munsell",
+     "text": "그러면 빨강과 노랑의 비는 어떻게 될까?",
+     "key": "14nkvbd",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 11.503,
+     "who": "munsell",
+     "text": "아래에서 골라 봐.",
+     "key": "12vwalf",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -126,17 +441,62 @@
     {
      "step": 12,
      "who": "munsell",
-     "text": "아래 그림을 같이 볼까? 왼쪽은 두 양에 같은 수를 곱했고, 오른쪽은 두 양에 같은 양을 더했어. 다인이에게 해 줄 설명을 낱말 카드를 끌어서 완성해 봐.",
-     "key": "ffwl4a",
+     "text": "아래 그림을 같이 볼까?",
+     "key": "1ekhqtj",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 12.001,
+     "who": "munsell",
+     "text": "왼쪽은 두 양에 같은 수를 곱했고, 오른쪽은 두 양에 같은 양을 더했어.",
+     "key": "mjdjej",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 12.002,
+     "who": "munsell",
+     "text": "다인이에게 해 줄 설명을 낱말 카드를 끌어서 완성해 봐.",
+     "key": "jn9y52",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 13,
      "who": "munsell",
-     "text": "실험으로 찾은 빨강 20 밀리리터 와 노랑 40 밀리리터 를 다시 가져왔어. 이번에는 조금 더 큰 20 밀리리터 짜리 컵을 줄게. 두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까? 컵을 눌러서 직접 옮겨 담아 봐.",
-     "key": "b6ize1",
+     "text": "실험으로 찾은 빨강 20 밀리리터 와 노랑 40 밀리리터 를 다시 가져왔어.",
+     "key": "91lyaj",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 13.001,
+     "who": "munsell",
+     "text": "이번에는 조금 더 큰 20 밀리리터 짜리 컵을 줄게.",
+     "key": "w9o7zc",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 13.002,
+     "who": "munsell",
+     "text": "두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까?",
+     "key": "ojp6z3",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 13.003,
+     "who": "munsell",
+     "text": "컵을 눌러서 직접 옮겨 담아 봐.",
+     "key": "1qgc2r0",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -144,35 +504,107 @@
     {
      "step": 14,
      "who": "munsell",
-     "text": "이번에는 빨강 40 밀리리터 를 기준으로 해 보자. 40 밀리리터 짜리 컵으로 나눠 담아 보면 각각 몇 컵이 될까?",
-     "key": "14ryoie",
+     "text": "이번에는 빨강 40 밀리리터 를 기준으로 해 보자.",
+     "key": "1bovoe2",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 14.001,
+     "who": "munsell",
+     "text": "40 밀리리터 짜리 컵으로 나눠 담아 보면 각각 몇 컵이 될까?",
+     "key": "m1fwol",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 15,
      "who": "munsell",
-     "text": "방금 한 일을 함께 짚어 볼까? 물감은 한 방울도 더하거나 덜지 않았는데 새로운 수가 보였어. 아래 세 물음에 답해 보렴.",
-     "key": "11zoqnv",
+     "text": "방금 한 일을 함께 짚어 볼까?",
+     "key": "bhh6od",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 15.001,
+     "who": "munsell",
+     "text": "물감은 한 방울도 더하거나 덜지 않았는데 새로운 수가 보였어.",
+     "key": "1xv6szo",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 15.002,
+     "who": "munsell",
+     "text": "아래 세 물음에 답해 보렴.",
+     "key": "3xit0y",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 16,
      "who": "munsell",
-     "text": "두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 기준이 되는 양을 앞에, 비교하는 양을 뒤에 놓고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.",
-     "key": "12fn7kb",
+     "text": "두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게.",
+     "key": "1gf84ul",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 16.001,
+     "who": "munsell",
+     "text": "이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해.",
+     "key": "1004yv",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 16.002,
+     "who": "munsell",
+     "text": "기준이 되는 양을 앞에, 비교하는 양을 뒤에 놓고 그 사이에 쌍점을 찍는단다.",
+     "key": "18i8h26",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 16.003,
+     "who": "munsell",
+     "text": "아래 낱말 카드를 끌어서 빈칸을 채워 보렴.",
+     "key": "1v9kwee",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 17,
      "who": "munsell",
-     "text": "양이 달라도 전부 같은 색이었어. 모두 간단히 하면 언제나 일 대 이였어. 수첩에는 뭐라고 적으면 좋을까?",
-     "key": "ro5waw",
+     "text": "양이 달라도 전부 같은 색이었어.",
+     "key": "li41sq",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 17.001,
+     "who": "munsell",
+     "text": "모두 간단히 하면 언제나 일 대 이였어.",
+     "key": "nehn0n",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 17.002,
+     "who": "munsell",
+     "text": "수첩에는 뭐라고 적으면 좋을까?",
+     "key": "rws3w5",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -180,8 +612,17 @@
     {
      "step": 18,
      "who": "munsell",
-     "text": "이제 빨강과 노랑을 몇 대 몇의 비율로 섞으면 그 색이 만들어지는지 뭉크에게 편지를 써 보렴. 아래 숫자 카드를 누른 채 끌어서 빈칸 위에 놓으면 돼.",
-     "key": "18hqqvr",
+     "text": "이제 빨강과 노랑을 몇 대 몇의 비율로 섞으면 그 색이 만들어지는지 뭉크에게 편지를 써 보렴.",
+     "key": "1vz6out",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 18.001,
+     "who": "munsell",
+     "text": "아래 숫자 카드를 누른 채 끌어서 빈칸 위에 놓으면 돼.",
+     "key": "1y9hogr",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -189,8 +630,35 @@
     {
      "step": 19,
      "who": "munch",
-     "text": "빨강과 노랑을 일 대 이로 섞으면 그 색이 나오는구나. 알아내줘서 고마워! 큰 통에 빨강을 50 밀리리터 넣었어. 그럼 노랑은 얼마나 넣어야 할까?",
-     "key": "wds6b5",
+     "text": "빨강과 노랑을 일 대 이로 섞으면 그 색이 나오는구나.",
+     "key": "19nfc1p",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 19.001,
+     "who": "munch",
+     "text": "알아내줘서 고마워!",
+     "key": "1181ha1",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 19.002,
+     "who": "munch",
+     "text": "큰 통에 빨강을 50 밀리리터 넣었어.",
+     "key": "debgmk",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 19.003,
+     "who": "munch",
+     "text": "그럼 노랑은 얼마나 넣어야 할까?",
+     "key": "hsllod",
      "cast": "화가 뭉크",
      "speaker": "njooahn",
      "reg": true
@@ -198,8 +666,17 @@
     {
      "step": 20,
      "who": "munch",
-     "text": "네가 준 물감으로 노을을 칠해 완성했어. 정말 고마워!",
-     "key": "1h65o07",
+     "text": "네가 준 물감으로 노을을 칠해 완성했어.",
+     "key": "hmfiyv",
+     "cast": "화가 뭉크",
+     "speaker": "njooahn",
+     "reg": true
+    },
+    {
+     "step": 20.001,
+     "who": "munch",
+     "text": "정말 고마워!",
+     "key": "1mvwnus",
      "cast": "화가 뭉크",
      "speaker": "njooahn",
      "reg": true
@@ -207,137 +684,407 @@
     {
      "step": 21,
      "who": "munsell",
-     "text": "우리가 한 실험을 한자리에 모아 볼까? 수첩에 적어 둔 기록을 표로 옮겨 담아 보자. 빨강이 가장 적은 것부터 차례로 놓으면 돼.",
-     "key": "1f74fvo",
+     "text": "우리가 한 실험을 한자리에 모아 볼까?",
+     "key": "h9rnaq",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 21.001,
+     "who": "munsell",
+     "text": "수첩에 적어 둔 기록을 표로 옮겨 담아 보자.",
+     "key": "vomdd8",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 21.002,
+     "who": "munsell",
+     "text": "빨강이 가장 적은 것부터 차례로 놓으면 돼.",
+     "key": "h0yj3u",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 22,
      "who": "munsell",
-     "text": "이번에는 표의 기록을 격자 위에 점으로 찍어 보자. 첫 줄은 내가 미리 찍어 두었어. 아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다. 나머지 줄도 찍어 볼래?",
-     "key": "r84hgq",
+     "text": "이번에는 표의 기록을 격자 위에 점으로 찍어 보자.",
+     "key": "1ifq6iq",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 22.001,
+     "who": "munsell",
+     "text": "첫 줄은 내가 미리 찍어 두었어.",
+     "key": "1y8n8tp",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 22.002,
+     "who": "munsell",
+     "text": "아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다.",
+     "key": "180uykn",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 22.003,
+     "who": "munsell",
+     "text": "나머지 줄도 찍어 볼래?",
+     "key": "1j3nn23",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
     },
     {
      "step": 23,
-     "who": "munsell",
-     "text": "마지막이야. 표의 줄마다 빨강에 얼마를 곱하면 노랑이 될까? 숫자 카드를 눌러 고른 다음 빈칸을 눌러 놓아 보렴.",
-     "key": "koihti",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": false
+     "who": "ratio",
+     "text": "지금까지 '뭉크'와 '먼셀'을 도와 색을 만드는 비의 비밀을 알아냈어요.",
+     "key": "1y2v2gu",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 23.001,
+     "who": "ratio",
+     "text": "정말 수고했어요!",
+     "key": "f7f5ws",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 23.002,
+     "who": "ratio",
+     "text": "이번에는 다른 방법으로 색을 만들어 볼 거예요.",
+     "key": "cdqcwf",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 23.003,
+     "who": "ratio",
+     "text": "이때도 비의 비밀이 숨어 있대요.",
+     "key": "13ygcli",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 23.004,
+     "who": "ratio",
+     "text": "같이 알아볼까요?",
+     "key": "epyp2",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 24,
-     "who": "ratio",
-     "text": "지금까지 '뭉크'와 '먼셀'을 도와 색을 만드는 비의 비밀을 알아냈어요. 정말 수고했어요! 이번에는 다른 방법으로 색을 만들어 볼 거예요. 이때도 비의 비밀이 숨어 있대요. 같이 알아볼까요?",
-     "key": "19q1ftp",
-     "cast": "레시오",
-     "speaker": "vhyeri",
+     "who": "signac",
+     "text": "안녕?",
+     "key": "1bgsdl6",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
+     "reg": true
+    },
+    {
+     "step": 24.001,
+     "who": "signac",
+     "text": "나는 점을 찍어 색을 표현하는 화가 '시냐크'라고 해.",
+     "key": "1p9isqq",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
+     "reg": true
+    },
+    {
+     "step": 24.002,
+     "who": "signac",
+     "text": "그런데 지금 「양산을 든 여인」을 그릴 때 필요한 주황색을 만드는 중이야.",
+     "key": "tyi2tn",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
+     "reg": true
+    },
+    {
+     "step": 24.003,
+     "who": "signac",
+     "text": "같이 점을 찍으며 색을 만드는 걸 도와주겠니?",
+     "key": "195n6r2",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
      "reg": true
     },
     {
      "step": 25,
      "who": "signac",
-     "text": "안녕? 나는 점을 찍어 색을 표현하는 화가 '시냐크'라고 해. 그런데 지금 「양산을 든 여인」을 그릴 때 필요한 주황색을 만드는 중이야. 같이 점을 찍으며 색을 만드는 걸 도와주겠니?",
-     "key": "1camscl",
+     "text": "나는 빨강과 노랑의 비가 이 대 삼으로 주황을 만들고 싶어.",
+     "key": "1e2xsml",
      "cast": "화가 시냐크",
-     "speaker": "nraewon",
+     "speaker": "njihun",
+     "reg": true
+    },
+    {
+     "step": 25.001,
+     "who": "signac",
+     "text": "다섯 칸을 기준으로 빨강과 노랑을 점 찍어서 표현해 봐.",
+     "key": "10u7s4",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
      "reg": true
     },
     {
      "step": 26,
      "who": "signac",
-     "text": "나는 빨강과 노랑의 비가 이 대 삼으로 주황을 만들고 싶어. 다섯 칸을 기준으로 빨강과 노랑을 점 찍어서 표현해 봐.",
-     "key": "x9iuu9",
+     "text": "이번에는 100칸을 색칠할 거야.",
+     "key": "j7316e",
      "cast": "화가 시냐크",
-     "speaker": "nraewon",
-     "reg": false
+     "speaker": "njihun",
+     "reg": true
+    },
+    {
+     "step": 26.001,
+     "who": "signac",
+     "text": "빨강 대 노랑 = 이 대 삼이 되도록 100칸을 색칠해 줘.",
+     "key": "1nt64xm",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
+     "reg": true
     },
     {
      "step": 27,
      "who": "signac",
-     "text": "이번에는 100칸을 색칠할 거야. 빨강 대 노랑 = 이 대 삼이 되도록 100칸을 색칠해 줘.",
-     "key": "tkfezo",
+     "text": "점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 이 대 삼이었지!",
+     "key": "3oq1ol",
      "cast": "화가 시냐크",
-     "speaker": "nraewon",
-     "reg": false
+     "speaker": "njihun",
+     "reg": true
+    },
+    {
+     "step": 27.001,
+     "who": "signac",
+     "text": "내가 원하던 색을 연습해보고 그림을 그릴 수 있게 만들어줘서 고마워.",
+     "key": "15vta7a",
+     "cast": "화가 시냐크",
+     "speaker": "njihun",
+     "reg": true
     },
     {
      "step": 28,
-     "who": "signac",
-     "text": "점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 이 대 삼이었지! 내가 원하던 색을 연습해보고 그림을 그릴 수 있게 만들어줘서 고마워.",
-     "key": "9w1dgr",
-     "cast": "화가 시냐크",
-     "speaker": "nraewon",
+     "who": "ratio",
+     "text": "빨강과 노랑 점을 많이 찍는다고 색이 더 붉어질까요?",
+     "key": "6jpflk",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 28.001,
+     "who": "ratio",
+     "text": "두 그림을 비교해 보세요.",
+     "key": "23hzoe",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 28.002,
+     "who": "ratio",
+     "text": "어느 쪽 주황이 더 붉을까요?",
+     "key": "klkie6",
+     "cast": "레시오",
+     "speaker": "vhyeri",
      "reg": true
     },
     {
      "step": 29,
      "who": "ratio",
-     "text": "빨강과 노랑 점을 많이 찍는다고 색이 더 붉어질까요? 두 그림을 비교해 보세요. 어느 쪽 주황이 더 붉을까요?",
-     "key": "1le3s6w",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": false
-    },
-    {
-     "step": 30,
-     "who": "ratio",
-     "text": "시냐크와 만든 주황을 표로 옮겨 볼게요. 첫 줄은 다섯 칸에 찍은 빨강 2 대 노랑 3이에요. 빨강 칸이 4, 6, 8로 늘어나면 노랑은 몇 칸이어야 같은 주황이 될까요? 숫자 카드를 눌러 채워 보세요.",
-     "key": "120dp74",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": false
-    },
-    {
-     "step": 31,
-     "who": "ratio",
-     "text": "이번에도 표를 격자 위에 점으로 찍어 볼까요? 첫 점은 찍어 두었어요. 아래 빨강 눈금과 왼쪽 노랑 눈금을 눌러 나머지도 찍어 보세요.",
-     "key": "awadpd",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": false
-    },
-    {
-     "step": 32,
-     "who": "ratio",
-     "text": "시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체 100에 대해 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.",
-     "key": "1owqhaj",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": false
-    },
-    {
-     "step": 33,
-     "who": "ratio",
-     "text": "두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 무엇을 알아야 할까요? 여러분의 생각을 적어 보세요.",
-     "key": "16x4rnd",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": false
-    },
-    {
-     "step": 34,
-     "who": "ratio",
-     "text": "여러분이 적은 내용을 잘 보았어요. 물감과 컵, 점과 칸으로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.",
-     "key": "1lilclr",
+     "text": "시냐크와 만든 주황을 표로 옮겨 볼게요.",
+     "key": "it8hjd",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
-     "step": 35,
+     "step": 29.001,
      "who": "ratio",
-     "text": "색깔의 비밀을 잘 찾아냈어요! 카드 숫자 1과 6을 얻었어요! 잘 기억해두세요!",
-     "key": "va2wf0",
+     "text": "첫 줄은 다섯 칸에 찍은 빨강 2 대 노랑 3이에요.",
+     "key": "1frkuqa",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 29.002,
+     "who": "ratio",
+     "text": "빨강 칸이 4, 6, 8로 늘어나면 노랑은 몇 칸이어야 같은 주황이 될까요?",
+     "key": "qp3cq",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 29.003,
+     "who": "ratio",
+     "text": "숫자 카드를 눌러 채워 보세요.",
+     "key": "m7ps5l",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 30,
+     "who": "ratio",
+     "text": "이번에도 표를 격자 위에 점으로 찍어 볼까요?",
+     "key": "49ukzz",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 30.001,
+     "who": "ratio",
+     "text": "첫 점은 찍어 두었어요.",
+     "key": "9upsbw",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 30.002,
+     "who": "ratio",
+     "text": "아래 빨강 눈금과 왼쪽 노랑 눈금을 눌러 나머지도 찍어 보세요.",
+     "key": "8pze82",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 31,
+     "who": "ratio",
+     "text": "시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요?",
+     "key": "1p5mcxi",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 31.001,
+     "who": "ratio",
+     "text": "다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요.",
+     "key": "1d7nbh9",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 31.002,
+     "who": "ratio",
+     "text": "전체 100 가운데 빨강이 차지하는 비율은 얼마일까요?",
+     "key": "djl4ab",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 31.003,
+     "who": "ratio",
+     "text": "알맞은 말을 끌어 빈칸 위에 놓아 주세요.",
+     "key": "9fevbf",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 32,
+     "who": "ratio",
+     "text": "두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 무엇을 알아야 할까요?",
+     "key": "8u2q5a",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 32.001,
+     "who": "ratio",
+     "text": "여러분의 생각을 적어 보세요.",
+     "key": "19anibj",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 33,
+     "who": "ratio",
+     "text": "여러분이 적은 내용을 잘 보았어요.",
+     "key": "m3dmzu",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 33.001,
+     "who": "ratio",
+     "text": "물감과 컵, 점과 칸으로 비를 공부해 보았지요.",
+     "key": "n6l32i",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 33.002,
+     "who": "ratio",
+     "text": "이제 함께 정리해 봐요.",
+     "key": "1vayv6v",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 33.003,
+     "who": "ratio",
+     "text": "낱말 카드를 놓아 빈칸을 채워 보세요.",
+     "key": "z5t9zk",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 34,
+     "who": "ratio",
+     "text": "색깔의 비밀을 잘 찾아냈어요!",
+     "key": "1f8pniu",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 34.001,
+     "who": "ratio",
+     "text": "카드 숫자 1과 6을 얻었어요!",
+     "key": "a5p6ti",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 34.002,
+     "who": "ratio",
+     "text": "잘 기억해두세요!",
+     "key": "1e3uozw",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     }
    ]
   },
@@ -348,35 +1095,107 @@
     {
      "step": 0,
      "who": "ratio",
-     "text": "이 방은 소리의 비밀을 알아내는 방이에요. 이 방에서는 소리를 집중해서 잘 들어야 비밀을 잘 느낄 수 있어요.",
-     "key": "1ccdqwl",
+     "text": "이 방은 소리의 비밀을 알아내는 방이에요.",
+     "key": "vlyhgi",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 0.001,
+     "who": "ratio",
+     "text": "이 방에서는 소리를 집중해서 잘 들어야 비밀을 잘 느낄 수 있어요.",
+     "key": "11zp0pb",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 1,
      "who": "ratio",
-     "text": "건반을 도부터 높은 도까지 하나씩 천천히 눌러 보고, 소리를 들어 보세요. 피아노 건반 뒤의 줄이 어떻게 떨리는지 관찰해 보세요. 다 누른 다음 문제를 풀어 보세요.",
-     "key": "120el12",
+     "text": "건반을 도부터 높은 도까지 하나씩 천천히 눌러 보고, 소리를 들어 보세요.",
+     "key": "1rg54wt",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 1.001,
+     "who": "ratio",
+     "text": "피아노 건반 뒤의 줄이 어떻게 떨리는지 관찰해 보세요.",
+     "key": "14vzjnd",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.002,
+     "who": "ratio",
+     "text": "다 누른 다음 문제를 풀어 보세요.",
+     "key": "goy7xu",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 2,
      "who": "ratio",
-     "text": "도와 다른 음을 함께 눌러 보세요. 소리를 듣고 물결 무늬를 본 다음 별점을 매겨 보세요. 일곱 음을 모두 평가하면 다음으로 가요.",
-     "key": "1jlg3s9",
+     "text": "도와 다른 음을 함께 눌러 보세요.",
+     "key": "v6f8a6",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 2.001,
+     "who": "ratio",
+     "text": "소리를 듣고 물결 무늬를 본 다음 별점을 매겨 보세요.",
+     "key": "fzdk5x",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 2.002,
+     "who": "ratio",
+     "text": "일곱 음을 모두 평가하면 다음으로 가요.",
+     "key": "y28fjm",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 3,
      "who": "ratio",
-     "text": "잠깐! 아직 별점을 안 준 음이 있어요. 각 음을 눌러 도와 함께 들어 보고, 별점을 매겨 주세요. 정답은 없어요, 내 귀가 기준이에요!",
-     "key": "xn1hj6",
+     "text": "잠깐!",
+     "key": "121rfmx",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.001,
+     "who": "ratio",
+     "text": "아직 별점을 안 준 음이 있어요.",
+     "key": "6ys5yz",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.002,
+     "who": "ratio",
+     "text": "각 음을 눌러 도와 함께 들어 보고, 별점을 매겨 주세요.",
+     "key": "5gwmr3",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.003,
+     "who": "ratio",
+     "text": "정답은 없어요, 내 귀가 기준이에요!",
+     "key": "t5ikkn",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -384,8 +1203,17 @@
     {
      "step": 3.01,
      "who": "ratio",
-     "text": "내가 매긴 별점을 모아 봤어요. 별을 비슷하게 준 음들끼리 모아 보면, 같은 방에 어떤 음들이 모이게 될까요?",
-     "key": "16wnnv2",
+     "text": "내가 매긴 별점을 모아 봤어요.",
+     "key": "19m2hai",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.0109999999999997,
+     "who": "ratio",
+     "text": "별을 비슷하게 준 음들끼리 모아 보면, 같은 방에 어떤 음들이 모이게 될까요?",
+     "key": "1mqm93w",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -393,8 +1221,35 @@
     {
      "step": 3.02,
      "who": "ratio",
-     "text": "별점이 방을 만들었어요! 점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 어떤 음들이 잘 어울리게 들리나요? 그 이유를 아래에서 골라 보세요.",
-     "key": "1q3rk6f",
+     "text": "별점이 방을 만들었어요!",
+     "key": "rmaf84",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.021,
+     "who": "ratio",
+     "text": "점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요.",
+     "key": "iyjusq",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.022,
+     "who": "ratio",
+     "text": "어떤 음들이 잘 어울리게 들리나요?",
+     "key": "182gat7",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.023,
+     "who": "ratio",
+     "text": "그 이유를 아래에서 골라 보세요.",
+     "key": "l05ixm",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -402,8 +1257,35 @@
     {
      "step": 3.03,
      "who": "ratio",
-     "text": "발견! 비가 간단할수록 잘 어울려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!",
-     "key": "x2tpq4",
+     "text": "발견!",
+     "key": "11tzd49",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.0309999999999997,
+     "who": "ratio",
+     "text": "비가 간단할수록 잘 어울려요.",
+     "key": "1vvx8f3",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.0319999999999996,
+     "who": "ratio",
+     "text": "이제 각 음의 진동수 비를 열어 봤어요.",
+     "key": "t642ky",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.033,
+     "who": "ratio",
+     "text": "내 방과 비교해 보세요!",
+     "key": "1ct53vk",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -411,8 +1293,26 @@
     {
      "step": 4,
      "who": "ratio",
-     "text": "음정 표 완성! 도부터 한 옥타브 높은 도까지 다 들어봤어요. 일 대 이, 이 대 삼, 삼 대 사처럼 비가 간단할수록 두 소리가 더 잘 어울려요!",
-     "key": "13s6zck",
+     "text": "음정 표 완성!",
+     "key": "1aynix5",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.001,
+     "who": "ratio",
+     "text": "도부터 한 옥타브 높은 도까지 다 들어봤어요.",
+     "key": "tnvayl",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.002,
+     "who": "ratio",
+     "text": "일 대 이 이 대 삼 삼 대 사처럼 비가 간단할수록 두 소리가 더 잘 어울려요!",
+     "key": "al25hc",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -420,56 +1320,182 @@
     {
      "step": 5,
      "who": "ratio",
-     "text": "1초 동안 떨리는 수를 진동수라고 해요. 단위는 헤르츠예요. 각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요. 11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요. 궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.",
-     "key": "bthyx7",
+     "text": "1초 동안 떨리는 수를 진동수라고 해요.",
+     "key": "1ncjbv7",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 5.001,
+     "who": "ratio",
+     "text": "단위는 헤르츠예요.",
+     "key": "1e9dvj6",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 5.002,
+     "who": "ratio",
+     "text": "각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요.",
+     "key": "1fvccbe",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 5.003,
+     "who": "ratio",
+     "text": "11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요.",
+     "key": "1wlpgc7",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 5.004,
+     "who": "ratio",
+     "text": "궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.",
+     "key": "3vqtfb",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 6,
      "who": "ratio",
-     "text": "진동수를 비로 나타내 봤지요? 이번에는 그 비를 이용해 악기를 만들어 볼 거예요. 먼저 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
-     "key": "cncfy5",
+     "text": "진동수를 비로 나타내 봤지요?",
+     "key": "1u8mogq",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 6.001,
+     "who": "ratio",
+     "text": "이번에는 그 비를 이용해 악기를 만들어 볼 거예요.",
+     "key": "tdjtz6",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 6.002,
+     "who": "ratio",
+     "text": "먼저 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
+     "key": "xc9w2t",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 7,
      "who": "ratio",
-     "text": "라 음을 기준으로 악기를 조율해 보세요. 라 음이 440 헤르츠 일 때 미 음은 330 헤르츠 예요. 라와 미의 비는 사 대 삼예요. 슬라이더를 움직이면서 미 소리가 날 때 멈춰 보세요.",
-     "key": "112ts7s",
+     "text": "라 음을 기준으로 악기를 조율해 보세요.",
+     "key": "1kj0jbj",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 7.001,
+     "who": "ratio",
+     "text": "라 음이 440 헤르츠 일 때 미 음은 330 헤르츠 예요.",
+     "key": "1qyafze",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 7.002,
+     "who": "ratio",
+     "text": "라와 미의 비는 사 대 삼이에요.",
+     "key": "175ga56",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 7.003,
+     "who": "ratio",
+     "text": "슬라이더를 움직이면서 미 소리가 날 때 멈춰 보세요.",
+     "key": "av853n",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 8,
      "who": "ratio",
-     "text": "줄의 길이로도 간단한 비를 만들어 봤어요. 그런데 왜 간단한 비가 더 잘 어울릴까요? 이번에는 리듬으로 알아봐요.",
-     "key": "1u132l3",
+     "text": "줄의 길이로도 간단한 비를 만들어 봤어요.",
+     "key": "yknfse",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 8.001,
+     "who": "ratio",
+     "text": "그런데 왜 간단한 비가 더 잘 어울릴까요?",
+     "key": "1sdwk8r",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 8.002,
+     "who": "ratio",
+     "text": "이번에는 리듬으로 알아봐요.",
+     "key": "16p8d4y",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 9,
      "who": "ratio",
-     "text": "먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 두 소리를 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.",
-     "key": "1qz52b9",
+     "text": "먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 두 소리를 함께 들어 보세요.",
+     "key": "b408h7",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 9.001,
+     "who": "ratio",
+     "text": "세 가지를 모두 들어야 다음 물음이 나와요.",
+     "key": "11mr8h2",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 10,
      "who": "ratio",
-     "text": "이번에는 다른 리듬이에요. 먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요. 세 가지를 모두 들어야 다음 물음이 나와요.",
-     "key": "d6u57n",
+     "text": "이번에는 다른 리듬이에요.",
+     "key": "20qvr6",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 10.001,
+     "who": "ratio",
+     "text": "먼저 북소리만 듣고, 그다음 트라이앵글만 듣고, 마지막으로 함께 들어 보세요.",
+     "key": "dwvilj",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 10.002,
+     "who": "ratio",
+     "text": "세 가지를 모두 들어야 다음 물음이 나와요.",
+     "key": "11mr8h2",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 11,
@@ -478,43 +1504,106 @@
      "key": "1ratbeg",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 12,
      "who": "ratio",
-     "text": "이번에는 여러분이 리듬을 만들어 봐요. 북과 트라이앵글이 각각 몇 칸마다 울릴지 골라 보세요. 두 소리는 몇 칸마다 다시 만날까요? 만들고 나서 재생해 확인해 보세요.",
-     "key": "1fqmjht",
+     "text": "이번에는 여러분이 리듬을 만들어 봐요.",
+     "key": "1fjc5ky",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 12.001,
+     "who": "ratio",
+     "text": "북과 트라이앵글이 각각 몇 칸마다 울릴지 골라 보세요.",
+     "key": "1eln009",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 12.002,
+     "who": "ratio",
+     "text": "두 소리는 몇 칸마다 다시 만날까요?",
+     "key": "1xhx1h8",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 12.003,
+     "who": "ratio",
+     "text": "만들고 나서 재생해 확인해 보세요.",
+     "key": "vnwrcu",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 13,
      "who": "ratio",
-     "text": "이 방에서는 각 음의 떨림, 진동수, 줄의 길이, 리듬을 통해 소리에 숨겨진 비밀을 알아봤어요. 친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?",
-     "key": "1f5b685",
+     "text": "이 방에서는 각 음의 떨림, 진동수, 줄의 길이, 리듬에서 소리에 숨겨진 비밀을 알아봤어요.",
+     "key": "9immqn",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 13.001,
+     "who": "ratio",
+     "text": "친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?",
+     "key": "1hklij",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 14,
      "who": "ratio",
-     "text": "소리의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.",
-     "key": "1ufx11n",
+     "text": "소리의 비밀을 공부해 보았어요.",
+     "key": "1tkilmr",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 14.001,
+     "who": "ratio",
+     "text": "낱말 카드를 놓아 빈칸을 채워 보세요.",
+     "key": "z5t9zk",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 15,
      "who": "ratio",
-     "text": "소리의 비밀을 잘 찾아냈어요! 카드 숫자 1과 8을 얻었어요! 잘 기억해두세요!",
-     "key": "mlgb0v",
+     "text": "소리의 비밀을 잘 찾아냈어요!",
+     "key": "1x92gln",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 15.001,
+     "who": "ratio",
+     "text": "카드 숫자 1과 8을 얻었어요!",
+     "key": "1o2ijk8",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 15.002,
+     "who": "ratio",
+     "text": "잘 기억해두세요!",
+     "key": "1e3uozw",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     }
    ]
   },
@@ -525,26 +1614,80 @@
     {
      "step": 0,
      "who": "ratio",
-     "text": "이 방은 지도의 비밀 방이에요. 지금까지 두 방에서 배웠던 비를 이용해서 문제를 풀어볼 거예요!",
-     "key": "1bt6wn7",
+     "text": "이 방은 지도의 비밀 방이에요.",
+     "key": "1dp3lvu",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 0.001,
+     "who": "ratio",
+     "text": "지금까지 두 방에서 배웠던 비를 이용해서 문제를 풀어볼 거예요!",
+     "key": "1j67c29",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 1,
      "who": "ratio",
-     "text": "지도는 넓은 땅을 종이 위에 담으려고 실제 거리를 일정한 비율로 줄여서 그린 그림이에요. 얼마나 줄였는지를 나타낸 것이 축척이에요. 지도 오른쪽 아래를 보면 축척 1 대 10,000이라고 적혀 있죠? 지도에서 1만큼이 실제로는 10,000만큼이라는 뜻이에요. 그러면 지도에서 1센티미터는 실제로 몇 센티미터일까요?",
-     "key": "y9coey",
+     "text": "지도는 넓은 땅을 종이 위에 담으려고 실제 거리를 일정한 비율로 줄여서 그린 그림이에요.",
+     "key": "15cvl7s",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 1.001,
+     "who": "ratio",
+     "text": "얼마나 줄였는지를 나타낸 것이 축척이에요.",
+     "key": "b5wh99",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.002,
+     "who": "ratio",
+     "text": "지도 오른쪽 아래를 보면 축척 일 대 만이라고 적혀 있죠?",
+     "key": "x6szxb",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.003,
+     "who": "ratio",
+     "text": "지도에서 1만큼이 실제로는 10,000만큼이라는 뜻이에요.",
+     "key": "3ngxr5",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.004,
+     "who": "ratio",
+     "text": "그러면 지도에서 1센티미터는 실제로 몇 센티미터일까요?",
+     "key": "6wwjpp",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 2,
      "who": "ratio",
-     "text": "지도에 다리가 3센티미터로 그려져 있어요. 실제 다리는 얼마나 길까요?",
-     "key": "1bqmcqi",
+     "text": "지도에 다리가 3센티미터로 그려져 있어요.",
+     "key": "180gelp",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 2.001,
+     "who": "ratio",
+     "text": "실제 다리는 얼마나 길까요?",
+     "key": "qjzxqn",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -552,17 +1695,44 @@
     {
      "step": 3,
      "who": "ratio",
-     "text": "현재 지도를 100퍼센트라고 할 때 지도를 200퍼센트로 확대해서 크게 보려고 해요. 3센티미터였던 지도의 다리가 몇 센티미터로 나타날까요?",
-     "key": "bm6mpz",
+     "text": "현재 지도를 100퍼센트라고 할 때 지도를 200퍼센트로 확대해서 크게 보려고 해요.",
+     "key": "e032d8",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 3.001,
+     "who": "ratio",
+     "text": "3센티미터였던 지도의 다리가 몇 센티미터로 나타날까요?",
+     "key": "112ip43",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 4,
      "who": "ratio",
-     "text": "지도의 비밀을 잘 알아봤어요! 이번에는 비를 이용해서 지도가 아닌 지구의 비밀도 풀어봐요! 위대한 수학자가 기다리고 있답니다.",
-     "key": "14gkppf",
+     "text": "지도의 비밀을 잘 알아봤어요!",
+     "key": "p93qsx",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.001,
+     "who": "ratio",
+     "text": "이번에는 비를 이용해서 지도가 아닌 지구의 비밀도 풀어봐요!",
+     "key": "na8dno",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.002,
+     "who": "ratio",
+     "text": "위대한 수학자가 기다리고 있답니다.",
+     "key": "ivj4om",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -570,8 +1740,35 @@
     {
      "step": 5,
      "who": "eratos",
-     "text": "젊은 벗이여! 만나서 반갑소. 나는 옛 그리스의 수학자, '에라토스테네스' 라오. 내가 신기한 소식을 하나 들었소.",
-     "key": "6csdeb",
+     "text": "젊은 벗이여!",
+     "key": "1u1ia3n",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 5.001,
+     "who": "eratos",
+     "text": "만나서 반갑소.",
+     "key": "psi3o",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 5.002,
+     "who": "eratos",
+     "text": "나는 옛 그리스의 수학자, '에라토스테네스' 라오.",
+     "key": "8nj2on",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 5.003,
+     "who": "eratos",
+     "text": "내가 신기한 소식을 하나 들었소.",
+     "key": "kr4pyc",
      "cast": "에라토스테네스",
      "speaker": "nwontak",
      "reg": true
@@ -579,8 +1776,26 @@
     {
      "step": 6,
      "who": "eratos",
-     "text": "남쪽 도시 시에네에서는 여름 한낮, 정오가 되면 그림자가 하나도 생기지 않는다고 하오. 해가 바로 머리 꼭대기에 있어 햇빛이 막대와 나란히 내려오기 때문이지. 막대와 햇빛이 이루는 각이 0도라는 뜻이라오.",
-     "key": "h7rt0f",
+     "text": "남쪽 도시 시에네에서는 여름 한낮, 정오가 되면 그림자가 하나도 생기지 않는다고 하오.",
+     "key": "1ak884k",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 6.001,
+     "who": "eratos",
+     "text": "해가 바로 머리 꼭대기에 있어 햇빛이 막대와 나란히 내려오기 때문이지.",
+     "key": "ypwrut",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 6.002,
+     "who": "eratos",
+     "text": "막대와 햇빛이 이루는 각이 0도라는 뜻이라오.",
+     "key": "el9loe",
      "cast": "에라토스테네스",
      "speaker": "nwontak",
      "reg": true
@@ -588,8 +1803,26 @@
     {
      "step": 7,
      "who": "eratos",
-     "text": "그런데 같은 시각, 북쪽 알렉산드리아에서는 막대에 그림자가 생긴단 말이오. 각을 재어 보니 7.2도였소. 같은 햇빛인데 각이 다르다니, 지구가 평평하다면 있을 수 없는 일이지요.",
-     "key": "4dqwqs",
+     "text": "그런데 같은 시각, 북쪽 알렉산드리아에서는 막대에 그림자가 생긴단 말이오.",
+     "key": "1qzb0j4",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 7.001,
+     "who": "eratos",
+     "text": "각을 재어 보니 7.2도였소.",
+     "key": "uasm17",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 7.002,
+     "who": "eratos",
+     "text": "같은 햇빛인데 각이 다르다니, 지구가 평평하다면 있을 수 없는 일이지요.",
+     "key": "du4bb3",
      "cast": "에라토스테네스",
      "speaker": "nwontak",
      "reg": true
@@ -597,38 +1830,101 @@
     {
      "step": 8,
      "who": "eratos",
-     "text": "원 전체 360도를 7.2도로 나누면 50이라오. 일 대 50은 두 도시 대 지구 전체. 일 대 50은 800킬로미터 대 지구 둘레. 이제 비를 이용하여 지구의 둘레를 계산해 보시오.",
-     "key": "1t0wm9p",
+     "text": "원 전체 360도를 7.2도로 나누면 50이라오.",
+     "key": "150oeuu",
      "cast": "에라토스테네스",
      "speaker": "nwontak",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 8.001,
+     "who": "eratos",
+     "text": "일 대 오십은 두 도시 대 지구 전체.",
+     "key": "1ilb2iw",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 8.002,
+     "who": "eratos",
+     "text": "일 대 오십은 800킬로미터 대 지구 둘레.",
+     "key": "1hu9dxc",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
+    },
+    {
+     "step": 8.003,
+     "who": "eratos",
+     "text": "이제 비를 이용하여 지구의 둘레를 계산해 보시오.",
+     "key": "1l0j4x0",
+     "cast": "에라토스테네스",
+     "speaker": "nwontak",
+     "reg": true
     },
     {
      "step": 9,
      "who": "ratio",
-     "text": "이 방에서는 축척으로 실제 거리 구하기, 지도 확대하기, 지구 둘레 구하기 등 다양한 활동을 해 보았어요. 그럼 여러분이 직접 지도를 만든다면, 무엇을 조사하고 무엇을 이용해야 할까요? 생각을 적어 보세요.",
-     "key": "5eb5dq",
+     "text": "이 방에서는 축척으로 실제 거리 구하기, 지도 확대하기, 지구 둘레 구하기 등 다양한 활동을 해 보았어요.",
+     "key": "1ejqcqn",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 9.001,
+     "who": "ratio",
+     "text": "그럼 여러분이 직접 지도를 만든다면, 무엇을 조사하고 무엇을 이용해야 할까요?",
+     "key": "1odzh36",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 9.002,
+     "who": "ratio",
+     "text": "생각을 적어 보세요.",
+     "key": "16lwzpf",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 10,
      "who": "ratio",
-     "text": "지도의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.",
-     "key": "1j24men",
+     "text": "지도의 비밀을 공부해 보았어요.",
+     "key": "zjgh3",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 10.001,
+     "who": "ratio",
+     "text": "낱말 카드를 놓아 빈칸을 채워 보세요.",
+     "key": "z5t9zk",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 11,
      "who": "ratio",
-     "text": "지도의 비밀을 잘 찾아냈어요! 축척으로 실제 거리를 구하고, 그림자의 비로 지구 둘레까지 재어 보았어요!",
-     "key": "1elmgya",
+     "text": "지도의 비밀을 잘 찾아냈어요!",
+     "key": "xnqqsv",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 11.001,
+     "who": "ratio",
+     "text": "축척으로 실제 거리를 구하고, 그림자의 비로 지구 둘레까지 재어 보았어요!",
+     "key": "146723p",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     }
    ]
   },
@@ -639,20 +1935,83 @@
     {
      "step": 0,
      "who": "ratio",
-     "text": "드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리의 방에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요. 색깔, 소리 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.",
-     "key": "i4ao73",
+     "text": "드디어 마지막 방이에요!",
+     "key": "fmmpj1",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 0.001,
+     "who": "ratio",
+     "text": "색깔의 방에서 받은 1과 6, 소리의 방에서 받은 1과 8.",
+     "key": "169xmix",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 0.002,
+     "who": "ratio",
+     "text": "비밀 카드 네 장이 여기 다 모였어요.",
+     "key": "1ju0zen",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 0.003,
+     "who": "ratio",
+     "text": "색깔, 소리 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.",
+     "key": "ls57kc",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     },
     {
      "step": 1,
      "who": "ratio",
-     "text": "1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요? 색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!",
-     "key": "mnqd72",
+     "text": "1.618, 황금비는 예로부터 아름답다고 여겨진 비예요.",
+     "key": "ct5go6",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
+    },
+    {
+     "step": 1.001,
+     "who": "ratio",
+     "text": "아래 막대를 움직여 기준을 바꿔 보세요.",
+     "key": "3bc2im",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.002,
+     "who": "ratio",
+     "text": "기준이 길어지면 황금비 막대는 어떻게 될까요?",
+     "key": "w988ew",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.003,
+     "who": "ratio",
+     "text": "색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요.",
+     "key": "odu5xn",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 1.004,
+     "who": "ratio",
+     "text": "긴 여정을 함께해 줘서 정말 고마워요!",
+     "key": "135m4ed",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
     }
    ]
   }
