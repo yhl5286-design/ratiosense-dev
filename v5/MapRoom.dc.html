@@ -672,7 +672,7 @@ class Component extends DCLogic {
     this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
     this._lastAct = Date.now();
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
-    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    /* v5 심화판 — 사용성 평가 밖이므로 식별 코드를 읽지 않고 늘 게스트로 돈다. 기록을 보내지 않고, 색깔·소리 순서 잠금도 걸리지 않는다 */ this._user = 'guest';
     this._guest = (this._user === 'guest');
     if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
     /* 순서 잠금 — 색깔·소리 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.

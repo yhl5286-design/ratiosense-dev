@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609130358"></script>
+<script src="tts/manifest.js?v=202609140445"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -871,7 +871,7 @@ class Component extends DCLogic {
             { t:Math.max(this.HBASE, Math.round(this.HBASE * p.a / p.b)) + ' － ' + Math.min(this.HBASE, Math.round(this.HBASE * p.a / p.b)) + ' = ' + Math.abs(this.HBASE - Math.round(this.HBASE * p.a / p.b)), ok:0, fb:'두 길이의 차예요. 우리가 한 일은 두 길이를 비교해 본 것이지요?' } ] } ] } : null;
       if (p.ph === 1) st.push({ k:'harp', i, probe,
         say:'라 음을 기준으로 악기를 조율해 보세요. 라 음이 440Hz일 때 ' + p.n + ' 음은 '
-            + Math.round(440 * p.b / p.a) + 'Hz예요. 라와 ' + p.n + '의 비는 ' + p.a + ' 대 ' + p.b + '이에요. '
+            + Math.round(440 * p.b / p.a) + 'Hz예요. 라와 ' + p.n + '의 진동수의 비는 ' + p.a + ' 대 ' + p.b + '이에요. '
             + '슬라이더를 움직이면서 ' + p.n + ' 소리가 날 때 멈춰 보세요.',
         hi:'🎻 하프 공방 · ' + this.HBASE + 'cm를 ' + p.b + '등분한 눈금에서 내 줄이 몇 칸인지 확인해요' });
       else st.push({ k:'harp', i, probe,
@@ -936,7 +936,7 @@ class Component extends DCLogic {
        '어느 가게가 싼가' → '어느 비가 더 잘 어울리는가' */
     secret: { card:true, title:'🃏 소리의 비밀 카드', rows:[
         ['두 음의 진동수의 비가 더 ', {a:'간단한'}, ' 비일수록 더 잘 어울린다.'],
-        ['관의 길이와 음 높이의 관계는 서로 ', {a:'반대'}, ' 이다.'] ],
+        ['줄의 길이와 음 높이의 관계는 서로 ', {a:'반대'}, ' 이다.'] ],
       bank:['간단한','반대','복잡한','비례'] }
   };
   /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 셋째 자리 */
@@ -2669,6 +2669,11 @@ class Component extends DCLogic {
   slSet(L) {
     const prev = this.state.slL;
     this.setState({ slL: L });
+    /* 통과 표시가 없어 학생 코드로는 넘어갈 수 없었다(게스트는 검사를 건너뛰어 드러나지 않음).
+       안내대로 라 줄보다 짧게도 길게도 한 번씩 들어 보면 넘어가게 한다. */
+    if (L < this.HBASE) this._slShort = 1;
+    if (L > this.HBASE) this._slLong = 1;
+    if (this._slShort && this._slLong && !(this.state.solved || {})[this.state.i]) this.markSolved();
     const now = Date.now();
     if (L !== prev) {
       const t = this._sTrk = this._sTrk || { dir:0, rev:0, n:0, lo:prev, hi:prev, snap:0, t0:now, from:prev };
@@ -2841,7 +2846,7 @@ class Component extends DCLogic {
         return;
       }
       this.setState({ tuneMsg: this.hintNext('harpear' + st.i, [
-        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 찾을 음을 다시 듣고 비교해 볼까요?',
+        '줄이 길수록 낮은 소리, 짧을수록 높은 소리였어요. 슬라이더를 조금씩 움직이며 소리가 높아지는지 낮아지는지 들어 볼까요?',
         off > 0 ? '목표보다 내 소리가 낮게 들리죠? 조금 더 짧게 움직여 볼까요?'
                 : '목표보다 내 소리가 높게 들리죠? 조금 더 길게 움직여 볼까요?',
         '눈금을 보면서 한 칸씩 옮겨 보세요. 한 칸 움직일 때마다 소리가 얼마나 달라지는지 들으면 찾기 쉬워요.'
@@ -3862,6 +3867,7 @@ class Component extends DCLogic {
       v.slTag = L === 60 ? '(기준 라 ★)' : (L < 48 ? '(아주 높은 소리!)' : (L < 60 ? '(높은 소리!)' : (L > 90 ? '(아주 낮은 소리!)' : '(낮은 소리!)')));
       v.slInput = (e) => this.slSet(+e.target.value);
       v.slEnd = () => this.slEndLog(0);
+      if (!solved) v.footHintOverride = '줄을 라 줄(' + this.HBASE + 'cm)보다 짧게도, 길게도 해 보세요';
       v.rp = this.repVals(L, this.HBASE, '내 줄 길이 : 라 줄 ' + this.HBASE + 'cm(기준)', false);
     }
 

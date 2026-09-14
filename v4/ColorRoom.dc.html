@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609130358"></script>
+<script src="tts/manifest.js?v=202609140445"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -1034,6 +1034,9 @@ class Component extends DCLogic {
             { t:'빨강 : 노랑 = 2 : 3', ok:1 },
             { t:'빨강 : 노랑 = 3 : 2', ok:0, fb:'앞에는 빨강 점 수, 뒤에는 노랑 점 수를 놓는 거야. 순서를 다시 볼까?' },
             { t:'빨강 : 전체 = 2 : 3', ok:0, fb:'전체는 다섯 개야. 지금 비교한 건 빨강과 노랑이지?' } ] } ] } },
+      { k:'grid', n:10, who:'signac',
+        say:'이번에도 빨강 : 노랑을 2 대 3으로 주황을 만들 거야. 이번에는 열 칸에 색칠해 줘.',
+        hi:'빨강 : 노랑 = 2 : 3' },
       { k:'grid', n:100, who:'signac', say:'이번에는 100칸을 색칠할 거야. 빨강 : 노랑 = 2 : 3이 되도록 100칸을 색칠해 줘.', hi:'큰 붓을 쓰면 한 줄씩 칠할 수 있어요',
         probe:{ title:'🤔 방금 칠한 백 칸을 짚어 볼까', rows:[
           { q:'백 칸을 어떻게 칠했나요?', opts:[
