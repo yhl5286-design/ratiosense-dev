@@ -90,7 +90,7 @@ button{font-family:inherit}
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,#c67139,#f6a06b);transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:#645c50;white-space:nowrap">{{stepLabel}}</div>
-    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
+    <div data-cards-badge="1" style="flex:none;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">{{audioIcon}}</button>
   </header>
 
@@ -1683,6 +1683,7 @@ class Component extends DCLogic {
   /* ix 를 주면 그 자리 하나만, 주지 않으면 남은 자리를 모두 넣는다.
      이미 받은 자리는 다시 넣지 않으므로 마무리 화면에서 한 번 더 불러도 안전하다. */
   awardDigit(ix) {
+    if (this._guest) return; /* 게스트는 비밀 카드를 모으지 않는다 — 과제를 건너뛰어도 넘어가므로 숫자가 앞뒤 없이 쌓인다(2026-09-14) */
     let got = [];
     try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
     const give = (ix == null) ? this.DIGITS : [this.DIGITS[ix]];
@@ -1773,7 +1774,7 @@ class Component extends DCLogic {
     try {
       const src = document.querySelector('[data-card-panel]');
       const dst = document.querySelector('[data-cards-badge]');
-      if (!src || !dst) return;
+      if (!src || !dst || this._guest) return;
       const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
       const el = document.createElement('div');
       el.textContent = '🃏';
@@ -2792,7 +2793,7 @@ class Component extends DCLogic {
     const v = {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
-      cards: S.cards,
+      cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
       audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),

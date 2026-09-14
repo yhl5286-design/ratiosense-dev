@@ -90,7 +90,7 @@
   <div class="sub">방마다 숨어 있는 <b>비(比)의 비밀</b>을 찾아가는 비율 탐험!<br>비밀 카드를 모아 마지막 문을 열어요</div>
   <div class="chiprow">
     <span class="mychip" id="chip" style="display:none">🙋 <span id="chipNo"></span></span>
-    <span class="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(색깔의 방 두 장, 소리의 방 두 장)</span></span>
+    <span class="wallet" id="wallet">🃏 비밀 카드 <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(색깔의 방 두 장, 소리의 방 두 장)</span></span>
     <button class="ghost" id="chgBtn" style="display:none">코드 바꾸기</button>
     <span class="guestnote" id="guestNote">🔎 게스트 모드 — 활동 기록이 남지 않아요</span>
   </div>
@@ -200,7 +200,9 @@ function showChip(code){
   $('#chipNo').textContent=code==='guest'?'게스트':code;
   $('#chip').style.display='inline-block';
   $('#chgBtn').style.display='inline-block';
-  $('#guestNote').style.display=code==='guest'?'inline-flex':'none';}
+  $('#guestNote').style.display=code==='guest'?'inline-flex':'none';
+  /* 게스트는 비밀 카드를 모으지 않으므로 지갑도 숨긴다(2026-09-14) */
+  $('#wallet').style.display=code==='guest'?'none':'';}
 /* 카드는 시작할 때 거저 주지 않는다 — 1 · 6 · 1 · 8 네 장을 색깔·소리 두 방에서
    직접 찾아내야 하고(방마다 두 장), 넷이 모여야 비의 비밀 마지막 문이 열린다. */
 function refresh(){
@@ -290,7 +292,7 @@ addEventListener('keydown',e=>{
   else $('#lgErr').textContent='코드에 쓰지 않는 글자예요. 화면에 있는 단추를 눌러 주세요';});
 $('#guestBtn').onclick=()=>{saveUser('guest');showChip('guest');$('#loginOv').style.display='none';refresh();};
 $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');}catch(e){}
-  $('#chip').style.display='none';$('#chgBtn').style.display='none';$('#guestNote').style.display='none';openLogin();};
+  $('#chip').style.display='none';$('#chgBtn').style.display='none';$('#guestNote').style.display='none';$('#wallet').style.display='';openLogin();};
 const u=getUser();
 if(u){showChip(u);}else{openLogin();}
 refresh();

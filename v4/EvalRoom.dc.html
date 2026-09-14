@@ -92,7 +92,7 @@ button{font-family:inherit}
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
-    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <div data-cards-badge="1" style="flex:none;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
   </header>
 
@@ -856,7 +856,7 @@ class Component extends DCLogic {
     try {
       const src = document.querySelector('[data-card-panel]');
       const dst = document.querySelector('[data-cards-badge]');
-      if (!src || !dst) return;
+      if (!src || !dst || this._guest) return;
       const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
       const el = document.createElement('div');
       el.textContent = '🃏';
@@ -1040,7 +1040,7 @@ class Component extends DCLogic {
     const v = {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
-      cards: S.cards,
+      cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
       audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
