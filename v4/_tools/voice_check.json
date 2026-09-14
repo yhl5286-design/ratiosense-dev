@@ -1,5 +1,5 @@
 {
- "ver": "202609110746",
+ "ver": "202609130358",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1872,8 +1872,8 @@
     {
      "step": 1,
      "who": "ratio",
-     "text": "1.618, 황금비는 예로부터 아름답다고 여겨진 비예요.",
-     "key": "ct5go6",
+     "text": "황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있어요.",
+     "key": "rt4g68",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1881,8 +1881,8 @@
     {
      "step": 1.001,
      "who": "ratio",
-     "text": "아래 막대를 움직여 기준을 바꿔 보세요.",
-     "key": "3bc2im",
+     "text": "막대를 움직여 황금비가 유지되는 것을 확인해보세요.",
+     "key": "7vyni9",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1890,8 +1890,8 @@
     {
      "step": 1.002,
      "who": "ratio",
-     "text": "기준이 길어지면 황금비 막대는 어떻게 될까요?",
-     "key": "w988ew",
+     "text": "색깔과 소리의 비밀 말고도 세상 곳곳에서 비의 비밀을 찾아내보세요.",
+     "key": "1w22k9s",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1899,17 +1899,8 @@
     {
      "step": 1.003,
      "who": "ratio",
-     "text": "색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요.",
-     "key": "odu5xn",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.004,
-     "who": "ratio",
-     "text": "긴 여정을 함께해 줘서 정말 고마워요!",
-     "key": "135m4ed",
+     "text": "고마워요!",
+     "key": "3ox61",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true

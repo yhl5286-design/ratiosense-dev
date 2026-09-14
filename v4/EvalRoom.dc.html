@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609110746"></script>
+<script src="tts/manifest.js?v=202609130358"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -64,8 +64,8 @@ button{font-family:inherit}
 .rs-wrapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
 /* 그림 높이를 묶어 두 줄이 고르게 앉게 한다 — 한 장이라도 길면 그 줄 전체가 따라 커져
    아래 맺음말이 화면 밖으로 밀린다. contain이라 그림은 잘리지 않고 여백만 생긴다. */
-.rs-wrapgrid figure>img{max-height:196px;object-fit:contain;background:var(--color-neutral-100)}
-.rs-wrapgrid figure>div{max-height:196px;overflow:hidden}
+.rs-wrapgrid figure>img{max-height:250px;object-fit:contain;background:var(--color-neutral-100)}
+.rs-wrapgrid figure>div{max-height:250px;overflow:hidden}
 @media (max-width:860px){.rs-wrapgrid{grid-template-columns:repeat(2,1fr);gap:10px}}
 @media (max-width:600px){.rs-wrapgrid{grid-template-columns:repeat(2,1fr);gap:9px}}
 .rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
@@ -210,10 +210,13 @@ button{font-family:inherit}
       <!-- 마지막 화면 — 안내자가 말하지 않는다. 그동안 한 활동을 그대로 펼쳐 놓고,
            그것이 모두 하나의 비로 이어져 있었음을 화면이 스스로 보인다.
            누를 것은 없다. 완료 기록은 이 화면에 들어오는 순간 go()에서 남긴다. -->
+      <!-- 「내가 한 것」 화면 — 2026-09-13에 단계 목록에서 빼 지금은 닿지 않는다.
+           면담의 자극 회상 자료로 갈무리만 남겨 두었다(4.학위논문\_면담지_갈무리).
+           되살리려면 STEPS 끝에 wrap 단계를 다시 넣고 finishRoom 자리를 옮긴다. -->
       <sc-if value="{{isWrap}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:5px;animation:rsUp .35s ease;margin:auto 0;width:100%;max-width:min(1240px,96vw);padding:6px 0">
 
-          <div style="font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:22px;color:var(--color-neutral-900)">우리가 한 것</div>
+          <div style="font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:22px;color:var(--color-neutral-900)">내가 한 것</div>
 
           <div class="rs-wrapgrid">
 
@@ -276,19 +279,10 @@ button{font-family:inherit}
 
           </div>
 
-          <div style="font-size:17px;font-weight:800;color:var(--color-neutral-700);line-height:1">↓</div>
-
-          <div style="font-size:21px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:6px 22px;text-align:center">
-            다섯 가지 모두 <span style="color:var(--color-accent-2-700)">비</span>였어요
-          </div>
-
-          <div style="font-size:14.5px;font-weight:700;line-height:1.5;text-align:center;color:var(--color-neutral-800);max-width:min(980px,94%)">
-            물감과 소리, 리듬과 줄 길이와 황금비 — 서로 달라 보이지만
-            모두 <b>두 양을 비교하는 비</b> 하나로 이어져 있었어요.<br>
-            세상에는 아직 만나지 못한 <b>비와 비율의 비밀</b>이 훨씬 더 많이 숨어 있어요.
-          </div>
-
-          <div style="font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:23px;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:4px solid var(--color-accent-2-400);border-radius:999px;padding:5px 30px;margin-top:0">
+          <!-- 결론을 적어 두지 않는다(2026-09-13). 이 화면은 면담에서 자극 회상 자료로
+               쓰므로, 「모두 비였어요」처럼 답을 먼저 말해 주면 회상이 아니라 유도가 된다.
+               한 일을 그대로 펼쳐 놓기만 하고 뜻은 학습자가 말하게 둔다(지침 5.1·3.2). -->
+          <div style="font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:23px;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:4px solid var(--color-accent-2-400);border-radius:999px;padding:6px 32px;margin-top:4px">
             수고했어요!
           </div>
 
@@ -372,14 +366,9 @@ class Component extends DCLogic {
       { k:'door',
         say:'드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리의 방에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요. 색깔, 소리 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
         hi:'🔐 마지막 문 — 카드의 숫자를 차례로' },
+      /* 마지막 자리이므로 말을 아낀다 — 작은 안내 글씨도 두지 않는다(2026-09-13). */
       { k:'finale',
-        say:'1.618, 황금비는 예로부터 아름답다고 여겨진 비예요. 아래 막대를 움직여 기준을 바꿔 보세요. 기준이 길어지면 황금비 막대는 어떻게 될까요? 색과 소리에서 찾은 것처럼, 세상 곳곳에 비의 비밀이 숨어 있어요. 긴 여정을 함께해 줘서 정말 고마워요!',
-        hi:'🎉 여정 완주 — 기준을 바꿔 가며 두 막대를 비교해 봐요' },
-      /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
-         소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
-      /* 마지막 화면에는 안내자의 말을 두지 않는다. 그동안 한 활동을 화면에 펼쳐
-         스스로 읽게 하고, 말로 결론을 먼저 알려 주지 않는다(지침 6.4). */
-      { k:'wrap' }
+        say:'황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있어요. 막대를 움직여 황금비가 유지되는 것을 확인해보세요. 색깔과 소리의 비밀 말고도 세상 곳곳에서 비의 비밀을 찾아내보세요. 고마워요!' }
     ];
   }
 
@@ -840,7 +829,9 @@ class Component extends DCLogic {
     }
     /* 마지막 화면에는 누를 것이 없다. 들어오는 순간 완료를 기록해 두어야
        학습자가 그대로 창을 닫아도 활동 완료가 로그에 남는다. */
-    if (this.STEPS[n].k === 'wrap') this.finishRoom();
+    /* 2026-09-13에 「내가 한 것」 화면을 지우면서 완료 기록을 황금비 화면으로 옮겼다.
+       이 줄이 없으면 complete가 한 번도 안 찍힌다. */
+    if (this.STEPS[n].k === 'finale') this.finishRoom();
     this.setState(patch);
     this.plog('nav', { to:n });
     setTimeout(() => this.sayStep(n), 380);

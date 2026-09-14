@@ -3,24 +3,31 @@
 <title>RatioSense 완주 시간·로그 측정</title>
 <!--
   방을 iframe에 띄우고 끝까지 걸어가며 두 가지를 잰다.
-  ① 실제로 걸리는 시간 — 낭독이 끝나고 화면이 가라앉기까지를 잰다(진짜 측정값)
+  ① 실제로 걸리는 시간 — 낭독 mp3가 끝나고 화면이 가라앉기까지를 시계로 잰다
   ② plog 이벤트 — 앱이 iframe 안에서 부모에게 보내는 pilotLog를 그대로 받는다
      (게스트여도 보내므로 연구용 시트에 아무것도 쌓이지 않는다)
 
-  조작에 걸리는 시간은 잴 수 없다(사람이 해야 한다). 화면 유형별 예상치를 따로 더한다.
-  ?room=ColorRoom 처럼 방을 지정한다. 끝나면 window.RESULT에 결과가 담긴다.
+  ⚠ 게스트로 걷기 때문에 과제를 풀지 않는다. 그래서 여기서 나오는 값은
+     「낭독 + 화면 전환」만의 시간, 곧 완주 시간의 **아래쪽 한계**다.
+     조작에 걸리는 시간은 사람이 직접 해 보아야 나온다.
+
+  ?room=ColorRoom 처럼 방을 지정한다. 끝나면 window.DONE=1 이 되고
+  결과가 window.RESULT 와 <pre id="out"> 에 들어간다.
 -->
 <body style="font:13px/1.5 ui-monospace,monospace;margin:0">
 <div id="hud" style="position:fixed;top:0;left:0;right:0;background:#111;color:#0f0;padding:6px 10px;z-index:9">준비…</div>
 <iframe id="fr" style="position:absolute;top:32px;left:0;width:1150px;height:900px;border:0"></iframe>
+<pre id="out" style="position:absolute;top:960px;left:0;white-space:pre-wrap"></pre>
+<script src="solve.js"></script>
 <script>
 const Q = new URLSearchParams(location.search);
 const ROOM = Q.get('room') || 'ColorRoom';
-const SETTLE = +(Q.get('settle') || 900);   /* 화면이 가라앉았다고 볼 무동작 시간 */
-const CAP = +(Q.get('cap') || 400);          /* 단계 최대 대기(초 아님, ×100ms) */
+const QUIET = +(Q.get('quiet') || 700);   /* 이 시간 동안 아무 일도 없으면 가라앉은 것으로 본다 */
+const CAP = +(Q.get('cap') || 900);
+const SOLVE = Q.get('solve') === '1';   /* 1이면 과제를 자동으로 푼다 */        /* 한 화면 최대 대기 = CAP × 100ms */
 
-const events = [];      /* {ms, ev, data} */
-const screens = [];     /* {i, sk, waitMs} */
+const events = [];
+const screens = [];
 let t0 = 0;
 
 addEventListener('message', e => {
@@ -30,47 +37,99 @@ addEventListener('message', e => {
 });
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const fr = () => document.getElementById('fr');
+const doc = () => fr().contentDocument;
+const win = () => fr().contentWindow;
 
-function doc() { return document.getElementById('fr').contentDocument; }
-function win() { return document.getElementById('fr').contentWindow; }
+/* 낭독은 new Audio('tts/…')로 나간다. iframe의 전역 Audio를 갈아 끼워
+   지금 울리는 낭독이 몇 개인지 센다 — 이게 있어야 「낭독이 끝났다」를 안다. */
+function hookAudio() {
+  const iw = win();
+  if (iw.__hooked) return;
+  const Real = iw.Audio;
+  iw.__narr = 0;
+  iw.__hooked = 1;
+  iw.Audio = function (src) {
+    const a = new Real(src);
+    if (String(src || '').indexOf('tts/') === 0) {
+      iw.__narr++;
+      let off = false;
+      const done = () => { if (off) return; off = true; iw.__narr = Math.max(0, iw.__narr - 1); };
+      a.addEventListener('ended', done);
+      a.addEventListener('error', done);
+      a.addEventListener('pause', done);
+    }
+    return a;
+  };
+}
 
-/* 화면 머리말의 「n / N」 */
 function pos() {
   const d = doc(); if (!d) return null;
   const m = (d.body.innerText || '').match(/(\d+)\s*\/\s*(\d+)/);
   return m ? { i: +m[1], n: +m[2] } : null;
 }
 
-/* 「다음 →」 · 「제출! →」 · 「다음 방으로」 단추 */
+/* 이동 막대의 오른쪽 끝 단추가 언제나 「다음」 자리다 — story 화면은 단추 이름이
+   「좋아요! 도와드릴게요!」처럼 제각각이라 글자로 찾으면 놓친다. */
 function nextBtn() {
   const d = doc(); if (!d) return null;
-  const bs = [...d.querySelectorAll('button')];
-  return bs.find(b => /다음|제출|시작|들어가기/.test(b.textContent || '')) || null;
+  const nav = d.querySelector('.rs-nav-in');
+  if (nav) {
+    const bs = [...nav.querySelectorAll('button, a')].filter(b => !/이전/.test(b.textContent || ''));
+    if (bs.length) return bs[bs.length - 1];
+  }
+  const p = [...d.querySelectorAll('a.rs-pill, button.rs-pill')];
+  return p.length ? p[p.length - 1] : null;
 }
 
-/* 낭독이 끝나고 화면이 조용해질 때까지 기다린다 — 마지막 이벤트 뒤 SETTLE ms */
+/* 낭독이 끝나고 QUIET 동안 이벤트가 없을 때까지 기다린다 */
 async function settle() {
-  let last = events.length, quiet = 0;
+  let last = events.length, quiet = 0, waited = 0;
   for (let k = 0; k < CAP; k++) {
-    await sleep(100);
-    const speaking = (() => { try { return win().speechSynthesis && win().speechSynthesis.speaking; } catch (e) { return false; } })();
+    await sleep(100); waited += 100;
+    const iw = win();
+    const narr = iw && iw.__narr ? iw.__narr : 0;
+    const synth = (() => { try { return iw.speechSynthesis && iw.speechSynthesis.speaking; } catch (e) { return false; } })();
     if (events.length !== last) { last = events.length; quiet = 0; continue; }
-    if (speaking) { quiet = 0; continue; }
+    if (narr > 0 || synth) { quiet = 0; continue; }
     quiet += 100;
-    if (quiet >= SETTLE) return k * 100;
+    if (quiet >= QUIET) return waited - QUIET;   /* 조용해지기까지 걸린 시간 */
   }
   return CAP * 100;
 }
 
+/* 바깥으로 나가는 모든 전송을 막는다 — 시험 삼아 걷는 것이 연구용 시트에
+   쌓이면 안 된다. 막은 횟수를 세어 끝에 보고한다(0이 아니면 그만큼 막은 것). */
+let blocked = 0;
+function blockNet() {
+  const iw = win();
+  if (iw.__netBlocked) return;
+  iw.__netBlocked = 1;
+  iw.fetch = function () { blocked++; return Promise.resolve(new Response('', { status: 200 })); };
+  try { iw.navigator.sendBeacon = function () { blocked++; return true; }; } catch (e) {}
+  try {
+    const XO = iw.XMLHttpRequest.prototype.open;
+    iw.XMLHttpRequest.prototype.open = function () { blocked++; return XO.call(this, 'GET', 'about:blank'); };
+  } catch (e) {}
+}
+
 async function run() {
-  const fr = document.getElementById('fr');
-  /* 게스트로 들어가 잠금 화면을 건너뛴다 */
-  fr.src = ROOM + '.dc.html?code=guest';
-  await new Promise(r => fr.onload = r);
-  try { win().localStorage.setItem('rs3_user', JSON.stringify({ code: 'guest', ts: Date.now() })); } catch (e) {}
-  fr.src = ROOM + '.dc.html?code=guest';
-  await new Promise(r => fr.onload = r);
-  await sleep(1200);
+  const f = fr();
+  /* 게스트가 아니라 실제 코드로 들어간다 — 게스트는 관문이 풀려 있어 과제를
+     풀 일이 없고 조작 로그도 찍히지 않는다. 전송은 바로 위에서 막는다. */
+  /* guest=1이면 게스트로 — 관문이 열려 있어 낭독 시간만 재기 좋다 */
+  const CODE = Q.get('guest') === '1' ? 'guest' : (Q.get('code') || 'E00');
+  f.src = '../' + ROOM + '.dc.html';
+  await new Promise(r => f.onload = r);
+  blockNet();
+  try { win().localStorage.setItem('rs3_user', JSON.stringify({ code: CODE, ts: Date.now() })); } catch (e) {}
+  try { win().localStorage.setItem('rs3_done:' + CODE, JSON.stringify(['color', 'sound', 'map'])); } catch (e) {}
+  try { win().localStorage.setItem('rs3_cards:' + CODE, JSON.stringify(['color1', 'color2', 'sound1', 'sound2'])); } catch (e) {}
+  f.src = '../' + ROOM + '.dc.html';
+  await new Promise(r => f.onload = r);
+  blockNet();
+  hookAudio();
+  await sleep(900);
   t0 = Date.now();
 
   const hud = document.getElementById('hud');
@@ -78,17 +137,29 @@ async function run() {
   while (guard++ < 120) {
     const p = pos();
     const waited = await settle();
-    screens.push({ i: p ? p.i : -1, n: p ? p.n : -1, waitMs: waited });
-    hud.textContent = `${ROOM}  ${p ? p.i + '/' + p.n : '?'}  대기 ${(waited/1000).toFixed(1)}s  · 이벤트 ${events.length}`;
+    screens.push({ i: p ? p.i : -1, n: p ? p.n : -1, ms: waited });
+    hud.textContent = `${ROOM}  ${p ? p.i + '/' + p.n : '?'}  ${(waited / 1000).toFixed(1)}s  · 이벤트 ${events.length}`;
     if (p && p.i >= p.n) break;
-    const b = nextBtn();
-    if (!b) { hud.textContent += '  ← 다음 단추를 못 찾음'; break; }
-    b.click();
-    await sleep(250);
+    if (SOLVE) {
+      /* 과제를 풀어 관문을 연다 */
+      const posN = () => { const q = pos(); return q ? q.i : -1; };
+      const press = () => { const b = nextBtn(); if (b) b.click(); };
+      const r = await window.RSSolve.solveOne(win(), doc(), press, posN, 1400);
+      screens[screens.length - 1].tries = r.tries;
+      if (!r.ok) { screens[screens.length - 1].stuck = 1;
+        hud.textContent += '  ← 못 넘어감'; break; }
+    } else {
+      const b = nextBtn();
+      if (!b) { hud.textContent += '  ← 다음 단추를 못 찾음'; break; }
+      b.click();
+      await sleep(220);
+    }
   }
-  window.RESULT = { room: ROOM, totalMs: Date.now() - t0, screens, events };
+  const total = Date.now() - t0;
+  window.RESULT = { room: ROOM, totalMs: total, screens, events, blocked };
+  document.getElementById('out').textContent = JSON.stringify(window.RESULT);
   window.DONE = 1;
-  hud.textContent = `끝 — ${ROOM} 화면 ${screens.length}개 · 낭독·전환 합계 ${((Date.now()-t0)/1000).toFixed(1)}초 · 이벤트 ${events.length}건`;
+  hud.textContent = `끝 — ${ROOM} 화면 ${screens.length}개 · ${(total / 1000).toFixed(1)}초 · 이벤트 ${events.length}건`;
 }
 run();
 </script>
