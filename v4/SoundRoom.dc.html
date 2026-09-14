@@ -1228,7 +1228,8 @@ class Component extends DCLogic {
       var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
       d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
     } catch(e) {}
-    this._lastAct = Date.now();
+    /* idle 기록 자체는 조작이 아니다. 여기서 갱신하면 긴 정지가 15초마다 쪼개져 여러 건 남는다(2026-09-14) */
+    if (ev !== 'idle') this._lastAct = Date.now();
     try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
@@ -2414,7 +2415,7 @@ class Component extends DCLogic {
     }
     this._polySched = sched;
     try { console.info('[poly] ' + (tag || st.p || '') + '/' + mode + ' ' + p.d + ':' + p.t + ' 스케줄(t0 기준 초):', JSON.stringify(sched)); } catch(e) {}
-    this.plog('poly_play', { task: st.p || '', mode, d: p.d, t: p.t, tag: tag || 'main' });
+    this.plog('poly_play', { task: st.p || '', mode, d: p.d, tri: p.t, tag: tag || 'main' });
     const patch = { polyPlaying: true, polyBeat: 0, polyTag: tag || 'main' };
     if (!tag) {
       if (mode === 'drum') patch.heardDrum = true;
@@ -2463,13 +2464,13 @@ class Component extends DCLogic {
     const S = this.state, st = this.STEPS[S.i], p = this.polyP(st);
     if (!p || !S.pickD || !S.pickT || S.polyFound) return;
     if (S.pickD === p.d && S.pickT === p.t) {
-      this.plog('poly_ok', { task: st.p, d: p.d, t: p.t });
+      this.plog('poly_ok', { task: st.p, d: p.d, tri: p.t });
       this.hintReset('polycount' + st.p);
       this.setState({ polyFound: true, polyStage: 'link' });
       this.toastOk('찾았다! ' + p.d + ' : ' + p.t,
         '북은 ' + p.d + '칸마다, 트라이앵글은 ' + p.t + '칸마다 울려요 — 이 리듬에 숨은 비예요!');
     } else {
-      this.plog('poly_try', { task: st.p, d: S.pickD, t: S.pickT });
+      this.plog('poly_try', { task: st.p, d: S.pickD, tri: S.pickT });
       /* 단계적 힌트(지침 6.5): 사실 안내 → 방향 → 전략. 정답 간격은 말하지 않는다 */
       this.toastRetry(this.hintNext('polycount' + st.p, [
         '울린 칸에는 악기 그림이 놓여 있어요. 처음 울린 칸부터 그다음 울린 칸까지 몇 칸을 건너뛰나요?',
@@ -2623,7 +2624,7 @@ class Component extends DCLogic {
     if (!S.myD || !S.myT) { this.toastRetry('북과 트라이앵글의 간격을 하나씩 골라 보세요!'); return; }
     const meet = this.meetCells({ d: S.myD, t: S.myT });
     this.setState({ myMeet: meet });
-    this.plog('poly_mine', { d: S.myD, t: S.myT, meet: this.lcm(S.myD, S.myT) });
+    this.plog('poly_mine', { d: S.myD, tri: S.myT, meet: this.lcm(S.myD, S.myT) });
     if ((this.STEPS[S.i] || {}).p === 'mine') this.markSolved();
     this.playPoly('both', { d: S.myD, t: S.myT }, 'mine');
   }

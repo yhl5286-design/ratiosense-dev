@@ -537,7 +537,8 @@ class Component extends DCLogic {
       var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
       d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
     } catch(e) {}
-    this._lastAct = Date.now();
+    /* idle 기록 자체는 조작이 아니다. 여기서 갱신하면 긴 정지가 15초마다 쪼개져 여러 건 남는다(2026-09-14) */
+    if (ev !== 'idle') this._lastAct = Date.now();
     try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
