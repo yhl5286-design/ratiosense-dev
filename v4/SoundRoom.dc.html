@@ -1546,6 +1546,19 @@ class Component extends DCLogic {
     this.setState({ solved: s });
   }
 
+  /* 방을 마쳤다는 기록 — 연구 로그와 진행 표시. 여러 번 불려도 한 번만 남는다.
+     2026-09-14: 「다음 방으로」 단추에만 달려 있어 마지막 화면에서 창을 닫으면 완료가 남지 않았다.
+     비의 비밀과 같게 마지막 화면에 들어오는 순간 기록한다. 단추도 이 함수를 부른다. */
+  finishRoom() {
+    if (this._finished) return;
+    this._finished = true;
+    this.plog('complete', {});
+    try {
+      const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+      if (d.indexOf('sound') < 0) { d.push('sound'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+    } catch(e) {}
+  }
+
   go(d) {
     const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
     if (n === this.state.i) return;
@@ -1580,6 +1593,8 @@ class Component extends DCLogic {
       setTimeout(() => { this.confetti(); this.clap(); this.awardDigit(); }, 350);
     }
     this.setState(patch);
+    /* 상태를 바꾼 뒤에 남겨야 complete의 step이 마지막 화면을 가리킨다 */
+    if (st.k === 'finish') this.finishRoom();
     this.plog('nav', { to:n });
     this._sayT = setTimeout(() => this.sayStep(n), 380);
   }
@@ -3656,13 +3671,7 @@ class Component extends DCLogic {
       toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
       closeToast: () => this.setState({ toast: null }),
       liveBadge: '', liveBg: '', liveFg: '', liveBd: '',
-      goNext: () => {
-        this.plog('complete', {});
-        try {
-          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
-          if (d.indexOf('sound') < 0) { d.push('sound'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
-        } catch(e) {}
-      }
+      goNext: () => this.finishRoom()
     };
 
     if (v.showPiano) {

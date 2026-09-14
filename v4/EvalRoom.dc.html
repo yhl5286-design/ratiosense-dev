@@ -831,8 +831,9 @@ class Component extends DCLogic {
        학습자가 그대로 창을 닫아도 활동 완료가 로그에 남는다. */
     /* 2026-09-13에 「내가 한 것」 화면을 지우면서 완료 기록을 황금비 화면으로 옮겼다.
        이 줄이 없으면 complete가 한 번도 안 찍힌다. */
-    if (this.STEPS[n].k === 'finale') this.finishRoom();
     this.setState(patch);
+    /* 상태를 바꾼 뒤에 남겨야 complete의 step이 황금비 화면을 가리킨다(2026-09-14) */
+    if (this.STEPS[n].k === 'finale') this.finishRoom();
     this.plog('nav', { to:n });
     setTimeout(() => this.sayStep(n), 380);
   }
