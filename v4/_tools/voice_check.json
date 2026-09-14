@@ -612,41 +612,32 @@
     {
      "step": 18,
      "who": "munsell",
-     "text": "우리가 한 실험을 한자리에 모아 볼까?",
-     "key": "h9rnaq",
+     "text": "지금까지 나왔던 모든 값을 표로 나타내 봤어.",
+     "key": "15kaalh",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
      "step": 18.001,
      "who": "munsell",
-     "text": "수첩에 적어 둔 기록을 표로 옮겨 담아 보자.",
-     "key": "vomdd8",
+     "text": "표에 나타낸 값을 그래프로 나타내 보자.",
+     "key": "jnwmzh",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
      "step": 18.002,
      "who": "munsell",
-     "text": "빨강이 가장 적은 것부터 차례로 놓으면 돼.",
-     "key": "h0yj3u",
+     "text": "이 그래프는 빨강이 변할 때마다 노랑이 얼만큼 변하는지를 보여 주는 거야.",
+     "key": "1py0q5j",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
-     "step": 19,
-     "who": "munsell",
-     "text": "이번에는 표의 기록을 격자 위에 점으로 찍어 보자.",
-     "key": "1ifq6iq",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 19.001,
+     "step": 18.003,
      "who": "munsell",
      "text": "첫 줄은 내가 미리 찍어 두었어.",
      "key": "1y8n8tp",
@@ -655,52 +646,16 @@
      "reg": true
     },
     {
-     "step": 19.002,
+     "step": 18.004,
      "who": "munsell",
-     "text": "아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다.",
-     "key": "180uykn",
+     "text": "반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다.",
+     "key": "a53xt7",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
-     "step": 19.003,
-     "who": "munsell",
-     "text": "나머지 줄도 찍어 볼래?",
-     "key": "1j3nn23",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 20,
-     "who": "munsell",
-     "text": "마지막이야.",
-     "key": "158ihum",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 20.001,
-     "who": "munsell",
-     "text": "표의 줄마다 빨강에 얼마를 곱하면 노랑이 될까?",
-     "key": "zw1fpf",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 20.002,
-     "who": "munsell",
-     "text": "숫자 카드를 눌러 고른 다음 빈칸을 눌러 놓아 보렴.",
-     "key": "1ik7nv",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 21,
+     "step": 19,
      "who": "signac",
      "text": "안녕?",
      "key": "1bgsdl6",
@@ -709,7 +664,7 @@
      "reg": true
     },
     {
-     "step": 21.001,
+     "step": 19.001,
      "who": "signac",
      "text": "나는 점을 찍어 색을 표현하는 화가 '시냐크'라고 해.",
      "key": "1p9isqq",
@@ -718,7 +673,7 @@
      "reg": true
     },
     {
-     "step": 21.002,
+     "step": 19.002,
      "who": "signac",
      "text": "그런데 지금 「양산을 든 여인」을 그릴 때 필요한 주황색을 만드는 중이야.",
      "key": "tyi2tn",
@@ -727,7 +682,7 @@
      "reg": true
     },
     {
-     "step": 21.003,
+     "step": 19.003,
      "who": "signac",
      "text": "같이 점을 찍으며 색을 만드는 걸 도와주겠니?",
      "key": "195n6r2",
@@ -736,7 +691,7 @@
      "reg": true
     },
     {
-     "step": 22,
+     "step": 20,
      "who": "signac",
      "text": "나는 빨강과 노랑의 비가 이 대 삼으로 주황을 만들고 싶어.",
      "key": "1e2xsml",
@@ -745,7 +700,7 @@
      "reg": true
     },
     {
-     "step": 22.001,
+     "step": 20.001,
      "who": "signac",
      "text": "다섯 칸을 기준으로 빨강과 노랑을 점 찍어서 표현해 봐.",
      "key": "10u7s4",
@@ -754,7 +709,7 @@
      "reg": true
     },
     {
-     "step": 23,
+     "step": 21,
      "who": "signac",
      "text": "이번에도 빨강 대 노랑을 이 대 삼으로 주황을 만들 거야.",
      "key": "psz66b",
@@ -763,7 +718,7 @@
      "reg": true
     },
     {
-     "step": 23.001,
+     "step": 21.001,
      "who": "signac",
      "text": "이번에는 열 칸에 색칠해 줘.",
      "key": "1v71qqv",
@@ -772,7 +727,7 @@
      "reg": true
     },
     {
-     "step": 24,
+     "step": 22,
      "who": "signac",
      "text": "이번에는 100칸을 색칠할 거야.",
      "key": "j7316e",
@@ -781,7 +736,7 @@
      "reg": true
     },
     {
-     "step": 24.001,
+     "step": 22.001,
      "who": "signac",
      "text": "빨강 대 노랑 = 이 대 삼이 되도록 100칸을 색칠해 줘.",
      "key": "1nt64xm",
@@ -790,7 +745,7 @@
      "reg": true
     },
     {
-     "step": 25,
+     "step": 23,
      "who": "signac",
      "text": "점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 이 대 삼이었지!",
      "key": "3oq1ol",
@@ -799,7 +754,7 @@
      "reg": true
     },
     {
-     "step": 25.001,
+     "step": 23.001,
      "who": "signac",
      "text": "덕분에 그림을 완성했어, 고마워.",
      "key": "1s8dw2u",
@@ -808,7 +763,7 @@
      "reg": true
     },
     {
-     "step": 26,
+     "step": 24,
      "who": "ratio",
      "text": "빨강과 노랑 점을 많이 찍는다고 색이 더 붉어질까요?",
      "key": "6jpflk",
@@ -817,7 +772,7 @@
      "reg": true
     },
     {
-     "step": 26.001,
+     "step": 24.001,
      "who": "ratio",
      "text": "두 그림을 비교해 보세요.",
      "key": "23hzoe",
@@ -826,7 +781,7 @@
      "reg": true
     },
     {
-     "step": 26.002,
+     "step": 24.002,
      "who": "ratio",
      "text": "어느 쪽 주황이 더 붉을까요?",
      "key": "klkie6",
@@ -835,70 +790,7 @@
      "reg": true
     },
     {
-     "step": 27,
-     "who": "ratio",
-     "text": "시냐크와 만든 주황을 표로 옮겨 볼게요.",
-     "key": "it8hjd",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 27.001,
-     "who": "ratio",
-     "text": "첫 줄은 다섯 칸에 찍은 빨강 2 대 노랑 3이에요.",
-     "key": "1frkuqa",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 27.002,
-     "who": "ratio",
-     "text": "빨강 칸이 4, 6, 8로 늘어나면 노랑은 몇 칸이어야 같은 주황이 될까요?",
-     "key": "qp3cq",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 27.003,
-     "who": "ratio",
-     "text": "숫자 카드를 눌러 채워 보세요.",
-     "key": "m7ps5l",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 28,
-     "who": "ratio",
-     "text": "이번에도 표를 격자 위에 점으로 찍어 볼까요?",
-     "key": "49ukzz",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 28.001,
-     "who": "ratio",
-     "text": "첫 점은 찍어 두었어요.",
-     "key": "9upsbw",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 28.002,
-     "who": "ratio",
-     "text": "아래 빨강 눈금과 왼쪽 노랑 눈금을 눌러 나머지도 찍어 보세요.",
-     "key": "8pze82",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 29,
+     "step": 25,
      "who": "ratio",
      "text": "시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요?",
      "key": "1p5mcxi",
@@ -907,7 +799,7 @@
      "reg": true
     },
     {
-     "step": 29.001,
+     "step": 25.001,
      "who": "ratio",
      "text": "다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요.",
      "key": "1d7nbh9",
@@ -916,7 +808,7 @@
      "reg": true
     },
     {
-     "step": 29.002,
+     "step": 25.002,
      "who": "ratio",
      "text": "전체 100 가운데 빨강이 차지하는 비율은 얼마일까요?",
      "key": "djl4ab",
@@ -925,7 +817,7 @@
      "reg": true
     },
     {
-     "step": 29.003,
+     "step": 25.003,
      "who": "ratio",
      "text": "알맞은 말을 끌어 빈칸 위에 놓아 주세요.",
      "key": "9fevbf",
@@ -934,7 +826,7 @@
      "reg": true
     },
     {
-     "step": 30,
+     "step": 26,
      "who": "ratio",
      "text": "두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 무엇을 알아야 할까요?",
      "key": "8u2q5a",
@@ -943,7 +835,7 @@
      "reg": true
     },
     {
-     "step": 30.001,
+     "step": 26.001,
      "who": "ratio",
      "text": "여러분의 생각을 적어 보세요.",
      "key": "19anibj",
@@ -952,7 +844,7 @@
      "reg": true
     },
     {
-     "step": 31,
+     "step": 27,
      "who": "ratio",
      "text": "여러분이 적은 내용을 잘 보았어요.",
      "key": "m3dmzu",
@@ -961,7 +853,7 @@
      "reg": true
     },
     {
-     "step": 31.001,
+     "step": 27.001,
      "who": "ratio",
      "text": "물감과 컵, 점과 칸으로 비를 공부해 보았지요.",
      "key": "n6l32i",
@@ -970,7 +862,7 @@
      "reg": true
     },
     {
-     "step": 31.002,
+     "step": 27.002,
      "who": "ratio",
      "text": "이제 함께 정리해 봐요.",
      "key": "1vayv6v",
@@ -979,7 +871,7 @@
      "reg": true
     },
     {
-     "step": 31.003,
+     "step": 27.003,
      "who": "ratio",
      "text": "낱말 카드를 놓아 빈칸을 채워 보세요.",
      "key": "z5t9zk",
@@ -988,7 +880,7 @@
      "reg": true
     },
     {
-     "step": 32,
+     "step": 28,
      "who": "ratio",
      "text": "색깔의 비밀을 잘 찾아냈어요!",
      "key": "1f8pniu",
@@ -997,7 +889,7 @@
      "reg": true
     },
     {
-     "step": 32.001,
+     "step": 28.001,
      "who": "ratio",
      "text": "카드 숫자 1과 6을 얻었어요!",
      "key": "a5p6ti",
@@ -1006,7 +898,7 @@
      "reg": true
     },
     {
-     "step": 32.002,
+     "step": 28.002,
      "who": "ratio",
      "text": "잘 기억해두세요!",
      "key": "1e3uozw",

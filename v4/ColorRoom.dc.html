@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609140445"></script>
+<script src="tts/manifest.js?v=202609140602"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -43,6 +43,8 @@ button{font-family:inherit}
 /* 색팽이(뉴턴 원판) — 빠르게 돌면 두 색이 섞여 한 색으로 보인다 */
 @keyframes rsSpin{to{transform:rotate(360deg)}}
 @keyframes rsBlend{from{opacity:0}to{opacity:1}}
+@keyframes rsTickR{0%,100%{box-shadow:0 0 0 3px #d3242f}50%{box-shadow:0 0 0 7px #d3242f55}}
+@keyframes rsTickY{0%,100%{box-shadow:0 0 0 3px #a87c00}50%{box-shadow:0 0 0 7px #a87c0055}}
 /* 반응형: 고정 폭 조작물은 태블릿/모바일에서 축소 (크롬북·태블릿 대상) */
 @media (max-width:1080px){.rs-fit{zoom:.85}}
 @media (max-width:700px){.rs-fit{zoom:.6}}
@@ -641,6 +643,7 @@ button{font-family:inherit}
       <sc-if value="{{isPlot}}" hint-placeholder-val="{{false}}">
         <div class="rs-fit" style="display:flex;gap:20px;align-items:flex-start;justify-content:center;flex-wrap:wrap;animation:rsUp .3s ease">
           <div style="display:flex;flex-direction:column;gap:7px;align-items:stretch">
+            <div style="text-align:center;font-size:16px;font-weight:800;color:#645c50">📋 먼셀이 정리한 표</div>
             <div style="display:flex;gap:7px">
               <div style="width:78px;text-align:center;font-size:12.5px;font-weight:800;color:{{cRed}}">빨강 ({{plotUnit}})</div>
               <div style="width:78px;text-align:center;font-size:12.5px;font-weight:800;color:{{cYel}}">노랑 ({{plotUnit}})</div>
@@ -667,14 +670,28 @@ button{font-family:inherit}
                 </div>
               </div>
             </sc-if>
+            <sc-if value="{{plotEqOn}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px;padding:13px 16px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:18px;animation:rsPop .35s ease">
+                <div style="display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;color:#8c491a;white-space:nowrap">
+                  <span style="color:{{cYel}}">노랑</span><span style="color:#645c50">=</span><span style="color:{{cRed}}">빨강</span><span style="color:#645c50">×</span>
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:58px;height:50px;border-radius:13px;border:3px {{plotEqBs}} {{plotEqBd}};background:{{plotEqBg}}">{{plotEqVal}}</span>
+                </div>
+                <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center">
+                  <sc-for list="{{plotEqCards}}" as="c" hint-placeholder-count="5">
+                    <button onClick="{{c.pick}}" style="min-width:48px;height:46px;border-radius:13px;border:3px solid #f6a06b;background:#fffdf6;font-size:20px;font-weight:800;color:#8c491a;cursor:pointer;font-family:inherit">{{c.t}}</button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div style="font-size:16px;font-weight:800;color:#645c50">📈 그래프</div>
             <div style="position:relative;width:{{plotOW}}px;height:{{plotOH}}px">
               <sc-for list="{{plotYTicks}}" as="t" hint-placeholder-count="4">
-                <button onClick="{{t.pick}}" aria-label="노랑 눈금" style="position:absolute;left:0;top:{{t.top}};width:33px;height:22px;padding:0;text-align:right;font-size:12.5px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};border:none;border-radius:7px;cursor:pointer;transform:translateY(-50%)">{{t.t}}</button>
+                <button onClick="{{t.pick}}" aria-label="노랑 눈금" style="position:absolute;left:0;top:{{t.top}};width:46px;height:30px;padding:0 6px 0 0;text-align:right;font-size:18px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};opacity:{{t.op}};pointer-events:{{t.pe}};box-shadow:{{t.sh}};animation:{{t.anim}};border:none;border-radius:8px;cursor:pointer;transform:translateY(-50%)">{{t.t}}</button>
               </sc-for>
               <sc-for list="{{plotXTicks}}" as="t" hint-placeholder-count="4">
-                <button onClick="{{t.pick}}" aria-label="빨강 눈금" style="position:absolute;left:{{t.left}};bottom:0;min-width:24px;height:22px;padding:0 4px;font-size:12.5px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};border:none;border-radius:7px;cursor:pointer;transform:translateX(-50%)">{{t.t}}</button>
+                <button onClick="{{t.pick}}" aria-label="빨강 눈금" style="position:absolute;left:{{t.left}};bottom:0;min-width:34px;height:30px;padding:0 5px;font-size:18px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};opacity:{{t.op}};pointer-events:{{t.pe}};box-shadow:{{t.sh}};animation:{{t.anim}};border:none;border-radius:8px;cursor:pointer;transform:translateX(-50%)">{{t.t}}</button>
               </sc-for>
               <div style="position:absolute;left:{{plotLeft}}px;top:0;width:{{plotW}}px;height:{{plotH}}px;background:#fffdf6;border-left:5px solid {{cYel}};border-bottom:5px solid {{cRed}};background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCell}}px)">
                 <sc-if value="{{gxOn}}" hint-placeholder-val="{{false}}">
@@ -687,11 +704,11 @@ button{font-family:inherit}
                   <div style="position:absolute;left:0;bottom:-2px;width:{{lineLen}};height:4px;border-radius:999px;background:#c67139;transform-origin:0 50%;transform:{{lineRot}};animation:rsBlend .55s ease"></div>
                 </sc-if>
                 <sc-for list="{{plotHits}}" as="h" hint-placeholder-count="9">
-                  <button onClick="{{h.tap}}" aria-label="격자 자리" style="position:absolute;left:{{h.left}};top:{{h.top}};width:{{h.sz}};height:{{h.sz}};border-radius:999px;border:{{h.bd}};background:{{h.bg}};padding:0;cursor:pointer"></button>
+                  <button onClick="{{h.tap}}" aria-label="격자 자리" style="position:absolute;left:{{h.left}};top:{{h.top}};width:{{h.sz}};height:{{h.sz}};border-radius:999px;border:{{h.bd}};background:{{h.bg}};padding:0;cursor:pointer;pointer-events:{{h.pe}}"></button>
                 </sc-for>
               </div>
             </div>
-            <div style="font-size:12.5px;font-weight:800;color:#645c50">가로 → <span style="color:{{cRed}}">빨강 ({{plotUnit}})</span> · 세로 ↑ <span style="color:{{cYel}}">노랑 ({{plotUnit}})</span></div>
+            <div style="font-size:15px;font-weight:800;color:#645c50">가로 → <span style="color:{{cRed}}">빨강 ({{plotUnit}})</span> · 세로 ↑ <span style="color:{{cYel}}">노랑 ({{plotUnit}})</span></div>
             <div style="font-size:12px;font-weight:700;color:#a19786">{{plotDemo}}</div>
             <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);text-align:center;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:6px 16px;max-width:min(420px,90vw)">{{plotHint}}</div>
           </div>
@@ -863,7 +880,7 @@ class Component extends DCLogic {
     /* 표·격자·식 — tbl은 표의 줄마다 놓인 수첩 기록의 번호,
        plot은 격자에 찍은 점, rule은 곱셈식의 빈칸에 놓인 수다. */
     tbl: [null,null,null], tblSel: null,
-    plot: [], plotSel: null, plotLine: 0, plotPred: null, plotGx: null, plotGy: null, plotAt: null,
+    plot: [], plotSel: null, plotLine: 0, plotPred: null, plotGx: null, plotGy: null, plotAt: null, plotEq: null,
     rule: {}, ruleSel: null, ruleLive: 0,
     fill: {}, fillSel: null,
     cupR: 0, cupY: 0, cupSeq: [], cupUndo: 0, cupPick: null,
@@ -985,34 +1002,12 @@ class Component extends DCLogic {
         lines:['네가 준 물감으로 노을을 칠해 완성했어.',
                '정말 고마워!'],
         btn:'다음 →' },
-      /* ── 표·격자·식 ──
-         실험에서 학습자가 손으로 만든 세 쌍(S.found)을 한자리에 모아
-         표 → 격자 → 식으로 옮겨 간다. 값을 새로 받지 않고 학습자가 제 손으로
-         만든 양을 그대로 쓴다. 구체적인 표상을 차례로 줄여 형식적 표기로
-         나아가되(지침 3.1) 옮기는 일은 모두 학습자가 하고(지침 3.4),
-         표의 줄과 격자의 점은 서로 이어져 한쪽을 누르면 다른 쪽이 함께 빛난다(지침 3.5). */
-      { k:'tbl', who:'munsell',
-        say:'우리가 한 실험을 한자리에 모아 볼까? 수첩에 적어 둔 기록을 표로 옮겨 담아 보자. 빨강이 가장 적은 것부터 차례로 놓으면 돼.',
-        hi:'📋 수첩 카드를 눌러 고른 다음, 표의 줄을 눌러 놓아요',
-        probe:{ title:'🤔 표로 늘어놓고 나서', rows:[
-          { q:'표로 늘어놓으니 무엇이 보이나요?', opts:[
-            { t:'빨강이 늘어나면 노랑도 함께 늘어나요', ok:1 },
-            { t:'빨강이 늘어나도 노랑은 그대로예요', ok:0, fb:'표의 두 줄을 위아래로 비교해 볼까? 빨강이 늘어난 줄에서 노랑은 어떻게 되었지?' },
-            { t:'빨강이 늘어나면 노랑은 줄어들어요', ok:0, fb:'맨 위 줄과 맨 아래 줄의 노랑을 비교해 볼까? 어느 쪽이 더 많지?' } ] },
-          { q:'세 줄 모두에서 똑같은 것은 무엇인가요?', opts:[
-            { t:'노랑이 언제나 빨강의 2배예요', ok:1 },
-            { t:'노랑이 언제나 빨강보다 20mL 많아요', ok:0, fb:'맨 아래 줄에서도 그럴까? 줄마다 노랑에서 빨강을 빼 보렴.' },
-            { t:'세 줄이 저마다 달라요', ok:0, fb:'줄마다 노랑을 빨강으로 나누어 볼까? 같은 수가 나오는지 확인해 보렴.' } ] } ] } },
+      /* ── 표와 그래프 ──
+         먼셀이 지금까지 나온 값을 표로 정리해 보여 주고, 학습자는 그 표를 그래프로만 옮긴다(2026-09-14).
+         표 옮기기와 식 세우기 단계는 시간 때문에 뺐다. */
       { k:'plot', who:'munsell',
-        say:'이번에는 표의 기록을 격자 위에 점으로 찍어 보자. 첫 줄은 내가 미리 찍어 두었어. 아래 빨강 눈금에서 빨강의 양을, 왼쪽 노랑 눈금에서 노랑의 양을 누르면 만나는 자리에 점이 찍힌단다. 나머지 줄도 찍어 볼래?',
-        hi:'📍 아래 빨강 눈금 하나, 왼쪽 노랑 눈금 하나 — 두 번만 누르면 돼요' },
-      { k:'rule', who:'munsell',
-        say:'마지막이야. 표의 줄마다 빨강에 얼마를 곱하면 노랑이 될까? 숫자 카드를 눌러 고른 다음 빈칸을 눌러 놓아 보렴.',
-        hi:'✖️ 숫자 카드를 눌러 고른 다음 빈칸을 눌러요',
-        probe:{ title:'🤔 두 가지로 적어 보았어', rows:[
-          { q:'「빨강 : 노랑 = 1 : 2」와 「노랑 = 빨강 × 2」는 어떤 사이일까요?', opts:[
-            { t:'같은 관계를 다르게 적은 것이에요', ok:1 },
-            { t:'서로 다른 관계예요', ok:0, fb:'빨강이 1이면 노랑은 2였지? 「빨강 × 2」의 빨강 자리에 1을 넣으면 얼마가 될까?' } ] } ] } },
+        say:'지금까지 나왔던 모든 값을 표로 나타내 봤어. 표에 나타낸 값을 그래프로 나타내 보자. 이 그래프는 빨강이 변할 때마다 노랑이 얼만큼 변하는지를 보여 주는 거야. 첫 줄은 내가 미리 찍어 두었어. 반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다.',
+        hi:'📈 반짝이는 숫자를 차례로 눌러 표의 값을 그래프에 찍어요' },
       /* 시냐크 소개 — 시냐크 본인의 점묘화 대표작을 그대로 보여 준다. */
       { k:'story', who:'signac', art:'signac_feneon.jpg', art2:'signac_incomplete.jpg', art2Wash:1,
         artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890)  ·  「양산을 든 여인」 — 주황이 빠진 미완성',
@@ -1064,32 +1059,6 @@ class Component extends DCLogic {
                  fb:'맞아요. 칸 수가 아니라 전체에서 차지하는 몫이 색을 정하는 거예요.'},
                 {t:'둘이 똑같아', ok:0,
                  fb:'㉮는 스무 칸 중 여덟 칸, ㉯는 여섯 칸 중 세 칸이에요. 반이 넘는 쪽은 어느 쪽일까요?'} ] },
-      /* ── 2 : 3 에서도 같은 일을 해 본다 ──
-         1 : 2에서 표와 격자로 본 것이 그 비에만 해당하는 일이 아님을 확인하는 자리다.
-         점 다섯 칸에 찍은 2 : 3을 첫 줄로 두고 그 배수를 채운 뒤, 같은 격자에 찍어
-         이번에도 점들이 한 선 위에 놓이는 것을 본다(지침 2.2·3.5). */
-      { k:'fill', who:'ratio', pairs:[[2,3],[4,6],[6,9],[8,12]],
-        cards:['6','9','12','5','8','10'], note:'첫 줄은 시냐크와 함께 다섯 칸에 찍은 그 비예요',
-        say:'시냐크와 만든 주황을 표로 옮겨 볼게요. 첫 줄은 다섯 칸에 찍은 빨강 2 : 노랑 3이에요. 빨강 칸이 4, 6, 8로 늘어나면 노랑은 몇 칸이어야 같은 주황이 될까요? 숫자 카드를 눌러 채워 보세요.',
-        hi:'✖️ 빨강과 노랑을 같은 수로 곱해야 같은 비가 돼요',
-        probe:{ title:'🤔 표를 채우고 나서', rows:[
-          { q:'빨강이 2에서 4로 늘어날 때 노랑은 어떻게 되었나요?', opts:[
-            { t:'3에서 6으로 — 빨강과 똑같이 2배가 되었어요', ok:1 },
-            { t:'3에서 5로 — 둘 다 2씩 늘었어요', ok:0, fb:'2씩 더하면 2 : 3이 4 : 5가 되지요. 표를 다시 볼까요? 노랑은 6이었어요.' } ] },
-          { q:'이 표의 네 줄은 모두 어떤 비인가요?', opts:[
-            { t:'모두 2 : 3과 같은 비예요', ok:1 },
-            { t:'줄마다 다른 비예요', ok:0, fb:'줄마다 노랑을 빨강으로 나누어 볼까요? 4와 6, 6과 9, 8과 12 모두 간단히 하면 무엇이 되나요?' } ] } ] } },
-      { k:'plot', who:'ratio', pairs:[[2,3],[4,6],[6,9],[8,12]],
-        gu:1, gk:1.5, gfloor:0, gpred:[10,15], gsx:2, gsy:3, unitName:'칸', cmpName:'시냐크의 주황',
-        say:'이번에도 표를 격자 위에 점으로 찍어 볼까요? 첫 점은 찍어 두었어요. 아래 빨강 눈금과 왼쪽 노랑 눈금을 눌러 나머지도 찍어 보세요.',
-        hi:'📍 아래 빨강 눈금 하나, 왼쪽 노랑 눈금 하나 — 두 번만 누르면 돼요',
-        probe:{ title:'🤔 1 : 2 때와 비교해 볼까', rows:[
-          { q:'2 : 3의 점들도 어떻게 놓였나요?', opts:[
-            { t:'1 : 2 때처럼 한 곧은 선 위에 놓였어요', ok:1 },
-            { t:'여기저기 흩어져 놓였어요', ok:0, fb:'네 점을 이어 볼까요? 「선으로 이어 보기」를 눌러 보세요.' } ] },
-          { q:'1 : 2의 선과 2 : 3의 선은 무엇이 다를까요?', opts:[
-            { t:'기울어진 정도가 달라요 — 비가 다르면 선도 달라져요', ok:1 },
-            { t:'아무 차이가 없어요', ok:0, fb:'1 : 2는 빨강 한 칸에 노랑이 두 칸씩 올라갔지요. 2 : 3은 몇 칸씩 올라갔나요?' } ] } ] } },
       /* 비율로 넘어가기 전, 안내자가 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
       { k:'blank', id:'cells', who:'ratio',
         say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체 100 가운데 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
@@ -2403,7 +2372,9 @@ class Component extends DCLogic {
   notes() {
     /* 네 쌍이다 — 실험 세 번에 뭉크의 큰 통(50 : 100)까지. 큰 통도 학습자가 제 손으로
        노랑을 부어 만든 양이므로 표·격자에 함께 올린다(2026-09-11). */
-    const out = this.state.found.filter(p => p && p[0] > 0 && p[1] > 0).slice(0, 4);
+    /* 격자의 칸(가로 10mL마다 0~50) 위에 놓이는 기록만 올린다. 자유 실험에서 1mL 단위나
+       50을 넘는 양으로 기록했으면 그 자리는 시범 값으로 채운다(2026-09-14). */
+    const out = this.state.found.filter(p => p && p[0] > 0 && p[1] > 0 && p[0] % 10 === 0 && p[0] <= 50).slice(0, 4);
     [[20,40],[30,60],[40,80],[50,100]].forEach(b => {
       if (out.length < 4 && !out.some(p => p[0] === b[0])) out.push(b);
     });
@@ -2453,13 +2424,24 @@ class Component extends DCLogic {
      칸 수로 그대로 드러난다. 학습자가 만든 양이 크면 한 칸을 키워 격자가 지나치게 커지지 않게 한다. */
   plotGeo() {
     const st = this.STEPS[this.state.i] || {};
+    /* 색깔 실험(빨강 : 노랑 = 1 : 2, mL)의 격자는 틀을 고정한다 — 가로 빨강 0~50, 세로 노랑 0~100,
+       두 축 모두 10mL마다 눈금을 빠짐없이 적는다. 수첩의 네 쌍(20:40 … 50:100)이 모두 칸 위에 놓이고,
+       어느 칸이든 두 눈금을 눌러 찍을 수 있어야 한다(2026-09-14). */
+    if (!st.pairs) {
+      const u = 10, k = 2, rmax = 50, ymax = 100;
+      /* 예측할 자리 — 선 위에 있으나 아직 찍지 않은 가장 작은 빨강 칸.
+         끝 칸(50 : 100)은 수첩에 이미 있어 예측 자리가 될 수 없다. */
+      const rows = this.tblAns();
+      let pr = u;
+      for (let r = u; r <= rmax; r += u) if (!rows.some(a => a[0] === r)) { pr = r; break; }
+      return { u, k, rmax, ymax, pred: [pr, pr * k],
+               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 44 };
+    }
     const rows = this.tblAns(), mr = rows[rows.length - 1][0];
-    /* 한 칸의 양·노랑 배수·예측할 자리는 단계가 정할 수 있다. 정하지 않으면
-       색깔 실험(빨강 : 노랑 = 1 : 2, mL)에 맞춘 값을 쓴다. */
-    const u = st.gu || (mr <= 60 ? 10 : (mr <= 140 ? 20 : 40));
+    /* 단계가 한 칸의 양·배수·예측할 자리를 정한다 — 시냐크의 2 : 3 격자가 그렇다. */
+    const u = st.gu || 1;
     const k = st.gk || 2;
-    /* 오른쪽에 한 칸 남긴다 — 예측할 자리다. 물감 실험에서는 빨강 50·노랑 100까지 언제나 연다. */
-    const floor = (st.gfloor != null) ? st.gfloor : 50;
+    const floor = (st.gfloor != null) ? st.gfloor : 0;
     const pred = st.gpred || null;
     const rmax = Math.max(floor, pred ? pred[0] : 0, Math.ceil(mr / u) * u + u);
     const ymax = Math.max(pred ? pred[1] : 0, Math.ceil(rmax * k / u) * u);
@@ -2467,7 +2449,7 @@ class Component extends DCLogic {
              cx: Math.round(rmax / u) + 1, cy: Math.round(ymax / u) + 1,
              sx: st.gsx || ((Math.round(rmax / u) + 1) > 8 ? 2 : 1),
              sy: st.gsy || ((Math.round(ymax / u) + 1) > 9 ? 2 : 1),
-             cell: (rmax / u <= 6) ? 30 : 26 };
+             cell: (rmax / u <= 6) ? 44 : 30 };
   }
   /* 지금 찍을 차례 — 학습자가 줄을 고르지 않아도 아직 안 찍은 첫 줄이 차례가 된다.
      줄을 눌러 차례를 바꿀 수도 있다. */
@@ -2481,7 +2463,7 @@ class Component extends DCLogic {
   plotRowPick(ri) {
     if (this.state.plot.some(p => p.ok && p.row === ri)) return;
     this.sfx('tap'); this.plog('plot_pick', { row: ri });
-    this.setState({ plotSel: this.state.plotSel === ri ? null : ri });
+    this.setState({ plotSel: this.state.plotSel === ri ? null : ri, plotGx: null, plotGy: null });
   }
   /* 격자에 들어설 때 부른다. 같은 격자로 되돌아온 것이면 찍어 둔 점을 그대로 두고,
      다른 격자(1 : 2 → 2 : 3)면 새로 열면서 첫 점을 예시로 찍어 둔다.
@@ -2490,7 +2472,7 @@ class Component extends DCLogic {
     if (this.state.plotAt === n) return null;
     const a = this.tblAns(n)[0];
     return { plotAt: n, plot: [{ r: a[0], y: a[1], ok: 1, row: 0, demo: 1 }],
-             plotSel: null, plotLine: 0, plotPred: null, plotGx: null, plotGy: null };
+             plotSel: null, plotLine: 0, plotPred: null, plotGx: null, plotGy: null, plotEq: null };
   }
   plotDone() {
     const P = this.state.plot;
@@ -2514,10 +2496,10 @@ class Component extends DCLogic {
         return;
       }
       this.setState(Object.assign({ plot: S.plot.concat([{ r, y, ok: 1 }]), plotPred: { r, y } }, clearG));
-      this.markSolved(); this.confetti();
+      this.sfx('ok');
       const un = (this.STEPS[S.i] || {}).unitName || 'mL';
-      this.toast('🎯', '선 위의 새 자리를 찾았어요!',
-        '빨강 ' + r + un + '와 노랑 ' + y + un + ' — 아직 만들어 보지 않은 양인데도 같은 색이 나와요!', 'ok');
+      this.toast('🎯', '그래프가 완성됐어요!',
+        '빨강 ' + r + un + '와 노랑 ' + y + un + '도 같은 색이에요. 이제 아래 식의 빈칸을 채워 볼까요?', 'ok');
       return;
     }
     const ri = this.plotCur();
@@ -2543,6 +2525,28 @@ class Component extends DCLogic {
   /* 눈금 숫자를 눌러 안내선을 세운다 — 어느 값에 선을 세울지는 학습자가 정하므로
      도구가 두 값을 대신 맞추어 주는 것이 아니라, 누를 자리를 겨누기 쉽게 돕기만 한다(지침 1.4). */
   plotGuide(axis, val) {
+    const S = this.state;
+    /* 점을 찍는 동안에는 한 번에 하나씩 — 먼저 아래 빨강 눈금, 그다음 왼쪽 노랑 눈금.
+       그래프는 6학년 교육과정 밖이므로, 두 수를 동시에 겨누게 하지 않고 차례를 나누어 이끈다(2026-09-14).
+       선을 이은 뒤 예측할 때는 차례를 묻지 않는다. */
+    if (!S.plotLine) {
+      const ri = this.plotCur();
+      if (ri == null) return;
+      const a = this.tblAns()[ri];
+      if (axis === 'y' && S.plotGx == null) {
+        this.plog('plot_guide', { axis, v: val, ok: 0, why: 'order' });
+        this.toast('👇', '빨강부터 골라요', '먼저 아래 빨강 눈금에서 ' + a[0] + '을 눌러 볼까요?');
+        return;
+      }
+      const want = axis === 'x' ? a[0] : a[1];
+      if (val !== want) {
+        this.plog('plot_guide', { axis, v: val, ok: 0 });
+        this.toast('🤔', axis === 'x' ? '빨강 눈금을 다시 볼까?' : '노랑 눈금을 다시 볼까?',
+          '표의 진한 줄은 빨강 ' + a[0] + ' · 노랑 ' + a[1] + '이에요. '
+          + (axis === 'x' ? '아래' : '왼쪽') + ' 눈금에서 ' + want + '을 찾아 눌러 보세요.');
+        return;
+      }
+    }
     this.sfx('tap');
     this.plog('plot_guide', { axis, v: val });
     const gx = axis === 'x' ? (this.state.plotGx === val ? null : val) : this.state.plotGx;
@@ -2559,6 +2563,28 @@ class Component extends DCLogic {
     this.toast('📏', '점이 모두 한 선 위에 있어요!',
       '양이 달라도 빨강과 노랑의 비가 같으면 모두 이 선 위에 놓여요. 이번에는 선 위의 빨강 '
       + this.plotGeo().pred[0] + ' 자리를 찾아 눌러 볼까요?', 'ok');
+  }
+
+  /* 그래프를 완성한 뒤 한 문제 — 「노랑 = 빨강 × ( )」 빈칸에 숫자 카드를 놓는다(2026-09-14).
+     식 세우기 단계를 따로 두지 않고 그래프 화면 안에서 풀고 넘어간다. */
+  plotEqPick(w) {
+    const S = this.state;
+    if (!S.plotPred || S.plotEq) return;
+    const ok = (w === '2');
+    this.plog('plot_eq', { v: w, ok: ok ? 1 : 0 });
+    if (!ok) {
+      const a = this.tblAns()[0];
+      this.toast('🤔', '그 수로는 맞지 않아', this.hintNext('plotEq', [
+        '빨강 ' + a[0] + '에 ' + w + '을 곱하면 ' + (a[0] * +w) + '이 된단다. 표에서 노랑은 ' + a[1] + '이었지?',
+        '표의 줄마다 노랑을 빨강으로 나누어 보면 얼마가 될까?',
+        '그래프에서 빨강이 10 늘 때 노랑은 얼마만큼 늘었지?'
+      ]));
+      return;
+    }
+    this.sfx('ok');
+    this.setState({ plotEq: w });
+    this.markSolved(); this.confetti();
+    this.toast('✖️', '식을 완성했어요!', '노랑 = 빨강 × 2 — 빨강을 알면 노랑을 구할 수 있어요.', 'ok');
   }
 
   /* 표의 빈칸 채우기 — 빨강은 적혀 있고 노랑을 학습자가 채운다.
@@ -3307,7 +3333,7 @@ class Component extends DCLogic {
       }
 
       if (st.k === 'plot') {
-        const g = this.plotGeo(), PAD_L = 40, PAD_B = 24;
+        const g = this.plotGeo(), PAD_L = 54, PAD_B = 38;
         const done = this.plotDone();
         v.plotW = (g.cx - 1) * g.cell; v.plotH = (g.cy - 1) * g.cell;
         v.plotOW = v.plotW + PAD_L; v.plotOH = v.plotH + PAD_B;
@@ -3320,8 +3346,8 @@ class Component extends DCLogic {
             r: String(a[0]), y: String(a[1]),
             bg: curRow === ri ? '#ffe1d0' : (put ? '#f0fae1' : '#fffdf6'),
             bd: curRow === ri ? '#8c491a' : (put ? '#ccdbb2' : '#dcd3c4'),
-            cur: put ? 'default' : 'pointer',
-            pick: () => this.plotRowPick(ri)
+            cur: 'default',
+            pick: () => {}
           };
         });
         /* 눈금이 만나는 자리 — 학습자가 누를 곳. 찍힌 점은 그 양으로 섞은 색으로 채운다.
@@ -3338,6 +3364,7 @@ class Component extends DCLogic {
             bg: put ? col([r, y]) : (cross ? 'rgba(198,113,57,.22)' : 'transparent'),
             bd: put ? (put.ok ? (put.demo ? '3px dashed #8c491a' : '3px solid #201e1d') : '3px dashed #a19786')
                     : (cross ? '3px solid #c67139' : '2px solid transparent'),
+            pe: (S.plotLine && !S.plotPred) ? 'auto' : 'none',
             tap: () => this.plotTap(r, y)
           });
         }
@@ -3346,6 +3373,23 @@ class Component extends DCLogic {
            노랑은 그대로 쓰면 바탕에 묻혀 읽히지 않으므로 짙게 내린 노랑을 쓴다.
            숫자를 누르면 그 값에 안내선이 서서 만나는 자리를 겨누기 쉬워진다. */
         const skipX = g.sx, skipY = g.sy;
+        /* 누를 숫자만 연다(2026-09-14) — 그래프는 6학년 교육과정 밖이므로 한 번에 숫자 하나만 누르게 이끈다.
+           점을 찍는 동안: 먼저 표의 진한 줄의 빨강 숫자 하나 → 누르면 세로 안내선이 서고,
+           그다음 노랑 숫자 하나 → 누르면 가로 안내선이 서며 만나는 자리에 점이 찍힌다.
+           선을 이은 뒤 예측할 때: 빨강은 예측할 숫자 하나만 열고, 노랑은 모두 열어
+           세로선이 주황 선과 만나는 높이를 학습자가 찾게 한다. */
+        const cur = (curRow != null) ? ans[curRow] : null;
+        const predOn = S.plotLine && !S.plotPred;
+        const xOpen = r => predOn ? (S.plotGx == null && r === g.pred[0])
+                                  : (!done && cur && S.plotGx == null && r === cur[0]);
+        const yOpen = y => predOn ? (S.plotGx != null)
+                                  : (!done && cur && S.plotGx != null && y === cur[1]);
+        const tickOn = (open, picked, color) => ({
+          op: (open || picked) ? '1' : '.28',
+          pe: open ? 'auto' : 'none',
+          sh: (open && !picked) ? '0 0 0 3px ' + color : 'none',
+          anim: (open && !picked && !predOn) ? ((color === this.C_RED ? 'rsTickR' : 'rsTickY') + ' 1.1s ease-in-out infinite') : 'none'
+        });
         const xt = [], yt = [];
         for (let ix = 0; ix < g.cx; ix += skipX) {
           const r = ix * g.u;
@@ -3353,14 +3397,16 @@ class Component extends DCLogic {
                     /* 숫자는 검정이라야 잘 보인다 — 축이 무슨 색인지는 축 선과 이름이 알려 준다.
                        고른 눈금만 축 색 바탕에 흰 글씨로 뒤집는다. */
                     fg: S.plotGx === r ? '#ffffff' : '#201e1d',
-                    bg: S.plotGx === r ? this.C_RED : 'transparent',
+                    bg: S.plotGx === r ? this.C_RED : (xOpen(r) ? '#fff1ea' : 'transparent'),
+                    ...tickOn(xOpen(r), S.plotGx === r, this.C_RED),
                     pick: () => this.plotGuide('x', r) });
         }
         for (let iy = 0; iy < g.cy; iy += skipY) {
           const y = iy * g.u;
           yt.push({ t: String(y), top: ((g.cy - 1 - iy) * g.cell) + 'px',
                     fg: S.plotGy === y ? '#ffffff' : '#201e1d',
-                    bg: S.plotGy === y ? this.C_YEL : 'transparent',
+                    bg: S.plotGy === y ? this.C_YEL : (yOpen(y) ? '#fff8dc' : 'transparent'),
+                    ...tickOn(yOpen(y), S.plotGy === y, this.C_YEL),
                     pick: () => this.plotGuide('y', y) });
         }
         v.plotXTicks = xt; v.plotYTicks = yt;
@@ -3376,6 +3422,12 @@ class Component extends DCLogic {
           v.lineLen = Math.round(Math.sqrt(v.plotW * v.plotW + v.plotH * v.plotH)) + 'px';
           v.lineRot = 'rotate(' + (-Math.atan2(v.plotH, v.plotW) * 180 / Math.PI).toFixed(2) + 'deg)';
         }
+        v.plotEqOn = S.plotPred ? 1 : 0;
+        v.plotEqVal = S.plotEq || '';
+        v.plotEqBd = S.plotEq ? '#ccdbb2' : '#f6a06b';
+        v.plotEqBg = S.plotEq ? '#f0fae1' : '#fffdf6';
+        v.plotEqBs = S.plotEq ? 'solid' : 'dashed';
+        v.plotEqCards = S.plotEq ? [] : this.RULE_CARDS.map(w => ({ t: w, pick: () => this.plotEqPick(w) }));
         v.predMix = S.plotPred ? col([S.plotPred.r, S.plotPred.y]) : null;
         v.predLabel = S.plotPred ? ('빨강 ' + S.plotPred.r + ' : 노랑 ' + S.plotPred.y) : '';
         /* 나란히 놓고 비교할 색은 표 첫 줄로 섞은 색이다 —
@@ -3386,11 +3438,12 @@ class Component extends DCLogic {
         const todo = ans.find(a => !S.plot.some(p => p.ok && p.r === a[0] && p.y === a[1]));
         const demo0 = ans[0];
         v.plotHint = S.plotLine
-          ? (S.plotPred ? '두 색이 똑같지요? 만들어 보지 않은 양인데도 같은 색이 나와요'
+          ? (S.plotPred ? (S.plotEq ? '✅ 식까지 완성했어요 — 다음으로 넘어가요' : '✖️ 노랑은 빨강의 몇 배일까요? 빈칸에 들어갈 숫자를 눌러요')
                         : '📍 선 위에서 빨강 ' + g.pred[0] + ' 자리를 찾아 눌러 보세요')
           : (done ? '📏 점을 다 찍었어요 — 선으로 이어 볼까요?'
-                  : (todo ? '📍 지금 찍을 차례는 빨강 ' + todo[0] + ' · 노랑 ' + todo[1]
-                            + ' — 아래 빨강 눈금과 왼쪽 노랑 눈금에서 그 수를 누르면 점이 찍혀요'
+                  : (todo ? (S.plotGx == null
+                              ? '1단계 👇 아래 빨강 눈금에서 ' + todo[0] + '을 눌러요'
+                              : '2단계 👈 이제 왼쪽 노랑 눈금에서 ' + todo[1] + '을 눌러요')
                           : '📍 눈금 숫자를 눌러 보세요'));
         const un = st.unitName || 'mL';
         v.plotUnit = un;
