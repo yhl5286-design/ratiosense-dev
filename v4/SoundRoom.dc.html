@@ -2482,12 +2482,12 @@ class Component extends DCLogic {
   /* ③ 연결 — 찾아낸 비를 앞 방에서 만난 비와 잇는다 */
   /* ── 찾은 비를 오늘 만난 자리와 잇기 ──
      같은 비가 물감의 양에서도, 두 음의 진동수에서도, 리듬의 칸에서도 똑같이 나타난다는 것을
-     한 화면에서 보게 한다. 물감은 비커 그림으로, 음은 함께 듣기로 보이고 들려주므로
+     한 화면에서 보게 한다. 뭉크의 물감은 비커로, 시냐크의 점묘는 칸으로, 음은 함께 듣기로 보이고 들려주므로
      학습자는 겉모습이 다른 세 소재를 같은 비로 묶게 된다(지침 2.2).
      맞는 자리가 둘이므로 둘을 다 찾아야 넘어간다. */
   WHERE = [
-    { id:'munch',  cap:'뭉크의 주황',        kind:'mix',   a:1, b:2, ok:'r12' },
-    { id:'signac', cap:'시냐크의 주황',      kind:'mix',   a:2, b:3, ok:'r23' },
+    { id:'munch',  cap:'뭉크의 주황',        kind:'mix',   show:'beaker', a:1, b:2, ok:'r12' },
+    { id:'signac', cap:'시냐크의 주황',      kind:'mix',   show:'cells',  a:2, b:3, ok:'r23' },
     { id:'octave', cap:'낮은 도와 높은 도',  kind:'sound', f:528,    ok:'r12' },
     { id:'fifth',  cap:'도와 솔',            kind:'sound', f:396,    ok:'r23' }
   ];
@@ -2502,7 +2502,7 @@ class Component extends DCLogic {
     if (!right) {
       this.sfx('oops');
       this.toast('🤔', '여기는 다른 비예요',
-        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. 빨강 칸과 노랑 칸을 다시 세어 볼까요?')
+        w.kind === 'mix' ? (w.cap + '은 빨강 ' + w.a + ' 대 노랑 ' + w.b + '이에요. ' + (w.show === 'beaker' ? '빨강 비커와 노랑 비커의 높이를 다시 비교해 볼까요?' : '빨강 칸과 노랑 칸을 다시 세어 볼까요?'))
                          : (w.cap + '을 한 번 더 들어 보고, 지금 리듬과 같은 비인지 생각해 볼까요?'));
       return;
     }
@@ -2523,7 +2523,9 @@ class Component extends DCLogic {
     const el = (t, at, ...k) => R.createElement(t, at, ...k);
     const got = S.linkGot || {};
     const RED = 'rgb(230,40,55)', YEL = 'rgb(250,215,45)';
-    /* 색깔 방에서 시냐크와 칸을 색칠해 비를 찾았으므로, 여기서도 같은 칸 그림으로 보인다.
+    /* 색깔 방에서 만난 모습 그대로 보인다(2026-09-14). 뭉크의 주황은 두 물감을 비커로 섞어 만들었으므로
+       비커 두 개(빨강 1 : 노랑 2의 높이)로, 시냐크의 주황은 칸을 색칠해 만들었으므로 칸(빨강 2칸 · 노랑 3칸)으로.
+       칸 그림에 대하여 —
        비커의 높이는 눈대중으로 비교해야 했지만 칸은 세면 그만이라, 「빨강 2칸 노랑 3칸」이
        곧 2 : 3으로 읽힌다. 수는 적지 않는다 — 세어 찾아내는 것이 이 문항의 몫이다. */
     const cells = (a, b) => el('div', { key:'g', style:{ display:'flex',
@@ -2531,11 +2533,18 @@ class Component extends DCLogic {
       Array.from({ length: a + b }, (_, i) => el('div', { key:i, style:{ width:'24px', height:'24px',
         background: (i < a) ? RED : YEL,
         borderLeft: i ? '1.5px solid ' + C.n800 : 'none' } })));
+    /* 비커 두 개 — 높이의 비가 곧 물감 양의 비다. 큰 쪽을 90%로 두고 작은 쪽을 같은 비로 줄인다. */
+    const beakers = (a, b) => el('div', { key:'bk', style:{ display:'flex', gap:'8px', alignItems:'flex-end', height:'74px' } },
+      [[a, RED], [b, YEL]].map(([v, col]) => el('div', { key:col, style:{ position:'relative', width:'30px', height:'74px',
+        border:'3px solid ' + C.n800, borderTopWidth:'1.5px', borderRadius:'0 0 9px 9px', overflow:'hidden',
+        background:C.n100 } },
+        el('div', { key:'f', style:{ position:'absolute', left:0, right:0, bottom:0,
+          height: Math.round(v / Math.max(a, b) * 90) + '%', background: col } }))));
     const card = (w) => {
       const done = !!got[task + '|' + w.id];
       const body = (w.kind === 'mix')
         ? el('div', { key:'m', style:{ display:'flex', alignItems:'center', height:'74px' } },
-            cells(w.a, w.b))
+            (w.show === 'beaker' ? beakers(w.a, w.b) : cells(w.a, w.b)))
         : el('div', { key:'s', style:{ display:'flex', alignItems:'center', height:'74px' } },
             this.pBtn('p', '▶ 함께 듣기', (e) => { if (e && e.stopPropagation) e.stopPropagation();
               this.chord(this.NOTES[0][1], w.f, 1.8); this.plog('link_listen', { id: w.id }); },
