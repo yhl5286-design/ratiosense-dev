@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609190406"></script>
+<script src="tts/manifest.js?v=202609190409"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -157,7 +157,6 @@ button{font-family:inherit}
               <button onClick="{{p.tap}}" class="rs-pad">{{p.k}}</button>
             </sc-for>
           </div>
-          <button onClick="{{doorGo}}" class="rs-pill">🔓 문 열기!</button>
         </div>
       </sc-if>
 
@@ -368,7 +367,7 @@ class Component extends DCLogic {
         hi:'🔐 마지막 문 — 카드의 숫자를 차례로' },
       /* 마지막 자리이므로 말을 아낀다 — 작은 안내 글씨도 두지 않는다(2026-09-13). */
       { k:'finale',
-        say:'황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있어요. 막대를 움직여 황금비가 유지되는 것을 확인해보세요. 색깔과 소리의 비밀 말고도 세상 곳곳에서 비의 비밀을 찾아내보세요. 고마워요!' }
+        say:'지금까지 색깔과 소리에 있는 비의 비밀을 잘 찾아줬어요! 잘했습니다! 막대를 움직여 황금비가 유지되는 것을 확인해보면서 황금비를 탐색해보세요. 황금비는 황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있답니다. 색깔과 소리의 비밀 말고도 세상 곳곳에서 비의 비밀이 숨겨져 있어요. 레시오와 함께 비밀을 찾는 여정 즐거웠나요? 더 많은 비밀을 여러분이 찾아주세요!' }
     ];
   }
 
@@ -410,6 +409,17 @@ class Component extends DCLogic {
     else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
     else if (kind === 'card') { [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i) => n(f, i*0.085, 0.5, 0.1 - i*0.008)); }
     else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+    /* 문이 열리는 소리 — 낮은 삐걱임 뒤에 문짝이 열리며 빠져나가는 결 */
+    else if (kind === 'door') {
+      n(98,   0,    0.24, 0.055, 'triangle'); n(123.5, 0.15, 0.26, 0.048, 'triangle');
+      n(196,  0.30, 0.34, 0.040, 'sine');    n(294,   0.40, 0.30, 0.030, 'sine');
+    }
+    /* 축하 빵빠레 — 금관 느낌으로 올라간 뒤 화음을 길게 문다 */
+    else if (kind === 'fanfare') {
+      [[392,0],[523.25,0.13],[659.25,0.26],[783.99,0.39]]
+        .forEach(s => { n(s[0], s[1], 0.34, 0.085, 'sawtooth'); n(s[0]*2, s[1], 0.24, 0.018, 'sine'); });
+      [523.25, 659.25, 783.99].forEach(f => n(f, 0.52, 0.95, 0.060, 'sawtooth'));
+    }
   }
 
   /* ── TTS (mp3 매니페스트 → speechSynthesis 폴백) ── */
@@ -988,7 +998,9 @@ class Component extends DCLogic {
       this.plog('door_open', {});
       this.markSolved();
       this.setState({ doorOpen: true });
-      this.sfx('win'); this.confetti();
+      /* 문 열리는 소리 → 빵빠레. sfx에 60ms 연속 호출 차단이 있어 간격을 둔다. */
+      this.sfx('door'); this.confetti();
+      setTimeout(() => this.sfx('fanfare'), 460);
       this.toast('🔓', '1.618 — 황금비!', '카드의 숫자를 이으니 황금비 φ가 되었어요! 문이 열립니다!', 'ok', true);
       this.speak('1.618, 황금비를 찾았어요! 문이 열립니다!', 'ratio');
       /* 2.6초로 못 박아 두면 말이 끝나기 전에 화면이 바뀌어 낭독이 잘린다.
@@ -1096,13 +1108,18 @@ class Component extends DCLogic {
        처음으로 돌아가는 길이 열려 있으면 자료가 흐트러진다. */
     v.showPrimary = !last;
     v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
-      : (st.k === 'finale' ? '비의 비밀은? →' : '다음 →');
-    v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
+      : (st.k === 'finale' ? '비의 비밀은? →' : (st.k === 'door' ? '🔓 문 열기!' : '다음 →'));
+    /* 2026-09-19: 문 화면에 단추가 둘이었다(화면 안 「문 열기!」 + 아래 「다음 →」).
+       아래 하나로 합치고 이름을 「문 열기!」로 바꿨으니 잠긴 것처럼 회색으로 두지 않는다. */
+    v.primaryBg = (!needsSolve || solved || st.k === 'door') ? 'var(--color-accent)' : 'var(--color-neutral-400)';
     v.footHint = (needsSolve && !solved)
       ? (st.k === 'door' ? '카드의 숫자로 문을 열면 다음으로 갈 수 있어요'
         : '문제를 해결하면 다음으로 갈 수 있어요')
       : '';
     v.primary = () => {
+      /* 문 화면에서는 이 단추가 문을 연다. 열리면 doorTry가 낭독이 끝나기를
+         기다렸다가 스스로 다음으로 넘긴다. */
+      if (st.k === 'door' && !solved) { this.doorTry(); return; }
       if (needsSolve && !solved) { this.sfx('oops'); this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return; }
       this.sfx('tap'); this.go(1);
     };

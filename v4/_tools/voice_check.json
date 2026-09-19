@@ -1,5 +1,5 @@
 {
- "ver": "202609190359",
+ "ver": "202609190406",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1351,7 +1351,7 @@
      "key": "7vw9qa",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.001,
@@ -1360,7 +1360,7 @@
      "key": "1ojex7p",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.002,
@@ -1369,7 +1369,7 @@
      "key": "q9frmj",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.003,
@@ -1378,7 +1378,7 @@
      "key": "f9x71o",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.004,
@@ -1387,7 +1387,7 @@
      "key": "1v53qtp",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 14,
@@ -1800,38 +1800,65 @@
     {
      "step": 1,
      "who": "ratio",
-     "text": "황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있어요.",
-     "key": "rt4g68",
+     "text": "지금까지 색깔과 소리에 있는 비의 비밀을 잘 찾아줬어요!",
+     "key": "19z68ki",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 1.001,
      "who": "ratio",
-     "text": "막대를 움직여 황금비가 유지되는 것을 확인해보세요.",
-     "key": "7vyni9",
+     "text": "잘했습니다!",
+     "key": "lhu0mo",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 1.002,
      "who": "ratio",
-     "text": "색깔과 소리의 비밀 말고도 세상 곳곳에서 비의 비밀을 찾아내보세요.",
-     "key": "1w22k9s",
+     "text": "막대를 움직여 황금비가 유지되는 것을 확인해보면서 황금비를 탐색해보세요.",
+     "key": "1k5d2h",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 1.003,
      "who": "ratio",
-     "text": "고마워요!",
-     "key": "3ox61",
+     "text": "황금비는 황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있답니다.",
+     "key": "hdc5go",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
+    },
+    {
+     "step": 1.004,
+     "who": "ratio",
+     "text": "색깔과 소리의 비밀 말고도 세상 곳곳에서 비의 비밀이 숨겨져 있어요.",
+     "key": "1wwneba",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 1.005,
+     "who": "ratio",
+     "text": "레시오와 함께 비밀을 찾는 여정 즐거웠나요?",
+     "key": "1telc60",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 1.006,
+     "who": "ratio",
+     "text": "더 많은 비밀을 여러분이 찾아주세요!",
+     "key": "iuupax",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
     }
    ]
   }
