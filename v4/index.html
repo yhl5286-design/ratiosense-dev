@@ -293,7 +293,11 @@ addEventListener('keydown',e=>{
 $('#guestBtn').onclick=()=>{saveUser('guest');showChip('guest');$('#loginOv').style.display='none';refresh();};
 $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');}catch(e){}
   $('#chip').style.display='none';$('#chgBtn').style.display='none';$('#guestNote').style.display='none';$('#wallet').style.display='';openLogin();};
-const u=getUser();
+/* 2026-09-19: 저장되어 있던 옛 코드는 검사 없이 그대로 쓰였다. CODE_RE는
+   숫자판 입력에만 걸려 있어, 규칙에 맞지 않는 값이 남아 있으면 그 값으로 기록이 쌓였다.
+   규칙에 맞지 않으면 지우고 로그인 화면을 띄운다. */
+let u=getUser();
+if(u&&u!=='guest'&&!CODE_RE.test(u)){try{localStorage.removeItem('rs3_user');}catch(e){}u='';}
 if(u){showChip(u);}else{openLogin();}
 refresh();
 </script>
