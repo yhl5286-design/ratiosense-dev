@@ -1,5 +1,5 @@
 {
- "ver": "202609190354",
+ "ver": "202609190359",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1347,26 +1347,26 @@
     {
      "step": 13,
      "who": "ratio",
-     "text": "소리의 방에서 두 음의 진동수의 비를 비교했어요.",
-     "key": "2gg72u",
+     "text": "진동수의 비로 악기를 만들어 볼게요.",
+     "key": "7vw9qa",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 13.001,
      "who": "ratio",
-     "text": "진동수의 비를 이용해서 악기를 만들어볼게요.",
-     "key": "1ay3bqv",
+     "text": "도와 높은 도의 진동수의 비는 일 대 이예요.",
+     "key": "1ojex7p",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 13.002,
      "who": "ratio",
-     "text": "도의 진동수는 264헤르츠, 높은 도의 진동수는 528헤르츠예요.",
-     "key": "1kqtxwb",
+     "text": "도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요?",
+     "key": "q9frmj",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1374,8 +1374,8 @@
     {
      "step": 13.003,
      "who": "ratio",
-     "text": "도 대 높은도의 비는 일 대 이예요.",
-     "key": "181eu54",
+     "text": "주의, 줄 길이의 비는 진동수의 비와 반대예요!",
+     "key": "f9x71o",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1383,20 +1383,11 @@
     {
      "step": 13.004,
      "who": "ratio",
-     "text": "도 줄의 길이가 100센티미터라면 높은 도 줄은 몇 센티미터로 만들어야 할까요?",
-     "key": "yelh4r",
+     "text": "일 대 이면 이 대 일로 계산해야 해요!",
+     "key": "1v53qtp",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 13.005,
-     "who": "ratio",
-     "text": "왜 그렇게 생각했는지도 함께 적어 보세요.",
-     "key": "vtb8e8",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 14,
