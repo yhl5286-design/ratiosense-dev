@@ -1,5 +1,5 @@
 {
- "ver": "202609190409",
+ "ver": "202609190425",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1374,14 +1374,32 @@
     {
      "step": 13.003,
      "who": "ratio",
-     "text": "주의, 줄 길이의 비는 진동수의 비와 반대예요!",
-     "key": "f9x71o",
+     "text": "잠깐!",
+     "key": "121rfmx",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
      "step": 13.004,
+     "who": "ratio",
+     "text": "줄의 길이와 진동수는 반대예요!",
+     "key": "1gubb98",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 13.005,
+     "who": "ratio",
+     "text": "높은 음일수록 줄은 짧아요!",
+     "key": "1lj2cgd",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 13.006,
      "who": "ratio",
      "text": "일 대 이면 이 대 일로 계산해야 해요!",
      "key": "1v53qtp",
@@ -1768,7 +1786,7 @@
      "key": "6m6p6x",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1,
