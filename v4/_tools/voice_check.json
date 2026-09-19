@@ -1129,15 +1129,6 @@
      "reg": true
     },
     {
-     "step": 4.002,
-     "who": "ratio",
-     "text": "일 대 이 이 대 삼 삼 대 사처럼 비가 간단할수록 두 소리가 더 잘 어울려요!",
-     "key": "al25hc",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
      "step": 5,
      "who": "ratio",
      "text": "1초 동안 떨리는 수를 진동수라고 해요.",
@@ -1356,20 +1347,56 @@
     {
      "step": 13,
      "who": "ratio",
-     "text": "이 방에서는 각 음의 떨림, 진동수, 줄의 길이, 리듬에서 소리에 숨겨진 비밀을 알아봤어요.",
-     "key": "9immqn",
+     "text": "색깔의 방에서는 빨강과 노랑, 두 물감의 양을 견주어 비를 찾았지요.",
+     "key": "wjp5ll",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 13.001,
      "who": "ratio",
-     "text": "친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?",
-     "key": "1hklij",
+     "text": "소리의 방에서도 두 가지를 견주었어요.",
+     "key": "hywvmj",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
+    },
+    {
+     "step": 13.002,
+     "who": "ratio",
+     "text": "도는 264헤르츠, 높은 도는 528헤르츠였지요.",
+     "key": "153tuc3",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 13.003,
+     "who": "ratio",
+     "text": "이번에는 여러분이 악기를 만들 차례예요.",
+     "key": "10nal63",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 13.004,
+     "who": "ratio",
+     "text": "도 줄의 길이가 100센티미터라면 높은 도 줄은 몇 센티미터로 만들어야 할까요?",
+     "key": "yelh4r",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 13.005,
+     "who": "ratio",
+     "text": "왜 그렇게 생각했는지도 함께 적어 보세요.",
+     "key": "vtb8e8",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
     },
     {
      "step": 14,

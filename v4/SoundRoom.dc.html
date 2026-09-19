@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609190331"></script>
+<script src="tts/manifest.js?v=202609190347"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -524,8 +524,8 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:52px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">친구에게 <b>소리에 숨겨진 비밀</b>을 하나 알려 준다면, 뭐라고 말해 줄 건가요?</div>
-          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="친구야, 소리는 (  )이야!" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">도는 <b>264Hz</b>, 높은 도는 <b>528Hz</b>였어요.<br>도 줄이 <b>100cm</b>라면, 높은 도 줄은 몇 cm로 만들어야 할까요?</div>
+          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="높은 도 줄은 (  )cm로 만들어요. 왜냐하면 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
         </div>
       </sc-if>
 
@@ -908,8 +908,8 @@ class Component extends DCLogic {
        일곱 관을 차례로 만들며 손으로 확인한다. */
     /* 「내 말로 정리」는 앞서 귀로 듣고 손으로 해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
     st.push({ k:'reflect', who:'ratio',
-      say:'이 방에서는 각 음의 떨림, 진동수, 줄의 길이, 리듬에서 소리에 숨겨진 비밀을 알아봤어요. 친구에게 소리에 숨겨진 비밀을 하나 알려 준다면 뭐라고 말해 줄 건가요?',
-      hi:'📝 친구에게 알려 줄 소리의 비밀 한 가지' });
+      say:'색깔의 방에서는 빨강과 노랑, 두 물감의 양을 견주어 비를 찾았지요. 소리의 방에서도 두 가지를 견주었어요. 도는 264헤르츠, 높은 도는 528헤르츠였지요. 이번에는 여러분이 악기를 만들 차례예요. 도 줄의 길이가 100센티미터라면 높은 도 줄은 몇 센티미터로 만들어야 할까요? 왜 그렇게 생각했는지도 함께 적어 보세요.',
+      hi:'📝 도 264Hz · 높은 도 528Hz — 도 줄이 100cm라면?' });
     /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
        앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
     st.push({ k:'blank', id:'secret', who:'ratio',
