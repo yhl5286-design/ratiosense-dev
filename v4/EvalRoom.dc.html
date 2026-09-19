@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609190409"></script>
+<script src="tts/manifest.js?v=202609190425"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -368,7 +368,7 @@ class Component extends DCLogic {
     return [
       /* 문 앞에서 말하고 문 앞에서 누른다 — 안내와 조작을 한 화면에 둔다 */
       { k:'door',
-        say:'드디어 마지막 방이에요! 색깔의 방에서 받은 1과 6, 소리의 방에서 받은 1과 8. 비밀 카드 네 장이 여기 다 모였어요. 색깔, 소리 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.',
+        say:'여러분이 모은 숫자 카드를 순서대로 눌러 마지막 비의 비밀 방 문을 열어 보세요.',
         hi:'🔐 마지막 문 — 카드의 숫자를 차례로' },
       /* 마지막 자리이므로 말을 아낀다 — 작은 안내 글씨도 두지 않는다(2026-09-13). */
       { k:'finale',
@@ -1006,20 +1006,12 @@ class Component extends DCLogic {
       /* 문 열리는 소리 → 빵빠레. sfx에 60ms 연속 호출 차단이 있어 간격을 둔다. */
       this.sfx('door'); this.confetti();
       setTimeout(() => this.sfx('fanfare'), 460);
-      this.toast('🔓', '1.618 — 황금비!', '카드의 숫자를 이으니 황금비 φ가 되었어요! 문이 열립니다!', 'ok', true);
-      this.speak('1.618, 황금비를 찾았어요! 문이 열립니다!', 'ratio');
-      /* 2.6초로 못 박아 두면 말이 끝나기 전에 화면이 바뀌어 낭독이 잘린다.
-         go()가 stopVoice()를 부르기 때문이다. 낭독이 끝나기를 기다렸다가 넘어간다.
-         소리를 끈 학습자와 낭독이 시작되지 않은 경우를 위해 최소 2.6초, 최대 15초를 둔다. */
-      clearInterval(this._doorIv);
-      const t0 = Date.now();
-      this._doorIv = setInterval(() => {
-        const waited = Date.now() - t0;
-        if (waited < 2600) return;
-        if (this._speaking && waited < 15000) return;
-        clearInterval(this._doorIv); this._doorIv = null;
-        this.go(1);
-      }, 250);
+      /* 2026-09-19: 토스트와 낭독을 없앴다. 낭독이 끝나기를 기다리던 2.6~15초도
+         함께 없앤다. 문이 돌아 열리는 것(1초)만 보여 주고 곧 다음 화면으로 간다.
+         소리는 오디오 컨텍스트에 미리 잡아 둔 것이라 화면이 바뀌어도 끝까지 난다. */
+      clearInterval(this._doorIv); this._doorIv = null;
+      clearTimeout(this._doorT);
+      this._doorT = setTimeout(() => this.go(1), 1300);
     } else {
       this.sfx('oops');
       this.setState({ doorVal: '' });

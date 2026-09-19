@@ -1764,38 +1764,11 @@
     {
      "step": 0,
      "who": "ratio",
-     "text": "드디어 마지막 방이에요!",
-     "key": "fmmpj1",
+     "text": "여러분이 모은 숫자 카드를 순서대로 눌러 마지막 비의 비밀 방 문을 열어 보세요.",
+     "key": "6m6p6x",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 0.001,
-     "who": "ratio",
-     "text": "색깔의 방에서 받은 1과 6, 소리의 방에서 받은 1과 8.",
-     "key": "169xmix",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 0.002,
-     "who": "ratio",
-     "text": "비밀 카드 네 장이 여기 다 모였어요.",
-     "key": "1ju0zen",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 0.003,
-     "who": "ratio",
-     "text": "색깔, 소리 순서대로 카드에 적힌 숫자를 눌러 마지막 문을 열어 보세요.",
-     "key": "ls57kc",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 1,
