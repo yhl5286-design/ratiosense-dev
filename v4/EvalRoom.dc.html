@@ -136,10 +136,14 @@ button{font-family:inherit}
 
       <sc-if value="{{isDoor}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
-          <!-- 문 — 잠겨 있을 때는 닫혀 있고, 열리면 경첩을 축으로 돌아 열리며 빛이 난다(2026-09-19) -->
-          <div style="perspective:700px;height:112px;display:flex;align-items:center;justify-content:center;position:relative;flex:none">
-            <div style="position:absolute;width:104px;height:104px;border-radius:50%;background:radial-gradient(circle,#ffeaa7 0%,#f6c343 55%,rgba(246,195,67,0) 72%);opacity:{{doorGlow}};transition:opacity .7s ease"></div>
-            <div style="font-size:86px;line-height:1;transform-origin:16% center;transition:transform 1s cubic-bezier(.2,.8,.2,1);transform:{{doorTf}}">🚪</div>
+          <!-- 문 — 문틀에 두 짝이 달려 있고, 1618을 맞히면 양쪽으로 확 열리며 빛이 쏟아진다(2026-09-19) -->
+          <div style="perspective:900px;height:188px;display:flex;align-items:center;justify-content:center;flex:none">
+            <div style="position:relative;width:168px;height:176px;border-radius:10px 10px 0 0;background:#3a2a1d;box-shadow:0 7px 20px rgba(0,0,0,.24)">
+              <div style="position:absolute;left:7px;top:7px;width:154px;height:162px;border-radius:5px 5px 0 0;background:radial-gradient(circle at 50% 62%,#fffbe8 0%,#ffdc74 42%,#f5a623 100%);opacity:{{doorGlow}};transition:opacity .4s ease"></div>
+              <div style="position:absolute;left:7px;top:7px;width:77px;height:162px;border-radius:5px 0 0 0;background:linear-gradient(100deg,#ad764e,#8a5a39);border-right:2px solid #6f4728;box-shadow:inset -7px 0 14px rgba(0,0,0,.2);transform-origin:left center;transition:transform .55s cubic-bezier(.16,1,.3,1);transform:{{doorTfL}}"></div>
+              <div style="position:absolute;left:84px;top:7px;width:77px;height:162px;border-radius:0 5px 0 0;background:linear-gradient(80deg,#8a5a39,#ad764e);box-shadow:inset 7px 0 14px rgba(0,0,0,.2);transform-origin:right center;transition:transform .55s cubic-bezier(.16,1,.3,1);transform:{{doorTfR}}"></div>
+              <div style="position:absolute;left:84px;top:96px;width:26px;height:26px;margin-left:-13px;font-size:22px;text-align:center;opacity:{{doorLockOp}};transition:opacity .22s ease">🔒</div>
+            </div>
           </div>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
             <sc-for list="{{doorCards}}" as="c" hint-placeholder-count="4">
@@ -1011,7 +1015,7 @@ class Component extends DCLogic {
          소리는 오디오 컨텍스트에 미리 잡아 둔 것이라 화면이 바뀌어도 끝까지 난다. */
       clearInterval(this._doorIv); this._doorIv = null;
       clearTimeout(this._doorT);
-      this._doorT = setTimeout(() => this.go(1), 1300);
+      this._doorT = setTimeout(() => this.go(1), 1500);
     } else {
       this.sfx('oops');
       this.setState({ doorVal: '' });
@@ -1066,7 +1070,8 @@ class Component extends DCLogic {
       /* 마지막 화면에서는 말풍선을 통째로 감춘다 */
       showCoach: st.k !== 'wrap',
       phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
-      doorCards: null, doorSlots: null, doorPad: null, doorTf: 'rotateY(0deg)', doorGlow: '0',
+      doorCards: null, doorSlots: null, doorPad: null, doorGlow: '0', doorLockOp: '1',
+      doorTfL: 'rotateY(0deg)', doorTfR: 'rotateY(0deg)',
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
@@ -1078,9 +1083,11 @@ class Component extends DCLogic {
     if (st.k === 'door') {
       v.doorCards = this.CARDS.map((c, i) => ({ no: c.room, concept: c.concept, digit: c.digit }));
       v.doorSlots = [0,1,2,3].map(i => ({ d: S.doorVal[i] || '', bd: S.doorVal[i] ? 'var(--color-accent-500)' : 'var(--color-neutral-300)' }));
-      /* doorOpen은 지금까지 값만 바뀌고 화면에 쓰이지 않았다. 문을 실제로 열어 준다. */
-      v.doorTf = S.doorOpen ? 'rotateY(-74deg)' : 'rotateY(0deg)';
+      /* doorOpen을 화면에 잇는다 — 두 짝이 양쪽으로 열리고 자물쇠가 사라진다. */
+      v.doorTfL = S.doorOpen ? 'rotateY(-88deg)' : 'rotateY(0deg)';
+      v.doorTfR = S.doorOpen ? 'rotateY(88deg)' : 'rotateY(0deg)';
       v.doorGlow = S.doorOpen ? '1' : '0';
+      v.doorLockOp = S.doorOpen ? '0' : '1';
       v.doorPad = ['1','2','3','4','5','6','7','8','9','⌫','0','C'].map(k => ({ k, tap: () => this.doorKey(k) }));
       v.doorGo = () => this.doorTry();
     }
