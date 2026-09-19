@@ -1,5 +1,5 @@
 {
- "ver": "202609190331",
+ "ver": "202609190354",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1347,56 +1347,47 @@
     {
      "step": 13,
      "who": "ratio",
-     "text": "색깔의 방에서는 빨강과 노랑, 두 물감의 양을 견주어 비를 찾았지요.",
-     "key": "wjp5ll",
+     "text": "소리의 방에서 두 음의 진동수의 비를 비교했어요.",
+     "key": "2gg72u",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.001,
      "who": "ratio",
-     "text": "소리의 방에서도 두 가지를 견주었어요.",
-     "key": "hywvmj",
+     "text": "진동수의 비를 이용해서 악기를 만들어볼게요.",
+     "key": "1ay3bqv",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.002,
      "who": "ratio",
-     "text": "도는 264헤르츠, 높은 도는 528헤르츠였지요.",
-     "key": "153tuc3",
+     "text": "도는 264헤르츠, 높은 도는 528헤르츠로 도 대 높은도의 비는 일 대 이예요.",
+     "key": "1jn3aph",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.003,
-     "who": "ratio",
-     "text": "이번에는 여러분이 악기를 만들 차례예요.",
-     "key": "10nal63",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": false
-    },
-    {
-     "step": 13.004,
      "who": "ratio",
      "text": "도 줄의 길이가 100센티미터라면 높은 도 줄은 몇 센티미터로 만들어야 할까요?",
      "key": "yelh4r",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
-     "step": 13.005,
+     "step": 13.004,
      "who": "ratio",
      "text": "왜 그렇게 생각했는지도 함께 적어 보세요.",
      "key": "vtb8e8",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 14,
