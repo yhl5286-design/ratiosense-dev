@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609140602"></script>
+<script src="tts/manifest.js?v=202609190319"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -857,8 +857,13 @@ class Component extends DCLogic {
       say:'진동수를 비로 나타내 봤지요? 이번에는 그 비를 이용해 악기를 만들어 볼 거예요. 먼저 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.',
       hi:'🎵 줄을 길게·짧게 하며 소리를 들어 보세요' });
     this.HP.forEach((p, i) => {
-      /* 짚어보기는 마지막 줄을 만든 뒤 한 번만 나온다 — 국면과 상관없이 붙인다 */
-      const probe = (i === this.HP.length - 1) ? { title:'🤔 방금 만든 줄을 짚어 볼까', rows:[
+      /* 짚어보기는 마지막 줄을 만든 뒤 한 번만 나온다 — 국면과 상관없이 붙인다.
+         2026-09-19: HARP_PROBE를 0으로 두어 꺼 놓았다. 소리 방에는 물음을 그리는 화면 코드가
+         없어(색깔 방 ColorRoom.dc.html:755의 sc-if probeRows 블록에 해당하는 것이 없다)
+         관문(gateOk = solved && probeOk)만 걸리고 답할 길이 없어, 8화면에서 아무도
+         넘어가지 못했다. 화면 코드를 붙이는 날 1로 되돌린다. 물음 내용은 그대로 둔다. */
+      const HARP_PROBE = 0;
+      const probe = (HARP_PROBE && i === this.HP.length - 1) ? { title:'🤔 방금 만든 줄을 짚어 볼까', rows:[
           { q:'이 줄의 길이를 어떻게 구했나요?', opts:[
             { t:this.HBASE + '센티미터를 ' + p.b + '등분해 한 칸을 구하고, 그 ' + p.a + '칸의 길이를 구했어요', ok:1 },
             { t:'슬라이더를 아무 데나 놓고 소리만 들었어요', ok:0, fb:'소리로 자리를 찾은 다음, 그 자리가 몇 칸인지 눈금에서 확인했지요. 한 칸의 길이부터 다시 볼까요?' } ] },

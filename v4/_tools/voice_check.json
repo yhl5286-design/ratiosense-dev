@@ -1,5 +1,5 @@
 {
- "ver": "202609140445",
+ "ver": "202609140602",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -616,7 +616,7 @@
      "key": "15kaalh",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
     },
     {
      "step": 18.001,
@@ -625,7 +625,7 @@
      "key": "jnwmzh",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
     },
     {
      "step": 18.002,
@@ -634,7 +634,7 @@
      "key": "1py0q5j",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
     },
     {
      "step": 18.003,
@@ -652,7 +652,7 @@
      "key": "a53xt7",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
     },
     {
      "step": 19,
@@ -1814,6 +1814,66 @@
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
+    }
+   ]
+  },
+  {
+   "title": "➕ 단계 밖 낭독",
+   "note": "make_voice_check가 훑지 않는 실행 중 낭독(2026-09-19 추가)",
+   "rows": [
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "기준 분류가 완성됐어요!",
+     "key": "pcj8og",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "여러분이 별점으로 나눈 방과 비교해 보세요.",
+     "key": "y35pjj",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "좋아요.",
+     "key": "1bvuwj1",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "이제 칸을 보면서, 북과 트라이앵글이 각각 몇 칸마다 울리는지 세어 보세요.",
+     "key": "lsb3uh",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "1.618, 황금비를 찾았어요!",
+     "key": "sx5ki2",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "문이 열립니다!",
+     "key": "4d9r8w",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
     }
    ]
   }
