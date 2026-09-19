@@ -1,5 +1,5 @@
 {
- "ver": "202609190406",
+ "ver": "202609190409",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1804,7 +1804,7 @@
      "key": "19z68ki",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.001,
@@ -1813,7 +1813,7 @@
      "key": "lhu0mo",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.002,
@@ -1822,7 +1822,7 @@
      "key": "1k5d2h",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.003,
@@ -1831,7 +1831,7 @@
      "key": "hdc5go",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.004,
@@ -1840,7 +1840,7 @@
      "key": "1wwneba",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.005,
@@ -1849,7 +1849,7 @@
      "key": "1telc60",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.006,
@@ -1858,7 +1858,7 @@
      "key": "iuupax",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     }
    ]
   }
