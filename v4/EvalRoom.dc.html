@@ -1125,8 +1125,10 @@ class Component extends DCLogic {
     const needsSolve = (st.k === 'door') && !this._guest;
     /* 2026-09-19: 마지막 화면에도 단추를 둔다 — 「홈 화면으로 가기」.
        로그 수집은 이 화면(비의 비밀 2단계)에서 끝난다. 들어올 때 complete가
-       남고, 이 단추는 새 기록을 남기지 않는다. */
-    v.showPrimary = true;
+       남고, 이 단추는 새 기록을 남기지 않는다.
+       문 화면에는 단추를 두지 않는다 — 네 자리를 다 누르면 스스로 열리므로
+       「문 열기!」가 할 일이 없다(사용자 확인, 같은 날). */
+    v.showPrimary = st.k !== 'door';
     v.primaryLabel = last ? '🏠 홈 화면으로 가기'
       : (st.k === 'story' ? (st.btn || '다음 →')
       : (st.k === 'finale' ? '비의 비밀은? →' : (st.k === 'door' ? '🔓 문 열기!' : '다음 →')));
