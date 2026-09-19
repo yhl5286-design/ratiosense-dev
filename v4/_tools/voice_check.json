@@ -1365,14 +1365,23 @@
     {
      "step": 13.002,
      "who": "ratio",
-     "text": "도는 264헤르츠, 높은 도는 528헤르츠로 도 대 높은도의 비는 일 대 이예요.",
-     "key": "1jn3aph",
+     "text": "도의 진동수는 264헤르츠, 높은 도의 진동수는 528헤르츠예요.",
+     "key": "1kqtxwb",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 13.003,
+     "who": "ratio",
+     "text": "도 대 높은도의 비는 일 대 이예요.",
+     "key": "181eu54",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 13.004,
      "who": "ratio",
      "text": "도 줄의 길이가 100센티미터라면 높은 도 줄은 몇 센티미터로 만들어야 할까요?",
      "key": "yelh4r",
@@ -1381,7 +1390,7 @@
      "reg": true
     },
     {
-     "step": 13.004,
+     "step": 13.005,
      "who": "ratio",
      "text": "왜 그렇게 생각했는지도 함께 적어 보세요.",
      "key": "vtb8e8",
