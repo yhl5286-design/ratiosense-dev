@@ -1,5 +1,5 @@
 {
- "ver": "202609190425",
+ "ver": "202609190501",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1387,7 +1387,7 @@
      "key": "1gubb98",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.005,
@@ -1396,7 +1396,7 @@
      "key": "1lj2cgd",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 13.006,
@@ -1791,24 +1791,6 @@
     {
      "step": 1,
      "who": "ratio",
-     "text": "지금까지 색깔과 소리에 있는 비의 비밀을 잘 찾아줬어요!",
-     "key": "19z68ki",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.001,
-     "who": "ratio",
-     "text": "잘했습니다!",
-     "key": "lhu0mo",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.002,
-     "who": "ratio",
      "text": "막대를 움직여 황금비가 유지되는 것을 확인해보면서 황금비를 탐색해보세요.",
      "key": "1k5d2h",
      "cast": "레시오",
@@ -1816,10 +1798,28 @@
      "reg": true
     },
     {
+     "step": 1.001,
+     "who": "ratio",
+     "text": "황금비는 일 대 1.618의 비를 말해요.",
+     "key": "1s06nf",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 1.002,
+     "who": "ratio",
+     "text": "황금비는 황금사각형, 정오각형, 피보나치 수에서도 찾아볼 수 있답니다.",
+     "key": "1x5d1yk",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
      "step": 1.003,
      "who": "ratio",
-     "text": "황금비는 황금사각형, 정오각형, 피보나치 수에서도 1.618을 찾아 볼 수 있답니다.",
-     "key": "hdc5go",
+     "text": "지금까지 색깔과 소리에 있는 비의 비밀을 잘 찾아줬어요!",
+     "key": "19z68ki",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1836,8 +1836,8 @@
     {
      "step": 1.005,
      "who": "ratio",
-     "text": "레시오와 함께 비밀을 찾는 여정 즐거웠나요?",
-     "key": "1telc60",
+     "text": "더 많은 비밀을 여러분이 찾아주세요!",
+     "key": "iuupax",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1845,11 +1845,29 @@
     {
      "step": 1.006,
      "who": "ratio",
-     "text": "더 많은 비밀을 여러분이 찾아주세요!",
-     "key": "iuupax",
+     "text": "레시오와 함께 비밀을 찾는 여정 즐거웠나요?",
+     "key": "1telc60",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
+    },
+    {
+     "step": 1.007,
+     "who": "ratio",
+     "text": "다음에 또 만나요!",
+     "key": "mdfvox",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 1.008,
+     "who": "ratio",
+     "text": "홈 화면으로 가보세요 ^^",
+     "key": "di3a14",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
     }
    ]
   }
