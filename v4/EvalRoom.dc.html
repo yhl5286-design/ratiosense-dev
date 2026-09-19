@@ -136,6 +136,11 @@ button{font-family:inherit}
 
       <sc-if value="{{isDoor}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
+          <!-- 문 — 잠겨 있을 때는 닫혀 있고, 열리면 경첩을 축으로 돌아 열리며 빛이 난다(2026-09-19) -->
+          <div style="perspective:700px;height:112px;display:flex;align-items:center;justify-content:center;position:relative;flex:none">
+            <div style="position:absolute;width:104px;height:104px;border-radius:50%;background:radial-gradient(circle,#ffeaa7 0%,#f6c343 55%,rgba(246,195,67,0) 72%);opacity:{{doorGlow}};transition:opacity .7s ease"></div>
+            <div style="font-size:86px;line-height:1;transform-origin:16% center;transition:transform 1s cubic-bezier(.2,.8,.2,1);transform:{{doorTf}}">🚪</div>
+          </div>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
             <sc-for list="{{doorCards}}" as="c" hint-placeholder-count="4">
               <div style="width:132px;border-radius:var(--radius-md);overflow:hidden;border:3px solid var(--color-accent-500);background:var(--color-neutral-100);box-shadow:var(--shadow-sm)">
@@ -1069,7 +1074,7 @@ class Component extends DCLogic {
       /* 마지막 화면에서는 말풍선을 통째로 감춘다 */
       showCoach: st.k !== 'wrap',
       phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
-      doorCards: null, doorSlots: null, doorPad: null,
+      doorCards: null, doorSlots: null, doorPad: null, doorTf: 'rotateY(0deg)', doorGlow: '0',
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
@@ -1081,6 +1086,9 @@ class Component extends DCLogic {
     if (st.k === 'door') {
       v.doorCards = this.CARDS.map((c, i) => ({ no: c.room, concept: c.concept, digit: c.digit }));
       v.doorSlots = [0,1,2,3].map(i => ({ d: S.doorVal[i] || '', bd: S.doorVal[i] ? 'var(--color-accent-500)' : 'var(--color-neutral-300)' }));
+      /* doorOpen은 지금까지 값만 바뀌고 화면에 쓰이지 않았다. 문을 실제로 열어 준다. */
+      v.doorTf = S.doorOpen ? 'rotateY(-74deg)' : 'rotateY(0deg)';
+      v.doorGlow = S.doorOpen ? '1' : '0';
       v.doorPad = ['1','2','3','4','5','6','7','8','9','⌫','0','C'].map(k => ({ k, tap: () => this.doorKey(k) }));
       v.doorGo = () => this.doorTry();
     }
@@ -1104,11 +1112,13 @@ class Component extends DCLogic {
 
     const last = S.i === this.STEPS.length - 1;
     const needsSolve = (st.k === 'door') && !this._guest;
-    /* 마지막 화면에는 누를 것을 두지 않는다. 40분 안에 세 방을 마쳐야 하는데
-       처음으로 돌아가는 길이 열려 있으면 자료가 흐트러진다. */
-    v.showPrimary = !last;
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
-      : (st.k === 'finale' ? '비의 비밀은? →' : (st.k === 'door' ? '🔓 문 열기!' : '다음 →'));
+    /* 2026-09-19: 마지막 화면에도 단추를 둔다 — 「홈 화면으로 가기」.
+       로그 수집은 이 화면(비의 비밀 2단계)에서 끝난다. 들어올 때 complete가
+       남고, 이 단추는 새 기록을 남기지 않는다. */
+    v.showPrimary = true;
+    v.primaryLabel = last ? '🏠 홈 화면으로 가기'
+      : (st.k === 'story' ? (st.btn || '다음 →')
+      : (st.k === 'finale' ? '비의 비밀은? →' : (st.k === 'door' ? '🔓 문 열기!' : '다음 →')));
     /* 2026-09-19: 문 화면에 단추가 둘이었다(화면 안 「문 열기!」 + 아래 「다음 →」).
        아래 하나로 합치고 이름을 「문 열기!」로 바꿨으니 잠긴 것처럼 회색으로 두지 않는다. */
     v.primaryBg = (!needsSolve || solved || st.k === 'door') ? 'var(--color-accent)' : 'var(--color-neutral-400)';
@@ -1117,6 +1127,13 @@ class Component extends DCLogic {
         : '문제를 해결하면 다음으로 갈 수 있어요')
       : '';
     v.primary = () => {
+      /* 마지막 화면 — 허브로 돌아간다. 남은 기록을 먼저 보내고 옮긴다. */
+      if (last) {
+        this.sfx('tap');
+        try { this.flush && this.flush(); } catch(e) {}
+        setTimeout(() => { try { location.href = 'index.html'; } catch(e) {} }, 250);
+        return;
+      }
       /* 문 화면에서는 이 단추가 문을 연다. 열리면 doorTry가 낭독이 끝나기를
          기다렸다가 스스로 다음으로 넘긴다. */
       if (st.k === 'door' && !solved) { this.doorTry(); return; }
