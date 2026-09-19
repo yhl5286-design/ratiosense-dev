@@ -1819,13 +1819,13 @@
   },
   {
    "title": "➕ 단계 밖 낭독",
-   "note": "make_voice_check가 훑지 않는 실행 중 낭독(2026-09-19 추가)",
+   "note": "make_voice_check가 훑지 않는 실행 중 낭독(2026-09-19). 72cm 오류 문장 2개는 뺐다",
    "rows": [
     {
      "step": -1,
      "who": "ratio",
-     "text": "기준 분류가 완성됐어요!",
-     "key": "pcj8og",
+     "text": "어떤 점이 같고 다른가요?",
+     "key": "1vdfcqq",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1833,8 +1833,8 @@
     {
      "step": -1,
      "who": "ratio",
-     "text": "여러분이 별점으로 나눈 방과 비교해 보세요.",
-     "key": "y35pjj",
+     "text": "귀로 찾았어요!",
+     "key": "1509u5f",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1842,8 +1842,8 @@
     {
      "step": -1,
      "who": "ratio",
-     "text": "좋아요.",
-     "key": "1bvuwj1",
+     "text": "60센티미터를 3등분하면 한 칸이 20센티미터, 그 4칸이 80센티미터예요.",
+     "key": "1i9efjc",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1851,8 +1851,8 @@
     {
      "step": -1,
      "who": "ratio",
-     "text": "이제 칸을 보면서, 북과 트라이앵글이 각각 몇 칸마다 울리는지 세어 보세요.",
-     "key": "lsb3uh",
+     "text": "좋아요!",
+     "key": "1bvuwiq",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1860,8 +1860,8 @@
     {
      "step": -1,
      "who": "ratio",
-     "text": "1.618, 황금비를 찾았어요!",
-     "key": "sx5ki2",
+     "text": "그럼 4칸은 몇 센티미터일까요?",
+     "key": "n0i7vs",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false
@@ -1869,8 +1869,26 @@
     {
      "step": -1,
      "who": "ratio",
-     "text": "문이 열립니다!",
-     "key": "4d9r8w",
+     "text": "맞아요!",
+     "key": "14yt8if",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "4칸이니까 80센티미터예요.",
+     "key": "12rbj4q",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": -1,
+     "who": "ratio",
+     "text": "이번에는 같은 계산을 곱셈식 하나로 써 볼까요?",
+     "key": "1fw3jvm",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": false

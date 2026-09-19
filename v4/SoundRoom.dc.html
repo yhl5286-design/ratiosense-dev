@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609190319"></script>
+<script src="tts/manifest.js?v=202609190331"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -3012,7 +3012,10 @@ class Component extends DCLogic {
       edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
     this.toastOk('제출 완료!', '내 말로 정리한 소리의 비밀이 저장됐어요.');
-    this.autoNext(3000);
+    /* 2026-09-19: autoNext는 아무것도 하지 않는 빈 함수라 제출해도 그 자리에 머물렀다.
+       단추 이름이 계속 「제출! →」이고 누를 때마다 refGo만 다시 불려 14화면에서 갇혔다.
+       색깔 방 submitReflect와 같게 바로 넘긴다. */
+    this.go(1);
   }
 
   /* ── 감각 잇기 (bridge) — 지침 2.3 ──
