@@ -25,16 +25,8 @@ button{font-family:inherit}
 :focus-visible{outline:3px solid #c67139;outline-offset:3px}
 ::selection{background:#ffe1d0}
 .rs-swatch{width:min(126px,29vw);aspect-ratio:1;border-radius:999px;border:5px solid #201e1d}
-/* 내 색과 목표 색을 맞붙여 견주는 표(2026-09-20) — 컵 수가 늘면 색 차이가 미묘해져
-   떨어뜨려 놓으면 눈이 두 번 움직이며 차이가 묻힌다. 두 칸을 경계선 없이 맞댄다.
-   성공 띠는 두 색 사이에 끼지 않도록 바깥 테두리에만 준다. */
-.rs-cmp{display:flex;border:5px solid #201e1d;border-radius:14px;overflow:hidden;transition:box-shadow .25s}
-.rs-cmp-col{display:flex;flex-direction:column}
-.rs-cmp-lab{font-size:13px;font-weight:800;text-align:center;padding:3px 4px;background:#fff9f2;border-bottom:3px solid #201e1d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rs-cmp-sw{width:min(126px,29vw);height:min(104px,24vw)}
 /* 노트북처럼 세로가 짧은 화면에서는 견본을 줄여 조작 영역이 잘리지 않게 한다 */
-@media (max-height:900px){.rs-swatch{width:min(96px,24vw);border-width:4px}
-  .rs-cmp-sw{width:min(96px,24vw);height:min(80px,20vw)}}
+@media (max-height:900px){.rs-swatch{width:min(96px,24vw);border-width:4px}}
 @media (max-height:800px){.rs-swatch{width:min(76px,20vw);border-width:4px}}
 /* 좁은 화면: 실험 화면이 가로로 밀려 나가지 않게 접고, 조작물을 화면 폭에 맞춘다 */
 @media (max-width:720px){
@@ -162,20 +154,20 @@ button{font-family:inherit}
       <!-- 목표 색 견본. 실험 단계에서는 내 비커 색을 바로 옆에 같은 크기로 붙여
            둘을 눈으로 비교하게 한다(지침 4.5 예측 후 확인) -->
       <sc-if value="{{showSwatch}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:12px;flex:none">
-          <div class="rs-cmp" style="box-shadow:{{beakerRing}}">
-            <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
-              <div class="rs-cmp-col">
-                <div class="rs-cmp-lab" style="color:#8c491a;border-right:3px solid #201e1d">내 색 {{beakerAmt}}</div>
-                <div class="rs-cmp-sw" style="background:{{myColor}};transition:background .18s"></div>
-              </div>
-            </sc-if>
-            <div class="rs-cmp-col">
-              <div class="rs-cmp-lab" style="color:#645c50">목표 색</div>
-              <div class="rs-cmp-sw" style="background:{{tgtColor}}"></div>
+        <div style="display:flex;gap:min(6vw,30px);align-items:flex-start;justify-content:center;margin-bottom:12px;flex:none">
+          <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+              <div class="rs-swatch" style="background:{{myColor}};box-shadow:{{beakerRing}};transition:background .18s,box-shadow .25s"></div>
+              <div style="font-size:14px;font-weight:800;color:#8c491a">내 색 {{beakerAmt}}</div>
             </div>
+          </sc-if>
+          <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:24px;color:#645c50;align-self:center;padding-bottom:22px">vs</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+            <div class="rs-swatch" style="background:{{tgtColor}}"></div>
+            <div style="font-size:14px;font-weight:800;color:#645c50">목표 색 · 노을빛 주황</div>
           </div>
-          <div style="font-size:12.5px;font-weight:700;color:#a19786;margin-top:5px">노을빛 주황</div>
         </div>
       </sc-if>
 
