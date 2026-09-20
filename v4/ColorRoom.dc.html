@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609200254"></script>
+<script src="tts/manifest.js?v=202609200704"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -275,10 +275,12 @@ button{font-family:inherit}
                     <div style="width:40px;height:22px;border-radius:999px;background:#f9f4ed;border:2.5px solid #201e1d;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">⇅</div>
                   </div>
                 </div>
+                <sc-if value="{{showPm}}" hint-placeholder-val="{{true}}">
                 <div style="display:flex;gap:8px;flex:none;align-items:center">
-                  <button onClick="{{p.minus}}" aria-label="{{p.name}} 10mL 줄이기" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{p.btnOp}};pointer-events:{{p.btnPe}}">−</button>
-                  <button onClick="{{p.plus}}" aria-label="{{p.name}} 10mL 늘리기" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{p.btnOp}};pointer-events:{{p.btnPe}}">＋</button>
+                  <button onClick="{{p.minus}}" aria-label="{{p.name}} 5mL 줄이기" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{p.btnOp}};pointer-events:{{p.btnPe}}">−</button>
+                  <button onClick="{{p.plus}}" aria-label="{{p.name}} 5mL 늘리기" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{p.btnOp}};pointer-events:{{p.btnPe}}">＋</button>
                 </div>
+                </sc-if>
               </div>
             </sc-for>
 
@@ -848,8 +850,10 @@ button{font-family:inherit}
 class Component extends DCLogic {
   PRIM = { '빨강':[230,40,55], '노랑':[250,215,45] };
   MAX = 200;                  /* 막대 상한 — 눈금이 촘촘히 보이도록 200mL까지만 연다 */
-  STEP_ML = 1;                /* ＋− 버튼이 한 번에 더하고 빼는 양 — 1mL씩 미세하게 맞춘다 */
-  SNAP_ML = 1;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼과 같이 1mL */
+  STEP_ML = 5;                /* ＋− 버튼이 한 번에 더하고 빼는 양 (2026-09-20: 1 → 5) */
+  SNAP_ML = 5;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼과 같이 5mL.
+                                 2026-09-20: 1 → 5. 1mL는 30:60 같은 값을 맞추기가 성가시고,
+                                 5mL면 목표 비를 끌기만으로도 닿을 수 있다. */
   CUP_ML = 10;                /* 실험 단계에서 한 번에 붓는 컵의 양 */
   CUP_LAB_MAX = 12;           /* 컵으로 탐색하는 실험에서 한 물감에 부을 수 있는 최대 컵 수 */
   TGT = [1,2];
@@ -871,7 +875,7 @@ class Component extends DCLogic {
   TRACE_MS = 300;
 
   state = {
-    i: 0, amt: { '빨강':0, '노랑':0 }, found: [], hypo: null, obs: null,
+    i: 0, amt: { '빨강':0, '노랑':0 }, found: [], moreN: 0, hypo: null, obs: null,
     picks: {}, solved: {}, refText:'', probe:{}, cupFlash:null, dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
@@ -935,9 +939,12 @@ class Component extends DCLogic {
       { k:'lab', mode:'more', unit:'cup', who:'munsell', run:'기록하기', lockR:40,
         say:'완벽해. 그런데 같은 색을 다른 양으로도 만들 수 있을까? 이번에는 빨강 물감을 10mL씩 네 컵 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 아까와 같은 색이 될까?',
         hi:'빨강이 두 배가 되었어요 · 노랑은 몇 컵일까요' },
-      { k:'lab', mode:'more', who:'munsell', run:'기록하기',
-        say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 슬라이더로 양을 정하고, 찾으면 기록해 둬.',
-        hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기 · ＋－는 1mL씩 움직여요' },
+      /* 2026-09-20: ＋－를 없애고 막대만 남긴다(noBtn). 단추가 있으면 막대를 끌지 않는다 —
+         전문가 로그에서 색깔 방 끌기 11회 대 단추 128회였다. 그리고 한 번이 아니라 세 번
+         찾게 한다(need:3) — 양이 달라도 비가 같으면 같은 색이라는 것을 한 번으로는 못 본다. */
+      { k:'lab', mode:'more', who:'munsell', run:'기록하기', need:3, noBtn:1,
+        say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 막대를 끌어 양을 정하고, 찾으면 기록해 둬. 서로 다른 세 가지 양을 찾아보자.',
+        hi:'미션 · 서로 다른 세 가지 양으로 목표색 만들기 · 막대를 끌어 5mL씩 맞춰요' },
       /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
          안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
          답은 어른이 말해 주지 않는다 — 다인이 말대로 직접 만들어 보고, 그 결과를 근거로
@@ -1671,7 +1678,7 @@ class Component extends DCLogic {
     this.setState({ i:n, toast:null, amt:this.startAmt(n), labLog:[],
       cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
       tmpNum:{},
-      cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
+      cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null, moreN:0 });
     /* 격자 화면에 들어서면 첫 점을 예시로 찍어 둔다 — 다른 비의 격자면 새로 연다 */
     if (this.STEPS[n].k === 'plot') { const open = this.plotOpen(n); if (open) this.setState(open); }
     if (this.STEPS[n].k === 'finish') { this.finishRoom(); setTimeout(() => this.awardDigit(), 350); }
@@ -1994,7 +2001,16 @@ class Component extends DCLogic {
       const key = a + ':' + b;
       if (this.state.found.some(f => f[0]+':'+f[1] === key)) { this.toast('🤔', '이미 실험한 양이에요', '새로운 양으로 도전!'); return; }
       const found = this.state.found.concat([[a,b]]);
-      this.setState({ found, amt: this.startAmt(this.state.i) });
+      const need = st.need || 1;
+      const n = (this.state.moreN || 0) + 1;
+      this.setState({ found, moreN: n, amt: this.startAmt(this.state.i) });
+      /* 정한 횟수를 채우기 전에는 통과시키지 않는다 — 몇 번째인지만 알려 주고 이어 가게 한다 */
+      if (n < need) {
+        this.sfx('ok');
+        this.toast('📝', n + '번째 기록! 앞으로 ' + (need - n) + '번 더',
+          '빨강 ' + a + 'mL · 노랑 ' + b + 'mL로 만들었어요. 다른 양으로도 찾아봐요.', 'ok');
+        return;
+      }
       this.markSolved(); this.confetti();
       /* 「간단히 하면 1 : 2」를 여기서 말하지 않는다 — 약분도 「:」도 학습자가
          20mL 컵으로 1컵·2컵을 만들어 낸 뒤(cups·sym 단계)에 처음 만나는 것이다(지침 4.1). */
@@ -2843,6 +2859,8 @@ class Component extends DCLogic {
       })(),
       replay: () => this.sayStep(S.i),
       tgtColor: tgt,
+      /* 막대만으로 맞추게 하는 화면에서는 ＋－를 감춘다(2026-09-20) */
+      showPm: !(st && st.noBtn),
       /* 목표 색 견본: 가설을 세우는 7·8단계와 실험(lab) 단계 모두 같은 형태로 상시 제시 */
       showSwatch: !!st.swatch || isLab,
       isStory: st.k === 'story' && !st.demo,
