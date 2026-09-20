@@ -1,5 +1,5 @@
 {
- "ver": "202609190517",
+ "ver": "202609200250",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -526,7 +526,7 @@
      "key": "o4mm0a",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
     },
     {
      "step": 14.003,
@@ -810,6 +810,15 @@
     {
      "step": 25.002,
      "who": "ratio",
+     "text": "전체에 대한 빨강의 비율에서 전체는 기준량이고 빨강이 비교하는 양이에요.",
+     "key": "m3iqhi",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 25.003,
+     "who": "ratio",
      "text": "전체 100 가운데 빨강이 차지하는 비율은 얼마일까요?",
      "key": "djl4ab",
      "cast": "레시오",
@@ -817,7 +826,7 @@
      "reg": true
     },
     {
-     "step": 25.003,
+     "step": 25.004,
      "who": "ratio",
      "text": "알맞은 말을 끌어 빈칸 위에 놓아 주세요.",
      "key": "9fevbf",
