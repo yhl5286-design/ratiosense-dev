@@ -1,5 +1,5 @@
 {
- "ver": "202609200254",
+ "ver": "202609200704",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -270,26 +270,26 @@
     {
      "step": 7,
      "who": "munsell",
-     "text": "빨강 20, 노랑 40으로 목표색을 찾았지?",
-     "key": "1ptl3vq",
+     "text": "이번에는 빨강과 노랑의 양을 다르게 해서 다시 목표색을 만들어봐.",
+     "key": "11xat1u",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
      "step": 7.001,
      "who": "munsell",
-     "text": "이번에는 다른 양으로 목표색을 만들어 봐.",
-     "key": "7q4p7a",
+     "text": "다른 세 가지 조합을 찾아줘.",
+     "key": "gvigj0",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
      "step": 7.002,
      "who": "munsell",
-     "text": "막대를 끌어 양을 정하고, 찾으면 기록해 둬.",
-     "key": "g6dh7x",
+     "text": "막대를 끌면서 눈금을 잘 보고 목표색이 나오면 기록해둬.",
+     "key": "rgvdrv",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": false
@@ -297,8 +297,8 @@
     {
      "step": 7.003,
      "who": "munsell",
-     "text": "서로 다른 세 가지 양을 찾아보자.",
-     "key": "1lpfjg8",
+     "text": "참고로 빨강은 100까지만 조작할 수 있어.",
+     "key": "1hw1ru",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": false

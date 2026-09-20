@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head><script>try{localStorage.setItem('rs3_user',JSON.stringify({code:'guest'}));localStorage.setItem('rs3_guest','1');}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609200750"></script>
+<script src="tts/manifest.js?v=202609200704"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -875,7 +875,7 @@ class Component extends DCLogic {
   TRACE_MS = 300;
 
   state = {
-    i: 0, amt: { '빨강':0, '노랑':0 }, found: [], moreN: 0, hypo: null, obs: null,
+    i: 7, amt: { '빨강':0, '노랑':0 }, found: [], moreN: 0, hypo: null, obs: null,
     picks: {}, solved: {}, refText:'', probe:{}, cupFlash:null, dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
@@ -943,8 +943,8 @@ class Component extends DCLogic {
          전문가 로그에서 색깔 방 끌기 11회 대 단추 128회였다. 그리고 한 번이 아니라 세 번
          찾게 한다(need:3) — 양이 달라도 비가 같으면 같은 색이라는 것을 한 번으로는 못 본다. */
       { k:'lab', mode:'more', who:'munsell', run:'기록하기', need:3, noBtn:1,
-        say:'이번에는 빨강과 노랑의 양을 다르게 해서 다시 목표색을 만들어봐. 다른 세 가지 조합을 찾아줘. 막대를 끌면서 눈금을 잘 보고 목표색이 나오면 기록해둬. 참고로 빨강은 100까지만 조작할 수 있어.',
-        hi:'미션 · 서로 다른 세 가지 양으로 목표색 만들기 · 빨강은 100까지' },
+        say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 막대를 끌어 양을 정하고, 찾으면 기록해 둬. 서로 다른 세 가지 양을 찾아보자.',
+        hi:'미션 · 서로 다른 세 가지 양으로 목표색 만들기 · 막대를 끌어 5mL씩 맞춰요' },
       /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
          안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
          답은 어른이 말해 주지 않는다 — 다인이 말대로 직접 만들어 보고, 그 결과를 근거로
