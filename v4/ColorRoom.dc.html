@@ -28,13 +28,15 @@ button{font-family:inherit}
 /* 내 색과 목표 색을 맞붙여 견주는 표(2026-09-20) — 컵 수가 늘면 색 차이가 미묘해져
    떨어뜨려 놓으면 눈이 두 번 움직이며 차이가 묻힌다. 두 칸을 경계선 없이 맞댄다.
    성공 띠는 두 색 사이에 끼지 않도록 바깥 테두리에만 준다. */
-.rs-cmp{display:flex;border:5px solid #201e1d;border-radius:14px;overflow:hidden;transition:box-shadow .25s}
-.rs-cmp-col{display:flex;flex-direction:column}
-.rs-cmp-lab{font-size:13px;font-weight:800;text-align:center;padding:3px 4px;background:#fff9f2;border-bottom:3px solid #201e1d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rs-cmp-sw{width:min(126px,29vw);height:min(104px,24vw)}
+.rs-cmp{display:flex;flex-direction:column;border:5px solid #201e1d;border-radius:14px;overflow:hidden;transition:box-shadow .25s}
+.rs-cmp-labs{display:flex;border-bottom:3px solid #201e1d}
+.rs-cmp-lab{flex:1;min-width:0;font-size:13px;font-weight:800;text-align:center;padding:3px 4px;background:#fff9f2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 색 면은 나누지 않는다 — 두 칸으로 두면 소수점 너비 탓에 가운데 흰 틈이 생긴다.
+   한 면을 그라데이션으로 반씩 칠해 두 색이 빈틈없이 맞닿게 한다(2026-09-20). */
+.rs-cmp-sw{width:min(252px,58vw);height:min(104px,24vw)}
 /* 노트북처럼 세로가 짧은 화면에서는 견본을 줄여 조작 영역이 잘리지 않게 한다 */
 @media (max-height:900px){.rs-swatch{width:min(96px,24vw);border-width:4px}
-  .rs-cmp-sw{width:min(96px,24vw);height:min(80px,20vw)}}
+  .rs-cmp-sw{width:min(192px,48vw);height:min(80px,20vw)}}
 @media (max-height:800px){.rs-swatch{width:min(76px,20vw);border-width:4px}}
 /* 좁은 화면: 실험 화면이 가로로 밀려 나가지 않게 접고, 조작물을 화면 폭에 맞춘다 */
 @media (max-width:720px){
@@ -164,16 +166,13 @@ button{font-family:inherit}
       <sc-if value="{{showSwatch}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;margin-bottom:12px;flex:none">
           <div class="rs-cmp" style="box-shadow:{{beakerRing}}">
-            <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
-              <div class="rs-cmp-col">
+            <div class="rs-cmp-labs">
+              <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
                 <div class="rs-cmp-lab" style="color:#8c491a;border-right:3px solid #201e1d">내 색 {{beakerAmt}}</div>
-                <div class="rs-cmp-sw" style="background:{{myColor}};transition:background .18s"></div>
-              </div>
-            </sc-if>
-            <div class="rs-cmp-col">
+              </sc-if>
               <div class="rs-cmp-lab" style="color:#645c50">목표 색</div>
-              <div class="rs-cmp-sw" style="background:{{tgtColor}}"></div>
             </div>
+            <div class="rs-cmp-sw" style="background:{{cmpFill}};transition:background .18s"></div>
           </div>
           <div style="font-size:12.5px;font-weight:700;color:#a19786;margin-top:5px">노을빛 주황</div>
         </div>
@@ -2851,6 +2850,7 @@ class Component extends DCLogic {
       })(),
       replay: () => this.sayStep(S.i),
       tgtColor: tgt,
+      cmpFill: tgt,
       /* 목표 색 견본: 가설을 세우는 7·8단계와 실험(lab) 단계 모두 같은 형태로 상시 제시 */
       showSwatch: !!st.swatch || isLab,
       isStory: st.k === 'story' && !st.demo,
@@ -2957,6 +2957,8 @@ class Component extends DCLogic {
 
     if (isLab) {
       v.myColor = this.rgb(this.mix(S.amt));
+      /* 왼쪽 반은 내 색, 오른쪽 반은 목표 색 — 경계에서 두 색이 바로 맞닿는다 */
+      v.cmpFill = 'linear-gradient(90deg,' + v.myColor + ' 0 50%,' + tgt + ' 50% 100%)';
       v.myPct = Math.min(94, (a + b) / (this.MAX * 1.4) * 94);
       v.redAmt = a; v.yelAmt = b;
       /* 간단히 한 비는 학습자가 단위화(10mL 컵) 단계에서 직접 만들어 낸 뒤에만 보인다.
