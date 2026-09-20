@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609190517"></script>
+<script src="tts/manifest.js?v=202609200250"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -987,8 +987,8 @@ class Component extends DCLogic {
          그 일을 되짚은 바로 뒤다. 약속(무엇을 앞에 놓고 어떻게 적는가)은 알려 주되,
          그 약속대로 적는 일은 학습자가 한다(지침 3.1·4.3). */
       { k:'blank', id:'sym', who:'munsell', demo:'sym',
-        say:'두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 기준이 되는 양을 앞에, 비교하는 양을 뒤에 놓고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
-        hi:'📝 앞에는 기준이 되는 양, 뒤에는 비교하는 양' },
+        say:'두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 부은 차례대로 두 수를 적고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
+        hi:'📝 두 수 사이에 쌍점을 찍어 적어요' },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
          앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
       { k:'blank', id:'letter', who:'munsell', demo:'recipe',
@@ -1147,7 +1147,7 @@ class Component extends DCLogic {
     /* 「:」 기호를 처음 들이는 자리. 약속은 알려 주되(위 그림), 그 약속대로 적는 일은 학습자가 한다. */
     sym: { card:true, title:'📝 비를 적는 법', rows:[
         ['두 양을 비교하여 나타낸 것을 ', {a:'비'}, ' 라고 해요.'],
-        ['기준이 되는 양을 ', {a:'앞'}, ' 에, 비교하는 양을 ', {a:'뒤'}, ' 에 놓아요.'],
+        ['먼저 부은 빨강을 ', {a:'앞'}, ' 에, 노랑을 ', {a:'뒤'}, ' 에 놓아요.'],
         ['빨강 1컵과 노랑 2컵을 비교하면 ', {a:'1'}, ' : ', {a:'2'}, ' 라고 적어요.'] ],
       bank:['비','앞','뒤','1','2','양','옆','3'] },
     why: { card:true, title:'📝 다인이에게 해 줄 설명', rows:[
@@ -2223,7 +2223,10 @@ class Component extends DCLogic {
   /* 10mL 컵으로 세어 보는 시연 — 학습자가 실제로 만든 세 가지를 나란히 놓는다.
      2:4(실험 1) · 5:7(다인이 방식) · 4:8(실험 2) */
   /* 물감 만드는 법 — 수첩에 적은 1 : 2를 그대로 만들어 뭉크에게 건넨다 */
-  /* 「:」 기호를 처음 들이는 그림 — 기준이 되는 양을 앞에, 비교하는 양을 뒤에.
+  /* 「:」 기호를 처음 들이는 그림 — 부은 차례대로 앞뒤에 놓는다.
+     2026-09-20: 「기준이 되는 양·비교하는 양」을 뺐다. 교과서에서 기준량은 비의 뒤 항이고
+     비율(비교하는 양 ÷ 기준량)을 다룰 때 쓰는 말인데, 여기서는 앞 항인 빨강에 붙어 있어
+     거꾸로였다. 이 자리는 비를 적는 법만 가르치므로 순서만 말한다(E04 지적).
      학습자가 방금 20mL 컵으로 만들어 낸 1컵과 2컵을 그대로 가리킨다(지침 3.1·3.3). */
   symEl() {
     const R = React, ink = 'var(--color-neutral-800)';
@@ -2241,9 +2244,9 @@ class Component extends DCLogic {
     return R.createElement('div', { key:'sym',
       style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'9px' } },
       R.createElement('div', { key:'row', style:{ display:'flex', gap:'14px', alignItems:'center', justifyContent:'center' } },
-        side('a', '1', '빨강 1컵', '기준이 되는 양', this.rgb(this.PRIM['빨강'])),
+        side('a', '1', '빨강 1컵', '앞', this.rgb(this.PRIM['빨강'])),
         colon,
-        side('b', '2', '노랑 2컵', '비교하는 양', this.rgb(this.PRIM['노랑']))),
+        side('b', '2', '노랑 2컵', '뒤', this.rgb(this.PRIM['노랑']))),
       R.createElement('div', { key:'read', style:{ fontSize:'17px', fontWeight:800, color:'var(--color-neutral-700)',
         background:'var(--color-neutral-100)', border:'2.5px solid var(--color-neutral-300)',
         borderRadius:'999px', padding:'6px 18px' } }, '1 : 2 라고 쓰고 「1 대 2」라고 읽어요'));

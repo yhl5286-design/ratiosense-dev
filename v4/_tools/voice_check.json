@@ -1,5 +1,5 @@
 {
- "ver": "202609190510",
+ "ver": "202609190517",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -522,11 +522,11 @@
     {
      "step": 14.002,
      "who": "munsell",
-     "text": "기준이 되는 양을 앞에, 비교하는 양을 뒤에 놓고 그 사이에 쌍점을 찍는단다.",
-     "key": "18i8h26",
+     "text": "부은 차례대로 두 수를 적고 그 사이에 쌍점을 찍는단다.",
+     "key": "o4mm0a",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": true
+     "reg": false
     },
     {
      "step": 14.003,
@@ -1813,7 +1813,7 @@
      "key": "2by7o2",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.003,
@@ -1822,7 +1822,7 @@
      "key": "1miyref",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.004,
@@ -1831,7 +1831,7 @@
      "key": "gnr4by",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.005,
@@ -1840,7 +1840,7 @@
      "key": "crfug1",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.006,
@@ -1849,7 +1849,7 @@
      "key": "umxssa",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1.007,
