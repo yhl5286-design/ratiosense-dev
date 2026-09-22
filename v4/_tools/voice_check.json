@@ -1,5 +1,5 @@
 {
- "ver": "202609221206",
+ "ver": "202609221239",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -841,7 +841,7 @@
      "key": "1hi9bqu",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 26.001,
@@ -1059,8 +1059,8 @@
     {
      "step": 4.003,
      "who": "ratio",
-     "text": "라와 미의 진동수의 비는 사 대 삼이에요.",
-     "key": "bzyr9j",
+     "text": "미는 라보다 낮은 음이에요.",
+     "key": "18hy76s",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1068,8 +1068,35 @@
     {
      "step": 4.004,
      "who": "ratio",
-     "text": "슬라이더를 움직이면서 미 소리가 날 때 멈춰 보세요.",
-     "key": "av853n",
+     "text": "낮은 음은 줄이 길었지요?",
+     "key": "1g4mztd",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.005,
+     "who": "ratio",
+     "text": "그러니 미 줄은 라 줄보다 길어요.",
+     "key": "1o6gcdi",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.006,
+     "who": "ratio",
+     "text": "라와 미의 진동수의 비는 사 대 삼이에요.",
+     "key": "bzyr9j",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.007,
+     "who": "ratio",
+     "text": "먼저 찾을 미 소리를 듣고, 칸마다 줄 소리를 하나씩 들어 본 다음 미 소리가 나는 칸을 골라 보세요.",
+     "key": "1bha6t6",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
