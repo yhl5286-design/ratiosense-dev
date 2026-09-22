@@ -8,7 +8,7 @@ const V4 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const norm = raw => {
   const t = raw == null ? '' : (typeof raw === 'string' ? raw : (Array.isArray(raw) ? raw.join(' ') : String(raw)));
   return t.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu, '')
-          .replace(/mL/g, ' 밀리리터 ').replace(/\s+/g, ' ').trim();
+          .replace(/mL/g, ' 밀리리터').replace(/\s+/g, ' ').trim();
 };
 const ttsKey = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
 

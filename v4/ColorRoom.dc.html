@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609200254"></script>
+<script src="tts/manifest.js?v=202609220458"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -940,7 +940,7 @@ class Component extends DCLogic {
       /* 네 번의 실험 — 다루는 단위와 변인을 차례로 연다.
          1·2는 10mL 컵으로 세면서 관계를 찾고(몇 컵 대 몇 컵), 3·4는 막대로 양을 자유롭게 정한다. */
       { k:'lab', mode:'find', unit:'cup', who:'munsell', run:'기록하기', lockR:20,
-        say:'목표색을 만들기 위해 빨강 물감 10mL씩 두 컵을 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 할까? 1컵씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!',
+        say:'목표색을 만들기 위해 빨강 물감 10mL씩 두 컵을 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 할까? [[1컵|한 컵]]씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!',
         hi:'노랑 쪽 ＋를 눌러 한 컵씩 부어요' },
       { k:'lab', mode:'more', unit:'cup', who:'munsell', run:'기록하기', lockR:40,
         say:'완벽해. 그런데 같은 색을 다른 양으로도 만들 수 있을까? 이번에는 빨강 물감을 10mL씩 네 컵 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 아까와 같은 색이 될까?',
@@ -997,7 +997,7 @@ class Component extends DCLogic {
          그 일을 되짚은 바로 뒤다. 약속(무엇을 앞에 놓고 어떻게 적는가)은 알려 주되,
          그 약속대로 적는 일은 학습자가 한다(지침 3.1·4.3). */
       { k:'blank', id:'sym', who:'munsell', demo:'sym',
-        say:'두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 부은 차례대로 두 수를 적고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
+        say:'두 번 다 네가 만들어 낸 [[1컵과 2컵|한 컵과 두 컵]]에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 부은 차례대로 두 수를 적고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
         hi:'📝 두 수 사이에 쌍점을 찍어 적어요' },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
          앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
@@ -1042,7 +1042,7 @@ class Component extends DCLogic {
       { k:'grid', n:10, who:'signac',
         say:'이번에도 빨강 : 노랑을 2 대 3으로 주황을 만들 거야. 이번에는 열 칸에 색칠해 줘.',
         hi:'빨강 : 노랑 = 2 : 3' },
-      { k:'grid', n:100, who:'signac', say:'이번에는 100칸을 색칠할 거야. 빨강 : 노랑 = 2 : 3이 되도록 100칸을 색칠해 줘.', hi:'큰 붓을 쓰면 한 줄씩 칠할 수 있어요',
+      { k:'grid', n:100, who:'signac', say:'이번에는 100칸을 색칠할 거야. [[빨강 : 노랑 = 2 : 3|빨강 대 노랑이 2 대 3]]이 되도록 100칸을 색칠해 줘.', hi:'큰 붓을 쓰면 한 줄씩 칠할 수 있어요',
         probe:{ title:'🤔 방금 칠한 백 칸을 짚어 볼까', rows:[
           { q:'백 칸을 어떻게 칠했나요?', opts:[
             { t:'빨강 40칸, 노랑 60칸으로 나누어 칠했어요', ok:1 },
@@ -1341,7 +1341,7 @@ class Component extends DCLogic {
       /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
          「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
       .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
-      .replace(/mL/g, ' 밀리리터 ').replace(/\s+/g, ' ').trim();
+      .replace(/mL/g, ' 밀리리터').replace(/\s+/g, ' ').trim();   /* 뒤 빈칸을 두지 않는다 — 「20 밀리리터 씩」처럼 조사가 떨어져 끊겨 읽혔다(2026-09-22) */
     if (!txt || txt === '[object Object]') return;
     /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
        CLOVA에는 쉼 표기(SSML·break)가 없어 문장 사이 호흡을 이렇게밖에 낼 수 없다.

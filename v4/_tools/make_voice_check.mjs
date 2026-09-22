@@ -30,7 +30,7 @@ const norm = (raw, room) => {
              .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => SINO(a) + ' 대 ' + b)
          .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => SINO(a) + ' 대 ' + SINO(b));  /* 10,000은 건드리지 않는다 */
   }
-  return x.replace(/mL/g, ' 밀리리터 ').replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ')
+  return x.replace(/mL/g, ' 밀리리터').replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ')
           .replace(/\s+/g, ' ').trim();
 };
 /* 낭독을 문장으로 나눈다 — 네 방의 SENT와 같아야 한다 */

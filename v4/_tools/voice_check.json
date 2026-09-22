@@ -1,5 +1,5 @@
 {
- "ver": "202609200254",
+ "ver": "202609220458",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -153,8 +153,8 @@
     {
      "step": 3.002,
      "who": "munsell",
-     "text": "왼쪽에는 20 밀리리터 , 오른쪽은 60 밀리리터 넣어서 색을 확인해봐.",
-     "key": "slxbro",
+     "text": "왼쪽에는 20 밀리리터, 오른쪽은 60 밀리리터 넣어서 색을 확인해봐.",
+     "key": "10rfzjo",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -207,8 +207,8 @@
     {
      "step": 5,
      "who": "munsell",
-     "text": "목표색을 만들기 위해 빨강 물감 10 밀리리터 씩 두 컵을 부었어.",
-     "key": "59n08j",
+     "text": "목표색을 만들기 위해 빨강 물감 10 밀리리터씩 두 컵을 부었어.",
+     "key": "efzmib",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -216,8 +216,8 @@
     {
      "step": 5.001,
      "who": "munsell",
-     "text": "노랑 물감은 10 밀리리터 씩 몇 컵을 부어야 할까?",
-     "key": "hfweg9",
+     "text": "노랑 물감은 10 밀리리터씩 몇 컵을 부어야 할까?",
+     "key": "2j0jah",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -225,8 +225,8 @@
     {
      "step": 5.002,
      "who": "munsell",
-     "text": "1컵씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!",
-     "key": "1ow64nm",
+     "text": "한 컵씩 추가하거나 빼 보면서 목표색을 찾아보고 기록해 둬!",
+     "key": "1tuian",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -252,8 +252,8 @@
     {
      "step": 6.002,
      "who": "munsell",
-     "text": "이번에는 빨강 물감을 10 밀리리터 씩 네 컵 부었어.",
-     "key": "1l78ypb",
+     "text": "이번에는 빨강 물감을 10 밀리리터씩 네 컵 부었어.",
+     "key": "182g6wf",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -261,8 +261,8 @@
     {
      "step": 6.003,
      "who": "munsell",
-     "text": "노랑 물감은 10 밀리리터 씩 몇 컵을 부어야 아까와 같은 색이 될까?",
-     "key": "901lfp",
+     "text": "노랑 물감은 10 밀리리터씩 몇 컵을 부어야 아까와 같은 색이 될까?",
+     "key": "4zx4xx",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -333,8 +333,8 @@
     {
      "step": 9.002,
      "who": "munsell",
-     "text": "비커에는 빨강 20 밀리리터 와 노랑 40 밀리리터 가 들어 있어.",
-     "key": "17muotp",
+     "text": "비커에는 빨강 20 밀리리터와 노랑 40 밀리리터가 들어 있어.",
+     "key": "pwrbnx",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -342,8 +342,8 @@
     {
      "step": 9.003,
      "who": "munsell",
-     "text": "다인이 말대로 양쪽에 30 밀리리터 씩 더 넣어 봐.",
-     "key": "7xjmli",
+     "text": "다인이 말대로 양쪽에 30 밀리리터씩 더 넣어 봐.",
+     "key": "yuxjra",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -387,8 +387,8 @@
     {
      "step": 11,
      "who": "munsell",
-     "text": "실험으로 찾은 빨강 20 밀리리터 와 노랑 40 밀리리터 를 다시 가져왔어.",
-     "key": "91lyaj",
+     "text": "실험으로 찾은 빨강 20 밀리리터와 노랑 40 밀리리터를 다시 가져왔어.",
+     "key": "e8sojf",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -396,8 +396,8 @@
     {
      "step": 11.001,
      "who": "munsell",
-     "text": "이번에는 조금 더 큰 20 밀리리터 짜리 컵을 줄게.",
-     "key": "w9o7zc",
+     "text": "이번에는 조금 더 큰 20 밀리리터짜리 컵을 줄게.",
+     "key": "1vdbgvc",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -459,8 +459,8 @@
     {
      "step": 12,
      "who": "munsell",
-     "text": "이번에는 빨강 40 밀리리터 를 기준으로 해 보자.",
-     "key": "1bovoe2",
+     "text": "이번에는 빨강 40 밀리리터를 기준으로 해 보자.",
+     "key": "1wr0boa",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -468,8 +468,8 @@
     {
      "step": 12.001,
      "who": "munsell",
-     "text": "40 밀리리터 짜리 컵으로 나눠 담아 보면 각각 몇 컵이 될까?",
-     "key": "m1fwol",
+     "text": "40 밀리리터짜리 컵으로 나눠 담아 보면 각각 몇 컵이 될까?",
+     "key": "4gd6k5",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -504,8 +504,8 @@
     {
      "step": 14,
      "who": "munsell",
-     "text": "두 번 다 네가 만들어 낸 1컵과 2컵에 이름을 붙여 줄게.",
-     "key": "1gf84ul",
+     "text": "두 번 다 네가 만들어 낸 한 컵과 두 컵에 이름을 붙여 줄게.",
+     "key": "xhi0w2",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -652,7 +652,7 @@
      "key": "ntpqbx",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
-     "reg": false
+     "reg": true
     },
     {
      "step": 19,
@@ -738,8 +738,8 @@
     {
      "step": 22.001,
      "who": "signac",
-     "text": "빨강 대 노랑 = 이 대 삼이 되도록 100칸을 색칠해 줘.",
-     "key": "1nt64xm",
+     "text": "빨강 대 노랑이 이 대 삼이 되도록 100칸을 색칠해 줘.",
+     "key": "mi2thv",
      "cast": "화가 시냐크",
      "speaker": "njihun",
      "reg": true
@@ -937,7 +937,7 @@
      "key": "xsk18v",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 1,
@@ -973,7 +973,7 @@
      "key": "1qj5c2q",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 2.001,
@@ -982,7 +982,7 @@
      "key": "1g5fpvd",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 3,
@@ -991,7 +991,7 @@
      "key": "1sx4swo",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 3.001,
@@ -1000,7 +1000,7 @@
      "key": "116jx24",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 3.002,
@@ -1027,7 +1027,7 @@
      "key": "16dlccq",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 4,
@@ -1036,7 +1036,7 @@
      "key": "wfza24",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 4.001,
@@ -1045,7 +1045,7 @@
      "key": "1ap9hi7",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 4.002,
@@ -1054,7 +1054,7 @@
      "key": "14fzp7u",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 4.003,
@@ -1090,7 +1090,7 @@
      "key": "8un2e1",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 5.002,
@@ -1099,7 +1099,7 @@
      "key": "1gnyvo7",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6,
@@ -1117,7 +1117,7 @@
      "key": "1nkwal",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.002,
@@ -1126,7 +1126,7 @@
      "key": "6k6hoi",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.01,
@@ -1135,7 +1135,7 @@
      "key": "vakswj",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.011,
@@ -1144,7 +1144,7 @@
      "key": "1u06s3e",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.02,
@@ -1153,7 +1153,7 @@
      "key": "uvcxpw",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.021,
@@ -1162,7 +1162,7 @@
      "key": "v5rng4",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.021999999999999,
@@ -1171,7 +1171,7 @@
      "key": "19deba3",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.03,
@@ -1180,7 +1180,7 @@
      "key": "14yt8if",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.031000000000001,
@@ -1189,7 +1189,7 @@
      "key": "o12wuy",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.032,
@@ -1198,7 +1198,7 @@
      "key": "1fhnh3m",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 6.033,
@@ -1216,7 +1216,7 @@
      "key": "1fffsfd",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 7.001,
@@ -1234,7 +1234,7 @@
      "key": "1baq1jf",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 7.003,
@@ -1252,7 +1252,7 @@
      "key": "oo4u5h",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.001,
@@ -1261,7 +1261,7 @@
      "key": "72gclk",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.5,
@@ -1270,7 +1270,7 @@
      "key": "1h2fro",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.51,
@@ -1279,7 +1279,7 @@
      "key": "7wxe35",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.511,
@@ -1288,7 +1288,7 @@
      "key": "1xz2w8m",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.512,
@@ -1297,7 +1297,7 @@
      "key": "1nwp3jy",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.513,
@@ -1306,7 +1306,7 @@
      "key": "eevxaq",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.514,
@@ -1315,7 +1315,7 @@
      "key": "nkjtka",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.515,
@@ -1324,7 +1324,7 @@
      "key": "lqystd",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 8.516,
@@ -1333,7 +1333,7 @@
      "key": "65qr3z",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 9,
@@ -1342,7 +1342,7 @@
      "key": "1mhgy3g",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 9.001,
@@ -1351,7 +1351,7 @@
      "key": "wav15b",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 9.002,
@@ -1360,7 +1360,7 @@
      "key": "1bvkmyg",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 9.003,
@@ -1369,7 +1369,7 @@
      "key": "19m9sy6",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 10,
@@ -1459,7 +1459,7 @@
      "key": "m350wf",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 14.001,
@@ -1468,7 +1468,7 @@
      "key": "11zadbv",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 14.002,
@@ -1477,7 +1477,7 @@
      "key": "r54roj",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 15,
@@ -1522,7 +1522,7 @@
      "key": "1xh287g",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     }
    ]
   },
