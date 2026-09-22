@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221425"></script>
+<script src="tts/manifest.js?v=202609221437"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -108,7 +108,7 @@ button{font-family:inherit}
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
-    <div data-cards-badge="1" style="flex:none;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <div data-cards-badge="1" onClick="{{openWallet}}" role="button" aria-label="카드 지갑 열기" style="flex:none;cursor:pointer;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
   </header>
 
@@ -464,7 +464,7 @@ button{font-family:inherit}
           <sc-if value="{{harpPh1}}" hint-placeholder-val="{{false}}">
             <div class="rs-fit">{{rulerEl}}</div>
           </sc-if>
-          <sc-if value="{{harpEar}}" hint-placeholder-val="{{false}}">
+          <sc-if value="{{cellTxt}}" hint-placeholder-val="{{false}}">
             <div style="font-size:18px;font-weight:800;color:{{cellFg}};background:{{cellBg}};border:2.5px solid {{cellBd}};border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);text-align:center;max-width:760px">{{cellTxt}}</div>
           </sc-if>
 
@@ -828,7 +828,8 @@ class Component extends DCLogic {
        1단계에서 「2배 빨리 떨리려면 줄은 절반」을 앞 화면의 떨림에 기대어 고르게 하고, 뒤집힌 두 비를 보여 준 뒤
        2단계에서 길이를 계산한다. 로그는 1단계 lenq1, 2단계 lenq. */
     st.push({ k:'reflect', who:'ratio', mc:1,
-      say:'앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요? 1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 도와 높은 도의 진동수의 비는 1 대 2예요. 높은 도는 도보다 [[2배|두 배]] 빨리 떨려요. [[2배|두 배]] 빨리 떨리려면 줄은 어떻게 되어야 할까요?',
+      /* 2026-09-22 밤 — 사용자 문안으로 바꿈 */
+      say:'1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 도와 높은 도의 진동수의 비는 1 대 2예요. 음이 높아질수록 빠르게 떨려서 진동수가 커져요. 하지만 음이 높아질수록 줄의 길이는 짧아져요. 그렇다면 도와 높은 도의 진동수가 1 대 2라면 줄의 길이는 반대가 되어야 해요. 얼마가 되어야 할까요?',
       hi:'👇 먼저 줄이 어떻게 되어야 하는지 골라요' });
     /* 2026-09-22 — 줄 길이 화면을 떨림(2화면) 바로 뒤로 옮겼다. 같은 날 밤 줄 계산(3화면)과 자리를 바꿔 4화면이 되었다 — 하프(5화면) 바로 앞에서 손으로 줄을 바꿔 보게 한다. 떨림에서 본 「줄이 짧을수록 빨리 떨린다」를
        손으로 줄을 바꿔 가며 귀로 확인하는 자리다. 헤르츠는 하프(5화면)에서 처음 꺼내므로 여기서는 띄우지 않는다. */
@@ -869,7 +870,7 @@ class Component extends DCLogic {
         hi:'하프 공방 2부 · 칸으로 계산하기 ' + (i + 1 - this.HP1) + ' / ' + (this.HP.length - this.HP1) });
     });
     st.push({ k:'blank', id:'dosol', who:'ratio', card:0,
-      say:'이번에는 도와 솔 줄을 만들어 볼 거예요. 도와 솔의 진동수의 비는 2 대 3이에요. 도 줄이 90센티미터일 때 솔 줄은 몇 센티미터일까요? 먼저 줄 길이의 비를 구하고, 그 비로 솔 줄의 길이를 구해 보세요.',
+      say:'이번에는 도와 솔 줄을 만들어 볼 거예요. 도와 솔의 진동수의 비는 2 대 3이에요. 도와 솔의 줄의 길이 비는 반대가 되어야 해요. 이때 도 줄이 90cm라면 솔 줄은 얼마가 되어야 할까요?',   /* 2026-09-22 밤 사용자 문안 */
       hi:'🃏 숫자 카드를 위에서부터 차례로 놓아요' });
     st.push({ k:'harmx',
       /* 2026-09-22 수정의견 — 별점(1~5)을 두 버튼으로. 방도 둘(잘 어울리는 방 / 잘 어울리지 않는 방)로 줄였다.
@@ -952,10 +953,12 @@ class Component extends DCLogic {
        strict — 위에서부터 차례로 채운다(맞는 다른 칸을 찾아 넣어 주면 2 : 3을 거꾸로 놓아도 풀린다).
        fb는 틀린 카드를 놓았을 때의 안내, fbw는 낱말마다 다른 안내다. */
     dosol: { card:true, title:'🃏 도와 솔로 악기 줄 만들기', rows:[
-        ['진동수의 비    도 : 솔 = 2 : 3'],
-        ['줄 길이의 비   도 : 솔 = ', {a:'3'}, ' : ', {a:'2'}],
-        ['도 줄이 90cm이면   3 : 2 = 90 : ', {a:'60'}] ],
-      bank:['2','3','60','135','45'], strict:1,
+        /* 2026-09-22 밤 — 두 줄만(사용자 문안): 진동수의 비 줄과 비례식을 뺐다 */
+        ['줄 길이의 비는  도 : 솔 = ', {a:'3'}, ' : ', {a:'2'}],
+        ['도 줄이 90cm이면 솔 줄은 ', {a:'60'}, 'cm'],
+        /* 까닭 줄(사용자 문안) — 같은 수를 두 번 쓰므로 카드도 두 장씩 둔다 */
+        ['왜냐하면 도가 ', {a:'3'}, '일 때 90이어서 솔은 ', {a:'2'}, '에 ', {a:'30'}, '을 곱한 ', {a:'60'}, '이 되어야 하기 때문이에요.'] ],
+      bank:['3','60','2','135','30','2','45','3','60'], strict:1,
       fb:'솔은 도보다 높은 음이라 더 빨리 떨려요. 줄의 길이는 진동수의 비를 거꾸로 했지요?',
       fbw:{ '135':'진동수의 비 2 : 3을 그대로 쓴 답이에요. 줄 길이의 비는 3 : 2였지요?',
             '45':'3에 몇을 곱하면 90이 될까요?' } }
@@ -1642,6 +1645,60 @@ class Component extends DCLogic {
       }
     } catch(e) {}
   }
+  /* 카드 지갑(2026-09-22 밤) — 네 칸(색깔 두 장 · 소리 두 장)에 모은 숫자를 보여 준다.
+     카드를 얻으면 저절로 열리고, 헤더의 🃏 배지를 눌러도 열린다. 아무 데나 누르면 닫힌다. */
+  walletGot() {
+    if (this._guest) return Object.keys(this._gCards || {});
+    let r = [];
+    try { r = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+    const s = {}; r.forEach(x => { if (x === 'sound') { s.sound1 = 1; s.sound2 = 1; } else s[x] = 1; });
+    return Object.keys(s);
+  }
+  showWallet(newId) {
+    try {
+      const old = document.getElementById('rs-wallet'); if (old) old.remove();
+      const SLOTS = [['color1','색깔','1'],['color2','색깔','6'],['sound1','소리','1'],['sound2','소리','8']];
+      const got = this.walletGot(), n = SLOTS.filter(s => got.indexOf(s[0]) >= 0).length;
+      const mk = (tag, css, txt) => { const e = document.createElement(tag); e.style.cssText = css; if (txt != null) e.textContent = txt; return e; };
+      const ov = mk('div', 'position:fixed;inset:0;z-index:320;display:flex;align-items:center;justify-content:center;background:rgba(32,30,29,.5);padding:16px');
+      ov.id = 'rs-wallet';
+      const box = mk('div', 'background:#f9f4ed;border:4px solid #f6a06b;border-radius:24px;box-shadow:0 18px 44px rgba(32,30,29,.35);padding:20px 22px 16px;max-width:520px;width:100%;text-align:center;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:12px');
+      const nw = SLOTS.find(s => s[0] === newId);
+      if (nw) {
+        /* 새 카드 — 비의 비밀 방 문 앞에 놓이는 카드와 같은 모양으로 크게 */
+        box.appendChild(mk('div', 'font-size:24px;font-weight:800;color:#8c491a', '🃏 비밀 카드를 얻었어요!'));
+        const card = mk('div', 'width:210px;border-radius:18px;overflow:hidden;border:4px solid #f6a06b;background:#fff;box-shadow:0 10px 26px rgba(246,160,107,.4)');
+        card.appendChild(mk('div', 'background:linear-gradient(#f6c49b,#f6a06b);color:#5a2e0e;font-size:16px;font-weight:800;padding:7px', nw[1] + '의 비밀 카드'));
+        const body = mk('div', 'padding:14px 10px 18px;display:flex;flex-direction:column;align-items:center;gap:10px');
+        body.appendChild(mk('div', 'font-size:19px;font-weight:800;color:#5a4a3a', '비밀 카드 숫자는'));
+        body.appendChild(mk('div', 'font-size:84px;font-weight:800;line-height:1.1;background:#201e1d;color:#f6c49b;border-radius:14px;padding:4px 34px', nw[2]));
+        card.appendChild(body);
+        box.appendChild(card);
+        try { card.animate([{ transform:'scale(.3) rotate(-14deg)', opacity:0 }, { transform:'scale(1.1) rotate(3deg)', opacity:1, offset:.7 }, { transform:'scale(1)', opacity:1 }], { duration:700, easing:'ease-out' }); } catch(e) {}
+      } else {
+        box.appendChild(mk('div', 'font-size:22px;font-weight:800;color:#8c491a', '👛 카드 지갑'));
+      }
+      box.appendChild(mk('div', 'font-size:21px;font-weight:800;color:#2f7a55', '모은 카드는 4개 중 ' + n + '개'));
+      const row = mk('div', 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap');
+      SLOTS.forEach(([id, room, d]) => {
+        const has = got.indexOf(id) >= 0, isNew = id === newId;
+        const c = mk('div', 'width:64px;height:84px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;'
+          + (has ? 'background:#fff;border:3px solid ' + (isNew ? '#2f9e6b' : '#f6a06b') + ';' : 'background:#ece6dc;border:3px dashed #c9bfae;'));
+        c.appendChild(mk('div', 'font-size:30px;font-weight:800;line-height:1;color:' + (has ? '#8c491a' : '#b3a893'), has ? d : '?'));
+        c.appendChild(mk('div', 'font-size:11px;font-weight:800;color:' + (has ? '#c67139' : '#b3a893'), room));
+        row.appendChild(c);
+      });
+      box.appendChild(row);
+      box.appendChild(mk('div', 'font-size:14.5px;font-weight:700;color:#7a6a5a;line-height:1.5',
+        n >= 4 ? '네 장을 다 모았어요! 비의 비밀 방에서 마지막 문을 열어 보세요. (눌러서 닫기)'
+               : '네 장을 모으면 비의 비밀 방의 마지막 문을 열 수 있어요. (눌러서 닫기)'));
+      ov.appendChild(box);
+      ov.addEventListener('pointerdown', () => ov.remove());
+      document.body.appendChild(ov);
+      this.plog('wallet', { n, new: newId || '' });
+    } catch(e) {}
+  }
+
   flyCard() {
     try {
       const src = document.querySelector('[data-card-panel]');
@@ -1951,23 +2008,24 @@ class Component extends DCLogic {
   }
   /* 🥁 북 — 낮은 사인의 급격한 피치 드롭(190→54Hz) + 짧은 저역 노이즈(가죽 때리는 소리)
      2026-09-22: 「북 소리가 안 들린다」는 보고로 소리는 그대로 두고 크기만 키웠다(몸통 0.42→0.78, 때림 0.11→0.2).
-     트라이앵글과 같은 칸에 겹쳐도 1을 넘지 않을 만큼만 올린다. */
+     트라이앵글과 같은 칸에 겹쳐도 1을 넘지 않을 만큼만 올린다.
+     같은 날 밤: 「조금 더 낮고 크게」 — 음색은 그대로, 피치 190→54를 160→46으로, 몸통 0.78→0.95·울림 0.34→0.42초, 때림 0.2→0.26(저역 900→700Hz). */
   drumAt(c, at) {
     if (!c || this.state.audio === 'mute') return;
     try {
       const o = c.createOscillator(), g = c.createGain();
       o.type = 'sine';
-      o.frequency.setValueAtTime(190, at);
-      o.frequency.exponentialRampToValueAtTime(54, at + 0.11);
+      o.frequency.setValueAtTime(160, at);
+      o.frequency.exponentialRampToValueAtTime(46, at + 0.12);
       g.gain.setValueAtTime(0.0001, at);
-      g.gain.linearRampToValueAtTime(0.78, at + 0.006);
-      g.gain.exponentialRampToValueAtTime(0.0008, at + 0.34);
+      g.gain.linearRampToValueAtTime(0.95, at + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0008, at + 0.42);
       o.connect(g); g.connect(c.destination);
-      o.start(at); o.stop(at + 0.4);
+      o.start(at); o.stop(at + 0.48);
       const s = c.createBufferSource(), ng = c.createGain(), lp = c.createBiquadFilter();
       s.buffer = this.noiseBuf(c);
-      lp.type = 'lowpass'; lp.frequency.value = 900;
-      ng.gain.setValueAtTime(0.2, at);
+      lp.type = 'lowpass'; lp.frequency.value = 700;
+      ng.gain.setValueAtTime(0.26, at);
       ng.gain.exponentialRampToValueAtTime(0.0006, at + 0.07);
       s.connect(lp); lp.connect(ng); ng.connect(c.destination);
       s.start(at); s.stop(at + 0.12);
@@ -3155,6 +3213,8 @@ class Component extends DCLogic {
     let n;
     if (this._guest) { this._gCards = Object.assign({}, this._gCards); this._gCards[D.id] = 1; n = Object.keys(this._gCards).length; }
     else { n = this.awardDigit(ix); this.flyCard(); }
+    this.setState({ cards: n });
+    clearTimeout(this._walT); this._walT = setTimeout(() => this.showWallet(D.id), this._guest ? 300 : 1300);
     this._cardGot = this._cardGot || {}; this._cardGot[this.state.i] = n;
     this.toast('🃏', '소리의 비밀 카드 1장을 얻었어요!', '숫자 ' + D.d + ' · 모은 비밀 카드 ' + '🃏'.repeat(n) + '⬜'.repeat(Math.max(0, 4 - n)) + ' ' + n + ' / 4', 'ok');
   }
@@ -3388,7 +3448,7 @@ class Component extends DCLogic {
     const baseW = cw * b, myW = Math.min(span, cw * L / unit), cells = L / unit;
     const full = Math.max(0, Math.floor(cells + 1e-6));
     const P = [];
-    P.push('<text x="' + X0 + '" y="' + (yA-9) + '" style="font-size:14px;font-weight:800;fill:' + this.C.g700 + '">라 줄 ' + this.HBASE + 'cm — ' + b + '등분한 눈금 (한 칸 ' + this.hUnitS(i) + 'cm)</text>');
+    P.push('<text x="' + X0 + '" y="' + (yA-9) + '" style="font-size:14px;font-weight:800;fill:' + this.C.g700 + '">라 줄</text>');   /* 2026-09-22 밤 — 「60cm — 3등분한 눈금(한 칸 20cm)」 설명을 뺐다(사용자 지시) */
     P.push('<rect x="' + X0 + '" y="' + yA + '" width="' + baseW.toFixed(1) + '" height="' + h + '" rx="7" style="fill:' + this.C.g100 + ';stroke:' + this.C.g500 + ';stroke-width:2.5"/>');
     for (let k = 0; k < NC; k++) {
       const x = X0 + cw*k, inBase = k < b;
@@ -3399,7 +3459,7 @@ class Component extends DCLogic {
     }
     P.push('<line x1="' + X1 + '" y1="' + (yA+h) + '" x2="' + X1 + '" y2="' + (yB+h) + '" style="stroke:' + this.C.n300 + ';stroke-width:1.5" stroke-dasharray="3 4"/>');
     P.push('<text x="' + X0 + '" y="' + (yB-9) + '" style="font-size:14px;font-weight:800;fill:' + this.C.a700 + '">'
-      + (tuned ? ('내 줄 = ' + p.a + '칸 (' + this.exS(i) + 'cm)') : ('내 줄 — 목표: ' + p.n)) + '</text>');
+      + p.n + ' 줄</text>');
     P.push('<rect x="' + X0 + '" y="' + yB + '" width="' + span + '" height="' + h + '" rx="7" style="fill:' + this.C.n200 + '"/>');
     P.push('<rect x="' + X0 + '" y="' + yB + '" width="' + myW.toFixed(1) + '" height="' + h + '" rx="7" style="fill:' + (tuned ? this.C.a300 : this.C.a200) + ';stroke:' + this.C.a700 + ';stroke-width:2.5"/>');
     for (let k = 1; k < NC; k++) {
@@ -3784,7 +3844,7 @@ class Component extends DCLogic {
     const v = {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
-      cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
+      cards: S.cards, cardsDisp: 'flex', openWallet: () => this.showWallet(''),
       cardBanner: st.card == null ? '' : ((this._cardGot || {})[S.i]
         ? '🃏 소리의 비밀 카드 1장을 얻었어요! · 모은 카드 ' + this._cardGot[S.i] + ' / 4'
         : '🃏 비밀 카드 문제 — 풀면 소리의 비밀 카드 1장을 얻어요!'),
@@ -4136,10 +4196,7 @@ class Component extends DCLogic {
         v.harpLBg = v.harpHit ? this.C.g100 : 'transparent';
         v.harpLFg = v.harpHit ? this.C.g700 : 'var(--color-text)';
         v.harpLBd = v.harpHit ? this.C.g300 : 'transparent';
-        v.cellTxt = S.harpTuned
-          ? ('📏 라 줄은 ' + p.b + '칸, 내 줄은 ' + p.a + '칸 — 길이의 비는 ' + p.b + ' : ' + p.a + '!')
-          : ('📏 한 칸 ' + this.hUnitS(st.i) + 'cm짜리 눈금 — 라 줄은 ' + p.b + '칸, 지금 내 줄은 ' +
-             (near ? ('딱 ' + Math.round(cells) + '칸') : ('약 ' + (Math.round(cells*10)/10) + '칸')));
+        v.cellTxt = '';   /* 2026-09-22 밤 — 「한 칸 20cm짜리 눈금 — 라 줄은 3칸…」 칸 수 설명을 뺐다(사용자 지시) */
         v.cellBg = S.harpTuned ? this.C.g100 : this.C.a100;
         v.cellFg = S.harpTuned ? this.C.g700 : this.C.a700;
         v.cellBd = S.harpTuned ? this.C.g300 : this.C.a300;
@@ -4164,8 +4221,9 @@ class Component extends DCLogic {
       v.refFree = st.mc ? 0 : (st.rq && !rhyOk ? 0 : 1);
       const len2 = st.mc && S.lenStage === 2;
       v.refQ = !st.mc ? ((st.q || '') + (rhyOk ? '\n\n✅ ㉮ 2 : 3 — 왜 그렇게 생각했나요?' : ''))
-        : (len2 ? '진동수의 비  도 : 높은 도 = 1 : 2\n↕ 반대로!\n줄 길이의 비  도 : 높은 도 = 2 : 1\n\n도 줄이 100cm라면, 높은 도 줄은 몇 cm일까요?'
-                : '도 : 높은 도 진동수의 비 = 1 : 2\n높은 도는 도보다 2배 빨리 떨려요.\n2배 빨리 떨리려면 줄은 어떻게 되어야 할까요?');
+        /* 2026-09-22 밤 — 더 간단하게(사용자 문안): 두 비만 나란히 */
+        : (len2 ? '도 진동수 : 높은 도 진동수 = 1 : 2\n도의 줄 : 높은 도의 줄 = 2 : 1\n\n도 줄이 100cm라면, 높은 도 줄은 몇 cm일까요?'
+                : '도 진동수 : 높은 도 진동수 = 1 : 2\n도의 줄 : 높은 도의 줄 = 2 : 1\n\n높은 도의 줄은 도의 줄의 몇 배가 되어야 할까요?');
       v.refPh = st.ph || '';
       v.refOpts = st.rq ? this.RHYQ.map((o, ix) => { const on = S.rhyPick === ix, good = on && o.ok;
           return { t: o.t, tap: () => this.rhyPick(ix), fs: '19px',

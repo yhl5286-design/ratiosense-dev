@@ -1,5 +1,5 @@
 {
- "ver": "202609221425",
+ "ver": "202609221437",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -851,33 +851,6 @@
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
-    },
-    {
-     "step": 27,
-     "who": "ratio",
-     "text": "색깔의 비밀을 잘 찾아냈어요!",
-     "key": "1f8pniu",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 27.001,
-     "who": "ratio",
-     "text": "카드 숫자 1과 6을 얻었어요!",
-     "key": "a5p6ti",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 27.002,
-     "who": "ratio",
-     "text": "잘 기억해두세요!",
-     "key": "1e3uozw",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
     }
    ]
   },
@@ -933,15 +906,6 @@
     {
      "step": 2,
      "who": "ratio",
-     "text": "앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요?",
-     "key": "1sx4swo",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 2.001,
-     "who": "ratio",
      "text": "1초 동안 줄이 떨리는 횟수를 진동수라고 해요.",
      "key": "116jx24",
      "cast": "레시오",
@@ -949,7 +913,7 @@
      "reg": true
     },
     {
-     "step": 2.002,
+     "step": 2.001,
      "who": "ratio",
      "text": "도와 높은 도의 진동수의 비는 1 대 2 예요.",
      "key": "1d3efla",
@@ -958,10 +922,19 @@
      "reg": true
     },
     {
+     "step": 2.002,
+     "who": "ratio",
+     "text": "음이 높아질수록 빠르게 떨려서 진동수가 커져요.",
+     "key": "15jakkw",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
      "step": 2.003,
      "who": "ratio",
-     "text": "높은 도는 도보다 두 배 빨리 떨려요.",
-     "key": "6g4hvg",
+     "text": "하지만 음이 높아질수록 줄의 길이는 짧아져요.",
+     "key": "9ft0h6",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -969,8 +942,17 @@
     {
      "step": 2.004,
      "who": "ratio",
-     "text": "두 배 빨리 떨리려면 줄은 어떻게 되어야 할까요?",
-     "key": "1wqlt4o",
+     "text": "그렇다면 도와 높은 도의 진동수가 1 대 2 라면 줄의 길이는 반대가 되어야 해요.",
+     "key": "hvs1d",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 2.005,
+     "who": "ratio",
+     "text": "얼마가 되어야 할까요?",
+     "key": "1gdon8b",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1077,8 +1059,8 @@
     {
      "step": 5.002,
      "who": "ratio",
-     "text": "도 줄이 90센티미터일 때 솔 줄은 몇 센티미터일까요?",
-     "key": "15jzqd5",
+     "text": "도와 솔의 줄의 길이 비는 반대가 되어야 해요.",
+     "key": "1k1iiza",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1086,8 +1068,8 @@
     {
      "step": 5.003,
      "who": "ratio",
-     "text": "먼저 줄 길이의 비를 구하고, 그 비로 솔 줄의 길이를 구해 보세요.",
-     "key": "1jcjya",
+     "text": "이때 도 줄이 90 센티미터 라면 솔 줄은 얼마가 되어야 할까요?",
+     "key": "1j287j6",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true

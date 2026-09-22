@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221425"></script>
+<script src="tts/manifest.js?v=202609221437"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -90,7 +90,7 @@ button{font-family:inherit}
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,#c67139,#f6a06b);transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:#645c50;white-space:nowrap">{{stepLabel}}</div>
-    <div data-cards-badge="1" style="flex:none;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
+    <div data-cards-badge="1" onClick="{{openWallet}}" role="button" aria-label="카드 지갑 열기" style="flex:none;cursor:pointer;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:#ffe1d0;border:2.5px solid #f6a06b;font-size:16px;color:#8c491a;white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" style="flex:none;width:46px;height:46px;border-radius:999px;border:2.5px solid #dcd3c4;background:#f9f4ed;font-size:19px;cursor:pointer">{{audioIcon}}</button>
   </header>
 
@@ -147,7 +147,7 @@ button{font-family:inherit}
             <div style="font-size:96px;line-height:1">{{storyEmoji}}</div>
           </sc-if>
           <sc-if value="{{artEl}}" hint-placeholder-val="{{false}}">
-            <div style="background:#2e2b25;padding:11px;border-radius:10px;box-shadow:0 14px 32px rgba(32,30,29,.3)">{{artEl}}</div>
+            <div style="background:{{artFrameBg}};padding:{{artFramePad}};border-radius:10px;box-shadow:{{artFrameSh}}">{{artEl}}</div>
           </sc-if>
           <sc-if value="{{artCap}}" hint-placeholder-val="{{false}}">
             <div style="font-size:14px;font-weight:700;color:#645c50;text-align:center">{{artCap}}</div>
@@ -1023,7 +1023,7 @@ class Component extends DCLogic {
         say:'지금까지 나왔던 모든 값을 표로 나타내 봤어. 표에 나타낸 값을 그래프로 나타내 보자. 첫 줄은 내가 미리 찍어 두었어. 반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다. 점을 다 찍으면 첫 번째 점부터 차례로 눌러 선으로 이어 보렴.',
         hi:'📈 점을 찍고, 첫 번째 점부터 차례로 눌러 이어요' },
       /* 시냐크 소개 — 시냐크 본인의 점묘화 대표작을 그대로 보여 준다. */
-      { k:'story', who:'signac', art:'signac_feneon.jpg', art2:'signac_incomplete.jpg', art2Wash:1,
+      { k:'story', who:'signac', art:'signac_feneon_hi.jpg', art2:'signac_incomplete_hi.jpg', art2Wash:1,   /* 2026-09-22 밤 — 점이 보이게 고해상도(위키미디어 공용, 공유 저작물)로 바꾸고 크게 */
         artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890)  ·  「양산을 든 여인」 — 주황이 빠진 미완성',
         lines:['안녕? 나는 점을 찍어 색을 표현하는 화가 \'시냐크\'라고 해.',
                '그런데 지금 「양산을 든 여인」을 그릴 때 필요한 주황색을 만드는 중이야.',
@@ -1061,7 +1061,7 @@ class Component extends DCLogic {
       /* 개수 대비 — 여기까지는 칸이 늘어나도 비가 그대로여서 개수를 세어도 답이 맞았다.
          칸 수가 많은 쪽이 오히려 비는 작은 사례를 비교하게 하여 개수로 판단하는 습관을
          드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
-      { k:'story', who:'signac', art:'signac_painting.jpg', artCap:'「양산을 든 여인」 완성!',
+      { k:'story', who:'signac', art:'signac_painting_hi.jpg', artCap:'「양산을 든 여인」 완성!',
         lines:['점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3이었지! 덕분에 그림을 완성했어, 고마워.'],
         btn:'다음 →' },
       /* 시냐크가 작별한 뒤이므로 이 물음은 안내자 레시오가 던진다 */
@@ -1083,10 +1083,9 @@ class Component extends DCLogic {
          입력 칸 안내도 빈칸 하나(「(  )을 알아야 해요」)를 채우는 틀이라 한 낱말 답을 불러 바꿨다. */
       { k:'reflect', who:'ratio',
         say:'두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 어떻게 해야 할까요? 여러분의 생각을 적어 보세요.',
-        hi:'' },
-      { k:'finish', who:'ratio',
-        say:'색깔의 비밀을 잘 찾아냈어요! 카드 숫자 1과 6을 얻었어요! 잘 기억해두세요!',
-        hi:'탐색 완료! 카드 숫자 1 · 6 획득' }
+        hi:'' }
+      /* 2026-09-22 밤 — 마침 화면(「카드 숫자 1과 6을 얻었어요」)을 뺐다. 카드는 문제를 풀 때 팝업으로 받으므로
+         되풀이였다. 27화면에서 제출하면 곧바로 소리의 비밀로 간다(사용자 지시). 28 → 27단계 */
     ];
   }
 
@@ -1421,7 +1420,15 @@ class Component extends DCLogic {
       edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
     this.sfx('ok');
-    this.go(1);
+    this.toNextRoom();
+  }
+  /* 색깔 방을 마치고 소리의 비밀로 — 완료 기록·빠진 카드·로그 전송을 먼저 하고 옮긴다 */
+  toNextRoom() {
+    this.finishRoom();
+    this.awardDigit();
+    this.flush(true);
+    this.stopVoice();
+    setTimeout(() => { try { location.href = 'SoundRoom.dc.html'; } catch(e) {} }, 700);
   }
 
   /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
@@ -1714,6 +1721,8 @@ class Component extends DCLogic {
     let n;
     if (this._guest) { this._gCards = Object.assign({}, this._gCards); this._gCards[D.id] = 1; n = Object.keys(this._gCards).length; }
     else { n = this.awardDigit(ix); this.flyCard(); }
+    this.setState({ cards: n });
+    clearTimeout(this._walT); this._walT = setTimeout(() => this.showWallet(D.id), this._guest ? 300 : 1300);
     this._cardGot = this._cardGot || {}; this._cardGot[this.state.i] = n;
     this.toast('🃏', '색깔의 비밀 카드 1장을 얻었어요!', '숫자 ' + D.d + ' · 모은 비밀 카드 ' + '🃏'.repeat(n) + '⬜'.repeat(Math.max(0, 4 - n)) + ' ' + n + ' / 4', 'ok');
   }
@@ -1803,6 +1812,60 @@ class Component extends DCLogic {
         document.body.appendChild(d);
         setTimeout(() => d.remove(), 3200);
       }
+    } catch(e) {}
+  }
+
+  /* 카드 지갑(2026-09-22 밤) — 네 칸(색깔 두 장 · 소리 두 장)에 모은 숫자를 보여 준다.
+     카드를 얻으면 저절로 열리고, 헤더의 🃏 배지를 눌러도 열린다. 아무 데나 누르면 닫힌다. */
+  walletGot() {
+    if (this._guest) return Object.keys(this._gCards || {});
+    let r = [];
+    try { r = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+    const s = {}; r.forEach(x => { if (x === 'sound') { s.sound1 = 1; s.sound2 = 1; } else s[x] = 1; });
+    return Object.keys(s);
+  }
+  showWallet(newId) {
+    try {
+      const old = document.getElementById('rs-wallet'); if (old) old.remove();
+      const SLOTS = [['color1','색깔','1'],['color2','색깔','6'],['sound1','소리','1'],['sound2','소리','8']];
+      const got = this.walletGot(), n = SLOTS.filter(s => got.indexOf(s[0]) >= 0).length;
+      const mk = (tag, css, txt) => { const e = document.createElement(tag); e.style.cssText = css; if (txt != null) e.textContent = txt; return e; };
+      const ov = mk('div', 'position:fixed;inset:0;z-index:320;display:flex;align-items:center;justify-content:center;background:rgba(32,30,29,.5);padding:16px');
+      ov.id = 'rs-wallet';
+      const box = mk('div', 'background:#f9f4ed;border:4px solid #f6a06b;border-radius:24px;box-shadow:0 18px 44px rgba(32,30,29,.35);padding:20px 22px 16px;max-width:520px;width:100%;text-align:center;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:12px');
+      const nw = SLOTS.find(s => s[0] === newId);
+      if (nw) {
+        /* 새 카드 — 비의 비밀 방 문 앞에 놓이는 카드와 같은 모양으로 크게 */
+        box.appendChild(mk('div', 'font-size:24px;font-weight:800;color:#8c491a', '🃏 비밀 카드를 얻었어요!'));
+        const card = mk('div', 'width:210px;border-radius:18px;overflow:hidden;border:4px solid #f6a06b;background:#fff;box-shadow:0 10px 26px rgba(246,160,107,.4)');
+        card.appendChild(mk('div', 'background:linear-gradient(#f6c49b,#f6a06b);color:#5a2e0e;font-size:16px;font-weight:800;padding:7px', nw[1] + '의 비밀 카드'));
+        const body = mk('div', 'padding:14px 10px 18px;display:flex;flex-direction:column;align-items:center;gap:10px');
+        body.appendChild(mk('div', 'font-size:19px;font-weight:800;color:#5a4a3a', '비밀 카드 숫자는'));
+        body.appendChild(mk('div', 'font-size:84px;font-weight:800;line-height:1.1;background:#201e1d;color:#f6c49b;border-radius:14px;padding:4px 34px', nw[2]));
+        card.appendChild(body);
+        box.appendChild(card);
+        try { card.animate([{ transform:'scale(.3) rotate(-14deg)', opacity:0 }, { transform:'scale(1.1) rotate(3deg)', opacity:1, offset:.7 }, { transform:'scale(1)', opacity:1 }], { duration:700, easing:'ease-out' }); } catch(e) {}
+      } else {
+        box.appendChild(mk('div', 'font-size:22px;font-weight:800;color:#8c491a', '👛 카드 지갑'));
+      }
+      box.appendChild(mk('div', 'font-size:21px;font-weight:800;color:#2f7a55', '모은 카드는 4개 중 ' + n + '개'));
+      const row = mk('div', 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap');
+      SLOTS.forEach(([id, room, d]) => {
+        const has = got.indexOf(id) >= 0, isNew = id === newId;
+        const c = mk('div', 'width:64px;height:84px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;'
+          + (has ? 'background:#fff;border:3px solid ' + (isNew ? '#2f9e6b' : '#f6a06b') + ';' : 'background:#ece6dc;border:3px dashed #c9bfae;'));
+        c.appendChild(mk('div', 'font-size:30px;font-weight:800;line-height:1;color:' + (has ? '#8c491a' : '#b3a893'), has ? d : '?'));
+        c.appendChild(mk('div', 'font-size:11px;font-weight:800;color:' + (has ? '#c67139' : '#b3a893'), room));
+        row.appendChild(c);
+      });
+      box.appendChild(row);
+      box.appendChild(mk('div', 'font-size:14.5px;font-weight:700;color:#7a6a5a;line-height:1.5',
+        n >= 4 ? '네 장을 다 모았어요! 비의 비밀 방에서 마지막 문을 열어 보세요. (눌러서 닫기)'
+               : '네 장을 모으면 비의 비밀 방의 마지막 문을 열 수 있어요. (눌러서 닫기)'));
+      ov.appendChild(box);
+      ov.addEventListener('pointerdown', () => ov.remove());
+      document.body.appendChild(ov);
+      this.plog('wallet', { n, new: newId || '' });
     } catch(e) {}
   }
 
@@ -2863,7 +2926,7 @@ class Component extends DCLogic {
     const v = {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
-      cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
+      cards: S.cards, cardsDisp: 'flex', openWallet: () => this.showWallet(''),
       cardBanner: st.card == null ? '' : ((this._cardGot || {})[S.i]
         ? '🃏 색깔의 비밀 카드 1장을 얻었어요! · 모은 카드 ' + this._cardGot[S.i] + ' / 4'
         : '🃏 비밀 카드 문제 — 풀면 색깔의 비밀 카드 1장을 얻어요!'),
@@ -2877,14 +2940,16 @@ class Component extends DCLogic {
       mp3Count: (() => { try { return Object.keys(window.RS_TTS || {}).length; } catch(e) { return 0; } })(),
       coachImgEl: who.img ? this.coachPortrait(who) : null,
       /* 그림 높이는 화면 높이에 맞춰 줄인다 — 노트북에서 자막이 길어도 그림과 버튼이 잘리지 않게 */
+      /* 두 그림 — 점이 보이도록 크게, 한 틀에 붙이지 않고 각자 틀에 담아 띄워 놓는다(2026-09-22 밤) */
+      artFrameBg: st.art2 ? 'transparent' : '#2e2b25', artFramePad: st.art2 ? '0' : '11px',
+      artFrameSh: st.art2 ? 'none' : '0 14px 32px rgba(32,30,29,.3)',
       artEl: st.art2 ? React.createElement('div', { key:'arts',
-        style:{ display:'flex', gap:'12px', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } }, [
-          React.createElement('img', { src: st.art, alt: st.artAlt || '', key: st.art,
-            style:{ display:'block', maxWidth:'min(240px,40vw)', maxHeight:artMax(34), borderRadius:'3px' } }),
-          React.createElement('img', { src: st.art2, alt:'', key: st.art2,
-            className: st.art2Wash ? 'washed' : undefined,
-            style:{ display:'block', maxWidth:'min(240px,40vw)', maxHeight:artMax(34), borderRadius:'3px' } })
-        ]) : st.art ? React.createElement('img', { src: st.art, alt: st.artAlt || st.artCap || '', key: st.art,
+        style:{ display:'flex', gap:'min(5vw,56px)', alignItems:'center', justifyContent:'center', flexWrap:'wrap' } }, [
+          [st.art, st.artAlt || '', false], [st.art2, '', !!st.art2Wash]].map(([src, alt, wash]) =>
+          React.createElement('div', { key: src, style:{ background:'#2e2b25', padding:'10px', borderRadius:'10px', boxShadow:'0 14px 32px rgba(32,30,29,.3)' } },
+            React.createElement('img', { src, alt, className: wash ? 'washed' : undefined,
+              style:{ display:'block', maxWidth:'min(42vw,560px)', maxHeight:(_vh < 820 ? '44vh' : '56vh'), borderRadius:'3px' } })))
+        ) : st.art ? React.createElement('img', { src: st.art, alt: st.artAlt || st.artCap || '', key: st.art,
         className: st.artWash ? 'washed' : undefined,
         style: st.artCrop
           ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
@@ -3639,7 +3704,7 @@ class Component extends DCLogic {
       : ((needsSolve && !gateOk && !v.liveBadge)
           ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '');
     v.primary = () => {
-      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
+      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.toNextRoom(); return; } this.submitReflect(); return; }
       /* 마지막 화면에는 처음부터 다시 하는 길을 두지 않는다(네 방 공통).
          40분 안에 세 방을 마쳐야 하므로 되돌아가는 길을 만들지 않는다. */
       if (needsSolve && !gateOk) {
