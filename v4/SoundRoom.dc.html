@@ -195,10 +195,10 @@ button{font-family:inherit}
             </div>
             <sc-if value="{{showRate}}" hint-placeholder-val="{{false}}">
               <div style="flex:0 1 330px;min-width:270px;background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);text-align:left;box-shadow:var(--shadow-sm);animation:rsPop .35s ease">
-                <div style="font-size:18px;line-height:1.5">도와 {{hxName}}의 어울림 — 내 귀에는 <span style="color:var(--color-accent-700)">5점 만점에 몇 점</span>?</div>
-                <div style="display:flex;gap:4px;margin-top:8px">
-                  <sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
-                    <button onClick="{{s.tap}}" aria-label="{{s.n}}점" class="rs-star" style="opacity:{{s.op}}">★</button>
+                <div style="font-size:18px;line-height:1.5">도와 {{hxName}}, <span style="color:var(--color-accent-700)">내 귀에는 어떻게 들리나요?</span></div>
+                <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+                  <sc-for list="{{fitBtns}}" as="b" hint-placeholder-count="2">
+                    <button onClick="{{b.tap}}" aria-label="{{b.t}}" class="rs-chip" style="font-size:17px;padding:10px 16px;border:3px solid {{b.bd}};background:{{b.bg}}">{{b.t}}</button>
                   </sc-for>
                 </div>
               </div>
@@ -218,9 +218,9 @@ button{font-family:inherit}
               <sc-for list="{{missRows}}" as="m" hint-placeholder-count="3">
                 <div style="background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);display:flex;align-items:center;gap:var(--space-3)">
                   <button onClick="{{m.play}}" class="rs-pill" style="min-height:44px;font-size:15px;padding:7px 14px">▶ 도+{{m.n}}</button>
-                  <div style="display:flex;gap:2px">
-                    <sc-for list="{{m.stars}}" as="s" hint-placeholder-count="5">
-                      <button onClick="{{s.tap}}" aria-label="{{m.n}} {{s.n}}점" class="rs-star" style="font-size:26px;opacity:{{s.op}}">★</button>
+                  <div style="display:flex;gap:6px;flex-wrap:wrap">
+                    <sc-for list="{{m.btns}}" as="b" hint-placeholder-count="2">
+                      <button onClick="{{b.tap}}" aria-label="{{m.n}} {{b.t}}" class="rs-chip" style="font-size:15px;padding:7px 12px">{{b.t}}</button>
                     </sc-for>
                   </div>
                 </div>
@@ -234,8 +234,8 @@ button{font-family:inherit}
                 <button onClick="{{c.tap}}" class="rs-chip" style="font-size:16px;padding:8px 16px">{{c.n}} <span style="color:var(--color-accent-500)">{{c.starsStr}}</span></button>
               </sc-for>
             </div>
-            <div class="rs-dial" style="text-align:center;max-width:640px">🤔 별을 <b>비슷하게 준 음들끼리</b> 모아 보면,<br>같은 방에 <b>어떤 음들</b>이 모이게 될까요?</div>
-            <button onClick="{{buildRooms}}" class="rs-pill">⭐ 내 별점으로 방 만들기!</button>
+            <div class="rs-dial" style="text-align:center;max-width:640px">🤔 내가 고른 대로 음들을 <b>두 방</b>에 모아 볼까요?</div>
+            <button onClick="{{buildRooms}}" class="rs-pill">👣 내가 고른 대로 방 만들기!</button>
           </sc-if>
 
           <sc-if value="{{roomBoxes}}" hint-placeholder-val="{{false}}">
@@ -271,8 +271,8 @@ button{font-family:inherit}
 
           <sc-if value="{{roomStage === 'reveal'}}" hint-placeholder-val="{{false}}">
             <div style="max-width:720px;width:min(96%,720px);background:var(--color-accent-100);border:2px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);font-size:15.5px;font-weight:700;line-height:1.7;text-align:left">
-              🎼 실제 음악에서는 <b>파(3:4)·솔(2:3)·도′(1:2)</b>을 잘 어울리는 음정으로 보고, <b>완전 음정</b>이라고 해요.<br>
-              <b>미(4:5)·라(3:5)</b>도 잘 어울리는 느낌이죠? 반면에 <b>레(8:9)·시(8:15)</b>는 잘 어울리지 않아요.<br>
+              🎼 실제 음악에서도 <b>미(4:5)·파(3:4)·솔(2:3)·라(3:5)·도′(1:2)</b>는 도와 잘 어울리는 음,<br>
+              <b>레(8:9)·시(8:15)</b>는 도와 잘 어울리지 않는 음으로 봐요.<br>
               여러분의 느낌도 이와 비슷했나요? <b>사람마다 조금씩은 다를 수 있어요!</b>
             </div>
           </sc-if>
@@ -304,34 +304,20 @@ button{font-family:inherit}
                   <span data-cls="{{c.n}}" class="tag tag-neutral" style="font-size:13px;padding:5px 12px;border:2px solid var(--color-neutral-300)">{{c.t}}</span>
                 </sc-for>
               </div>
-              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;align-items:stretch">
-                <div data-clsroom="perfect" style="grid-row:span {{clsPerfRows}};background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:6px;align-items:center">
-                  <div style="font-size:14px;color:var(--color-accent-2-700);text-align:center">완전음정 방<br><span style="font-size:11px;color:var(--color-neutral-600);font-weight:700">1·4·5·8도</span></div>
-                  <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:30px">
-                    <sc-for list="{{clsPerfect}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent-2" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;align-items:stretch">
+                <div style="background:var(--color-accent-2-100);border:2.5px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:6px;align-items:center">
+                  <div style="font-size:14px;color:var(--color-accent-2-700);text-align:center">👣 잘 어울리는 방</div>
+                  <div data-clsroom="good" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:30px;width:100%">
+                    <sc-for list="{{clsGood}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent-2" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
                   </div>
                 </div>
-                <div style="grid-column:span 2;background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:4px;align-items:center">
-                  <div style="font-size:14px;color:var(--color-accent-700)">장음정 방 <span style="font-size:11px;color:var(--color-neutral-600);font-weight:700">2·3·6·7도</span></div>
-                  <div data-clsroom="major" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:{{clsMajorMinH}}px;width:100%">
-                    <sc-for list="{{clsMajor}}" as="c" hint-placeholder-count="0"><span data-cls="{{c.n}}" class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
+                <div style="background:var(--color-accent-100);border:2.5px solid var(--color-accent-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:6px;align-items:center">
+                  <div style="font-size:14px;color:var(--color-accent-700);text-align:center">🌀 잘 어울리지 않는 방</div>
+                  <div data-clsroom="bad" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:30px;width:100%">
+                    <sc-for list="{{clsBad}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
                   </div>
                 </div>
-                <sc-if value="{{clsSplit}}" hint-placeholder-val="{{false}}">
-                  <div data-clsroom="simple" style="background:var(--color-neutral-100);border:2px dashed var(--color-accent-400);border-radius:var(--radius-sm);padding:6px;display:flex;flex-direction:column;gap:4px;align-items:center;animation:rsPop .3s ease">
-                    <div style="font-size:11.5px;font-weight:800;color:var(--color-accent-700);text-align:center">장음정 · 비가 간단한 방</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:26px">
-                      <sc-for list="{{clsSimple}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
-                    </div>
-                  </div>
-                  <div data-clsroom="complex" style="background:var(--color-neutral-100);border:2px dashed var(--color-accent-700);border-radius:var(--radius-sm);padding:6px;display:flex;flex-direction:column;gap:4px;align-items:center;animation:rsPop .3s ease">
-                    <div style="font-size:11.5px;font-weight:800;color:var(--color-accent-800);text-align:center">장음정 · 비가 복잡한 방</div>
-                    <div style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;min-height:26px">
-                      <sc-for list="{{clsComplex}}" as="c" hint-placeholder-count="0"><span class="tag tag-accent" style="font-size:12.5px;animation:rsPop .3s ease">{{c.t}}</span></sc-for>
-                    </div>
-                  </div>
-                </sc-if>
-                <div style="grid-column:1/-1;font-size:16px;text-align:center;margin-top:2px">⭐ 내가 나눈 방</div>
+                <div style="grid-column:1/-1;font-size:16px;text-align:center;margin-top:2px">👣 내가 나눈 방</div>
                 <sc-if value="{{myRooms}}" hint-placeholder-val="{{false}}">
                   <sc-for list="{{myRooms}}" as="rb" hint-placeholder-count="3">
                     <div style="background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-md);padding:var(--space-2);display:flex;flex-direction:column;gap:4px;align-items:center">
@@ -345,14 +331,14 @@ button{font-family:inherit}
                   <div style="grid-column:1/-1;justify-self:center;font-size:13.5px;font-weight:700;color:var(--color-accent-700);background:var(--color-accent-100);border-radius:999px;padding:6px 14px;text-align:center">여러분이 나눈 방과 어떤 점이 같고 다른가요?</div>
                 </sc-if>
                 <sc-if value="{{myRoomsNone}}" hint-placeholder-val="{{false}}">
-                  <div style="grid-column:1/-1;font-size:13.5px;font-weight:700;color:var(--color-neutral-700);background:var(--color-neutral-200);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);text-align:center">먼저 별점 방 만들기를 해 보세요. 내가 나눈 방이 여기에 나타나요.</div>
+                  <div style="grid-column:1/-1;font-size:13.5px;font-weight:700;color:var(--color-neutral-700);background:var(--color-neutral-200);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);text-align:center">먼저 앞 화면에서 두 방을 만들어 보세요. 내가 나눈 방이 여기에 나타나요.</div>
                 </sc-if>
               </div>
               <div style="font-size:14px;font-weight:700;color:var(--color-neutral-700);min-height:20px;text-align:center">{{clsMsg}}</div>
             </div>
 
           </div>
-          <div class="rs-dial" style="text-align:center;max-width:660px"><b>1:2</b>, <b>2:3</b>, <b>3:4</b>처럼 <b>비가 간단할수록</b> 두 소리가 <b>더 잘 어울려요</b>!</div>
+          <div class="rs-dial" style="text-align:center;max-width:660px">비의 두 수가 작을수록(<b>간단한 비</b>) <b>꼭대기가 자주 겹쳐</b> 잘 어울려요!</div>
         </div>
       </sc-if>
 
@@ -698,21 +684,20 @@ class Component extends DCLogic {
   HP = [{n:'미',a:4,b:3,ph:1}];
   HMIN = 40; HMAX = 100;   /* 하프 슬라이더 범위(cm) — 460행 min·max와 함께 움직인다 */
   HP1 = 1;  /* 1부 단계 수 */
-  /* 음정에 따른 분류 보기: 1차 = 완전음정(1·4·5·8도) vs 장음정(2·3·6·7도),
-     2차 = 장음정을 비가 간단한 방(미·라) / 복잡한 방(레·시)으로 재분류 */
+  /* 음정에 따른 분류 보기 — 도와 잘 어울리는 음(협화) / 잘 어울리지 않는 음(불협화) 두 방.
+     2026-09-22: 완전음정·장음정 두 단계 분류가 너무 어렵다는 의견으로 한 번에 두 방으로 줄였다. */
   CLS = [
-    { n:'레',  r:'8:9',  room1:'major', room2:'complex' },
-    { n:'미',  r:'4:5',  room1:'major', room2:'simple' },
-    { n:'파',  r:'3:4',  room1:'perfect' },
-    { n:'솔',  r:'2:3',  room1:'perfect' },
-    { n:'라',  r:'3:5',  room1:'major', room2:'simple' },
-    { n:'시',  r:'8:15', room1:'major', room2:'complex' },
-    { n:'도′', r:'1:2',  room1:'perfect' }
+    { n:'레',  r:'8:9',  room1:'bad' },
+    { n:'미',  r:'4:5',  room1:'good' },
+    { n:'파',  r:'3:4',  room1:'good' },
+    { n:'솔',  r:'2:3',  room1:'good' },
+    { n:'라',  r:'3:5',  room1:'good' },
+    { n:'시',  r:'8:15', room1:'bad' },
+    { n:'도′', r:'1:2',  room1:'good' }
   ];
   CLS_SAY = {
-    p1:'먼저 아주 잘 어울리는 완전음정 방과, 장음정 방으로 나눠 볼게요.',
-    p2:'이제 장음정 방을 비가 간단한 방과 복잡한 방으로 다시 나눠요.',
-    done:'기준 분류가 완성됐어요! 여러분이 별점으로 나눈 방과 비교해 보세요. 어떤 점이 같고 다른가요?'
+    p1:'음악에서는 도와 함께 울릴 때 잘 어울리는 음과 잘 어울리지 않는 음을 두 방으로 나눠요.',
+    done:'두 방이 완성됐어요! 비를 이루는 두 수가 작을수록 간단한 비라고 해요. 도와 솔은 2 대 3이에요. 도가 두 번, 솔이 세 번 떨릴 때마다 꼭대기가 다시 겹쳐요. 도와 레는 8 대 9예요. 여덟 번과 아홉 번을 떨어야 겨우 한 번 겹쳐요. 그래서 발이 자꾸 꼬이는 거예요. 여러분이 나눈 방과 같은가요? 다른 음이 있다면 한 번 더 들어 보세요.'
   };
   SND_DUR = 1.15;   /* 건반 하나를 눌렀을 때 울리는 길이(초) — 여덟 음을 차례로 눌러 보기에 알맞게 */
   DECAY = Math.pow(0.02, 1/(60*1.6));
@@ -768,7 +753,7 @@ class Component extends DCLogic {
     const r23 = { q:'우리가 찾은 2 : 3 — 어디에서 만난 비일까요?',
       opts:[ { t:'🎹 화음에서 도와 레의 진동수 비', ok:0, fb:'도와 레는 8 : 9였어요. 앞에서 본 진동수 비 표를 다시 떠올려 볼까요?' },
              { t:'🎹 화음에서 도와 솔의 진동수 비', ok:1 },
-             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'별점을 매기며 만난 진동수 비 표를 떠올려 볼까요? 그 안에 2 : 3이 있었어요.' } ] };
+             { t:'✨ 오늘 처음 보는 비', ok:0, fb:'도와 함께 들어 보며 만난 진동수 비 표를 떠올려 볼까요? 그 안에 2 : 3이 있었어요.' } ] };
     if (this.didColor()) {
       r23.q = '우리가 찾은 2 : 3 — 앞에서 어디에서 만난 비일까요? (맞는 곳이 둘이에요)';
       r23.opts.splice(1, 0, { t:'🎨 색깔 방에서 만든 빨강 : 노랑', ok:1, cross:1,
@@ -779,7 +764,7 @@ class Component extends DCLogic {
     }
     return {
       r12: { q:'우리가 찾은 1 : 2 — 어디에서 만난 비일까요?',
-        opts:[ { t:'🎹 화음에서 도와 솔의 진동수 비', ok:0, fb:'도와 솔은 2 : 3이었어요. 앞에서 별점을 매긴 표를 다시 떠올려 볼까요?' },
+        opts:[ { t:'🎹 화음에서 도와 솔의 진동수 비', ok:0, fb:'도와 솔은 2 : 3이었어요. 앞에서 본 진동수 비 표를 다시 떠올려 볼까요?' },
                { t:'✨ 오늘 처음 보는 비', ok:0, fb:'진동수 비 표에서 가장 간단한 비가 무엇이었는지 떠올려 볼까요?' },
                { t:'🎹 화음에서 도와 한 옥타브 높은 도의 진동수 비', ok:1 } ] },
       r23: r23
@@ -807,7 +792,7 @@ class Component extends DCLogic {
     hzHeard:{}, hzHeardF:{}, hzAns:{}, hzRatio:{}, hzBars:'pair', linkGot:{},
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
     voiceMap:{}, pressKey:-1,
-    rates:{},                       /* 화음 별점 (음이름 → 1~5) — harmx_rate */
+    rates:{},                       /* 도와의 어울림 (음이름 → 'good' | 'bad', 9/22 전엔 별점 1~5) — harmx_rate */
     vibHit:[], vibCur:-1, vibAns:{}, vibMsg:'',
     hxCur:-1,
     roomStage:'collect', grpWaveN:null,
@@ -837,12 +822,14 @@ class Component extends DCLogic {
         hi:'실제는 더 빠르지만 구분하기 쉽도록 천천히 보여드려요' }
     ];
     st.push({ k:'harmx',
-      say:'도와 다른 음을 함께 눌러 보세요. 소리를 듣고 물결 무늬를 본 다음 별점을 매겨 보세요. 일곱 음을 모두 평가하면 다음으로 가요.',
-      hi:'아무 순서나 괜찮아요 · 정답은 없어요 — 내 귀가 기준! 별점을 주면 그 음의 진동수 비가 열려요' });
+      /* 2026-09-22 수정의견 — 별점(1~5)을 두 버튼으로. 방도 둘(잘 어울리는 방 / 잘 어울리지 않는 방)로 줄였다.
+         별점 3점이 어느 방인지 애매했고, 전문가 로그에서도 6명 중 4명이 가운데 방을 비우거나 다 몰아넣었다. */
+      say:'도와 다른 음을 함께 눌러 들어 보세요. 두 소리의 발걸음이 딱딱 맞는 것 같으면 「잘 어울려요」를 골라요. 발이 자꾸 꼬이는 것 같으면 「잘 안 어울려요」를 골라요. 정답은 없어요. 내 귀가 기준이에요!',
+      hi:'🎹 일곱 음을 모두 골라야 다음으로 가요 · 물결 무늬도 함께 보세요' });
     st.push({ k:'rooms' });
     st.push({ k:'table',
       say:'음정 표 완성! 도부터 한 옥타브 높은 도까지 다 들어봤어요.',
-      hi:'▶ 분류 시작을 눌러 기준 분류를 한 번 보고, 내가 나눈 방과 비교해 보세요' });
+      hi:'▶ 분류 시작을 눌러 두 방 분류를 보고, 내가 나눈 방과 비교해 보세요' });
     /* 진동수를 처음으로 수로 다루는 자리 — 여덟 음의 헤르츠와 도에 대한 비를 함께 보인다.
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
     st.push({ k:'hz', p:'unit',
@@ -1467,10 +1454,10 @@ class Component extends DCLogic {
   }
 
   roomsSay(stage) {
-    if (stage === 'miss') return '잠깐! 아직 별점을 안 준 음이 있어요. 각 음을 눌러 도와 함께 들어 보고, 별점을 매겨 주세요. 정답은 없어요, 내 귀가 기준이에요!';
-    if (stage === 'collect') return '내가 매긴 별점을 모아 봤어요. 별을 비슷하게 준 음들끼리 모아 보면, 같은 방에 어떤 음들이 모이게 될까요?';
-    if (stage === 'rooms') return '별점이 방을 만들었어요! 점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 어떤 음들이 잘 어울리게 들리나요? 그 이유를 아래에서 골라 보세요.';
-    return '발견! 비가 간단할수록 잘 어울려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
+    if (stage === 'miss') return '잠깐! 아직 고르지 않은 음이 있어요. 도와 함께 들어 보고 골라 주세요.';
+    if (stage === 'collect') return '일곱 음을 모두 골랐어요. 내가 고른 대로 음들을 두 방에 모아 볼까요?';
+    if (stage === 'rooms') return '내가 고른 대로 음들이 두 방에 모였어요! 잘 어울리는 방의 음을 눌러 물결을 보고, 잘 어울리지 않는 방의 음도 눌러 비교해 보세요. 잘 어울리는 소리는 물결의 꼭대기가 어떻게 겹치나요?';
+    return '맞아요! 꼭대기가 자주 겹치는 두 소리는 발걸음이 딱딱 맞는 사이예요. 그래서 부드럽고 마음이 편안해져요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
   }
   /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
      who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
@@ -1499,6 +1486,7 @@ class Component extends DCLogic {
     const who = s.who || 'ratio';
     if (s.k === 'story') this.speak(s.lines.join(' '), who);
     else if (s.k === 'rooms') this.speak(this.roomsSay(this.state.roomStage), who);
+    else if (s.k === 'table' && i === this.state.i && this.state.clsStage === 'done') this.speak(this.CLS_SAY.done, who);
     else this.speak(s.say, who);
   }
 
@@ -1770,10 +1758,12 @@ class Component extends DCLogic {
     this._ph0 = performance.now();
     this.setState({ hxCur: i });
   }
+  /* v = 'good'(잘 어울려요) | 'bad'(잘 안 어울려요). 2026-09-22 전까지는 별점 1~5였다 —
+     로그의 harmx_rate도 stars 대신 fit을 남긴다. */
   rateStar(noteName, v, late) {
     const rates = Object.assign({}, this.state.rates);
     rates[noteName] = v;
-    const payload = { n: noteName, stars: v };
+    const payload = { n: noteName, fit: v };
     if (late) payload.late = 1;
     this.plog('harmx_rate', payload);
     const st = this.STEPS[this.state.i];
@@ -1783,9 +1773,9 @@ class Component extends DCLogic {
       this.setState({ rates });
       if (allDone && !wasSolved) {
         this.markSolved();
-        this.toastOk('일곱 음 모두 평정 완료! ⭐', '건반 아래에 진동수의 비가 전부 열렸어요. 다시 눌러 확인해 보고, 다음으로 가요!');
+        this.toastOk('일곱 음을 모두 골랐어요! 👣', '건반 아래에 진동수의 비가 전부 열렸어요. 다시 눌러 확인해 보고, 다음으로 가요!');
       } else if (!allDone) {
-        this.toastOk('별점 저장! ⭐', noteName + '의 진동수 비가 열렸어요. 건반을 다시 눌러 확인하고, 아직 안 들어 본 음도 눌러 봐요!');
+        this.toastOk('골랐어요!', noteName + '의 진동수 비가 열렸어요. 건반을 다시 눌러 확인하고, 아직 안 들어 본 음도 눌러 봐요!');
       } else {
         this.sfx('ok');
       }
@@ -1801,14 +1791,13 @@ class Component extends DCLogic {
     }
   }
 
-  /* ── 3) 별점 방 만들기 (grp) ── */
+  /* ── 3) 두 방 만들기 (grp) — 잘 어울리는 방 / 잘 어울리지 않는 방 ──
+     옛 별점(숫자)이 남아 있으면 4~5점은 잘 어울리는 방, 1~3점은 잘 어울리지 않는 방으로 읽는다. */
   roomsOf() {
     const R = this.state.rates, NM = this.NM();
-    return {
-      hi: NM.filter(n => (R[n]||0) >= 4),
-      md: NM.filter(n => R[n] === 3),
-      lo: NM.filter(n => (R[n]||0) >= 1 && (R[n]||0) <= 2)
-    };
+    const good = x => x === 'good' || (typeof x === 'number' && x >= 4);
+    const bad = x => x === 'bad' || (typeof x === 'number' && x >= 1 && x <= 3);
+    return { hi: NM.filter(n => good(R[n])), lo: NM.filter(n => bad(R[n])) };
   }
   listenNote(n, log) {
     const t = this.noteByName(n);
@@ -1826,7 +1815,7 @@ class Component extends DCLogic {
     if (k === 'ratio') {
       this.markSolved();
       this.setState({ roomStage: 'reveal' });
-      this.toastOk('발견! 비가 간단할수록 잘 어울려요', '이제 각 음의 진동수 비를 열어 봤어요 — 내 방과 비교해 보세요!');
+      this.toastOk('발견! 꼭대기가 자주 겹칠수록 잘 어울려요', '이제 각 음의 진동수 비를 열어 봤어요 — 내 방과 비교해 보세요!');
       this.speak(this.roomsSay('reveal'), 'ratio');
     } else if (k === 'high') {
       this.toastRetry('도′(높음)도 레(낮음)도 있는지 확인해 봐요 — 음의 높이만으로는 설명이 안 돼요!');
@@ -1893,17 +1882,10 @@ class Component extends DCLogic {
     this._clsBusy = true;
     this.plog('itv_sort', { phase:'play' });
     this.sfx('tap');
-    this.setState({ clsStage:'p1', clsPlaced:{}, clsFly:null, clsMsg:'잘 어울리는 정도로 먼저 크게 나눠요' });
+    this.setState({ clsStage:'p1', clsPlaced:{}, clsFly:null, clsMsg:'도와 잘 어울리는지로 두 방에 나눠요' });
     this.speak(this.CLS_SAY.p1, 'ratio');
     let t = 1500;
     this.CLS.forEach(c => { this._clsTimer(run, t, () => this._clsMove(run, c.n, c.room1)); t += 560; });
-    t += 500;
-    this._clsTimer(run, t, () => this._afterVoice(run, () => {
-      this.setState({ clsStage:'p2', clsMsg:'장음정 방을 다시 둘로 나눠요' });
-      this.speak(this.CLS_SAY.p2, 'ratio');
-    }));
-    t += 1400;
-    this.CLS.filter(c => c.room2).forEach(c => { this._clsTimer(run, t, () => this._clsMove(run, c.n, c.room2)); t += 560; });
     t += 500;
     this._clsTimer(run, t, () => this._afterVoice(run, () => {
       this._clsBusy = false;
@@ -3198,7 +3180,7 @@ class Component extends DCLogic {
     P.push('<rect x="' + bx0 + '" y="' + (top-8) + '" width="' + bandW + '" height="' + (bottom-top+16) + '" rx="8" style="fill:' + this.C.a100 + '"/>');
     P.push('<line x1="' + bx0 + '" y1="' + (top-8) + '" x2="' + bx0 + '" y2="' + (bottom+8) + '" style="stroke:' + this.C.a700 + ';stroke-width:1.5" stroke-dasharray="4 4"/>');
     P.push('<line x1="' + bx1 + '" y1="' + (top-8) + '" x2="' + bx1 + '" y2="' + (bottom+8) + '" style="stroke:' + this.C.a700 + ';stroke-width:2"/>');
-    P.push('<text x="' + (bx1+6) + '" y="' + (top+2) + '" style="font-size:13px;font-weight:700;fill:' + this.C.a700 + '">↺ 다시 처음으로!</text>');
+    P.push('<text x="' + (bx1+6) + '" y="' + (top+2) + '" style="font-size:13px;font-weight:700;fill:' + this.C.a700 + '">↺ 꼭대기가 다시 겹쳐요!</text>');
     P.push('<text x="' + ((bx0+bx1)/2) + '" y="' + (bottom+34) + '" text-anchor="middle" style="font-size:14px;fill:' + this.C.a700 + '">여기까지가 한 묶음 (무늬가 한 바퀴)</text>');
     P.push('<text x="' + ((bx0+bx1)/2) + '" y="' + (top+2) + '" text-anchor="middle" style="font-size:14px;font-weight:800;fill:' + this.C.n600 + '">' + (rev ? ('도 ' + nb + '번 = ' + nm + ' ' + nr + '번') : '한 묶음(무늬 한 바퀴)') + '</text>');
     P.push('<line x1="' + padL + '" y1="' + midY + '" x2="' + (W-padR) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>');
@@ -3221,7 +3203,7 @@ class Component extends DCLogic {
     /* 두 마루가 만나는 자리 — 띠의 양 끝. 점으로 짚어 「여기서 다시 만난다」를 눈에 보이게 한다 */
     const cy0 = midY - amp;
     [bx0, bx1].forEach(x => P.push('<circle cx="' + x + '" cy="' + cy0 + '" r="8" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>'));
-    P.push('<text x="' + bx1 + '" y="' + (cy0 - 14) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:' + this.C.a700 + '">마루가 다시 만나요</text>');
+    /* 설명 글은 띠 오른쪽 끝의 「↺ 꼭대기가 다시 겹쳐요!」 하나로 둔다 — 따로 두면 두 글이 겹쳤다 */
     return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(360px,42vw)' : 'min(470px,54vw)', display:'block' }, P.join(''), 'hx');
   }
   /* 방 단계의 정지 이중 파형 — waveHTML 이식 */
@@ -3665,7 +3647,11 @@ class Component extends DCLogic {
       /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
       coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name,
       coachText: st.k === 'story' ? st.lines.map(l => this.wrapSay(l)).join('\n')
-        : this.wrapSay(st.k === 'rooms' ? this.roomsSay(S.roomStage) : st.say),
+        : this.wrapSay(st.k === 'rooms' ? this.roomsSay(S.roomStage)
+            /* 5화면 — 분류가 진행되면 자막도 그 단계의 말로 바꾼다. 「간단한 비」의 기준을 말하는 자리라
+               소리로만 흘려보내지 않고 글로도 남긴다(2026-09-22). */
+            : (st.k === 'table' && (S.clsStage === 'p1' || S.clsStage === 'done')) ? this.CLS_SAY[S.clsStage]
+            : st.say),
       /* 자막 아래 안내 띠는 쓰지 않는다 — 화면에는 레시오의 말만 둔다 */
       coachHi: '',
       replay: () => this.sayStep(S.i),
@@ -3706,11 +3692,12 @@ class Component extends DCLogic {
         const pressed = S.pressKey === i;
         const isBase = isHx && i === 0;
         const rated = isHx && i > 0 ? (S.rates[n[0]] || 0) : 0;
+        const fitMark = rated === 'good' || rated >= 4 ? ' 👣' : ' 🌀';
         /* 손가락 유도: 아직 안 끝낸 건반에만 (vib=안 들어본 건반, harmx=미평정 음) */
         const invite = st.k === 'vib' ? S.vibHit.indexOf(i) < 0 : (isHx && i > 0 && !rated);
         return {
           label: n[0], star: isBase,
-          sub: rated ? (n[3] + ':' + n[2] + ' ★' + rated) : '',
+          sub: rated ? (n[3] + ':' + n[2] + fitMark) : '',
           fingerD: invite ? 'flex' : 'none',
           bg: pressed ? this.C.a200 : (isBase || rated ? this.C.g100 : 'linear-gradient(var(--color-neutral-100),var(--color-neutral-200))'),
           bd: isBase ? this.C.g500 : (rated ? this.C.g500 : this.C.n800),
@@ -3760,10 +3747,10 @@ class Component extends DCLogic {
         const n = this.NOTES[cur], a = n[3], b = n[2];
         const rev = !!S.rates[n[0]];
         if (rev) { v.hxRes = '도 : ' + n[0] + ' = 264Hz : ' + n[1] + 'Hz'; v.hxRatio = a + ' : ' + b; }
-        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울릴 때 얼마나 잘 어울리나요? 무늬를 보고 두 음이 얼마나 자주 만나는지 살펴보세요.'; }
+        else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울릴 때 잘 어울리나요? 무늬를 보고 두 물결의 꼭대기가 얼마나 자주 겹치는지 살펴보세요.'; }
         v.hxWaveMsg = rev
-          ? '(도) 초록 물결 ' + a + '번 + (' + n[0] + ') 주황 물결 ' + b + '번마다 반복되는 무늬가 생겨요!'
-          : '두 물결이 만드는 무늬가 얼마나 자주 반복되나요? 잘 보고 별점을 매겨 봐요!';
+          ? '초록 물결(도)이 ' + a + '번, 주황 물결(' + n[0] + ')이 ' + b + '번 떨릴 때마다 꼭대기가 다시 겹쳐요!'
+          : '두 물결의 꼭대기가 얼마나 자주 겹치나요? 잘 보고 골라 봐요!';
       }
       v.hxSvgEl = this.hxSvg();
       v.showRate = cur >= 1;
@@ -3771,19 +3758,22 @@ class Component extends DCLogic {
         const nm = this.NOTES[cur][0];
         v.hxName = nm;
         const rated = S.rates[nm] || 0;
-        v.stars = [1,2,3,4,5].map(s => ({ n:s, op: rated >= s ? 1 : .3, tap: () => this.rateStar(nm, s) }));
+        v.fitBtns = [['good', '👣 잘 어울려요'], ['bad', '🌀 잘 안 어울려요']].map(([k, t]) => ({ t,
+          bd: rated === k ? this.C.a700 : this.C.a300, bg: rated === k ? this.C.a200 : this.C.n100,
+          tap: () => this.rateStar(nm, k) }));
       }
-      if (solved) { v.liveBadge = '⭐ 일곱 음 모두 평정 완료!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
-      else if (doneN > 0) { v.liveBadge = '평정한 음 ' + doneN + ' / 7'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
+      if (solved) { v.liveBadge = '👣 일곱 음을 모두 골랐어요!'; v.liveBg = this.C.g100; v.liveFg = this.C.g700; v.liveBd = this.C.g300; }
+      else if (doneN > 0) { v.liveBadge = '고른 음 ' + doneN + ' / 7'; v.liveBg = this.C.a100; v.liveFg = this.C.a700; v.liveBd = this.C.a300; }
     }
 
     if (st.k === 'rooms') {
       const NM = this.NM();
-      const starStr = (n) => '★'.repeat(S.rates[n]||0) + '☆'.repeat(5 - (S.rates[n]||0));
+      /* 고른 표시 — 별점 대신 👣(잘 어울려요) · 🌀(잘 안 어울려요) */
+      const starStr = (n) => { const r = S.rates[n]; return !r ? '' : ((r === 'good' || r >= 4) ? '👣' : '🌀'); };
       if (S.roomStage === 'miss') {
         v.missRows = NM.filter(n => !S.rates[n]).map(n => ({
           n, play: () => this.listenNote(n, false),
-          stars: [1,2,3,4,5].map(s => ({ n:s, op: (S.rates[n]||0) >= s ? 1 : .3, tap: () => this.rateStar(n, s, true) }))
+          btns: [['good', '👣 잘 어울려요'], ['bad', '🌀 잘 안 어울려요']].map(([k, t]) => ({ t, tap: () => this.rateStar(n, k, true) }))
         }));
       }
       if (S.roomStage === 'collect') {
@@ -3798,19 +3788,19 @@ class Component extends DCLogic {
               tap: () => { this.listenNote(n, true); if (this.state.roomStage === 'rooms') this.setState({ grpWaveN: n }); } };
           }) });
         v.roomBoxes = [
-          mk(withRatio ? '⭐ 높은 방' : '⭐ 높은 방 (4~5점)', r.hi),
-          mk(withRatio ? '🙂 보통 방' : '🙂 보통 방 (3점)', r.md),
-          mk(withRatio ? '😖 낮은 방' : '😖 낮은 방 (1~2점)', r.lo)
+          mk('👣 잘 어울리는 방', r.hi),
+          mk('🌀 잘 어울리지 않는 방', r.lo)
         ];
       }
       if (S.roomStage === 'rooms') {
         v.grpWaveEl = S.grpWaveN ? this.grpWaveSvg(S.grpWaveN) : null;
-        v.grpWaveHint = S.grpWaveN ? '' : '점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요. 음을 누르면 그 화음의 물결 그래프가 함께 나타나요.';
+        v.grpWaveHint = S.grpWaveN ? '' : '잘 어울리는 방의 음을 눌러 물결을 보고, 잘 어울리지 않는 방의 음도 눌러 비교해 보세요. 음을 누르면 그 화음의 물결 그래프가 함께 나타나요.';
         /* 긴 선택지는 쉼표(의미 단위)에서 줄바꿈해 두 줄로 표시 */
+        /* 정답을 가운데에 둔다 — 첫 자리만 찍어 맞히지 않게(수정의견) */
         v.reasonChips = [
-          { t1:'두 음의 진동수 비가 간단하여,', t2:'그래프 규칙이 자주 만들어질수록 화음이 잘 어울린다.', k:'ratio' },
-          { t1:'모두 높은 음이라서 잘 어울린다', t2:'', k:'high' },
-          { t1:'건반에서 도와 멀리 있어서 잘 어울린다', t2:'', k:'far' }
+          { t1:'두 소리가 모두 높은 음이라서 잘 어울린다', t2:'', k:'high' },
+          { t1:'두 물결의 꼭대기가 자주 겹쳐서 잘 어울린다', t2:'', k:'ratio' },
+          { t1:'건반에서 도와 멀리 떨어져 있어서 잘 어울린다', t2:'', k:'far' }
         ].map(o => ({ t1:o.t1, t2:o.t2, tap: () => this.reasonPick(o.k) }));
       }
     }
@@ -3838,19 +3828,14 @@ class Component extends DCLogic {
     if (st.k === 'table') {
       v.itvRows = this.NOTES.map((m, i) => ({
         n: (i === 0 ? '★' : '') + m[0], ratio: m[3] + ' : ' + m[2],
-        bg: this.PERF.indexOf(i) >= 0 ? this.C.a100 : 'transparent'
+        bg: (S.clsStage === 'done' && (i === 0 || this.CLS.some(c => c.n === m[0] && c.room1 === 'good'))) ? this.C.g100 : 'transparent'
       }));
       /* 음정에 따른 분류 보기 */
       const P = S.clsPlaced || {}, fly = S.clsFly, stg = S.clsStage;
       const chip = (c) => ({ n: c.n, t: c.n + ' ' + c.r });
       v.clsPool = this.CLS.filter(c => !P[c.n] && fly !== c.n).map(chip);
-      v.clsPerfect = this.CLS.filter(c => P[c.n] === 'perfect').map(chip);
-      v.clsMajor = this.CLS.filter(c => P[c.n] === 'major' && fly !== c.n).map(chip);
-      v.clsSimple = this.CLS.filter(c => P[c.n] === 'simple').map(chip);
-      v.clsComplex = this.CLS.filter(c => P[c.n] === 'complex').map(chip);
-      v.clsSplit = stg === 'p2' || stg === 'done';
-      v.clsMajorMinH = v.clsSplit ? 0 : 30;
-      v.clsPerfRows = v.clsSplit ? 2 : 1;
+      v.clsGood = this.CLS.filter(c => P[c.n] === 'good' && fly !== c.n).map(chip);
+      v.clsBad = this.CLS.filter(c => P[c.n] === 'bad' && fly !== c.n).map(chip);
       v.clsBtn = this._clsBusy ? '⏳ 분류 중…' : (stg === 'done' ? '↺ 다시 보기' : '▶ 분류 시작');
       v.clsPlay = () => this.playCls();
       v.clsMsg = S.clsMsg || '';
@@ -3860,7 +3845,7 @@ class Component extends DCLogic {
         const r = this.roomsOf();
         const mk = (title, arr) => ({ title, empty: arr.length === 0,
           chips: arr.map(x => { const t = this.noteByName(x); return { t: x + ' ' + t[3] + ':' + t[2] }; }) });
-        v.myRooms = [ mk('⭐ 높은 방 (4~5점)', r.hi), mk('🙂 보통 방 (3점)', r.md), mk('😖 낮은 방 (1~2점)', r.lo) ];
+        v.myRooms = [ mk('👣 잘 어울리는 방', r.hi), mk('🌀 잘 어울리지 않는 방', r.lo) ];
         v.myRoomsNone = false;
       } else { v.myRooms = null; v.myRoomsNone = true; }
     }
