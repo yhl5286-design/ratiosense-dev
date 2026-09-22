@@ -942,8 +942,9 @@ class Component extends DCLogic {
         ['두 음의 진동수의 비가 더 ', {a:'간단한'}, ' 비일수록 화음이 더 잘 어울린다.'] ],
       bank:['간단한','복잡한'] }
   };
-  /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 셋째 자리 */
-  DIGIT = { id:'sound', d:'1', concept:'진동수의 비가 간단할수록 어울리는 화음!' };
+  /* 이 방을 마치면 받는 황금비 숫자 두 장 — 1.618 의 셋째·넷째 자리.
+     비의 비밀 방은 sound1·sound2 를 기대하므로 두 장을 함께 준다(2026-09-22, 옛 'sound' 한 장은 3/4로 보이던 결함). */
+  DIGITS = [ { id:'sound1', d:'1' }, { id:'sound2', d:'8' } ];
 
   gcd(a,b) { return b ? this.gcd(b, a%b) : a; }
   gcd2(a,b) { a=Math.round(Math.abs(a)); b=Math.round(Math.abs(b)); while(b){ const t=a%b; a=b; b=t; } return a||1; }
@@ -1328,7 +1329,7 @@ class Component extends DCLogic {
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
-    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    try { const raw = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); const ids = {}; raw.forEach(x => { if (x === 'sound') { ids.sound1 = 1; ids.sound2 = 1; } else ids[x] = 1; }); cards = Object.keys(ids).length; } catch(e) {} /* 옛 'sound' 한 장은 sound1·sound2 두 장으로 센다(2026-09-22) */
     let voiceMap = {};
     try { voiceMap = JSON.parse(localStorage.getItem('rs3_voices') || '{}') || {}; } catch(e) {}
     this.setState({ audio, cards, voiceMap });
@@ -3039,14 +3040,12 @@ class Component extends DCLogic {
      네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
   awardDigit() {
     if (this._guest) return; /* 게스트는 비밀 카드를 모으지 않는다(2026-09-14) */
-    const D = this.DIGIT;
     let got = [];
     try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
-    if (got.indexOf(D.id) < 0) {
-      got.push(D.id);
-      try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
-    }
-    this.plog('card', { id: D.id, digit: D.d });
+    got = got.filter(x => x !== 'sound');
+    this.DIGITS.forEach(D => { if (got.indexOf(D.id) < 0) got.push(D.id); });
+    try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
+    this.plog('card', { id: 'sound', digit: this.DIGITS.map(D => D.d).join('') });
     this.setState({ cards: got.length });
   }
 
