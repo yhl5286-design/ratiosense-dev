@@ -166,7 +166,8 @@ button{font-family:inherit}
               <div style="width:42px;height:48px;border:2px solid {{s.bd}};border-radius:var(--radius-sm);background:var(--color-neutral-100);font-size:23px;display:flex;align-items:center;justify-content:center">{{s.d}}</div>
             </sc-for>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,54px);gap:6px;justify-content:center">
+          <!-- 2026-09-22 밤 — 칸(54px)이 단추(72px)보다 좁아 번호가 겹쳤다. 칸을 단추 폭에 맞춘다 -->
+          <div style="display:grid;grid-template-columns:repeat(3,72px);gap:10px;justify-content:center">
             <sc-for list="{{doorPad}}" as="p" hint-placeholder-count="12">
               <button onClick="{{p.tap}}" class="rs-pad">{{p.k}}</button>
             </sc-for>
