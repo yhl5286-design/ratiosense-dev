@@ -2727,6 +2727,8 @@ class Component extends DCLogic {
       const other = keys.find(k => !blanks[k.key] && k.a === word);
       if (other) target = other;
     }
+    /* 2026-09-22 — 카드를 놓을 때마다 칸·낱말·정답 여부를 남긴다. 전에는 다 채웠을 때만 남아 틀린 낱말(예: 색깔 11화면 「나눠야」)을 로그로 볼 수 없었다. payload에 t·step·sk는 쓰지 않는다. */
+    this.plog('blank_try', { id: this.STEPS[this.state.i].id, slot: target.key, w: word, ok: target.a === word ? 1 : 0 });
     if (target.a === word) {
       blanks[target.key] = word;
       const used = Object.assign({}, this.state.used);
