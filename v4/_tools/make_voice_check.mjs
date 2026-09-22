@@ -23,7 +23,8 @@ const SINO = v => {  /* 만 단위까지 읽는다 — 네 방의 SINO와 같아
 };
 const norm = (raw, room) => {
   const t = raw == null ? '' : (typeof raw === 'string' ? raw : (Array.isArray(raw) ? raw.join(' ') : String(raw)));
-  let x = t.replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '');
+  let x = t.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')   /* [[화면 글|읽을 말]] — 네 방 speak와 같다 */
+    .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '');
   if (SINO_ROOMS.has(room)) {
     x = x.replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')   /* 빨강:노랑 → 빨강 대 노랑 */
              .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => SINO(a) + ' 대 ' + b)
@@ -72,6 +73,15 @@ function lines(name, done) {
     ['miss', 'collect', 'rooms', 'done'].forEach((stage, j) => {
       SENT(norm(room.roomsSay(stage), name)).forEach((p, k) => out.push({
         step: (idx < 0 ? 3 : idx) + j * 0.01 + k * 0.001, who: 'ratio', text: p,
+        key: ttsKey('ratio|' + p) }));
+    });
+  }
+  /* 소리 방 음정 표(table) 분류 대사 — 분류 시작과 끝에 CLS_SAY를 읽는다(2026-09-22 추가, 전에는 목록에서 빠졌다) */
+  if (name === 'SoundRoom' && room.CLS_SAY) {
+    const idx = (room.STEPS || []).findIndex(s => s.k === 'table');
+    ['p1', 'done'].forEach((stage, j) => {
+      SENT(norm(room.CLS_SAY[stage], name)).forEach((p, k) => out.push({
+        step: (idx < 0 ? 8 : idx) + 0.5 + j * 0.01 + k * 0.001, who: 'ratio', text: p,
         key: ttsKey('ratio|' + p) }));
     });
   }

@@ -465,7 +465,8 @@ class Component extends DCLogic {
     if (this.state.audio !== 'full') return;
     const raw = (text === null || text === undefined) ? '' :
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
-    const txt = raw
+    /* [[화면 글|읽을 말]] — 화면에는 앞, 음성에는 뒤(2026-09-22). _tools/make_voice_check.mjs의 norm과 같아야 음성 키가 맞는다 */
+    const txt = raw.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')
       .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
       /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
          화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
@@ -821,7 +822,7 @@ class Component extends DCLogic {
   wrapSay(t) {
     if (!t) return '';
     const NL = String.fromCharCode(10);
-    return String(t).split(/\n\s*\n/)
+    return String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1').split(/\n\s*\n/)
       .map(par => this.markNames(par).split(/(?<=[^0-9\s][.!?])\s+/).join(NL))
       .join(NL + NL);
   }

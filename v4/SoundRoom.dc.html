@@ -824,7 +824,7 @@ class Component extends DCLogic {
         /* 색깔 방을 마쳤다면 앞 방에서 만든 표상을 먼저 되짚어 준다 —
            친숙한 색 표상이 낯선 음정 표상을 해석하는 발판이 된다. */
         lines: ['이 방은 소리의 비밀을 알아내는 방이에요.',
-                '이 방에서는 소리를 집중해서 잘 들어야 비밀을 잘 느낄 수 있어요.'],
+                '이 방에서는 소리를 집중해서 들어야 비밀을 느낄 수 있어요.'],
         btn:'시작하기 →' },
       { k:'vib',
         say:'건반을 도부터 높은 도까지 하나씩 천천히 눌러 보고, 소리를 들어 보세요. 피아노 건반 뒤의 줄이 어떻게 떨리는지 관찰해 보세요. 다 누른 다음 문제를 풀어 보세요.',
@@ -840,7 +840,7 @@ class Component extends DCLogic {
        「반대로 계산한다」는 힌트는 답을 먼저 알려 주므로 대사에서 빼고 틀렸을 때의 안내로 옮겼다.
        진동수라는 말이 이 방에서 처음 나오는 자리라 여기서 정의한다(8화면 진동수 화면은 되짚기만 한다). */
     st.push({ k:'reflect', who:'ratio', mc:1,
-      say:'앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요? 1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 진동수의 단위는 헤르츠예요. 도와 높은 도의 진동수의 비는 1 대 2예요. 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요? 아래에서 골라 보세요.',
+      say:'앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요? 1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 도와 높은 도의 진동수의 비는 1 대 2예요. 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요? 아래에서 골라 보세요.',
       hi:'👇 알맞은 길이를 골라요' });
     /* ── 하프 공방 — 줄의 길이로 비를 다룬다 (2026-09-22: 줄 길이 화면 바로 뒤, 4화면으로 옮김) ──
        ① 살펴보기: 줄을 길게·짧게 하며 소리가 어떻게 달라지는지 귀로 겪는다.
@@ -865,8 +865,8 @@ class Component extends DCLogic {
             { t:Math.max(this.HBASE, Math.round(this.HBASE * p.a / p.b)) + ' － ' + Math.min(this.HBASE, Math.round(this.HBASE * p.a / p.b)) + ' = ' + Math.abs(this.HBASE - Math.round(this.HBASE * p.a / p.b)), ok:0, fb:'두 길이의 차예요. 우리가 한 일은 두 길이를 비교해 본 것이지요?' },
             { t:'라 : ' + p.n + ' = ' + p.b + ' : ' + p.a, ok:1 } ] } ] } : null;
       if (p.ph === 1) st.push({ k:'harp', i, probe,
-        say:'이번에는 줄의 길이로 악기를 조율해 볼 거예요. 라 음을 기준으로 악기를 조율해 보세요. 라 음이 440Hz일 때 ' + p.n + ' 음은 '
-            + Math.round(440 * p.b / p.a) + 'Hz예요. 라와 ' + p.n + '의 진동수의 비는 ' + p.a + ' 대 ' + p.b + '이에요. '
+        say:'이번에는 줄의 길이를 바꿔 ' + p.n + ' 소리를 찾아볼 거예요. 헤르츠는 진동수의 단위예요. 라 음이 [[440Hz|440헤르츠]]일 때 ' + p.n + ' 음은 '
+            + '[[' + Math.round(440 * p.b / p.a) + 'Hz|' + Math.round(440 * p.b / p.a) + '헤르츠]]예요. 라와 ' + p.n + '의 진동수의 비는 ' + p.a + ' 대 ' + p.b + '이에요. '
             + '슬라이더를 움직이면서 ' + p.n + ' 소리가 날 때 멈춰 보세요.',
         hi:'🎻 하프 공방 · ' + this.HBASE + 'cm를 ' + p.b + '등분한 눈금에서 내 줄이 몇 칸인지 확인해요' });
       else st.push({ k:'harp', i, probe,
@@ -882,7 +882,7 @@ class Component extends DCLogic {
     /* 진동수를 처음으로 수로 다루는 자리 — 여덟 음의 헤르츠와 도에 대한 비를 함께 보인다.
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
     st.push({ k:'hz', p:'unit',
-      say:'진동수는 1초 동안 떨리는 횟수라고 했지요? 각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요. 11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요. 궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.',
+      say:'진동수는 1초 동안 떨리는 횟수라고 했지요? 각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요. 11이 공약수여서 모든 음의 진동수는 11로 나누어떨어져요. 궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.',
       hi:'📊 ▶로 도와 함께 들어 보며 칸과 비를 비교해 보세요' });
     st.push({ k:'table',
       say:'진동수의 비로 음정 표를 만들었어요! 분류 시작을 눌러 음악에서는 어떻게 나누는지 보고, 내가 나눈 방과 비교해 보세요.',
@@ -895,8 +895,8 @@ class Component extends DCLogic {
     st.push({ k:'story', emoji:'🥁',
       lines:['간단한 비일수록 잘 어울린다는 것을 알았어요.',
              '그런데 왜 간단한 비가 잘 어울릴까요?',
-             '소리의 떨림은 너무 빨라서 눈으로 셀 수 없어요. 그래서 북과 트라이앵글의 박자로 느리게 들어 봐요.'],
-      btn:'박자 실험실로! →' });
+             '소리의 떨림은 너무 빨라서 눈으로 셀 수 없어요. 그래서 북과 트라이앵글의 리듬으로 느리게 들어 봐요.'],
+      btn:'리듬 실험실로! →' });
     st.push({ k:'poly', p:'r12',
       say:'북과 트라이앵글을 함께 들어 보세요. 두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요.',
       hi:'▶ 함께 듣기를 눌러 보세요' });
@@ -920,7 +920,7 @@ class Component extends DCLogic {
     /* 2026-09-22 — 줄 길이 계산은 3화면 버튼 문제로 옮기고, 이 자리는 소리에 숨겨진 비밀을 직접 묻고
        내 말로 답하게 한다. 설계원리 5(내 말로 정리) 자료는 그대로 이 화면의 글에서 나온다. */
     st.push({ k:'reflect', who:'ratio',
-      say:'소리의 방에서 여러 가지를 해 보았어요. 두 음이 잘 어울리는 소리에는 어떤 비밀이 숨어 있을까요? 내 말로 적어 보세요.',
+      say:'소리의 방에서 여러 가지를 해 보았어요. 잘 어울리는 두 음에는 어떤 비밀이 숨어 있을까요? 내 말로 적어 보세요.',
       q:'🎼 소리에 숨겨진 비밀은 무엇일까요?\n두 음이 잘 어울리는 까닭을 내 말로 적어 보세요.',
       ph:'소리에 숨겨진 비밀은 …',
       hi:'' });
@@ -929,7 +929,7 @@ class Component extends DCLogic {
     st.push({ k:'blank', id:'secret', who:'ratio',
       say:'소리의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
     st.push({ k:'finish', who:'ratio',
-      say:'소리의 비밀을 잘 찾아냈어요! 카드 숫자 1과 8을 얻었어요! 잘 기억해두세요!',
+      say:'소리의 비밀을 잘 찾아냈어요! 카드 숫자 1과 8을 얻었어요! 잘 기억해 두세요!',
       hi:'탐색 완료! 카드 숫자 1 · 8 획득' });
     return st;
   }
@@ -1161,7 +1161,8 @@ class Component extends DCLogic {
     if (this.state.audio !== 'full') return;
     const raw = (text === null || text === undefined) ? '' :
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
-    const txt = raw
+    /* [[화면 글|읽을 말]] — 화면에는 앞, 음성에는 뒤(2026-09-22). _tools/make_voice_check.mjs의 norm과 같아야 음성 키가 맞는다 */
+    const txt = raw.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')
       .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
       /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
          화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
@@ -1483,8 +1484,8 @@ class Component extends DCLogic {
   roomsSay(stage) {
     if (stage === 'miss') return '잠깐! 아직 고르지 않은 음이 있어요. 도와 함께 들어 보고 골라 주세요.';
     if (stage === 'collect') return '일곱 음을 모두 골랐어요. 내가 고른 대로 음들을 두 방에 모아 볼까요?';
-    if (stage === 'rooms') return '내가 고른 대로 음들이 두 방에 모였어요! 잘 어울리는 방의 음을 눌러 물결을 보고, 잘 어울리지 않는 방의 음도 눌러 비교해 보세요. 잘 어울리는 소리는 물결의 꼭대기가 어떻게 겹치나요?';
-    return '맞아요! 두 소리의 꼭대기가 자주 겹치면 잘 어울리게 들려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
+    if (stage === 'rooms') return '내가 고른 대로 음들이 두 방에 모였어요! 잘 어울리는 방의 음을 눌러 물결을 보고, 잘 어울리지 않는 방의 음도 눌러 비교해 보세요. 잘 어울리는 소리는 물결의 꼭대기가 얼마나 자주 겹치나요?';
+    return '맞아요! 두 소리의 꼭대기가 자주 겹치면 잘 어울리게 들려요. 이제 각 음의 진동수 비를 보여 줄게요. 내 방과 비교해 보세요!';
   }
   /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
      who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
@@ -1842,7 +1843,7 @@ class Component extends DCLogic {
     if (k === 'ratio') {
       this.markSolved();
       this.setState({ roomStage: 'reveal' });
-      this.toastOk('발견! 꼭대기가 자주 겹칠수록 잘 어울려요', '이제 각 음의 진동수 비를 열어 봤어요 — 내 방과 비교해 보세요!');
+      this.toastOk('발견! 꼭대기가 자주 겹칠수록 잘 어울려요', '이제 각 음의 진동수 비를 보여 줄게요 — 내 방과 비교해 보세요!');
       this.speak(this.roomsSay('reveal'), 'ratio');
     } else if (k === 'high') {
       this.toastRetry('도′(높음)도 레(낮음)도 있는지 확인해 봐요 — 음의 높이만으로는 설명이 안 돼요!');
@@ -2904,8 +2905,9 @@ class Component extends DCLogic {
       this.hintReset('harpear' + st.i);
       this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm',
         this.HBASE + 'cm를 ' + p.b + '등분하면 한 칸이 ' + unitS + 'cm — 그 ' + p.a + '칸이 ' + exS + 'cm예요!');
+      const NAT = ['', '한', '두', '세', '네', '다섯', '여섯', '일곱', '여덟', '아홉', '열'];
       this.speak('귀로 찾았어요! ' + this.HBASE + '센티미터를 ' + p.b + '등분하면 한 칸이 ' + unitS +
-                 '센티미터, 그 ' + p.a + '칸이 ' + exS + '센티미터예요.', 'ratio');
+                 '센티미터, 그 [[' + p.a + '칸|' + (NAT[p.a] || p.a) + ' 칸]]이 ' + exS + '센티미터예요.', 'ratio');
     }
   }
 
@@ -3091,7 +3093,7 @@ class Component extends DCLogic {
   }
   wrapSay(t) {
     if (!t) return '';
-    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1')).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
   }
 
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }

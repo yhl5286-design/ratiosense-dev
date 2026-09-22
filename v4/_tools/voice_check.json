@@ -933,11 +933,11 @@
     {
      "step": 0.001,
      "who": "ratio",
-     "text": "이 방에서는 소리를 집중해서 잘 들어야 비밀을 잘 느낄 수 있어요.",
-     "key": "11zp0pb",
+     "text": "이 방에서는 소리를 집중해서 들어야 비밀을 느낄 수 있어요.",
+     "key": "xsk18v",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 1,
@@ -969,401 +969,41 @@
     {
      "step": 2,
      "who": "ratio",
-     "text": "도와 다른 음을 함께 눌러 보세요.",
-     "key": "v6f8a6",
+     "text": "이번에는 줄의 길이를 직접 바꿔 볼 거예요.",
+     "key": "1qj5c2q",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 2.001,
      "who": "ratio",
-     "text": "소리를 듣고 물결 무늬를 본 다음 별점을 매겨 보세요.",
-     "key": "fzdk5x",
+     "text": "줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
+     "key": "1g5fpvd",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 2.002,
-     "who": "ratio",
-     "text": "일곱 음을 모두 평가하면 다음으로 가요.",
-     "key": "y28fjm",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 3,
      "who": "ratio",
-     "text": "잠깐!",
-     "key": "121rfmx",
+     "text": "앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요?",
+     "key": "1sx4swo",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 3.001,
      "who": "ratio",
-     "text": "아직 별점을 안 준 음이 있어요.",
-     "key": "6ys5yz",
+     "text": "1초 동안 줄이 떨리는 횟수를 진동수라고 해요.",
+     "key": "116jx24",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     },
     {
      "step": 3.002,
-     "who": "ratio",
-     "text": "각 음을 눌러 도와 함께 들어 보고, 별점을 매겨 주세요.",
-     "key": "5gwmr3",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.003,
-     "who": "ratio",
-     "text": "정답은 없어요, 내 귀가 기준이에요!",
-     "key": "t5ikkn",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.01,
-     "who": "ratio",
-     "text": "내가 매긴 별점을 모아 봤어요.",
-     "key": "19m2hai",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.0109999999999997,
-     "who": "ratio",
-     "text": "별을 비슷하게 준 음들끼리 모아 보면, 같은 방에 어떤 음들이 모이게 될까요?",
-     "key": "1mqm93w",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.02,
-     "who": "ratio",
-     "text": "별점이 방을 만들었어요!",
-     "key": "rmaf84",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.021,
-     "who": "ratio",
-     "text": "점수가 높은 방의 음들을 눌러서 들어보고, 점차 점수가 낮은 방의 음도 들어보세요.",
-     "key": "iyjusq",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.022,
-     "who": "ratio",
-     "text": "어떤 음들이 잘 어울리게 들리나요?",
-     "key": "182gat7",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.023,
-     "who": "ratio",
-     "text": "그 이유를 아래에서 골라 보세요.",
-     "key": "l05ixm",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.03,
-     "who": "ratio",
-     "text": "발견!",
-     "key": "11tzd49",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.0309999999999997,
-     "who": "ratio",
-     "text": "비가 간단할수록 잘 어울려요.",
-     "key": "1vvx8f3",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.0319999999999996,
-     "who": "ratio",
-     "text": "이제 각 음의 진동수 비를 열어 봤어요.",
-     "key": "t642ky",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.033,
-     "who": "ratio",
-     "text": "내 방과 비교해 보세요!",
-     "key": "1ct53vk",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4,
-     "who": "ratio",
-     "text": "음정 표 완성!",
-     "key": "1aynix5",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.001,
-     "who": "ratio",
-     "text": "도부터 한 옥타브 높은 도까지 다 들어봤어요.",
-     "key": "tnvayl",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 5,
-     "who": "ratio",
-     "text": "1초 동안 떨리는 수를 진동수라고 해요.",
-     "key": "1ncjbv7",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 5.001,
-     "who": "ratio",
-     "text": "단위는 헤르츠예요.",
-     "key": "1e9dvj6",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 5.002,
-     "who": "ratio",
-     "text": "각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요.",
-     "key": "1fvccbe",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 5.003,
-     "who": "ratio",
-     "text": "11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요.",
-     "key": "1wlpgc7",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 5.004,
-     "who": "ratio",
-     "text": "궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.",
-     "key": "3vqtfb",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 6,
-     "who": "ratio",
-     "text": "진동수를 비로 나타내 봤지요?",
-     "key": "1u8mogq",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 6.001,
-     "who": "ratio",
-     "text": "이번에는 그 비를 이용해 악기를 만들어 볼 거예요.",
-     "key": "tdjtz6",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 6.002,
-     "who": "ratio",
-     "text": "먼저 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
-     "key": "xc9w2t",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7,
-     "who": "ratio",
-     "text": "라 음을 기준으로 악기를 조율해 보세요.",
-     "key": "1kj0jbj",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.001,
-     "who": "ratio",
-     "text": "라 음이 440 헤르츠 일 때 미 음은 330 헤르츠 예요.",
-     "key": "1qyafze",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.002,
-     "who": "ratio",
-     "text": "라와 미의 진동수의 비는 사 대 삼이에요.",
-     "key": "bzyr9j",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.003,
-     "who": "ratio",
-     "text": "슬라이더를 움직이면서 미 소리가 날 때 멈춰 보세요.",
-     "key": "av853n",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 8,
-     "who": "ratio",
-     "text": "줄의 길이로도 간단한 비를 만들어 봤어요.",
-     "key": "yknfse",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 8.001,
-     "who": "ratio",
-     "text": "그런데 왜 간단한 비가 더 잘 어울릴까요?",
-     "key": "1sdwk8r",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 8.002,
-     "who": "ratio",
-     "text": "이번에는 리듬으로 알아봐요.",
-     "key": "16p8d4y",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 9,
-     "who": "ratio",
-     "text": "북과 트라이앵글을 함께 들어 보세요.",
-     "key": "hgsdzm",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 9.001,
-     "who": "ratio",
-     "text": "두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요.",
-     "key": "1vm5de4",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 10,
-     "who": "ratio",
-     "text": "이번에는 다른 리듬이에요.",
-     "key": "20qvr6",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 10.001,
-     "who": "ratio",
-     "text": "두 소리를 함께 들어 보고, 아까와 어떻게 다른지 느껴 보세요.",
-     "key": "1srp61",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 11,
-     "who": "ratio",
-     "text": "다음 네 가지 리듬을 차례대로 들어 보면서, 두 소리가 같이 만나는 횟수를 세어 보세요.",
-     "key": "1ratbeg",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 12,
-     "who": "ratio",
-     "text": "이번에는 여러분이 리듬을 만들어 봐요.",
-     "key": "1fjc5ky",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 12.001,
-     "who": "ratio",
-     "text": "북과 트라이앵글이 각각 몇 칸마다 울릴지 골라 보세요.",
-     "key": "1eln009",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 12.002,
-     "who": "ratio",
-     "text": "두 소리는 몇 칸마다 다시 만날까요?",
-     "key": "1xhx1h8",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 12.003,
-     "who": "ratio",
-     "text": "만들고 나서 재생해 확인해 보세요.",
-     "key": "vnwrcu",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 13,
-     "who": "ratio",
-     "text": "진동수의 비로 악기를 만들어 볼게요.",
-     "key": "7vw9qa",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 13.001,
      "who": "ratio",
      "text": "도와 높은 도의 진동수의 비는 일 대 이예요.",
      "key": "1ojex7p",
@@ -1372,7 +1012,7 @@
      "reg": true
     },
     {
-     "step": 13.002,
+     "step": 3.003,
      "who": "ratio",
      "text": "도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요?",
      "key": "q9frmj",
@@ -1381,7 +1021,88 @@
      "reg": true
     },
     {
-     "step": 13.003,
+     "step": 3.004,
+     "who": "ratio",
+     "text": "아래에서 골라 보세요.",
+     "key": "16dlccq",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 4,
+     "who": "ratio",
+     "text": "이번에는 줄의 길이를 바꿔 미 소리를 찾아볼 거예요.",
+     "key": "wfza24",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 4.001,
+     "who": "ratio",
+     "text": "헤르츠는 진동수의 단위예요.",
+     "key": "1ap9hi7",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 4.002,
+     "who": "ratio",
+     "text": "라 음이 440헤르츠일 때 미 음은 330헤르츠예요.",
+     "key": "14fzp7u",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 4.003,
+     "who": "ratio",
+     "text": "라와 미의 진동수의 비는 사 대 삼이에요.",
+     "key": "bzyr9j",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.004,
+     "who": "ratio",
+     "text": "슬라이더를 움직이면서 미 소리가 날 때 멈춰 보세요.",
+     "key": "av853n",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 5,
+     "who": "ratio",
+     "text": "도와 다른 음을 함께 눌러 보세요.",
+     "key": "v6f8a6",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 5.001,
+     "who": "ratio",
+     "text": "소리를 듣고 물결 무늬를 본 다음 두 음이 잘 어울리는지 골라 보세요.",
+     "key": "8un2e1",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 5.002,
+     "who": "ratio",
+     "text": "일곱 음을 모두 고르면 다음으로 가요.",
+     "key": "1gnyvo7",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6,
      "who": "ratio",
      "text": "잠깐!",
      "key": "121rfmx",
@@ -1390,34 +1111,376 @@
      "reg": true
     },
     {
-     "step": 13.004,
+     "step": 6.001,
      "who": "ratio",
-     "text": "줄의 길이와 진동수는 반대예요!",
-     "key": "1gubb98",
+     "text": "아직 고르지 않은 음이 있어요.",
+     "key": "1nkwal",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.002,
+     "who": "ratio",
+     "text": "도와 함께 들어 보고 골라 주세요.",
+     "key": "6k6hoi",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.01,
+     "who": "ratio",
+     "text": "일곱 음을 모두 골랐어요.",
+     "key": "vakswj",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.011,
+     "who": "ratio",
+     "text": "내가 고른 대로 음들을 두 방에 모아 볼까요?",
+     "key": "1u06s3e",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.02,
+     "who": "ratio",
+     "text": "내가 고른 대로 음들이 두 방에 모였어요!",
+     "key": "uvcxpw",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.021,
+     "who": "ratio",
+     "text": "잘 어울리는 방의 음을 눌러 물결을 보고, 잘 어울리지 않는 방의 음도 눌러 비교해 보세요.",
+     "key": "v5rng4",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.021999999999999,
+     "who": "ratio",
+     "text": "잘 어울리는 소리는 물결의 꼭대기가 얼마나 자주 겹치나요?",
+     "key": "19deba3",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.03,
+     "who": "ratio",
+     "text": "맞아요!",
+     "key": "14yt8if",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.031000000000001,
+     "who": "ratio",
+     "text": "두 소리의 꼭대기가 자주 겹치면 잘 어울리게 들려요.",
+     "key": "o12wuy",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.032,
+     "who": "ratio",
+     "text": "이제 각 음의 진동수 비를 보여 줄게요.",
+     "key": "1fhnh3m",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 6.033,
+     "who": "ratio",
+     "text": "내 방과 비교해 보세요!",
+     "key": "1ct53vk",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
-     "step": 13.005,
+     "step": 7,
      "who": "ratio",
-     "text": "높은 음일수록 줄은 짧아요!",
-     "key": "1lj2cgd",
+     "text": "진동수는 1초 동안 떨리는 횟수라고 했지요?",
+     "key": "1fffsfd",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 7.001,
+     "who": "ratio",
+     "text": "각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요.",
+     "key": "1fvccbe",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
-     "step": 13.006,
+     "step": 7.002,
      "who": "ratio",
-     "text": "일 대 이면 이 대 일로 계산해야 해요!",
-     "key": "1v53qtp",
+     "text": "11이 공약수여서 모든 음의 진동수는 11로 나누어떨어져요.",
+     "key": "1baq1jf",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 7.003,
+     "who": "ratio",
+     "text": "궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.",
+     "key": "3vqtfb",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 8,
+     "who": "ratio",
+     "text": "진동수의 비로 음정 표를 만들었어요!",
+     "key": "oo4u5h",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.001,
+     "who": "ratio",
+     "text": "분류 시작을 눌러 음악에서는 어떻게 나누는지 보고, 내가 나눈 방과 비교해 보세요.",
+     "key": "72gclk",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.5,
+     "who": "ratio",
+     "text": "음악에서는 도와 함께 울릴 때 잘 어울리는 음과 잘 어울리지 않는 음을 두 방으로 나눠요.",
+     "key": "1h2fro",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.51,
+     "who": "ratio",
+     "text": "두 방이 완성됐어요!",
+     "key": "7wxe35",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.511,
+     "who": "ratio",
+     "text": "비를 이루는 두 수가 작을수록 간단한 비라고 해요.",
+     "key": "1xz2w8m",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.512,
+     "who": "ratio",
+     "text": "도와 솔은 이 대 삼이에요.",
+     "key": "1nwp3jy",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.513,
+     "who": "ratio",
+     "text": "도가 두 번, 솔이 세 번 떨릴 때마다 꼭대기가 다시 겹쳐요.",
+     "key": "eevxaq",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.514,
+     "who": "ratio",
+     "text": "도와 레는 팔 대 구예요.",
+     "key": "nkjtka",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.515,
+     "who": "ratio",
+     "text": "여덟 번과 아홉 번을 떨어야 겨우 한 번 겹쳐요.",
+     "key": "lqystd",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 8.516,
+     "who": "ratio",
+     "text": "여러분이 나눈 방과 같은가요?",
+     "key": "65qr3z",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 9,
+     "who": "ratio",
+     "text": "간단한 비일수록 잘 어울린다는 것을 알았어요.",
+     "key": "1mhgy3g",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 9.001,
+     "who": "ratio",
+     "text": "그런데 왜 간단한 비가 잘 어울릴까요?",
+     "key": "wav15b",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 9.002,
+     "who": "ratio",
+     "text": "소리의 떨림은 너무 빨라서 눈으로 셀 수 없어요.",
+     "key": "1bvkmyg",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 9.003,
+     "who": "ratio",
+     "text": "그래서 북과 트라이앵글의 리듬으로 느리게 들어 봐요.",
+     "key": "19m9sy6",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 10,
+     "who": "ratio",
+     "text": "북과 트라이앵글을 함께 들어 보세요.",
+     "key": "hgsdzm",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 10.001,
+     "who": "ratio",
+     "text": "두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요.",
+     "key": "1vm5de4",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 11,
+     "who": "ratio",
+     "text": "이번에는 다른 리듬이에요.",
+     "key": "20qvr6",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 11.001,
+     "who": "ratio",
+     "text": "두 소리를 함께 들어 보고, 아까와 어떻게 다른지 느껴 보세요.",
+     "key": "1srp61",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 12,
+     "who": "ratio",
+     "text": "다음 네 가지 리듬을 차례대로 들어 보면서, 두 소리가 같이 만나는 횟수를 세어 보세요.",
+     "key": "1ratbeg",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 13,
+     "who": "ratio",
+     "text": "이번에는 여러분이 리듬을 만들어 봐요.",
+     "key": "1fjc5ky",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 13.001,
+     "who": "ratio",
+     "text": "북과 트라이앵글이 각각 몇 칸마다 울릴지 골라 보세요.",
+     "key": "1eln009",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 13.002,
+     "who": "ratio",
+     "text": "두 소리는 몇 칸마다 다시 만날까요?",
+     "key": "1xhx1h8",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 13.003,
+     "who": "ratio",
+     "text": "만들고 나서 재생해 확인해 보세요.",
+     "key": "vnwrcu",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
      "step": 14,
+     "who": "ratio",
+     "text": "소리의 방에서 여러 가지를 해 보았어요.",
+     "key": "m350wf",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 14.001,
+     "who": "ratio",
+     "text": "잘 어울리는 두 음에는 어떤 비밀이 숨어 있을까요?",
+     "key": "11zadbv",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 14.002,
+     "who": "ratio",
+     "text": "내 말로 적어 보세요.",
+     "key": "r54roj",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
+    },
+    {
+     "step": 15,
      "who": "ratio",
      "text": "소리의 비밀을 공부해 보았어요.",
      "key": "1tkilmr",
@@ -1426,7 +1489,7 @@
      "reg": true
     },
     {
-     "step": 14.001,
+     "step": 15.001,
      "who": "ratio",
      "text": "낱말 카드를 놓아 빈칸을 채워 보세요.",
      "key": "z5t9zk",
@@ -1435,7 +1498,7 @@
      "reg": true
     },
     {
-     "step": 15,
+     "step": 16,
      "who": "ratio",
      "text": "소리의 비밀을 잘 찾아냈어요!",
      "key": "1x92gln",
@@ -1444,7 +1507,7 @@
      "reg": true
     },
     {
-     "step": 15.001,
+     "step": 16.001,
      "who": "ratio",
      "text": "카드 숫자 1과 8을 얻었어요!",
      "key": "1o2ijk8",
@@ -1453,13 +1516,13 @@
      "reg": true
     },
     {
-     "step": 15.002,
+     "step": 16.002,
      "who": "ratio",
-     "text": "잘 기억해두세요!",
-     "key": "1e3uozw",
+     "text": "잘 기억해 두세요!",
+     "key": "1xh287g",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": true
+     "reg": false
     }
    ]
   },
