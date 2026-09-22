@@ -510,8 +510,17 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:52px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">도 : 높은 도 <b>진동수의 비 = 1 : 2</b><br>도 줄이 <b>100cm</b>라면, 높은 도 줄은 몇 cm로 만들어야 할까요?</div>
-          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="높은 도 줄은 (  )cm로 만들어요. 왜냐하면 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55;white-space:pre-line">{{refQ}}</div>
+          <sc-if value="{{refFree}}" hint-placeholder-val="{{false}}">
+          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="{{refPh}}" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          </sc-if>
+          <sc-if value="{{refOpts}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+              <sc-for list="{{refOpts}}" as="o" hint-placeholder-count="3">
+                <button onClick="{{o.tap}}" aria-label="{{o.t}}" class="rs-chip" style="min-width:130px;min-height:64px;font-size:24px;font-weight:800;padding:12px 26px;border:3px solid {{o.bd}};background:{{o.bg}}">{{o.t}}</button>
+              </sc-for>
+            </div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -697,7 +706,7 @@ class Component extends DCLogic {
   ];
   CLS_SAY = {
     p1:'음악에서는 도와 함께 울릴 때 잘 어울리는 음과 잘 어울리지 않는 음을 두 방으로 나눠요.',
-    done:'두 방이 완성됐어요! 비를 이루는 두 수가 작을수록 간단한 비라고 해요. 도와 솔은 2 대 3이에요. 도가 두 번, 솔이 세 번 떨릴 때마다 꼭대기가 다시 겹쳐요. 도와 레는 8 대 9예요. 여덟 번과 아홉 번을 떨어야 겨우 한 번 겹쳐요. 그래서 발이 자꾸 꼬이는 거예요. 여러분이 나눈 방과 같은가요?'
+    done:'두 방이 완성됐어요! 비를 이루는 두 수가 작을수록 간단한 비라고 해요. 도와 솔은 2 대 3이에요. 도가 두 번, 솔이 세 번 떨릴 때마다 꼭대기가 다시 겹쳐요. 도와 레는 8 대 9예요. 여덟 번과 아홉 번을 떨어야 겨우 한 번 겹쳐요. 여러분이 나눈 방과 같은가요?'
   };
   SND_DUR = 1.15;   /* 건반 하나를 눌렀을 때 울리는 길이(초) — 여덟 음을 차례로 눌러 보기에 알맞게 */
   DECAY = Math.pow(0.02, 1/(60*1.6));
@@ -805,7 +814,7 @@ class Component extends DCLogic {
     clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
     harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 아래 음 표시를 보고 찾을 음의 자리를 가늠해 보세요!',
     hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
-    refText:'', bridgePick:null, probe:{},
+    refText:'', lenPick:-1, bridgePick:null, probe:{},
     blanks:{}, used:{}
   };
 
@@ -821,6 +830,13 @@ class Component extends DCLogic {
         say:'건반을 도부터 높은 도까지 하나씩 천천히 눌러 보고, 소리를 들어 보세요. 피아노 건반 뒤의 줄이 어떻게 떨리는지 관찰해 보세요. 다 누른 다음 문제를 풀어 보세요.',
         hi:'실제는 더 빠르지만 구분하기 쉽도록 천천히 보여드려요' }
     ];
+    /* 2026-09-22 — 줄 길이 계산을 떨림 바로 뒤(3화면)로 옮기고, 글로 적던 것을 버튼 셋으로 바꿨다(수정의견: 너무 어렵다).
+       떨림 화면의 마지막 물음 「음이 높아질수록 줄의 길이는?」에서 곧바로 이어진다.
+       「반대로 계산한다」는 힌트는 답을 먼저 알려 주므로 대사에서 빼고 틀렸을 때의 안내로 옮겼다.
+       진동수라는 말이 이 방에서 처음 나오는 자리라 여기서 정의한다(8화면 진동수 화면은 되짚기만 한다). */
+    st.push({ k:'reflect', who:'ratio', mc:1,
+      say:'앞에서 높은 음일수록 줄이 빨리 떨리고, 줄이 짧아지는 것을 보았지요? 1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 진동수의 단위는 헤르츠예요. 도와 높은 도의 진동수의 비는 1 대 2예요. 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요? 아래에서 골라 보세요.',
+      hi:'👇 알맞은 길이를 골라요' });
     /* 2026-09-22 — 줄 길이 화면을 떨림(2화면) 바로 뒤로 옮겼다. 떨림에서 본 「줄이 짧을수록 빨리 떨린다」를
        손으로 줄을 바꿔 가며 귀로 확인하는 자리다. 진동수는 아직 배우기 전이라 헤르츠는 띄우지 않는다. */
     st.push({ k:'strlen',
@@ -866,7 +882,7 @@ class Component extends DCLogic {
     /* 진동수를 처음으로 수로 다루는 자리 — 여덟 음의 헤르츠와 도에 대한 비를 함께 보인다.
        앞 단계까지는 귀와 눈(물결)으로만 판단하게 하고, 여기에서 수를 얹는다(지침 4.1). */
     st.push({ k:'hz', p:'unit',
-      say:'1초 동안 떨리는 수를 진동수라고 해요. 단위는 헤르츠예요. 각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요. 11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요. 궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.',
+      say:'진동수는 1초 동안 떨리는 횟수라고 했지요? 각 음의 진동수를 도를 기준으로 나타내고 비교해 봤어요. 11이 공약수여서 모든 음의 진동수를 11을 기준으로 나눌 수 있어요. 궁금하면 11헤르츠로 나누어 보기를 눌러 보세요.',
       hi:'📊 ▶로 도와 함께 들어 보며 칸과 비를 비교해 보세요' });
     st.push({ k:'table',
       say:'진동수의 비로 음정 표를 만들었어요! 분류 시작을 눌러 음악에서는 어떻게 나누는지 보고, 내가 나눈 방과 비교해 보세요.',
@@ -901,9 +917,12 @@ class Component extends DCLogic {
        라 음(440Hz·65cm)을 기준으로, 만들고 싶은 음의 버튼을 누르면
        진동수의 비로 관의 길이가 정해진다. 관 길이 x 진동수가 늘 일정하다는 것을
        일곱 관을 차례로 만들며 손으로 확인한다. */
-    /* 「내 말로 정리」는 앞서 귀로 듣고 손으로 해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
+    /* 2026-09-22 — 줄 길이 계산은 3화면 버튼 문제로 옮기고, 이 자리는 소리에 숨겨진 비밀을 직접 묻고
+       내 말로 답하게 한다. 설계원리 5(내 말로 정리) 자료는 그대로 이 화면의 글에서 나온다. */
     st.push({ k:'reflect', who:'ratio',
-      say:'이번에는 진동수의 비로 줄의 길이를 계산해 볼게요. 도와 높은 도의 진동수의 비는 1:2예요. 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요? 잠깐! 줄의 길이와 진동수는 반대예요! 높은 음일수록 줄은 짧아요! 1:2면 2:1로 계산해야 해요!',
+      say:'소리의 방에서 여러 가지를 해 보았어요. 두 음이 잘 어울리는 소리에는 어떤 비밀이 숨어 있을까요? 내 말로 적어 보세요.',
+      q:'🎼 소리에 숨겨진 비밀은 무엇일까요?\n두 음이 잘 어울리는 까닭을 내 말로 적어 보세요.',
+      ph:'소리에 숨겨진 비밀은 …',
       hi:'' });
     /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
        앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
@@ -1465,7 +1484,7 @@ class Component extends DCLogic {
     if (stage === 'miss') return '잠깐! 아직 고르지 않은 음이 있어요. 도와 함께 들어 보고 골라 주세요.';
     if (stage === 'collect') return '일곱 음을 모두 골랐어요. 내가 고른 대로 음들을 두 방에 모아 볼까요?';
     if (stage === 'rooms') return '내가 고른 대로 음들이 두 방에 모였어요! 잘 어울리는 방의 음을 눌러 물결을 보고, 잘 어울리지 않는 방의 음도 눌러 비교해 보세요. 잘 어울리는 소리는 물결의 꼭대기가 어떻게 겹치나요?';
-    return '맞아요! 꼭대기가 자주 겹치는 두 소리는 발걸음이 딱딱 맞는 사이예요. 그래서 부드럽고 마음이 편안해져요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
+    return '맞아요! 두 소리의 꼭대기가 자주 겹치면 잘 어울리게 들려요. 이제 각 음의 진동수 비를 열어 봤어요. 내 방과 비교해 보세요!';
   }
   /* 도우미 초상 — 56×56 원형 슬롯(캐릭터 공통 규격).
      who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
@@ -2994,7 +3013,21 @@ class Component extends DCLogic {
     }
   }
 
-  /* ── 8) 내 말로 정리 (reflect) ── */
+  /* ── 8) 줄 길이 계산 (reflect · mc) — 보기 셋, 정답은 가운데 ── */
+  LENQ = [
+    { t:'200cm', ok:0, fb:'진동수가 2배가 되면 줄은 반대로 짧아져요. 높은 음일수록 줄이 짧았지요? 1 대 2면 줄은 2 대 1로 계산해요.' },
+    { t:'50cm', ok:1 },
+    { t:'100cm', ok:0, fb:'줄의 길이가 같으면 같은 높이의 소리가 나요. 높은 도는 도보다 줄이 짧아야 해요.' }
+  ];
+  lenPick(ix) {
+    const o = this.LENQ[ix];
+    this.plog('lenq', { pick: o.t, ok: o.ok ? 1 : 0 });
+    this.setState({ lenPick: ix });
+    if (!o.ok) { this.toastRetry(o.fb); return; }
+    this.markSolved();
+    this.toastOk('정답! 50cm', '진동수가 2배가 되면 줄의 길이는 반으로 줄어요. 줄의 길이와 진동수는 반대로 변해요!');
+  }
+  /* ── 내 말로 정리 (reflect, 글로 적기) — 14화면 「소리에 숨겨진 비밀」 ── */
   refGo() {
     const v = (this.state.refText || '').trim();
     if (!v) { this.toastRetry('한 줄이면 충분해요 — 내 말로 적어 봐요!'); return; }
@@ -3999,6 +4032,15 @@ class Component extends DCLogic {
     }
 
     if (st.k === 'reflect') {
+      v.refFree = st.mc ? 0 : 1;
+      v.refQ = st.mc ? '도 : 높은 도 진동수의 비 = 1 : 2\n도 줄이 100cm라면, 높은 도 줄은 몇 cm일까요?' : (st.q || '');
+      v.refPh = st.ph || '';
+      v.refOpts = st.mc ? this.LENQ.map((o, ix) => {
+        const on = S.lenPick === ix, good = on && o.ok;
+        return { t: o.t, tap: () => this.lenPick(ix),
+          bd: good ? this.C.g500 : (on ? this.C.a700 : this.C.a300),
+          bg: good ? this.C.g100 : (on ? this.C.a100 : this.C.n100) };
+      }) : null;
       v.refText = S.refText;
     /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
        이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
@@ -4071,7 +4113,7 @@ class Component extends DCLogic {
     const needsSolve = (['vib','harmx','rooms','table','hz','poly','strlen','harp','reflect','blank'].indexOf(st.k) >= 0) && !this._guest;
     const gateOk = solved && probeOk;
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' && !st.mc ? '제출! →' : '다음 →');
     v.showPrimary = st.k !== 'finish';
     v.primaryBg = (!needsSolve || gateOk) ? this.C.acc : this.C.n400;
     v.footHint = (needsSolve && !gateOk && !v.liveBadge)
@@ -4079,7 +4121,7 @@ class Component extends DCLogic {
     if (st.k === 'table' && !solved && !v.liveBadge) v.footHint = '분류 과정을 한 번 보면 다음으로 갈 수 있어요';
     if (v.footHintOverride && !solved) v.footHint = v.footHintOverride;
     v.primary = () => {
-      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.refGo(); return; }
+      if (st.k === 'reflect' && !st.mc) { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.refGo(); return; }
       /* 마지막 화면에는 처음부터 다시 하는 길을 두지 않는다(네 방 공통).
          showPrimary가 finish에서 거짓이라 이 단추 자체가 뜨지 않으며,
          40분 안에 세 방을 마쳐야 하므로 되돌아가는 길을 만들지 않는다. */
