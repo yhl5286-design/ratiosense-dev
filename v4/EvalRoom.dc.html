@@ -643,7 +643,9 @@ class Component extends DCLogic {
       let blocked = false;
       try {
         const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
-        blocked = ['color','sound','map'].some(r => d.indexOf(r) < 0);
+        /* 2026-09-22: v4에는 지도 방이 없다(9/14 v5 심화판으로 분리). 'map'까지 요구하던 탓에
+           소리 방을 마친 참여자도 「마지막 문으로」를 누르면 허브로 튕겼다(E05 보고). v4의 두 방만 본다. */
+        blocked = ['color','sound'].some(r => d.indexOf(r) < 0);
       } catch(e) { blocked = false; }
       if (blocked) { try { location.replace('index.html'); } catch(e) {} }
     }
