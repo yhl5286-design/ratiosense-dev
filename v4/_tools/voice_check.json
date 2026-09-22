@@ -1,5 +1,5 @@
 {
- "ver": "202609221444",
+ "ver": "202609221446",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -846,8 +846,8 @@
     {
      "step": 26.001,
      "who": "ratio",
-     "text": "여러분의 생각을 적어 보세요.",
-     "key": "19anibj",
+     "text": "알맞은 것을 골라 보세요.",
+     "key": "1m4gjz",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1473,8 +1473,8 @@
     {
      "step": 15.002,
      "who": "ratio",
-     "text": "고른 다음, 왜 그렇게 생각했는지 적어 보세요.",
-     "key": "18ck5vs",
+     "text": "고른 다음, 왜 그렇게 생각했는지도 골라 보세요.",
+     "key": "8p0o0d",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1908,8 +1908,8 @@
     {
      "step": 1,
      "who": "ratio",
-     "text": "여러분이 찾은 비의 비밀들을 모아보니 1.618 황금비가 나왔어요.",
-     "key": "1kjml4p",
+     "text": "여러분이 찾은 비의 비밀들을 모아보니 1 점 6 1 8 황금비가 나왔어요.",
+     "key": "15td753",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true

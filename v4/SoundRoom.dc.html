@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221444"></script>
+<script src="tts/manifest.js?v=202609221446"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -500,7 +500,11 @@ button{font-family:inherit}
           <div style="font-size:52px;line-height:1">📝</div>
           <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55;white-space:pre-line">{{refQ}}</div>
           <sc-if value="{{refFree}}" hint-placeholder-val="{{false}}">
-          <textarea class="input" value="{{refText}}" onChange="{{refInput}}" placeholder="{{refPh}}" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);font-family:inherit"></textarea>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:stretch;width:min(620px,92vw)">
+            <sc-for list="{{refChoices}}" as="o" hint-placeholder-count="3">
+              <button onClick="{{o.tap}}" aria-label="{{o.t}}" style="min-height:58px;font-size:18px;font-weight:800;padding:10px 20px;border-radius:16px;border:3px solid {{o.bd}};background:{{o.bg}};color:var(--color-text);text-align:left;cursor:pointer;font-family:inherit">{{o.t}}</button>
+            </sc-for>
+          </div>
           </sc-if>
           <sc-if value="{{refOpts}}" hint-placeholder-val="{{false}}">
             <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
@@ -920,7 +924,7 @@ class Component extends DCLogic {
        먼저 두 리듬 가운데 더 자주 만나는 쪽을 고르고, 맞히면 「왜 그렇게 생각했나요?」를 글로 적는다.
        힌트 낱말은 주지 않는다. 제출하면 카드 「8」. 설계원리 5 자료는 이 글에서 나온다. */
     st.push({ k:'reflect', who:'ratio', rq:1, card:1,
-      say:'북과 트라이앵글의 리듬을 들어 보았지요? 두 소리가 더 자주 만나는 것은 어느 쪽일까요? 고른 다음, 왜 그렇게 생각했는지 적어 보세요.',
+      say:'북과 트라이앵글의 리듬을 들어 보았지요? 두 소리가 더 자주 만나는 것은 어느 쪽일까요? 고른 다음, 왜 그렇게 생각했는지도 골라 보세요.',
       q:'🥁 두 소리가 더 자주 만나는 것은 어느 쪽일까요?',
       ph:'왜냐하면 …',
       hi:'' });
@@ -3164,12 +3168,32 @@ class Component extends DCLogic {
     this.sfx('ok');
   }
   /* ── 내 말로 정리 (reflect, 글로 적기) — 마지막 화면. rq면 리듬을 먼저 고른다 ── */
+  /* 2026-09-22 밤 — 글쓰기 대신 보기 셋 중 고르기(키보드 입력이 어렵다는 의견). 틀린 보기도 제출할 수 있다 — 채점용.
+     고른 보기 글이 refText가 되어 reflect{text}로 남고, pick·ok가 함께 남는다. */
+  REFC = [
+    { t:'비가 간단할수록 두 소리가 더 자주 만나요', ok:1 },
+    { t:'숫자가 클수록 더 자주 만나요', ok:0 },
+    { t:'북이 더 자주 울리기 때문이에요', ok:0 }
+  ];
+  refChoose(ix) {
+    const o = this.REFC[ix];
+    if (!this._refT0) this._refT0 = Date.now();
+    this._refN = (this._refN || 0) + 1;
+    this.plog('ref_pick', { pick: ix, ok: o.ok ? 1 : 0 });
+    this.sfx('tap');
+    this.setState({ refText: o.t, refPick: ix });
+  }
+  refChoicesV() {
+    return this.REFC.map((o, ix) => { const on = this.state.refPick === ix;
+      return { t: o.t, tap: () => this.refChoose(ix), bd: on ? 'var(--color-accent-700)' : 'var(--color-neutral-300)',
+        bg: on ? 'var(--color-accent-200)' : 'var(--color-neutral-100)' }; });
+  }
   refGo() {
     const stq = this.STEPS[this.state.i] || {};
     if (stq.rq && !(this.RHYQ[this.state.rhyPick] || {}).ok) { this.toastRetry('먼저 위에서 더 자주 만나는 쪽을 골라 보세요!'); return; }
     const v = (this.state.refText || '').trim();
-    if (!v) { this.toastRetry('한 줄이면 충분해요 — 내 말로 적어 봐요!'); return; }
-    this.plog('reflect', { room:'sound', text: v.slice(0,300),
+    if (!v) { this.toastRetry('왜 그렇게 생각했는지 보기 하나를 골라 보세요!'); return; }
+    this.plog('reflect', { room:'sound', text: v.slice(0,300), pick: this.state.refPick, ok: (this.REFC[this.state.refPick] || {}).ok ? 1 : 0,
       ms: this._refT0 ? (Date.now() - this._refT0) : -1,
       edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
@@ -4235,6 +4259,7 @@ class Component extends DCLogic {
           bg: good ? this.C.g100 : (on ? this.C.a100 : this.C.n100) };
       });
       v.refText = S.refText;
+      v.refChoices = this.refChoicesV();
     /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
        이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
       v.refInput = (e) => {

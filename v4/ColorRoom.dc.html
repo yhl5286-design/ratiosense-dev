@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221444"></script>
+<script src="tts/manifest.js?v=202609221446"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -528,7 +528,11 @@ button{font-family:inherit}
               </div>
             </div>
           </sc-if>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="다른 양으로도 같은 색을 만들려면 …" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:stretch;width:min(620px,92vw)">
+            <sc-for list="{{refChoices}}" as="o" hint-placeholder-count="3">
+              <button onClick="{{o.tap}}" aria-label="{{o.t}}" style="min-height:58px;font-size:18px;font-weight:800;padding:10px 20px;border-radius:16px;border:3px solid {{o.bd}};background:{{o.bg}};color:var(--color-text);text-align:left;cursor:pointer;font-family:inherit">{{o.t}}</button>
+            </sc-for>
+          </div>
         </div>
       </sc-if>
 
@@ -1082,7 +1086,7 @@ class Component extends DCLogic {
          2026-09-22 물음을 「무엇을 알아야 할까요?」에서 「어떻게 해야 할까요?」로 — 전문가 7명 중 6명이 「비」 한 낱말로 답했다.
          입력 칸 안내도 빈칸 하나(「(  )을 알아야 해요」)를 채우는 틀이라 한 낱말 답을 불러 바꿨다. */
       { k:'reflect', who:'ratio',
-        say:'두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 어떻게 해야 할까요? 여러분의 생각을 적어 보세요.',
+        say:'두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 어떻게 해야 할까요? 알맞은 것을 골라 보세요.',
         hi:'' }
       /* 2026-09-22 밤 — 마침 화면(「카드 숫자 1과 6을 얻었어요」)을 뺐다. 카드는 문제를 풀 때 팝업으로 받으므로
          되풀이였다. 27화면에서 제출하면 곧바로 소리의 비밀로 간다(사용자 지시). 28 → 27단계 */
@@ -1412,10 +1416,30 @@ class Component extends DCLogic {
   }
 
   /* ── 내 말로 정리 (reflect) — 지침 4.4 단계 끝 언어 성찰 과제 ── */
+  /* 2026-09-22 밤 — 글쓰기 대신 보기 셋 중 고르기(키보드 입력이 어렵다는 의견). 틀린 보기도 제출할 수 있다 — 채점용.
+     고른 보기 글이 refText가 되어 reflect{text}로 남고, pick·ok가 함께 남는다. */
+  REFC = [
+    { t:'두 물감의 양에 0이 아닌 같은 수를 곱하거나 나누어요', ok:1 },
+    { t:'두 물감의 양에 같은 수를 더하거나 빼요', ok:0 },
+    { t:'한 가지 물감만 더 넣어요', ok:0 }
+  ];
+  refChoose(ix) {
+    const o = this.REFC[ix];
+    if (!this._refT0) this._refT0 = Date.now();
+    this._refN = (this._refN || 0) + 1;
+    this.plog('ref_pick', { pick: ix, ok: o.ok ? 1 : 0 });
+    this.sfx('tap');
+    this.setState({ refText: o.t, refPick: ix });
+  }
+  refChoicesV() {
+    return this.REFC.map((o, ix) => { const on = this.state.refPick === ix;
+      return { t: o.t, tap: () => this.refChoose(ix), bd: on ? 'var(--color-accent-700)' : 'var(--color-neutral-300)',
+        bg: on ? 'var(--color-accent-200)' : 'var(--color-neutral-100)' }; });
+  }
   submitReflect() {
     const v = (this.state.refText || '').trim();
-    if (!v) { this.toast('✏️', '한 줄이면 충분해요', '내 말로 적어 봐요!'); return; }
-    this.plog('reflect', { room:'color', text: v.slice(0,300),
+    if (!v) { this.toast('✏️', '하나를 골라 주세요', '보기 가운데 하나를 고르면 제출할 수 있어요.'); return; }
+    this.plog('reflect', { room:'color', text: v.slice(0,300), pick: this.state.refPick, ok: (this.REFC[this.state.refPick] || {}).ok ? 1 : 0,
       ms: this._refT0 ? (Date.now() - this._refT0) : -1,
       edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
@@ -2988,7 +3012,7 @@ class Component extends DCLogic {
         : (((st.k === 'story' || st.k === 'blank') && st.demo === 'recipe') ? this.recipeEl()
         : ((st.k === 'chips' && st.demo === 'cmp') ? this.cmpGridsEl() : null))), isChips: st.k === 'chips', isLab,
       isDemo: st.k === 'demo', isCups: st.k === 'cups', isDots: st.k === 'dots', isGrid: st.k === 'grid',
-      isReflect: st.k === 'reflect', refText: S.refText,
+      isReflect: st.k === 'reflect', refText: S.refText, refChoices: st.k === 'reflect' ? this.refChoicesV() : [],
       /* 정리 단계에 학습자 자신의 조작 기록을 다시 띄운다 — 「비밀」을 허공에서 떠올리지 않고
          자기가 만든 양을 근거로 말하게 하는 발판이다(지침 5.3). */
       refRecall: (st.k === 'reflect' && st.recall) ? (() => {
@@ -3700,7 +3724,7 @@ class Component extends DCLogic {
     const refReady = (st.k === 'reflect') && !!(S.refText || '').trim();
     v.primaryBg = (!needsSolve || gateOk || refReady) ? '#c67139' : '#c0b6a5';
     v.footHint = (st.k === 'reflect')
-      ? (refReady ? '' : '한 줄이라도 적으면 제출할 수 있어요')
+      ? (refReady ? '' : '보기 하나를 고르면 제출할 수 있어요')
       : ((needsSolve && !gateOk && !v.liveBadge)
           ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '');
     v.primary = () => {

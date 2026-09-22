@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221444"></script>
+<script src="tts/manifest.js?v=202609221446"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -178,6 +178,8 @@ button{font-family:inherit}
       <!-- 황금비 막대 — 기준을 늘여도 두 막대의 비는 그대로임을 눈으로 확인한다 -->
       <sc-if value="{{isPhi}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
+          <!-- 조작 안내는 대사에 넣지 않고 그림에만 둔다(2026-09-22 밤, 사용자 문안) -->
+          <div style="font-size:18px;font-weight:800;color:var(--color-accent-700);text-align:center">🎚️ 슬라이더를 옮기면서 1 대 1.618 황금비를 느껴보세요.</div>
 
           <div style="width:min(680px,94%);display:flex;flex-direction:column;gap:12px">
             <div style="display:flex;align-items:center;gap:10px">
@@ -383,7 +385,7 @@ class Component extends DCLogic {
       /* 마지막 자리이므로 말을 아낀다 — 작은 안내 글씨도 두지 않는다(2026-09-13). */
       { k:'finale',
         /* 2026-09-22 밤 — 너무 길어 사용자 문안으로 줄였다 */
-        say:'여러분이 찾은 비의 비밀들을 모아보니 1.618 황금비가 나왔어요. 황금비는 보기에 편하고 아름다운 이상적인 비율을 말하죠. 이렇게 세상 곳곳에 숨겨진 비를 감각으로 느껴보니 어땠나요? 수학을 느껴보는 신기한 경험을 또 해보고 싶지 않나요? 다음에 또 만나요 여러분! 열심히 찾아주어 고마워요!' }
+        say:'여러분이 찾은 비의 비밀들을 모아보니 [[1.618|1 점 6 1 8]] 황금비가 나왔어요. 황금비는 보기에 편하고 아름다운 이상적인 비율을 말하죠. 이렇게 세상 곳곳에 숨겨진 비를 감각으로 느껴보니 어땠나요? 수학을 느껴보는 신기한 경험을 또 해보고 싶지 않나요? 다음에 또 만나요 여러분! 열심히 찾아주어 고마워요!' }
     ];
   }
 
