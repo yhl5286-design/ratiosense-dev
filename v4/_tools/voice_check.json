@@ -1,5 +1,5 @@
 {
- "ver": "202609221437",
+ "ver": "202609221444",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1908,8 +1908,8 @@
     {
      "step": 1,
      "who": "ratio",
-     "text": "황금비는 1 대 1.618 의 비를 말해요.",
-     "key": "1inrckm",
+     "text": "여러분이 찾은 비의 비밀들을 모아보니 1.618 황금비가 나왔어요.",
+     "key": "1kjml4p",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1917,8 +1917,8 @@
     {
      "step": 1.001,
      "who": "ratio",
-     "text": "황금비는 황금사각형, 정오각형, 피보나치 수에서도 찾아볼 수 있답니다.",
-     "key": "1x5d1yk",
+     "text": "황금비는 보기에 편하고 아름다운 이상적인 비율을 말하죠.",
+     "key": "1bo7jbj",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1926,8 +1926,8 @@
     {
      "step": 1.002,
      "who": "ratio",
-     "text": "막대를 움직이면서 황금비를 탐색해보세요.",
-     "key": "2by7o2",
+     "text": "이렇게 세상 곳곳에 숨겨진 비를 감각으로 느껴보니 어땠나요?",
+     "key": "1ugs2yk",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1935,8 +1935,8 @@
     {
      "step": 1.003,
      "who": "ratio",
-     "text": "색깔에도 화음에도 리듬에도 황금비에도 비의 비밀이 숨어 있었죠?",
-     "key": "1miyref",
+     "text": "수학을 느껴보는 신기한 경험을 또 해보고 싶지 않나요?",
+     "key": "qxshjf",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1944,8 +1944,8 @@
     {
      "step": 1.004,
      "who": "ratio",
-     "text": "이렇게 세상 곳곳에 비를 찾아볼 수 있어요.",
-     "key": "gnr4by",
+     "text": "다음에 또 만나요 여러분!",
+     "key": "1lr3c0l",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1953,26 +1953,8 @@
     {
      "step": 1.005,
      "who": "ratio",
-     "text": "저와 함께 하는 비의 비밀 찾기 즐거웠나요?",
-     "key": "crfug1",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.006,
-     "who": "ratio",
-     "text": "수학을 감각으로 느끼는 신기한 경험이 되었길 바랍니다.",
-     "key": "umxssa",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.007,
-     "who": "ratio",
-     "text": "다음에 또 만나요!",
-     "key": "mdfvox",
+     "text": "열심히 찾아주어 고마워요!",
+     "key": "1dhunbf",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
