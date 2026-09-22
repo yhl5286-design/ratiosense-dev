@@ -630,15 +630,6 @@
     {
      "step": 18.002,
      "who": "munsell",
-     "text": "이 그래프는 빨강이 변할 때마다 노랑이 얼만큼 변하는지를 보여 주는 거야.",
-     "key": "1py0q5j",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 18.003,
-     "who": "munsell",
      "text": "첫 줄은 내가 미리 찍어 두었어.",
      "key": "1y8n8tp",
      "cast": "과학자 먼셀",
@@ -646,13 +637,22 @@
      "reg": true
     },
     {
-     "step": 18.004,
+     "step": 18.003,
      "who": "munsell",
      "text": "반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다.",
      "key": "a53xt7",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
+    },
+    {
+     "step": 18.004,
+     "who": "munsell",
+     "text": "점을 다 찍으면 첫 번째 점부터 차례로 눌러 선으로 이어 보렴.",
+     "key": "ntpqbx",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": false
     },
     {
      "step": 19,
