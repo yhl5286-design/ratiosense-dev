@@ -1,5 +1,5 @@
 {
- "ver": "202609221357",
+ "ver": "202609221358",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1585,7 +1585,7 @@
      "key": "1d3byf1",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     }
    ]
   },
