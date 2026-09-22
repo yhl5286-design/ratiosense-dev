@@ -1,5 +1,5 @@
 {
- "ver": "202609200250",
+ "ver": "202609200254",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -814,7 +814,7 @@
      "key": "m3iqhi",
      "cast": "레시오",
      "speaker": "vhyeri",
-     "reg": false
+     "reg": true
     },
     {
      "step": 25.003,
