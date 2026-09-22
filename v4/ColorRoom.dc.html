@@ -1417,6 +1417,8 @@ class Component extends DCLogic {
       ms: this._refT0 ? (Date.now() - this._refT0) : -1,
       edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
+    /* 2026-09-22 — 글을 내면 카드 「6」. 카드가 배지로 날아가는 것을 본 뒤 마침 화면으로 넘어간다 */
+    if (!this._refCarded) { this._refCarded = true; this.awardCard(1); setTimeout(() => this.go(1), 1800); return; }
     this.sfx('ok');
     this.go(1);
   }
@@ -2759,9 +2761,9 @@ class Component extends DCLogic {
           const id = this.STEPS[this.state.i].id;
           this.plog('blank', { id });
           this.markSolved();
-          if (id === 'cells' || id === 'secret') {
-            /* 2026-09-22 — 비율 빈칸(cells)에서 「1」, 비밀 정리(secret)에서 「6」을 준다 */
-            this.awardCard(id === 'cells' ? 0 : 1);
+          if (id === 'secret') {
+            /* 2026-09-22 — 비밀 정리 카드에서 「1」, 마지막 글쓰기를 내면 「6」을 준다(사용자 지시) */
+            this.awardCard(0);
             this.autoNext(3200);
           } else {
             this.confetti();
