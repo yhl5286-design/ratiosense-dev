@@ -649,7 +649,7 @@ class Component extends DCLogic {
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
-    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    try { const raw = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); const ids = {}; raw.forEach(x => { if (x === 'sound') { ids.sound1 = 1; ids.sound2 = 1; } else ids[x] = 1; }); cards = Object.keys(ids).length; } catch(e) {} /* 옛 'sound' 한 장은 sound1·sound2 두 장으로 센다(2026-09-22) */
     this.setState({ audio, cards });
     this._flushT = setInterval(() => this.flush(), 5000);
     this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };

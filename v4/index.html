@@ -189,7 +189,7 @@ function saveUser(code){try{localStorage.setItem('rs3_user',JSON.stringify({code
 function getUser(){try{return (JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){return '';}}
 function uk(b){return b+':'+(getUser()||'anon');}
 function getDone(){try{return JSON.parse(localStorage.getItem(uk('rs3_done'))||'[]');}catch(e){return [];}}
-function getCards(){try{return JSON.parse(localStorage.getItem(uk('rs3_cards'))||'[]');}catch(e){return [];}}
+function getCards(){try{const r=JSON.parse(localStorage.getItem(uk('rs3_cards'))||'[]');const s=new Set();r.forEach(x=>{if(x==='sound'){s.add('sound1');s.add('sound2');}else s.add(x);});return [...s];}catch(e){return [];}} /* 옛 'sound' 한 장은 두 장으로 센다(2026-09-22) */
 
 let code='';
 function paint(){const b=$('#codeShow').children;
