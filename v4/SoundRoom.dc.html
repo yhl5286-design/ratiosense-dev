@@ -1928,7 +1928,9 @@ class Component extends DCLogic {
     for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
     this._nb = buf; return buf;
   }
-  /* 🥁 북 — 낮은 사인의 급격한 피치 드롭(190→54Hz) + 짧은 저역 노이즈(가죽 때리는 소리) */
+  /* 🥁 북 — 낮은 사인의 급격한 피치 드롭(190→54Hz) + 짧은 저역 노이즈(가죽 때리는 소리)
+     2026-09-22: 「북 소리가 안 들린다」는 보고로 소리는 그대로 두고 크기만 키웠다(몸통 0.42→0.78, 때림 0.11→0.2).
+     트라이앵글과 같은 칸에 겹쳐도 1을 넘지 않을 만큼만 올린다. */
   drumAt(c, at) {
     if (!c || this.state.audio === 'mute') return;
     try {
@@ -1937,14 +1939,14 @@ class Component extends DCLogic {
       o.frequency.setValueAtTime(190, at);
       o.frequency.exponentialRampToValueAtTime(54, at + 0.11);
       g.gain.setValueAtTime(0.0001, at);
-      g.gain.linearRampToValueAtTime(0.42, at + 0.006);
+      g.gain.linearRampToValueAtTime(0.78, at + 0.006);
       g.gain.exponentialRampToValueAtTime(0.0008, at + 0.34);
       o.connect(g); g.connect(c.destination);
       o.start(at); o.stop(at + 0.4);
       const s = c.createBufferSource(), ng = c.createGain(), lp = c.createBiquadFilter();
       s.buffer = this.noiseBuf(c);
       lp.type = 'lowpass'; lp.frequency.value = 900;
-      ng.gain.setValueAtTime(0.11, at);
+      ng.gain.setValueAtTime(0.2, at);
       ng.gain.exponentialRampToValueAtTime(0.0006, at + 0.07);
       s.connect(lp); lp.connect(ng); ng.connect(c.destination);
       s.start(at); s.stop(at + 0.12);
