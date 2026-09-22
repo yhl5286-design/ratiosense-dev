@@ -1072,6 +1072,11 @@ class Component extends DCLogic {
       /* 비율로 넘어가기 전, 안내자가 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
       { k:'blank', id:'cells', who:'ratio',
         say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체에 대한 빨강의 비율에서 전체는 기준량이고 빨강이 비교하는 양이에요. 전체 100 가운데 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
+      /* 2026-09-22 글쓰기 앞으로 옮김(빈칸 카드 먼저, 쓰기는 마지막). 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
+         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
+      { k:'blank', id:'secret', who:'ratio',
+        say:'물감과 컵, 점과 칸으로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
+        hi:'📝 색깔의 비밀 정리' },
       /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
          화면에도 학습자가 실험으로 만든 양을 그대로 다시 띄운다(지침 5.3).
          2026-09-22 물음을 「무엇을 알아야 할까요?」에서 「어떻게 해야 할까요?」로 — 전문가 7명 중 6명이 「비」 한 낱말로 답했다.
@@ -1079,11 +1084,6 @@ class Component extends DCLogic {
       { k:'reflect', who:'ratio',
         say:'두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 어떻게 해야 할까요? 여러분의 생각을 적어 보세요.',
         hi:'' },
-      /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
-         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
-      { k:'blank', id:'secret', who:'ratio',
-        say:'여러분이 적은 내용을 잘 보았어요. 물감과 컵, 점과 칸으로 비를 공부해 보았지요. 이제 함께 정리해 봐요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
-        hi:'📝 색깔의 비밀 정리' },
       { k:'finish', who:'ratio',
         say:'색깔의 비밀을 잘 찾아냈어요! 카드 숫자 1과 6을 얻었어요! 잘 기억해두세요!',
         hi:'탐색 완료! 카드 숫자 1 · 6 획득' }
@@ -1701,6 +1701,17 @@ class Component extends DCLogic {
      네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
   /* ix 를 주면 그 자리 하나만, 주지 않으면 남은 자리를 모두 넣는다.
      이미 받은 자리는 다시 넣지 않으므로 마무리 화면에서 한 번 더 불러도 안전하다. */
+  /* 문제를 풀 때마다 비밀 카드를 한 장씩 준다(2026-09-22) — 효과음 · 배지로 날아가는 카드 · 안내창.
+     전에는 방을 마칠 때 두 장을 한꺼번에 주었다. 마침 화면의 awardDigit()은 빠진 카드만 채우는 안전장치로 남긴다. */
+  awardCard(ix) {
+    const D = this.DIGITS[ix]; if (!D) return;
+    this.confetti();
+    if (this._guest) { this.toast('✅', '완성!', '아주 잘했어요.', 'ok'); return; }
+    this.awardDigit(ix);
+    this.sfx('card');
+    this.flyCard();
+    this.toast('🃏', '비밀 카드 획득! 숫자 ' + D.d, '황금비의 비밀 숫자 한 장을 모았어요. 마지막 문을 열 때 쓰게 될 거예요.', 'ok');
+  }
   awardDigit(ix) {
     if (this._guest) return; /* 게스트는 비밀 카드를 모으지 않는다 — 과제를 건너뛰어도 넘어가므로 숫자가 앞뒤 없이 쌓인다(2026-09-14) */
     let got = [];
@@ -1793,8 +1804,11 @@ class Component extends DCLogic {
     try {
       const src = document.querySelector('[data-card-panel]');
       const dst = document.querySelector('[data-cards-badge]');
-      if (!src || !dst || this._guest) return;
-      const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+      if (!dst || this._guest) return;
+      /* 카드 판이 없는 화면(문제를 푼 자리)에서는 화면 한가운데에서 날아간다(2026-09-22) */
+      const a = src ? src.getBoundingClientRect()
+                    : { left: innerWidth / 2 - 52, top: innerHeight / 2 - 71, width: 104, height: 142 };
+      const b = dst.getBoundingClientRect();
       const el = document.createElement('div');
       el.textContent = '🃏';
       el.style.cssText = 'position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:104px;height:142px;border-radius:16px;border:4px solid #f6a06b;background:#f9f4ed;box-shadow:0 16px 40px rgba(32,30,29,.34);font-size:46px';
@@ -2745,10 +2759,9 @@ class Component extends DCLogic {
           const id = this.STEPS[this.state.i].id;
           this.plog('blank', { id });
           this.markSolved();
-          if (id === 'secret') {
-            /* 카드 보상은 마무리 화면에서 한꺼번에 준다 — 여기서는 정리 활동만 한다 */
-            this.confetti();
-            this.toast('✅', '정리 완성!', '색깔의 비밀을 정리했어요. 이제 다음 방으로 이어가요!', 'ok');
+          if (id === 'cells' || id === 'secret') {
+            /* 2026-09-22 — 비율 빈칸(cells)에서 「1」, 비밀 정리(secret)에서 「6」을 준다 */
+            this.awardCard(id === 'cells' ? 0 : 1);
             this.autoNext(3200);
           } else {
             this.confetti();

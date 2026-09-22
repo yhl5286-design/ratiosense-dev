@@ -557,7 +557,7 @@ button{font-family:inherit}
       <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
         <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--space-3);width:100%">
           <div style="flex:none;background:var(--color-neutral-100);border:3.5px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);max-width:720px;width:min(96%,720px);box-shadow:var(--shadow-md)">
-            <div style="font-size:20px;color:var(--color-accent-700);margin-bottom:8px">📝 소리의 비밀 정리</div>
+            <div style="font-size:20px;color:var(--color-accent-700);margin-bottom:8px">{{blankTitle}}</div>
             <sc-for list="{{rows}}" as="r" hint-placeholder-count="1">
               <div style="font-size:19px;font-weight:700;line-height:2.3;text-wrap:pretty">
                 <sc-for list="{{r.tokens}}" as="tk" hint-placeholder-count="3">
@@ -914,6 +914,13 @@ class Component extends DCLogic {
        라 음(440Hz·65cm)을 기준으로, 만들고 싶은 음의 버튼을 누르면
        진동수의 비로 관의 길이가 정해진다. 관 길이 x 진동수가 늘 일정하다는 것을
        일곱 관을 차례로 만들며 손으로 확인한다. */
+    /* 2026-09-22 — 빈칸 문제를 먼저, 글쓰기를 마지막에. 간단한 비를 거꾸로 써서 줄 길이를 구하는 문제를 두 단계로. */
+    st.push({ k:'blank', id:'ratio', who:'ratio',
+      say:'도와 솔은 진동수의 비가 2 대 3이라 잘 어울려요. 이 비를 이용해 잘 어울리는 줄을 만들어 볼 거예요. 먼저 줄 길이의 비를 구해 보세요. 진동수와 줄의 길이가 어떤 관계였는지 떠올려 보세요.',
+      hi:'🃏 숫자 카드를 빈칸에 놓아요' });
+    st.push({ k:'blank', id:'len', who:'ratio',
+      say:'이번에는 도 줄이 90센티미터일 때 솔 줄의 길이를 구해 볼 거예요. 앞에서 구한 줄 길이의 비를 이용해 보세요. 그리고 왜 그렇게 생각했는지 빈칸을 채워 설명해 보세요.',
+      hi:'🃏 답과 까닭을 빈칸에 놓아요' });
     /* 2026-09-22 — 줄 길이 계산은 3화면 버튼 문제로 옮기고, 이 자리는 소리에 숨겨진 비밀을 직접 묻고
        내 말로 답하게 한다. 설계원리 5(내 말로 정리) 자료는 그대로 이 화면의 글에서 나온다. */
     st.push({ k:'reflect', who:'ratio',
@@ -921,10 +928,6 @@ class Component extends DCLogic {
       q:'🎼 소리에 숨겨진 비밀은 무엇일까요?\n두 음이 잘 어울리는 까닭을 내 말로 적어 보세요.',
       ph:'소리에 숨겨진 비밀은 …',
       hi:'' });
-    /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
-       앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
-    st.push({ k:'blank', id:'secret', who:'ratio',
-      say:'소리의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.' });
     st.push({ k:'finish', who:'ratio',
       say:'소리의 비밀을 잘 찾아냈어요! 카드 숫자 1과 8을 얻었어요! 잘 기억해 두세요!',
       hi:'탐색 완료! 카드 숫자 1 · 8 획득' });
@@ -949,9 +952,23 @@ class Component extends DCLogic {
     /* 없어진 마트의 비밀 문제를 소리의 맥락으로 옮긴 두 장.
        '묶음 가격 ÷ 개수 = 1개 값' → '전체 길이 ÷ 등분 수 = 한 칸 길이',
        '어느 가게가 싼가' → '어느 비가 더 잘 어울리는가' */
-    secret: { card:true, title:'🃏 소리의 비밀 카드', rows:[
-        ['두 음의 진동수의 비가 더 ', {a:'간단한'}, ' 비일수록 화음이 더 잘 어울린다.'] ],
-      bank:['간단한','복잡한'] }
+    /* 2026-09-22 — 「간단한/복잡한」 카드 대신, 간단한 비(도 : 솔 = 2 : 3)를 거꾸로 써서 줄 길이를
+       구하는 문제를 두 단계로 나눈다. 가를 풀면 「1」, 나를 풀면 「8」 카드를 준다.
+       fb는 틀린 카드를 놓았을 때의 안내, fbw는 낱말마다 다른 안내다. */
+    ratio: { card:true, title:'🃏 가. 도와 솔의 줄 길이의 비', rows:[
+        ['도와 솔은 진동수의 비가 2 : 3이라 잘 어울려요.'],
+        ['줄 길이의 비   도 : 솔 = ', {a:'3'}, ' : ', {a:'2'}] ],
+      bank:['2','3','1','4'], strict:1,
+      fb:'솔은 도보다 높은 음이라 더 빨리 떨려요. 줄의 길이는 진동수의 비를 거꾸로 했지요?' },
+    len: { card:true, title:'🃏 나. 솔 줄의 길이', rows:[
+        ['도 줄이 90cm일 때, 솔 줄의 길이는 ', {a:'60'}, ' cm예요.'],
+        ['왜 그렇게 생각했나요?'],
+        ['줄 길이의 비가 3 : 2이니까 90cm를 ', {a:'3'}, ' 칸으로 나누면'],
+        ['한 칸은 ', {a:'30'}, ' cm이고, 솔 줄은 그 ', {a:'2'}, ' 칸이기 때문이에요.'] ],
+      bank:['60','135','45','3','30','2'], strict:1,
+      fb:'다른 카드를 놓아 볼까요? 줄 길이의 비 3 : 2를 떠올려 보세요.',
+      fbw:{ '135':'135cm는 진동수의 비 2 : 3을 그대로 쓴 답이에요. 줄 길이의 비는 거꾸로 3 : 2였지요?',
+            '45':'45cm는 한 칸의 길이를 다르게 구한 답이에요. 90cm를 3칸으로 나누면 한 칸은 몇 cm일까요?' } }
   };
   /* 이 방을 마치면 받는 황금비 숫자 두 장 — 1.618 의 셋째·넷째 자리.
      비의 비밀 방은 sound1·sound2 를 기대하므로 두 장을 함께 준다(2026-09-22, 옛 'sound' 한 장은 3/4로 보이던 결함). */
@@ -1636,8 +1653,11 @@ class Component extends DCLogic {
     try {
       const src = document.querySelector('[data-card-panel]');
       const dst = document.querySelector('[data-cards-badge]');
-      if (!src || !dst || this._guest) return;
-      const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
+      if (!dst || this._guest) return;
+      /* 카드 판이 없는 화면(문제를 푼 자리)에서는 화면 한가운데에서 날아간다(2026-09-22) */
+      const a = src ? src.getBoundingClientRect()
+                    : { left: innerWidth / 2 - 52, top: innerHeight / 2 - 71, width: 104, height: 142 };
+      const b = dst.getBoundingClientRect();
       const el = document.createElement('div');
       el.textContent = '🃏';
       el.style.cssText = 'position:fixed;z-index:300;pointer-events:none;display:flex;align-items:center;justify-content:center;width:104px;height:142px;border-radius:16px;border:4px solid var(--color-accent-400);background:var(--color-neutral-100);box-shadow:var(--shadow-lg);font-size:46px';
@@ -3111,14 +3131,28 @@ class Component extends DCLogic {
 
   /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
      네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
-  awardDigit() {
+  /* 문제를 풀 때마다 비밀 카드를 한 장씩 준다(2026-09-22) — 효과음 · 배지로 날아가는 카드 · 안내창.
+     전에는 방을 마칠 때 두 장을 한꺼번에 주었다. 마침 화면의 awardDigit()은 빠진 카드만 채우는 안전장치로 남긴다. */
+  awardCard(ix) {
+    const D = this.DIGITS[ix]; if (!D) return;
+    this.confetti();
+    if (this._guest) { this.toast('✅', '완성!', '아주 잘했어요.', 'ok'); return; }
+    this.awardDigit(ix);
+    this.sfx('card');
+    this.flyCard();
+    this.toast('🃏', '비밀 카드 획득! 숫자 ' + D.d, '황금비의 비밀 숫자 한 장을 모았어요. 마지막 문을 열 때 쓰게 될 거예요.', 'ok');
+  }
+  /* ix를 주면 그 한 장만, 없으면 빠진 카드를 모두 준다(마침 화면의 안전장치) */
+  awardDigit(ix) {
     if (this._guest) return; /* 게스트는 비밀 카드를 모으지 않는다(2026-09-14) */
     let got = [];
     try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
     got = got.filter(x => x !== 'sound');
-    this.DIGITS.forEach(D => { if (got.indexOf(D.id) < 0) got.push(D.id); });
+    const give = (ix == null) ? this.DIGITS : [this.DIGITS[ix]];
+    const added = [];
+    give.forEach(D => { if (D && got.indexOf(D.id) < 0) { got.push(D.id); added.push(D); } });
     try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
-    this.plog('card', { id: 'sound', digit: this.DIGITS.map(D => D.d).join('') });
+    if (added.length) this.plog('card', { id: added.map(d => d.id).join('+'), digit: added.map(d => d.d).join('') });
     this.setState({ cards: got.length });
   }
 
@@ -3155,7 +3189,8 @@ class Component extends DCLogic {
       ? keys.find(k => k.key === this.state.selBlank)
       : keys.find(k => !blanks[k.key]);
     if (!target) return;
-    if (target.a !== word && !this.state.selBlank) {
+    /* strict 빈칸(가·나)은 차례대로 채운다 — 맞는 다른 칸을 찾아 넣어 주면 「2 : 3」을 거꾸로 놓아도 풀린다(2026-09-22) */
+    if (target.a !== word && !this.state.selBlank && !(this.blankDef() || {}).strict) {
       const other = keys.find(k => !blanks[k.key] && k.a === word);
       if (other) target = other;
     }
@@ -3170,17 +3205,18 @@ class Component extends DCLogic {
       this.setState({ blanks, used, selBlank: null });
       if (keys.every(k => blanks[k.key])) {
         setTimeout(() => {
-          /* 구버전 summary 로그: {no, a:[채운 답들]} — 카드 보상은 비의 비밀으로 이동, 학습 정리만 유지 */
-          this.plog('summary', { no: 1, a: keys.map(k => blanks[k.key]) });
+          const id = this.STEPS[this.state.i].id;
+          this.plog('summary', { id, a: keys.map(k => blanks[k.key]) });
           this.markSolved();
-          this.confetti();
-          this.toast('✅', '정리 완성!', '소리의 비밀을 문장으로 정리했어요. 이제 다음 방으로 이어가요!', 'ok');
+          /* 2026-09-22 — 가(ratio)를 풀면 「1」, 나(len)를 풀면 「8」 */
+          this.awardCard(id === 'ratio' ? 0 : 1);
           this.autoNext(3200);
         }, 320);
       }
     } else {
       this.sfx('oops');
-      this.toastRetry('다른 카드를 놓아 볼까요?');
+      const def = this.blankDef() || {};
+      this.toastRetry((def.fbw && def.fbw[word]) || def.fb || '다른 카드를 놓아 볼까요?');
     }
   }
   chipDown(word, placeFn) {
@@ -4133,6 +4169,7 @@ class Component extends DCLogic {
 
     if (st.k === 'blank') {
       const def = this.blankDef();
+      v.blankTitle = def.title || '📝 소리의 비밀 정리';   /* 문제마다 제목(2026-09-22) */
       v.rows = def.rows.map((row, ri) => ({
         tokens: row.map((tk, ti) => {
           if (typeof tk === 'string')
