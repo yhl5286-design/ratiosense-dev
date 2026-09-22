@@ -1,5 +1,5 @@
 {
- "ver": "202609221424",
+ "ver": "202609221425",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -522,8 +522,8 @@
     {
      "step": 14.002,
      "who": "munsell",
-     "text": "부은 차례대로 두 수를 적고 그 사이에 쌍점을 찍는단다.",
-     "key": "o4mm0a",
+     "text": "두 수를 적고 그 사이에 쌍점을 찍는단다.",
+     "key": "4n2p26",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
