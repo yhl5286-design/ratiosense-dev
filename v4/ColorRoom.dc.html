@@ -753,14 +753,15 @@ button{font-family:inherit}
 
       <!-- 조작 직후 발문(지침 5.1) — 조작물은 그대로 둔 채, 그 아래에서 어떻게·왜·기호를 묻는다 -->
       <sc-if value="{{probeRows}}" hint-placeholder-val="{{false}}">
-        <div style="flex:none;width:min(760px,96%);background:#fffdf6;border:3.5px solid #f6a06b;border-radius:22px;padding:13px 18px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;gap:11px">
-          <div style="font-size:17px;color:#8c491a">{{probeTitle}}</div>
+        <!-- 짚어보기 — 2026-09-22 글씨를 키우고 화면 폭을 거의 다 쓴다(수정의견). 세로로도 남는 자리를 채운다 -->
+        <div style="flex:1 1 auto;min-height:0;width:min(1120px,98%);background:#fffdf6;border:3.5px solid #f6a06b;border-radius:24px;padding:20px 30px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;justify-content:space-evenly;gap:18px">
+          <div style="font-size:23px;font-weight:800;color:#8c491a">{{probeTitle}}</div>
           <sc-for list="{{probeRows}}" as="row" hint-placeholder-count="3">
-            <div style="display:flex;flex-direction:column;gap:7px">
-              <div style="font-size:16.5px;font-weight:700;color:#474238;line-height:1.45"><b>{{row.no}}</b> {{row.q}}</div>
-              <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <div style="font-size:23px;font-weight:700;color:#474238;line-height:1.45"><b>{{row.no}}</b> {{row.q}}</div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px">
                 <sc-for list="{{row.opts}}" as="o" hint-placeholder-count="2">
-                  <button onClick="{{o.pick}}" style="min-height:46px;padding:9px 16px;border-radius:14px;border:2.5px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}};font-size:16px;cursor:{{o.cur}};text-align:left;line-height:1.4;max-width:100%">{{o.t}}</button>
+                  <button onClick="{{o.pick}}" style="min-height:62px;padding:14px 24px;border-radius:16px;border:3px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}};font-size:21px;cursor:{{o.cur}};text-align:left;line-height:1.4;max-width:100%">{{o.t}}</button>
                 </sc-for>
               </div>
             </div>
@@ -973,12 +974,12 @@ class Component extends DCLogic {
         hi:'🤔 방금 한 일을 짚어 봐요',
         probe:{ title:'🤔 방금 한 일을 짚어 볼까', rows:[
           { q:'어떻게 해서 1컵과 2컵이 되었나요?', opts:[
-            { t:'정해진 크기의 컵으로 두 비커를 모두 옮겨 담았어요', ok:1 },
-            { t:'빨강을 덜어 내고 노랑을 더 넣었어요', ok:0, fb:'물감은 한 방울도 덜어 내거나 더 넣지 않았단다. 세는 단위만 바꾸었지?' } ] },
+            { t:'빨강을 덜어 내고 노랑을 더 넣었어요', ok:0, fb:'물감은 한 방울도 덜어 내거나 더 넣지 않았단다. 세는 단위만 바꾸었지?' },
+            { t:'정해진 크기의 컵으로 두 비커를 모두 옮겨 담았어요', ok:1 } ] },
           { q:'양은 그대로인데 왜 1과 2라는 새로운 수가 보였을까요?', opts:[
-            { t:'컵 하나를 한 묶음으로 세었기 때문이에요', ok:1 },
             { t:'물감이 줄어들었기 때문이에요', ok:0, fb:'비커의 물감은 컵으로 자리만 옮겼을 뿐 줄어들지 않았단다.' },
-            { t:'컵이 비커보다 작기 때문이에요', ok:0, fb:'컵이 작다는 것만으로는 1과 2가 나오지 않는단다. 무엇을 한 묶음으로 세었는지 다시 볼까?' } ] },
+            { t:'컵이 비커보다 작기 때문이에요', ok:0, fb:'컵이 작다는 것만으로는 1과 2가 나오지 않는단다. 무엇을 한 묶음으로 세었는지 다시 볼까?' },
+            { t:'컵 하나를 한 묶음으로 세었기 때문이에요', ok:1 } ] },
           { q:'손으로 옮긴 이 일을 수로 나타내면 어느 것일까요?', opts:[
             { t:'빨강 1컵과 노랑 2컵', ok:1 },
             { t:'20 + 40 = 60', ok:0, fb:'두 양을 더한 값이란다. 우리가 한 일은 두 양을 비교해 본 것이지?' },
@@ -1020,15 +1021,15 @@ class Component extends DCLogic {
         hi:'점 5칸 — 비를 지켜 찍어 봐요',
         probe:{ title:'🤔 방금 찍은 점을 짚어 볼까', rows:[
           { q:'어떻게 해서 이 주황이 되었나요?', opts:[
-            { t:'빨강 점 2개와 노랑 점 3개를 찍었어요', ok:1 },
-            { t:'아무 색이나 다섯 개를 찍었어요', ok:0, fb:'색을 아무렇게나 찍으면 이 주황이 안 나와. 각 색을 몇 개씩 찍었는지 다시 볼까?' } ] },
+            { t:'아무 색이나 다섯 개를 찍었어요', ok:0, fb:'색을 아무렇게나 찍으면 이 주황이 안 나와. 각 색을 몇 개씩 찍었는지 다시 볼까?' },
+            { t:'빨강 점 2개와 노랑 점 3개를 찍었어요', ok:1 } ] },
           { q:'왜 점의 개수가 색을 정할까요?', opts:[
             { t:'전체에서 각 색이 차지하는 몫이 정해지기 때문이에요', ok:1 },
             { t:'점이 많을수록 색이 진해지기 때문이에요', ok:0, fb:'점을 많이 찍어도 두 색의 비가 같으면 같은 주황이야. 다시 생각해볼까?' } ] },
           { q:'내가 찍은 점을 기호로 쓰면 어느 것일까요?', opts:[
-            { t:'빨강 : 노랑 = 2 : 3', ok:1 },
             { t:'빨강 : 노랑 = 3 : 2', ok:0, fb:'앞에는 빨강 점 수, 뒤에는 노랑 점 수를 놓는 거야. 순서를 다시 볼까?' },
-            { t:'빨강 : 전체 = 2 : 3', ok:0, fb:'전체는 다섯 개야. 지금 비교한 건 빨강과 노랑이지?' } ] } ] } },
+            { t:'빨강 : 전체 = 2 : 3', ok:0, fb:'전체는 다섯 개야. 지금 비교한 건 빨강과 노랑이지?' },
+            { t:'빨강 : 노랑 = 2 : 3', ok:1 } ] } ] } },
       { k:'grid', n:10, who:'signac',
         say:'이번에도 빨강 : 노랑을 2 대 3으로 주황을 만들 거야. 이번에는 열 칸에 색칠해 줘.',
         hi:'빨강 : 노랑 = 2 : 3' },
@@ -1038,12 +1039,12 @@ class Component extends DCLogic {
             { t:'빨강 40칸, 노랑 60칸으로 나누어 칠했어요', ok:1 },
             { t:'한 칸씩 아무 데나 칠했어요', ok:0, fb:'칠한 자리는 달라도 좋아. 그런데 각 색을 몇 칸 칠했는지가 색을 정하지. 다시 세어 볼까?' } ] },
           { q:'칸이 열 칸에서 백 칸으로 늘었는데 왜 같은 주황일까요?', opts:[
-            { t:'칸 수가 늘어도 빨강과 노랑의 비가 2 대 3 그대로이기 때문이에요', ok:1 },
-            { t:'칸이 많아져서 색이 더 진해졌기 때문이에요', ok:0, fb:'칸이 많아져도 색은 그대로였지? 무엇이 변하지 않았는지 다시 볼까?' } ] },
+            { t:'칸이 많아져서 색이 더 진해졌기 때문이에요', ok:0, fb:'칸이 많아져도 색은 그대로였지? 무엇이 변하지 않았는지 다시 볼까?' },
+            { t:'칸 수가 늘어도 빨강과 노랑의 비가 2 대 3 그대로이기 때문이에요', ok:1 } ] },
           { q:'백 칸에 칠한 것을 기호로 쓰면 어느 것일까요?', opts:[
-            { t:'40 : 60 = 2 : 3', ok:1 },
             { t:'40 : 100 = 2 : 3', ok:0, fb:'40과 100은 빨강과 전체를 비교한 거야. 지금은 빨강과 노랑을 비교하고 있지?' },
-            { t:'40 + 60 = 100', ok:0, fb:'두 수를 더한 값이야. 우리가 한 일은 두 양을 비교해 본 것이지?' } ] } ] } },
+            { t:'40 + 60 = 100', ok:0, fb:'두 수를 더한 값이야. 우리가 한 일은 두 양을 비교해 본 것이지?' },
+            { t:'40 : 60 = 2 : 3', ok:1 } ] } ] } },
       /* 개수 대비 — 여기까지는 칸이 늘어나도 비가 그대로여서 개수를 세어도 답이 맞았다.
          칸 수가 많은 쪽이 오히려 비는 작은 사례를 비교하게 하여 개수로 판단하는 습관을
          드러내고, 고른 뒤 두 주황을 섞어 눈으로 확인하게 한다(지침 2.8). */
