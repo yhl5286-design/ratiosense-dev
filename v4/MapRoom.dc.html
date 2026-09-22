@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221358"></script>
+<script src="tts/manifest.js?v=202609221424"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -523,10 +523,13 @@ class Component extends DCLogic {
          콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
          숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
       .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => a + ' 대 ' + b)
       /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
          「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
-      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => a + ' 대 ' + b)
+      /* 2026-09-22 밤 — 비는 숫자 그대로 읽히고(「이 대 삼」 한글로 바꾸면 목소리가 이상해졌다),
+         뒤의 조사와는 띄어 쓴다(「2 대 3 이에요」가 가장 자연스러웠다 — 사용자 청취 비교). */
+      .replace(/(\d) 대 (\d[\d.,]*)(?=[가-힣])/g, '$1 대 $2 ')
       .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
     if (!txt) return;
     /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).

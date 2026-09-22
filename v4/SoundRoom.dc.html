@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221358"></script>
+<script src="tts/manifest.js?v=202609221424"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -139,6 +139,10 @@ button{font-family:inherit}
       </div>
 
       <div class="rs-play">
+      <!-- 비밀 카드 문제 표시(2026-09-22 밤) — 어느 문제가 카드 문제인지, 몇 장 모았는지 보이게 한다 -->
+      <sc-if value="{{cardBanner}}" hint-placeholder-val="{{false}}">
+        <div style="flex:none;align-self:center;font-size:17px;font-weight:800;color:{{cardBnFg}};background:{{cardBnBg}};border:3px solid {{cardBnBd}};border-radius:999px;padding:6px 20px;text-align:center">{{cardBanner}}</div>
+      </sc-if>
 
       <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
@@ -864,7 +868,7 @@ class Component extends DCLogic {
         say:'이번에는 귀 대신 칸으로 구해 봐요. ' + p.n + ' 줄은 ' + p.b + '칸 중 ' + p.a + '칸이에요. 72센티미터를 ' + p.b + '등분하면 한 칸은 몇 센티미터일까요? 한 칸을 먼저 구하고, 그 다음 ' + p.a + '칸의 길이를 구해 보세요.',
         hi:'하프 공방 2부 · 칸으로 계산하기 ' + (i + 1 - this.HP1) + ' / ' + (this.HP.length - this.HP1) });
     });
-    st.push({ k:'blank', id:'dosol', who:'ratio',
+    st.push({ k:'blank', id:'dosol', who:'ratio', card:0,
       say:'이번에는 도와 솔 줄을 만들어 볼 거예요. 도와 솔의 진동수의 비는 2 대 3이에요. 도 줄이 90센티미터일 때 솔 줄은 몇 센티미터일까요? 먼저 줄 길이의 비를 구하고, 그 비로 솔 줄의 길이를 구해 보세요.',
       hi:'🃏 숫자 카드를 위에서부터 차례로 놓아요' });
     st.push({ k:'harmx',
@@ -914,7 +918,7 @@ class Component extends DCLogic {
     /* 2026-09-22 — 마지막 글쓰기는 바로 앞 리듬 화면에서 센 것을 묻는다(사용자 지시).
        먼저 두 리듬 가운데 더 자주 만나는 쪽을 고르고, 맞히면 「왜 그렇게 생각했나요?」를 글로 적는다.
        힌트 낱말은 주지 않는다. 제출하면 카드 「8」. 설계원리 5 자료는 이 글에서 나온다. */
-    st.push({ k:'reflect', who:'ratio', rq:1,
+    st.push({ k:'reflect', who:'ratio', rq:1, card:1,
       say:'북과 트라이앵글의 리듬을 들어 보았지요? 두 소리가 더 자주 만나는 것은 어느 쪽일까요? 고른 다음, 왜 그렇게 생각했는지 적어 보세요.',
       q:'🥁 두 소리가 더 자주 만나는 것은 어느 쪽일까요?',
       ph:'왜냐하면 …',
@@ -1171,10 +1175,13 @@ class Component extends DCLogic {
          콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
          숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
       .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => a + ' 대 ' + b)
       /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
          「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
-      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => a + ' 대 ' + b)
+      /* 2026-09-22 밤 — 비는 숫자 그대로 읽히고(「이 대 삼」 한글로 바꾸면 목소리가 이상해졌다),
+         뒤의 조사와는 띄어 쓴다(「2 대 3 이에요」가 가장 자연스러웠다 — 사용자 청취 비교). */
+      .replace(/(\d) 대 (\d[\d.,]*)(?=[가-힣])/g, '$1 대 $2 ')
       .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
     if (!txt || txt === '[object Object]') return;
     /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
@@ -3109,7 +3116,7 @@ class Component extends DCLogic {
       edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
     /* 2026-09-22 — 마지막 글을 내면 카드 「8」. 카드가 날아가는 것을 본 뒤 마침 화면으로 */
-    if (stq.rq && !this._rhyCarded) { this._rhyCarded = true; this.awardCard(1); setTimeout(() => this.go(1), 1800); return; }
+    if (stq.rq && !this._rhyCarded) { this._rhyCarded = true; this.awardCard(1); setTimeout(() => this.go(1), 3500); return; }
     this.toastOk('제출 완료!', '내 말로 정리한 소리의 비밀이 저장됐어요.');
     /* 2026-09-19: autoNext는 아무것도 하지 않는 빈 함수라 제출해도 그 자리에 머물렀다.
        단추 이름이 계속 「제출! →」이고 누를 때마다 refGo만 다시 불려 14화면에서 갇혔다.
@@ -3143,15 +3150,18 @@ class Component extends DCLogic {
   awardCard(ix) {
     const D = this.DIGITS[ix]; if (!D) return;
     this.confetti();
-    if (this._guest) { this.toast('✅', '완성!', '아주 잘했어요.', 'ok'); return; }
-    this.awardDigit(ix);
     this.sfx('card');
-    this.flyCard();
-    this.toast('🃏', '비밀 카드 획득! 숫자 ' + D.d, '황금비의 비밀 숫자 한 장을 모았어요. 마지막 문을 열 때 쓰게 될 거예요.', 'ok');
+    /* 2026-09-22 밤 — 게스트에게도 「카드를 얻었어요」를 보여 준다. 저장·로그는 하지 않는다 */
+    let n;
+    if (this._guest) { this._gCards = Object.assign({}, this._gCards); this._gCards[D.id] = 1; n = Object.keys(this._gCards).length; }
+    else { n = this.awardDigit(ix); this.flyCard(); }
+    this._cardGot = this._cardGot || {}; this._cardGot[this.state.i] = n;
+    this.toast('🃏', '소리의 비밀 카드 1장을 얻었어요!', '숫자 ' + D.d + ' · 모은 비밀 카드 ' + '🃏'.repeat(n) + '⬜'.repeat(Math.max(0, 4 - n)) + ' ' + n + ' / 4', 'ok');
   }
+
   /* ix를 주면 그 한 장만, 없으면 빠진 카드를 모두 준다(마침 화면의 안전장치) */
   awardDigit(ix) {
-    if (this._guest) return; /* 게스트는 비밀 카드를 모으지 않는다(2026-09-14) */
+    if (this._guest) return 0; /* 게스트는 비밀 카드를 모으지 않는다(2026-09-14) */
     let got = [];
     try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
     got = got.filter(x => x !== 'sound');
@@ -3161,6 +3171,7 @@ class Component extends DCLogic {
     try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
     if (added.length) this.plog('card', { id: added.map(d => d.id).join('+'), digit: added.map(d => d.d).join('') });
     this.setState({ cards: got.length });
+    return got.length;
   }
 
   /* ── 9) 비밀 카드 빈칸 (blank) — ColorRoom 관례 ── */
@@ -3774,6 +3785,12 @@ class Component extends DCLogic {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
       cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
+      cardBanner: st.card == null ? '' : ((this._cardGot || {})[S.i]
+        ? '🃏 소리의 비밀 카드 1장을 얻었어요! · 모은 카드 ' + this._cardGot[S.i] + ' / 4'
+        : '🃏 비밀 카드 문제 — 풀면 소리의 비밀 카드 1장을 얻어요!'),
+      cardBnBg: (this._cardGot || {})[S.i] ? 'var(--color-accent-2-100)' : 'var(--color-accent-100)',
+      cardBnFg: (this._cardGot || {})[S.i] ? 'var(--color-accent-2-700)' : 'var(--color-accent-700)',
+      cardBnBd: (this._cardGot || {})[S.i] ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
       audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),

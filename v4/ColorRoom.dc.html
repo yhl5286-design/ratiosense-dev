@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609221358"></script>
+<script src="tts/manifest.js?v=202609221424"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -133,6 +133,10 @@ button{font-family:inherit}
       </div>
 
       <div class="rs-play">
+      <!-- 비밀 카드 문제 표시(2026-09-22 밤) — 어느 문제가 카드 문제인지, 몇 장 모았는지 보이게 한다 -->
+      <sc-if value="{{cardBanner}}" hint-placeholder-val="{{false}}">
+        <div style="flex:none;align-self:center;font-size:17px;font-weight:800;color:{{cardBnFg}};background:{{cardBnBg}};border:3px solid {{cardBnBd}};border-radius:999px;padding:6px 20px;text-align:center">{{cardBanner}}</div>
+      </sc-if>
 
       <sc-if value="{{storyDemo}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsPop .4s ease;margin:auto 0">{{storyDemo}}</div>
@@ -1001,7 +1005,7 @@ class Component extends DCLogic {
         hi:'📝 두 수 사이에 쌍점을 찍어 적어요' },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
          앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
-      { k:'blank', id:'letter', who:'munsell', demo:'recipe',
+      { k:'blank', id:'letter', who:'munsell', demo:'recipe', card:0,
         say:'이제 빨강과 노랑을 몇 대 몇의 비율로 섞으면 그 색이 만들어지는지 뭉크에게 편지를 써 보렴. 아래 숫자 카드를 누른 채 끌어서 빈칸 위에 놓으면 돼.' },
       /* 찾은 비를 큰 통에 그대로 옮겨 쓰는 자리 — 빨강 50mL는 이미 담겨 있고,
          노랑을 10mL 컵으로 부어 학습자가 1 : 2를 스스로 지킨다. */
@@ -1070,7 +1074,7 @@ class Component extends DCLogic {
                 {t:'둘이 똑같아', ok:0,
                  fb:'㉮는 스무 칸 중 여덟 칸, ㉯는 여섯 칸 중 세 칸이에요. 반이 넘는 쪽은 어느 쪽일까요?'} ] },
       /* 비율로 넘어가기 전, 안내자가 지금까지 한 일을 짚어 주며 한 단계 들어온다. */
-      { k:'blank', id:'cells', who:'ratio',
+      { k:'blank', id:'cells', who:'ratio', card:1,
         say:'시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요? 다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요. 전체에 대한 빨강의 비율에서 전체는 기준량이고 빨강이 비교하는 양이에요. 전체 100 가운데 빨강이 차지하는 비율은 얼마일까요? 알맞은 말을 끌어 빈칸 위에 놓아 주세요.' },
       /* 2026-09-22 비밀 정리 카드(secret)를 뺐다 — 「두 물감의 양이 달라도 비가 같다면 같은 색」이 바로 다음 글쓰기 물음의 답을 먼저 알려 주었다(사용자 지시). */
       /* 「내 말로 정리」는 앞선 조작을 짚어 준 뒤에 묻는다 — 감각 경험을 근거로 비를 말하게 하는 자리다.
@@ -1335,10 +1339,13 @@ class Component extends DCLogic {
          콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
          숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
       .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
-      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => this.SINO(a) + ' 대 ' + b)
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => a + ' 대 ' + b)
       /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
          「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
-      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => this.SINO(a) + ' 대 ' + this.SINO(b))
+      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => a + ' 대 ' + b)
+      /* 2026-09-22 밤 — 비는 숫자 그대로 읽히고(「이 대 삼」 한글로 바꾸면 목소리가 이상해졌다),
+         뒤의 조사와는 띄어 쓴다(「2 대 3 이에요」가 가장 자연스러웠다 — 사용자 청취 비교). */
+      .replace(/(\d) 대 (\d[\d.,]*)(?=[가-힣])/g, '$1 대 $2 ')
       .replace(/mL/g, ' 밀리리터').replace(/\s+/g, ' ').trim();   /* 뒤 빈칸을 두지 않는다 — 「20 밀리리터 씩」처럼 조사가 떨어져 끊겨 읽혔다(2026-09-22) */
     if (!txt || txt === '[object Object]') return;
     /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
@@ -1702,23 +1709,27 @@ class Component extends DCLogic {
   awardCard(ix) {
     const D = this.DIGITS[ix]; if (!D) return;
     this.confetti();
-    if (this._guest) { this.toast('✅', '완성!', '아주 잘했어요.', 'ok'); return; }
-    this.awardDigit(ix);
     this.sfx('card');
-    this.flyCard();
-    this.toast('🃏', '비밀 카드 획득! 숫자 ' + D.d, '황금비의 비밀 숫자 한 장을 모았어요. 마지막 문을 열 때 쓰게 될 거예요.', 'ok');
+    /* 2026-09-22 밤 — 게스트에게도 「카드를 얻었어요」를 보여 준다. 저장·로그는 하지 않는다 */
+    let n;
+    if (this._guest) { this._gCards = Object.assign({}, this._gCards); this._gCards[D.id] = 1; n = Object.keys(this._gCards).length; }
+    else { n = this.awardDigit(ix); this.flyCard(); }
+    this._cardGot = this._cardGot || {}; this._cardGot[this.state.i] = n;
+    this.toast('🃏', '색깔의 비밀 카드 1장을 얻었어요!', '숫자 ' + D.d + ' · 모은 비밀 카드 ' + '🃏'.repeat(n) + '⬜'.repeat(Math.max(0, 4 - n)) + ' ' + n + ' / 4', 'ok');
   }
+
   awardDigit(ix) {
-    if (this._guest) return; /* 게스트는 비밀 카드를 모으지 않는다 — 과제를 건너뛰어도 넘어가므로 숫자가 앞뒤 없이 쌓인다(2026-09-14) */
+    if (this._guest) return 0; /* 게스트는 비밀 카드를 모으지 않는다 — 과제를 건너뛰어도 넘어가므로 숫자가 앞뒤 없이 쌓인다(2026-09-14) */
     let got = [];
     try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
     const give = (ix == null) ? this.DIGITS : [this.DIGITS[ix]];
     const added = [];
     give.forEach(D => { if (D && got.indexOf(D.id) < 0) { got.push(D.id); added.push(D); } });
-    if (!added.length) { this.setState({ cards: got.length }); return; }
+    if (!added.length) { this.setState({ cards: got.length }); return got.length; }
     try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
     this.plog('card', { id: added.map(d => d.id).join('+'), digit: added.map(d => d.d).join('') });
     this.setState({ cards: got.length });
+    return got.length;
   }
 
   /* 자막 다듬기 —
@@ -2853,6 +2864,12 @@ class Component extends DCLogic {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
       cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
+      cardBanner: st.card == null ? '' : ((this._cardGot || {})[S.i]
+        ? '🃏 색깔의 비밀 카드 1장을 얻었어요! · 모은 카드 ' + this._cardGot[S.i] + ' / 4'
+        : '🃏 비밀 카드 문제 — 풀면 색깔의 비밀 카드 1장을 얻어요!'),
+      cardBnBg: (this._cardGot || {})[S.i] ? 'var(--color-accent-2-100)' : 'var(--color-accent-100)',
+      cardBnFg: (this._cardGot || {})[S.i] ? 'var(--color-accent-2-700)' : 'var(--color-accent-700)',
+      cardBnBd: (this._cardGot || {})[S.i] ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
       audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
       audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
       cycleAudio: () => this.cycleAudio(),
