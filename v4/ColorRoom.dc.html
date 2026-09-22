@@ -666,7 +666,6 @@ button{font-family:inherit}
             </sc-if>
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
-            <div style="font-size:16px;font-weight:800;color:#645c50">📈 그래프</div>
             <div style="position:relative;width:{{plotOW}}px;height:{{plotOH}}px">
               <sc-for list="{{plotYTicks}}" as="t" hint-placeholder-count="4">
                 <button onClick="{{t.pick}}" aria-label="노랑 눈금" style="position:absolute;left:0;top:{{t.top}};width:46px;height:30px;padding:0 6px 0 0;text-align:right;font-size:18px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};opacity:{{t.op}};pointer-events:{{t.pe}};box-shadow:{{t.sh}};animation:{{t.anim}};border:none;border-radius:8px;cursor:pointer;transform:translateY(-50%)">{{t.t}}</button>
@@ -674,7 +673,7 @@ button{font-family:inherit}
               <sc-for list="{{plotXTicks}}" as="t" hint-placeholder-count="4">
                 <button onClick="{{t.pick}}" aria-label="빨강 눈금" style="position:absolute;left:{{t.left}};bottom:0;min-width:34px;height:30px;padding:0 5px;font-size:18px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};opacity:{{t.op}};pointer-events:{{t.pe}};box-shadow:{{t.sh}};animation:{{t.anim}};border:none;border-radius:8px;cursor:pointer;transform:translateX(-50%)">{{t.t}}</button>
               </sc-for>
-              <div style="position:absolute;left:{{plotLeft}}px;top:0;width:{{plotW}}px;height:{{plotH}}px;background:#fffdf6;border-left:5px solid {{cYel}};border-bottom:5px solid {{cRed}};background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCell}}px)">
+              <div style="position:absolute;left:{{plotGridLeft}}px;top:{{plotTop}}px;width:{{plotW}}px;height:{{plotH}}px;box-sizing:content-box;background:#fffdf6;border-left:5px solid {{cYel}};border-bottom:5px solid {{cRed}};background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCellY}}px)">
                 <sc-if value="{{gxOn}}" hint-placeholder-val="{{false}}">
                   <div style="position:absolute;left:{{gxLeft}};top:0;bottom:0;width:3px;margin-left:-1px;background:{{cRed}};opacity:.55;animation:rsBlend .3s ease"></div>
                 </sc-if>
@@ -2453,10 +2452,11 @@ class Component extends DCLogic {
        두 축 모두 10mL마다 눈금을 빠짐없이 적는다. 수첩의 네 쌍(20:40 … 50:100)이 모두 칸 위에 놓이고,
        어느 칸이든 두 눈금을 눌러 찍을 수 있어야 한다(2026-09-14). */
     if (!st.pairs) {
-      /* 2026-09-22 — 표는 10 : 20~50 : 100, 예측은 표 밖의 60 : 120. 칸이 늘어 한 칸을 28px로 줄인다 — 크롬북(768px)에서 세로로 넘치지 않게. */
+      /* 2026-09-22 — 표는 10 : 20~50 : 100, 예측은 표 밖의 60 : 120. 세로 13줄이 크롬북(768px)에 들어가도록 칸 높이는 40px,
+         그래프가 작아 보이지 않게 칸 너비는 72px로 넓힌다(2026-09-22 사용자 지시). 두 축 모두 한 칸 = 10mL. */
       const u = 10, k = 2, rmax = 60, ymax = 120;
       return { u, k, rmax, ymax, pred: [rmax, ymax],
-               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 28 };
+               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 72, cellY: 40 };
     }
     const rows = this.tblAns(), mr = rows[rows.length - 1][0];
     /* 단계가 한 칸의 양·배수·예측할 자리를 정한다 — 시냐크의 2 : 3 격자가 그렇다. */
@@ -3384,12 +3384,18 @@ class Component extends DCLogic {
       }
 
       if (st.k === 'plot') {
-        const g = this.plotGeo(), PAD_L = 54, PAD_B = 38;
+        const g = this.plotGeo(), PAD_L = 54, PAD_B = 38, PAD_T = 18, PAD_R = 26;
+        const CX = g.cell, CY = g.cellY || g.cell; /* 칸 너비 · 칸 높이 */
         const done = this.plotDone();
-        v.plotW = (g.cx - 1) * g.cell; v.plotH = (g.cy - 1) * g.cell;
-        v.plotOW = v.plotW + PAD_L; v.plotOH = v.plotH + PAD_B;
+        v.plotW = (g.cx - 1) * CX; v.plotH = (g.cy - 1) * CY;
+        /* 위 · 오른쪽 여백 — 끝 눈금(120 · 60)과 그 자리의 점이 잘리지 않게 */
+        v.plotOW = v.plotW + PAD_L + PAD_R; v.plotOH = v.plotH + PAD_B + PAD_T;
+        v.plotTop = PAD_T;
         v.plotLeft = PAD_L;
-        v.plotCell = g.cell;
+        /* 축은 격자의 테두리로 그린다. 테두리를 칸 바깥에 두고(content-box) 그만큼 왼쪽으로 당겨야
+           눈금 숫자 · 격자선 · 점 · 선이 한 좌표에 놓인다 — border-box로 두면 5px씩 어긋났다(2026-09-22). */
+        v.plotGridLeft = PAD_L - 5;
+        v.plotCell = CX; v.plotCellY = CY;
         const curRow = this.plotCur();
         v.plotRows = ans.map((a, ri) => {
           const put = S.plot.some(p => p.ok && p.r === a[0] && p.y === a[1]);
@@ -3410,7 +3416,7 @@ class Component extends DCLogic {
           const put = S.plot.find(p => p.r === r && p.y === y);
           const cross = (S.plotGx === r && S.plotGy === y);
           hits.push({
-            left: (ix * g.cell - HOF) + 'px', top: ((g.cy - 1 - iy) * g.cell - HOF) + 'px',
+            left: (ix * CX - HOF) + 'px', top: ((g.cy - 1 - iy) * CY - HOF) + 'px',
             sz: HIT + 'px',
             bg: put ? col([r, y]) : (cross ? 'rgba(198,113,57,.22)' : 'transparent'),
             bd: put ? (put.ok ? (put.demo ? '3px dashed #8c491a' : '3px solid #201e1d') : '3px dashed #a19786')
@@ -3447,7 +3453,7 @@ class Component extends DCLogic {
         const xt = [], yt = [];
         for (let ix = 0; ix < g.cx; ix += skipX) {
           const r = ix * g.u;
-          xt.push({ t: String(r), left: (PAD_L + ix * g.cell) + 'px',
+          xt.push({ t: String(r), left: (PAD_L + ix * CX) + 'px',
                     /* 숫자는 검정이라야 잘 보인다 — 축이 무슨 색인지는 축 선과 이름이 알려 준다.
                        고른 눈금만 축 색 바탕에 흰 글씨로 뒤집는다. */
                     fg: S.plotGx === r ? '#ffffff' : '#201e1d',
@@ -3457,7 +3463,7 @@ class Component extends DCLogic {
         }
         for (let iy = 0; iy < g.cy; iy += skipY) {
           const y = iy * g.u;
-          yt.push({ t: String(y), top: ((g.cy - 1 - iy) * g.cell) + 'px',
+          yt.push({ t: String(y), top: (PAD_T + (g.cy - 1 - iy) * CY) + 'px',
                     fg: S.plotGy === y ? '#ffffff' : '#201e1d',
                     bg: S.plotGy === y ? this.C_YEL : (yOpen(y) ? '#fff8dc' : 'transparent'),
                     ...tickOn(yOpen(y), S.plotGy === y, this.C_YEL),
@@ -3467,11 +3473,11 @@ class Component extends DCLogic {
         /* 안내선 — 학습자가 고른 눈금에만 선다 */
         v.gxOn = S.plotGx != null ? 1 : 0;
         v.gyOn = S.plotGy != null ? 1 : 0;
-        v.gxLeft = ((S.plotGx || 0) / g.u * g.cell) + 'px';
-        v.gyTop = (v.plotH - (S.plotGy || 0) / g.u * g.cell) + 'px';
+        v.gxLeft = ((S.plotGx || 0) / g.u * CX) + 'px';
+        v.gyTop = (v.plotH - (S.plotGy || 0) / g.u * CY) + 'px';
         v.plotLineBtn = 0; /* 2026-09-22 — 「선으로 이어 보기」 단추 대신 학습자가 점을 차례로 잇는다 */
         /* 이은 선분 — 앞 점에서 다음 점까지. 다 이은 뒤에는 끝 점에서 격자 끝까지 점선으로 늘인다 */
-        const px = r => r / g.u * g.cell, py = y => v.plotH - y / g.u * g.cell;
+        const px = r => r / g.u * CX, py = y => v.plotH - y / g.u * CY;
         const seg = (a, b, dash) => {
           const dx = px(b[0]) - px(a[0]), dy = py(b[1]) - py(a[1]);
           return { left: px(a[0]) + 'px', top: (py(a[1]) - 2) + 'px',
