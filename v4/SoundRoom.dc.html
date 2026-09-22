@@ -3205,7 +3205,11 @@ class Component extends DCLogic {
       let dd = ''; const span = W - padL - padR;
       for (let px = 0; px <= span; px += 2) {
         const x = padL + px, tt = px / bandW;
-        const y = midY - amp * Math.sin(2 * Math.PI * cyc * tt - ph * cyc);
+        /* 2026-09-22: 흐르지 않게 하고 cos로 그린다. 예전에는 두 물결이 5.2초마다 함께
+           밀려 다시 만나는 자리가 띠 경계와 따로 움직였고(위상 0일 때만 잠깐 맞음),
+           sin이라 출발점이 마루가 아니었다. 이제 띠 왼쪽 끝에서 마루끼리 출발해
+           오른쪽 끝에서 다시 마루끼리 만난다(수정의견 — 골·마루를 맞춰 보이기). */
+        const y = midY - amp * Math.cos(2 * Math.PI * cyc * tt);
         dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
       }
       return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:' + wd + ';stroke-linecap:round"/>';
@@ -3213,6 +3217,10 @@ class Component extends DCLogic {
     P.push('<g opacity="0.3">' + wp(nb, this.C.g600, 2.5) + wp(nr, this.C.a600, 2.5) + '</g>');
     P.push('<clipPath id="hxclip"><rect x="' + bx0 + '" y="0" width="' + bandW + '" height="300"/></clipPath>');
     P.push('<g clip-path="url(#hxclip)">' + wp(nb, this.C.g600, 4) + wp(nr, this.C.a600, 4) + '</g>');
+    /* 두 마루가 만나는 자리 — 띠의 양 끝. 점으로 짚어 「여기서 다시 만난다」를 눈에 보이게 한다 */
+    const cy0 = midY - amp;
+    [bx0, bx1].forEach(x => P.push('<circle cx="' + x + '" cy="' + cy0 + '" r="8" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>'));
+    P.push('<text x="' + bx1 + '" y="' + (cy0 - 14) + '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:' + this.C.a700 + '">마루가 다시 만나요</text>');
     return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(360px,42vw)' : 'min(470px,54vw)', display:'block' }, P.join(''), 'hx');
   }
   /* 방 단계의 정지 이중 파형 — waveHTML 이식 */
@@ -3226,7 +3234,7 @@ class Component extends DCLogic {
       let dd = ''; const span = W - padL - padR;
       for (let px = 0; px <= span; px += 2) {
         const x = padL + px, tt = px / bandW;
-        const y = midY - amp * Math.sin(2 * Math.PI * cyc * tt);
+        const y = midY - amp * Math.cos(2 * Math.PI * cyc * tt);   /* 마루에서 출발(3화면과 같게) */
         dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
       }
       return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:2.5;stroke-linecap:round"/>';
