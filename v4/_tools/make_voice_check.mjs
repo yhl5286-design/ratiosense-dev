@@ -85,6 +85,11 @@ function lines(name, done) {
         key: ttsKey('ratio|' + p) }));
     });
   }
+  /* 방이 VOICE_EXTRA([[인물, 대사], …])로 알려 주는 실행 중 대사(2026-09-22) */
+  (room.VOICE_EXTRA || []).forEach(([who, txt], j) => {
+    SENT(norm(txt, name)).forEach((p, k) => out.push({
+      step: 99 + j * 0.01 + k * 0.001, who, text: p, key: ttsKey(who + '|' + p) }));
+  });
   /* STEPS 밖에서 부르는 대사 — 색깔 방의 컵 세기 물음 */
   if (name === 'ColorRoom' && room.CUP_ASK) {
     SENT(norm(room.CUP_ASK, name)).forEach((p, j) => out.push({

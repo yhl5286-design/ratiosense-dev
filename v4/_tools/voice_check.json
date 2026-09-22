@@ -1,5 +1,5 @@
 {
- "ver": "202609220458",
+ "ver": "202609221206",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1014,8 +1014,8 @@
     {
      "step": 3.003,
      "who": "ratio",
-     "text": "도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요?",
-     "key": "q9frmj",
+     "text": "높은 도는 도보다 두 배 빨리 떨려요.",
+     "key": "6g4hvg",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1023,8 +1023,8 @@
     {
      "step": 3.004,
      "who": "ratio",
-     "text": "아래에서 골라 보세요.",
-     "key": "16dlccq",
+     "text": "두 배 빨리 떨리려면 줄은 어떻게 되어야 할까요?",
+     "key": "1wqlt4o",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1520,6 +1520,42 @@
      "who": "ratio",
      "text": "잘 기억해 두세요!",
      "key": "1xh287g",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 99,
+     "who": "ratio",
+     "text": "맞아요!",
+     "key": "14yt8if",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 99.001,
+     "who": "ratio",
+     "text": "진동수와 줄의 길이는 반대예요.",
+     "key": "1xnfcib",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 99.002,
+     "who": "ratio",
+     "text": "진동수의 비가 일 대 이면 줄 길이의 비는 이 대 일이에요.",
+     "key": "1t2f4rv",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 99.003,
+     "who": "ratio",
+     "text": "그럼 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요?",
+     "key": "160rlr",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true

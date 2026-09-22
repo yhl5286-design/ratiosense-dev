@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609220458"></script>
+<script src="tts/manifest.js?v=202609221206"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -517,7 +517,7 @@ button{font-family:inherit}
           <sc-if value="{{refOpts}}" hint-placeholder-val="{{false}}">
             <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
               <sc-for list="{{refOpts}}" as="o" hint-placeholder-count="3">
-                <button onClick="{{o.tap}}" aria-label="{{o.t}}" class="rs-chip" style="min-width:130px;min-height:64px;font-size:24px;font-weight:800;padding:12px 26px;border:3px solid {{o.bd}};background:{{o.bg}}">{{o.t}}</button>
+                <button onClick="{{o.tap}}" aria-label="{{o.t}}" class="rs-chip" style="min-width:130px;min-height:64px;font-size:{{o.fs}};font-weight:800;padding:12px 26px;border:3px solid {{o.bd}};background:{{o.bg}}">{{o.t}}</button>
               </sc-for>
             </div>
           </sc-if>
@@ -814,7 +814,7 @@ class Component extends DCLogic {
     clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
     harpL:60, harpTuned:false, harpGoalHeard:false, tuneMsg:'슬라이더를 움직이면 소리가 따라와요 — 아래 음 표시를 보고 찾을 음의 자리를 가늠해 보세요!',
     hb:{}, hbUsed:{}, harpBank:[], selBlank:null, hDone:0, helpOpen:false,
-    refText:'', lenPick:-1, bridgePick:null, probe:{},
+    refText:'', lenStage:1, len1Pick:-1, lenPick:-1, bridgePick:null, probe:{},
     blanks:{}, used:{}
   };
 
@@ -838,10 +838,13 @@ class Component extends DCLogic {
     /* 2026-09-22 — 줄 길이 계산을 줄 길이 화면 바로 뒤(4화면)로 옮기고, 글로 적던 것을 버튼 셋으로 바꿨다(수정의견: 너무 어렵다).
        줄을 직접 바꿔 본 3화면에서 곧바로 이어진다(사용자 지시로 3·4화면 순서를 바꿈).
        「반대로 계산한다」는 힌트는 답을 먼저 알려 주므로 대사에서 빼고 틀렸을 때의 안내로 옮겼다.
-       진동수라는 말이 이 방에서 처음 나오는 자리라 여기서 정의한다(8화면 진동수 화면은 되짚기만 한다). */
+       진동수라는 말이 이 방에서 처음 나오는 자리라 여기서 정의한다(8화면 진동수 화면은 되짚기만 한다).
+       2026-09-22 두 단계로 — 전문가 7명 중 3명이 200cm(진동수 비를 길이에 그대로)로 답했다.
+       1단계에서 「2배 빨리 떨리려면 줄은 절반」을 앞 화면의 떨림에 기대어 고르게 하고, 뒤집힌 두 비를 보여 준 뒤
+       2단계에서 길이를 계산한다. 로그는 1단계 lenq1, 2단계 lenq. */
     st.push({ k:'reflect', who:'ratio', mc:1,
-      say:'앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요? 1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 도와 높은 도의 진동수의 비는 1 대 2예요. 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요? 아래에서 골라 보세요.',
-      hi:'👇 알맞은 길이를 골라요' });
+      say:'앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요? 1초 동안 줄이 떨리는 횟수를 진동수라고 해요. 도와 높은 도의 진동수의 비는 1 대 2예요. 높은 도는 도보다 [[2배|두 배]] 빨리 떨려요. [[2배|두 배]] 빨리 떨리려면 줄은 어떻게 되어야 할까요?',
+      hi:'👇 먼저 줄이 어떻게 되어야 하는지 골라요' });
     /* ── 하프 공방 — 줄의 길이로 비를 다룬다 (2026-09-22: 줄 길이 화면 바로 뒤, 4화면으로 옮김) ──
        ① 살펴보기: 줄을 길게·짧게 하며 소리가 어떻게 달라지는지 귀로 겪는다.
        ② 귀로 찾기(1부): 비가 복잡해 셈으로 다가가기 어려운 음을 소리로 맞춘다.
@@ -1515,6 +1518,7 @@ class Component extends DCLogic {
     if (s.k === 'story') this.speak(s.lines.join(' '), who);
     else if (s.k === 'rooms') this.speak(this.roomsSay(this.state.roomStage), who);
     else if (s.k === 'table' && i === this.state.i && this.state.clsStage === 'done') this.speak(this.CLS_SAY.done, who);
+    else if (s.k === 'reflect' && s.mc && i === this.state.i && this.state.lenStage === 2) this.speak(this.LEN2_SAY, who);
     else this.speak(s.say, who);
   }
 
@@ -3017,9 +3021,26 @@ class Component extends DCLogic {
     }
   }
 
-  /* ── 8) 줄 길이 계산 (reflect · mc) — 보기 셋, 정답은 가운데 ── */
+  /* ── 8) 줄 길이 계산 (reflect · mc) — 1단계(줄은 어떻게?) → 2단계(몇 cm?), 보기 셋, 정답은 가운데 ── */
+  LENQ1 = [
+    { t:'2배 길어져요', ok:0, fb:'줄이 길수록 느리게 떨리고 소리가 낮아졌지요? 높은 도는 더 빨리 떨려야 해요.' },
+    { t:'절반으로 짧아져요', ok:1 },
+    { t:'그대로예요', ok:0, fb:'줄의 길이가 같으면 같은 높이의 소리가 나요. 높은 도는 더 빨리 떨려야 해요.' }
+  ];
+  LEN2_SAY = '맞아요! 진동수와 줄의 길이는 반대예요. 진동수의 비가 1 대 2면 줄 길이의 비는 2 대 1이에요. 그럼 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요?';
+  /* STEPS 밖에서 읽는 대사 — make_voice_check가 이 목록도 음성 목록에 넣는다 */
+  get VOICE_EXTRA() { return [['ratio', this.LEN2_SAY]]; }
+  len1Pick(ix) {
+    const o = this.LENQ1[ix];
+    this.plog('lenq1', { pick: o.t, ok: o.ok ? 1 : 0 });
+    this.setState({ len1Pick: ix });
+    if (!o.ok) { this.toastRetry(o.fb); return; }
+    this.sfx('ok');
+    this.setState({ lenStage: 2, lenPick: -1 });
+    this.speak(this.LEN2_SAY, 'ratio');
+  }
   LENQ = [
-    { t:'200cm', ok:0, fb:'진동수가 2배가 되면 줄은 반대로 짧아져요. 높은 음일수록 줄이 짧았지요? 1 대 2면 줄은 2 대 1로 계산해요.' },
+    { t:'200cm', ok:0, fb:'줄 길이의 비는 2 대 1이었지요? 높은 도 줄은 도 줄보다 짧아야 해요. 100cm의 절반을 생각해 볼까요?' },
     { t:'50cm', ok:1 },
     { t:'100cm', ok:0, fb:'줄의 길이가 같으면 같은 높이의 소리가 나요. 높은 도는 도보다 줄이 짧아야 해요.' }
   ];
@@ -3698,6 +3719,7 @@ class Component extends DCLogic {
             /* 5화면 — 분류가 진행되면 자막도 그 단계의 말로 바꾼다. 「간단한 비」의 기준을 말하는 자리라
                소리로만 흘려보내지 않고 글로도 남긴다(2026-09-22). */
             : (st.k === 'table' && (S.clsStage === 'p1' || S.clsStage === 'done')) ? this.CLS_SAY[S.clsStage]
+            : (st.k === 'reflect' && st.mc && S.lenStage === 2) ? this.LEN2_SAY
             : st.say),
       /* 자막 아래 안내 띠는 쓰지 않는다 — 화면에는 레시오의 말만 둔다 */
       coachHi: '',
@@ -4039,14 +4061,17 @@ class Component extends DCLogic {
 
     if (st.k === 'reflect') {
       v.refFree = st.mc ? 0 : 1;
-      v.refQ = st.mc ? '도 : 높은 도 진동수의 비 = 1 : 2\n도 줄이 100cm라면, 높은 도 줄은 몇 cm일까요?' : (st.q || '');
+      const len2 = st.mc && S.lenStage === 2;
+      v.refQ = !st.mc ? (st.q || '')
+        : (len2 ? '진동수의 비  도 : 높은 도 = 1 : 2\n↕ 반대로!\n줄 길이의 비  도 : 높은 도 = 2 : 1\n\n도 줄이 100cm라면, 높은 도 줄은 몇 cm일까요?'
+                : '도 : 높은 도 진동수의 비 = 1 : 2\n높은 도는 도보다 2배 빨리 떨려요.\n2배 빨리 떨리려면 줄은 어떻게 되어야 할까요?');
       v.refPh = st.ph || '';
-      v.refOpts = st.mc ? this.LENQ.map((o, ix) => {
-        const on = S.lenPick === ix, good = on && o.ok;
-        return { t: o.t, tap: () => this.lenPick(ix),
+      v.refOpts = !st.mc ? null : (len2 ? this.LENQ : this.LENQ1).map((o, ix) => {
+        const on = (len2 ? S.lenPick : S.len1Pick) === ix, good = on && o.ok;
+        return { t: o.t, tap: () => (len2 ? this.lenPick(ix) : this.len1Pick(ix)), fs: len2 ? '24px' : '20px',
           bd: good ? this.C.g500 : (on ? this.C.a700 : this.C.a300),
           bg: good ? this.C.g100 : (on ? this.C.a100 : this.C.n100) };
-      }) : null;
+      });
       v.refText = S.refText;
     /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
        이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
