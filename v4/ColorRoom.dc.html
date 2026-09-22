@@ -215,6 +215,33 @@ button{font-family:inherit}
 
           <div class="rs-labrow" style="flex:1;min-height:0;display:flex;gap:12px;justify-content:center;align-items:stretch;flex-wrap:nowrap;width:100%">
 
+          <!-- 왼쪽 세로 칸 — 수첩과 실험 기록(2026-09-22 수정의견).
+               아래 띠로 두면 안내창·단추와 겹쳐 가려졌다. 실험 조작물 옆에 세로로 쌓는다 -->
+          <sc-if value="{{labSide}}" hint-placeholder-val="{{false}}">
+          <div style="flex:none;width:196px;min-height:0;display:flex;flex-direction:column;gap:8px;overflow-y:auto">
+            <sc-if value="{{noteRows}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-direction:column;gap:6px;background:#fffdf6;border:3px solid #f6a06b;border-radius:18px;padding:9px 10px;box-shadow:0 3px 10px rgba(246,160,107,.18)">
+                <div style="font-size:13px;font-weight:800;color:#8c491a">📓 나의 수첩</div>
+                <sc-for list="{{noteRows}}" as="r" hint-placeholder-count="0">
+                  <div style="display:flex;align-items:center;gap:6px;background:#f9f4ed;border:2.5px solid #dcd3c4;border-radius:12px;padding:5px 8px">
+                    <span style="font-size:12px;font-weight:800;color:#645c50;flex:none">{{r.no}}</span>
+                    <span style="width:18px;height:18px;border-radius:999px;border:2px solid #201e1d;background:{{r.color}};display:inline-block;flex:none"></span>
+                    <span style="font-size:13.5px;font-weight:800;color:#8c491a;line-height:1.25">{{r.t}}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{labLog}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-direction:column;gap:5px;background:#f9f4ed;border:2px solid #dcd3c4;border-radius:18px;padding:8px 10px">
+                <div style="font-size:12px;font-weight:800;color:#645c50">📓 실험 기록</div>
+                <sc-for list="{{labLog}}" as="l" hint-placeholder-count="0">
+                  <div style="font-size:12.5px;font-weight:800;padding:4px 8px;border-radius:10px;background:{{l.bg}};color:{{l.fg}};border:2px solid {{l.bd}};line-height:1.25">{{l.t}}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          </sc-if>
+
           <!-- 컵으로 탐색하는 실험 — 10mL 컵을 한 개씩 부어 몇 컵 대 몇 컵인지를 먼저 본다 -->
           <sc-if value="{{isCupLab}}" hint-placeholder-val="{{false}}">
           <div style="display:flex;flex-direction:column;gap:10px;justify-content:center;align-items:stretch;min-height:0;flex:1;max-width:430px">
@@ -322,29 +349,6 @@ button{font-family:inherit}
           </div>
           </div>
 
-          <!-- 수첩 — 기록하기로 확인된 양이 차곡차곡 쌓여 실험 내내 남는다 -->
-          <sc-if value="{{noteRows}}" hint-placeholder-val="{{false}}">
-            <div style="flex:none;display:flex;gap:8px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;background:#fffdf6;border:3px solid #f6a06b;border-radius:20px;padding:8px 13px;box-shadow:0 3px 10px rgba(246,160,107,.18)">
-              <div style="font-size:12px;font-weight:800;color:#8c491a;flex:none;line-height:1.25">📓 나의<br>수첩</div>
-              <sc-for list="{{noteRows}}" as="r" hint-placeholder-count="0">
-                <div style="display:flex;align-items:center;gap:7px;background:#f9f4ed;border:2.5px solid #dcd3c4;border-radius:999px;padding:5px 13px;flex:none">
-                  <span style="font-size:12px;font-weight:800;color:#645c50">{{r.no}}</span>
-                  <span style="width:19px;height:19px;border-radius:999px;border:2px solid #201e1d;background:{{r.color}};display:inline-block;flex:none"></span>
-                  <span style="font-size:15px;font-weight:800;color:#8c491a;white-space:nowrap">{{r.t}}</span>
-                </div>
-              </sc-for>
-            </div>
-          </sc-if>
-
-          <!-- 실험 기록 — 시도할 때마다 남는 자취. 기록이 있을 때만 띠가 보인다 -->
-          <sc-if value="{{labLog}}" hint-placeholder-val="{{false}}">
-            <div style="flex:none;display:flex;gap:6px;align-items:center;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;width:100%;background:#f9f4ed;border:2px solid #dcd3c4;border-radius:20px;padding:7px 12px">
-              <div style="font-size:11.5px;font-weight:800;color:#645c50;flex:none">📓 실험 기록</div>
-              <sc-for list="{{labLog}}" as="l" hint-placeholder-count="0">
-                <div style="font-size:12.5px;font-weight:800;padding:4px 9px;border-radius:999px;background:{{l.bg}};color:{{l.fg}};border:2px solid {{l.bd}};flex:none">{{l.t}}</div>
-              </sc-for>
-            </div>
-          </sc-if>
 
         </div>
       </sc-if>
@@ -654,34 +658,11 @@ button{font-family:inherit}
                 <div style="width:78px;height:46px;display:flex;align-items:center;justify-content:center;border:3px solid {{r.bd}};background:{{r.bg}};border-radius:13px;font-size:19px;font-weight:800;color:#8c491a">{{r.y}}</div>
               </div>
             </sc-for>
+            <!-- 안내 두 줄은 표 아래에 둔다 — 격자 아래에 두면 세로가 넘쳤다(2026-09-22) -->
+            <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);text-align:center;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:16px;padding:7px 12px;max-width:190px;margin-top:6px;line-height:1.4">{{plotHint}}</div>
+            <div style="font-size:12px;font-weight:700;color:#a19786;max-width:190px;text-align:center;line-height:1.35">{{plotDemo}}</div>
             <sc-if value="{{plotLineBtn}}" hint-placeholder-val="{{false}}">
               <button onClick="{{plotLineGo}}" style="min-height:52px;margin-top:5px;padding:12px 16px;border-radius:16px;border:3px solid #c67139;background:#ffe1d0;font-size:16.5px;color:#8c491a;cursor:pointer;animation:rsPop .35s ease">📏 선으로 이어 보기</button>
-            </sc-if>
-            <sc-if value="{{predMix}}" hint-placeholder-val="{{false}}">
-              <div style="display:flex;gap:13px;align-items:flex-end;justify-content:center;margin-top:9px;animation:rsPop .35s ease">
-                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
-                  <div style="width:60px;height:60px;border-radius:999px;border:4px solid #201e1d;background:{{predMix}}"></div>
-                  <div style="font-size:11.5px;font-weight:800;color:#8c491a;white-space:nowrap">{{predLabel}}</div>
-                </div>
-                <div style="font-size:16px;color:#645c50;padding-bottom:22px">vs</div>
-                <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
-                  <div style="width:60px;height:60px;border-radius:999px;border:4px solid #201e1d;background:{{predRef}}"></div>
-                  <div style="font-size:11.5px;font-weight:800;color:#645c50">{{predRefName}}</div>
-                </div>
-              </div>
-            </sc-if>
-            <sc-if value="{{plotEqOn}}" hint-placeholder-val="{{false}}">
-              <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px;padding:13px 16px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:18px;animation:rsPop .35s ease">
-                <div style="display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;color:#8c491a;white-space:nowrap">
-                  <span style="color:{{cYel}}">노랑</span><span style="color:#645c50">=</span><span style="color:{{cRed}}">빨강</span><span style="color:#645c50">×</span>
-                  <span style="display:inline-flex;align-items:center;justify-content:center;width:58px;height:50px;border-radius:13px;border:3px {{plotEqBs}} {{plotEqBd}};background:{{plotEqBg}}">{{plotEqVal}}</span>
-                </div>
-                <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center">
-                  <sc-for list="{{plotEqCards}}" as="c" hint-placeholder-count="5">
-                    <button onClick="{{c.pick}}" style="min-width:48px;height:46px;border-radius:13px;border:3px solid #f6a06b;background:#fffdf6;font-size:20px;font-weight:800;color:#8c491a;cursor:pointer;font-family:inherit">{{c.t}}</button>
-                  </sc-for>
-                </div>
-              </div>
             </sc-if>
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
@@ -709,9 +690,38 @@ button{font-family:inherit}
               </div>
             </div>
             <div style="font-size:15px;font-weight:800;color:#645c50">가로 → <span style="color:{{cRed}}">빨강 ({{plotUnit}})</span> · 세로 ↑ <span style="color:{{cYel}}">노랑 ({{plotUnit}})</span></div>
-            <div style="font-size:12px;font-weight:700;color:#a19786">{{plotDemo}}</div>
-            <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);text-align:center;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:6px 16px;max-width:min(420px,90vw)">{{plotHint}}</div>
           </div>
+          <!-- 셋째 칸 — 예측한 색 비교와 식 빈칸. 왼쪽 칸 아래에 두면 화면 밖으로 밀렸다(2026-09-22) -->
+          <sc-if value="{{plotEqOn}}" hint-placeholder-val="{{false}}">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;align-self:center">
+              <sc-if value="{{predMix}}" hint-placeholder-val="{{false}}">
+                <div style="display:flex;gap:13px;align-items:flex-end;justify-content:center;margin-top:9px;animation:rsPop .35s ease">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                    <div style="width:60px;height:60px;border-radius:999px;border:4px solid #201e1d;background:{{predMix}}"></div>
+                    <div style="font-size:11.5px;font-weight:800;color:#8c491a;white-space:nowrap">{{predLabel}}</div>
+                  </div>
+                  <div style="font-size:16px;color:#645c50;padding-bottom:22px">vs</div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+                    <div style="width:60px;height:60px;border-radius:999px;border:4px solid #201e1d;background:{{predRef}}"></div>
+                    <div style="font-size:11.5px;font-weight:800;color:#645c50">{{predRefName}}</div>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{plotEqOn}}" hint-placeholder-val="{{false}}">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:12px;padding:13px 16px;background:#f9f4ed;border:3px solid #dcd3c4;border-radius:18px;animation:rsPop .35s ease">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:22px;font-weight:800;color:#8c491a;white-space:nowrap">
+                    <span style="color:{{cYel}}">노랑</span><span style="color:#645c50">=</span><span style="color:{{cRed}}">빨강</span><span style="color:#645c50">×</span>
+                    <span style="display:inline-flex;align-items:center;justify-content:center;width:58px;height:50px;border-radius:13px;border:3px {{plotEqBs}} {{plotEqBd}};background:{{plotEqBg}}">{{plotEqVal}}</span>
+                  </div>
+                  <div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:center">
+                    <sc-for list="{{plotEqCards}}" as="c" hint-placeholder-count="5">
+                      <button onClick="{{c.pick}}" style="min-width:48px;height:46px;border-radius:13px;border:3px solid #f6a06b;background:#fffdf6;font-size:20px;font-weight:800;color:#8c491a;cursor:pointer;font-family:inherit">{{c.t}}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+          </div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -828,7 +838,7 @@ button{font-family:inherit}
   </sc-if>
 
   <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
-    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+    <div style="position:fixed;left:50%;top:{{toastTop}};bottom:{{toastBottom}};transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
       <div style="background:#f9f4ed;border:4px solid {{toastBd}};border-radius:24px;padding:17px 21px;box-shadow:0 16px 44px rgba(32,30,29,.28);display:flex;gap:13px;align-items:flex-start">
         <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
         <div style="min-width:0">
@@ -2442,10 +2452,10 @@ class Component extends DCLogic {
        두 축 모두 10mL마다 눈금을 빠짐없이 적는다. 수첩의 네 쌍(20:40 … 50:100)이 모두 칸 위에 놓이고,
        어느 칸이든 두 눈금을 눌러 찍을 수 있어야 한다(2026-09-14). */
     if (!st.pairs) {
-      /* 2026-09-22 — 표는 10 : 20~50 : 100, 예측은 표 밖의 60 : 120. 칸이 늘어 한 칸을 38px로 줄인다. */
+      /* 2026-09-22 — 표는 10 : 20~50 : 100, 예측은 표 밖의 60 : 120. 칸이 늘어 한 칸을 28px로 줄인다 — 크롬북(768px)에서 세로로 넘치지 않게. */
       const u = 10, k = 2, rmax = 60, ymax = 120;
       return { u, k, rmax, ymax, pred: [rmax, ymax],
-               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 38 };
+               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 28 };
     }
     const rows = this.tblAns(), mr = rows[rows.length - 1][0];
     /* 단계가 한 칸의 양·배수·예측할 자리를 정한다 — 시냐크의 2 : 3 격자가 그렇다. */
@@ -2510,7 +2520,7 @@ class Component extends DCLogic {
       this.sfx('ok');
       const un = (this.STEPS[S.i] || {}).unitName || 'mL';
       this.toast('🎯', '그래프가 완성됐어요!',
-        '빨강 ' + r + un + '와 노랑 ' + y + un + '도 같은 색이에요. 이제 아래 식의 빈칸을 채워 볼까요?', 'ok');
+        '빨강 ' + r + un + '와 노랑 ' + y + un + '도 같은 색이에요. 이제 오른쪽 식의 빈칸을 채워 볼까요?', 'ok');
       return;
     }
     const ri = this.plotCur();
@@ -2915,6 +2925,9 @@ class Component extends DCLogic {
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
       toastBd: S.toast && S.toast.kind === 'ok' ? '#ccdbb2' : '#f6a06b',
+      /* 실험·그래프 화면에서는 안내창을 위쪽 대사 자리에 띄운다 — 아래에 두면 두 배 막대·단추·가로축을 가렸다(2026-09-22 수정의견) */
+      toastTop: (st.k === 'lab' || st.k === 'plot') ? '62px' : 'auto',
+      toastBottom: (st.k === 'lab' || st.k === 'plot') ? 'auto' : '92px',
       closeToast: () => this.setState({ toast: null }),
       goNext: () => this.finishRoom()
     };
@@ -3126,7 +3139,7 @@ class Component extends DCLogic {
          시도 자취(labLog)는 단계가 바뀌면 지워지지만 수첩은 지워지지 않는다. */
       v.noteRows = S.found.length ? S.found.map((f, i) => ({
         no: (i + 1) + '.',
-        t: '빨강 ' + f[0] + 'mL : 노랑 ' + f[1] + 'mL',
+        t: '빨강 ' + f[0] + ' : 노랑 ' + f[1],
         color: this.rgb(this.mix({ '빨강': f[0], '노랑': f[1] }))
       })) : null;
       v.labLog = S.labLog.length ? S.labLog.map(l => ({
@@ -3134,6 +3147,7 @@ class Component extends DCLogic {
         bg: l.ok ? '#f0fae1' : '#fff2eb', fg: l.ok ? '#56633f' : '#8c491a',
         bd: l.ok ? '#ccdbb2' : '#ffc6a5'
       })) : null;
+      v.labSide = (v.noteRows || v.labLog) ? 1 : 0;
     }
 
     if (st.k === 'demo') {
