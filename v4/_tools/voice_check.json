@@ -1,5 +1,5 @@
 {
- "ver": "202609221332",
+ "ver": "202609221357",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -933,24 +933,6 @@
     {
      "step": 2,
      "who": "ratio",
-     "text": "이번에는 줄의 길이를 직접 바꿔 볼 거예요.",
-     "key": "1qj5c2q",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 2.001,
-     "who": "ratio",
-     "text": "줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
-     "key": "1g5fpvd",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3,
-     "who": "ratio",
      "text": "앞에서 줄을 짧게 하면 소리가 높아지고, 줄이 빨리 떨렸지요?",
      "key": "1sx4swo",
      "cast": "레시오",
@@ -958,7 +940,7 @@
      "reg": true
     },
     {
-     "step": 3.001,
+     "step": 2.001,
      "who": "ratio",
      "text": "1초 동안 줄이 떨리는 횟수를 진동수라고 해요.",
      "key": "116jx24",
@@ -967,7 +949,7 @@
      "reg": true
     },
     {
-     "step": 3.002,
+     "step": 2.002,
      "who": "ratio",
      "text": "도와 높은 도의 진동수의 비는 일 대 이예요.",
      "key": "1ojex7p",
@@ -976,7 +958,7 @@
      "reg": true
     },
     {
-     "step": 3.003,
+     "step": 2.003,
      "who": "ratio",
      "text": "높은 도는 도보다 두 배 빨리 떨려요.",
      "key": "6g4hvg",
@@ -985,7 +967,7 @@
      "reg": true
     },
     {
-     "step": 3.004,
+     "step": 2.004,
      "who": "ratio",
      "text": "두 배 빨리 떨리려면 줄은 어떻게 되어야 할까요?",
      "key": "1wqlt4o",
@@ -994,61 +976,25 @@
      "reg": true
     },
     {
+     "step": 3,
+     "who": "ratio",
+     "text": "이번에는 줄의 길이를 직접 바꿔 볼 거예요.",
+     "key": "1qj5c2q",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 3.001,
+     "who": "ratio",
+     "text": "줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
+     "key": "1g5fpvd",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
      "step": 4,
-     "who": "ratio",
-     "text": "이번에는 줄의 길이를 바꿔 미 소리를 찾아볼 거예요.",
-     "key": "wfza24",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.001,
-     "who": "ratio",
-     "text": "헤르츠는 진동수의 단위예요.",
-     "key": "1ap9hi7",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.002,
-     "who": "ratio",
-     "text": "라 음이 440헤르츠일 때 미 음은 330헤르츠예요.",
-     "key": "14fzp7u",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.003,
-     "who": "ratio",
-     "text": "미는 라보다 낮은 음이에요.",
-     "key": "18hy76s",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.004,
-     "who": "ratio",
-     "text": "낮은 음은 줄이 길었지요?",
-     "key": "1g4mztd",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.005,
-     "who": "ratio",
-     "text": "그러니 미 줄은 라 줄보다 길어요.",
-     "key": "1o6gcdi",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.006,
      "who": "ratio",
      "text": "라와 미의 진동수의 비는 사 대 삼이에요.",
      "key": "bzyr9j",
@@ -1057,10 +1003,55 @@
      "reg": true
     },
     {
-     "step": 4.007,
+     "step": 4.001,
      "who": "ratio",
-     "text": "먼저 찾을 미 소리를 듣고, 칸마다 줄 소리를 하나씩 들어 본 다음 미 소리가 나는 칸을 골라 보세요.",
-     "key": "1bha6t6",
+     "text": "라는 440헤르츠, 미는 330헤르츠예요.",
+     "key": "462x5u",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.002,
+     "who": "ratio",
+     "text": "헤르츠는 진동수의 단위예요.",
+     "key": "1ap9hi7",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.003,
+     "who": "ratio",
+     "text": "진동수의 비를 반대로 하면 줄의 길이의 비가 돼요.",
+     "key": "1m8wdlr",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.004,
+     "who": "ratio",
+     "text": "그래서 라와 미의 줄의 길이의 비는 삼 대 사예요.",
+     "key": "rnluci",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.005,
+     "who": "ratio",
+     "text": "라 줄이 60 센티미터 일 때 미 줄은 몇 센티미터 일까요?",
+     "key": "4hqqw2",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 4.006,
+     "who": "ratio",
+     "text": "칸마다 소리를 들어 보고, 미 소리가 나는 칸을 골라 보세요.",
+     "key": "2bn6r6",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1568,6 +1559,33 @@
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
+    },
+    {
+     "step": 99.01,
+     "who": "ratio",
+     "text": "맞아요!",
+     "key": "14yt8if",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 99.01100000000001,
+     "who": "ratio",
+     "text": "라 줄 60센티미터가 세 칸이니까 한 칸은 20센티미터예요.",
+     "key": "1i1sxvm",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 99.012,
+     "who": "ratio",
+     "text": "라가 세 칸일 때 미는 네 칸이니까, 20 곱하기 4는 80센티미터예요.",
+     "key": "1d3byf1",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": false
     }
    ]
   },
