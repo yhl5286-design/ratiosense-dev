@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271004"></script>
+<script src="tts/manifest.js?v=202609271130"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -1519,10 +1519,6 @@ class Component extends DCLogic {
       this._s1T++;
       if (this._w1env > .001) this._w1env *= this.DECAY;
       for (let i = 0; i < 8; i++) if (this._plucks[i] > .001) this._plucks[i] *= this.DECAY;
-      /* 2026-09-23 — 떨림 파형이 소리가 나는 동안만 흐른다. 소리가 잦아들면 그 자리에 멈춘다.
-         흐르는 빠르기는 모든 음이 같으므로, 같은 시간 안에 지나가는 물결 수로 진동수를 견준다. */
-      const cur = this.state.vibCur;
-      if (cur >= 0 && this._plucks[cur] > .02) this._vibPh = (this._vibPh || 0) + 0.006;
       this.forceUpdate();
     } else if (st.k === 'harmx' && this.state.hxCur >= 0) {
       /* 도와 누른 음의 두 물결도 함께 흐른다(2026-09-23) */
@@ -3439,18 +3435,15 @@ class Component extends DCLogic {
     const W = 560, padL = 16, padR = 16, top = 16, bottom = 104;
     const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 6;
     const cyc = n[1] / 264 * 4; let dd = ''; const span = W - padL - padR;
-    /* 2026-09-23 — 소리가 나는 동안 파형이 왼쪽으로 흐른다(위상은 _frame이 올린다).
-       모든 음이 같은 빠르기로 흐르므로, 같은 시간 동안 지나간 물결 수가 곧 진동수 차이다. */
-    const ph = this._vibPh || 0;
+    /* 2026-09-27 — 파형을 다시 멈춰 둔다. 건반 뒤의 줄 떨림과 파형이 함께 움직여 눈이 바빴다(사용자 지시).
+       같은 시간 안의 물결 수는 멈춘 그림에서도 세어 볼 수 있다. */
     for (let px = 0; px <= span; px += 2) {
-      const x = padL + px, y = midY - amp * Math.sin(2 * Math.PI * cyc * (px / span + ph));
+      const x = padL + px, y = midY - amp * Math.sin(2 * Math.PI * cyc * px / span);
       dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
     }
-    const moving = this._plucks[i] > .02;
     const html = '<line x1="16" y1="' + midY + '" x2="' + (W-16) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>'
       + '<path d="' + dd + '" style="fill:none;stroke:' + this.C.g600 + ';stroke-width:3;stroke-linecap:round"/>'
-      + '<text x="' + (W/2) + '" y="116" text-anchor="middle" style="font-size:13px;font-weight:700;fill:' + this.C.n600 + '">'
-      + (moving ? '떨림 모양 — 흐르는 중' : '떨림 모양 — 소리가 멎어 멈췄어요') + '</text>';
+      ;   /* 2026-09-27 — 「떨림 모양 …」 작은 글은 뺐다(사용자 지시) */
     return this.svgEl('0 0 560 120', { width:'min(560px,86vw)', display:'block' }, html, 'vibwave' + i);
   }
   /* 도+누른 음 두 물결 — drawHX 이식 (한 묶음 띠 + 5.2초 위상 순환 + 1.5초 유지) */
