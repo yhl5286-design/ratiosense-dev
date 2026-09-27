@@ -877,10 +877,9 @@ class Component extends DCLogic {
   PRIM = { '빨강':[230,40,55], '노랑':[250,215,45] };
   MAX = 200;                  /* 막대 상한 — 눈금이 촘촘히 보이도록 200mL까지만 연다 */
   STEP_ML = 1;                /* ＋− 버튼이 한 번에 더하고 빼는 양 — 1mL씩 미세하게 맞춘다 */
-  /* 비커 커서 — 가로줄(길이 46px) 한 줄. 가운데(23,10)가 가리키는 점이다. */
-  /* 비커 커서 — 물감 높이를 긋는 듯한 가로줄(길이 46px). 가운데(23,10)가 가리키는 점이다.
-     따옴표가 style 속성을 깨뜨리므로 SVG는 모두 퍼센트 부호로 적는다(2026-09-27). */
-  LINE_CUR = 'url(data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2746%27%20height=%2720%27%3E%3Cline%20x1=%273%27%20y1=%2710%27%20x2=%2743%27%20y2=%2710%27%20stroke=%27white%27%20stroke-width=%277%27%20stroke-linecap=%27round%27/%3E%3Cline%20x1=%273%27%20y1=%2710%27%20x2=%2743%27%20y2=%2710%27%20stroke=%27%23201e1d%27%20stroke-width=%273.5%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E) 23 10, ns-resize';
+  /* 비커 커서 — 위아래 화살표를 크게 그린 것(2026-09-27, 사용자 지시로 가로줄에서 되돌림).
+     따옴표가 style 속성을 깨뜨리므로 SVG는 모두 퍼센트 부호로 적는다. */
+  LINE_CUR = 'url(data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2730%27%20height=%2744%27%3E%3Cg%20stroke=%27white%27%20stroke-width=%277%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%20fill=%27none%27%3E%3Cpath%20d=%27M15%206%20L15%2038%27/%3E%3Cpath%20d=%27M8%2013%20L15%206%20L22%2013%27/%3E%3Cpath%20d=%27M8%2031%20L15%2038%20L22%2031%27/%3E%3C/g%3E%3Cg%20stroke=%27%23201e1d%27%20stroke-width=%273.5%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%20fill=%27none%27%3E%3Cpath%20d=%27M15%206%20L15%2038%27/%3E%3Cpath%20d=%27M8%2013%20L15%206%20L22%2013%27/%3E%3Cpath%20d=%27M8%2031%20L15%2038%20L22%2031%27/%3E%3C/g%3E%3C/svg%3E) 15 22, ns-resize';
   SNAP_ML = 1;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼과 같이 1mL */
   CUP_ML = 10;                /* 실험 단계에서 한 번에 붓는 컵의 양 */
   CUP_LAB_MAX = 12;           /* 컵으로 탐색하는 실험에서 한 물감에 부을 수 있는 최대 컵 수 */
