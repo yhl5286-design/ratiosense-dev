@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271421"></script>
+<script src="tts/manifest.js?v=202609271424"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -392,9 +392,8 @@ button{font-family:inherit}
                 <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700)">{{t.len}}</div>
                 <div style="font-size:14px;font-weight:700;color:var(--color-accent-2-700)">{{t.hz}}</div>
               </div>
-              <div style="flex:1;min-width:0;display:flex;align-items:center">
-                <div style="width:{{t.pct}}%;height:16px;border-radius:999px;background:linear-gradient(90deg,var(--color-accent-400),var(--color-accent-700))"></div>
-              </div>
+              <!-- 2026-09-27 — 줄이 실제로 떨린다. 진동수가 두 배면 눈에도 두 배로 빠르게 떨린다(사용자 지시) -->
+              <div style="flex:1;min-width:0;display:flex;align-items:center">{{t.wave}}</div>
               <button onClick="{{t.tap}}" class="rs-pill2" style="flex:none;min-height:56px;font-size:18px;padding:12px 22px">{{t.btn}}</button>
             </div>
           </sc-for>
@@ -493,8 +492,8 @@ button{font-family:inherit}
               <!-- 2026-09-22 밤 — 까닭 문장·두 비 상자·설명 문장을 뺐다(첫 대사에서 이미 말함).
                    한 칸을 구하고, 그 칸 수를 곱하는 두 걸음만 남긴다. -->
               <div style="background:var(--color-accent-2-100);border:3px solid var(--color-accent-2-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);max-width:760px;width:min(96%,760px);font-size:20px;line-height:1.9;text-align:center">
-                <div>{{harpStep1}} = <b style="color:var(--color-accent-2-700)">{{harpUnit}}cm</b></div>
-                <div>{{harpStep2}} = <b style="color:var(--color-accent-2-700)">{{harpTot}}cm</b></div>
+                <!-- 2026-09-27 — 두 줄로 나눠 적던 식을 한 문장으로(사용자 문안). 음성은 없고 보고 넘어간다 -->
+                <div style="line-height:1.8">{{harpWhyTxt}}</div>
               </div>
             </div>
           </sc-if>
@@ -703,6 +702,9 @@ class Component extends DCLogic {
   twoHear(i) {
     if (this.narrBlocked()) return;
     const t = this.TWO_STR[i];
+    /* 눌린 줄만 떨린다 — 세기는 프레임마다 줄어든다(소리 2화면의 줄 떨림과 같은 방식) */
+    this._twoEnv = this._twoEnv || [0, 0];
+    this._twoEnv[i] = 1;
     this.strPluck(t.f);
     const heard = Object.assign({}, this.state.twoHeard || {}); heard[i] = 1;
     this.plog('str_hear', { n: t.n, L: t.L, f: t.f });
@@ -866,7 +868,7 @@ class Component extends DCLogic {
     /* 2026-09-22 — 줄 길이 화면을 떨림(2화면) 바로 뒤로 옮겼다. 같은 날 밤 줄 계산(3화면)과 자리를 바꿔 4화면이 되었다 — 하프(5화면) 바로 앞에서 손으로 줄을 바꿔 보게 한다. 떨림에서 본 「줄이 짧을수록 빨리 떨린다」를
        손으로 줄을 바꿔 가며 귀로 확인하는 자리다. 헤르츠는 하프(5화면)에서 처음 꺼내므로 여기서는 띄우지 않는다. */
     st.push({ k:'strlen',
-      say:'이번에는 줄의 길이를 직접 바꿔 볼 거예요. 줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.',
+      say:'줄의 길이를 직접 조절하면서 소리의 높낮이가 어떻게 바뀌는지 느껴 보세요.',   /* 2026-09-27 사용자 문안 */
       hi:'🎵 줄을 길게·짧게 하며 소리를 들어 보세요' });
     /* ── 하프 공방 — 줄의 길이로 비를 다룬다 (2026-09-22: 줄 길이 화면 바로 뒤, 4화면으로 옮김) ──
        ① 살펴보기: 줄을 길게·짧게 하며 소리가 어떻게 달라지는지 귀로 겪는다.
@@ -1542,6 +1544,16 @@ class Component extends DCLogic {
     /* 말이 끝나는 순간 이동 단추를 켜야 하므로 말하기 상태가 바뀔 때 한 번 다시 그린다(2026-09-27) */
     const talk = this.narrating();
     if (talk !== this._talkWas) { this._talkWas = talk; this.forceUpdate(); }
+    /* 도·높은 도 두 줄 — 눌린 줄이 떨리는 동안 다시 그린다(2026-09-27) */
+    if (st.k === 'twostr') {
+      this._twoEnv = this._twoEnv || [0, 0];
+      let live = 0;
+      for (let i = 0; i < this._twoEnv.length; i++) {
+        if (this._twoEnv[i] > 0.004) { this._twoEnv[i] *= 0.992; live = 1; }
+        else this._twoEnv[i] = 0;
+      }
+      if (live) this.forceUpdate();
+    }
     if (st.k === 'vib') {
       this._s1T++;
       if (this._w1env > .001) this._w1env *= this.DECAY;
@@ -2858,6 +2870,9 @@ class Component extends DCLogic {
   /* 줄 길이 — 하프와 같은 조작이므로 같은 모양으로 남긴다(str_rev · str_move · str_end).
      지금까지는 뜯어본 순간(strlen)만 남아, 어디를 오가다 그 자리를 골랐는지가 빠져 있었다. */
   slSet(L) {
+    /* 2026-09-27 — 레시오가 말하는 동안에는 줄을 움직여도 소리가 나지 않는다(사용자 지시).
+       narrBlocked가 안내를 띄우고 막는다. 다 들은 뒤에 조작한다. */
+    if (this.narrBlocked()) return;
     const prev = this.state.slL;
     this.setState({ slL: L });
     /* 통과 표시가 없어 학생 코드로는 넘어갈 수 없었다(게스트는 검사를 건너뛰어 드러나지 않음).
@@ -3064,8 +3079,8 @@ class Component extends DCLogic {
       this.markSolved();
       this.hintReset('harpear' + st.i);
       /* 2026-09-22 밤 — 설명이 네 겹이라 길었다. 한 칸 → 곱하기 두 걸음만 말한다 */
+      /* 2026-09-27 — 식 설명은 글로만 보여 주고 읽지 않는다(사용자 지시) */
       this.toastOk(p.n + ' 줄 완성! ' + exS + 'cm', '');
-      this.speak(this.harpOkSay(st.i), 'ratio');
     }
   }
 
@@ -3202,7 +3217,8 @@ class Component extends DCLogic {
   LEN2_SAY = '맞아요! 진동수와 줄의 길이는 반대예요. 진동수의 비가 1 대 2면 줄 길이의 비는 2 대 1이에요. 그럼 도 줄이 100센티미터라면 높은 도 줄은 몇 센티미터일까요?';
   /* STEPS 밖에서 읽는 대사 — make_voice_check가 이 목록도 음성 목록에 넣는다 */
   /* 2026-09-27 — 두 단계 문제 화면을 뺐으므로 LEN2_SAY는 더 쓰지 않는다 */
-  get VOICE_EXTRA() { return this.HP.map((p, i) => ['ratio', this.harpOkSay(i)]); }
+  /* 2026-09-27 — 하프 정답 음성을 쓰지 않으므로 음성 목록에서도 뺀다 */
+  get VOICE_EXTRA() { return []; }
   /* 하프 정답 음성 — 한 칸을 구하고 칸 수를 곱하는 두 걸음(2026-09-22 밤) */
   harpOkSay(i) {
     const p = this.HP[i], unitS = this.hUnitS(i), exS = this.exS(i);
@@ -3585,6 +3601,28 @@ class Component extends DCLogic {
     return this.svgEl('0 0 660 156', { width:'min(660px,92vw)', display:'block', margin:'0 auto' }, P.join(''), 'hruler' + i + (tuned ? 't' : ''));
   }
 
+  /* 도·높은 도 줄 그림(2026-09-27) — 길이는 cm에 비례하고, 떨리는 빠르기는 진동수에 비례한다.
+     264Hz는 천천히, 528Hz는 그 두 배로 빠르게 흔들려 눈으로도 진동수 차이가 보인다.
+     실제 초당 264번은 눈으로 볼 수 없으므로 60으로 나눈 빠르기로 보여 준다(소리 2화면 줄 떨림과 같은 방식). */
+  twoWaveSvg(i) {
+    const t = this.TWO_STR[i], W = 520, H = 54, mid = H / 2;
+    const len = Math.round(W * t.L / 100);
+    const env = (this._twoEnv || [0, 0])[i] || 0;
+    const amp = (H / 2 - 8) * env;
+    const ph = (performance.now() / 1000) * (t.f / 60) * 2 * Math.PI;
+    let dd = '';
+    for (let x = 0; x <= len; x += 4) {
+      const y = mid + amp * Math.sin(Math.PI * x / len) * Math.sin(ph);
+      dd += (x === 0 ? 'M' : 'L') + x + ' ' + y.toFixed(1) + ' ';
+    }
+    const col = env > 0.02 ? this.C.a700 : this.C.a500;
+    const P = [];
+    P.push('<line x1="0" y1="' + mid + '" x2="' + len + '" y2="' + mid + '" style="stroke:' + this.C.n300 + ';stroke-width:2" stroke-dasharray="4 5"/>');
+    P.push('<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:7;stroke-linecap:round"/>');
+    P.push('<circle cx="0" cy="' + mid + '" r="6" style="fill:' + this.C.n700 + '"/>');
+    P.push('<circle cx="' + len + '" cy="' + mid + '" r="6" style="fill:' + this.C.n700 + '"/>');
+    return this.svgEl('0 0 ' + W + ' ' + H, { width:'100%', display:'block' }, P.join(''), 'twowave' + i);
+  }
   /* 도와 솔 칸 그림(2026-09-23) — 90cm를 3칸으로 나누고 그중 2칸이 솔임을 보인다.
      빈칸을 채워 갈수록 그림의 숫자도 함께 채워져, 식과 그림이 같은 것을 가리키게 한다. */
   dosolCellsSvg() {
@@ -4010,7 +4048,7 @@ class Component extends DCLogic {
       isTwoStr: st.k === 'twostr',
       twoRows: st.k !== 'twostr' ? [] : this.TWO_STR.map((t, i) => {
         const on = !!(S.twoHeard || {})[i];
-        return { n: t.n, len: t.L + 'cm', hz: t.f + 'Hz', pct: Math.round(t.L / 100 * 100),
+        return { n: t.n, len: t.L + 'cm', hz: t.f + 'Hz', wave: this.twoWaveSvg(i),
           bg: on ? this.C.g100 : this.C.n100, bd: on ? this.C.g300 : this.C.n300,
           btn: on ? '🔁 다시 듣기' : '🔊 들어 보기', tap: () => this.twoHear(i) };
       }),
@@ -4274,8 +4312,8 @@ class Component extends DCLogic {
         + p.b + '칸으로 나눈 다음 다시 ' + p.a + jsl(p.a) + ' 곱해요!';
       v.harpWhyBtn = '❓ 왜 라보다 ' + (this.hLen(st.i) < this.HBASE ? '짧아질까' : '길어질까') + '?';
       v.harpUnit = unitS; v.harpTot = this.exS(st.i);
-      v.harpStep1 = '라 줄 ' + this.HBASE + 'cm가 ' + p.b + '칸 → 한 칸 = ' + this.HBASE + ' ÷ ' + p.b;
-      v.harpStep2 = '라가 ' + p.b + '일 때 ' + p.n + '는 ' + p.a + ' → ' + unitS + ' × ' + p.a;
+      v.harpWhyTxt = '라가 ' + p.b + '칸일 때 ' + p.n + '는 ' + p.a + '칸이니까 1칸이 ' + unitS + 'cm, '
+        + unitS + ' × ' + p.a + ' = ' + this.exS(st.i) + 'cm예요.';
       v.harpIntro = st.i === 0;
       v.harpPh1 = ph === 1;                      /* 1부 — 눈금은 조율 뒤에도 남긴다 */
       v.harpEar = ph === 1 && !S.harpTuned;      /* 1부 — 귀로 찾기(식 빈칸 없음) */

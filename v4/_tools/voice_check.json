@@ -1,5 +1,5 @@
 {
- "ver": "202609271421",
+ "ver": "202609271424",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1050,17 +1050,8 @@
     {
      "step": 3,
      "who": "ratio",
-     "text": "이번에는 줄의 길이를 직접 바꿔 볼 거예요.",
-     "key": "1qj5c2q",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 3.001,
-     "who": "ratio",
-     "text": "줄을 길게, 짧게 조절해 보면서 소리가 높아지는지 낮아지는지 알아보세요.",
-     "key": "1g5fpvd",
+     "text": "줄의 길이를 직접 조절하면서 소리의 높낮이가 어떻게 바뀌는지 느껴 보세요.",
+     "key": "pq4k81",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1565,33 +1556,6 @@
      "who": "ratio",
      "text": "이제 마지막 문으로 가 볼까요?",
      "key": "13u6tma",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 99,
-     "who": "ratio",
-     "text": "맞아요!",
-     "key": "14yt8if",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 99.001,
-     "who": "ratio",
-     "text": "라 줄 60센티미터가 세 칸이니까 한 칸은 20센티미터예요.",
-     "key": "1i1sxvm",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 99.002,
-     "who": "ratio",
-     "text": "라가 세 칸일 때 미는 네 칸이니까, 20 곱하기 4는 80센티미터예요.",
-     "key": "1d3byf1",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
