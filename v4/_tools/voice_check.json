@@ -1,5 +1,5 @@
 {
- "ver": "202609271004",
+ "ver": "202609271130",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -216,8 +216,8 @@
     {
      "step": 5.002,
      "who": "munsell",
-     "text": "이번에는 빨강 물감을 10 밀리리터씩 네 컵 부었어.",
-     "key": "182g6wf",
+     "text": "이번에는 빨강 물감을 10 밀리리터씩 세 컵 부었어.",
+     "key": "hzn3w3",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -234,6 +234,33 @@
     {
      "step": 6,
      "who": "munsell",
+     "text": "좋아!",
+     "key": "1pvw8ev",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 6.001,
+     "who": "munsell",
+     "text": "이번에는 빨강 물감을 10 밀리리터씩 네 컵 부었어.",
+     "key": "182g6wf",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 6.002,
+     "who": "munsell",
+     "text": "노랑 물감은 10 밀리리터씩 몇 컵을 부어야 같은 색이 될까?",
+     "key": "8v6ne5",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 7,
+     "who": "munsell",
      "text": "이번에는 뭉크가 쓸 물감을 큰 통에 가득 만들어 보자.",
      "key": "1rrnslm",
      "cast": "과학자 먼셀",
@@ -241,7 +268,7 @@
      "reg": true
     },
     {
-     "step": 6.001,
+     "step": 7.001,
      "who": "munsell",
      "text": "큰 통에 빨강을 50 밀리리터 넣었어.",
      "key": "1ccousx",
@@ -250,7 +277,7 @@
      "reg": true
     },
     {
-     "step": 6.002,
+     "step": 7.002,
      "who": "munsell",
      "text": "앞에서 찾은 관계대로라면 노랑은 얼마나 넣어야 할까?",
      "key": "154i4wo",
@@ -259,7 +286,7 @@
      "reg": true
     },
     {
-     "step": 7,
+     "step": 8,
      "who": "munsell",
      "text": "이번엔 다른 방법을 실험해 보자.",
      "key": "qcajjr",
@@ -268,7 +295,7 @@
      "reg": true
     },
     {
-     "step": 7.001,
+     "step": 8.001,
      "who": "munsell",
      "text": "빨강과 노랑에 각 물감을 30 밀리리터씩 같은 양만큼 더 넣어 보자.",
      "key": "tcsgf7",
@@ -277,7 +304,7 @@
      "reg": true
     },
     {
-     "step": 7.002,
+     "step": 8.002,
      "who": "munsell",
      "text": "아까와 같은 목표색이 될까, 다른 색이 될까?",
      "key": "15w3bsi",
@@ -286,7 +313,7 @@
      "reg": true
     },
     {
-     "step": 7.003,
+     "step": 8.003,
      "who": "munsell",
      "text": "지금 비커에 빨강 20 밀리리터와 노랑 40 밀리리터가 들어 있어.",
      "key": "7z8yi9",
@@ -295,7 +322,7 @@
      "reg": true
     },
     {
-     "step": 7.004,
+     "step": 8.004,
      "who": "munsell",
      "text": "양쪽에 30 밀리리터씩 더 넣고 목표색과 비교해 봐.",
      "key": "1kjc7me",
@@ -304,7 +331,7 @@
      "reg": true
     },
     {
-     "step": 8,
+     "step": 9,
      "who": "munsell",
      "text": "왼쪽은 빨강 20, 노랑 40에 각각 2를 곱한 양으로 섞어 만든 색이야.",
      "key": "1dtegvh",
@@ -313,7 +340,7 @@
      "reg": true
     },
     {
-     "step": 8.001,
+     "step": 9.001,
      "who": "munsell",
      "text": "오른쪽은 빨강 20, 노랑 40에 각각 30 밀리리터를 더한 양으로 섞어 만든 색이야.",
      "key": "4q1irt",
@@ -322,7 +349,7 @@
      "reg": true
     },
     {
-     "step": 8.002,
+     "step": 9.002,
      "who": "munsell",
      "text": "같은 색 물감을 만들려면 어떻게 해야 할까?",
      "key": "ih7nvl",
@@ -331,7 +358,7 @@
      "reg": true
     },
     {
-     "step": 8.003,
+     "step": 9.003,
      "who": "munsell",
      "text": "낱말 카드를 끌어 빈칸에 넣어 알맞은 문장을 완성해 봐.",
      "key": "5to33r",
@@ -340,16 +367,16 @@
      "reg": true
     },
     {
-     "step": 9,
+     "step": 10,
      "who": "munsell",
-     "text": "빨강 20에 노랑 40을, 빨강 40에 노랑 80을 섞으면 목표색이 되었지?",
-     "key": "1qhef9q",
+     "text": "빨강 20에 노랑 40을, 빨강 30에 노랑 60을, 빨강 40에 노랑 80을 섞으면 목표색이 되었지?",
+     "key": "ejk65j",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
     },
     {
-     "step": 9.001,
+     "step": 10.001,
      "who": "munsell",
      "text": "이번에는 이것과 다른 양으로 목표색을 만들어 봐.",
      "key": "1llyywt",
@@ -358,25 +385,7 @@
      "reg": true
     },
     {
-     "step": 9.002,
-     "who": "munsell",
-     "text": "마우스로 슬라이더를 움직이거나 플러스 마이너스 단추를 눌러 양을 정하고, 목표색이 되면 기록하기를 눌러!",
-     "key": "ufqys4",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 10,
-     "who": "munsell",
-     "text": "이전과 또 다른 양으로 목표색을 만들어 봐.",
-     "key": "1wwl84y",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 10.001,
+     "step": 10.002,
      "who": "munsell",
      "text": "마우스로 슬라이더를 움직이거나 플러스 마이너스 단추를 눌러 양을 정하고, 목표색이 되면 기록하기를 눌러!",
      "key": "ufqys4",
@@ -387,8 +396,8 @@
     {
      "step": 11,
      "who": "munsell",
-     "text": "실험으로 찾은 빨강 20 밀리리터와 노랑 40 밀리리터를 다시 가져왔어.",
-     "key": "e8sojf",
+     "text": "이전과 또 다른 양으로 목표색을 만들어 봐.",
+     "key": "1wwl84y",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -396,26 +405,8 @@
     {
      "step": 11.001,
      "who": "munsell",
-     "text": "이번에는 조금 더 큰 20 밀리리터짜리 컵을 줄게.",
-     "key": "1vdbgvc",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 11.002,
-     "who": "munsell",
-     "text": "두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까?",
-     "key": "ojp6z3",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 11.003,
-     "who": "munsell",
-     "text": "컵을 눌러서 직접 옮겨 담아 봐.",
-     "key": "1qgc2r0",
+     "text": "마우스로 슬라이더를 움직이거나 플러스 마이너스 단추를 눌러 양을 정하고, 목표색이 되면 기록하기를 눌러!",
+     "key": "ufqys4",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -459,6 +450,42 @@
     {
      "step": 12,
      "who": "munsell",
+     "text": "실험으로 찾은 빨강 20 밀리리터와 노랑 40 밀리리터를 다시 가져왔어.",
+     "key": "e8sojf",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 12.001,
+     "who": "munsell",
+     "text": "이번에는 조금 더 큰 20 밀리리터짜리 컵을 줄게.",
+     "key": "1vdbgvc",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 12.002,
+     "who": "munsell",
+     "text": "두 비커의 물감을 이 컵으로 모두 옮겨 담으면 각각 몇 컵이 될까?",
+     "key": "ojp6z3",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 12.003,
+     "who": "munsell",
+     "text": "컵을 눌러서 직접 옮겨 담아 봐.",
+     "key": "1qgc2r0",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 13,
+     "who": "munsell",
      "text": "이번에는 빨강 40 밀리리터를 기준으로 해 보자.",
      "key": "1wr0boa",
      "cast": "과학자 먼셀",
@@ -466,7 +493,7 @@
      "reg": true
     },
     {
-     "step": 12.001,
+     "step": 13.001,
      "who": "munsell",
      "text": "40 밀리리터짜리 컵으로 나눠 담아 보면 각각 몇 컵이 될까?",
      "key": "4gd6k5",
@@ -475,7 +502,7 @@
      "reg": true
     },
     {
-     "step": 13,
+     "step": 14,
      "who": "munsell",
      "text": "방금 한 일을 함께 짚어 볼까?",
      "key": "bhh6od",
@@ -484,7 +511,7 @@
      "reg": true
     },
     {
-     "step": 13.001,
+     "step": 14.001,
      "who": "munsell",
      "text": "아래 세 물음에 답해 보렴.",
      "key": "3xit0y",
@@ -493,7 +520,7 @@
      "reg": true
     },
     {
-     "step": 14,
+     "step": 15,
      "who": "munsell",
      "text": "두 번 다 네가 만들어 낸 한 컵과 두 컵에 이름을 붙여 줄게.",
      "key": "xhi0w2",
@@ -502,7 +529,7 @@
      "reg": true
     },
     {
-     "step": 14.001,
+     "step": 15.001,
      "who": "munsell",
      "text": "이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해.",
      "key": "1004yv",
@@ -511,7 +538,7 @@
      "reg": true
     },
     {
-     "step": 14.002,
+     "step": 15.002,
      "who": "munsell",
      "text": "두 수를 적고 그 사이에 쌍점을 찍는단다.",
      "key": "4n2p26",
@@ -520,7 +547,7 @@
      "reg": true
     },
     {
-     "step": 14.003,
+     "step": 15.003,
      "who": "munsell",
      "text": "아래 낱말 카드를 끌어서 빈칸을 채워 보렴.",
      "key": "1v9kwee",
@@ -529,25 +556,25 @@
      "reg": true
     },
     {
-     "step": 15,
+     "step": 16,
      "who": "munsell",
-     "text": "지금까지 나왔던 모든 값을 표로 나타내 봤어.",
-     "key": "15kaalh",
+     "text": "목표색이 되는 양 몇 가지를 표로 적어 두었어.",
+     "key": "h4zwyo",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
     },
     {
-     "step": 15.001,
+     "step": 16.001,
      "who": "munsell",
-     "text": "표에 나타낸 값을 그래프로 나타내 보자.",
-     "key": "jnwmzh",
+     "text": "표에 적은 값을 그래프로 나타내 보자.",
+     "key": "1oz5inw",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
     },
     {
-     "step": 15.002,
+     "step": 16.002,
      "who": "munsell",
      "text": "첫 줄은 내가 미리 찍어 두었어.",
      "key": "1y8n8tp",
@@ -556,7 +583,7 @@
      "reg": true
     },
     {
-     "step": 15.003,
+     "step": 16.003,
      "who": "munsell",
      "text": "반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다.",
      "key": "a53xt7",
@@ -565,7 +592,7 @@
      "reg": true
     },
     {
-     "step": 15.004,
+     "step": 16.004,
      "who": "munsell",
      "text": "점을 다 찍으면 첫 번째 점부터 차례로 눌러 선으로 이어 보렴.",
      "key": "ntpqbx",
@@ -574,7 +601,7 @@
      "reg": true
     },
     {
-     "step": 16,
+     "step": 17,
      "who": "munsell",
      "text": "이제 빨강과 노랑을 몇 대 몇의 비율로 섞으면 그 색이 만들어지는지 뭉크에게 편지를 써 보렴.",
      "key": "1vz6out",
@@ -583,7 +610,7 @@
      "reg": true
     },
     {
-     "step": 16.001,
+     "step": 17.001,
      "who": "munsell",
      "text": "아래 숫자 카드를 누른 채 끌어서 빈칸 위에 놓으면 돼.",
      "key": "1y9hogr",
@@ -592,7 +619,7 @@
      "reg": true
     },
     {
-     "step": 17,
+     "step": 18,
      "who": "munch",
      "text": "네가 준 물감으로 노을을 칠해 완성했어.",
      "key": "hmfiyv",
@@ -601,7 +628,7 @@
      "reg": true
     },
     {
-     "step": 17.001,
+     "step": 18.001,
      "who": "munch",
      "text": "정말 고마워!",
      "key": "1mvwnus",
@@ -610,7 +637,7 @@
      "reg": true
     },
     {
-     "step": 18,
+     "step": 19,
      "who": "munsell",
      "text": "뭉크의 색을 함께 만들어 줘서 고마워.",
      "key": "82ambv",
@@ -619,7 +646,7 @@
      "reg": true
     },
     {
-     "step": 18.001,
+     "step": 19.001,
      "who": "munsell",
      "text": "빨강과 노랑을 1 대 2 로 섞으면, 양이 달라도 같은 색이 나온다는 걸 네가 직접 찾아냈지.",
      "key": "n6tzmd",
@@ -628,7 +655,7 @@
      "reg": true
     },
     {
-     "step": 18.002,
+     "step": 19.002,
      "who": "munsell",
      "text": "이 그림을 봐.",
      "key": "jls7pv",
@@ -637,7 +664,7 @@
      "reg": true
     },
     {
-     "step": 18.003,
+     "step": 19.003,
      "who": "munsell",
      "text": "물감을 섞지 않고 작은 점을 찍어서 색을 만든 그림이야.",
      "key": "1whrgxy",
@@ -646,7 +673,7 @@
      "reg": true
     },
     {
-     "step": 18.004,
+     "step": 19.004,
      "who": "munsell",
      "text": "이번에는 점을 찍어 색을 만드는 화가를 도와줄래?",
      "key": "f69juy",
@@ -655,7 +682,7 @@
      "reg": true
     },
     {
-     "step": 18.005,
+     "step": 19.005,
      "who": "munsell",
      "text": "우리가 함께 공부한 비를 기억하면 도울 수 있을 거야.",
      "key": "l4dpdz",
@@ -664,7 +691,7 @@
      "reg": true
     },
     {
-     "step": 19,
+     "step": 20,
      "who": "signac",
      "text": "안녕?",
      "key": "1bgsdl6",
@@ -673,7 +700,7 @@
      "reg": true
     },
     {
-     "step": 19.001,
+     "step": 20.001,
      "who": "signac",
      "text": "나는 점을 찍어 색을 표현하는 화가 시냐크라고 해.",
      "key": "js38aq",
@@ -682,7 +709,7 @@
      "reg": true
     },
     {
-     "step": 19.002,
+     "step": 20.002,
      "who": "signac",
      "text": "지금 「양산을 든 여인」을 그리는 중인데, 여기에 쓸 주황이 아직 없어.",
      "key": "jnel9p",
@@ -691,7 +718,7 @@
      "reg": true
     },
     {
-     "step": 19.003,
+     "step": 20.003,
      "who": "signac",
      "text": "같이 점을 찍어 주황을 만들어 줄래?",
      "key": "huabmu",
@@ -700,7 +727,7 @@
      "reg": true
     },
     {
-     "step": 20,
+     "step": 21,
      "who": "signac",
      "text": "나는 빨강과 노랑의 비가 2 대 3 으로 주황을 만들고 싶어.",
      "key": "1lyniw4",
@@ -709,7 +736,7 @@
      "reg": true
     },
     {
-     "step": 20.001,
+     "step": 21.001,
      "who": "signac",
      "text": "다섯 칸을 기준으로 빨강과 노랑을 점 찍어서 표현해 봐.",
      "key": "10u7s4",
@@ -718,7 +745,7 @@
      "reg": true
     },
     {
-     "step": 21,
+     "step": 22,
      "who": "signac",
      "text": "이번에도 빨강 대 노랑을 2 대 3 으로 주황을 만들 거야.",
      "key": "afiqsq",
@@ -727,7 +754,7 @@
      "reg": true
     },
     {
-     "step": 21.001,
+     "step": 22.001,
      "who": "signac",
      "text": "이번에는 열 칸에 색칠해 줘.",
      "key": "1v71qqv",
@@ -736,7 +763,7 @@
      "reg": true
     },
     {
-     "step": 22,
+     "step": 23,
      "who": "signac",
      "text": "이번에는 100칸을 색칠할 거야.",
      "key": "j7316e",
@@ -745,7 +772,7 @@
      "reg": true
     },
     {
-     "step": 22.001,
+     "step": 23.001,
      "who": "signac",
      "text": "빨강 대 노랑이 2 대 3 이 되도록 100칸을 색칠해 줘.",
      "key": "1hzij16",
@@ -754,7 +781,7 @@
      "reg": true
     },
     {
-     "step": 23,
+     "step": 24,
      "who": "signac",
      "text": "점의 개수가 늘어나도 빨강과 노랑의 비는 그대로 2 대 3 이었지!",
      "key": "1etrhjg",
@@ -763,7 +790,7 @@
      "reg": true
     },
     {
-     "step": 23.001,
+     "step": 24.001,
      "who": "signac",
      "text": "덕분에 그림을 완성했어, 고마워.",
      "key": "1s8dw2u",
@@ -772,7 +799,7 @@
      "reg": true
     },
     {
-     "step": 24,
+     "step": 25,
      "who": "ratio",
      "text": "빨강과 노랑 점을 많이 찍는다고 색이 더 붉어질까요?",
      "key": "6jpflk",
@@ -781,7 +808,7 @@
      "reg": true
     },
     {
-     "step": 24.001,
+     "step": 25.001,
      "who": "ratio",
      "text": "두 그림을 비교해 보세요.",
      "key": "23hzoe",
@@ -790,7 +817,7 @@
      "reg": true
     },
     {
-     "step": 24.002,
+     "step": 25.002,
      "who": "ratio",
      "text": "어느 쪽 주황이 더 붉을까요?",
      "key": "klkie6",
@@ -799,7 +826,7 @@
      "reg": true
     },
     {
-     "step": 25,
+     "step": 26,
      "who": "ratio",
      "text": "시냐크와 공부했던 내용을 이어 비율을 공부해 볼까요?",
      "key": "1p5mcxi",
@@ -808,7 +835,7 @@
      "reg": true
     },
     {
-     "step": 25.001,
+     "step": 26.001,
      "who": "ratio",
      "text": "다음 100칸 중 빨강은 40칸, 노랑은 60칸 색칠했어요.",
      "key": "1d7nbh9",
@@ -817,7 +844,7 @@
      "reg": true
     },
     {
-     "step": 25.002,
+     "step": 26.002,
      "who": "ratio",
      "text": "전체에 대한 빨강의 비율에서 전체는 기준량이고 빨강이 비교하는 양이에요.",
      "key": "m3iqhi",
@@ -826,7 +853,7 @@
      "reg": true
     },
     {
-     "step": 25.003,
+     "step": 26.003,
      "who": "ratio",
      "text": "전체 100 가운데 빨강이 차지하는 비율은 얼마일까요?",
      "key": "djl4ab",
@@ -835,7 +862,7 @@
      "reg": true
     },
     {
-     "step": 25.004,
+     "step": 26.004,
      "who": "ratio",
      "text": "알맞은 말을 끌어 빈칸 위에 놓아 주세요.",
      "key": "9fevbf",
@@ -844,7 +871,7 @@
      "reg": true
     },
     {
-     "step": 26,
+     "step": 27,
      "who": "ratio",
      "text": "두 물감을 섞어 어떤 색을 만들 때, 다른 양으로도 같은 색을 만들려면 어떻게 해야 할까요?",
      "key": "1hi9bqu",
@@ -853,7 +880,7 @@
      "reg": true
     },
     {
-     "step": 26.001,
+     "step": 27.001,
      "who": "ratio",
      "text": "알맞은 것을 골라 보세요.",
      "key": "1m4gjz",
