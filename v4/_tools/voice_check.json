@@ -1,5 +1,5 @@
 {
- "ver": "202609271503",
+ "ver": "202609271504",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1860,8 +1860,8 @@
     {
      "step": 1,
      "who": "ratio",
-     "text": "여러분이 찾은 비의 비밀들을 모아보니 1 점 6 1 8 황금비가 나왔어요.",
-     "key": "15td753",
+     "text": "이렇게 세상 곳곳에 비의 비밀이 숨겨져 있었네요.",
+     "key": "1ax5wp0",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1869,8 +1869,8 @@
     {
      "step": 1.001,
      "who": "ratio",
-     "text": "황금비는 보기에 편하고 아름다운 이상적인 비율을 말하죠.",
-     "key": "1bo7jbj",
+     "text": "수학을 눈으로 소리로 느껴 보는 경험 신기했나요?",
+     "key": "1kqhf0j",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1878,8 +1878,8 @@
     {
      "step": 1.002,
      "who": "ratio",
-     "text": "이렇게 세상 곳곳에 숨겨진 비를 감각으로 느껴보니 어땠나요?",
-     "key": "1ugs2yk",
+     "text": "함께 해 줘서 고마워요!",
+     "key": "5rl5l5",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1887,26 +1887,8 @@
     {
      "step": 1.003,
      "who": "ratio",
-     "text": "수학을 느껴보는 신기한 경험을 또 해보고 싶지 않나요?",
-     "key": "qxshjf",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.004,
-     "who": "ratio",
-     "text": "다음에 또 만나요 여러분!",
-     "key": "1lr3c0l",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 1.005,
-     "who": "ratio",
-     "text": "열심히 찾아주어 고마워요!",
-     "key": "1dhunbf",
+     "text": "다음에 또 만나요!",
+     "key": "mdfvox",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true

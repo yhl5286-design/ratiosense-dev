@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271221"></script>
+<script src="tts/manifest.js?v=202609271504"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -1598,6 +1598,19 @@ class Component extends DCLogic {
   }
   ukey(b) { return b + ':' + (this._user || 'anon'); }
 
+  /* 2026-09-28 — 마침 화면에서 「못 받은 카드 풀러 가기」로 올 때 쓴다.
+     주소 끝에 ?card=color1 처럼 붙이면 그 카드 문제 화면부터 시작한다(사용자 지시). */
+  cardStart() {
+    try {
+      const want = new URLSearchParams(location.search).get('card');
+      if (!want) return -1;
+      for (let i = 0; i < this.STEPS.length; i++) {
+        const c = this.STEPS[i].card;
+        if (c != null && this.DIGITS[c] && this.DIGITS[c].id === want) return i;
+      }
+    } catch(e) {}
+    return -1;
+  }
   componentDidMount() {
     this._seq = 0;
     this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
@@ -1696,6 +1709,8 @@ class Component extends DCLogic {
     };
     addEventListener('keydown', this._keyZ, true);
 
+    const jump = this.cardStart();
+    if (jump >= 0) { this.setState({ i: jump }); this.plog('card_jump', { to: jump }); }
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
@@ -1774,6 +1789,8 @@ class Component extends DCLogic {
     if (this._finished) return;
     this._finished = true;
     this.plog('complete', {});
+    /* 2026-09-28 — 「홈으로」를 누르지 않아도 기록이 끝나도록 여기서 바로 보낸다(사용자 지시) */
+    this.flush(true);
     try {
       const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
       if (d.indexOf('color') < 0) { d.push('color'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }

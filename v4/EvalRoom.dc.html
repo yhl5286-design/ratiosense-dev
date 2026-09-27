@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271221"></script>
+<script src="tts/manifest.js?v=202609271504"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -385,7 +385,8 @@ class Component extends DCLogic {
       /* 마지막 자리이므로 말을 아낀다 — 작은 안내 글씨도 두지 않는다(2026-09-13). */
       { k:'finale',
         /* 2026-09-22 밤 — 너무 길어 사용자 문안으로 줄였다 */
-        say:'여러분이 찾은 비의 비밀들을 모아보니 [[1.618|1 점 6 1 8]] 황금비가 나왔어요. 황금비는 보기에 편하고 아름다운 이상적인 비율을 말하죠. 이렇게 세상 곳곳에 숨겨진 비를 감각으로 느껴보니 어땠나요? 수학을 느껴보는 신기한 경험을 또 해보고 싶지 않나요? 다음에 또 만나요 여러분! 열심히 찾아주어 고마워요!' }
+        /* 2026-09-28 사용자 문안 */
+        say:'이렇게 세상 곳곳에 비의 비밀이 숨겨져 있었네요. 수학을 눈으로 소리로 느껴 보는 경험 신기했나요? 함께 해 줘서 고마워요! 다음에 또 만나요!' }
     ];
   }
 
@@ -676,6 +677,11 @@ class Component extends DCLogic {
         /* 2026-09-22: v4에는 지도 방이 없다(9/14 v5 심화판으로 분리). 'map'까지 요구하던 탓에
            소리 방을 마친 참여자도 「마지막 문으로」를 누르면 허브로 튕겼다(E05 보고). v4의 두 방만 본다. */
         blocked = ['color','sound'].some(r => d.indexOf(r) < 0);
+        /* 2026-09-28 — 비밀 카드 네 장을 모아야 마지막 문으로 올 수 있다(사용자 지시).
+           소리 방 마침 화면에서 못 받은 카드를 풀러 갈 수 있다. */
+        const raw = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]');
+        const ids = {}; raw.forEach(x => { if (x === 'sound') { ids.sound1 = 1; ids.sound2 = 1; } else ids[x] = 1; });
+        if (Object.keys(ids).length < 4) blocked = true;
       } catch(e) { blocked = false; }
       if (blocked) { try { location.replace('index.html'); } catch(e) {} }
     }
@@ -874,6 +880,8 @@ class Component extends DCLogic {
     if (this._finished) return;
     this._finished = true;
     this.plog('complete', {});
+    /* 2026-09-28 — 「홈으로」를 누르지 않아도 기록이 끝나도록 여기서 바로 보낸다(사용자 지시) */
+    this.flush(true);
     try {
       const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
       if (d.indexOf('eval') < 0) { d.push('eval'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
