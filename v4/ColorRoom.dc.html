@@ -1516,6 +1516,14 @@ class Component extends DCLogic {
   /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
      step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
      t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
+  /* 기기 표시 — 허브와 같은 값을 쓴다(2026-09-27) */
+  devId() {
+    try {
+      let d = localStorage.getItem('rs3_dev');
+      if (!d) { d = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)); localStorage.setItem('rs3_dev', d); }
+      return d;
+    } catch(e) { return 'nodev'; }
+  }
   plog(ev, data) {
     var d = data || {};
     try {
@@ -1528,7 +1536,8 @@ class Component extends DCLogic {
     try {
       if (this._user === 'guest') return;
       this._q = this._q || [];
-      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:'',
+      /* userName 자리에 기기 표시를 담는다(2026-09-27) — 시트가 「코드+기기」를 기억해 코드 중복을 막는다 */
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:this.devId(),
         seq: ++this._seq, clientTs:new Date().toISOString(),
         eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
         tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
@@ -2732,7 +2741,13 @@ class Component extends DCLogic {
   plotTap(r, y) {
     const S = this.state;
     const clearG = { plotGx: null, plotGy: null };
-    if (this.plotDone() && !S.plotLine) { this.plotLinkTap(r, y); return; }
+    /* 2026-09-27 — 선 잇기는 다음 화면(stage:'pred')에서만 한다. 점 찍기 화면에서는 점을 다 찍으면 끝난다 */
+    if (this.plotDone() && !S.plotLine) {
+      if ((this.STEPS[S.i] || {}).stage === 'pred') { this.plotLinkTap(r, y); return; }
+      this.setState(clearG);
+      this.toast('📍', '점을 다 찍었어요!', '「다음 →」을 눌러 점들을 선으로 이어 볼까요?', 'quiet');
+      return;
+    }
     if (S.plot.some(p => p.r === r && p.y === y)) { this.setState(clearG); return; }
     /* 예측 — 세 점을 이어 선을 본 뒤에는, 아직 만들어 보지 않은 자리를 찾게 한다 */
     if (S.plotLine) {

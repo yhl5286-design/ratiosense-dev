@@ -168,7 +168,7 @@ const LOG={q:[],sent:{},sentIds:[],inflight:{},bid:0,sending:false,sess:uid(),se
 const HUB_T0=Date.now();   /* 허브에 머문 시간의 기준 */
 function plog(code,ev,data){try{
   if(!code||code==='guest')return; /* 게스트는 미전송 */
-  LOG.q.push({_t:'events',schemaVersion:'2',sessionId:LOG.sess,userCode:code,userName:'',
+  LOG.q.push({_t:'events',schemaVersion:'2',sessionId:LOG.sess,userCode:code,userName:devId(),
     seq:++LOG.seq,clientTs:new Date().toISOString(),eventId:uid(),
     tab:'hubV3',eventType:'pilot.hubV3.'+ev,payload:JSON.stringify(data||{})});
   flushLog();
@@ -206,6 +206,29 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
    plog가 큐에 넣은 뒤 같은 손짓으로 flush까지 해야 마지막 한 건이 유실되지 않는다. */
 addEventListener('pagehide',()=>{plog(getUser(),'exit',{ms:Date.now()-HUB_T0,done:getDone()});flushLog(true);});
 
+/* 기기 표시(2026-09-27) — 코드 중복을 막는 데 쓴다. 브라우저마다 한 번 만들어 저장한다.
+   같은 기기에서 새로 고치거나 이어서 할 때는 막히지 않게 하려고 둔다. */
+function devId(){
+  try{
+    let d=localStorage.getItem('rs3_dev');
+    if(!d){ d=(Date.now().toString(36)+Math.random().toString(36).slice(2,10)); localStorage.setItem('rs3_dev',d); }
+    return d;
+  }catch(e){ return 'nodev'; }
+}
+/* 코드가 이미 다른 기기에서 쓰였는지 시트에 물어본다. 답이 늦거나 막히면 들여보낸다 —
+   수업 중에 인터넷이 흔들려도 학생이 갇히지 않게 하려는 것이다. */
+function checkCode(v){
+  return new Promise(res=>{
+    let done=0; const ok=(r)=>{ if(!done){ done=1; res(r); } };
+    setTimeout(()=>ok({allow:1,reason:'timeout'}),4000);
+    try{
+      fetch(LOG_EP+'?check=1&code='+encodeURIComponent(v)+'&dev='+encodeURIComponent(devId()),{method:'GET'})
+        .then(r=>r.json())
+        .then(j=>ok({allow: j && j.used && j.dev && j.dev!==devId() ? 0 : 1, at: j && j.at}))
+        .catch(()=>ok({allow:1,reason:'error'}));
+    }catch(e){ ok({allow:1,reason:'error'}); }
+  });
+}
 function saveUser(code){try{localStorage.setItem('rs3_user',JSON.stringify({code,ts:Date.now()}));}catch(e){}}
 function getUser(){try{return (JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){return '';}}
 function uk(b){return b+':'+(getUser()||'anon');}
@@ -333,11 +356,22 @@ function padPaint(){
   if(h) h.textContent = first ? '먼저 앞 글자를 눌러 주세요 — 전문가는 E, 학생은 S'
                               : '이제 숫자 두 개를 눌러 주세요';
 }
-function submitCode(){
+async function submitCode(){
   if($('#loginOv').style.display!=='flex')return; /* Enter+클릭이 겹쳐 두 번 들어오는 것 차단 */
   const v=code.toUpperCase();
   if(!CODE_RE.test(v)){$('#lgErr').textContent='연구자에게 받은 코드를 눌러 주세요 — 앞 글자 하나(E 또는 S)와 숫자 두 개예요';return;}
-  saveUser(v);showChip(v);$('#loginOv').style.display='none';plog(v,'login',{});refresh();}
+  /* 2026-09-27 — 다른 기기에서 이미 쓴 코드는 들어가지 못한다(사용자 지시).
+     잘못 눌러 잠긴 코드는 연구용 시트의 「코드사용」 탭에서 그 줄을 지우면 다시 열린다. */
+  if(submitCode._busy) return; submitCode._busy=1;
+  $('#lgErr').textContent='코드를 확인하고 있어요…';
+  const r=await checkCode(v);
+  submitCode._busy=0;
+  if(!r.allow){
+    $('#lgErr').textContent='이미 사용 중인 코드예요. 연구자에게 알려 주세요.';
+    code=''; paint(); padPaint();
+    return;
+  }
+  saveUser(v);showChip(v);$('#loginOv').style.display='none';plog(v,'login',{dev:devId()});refresh();}
 function press(k){
   if(k==='del'){code=code.slice(0,-1);}
   else if(k==='go'){submitCode();return;}
