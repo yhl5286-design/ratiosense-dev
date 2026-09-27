@@ -1,5 +1,5 @@
 {
- "ver": "202609271432",
+ "ver": "202609271437",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -942,8 +942,8 @@
     {
      "step": 0,
      "who": "ratio",
-     "text": "이 방은 소리의 비밀을 알아내는 방이에요.",
-     "key": "vlyhgi",
+     "text": "소리를 집중해서 들으며 소리에 숨겨진 비의 비밀을 알아보세요.",
+     "key": "w9brua",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -951,8 +951,8 @@
     {
      "step": 0.001,
      "who": "ratio",
-     "text": "이 방에서는 소리를 집중해서 들어야 비밀을 느낄 수 있어요.",
-     "key": "xsk18v",
+     "text": "제 설명을 잘 듣고 활동해 주세요.",
+     "key": "bw2lp1",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
