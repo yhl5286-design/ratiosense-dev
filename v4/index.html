@@ -238,9 +238,11 @@ let introDone = false;
 function openIntro(){
   const ov=$('#introOv'); ov.style.display='flex';
   $('#introText').innerHTML = HUB_ITEMS.map((t, i) => '<div style="margin:6px 0">' + (i + 1) + '. ' + t + '</div>').join('');
-  const paintSay = (cur) => { $('#introSay').innerHTML = HUB_SAY.map((l, i) =>
-    '<div style="margin:3px 0;color:' + (i === cur ? '#8c491a' : '#8a7c6c') + ';font-weight:' + (i === cur ? 800 : 400) + '">' + l + '</div>').join(''); };
-  paintSay(-1);
+  /* 2026-09-27 — 읽는 문장을 따라가 진하게 하던 것을 그만둔다. 문장 길이와 mp3 길이가 어긋나
+     글씨와 소리가 따로 놀았다. 처음부터 모두 진하게 보인다(사용자 지시). */
+  const paintSay = () => { $('#introSay').innerHTML = HUB_SAY.map(l =>
+    '<div style="margin:3px 0;color:#8c491a;font-weight:800">' + l + '</div>').join(''); };
+  paintSay();
   const parts=[]; HUB_SAY.forEach(l=>hubSent(hubNorm(l)).forEach(x=>parts.push(x)));
   const man = window.RS_TTS || {};
   const enable = () => { introDone=true; const b=$('#introGo'); b.disabled=false; b.style.background='#c67139'; b.style.cursor='pointer';
@@ -248,8 +250,7 @@ function openIntro(){
   if (introDone) { enable(); return; }
   let i=0;
   const next=()=>{
-    if(i>=parts.length){ paintSay(-1); enable(); return; }
-    paintSay(Math.min(i, HUB_SAY.length - 1));
+    if(i>=parts.length){ enable(); return; }
     const k=hubKey('ratio|'+parts[i]); i++;
     if(!man[k]){ next(); return; }
     const a=new Audio('tts/'+k+'.mp3?v='+(window.RS_TTS_V||'1'));
