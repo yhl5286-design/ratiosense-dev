@@ -355,7 +355,7 @@ button{font-family:inherit}
                 <div style="font-size:15px;color:#8c491a;background:#fff2eb;border-radius:999px;padding:3px 10px;text-align:center">{{simpleRatio}}</div>
               </sc-if>
             </div>
-            <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
+            <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;opacity:{{labOp}};background:#c67139;color:#f9f4ed;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
             <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">비우기</button>
             <sc-if value="{{canChangeHypo}}" hint-placeholder-val="{{false}}">
               <button onClick="{{openHypo}}" style="min-height:48px;padding:11px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:15.5px;color:#8c491a;cursor:pointer">🔬 가설 바꾸기</button>
@@ -3196,13 +3196,21 @@ class Component extends DCLogic {
         return desc || '내가 세운 가설';
       })();
       v.runLabel = st.run || '기록하기';
-      v.runLab = () => this.runLab();
-      v.clearLab = () => this.clearLab();
+      /* 2026-09-27 — 한 번 기록하면 그 화면의 조작을 잠근다. 기록한 뒤에도 양을 바꿀 수 있어
+         무엇을 기록했는지 헷갈렸다. 잠근 뒤에는 「다음 →」만 남는다(사용자 지시). */
+      const labDone = !!S.solved[S.i];
+      v.labDone = labDone ? 1 : 0; v.labOp = labDone ? '.45' : '1';
+      v.runLab = labDone
+        ? (() => this.toast('✅', '이미 기록했어요', '「다음 →」을 눌러 넘어가요.', 'quiet'))
+        : (() => this.runLab());
+      v.clearLab = labDone
+        ? (() => this.toast('✅', '이미 기록했어요', '「다음 →」을 눌러 넘어가요.', 'quiet'))
+        : (() => this.clearLab());
       v.padDown = (e) => this.padDown(e); v.padMove = (e) => this.padMove(e); v.padUp = (e) => this.padUp(e);
       /* 잠긴 물감은 막대·＋−를 모두 막고 자물쇠로 표시한다. 눌러 보면 왜 잠겼는지 알려 준다. */
       const lockR = this.lockR(st);
       v.paints = ['빨강','노랑'].map((nm, idx) => {
-        const lk = !!(lockR && nm === '빨강');
+        const lk = !!(lockR && nm === '빨강') || labDone;
         return {
           name: nm, amt: S.amt[nm], ink: nm === '빨강' ? '#8c491a' : '#56633f',
           color: this.rgb(this.PRIM[nm]),
@@ -3216,9 +3224,10 @@ class Component extends DCLogic {
           btnOp: lk ? 0.3 : 1,
           btnPe: lk ? 'none' : 'auto',
           handleOp: (lk || !(S.amt[nm] > 0)) ? 0 : 1,
-          down: lk ? (() => this.toast('🔒', '빨강은 이미 부었어요',
+          down: labDone ? (() => this.toast('✅', '이미 기록했어요', '「다음 →」을 눌러 넘어가요.', 'quiet'))
+               : lk ? (() => this.toast('🔒', '빨강은 이미 부었어요',
                         '빨강 물감은 먼셀이 이미 부어 두었어요. 노랑을 몇 컵 부을지 정해 봐요.'))
-                   : this.colDown(nm),
+                    : this.colDown(nm),
           plus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] + this.STEP_ML, 'btn')),
           minus: lk ? (() => {}) : (() => this.setAmt(nm, S.amt[nm] - this.STEP_ML, 'btn'))
         };
@@ -3257,7 +3266,7 @@ class Component extends DCLogic {
           Math.floor((AVAIL - CGAP * (sizeBy - 1)) / sizeBy)));
         const cupH = Math.round(cupW * 1.46);
         v.cupPaints = v.paints.map(q => {
-          const nm = q.name, cur = S.amt[nm], n = Math.round(cur / this.CUP_ML), lk = !!(lockR && nm === '빨강');
+          const nm = q.name, cur = S.amt[nm], n = Math.round(cur / this.CUP_ML), lk = !!(lockR && nm === '빨강') || labDone;
           return {
             name: nm, ink: q.ink, color: q.color, amt: cur, n: n, tag: q.tag,
             cupW: cupW + 'px', cupH: cupH + 'px',
