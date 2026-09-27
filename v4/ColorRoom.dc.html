@@ -1417,7 +1417,21 @@ class Component extends DCLogic {
           const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
           a.volume = 0.95; this._mp3 = a;
           a.onended = nextGap;
-          a.play().catch(() => { this._mp3 = null; this._speakSynth(parts[i], who, nextGap); });
+          /* 2026-09-27 — mp3가 있는 줄은 브라우저 기본 음성으로 대신 읽지 않는다.
+             화면을 빨리 넘기거나 자동 재생이 막히면 재생이 실패하는데, 그때 로봇 목소리가 나와
+             「합성 전 음성」처럼 들렸다(사용자 보고). 자동 재생이 막힌 것뿐이면 화면을 처음 누를 때
+             이어서 들려주고, 화면이 이미 바뀌었으면 그냥 멈춘다. */
+          a.play().catch(() => {
+            this._mp3 = null;
+            if (tok !== this._vtok) return;
+            const resume = () => {
+              document.removeEventListener('pointerdown', resume, true);
+              if (tok !== this._vtok) return;
+              this._mp3 = a;
+              a.play().catch(() => nextGap());
+            };
+            document.addEventListener('pointerdown', resume, true);
+          });
           return;
         } catch(e) {}
       }
