@@ -1,5 +1,5 @@
 {
- "ver": "202609271439",
+ "ver": "202609271442",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -978,8 +978,8 @@
     {
      "step": 2,
      "who": "ratio",
-     "text": "1초 동안 줄이 떨리는 횟수를 진동수라고 해요.",
-     "key": "116jx24",
+     "text": "진동수는 1초 동안 줄이 떨리는 횟수를 말해요.",
+     "key": "avibr8",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -987,8 +987,8 @@
     {
      "step": 2.001,
      "who": "ratio",
-     "text": "줄이 짧을수록 1초 안에 빠르게 떨리고 음이 높아져요.",
-     "key": "1ckw4n3",
+     "text": "단위는 헤르츠예요.",
+     "key": "1e9dvj6",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -996,8 +996,8 @@
     {
      "step": 2.002,
      "who": "ratio",
-     "text": "도의 진동수가 264헤르츠라면 높은 도의 진동수는 도의 2배인 528헤르츠예요.",
-     "key": "1tm1ujx",
+     "text": "도의 진동수가 264헤르츠라면 1초에 264번 떨리는 거죠.",
+     "key": "144v7sm",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1005,8 +1005,8 @@
     {
      "step": 2.003,
      "who": "ratio",
-     "text": "그렇지만 반대로 줄은 더 짧아져야 하죠.",
-     "key": "bftz5a",
+     "text": "그런데 줄이 짧을수록 빠르게 떨리고, 음도 높아져요.",
+     "key": "z9lnqy",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1014,14 +1014,32 @@
     {
      "step": 2.004,
      "who": "ratio",
-     "text": "도가 100 센티미터 라면 높은 도는 50 센티미터 가 되어야 하는 거죠.",
-     "key": "xfh7k0",
+     "text": "높은 도는 도보다 진동수가 2배 빠르죠.",
+     "key": "1gsq103",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
      "step": 2.005,
+     "who": "ratio",
+     "text": "그렇지만 반대로 줄은 2분의 1배로 짧아져야 한답니다.",
+     "key": "t85cd0",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 2.006,
+     "who": "ratio",
+     "text": "도가 100 센티미터 라면 높은 도는 50 센티미터 예요.",
+     "key": "1jhhpm8",
+     "cast": "레시오",
+     "speaker": "vhyeri",
+     "reg": true
+    },
+    {
+     "step": 2.007,
      "who": "ratio",
      "text": "두 줄을 눌러 소리를 들어 보세요.",
      "key": "x4dv2q",
