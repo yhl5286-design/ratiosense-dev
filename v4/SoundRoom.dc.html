@@ -4350,7 +4350,8 @@ class Component extends DCLogic {
         v.harpCells = cl.map(c => { const on = Math.abs(S.harpL - c * unit) < 1e-6, h = !!(S.harpHeard || {})[c];
           return { t: '🔊 ' + c + '칸 (' + Math.round(c * unit) + 'cm)', tap: () => this.harpCellPlay(c),
                    bd: on ? this.C.a700 : (h ? this.C.g500 : this.C.a300), bg: on ? this.C.a100 : (h ? this.C.g100 : this.C.n100) }; });
-        v.harpAsk = !S.harpTuned && cl.every(c => (S.harpHeard || {})[c]) ? 1 : 0;
+        /* 2026-09-27 — 세 칸을 다 듣지 않아도 바로 고를 수 있다(사용자 지시). 목표음을 먼저 들었는지는 harp_submit{goal}로 남는다 */
+        v.harpAsk = S.harpTuned ? 0 : 1;
         v.harpAskQ = p.n + ' 소리가 나는 줄은 몇 칸인가요?';
         v.harpChoices = cl.map(c => ({ t: c + '칸', tap: () => this.harpChoose(c) }));
       }
