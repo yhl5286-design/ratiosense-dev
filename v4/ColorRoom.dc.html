@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271215"></script>
+<script src="tts/manifest.js?v=202609271221"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -1043,11 +1043,11 @@ class Component extends DCLogic {
          앞 화면은 표를 그래프로 옮기는 데까지, 뒤 화면은 실험하지 않은 값(빨강 60)을 그래프로 예측하고 식으로 적는다.
          뒤 화면은 앞 화면의 점과 선을 그대로 이어받는다(plotOpen이 stage:'pred'에서는 지우지 않는다). */
       { k:'plot', stage:'draw', who:'munsell',
-        say:'우리가 목표색을 만들었던 빨강과 노랑의 값을 표로 만들었어. 예를 들어 빨강이 10mL이고 노랑이 20mL이면 이렇게 하면 돼. 빨강이 20, 30, 40, 50일 때도 노랑과 만나게 해서 점을 찍어 보자. 점을 다 찍으면 점들을 선으로 이어 보자.',
-        hi:'📈 점을 찍고, 첫 번째 점부터 차례로 눌러 이어요' },
+        say:'우리가 목표색을 만들었던 빨강과 노랑의 값을 표로 만들었어. 예를 들어 빨강이 10mL이고 노랑이 20mL이면 이렇게 하면 돼. 빨강이 20, 30, 40, 50일 때도 노랑과 만나게 해서 점을 찍어 보자.',
+        hi:'📈 빨강 눈금과 노랑 눈금을 차례로 눌러 점을 찍어요' },
       { k:'plot', stage:'pred', who:'munsell',
-        say:'만약 빨강이 60이면 노랑은 얼마가 필요할까? 실험해 보지 않고도 알 수 있을까? 그래프에서 찾아보자. 선을 따라가 빨강 60 자리를 찾아 눌러 보렴. 그다음 오른쪽 식의 빈칸도 채워 봐.',
-        hi:'📈 선을 따라가 빨강 60 자리를 누르고, 식의 빈칸을 채워요' },
+        say:'점을 모두 찍었구나! 이제 첫 번째 점부터 차례로 눌러 선으로 이어 보자. 그리고 만약 빨강이 60이면 노랑은 얼마가 필요할까? 실험해 보지 않고도 그래프에서 찾을 수 있어. 선을 따라가 빨강 60 자리를 찾아 눌러 보렴. 그다음 오른쪽 식의 빈칸도 채워 봐.',
+        hi:'📈 점을 차례로 눌러 선으로 잇고, 빨강 60 자리와 식의 빈칸을 채워요' },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
          앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
       { k:'blank', id:'letter', who:'munsell', demo:'recipe', card:0,
@@ -2683,7 +2683,7 @@ class Component extends DCLogic {
        앞 화면에서 학습자가 찍은 것과 같은 값이며, 돌아왔다가 다시 와도 늘 같은 그림에서 시작한다. */
     if ((this.STEPS[n] || {}).stage === 'pred') {
       return { plotAt: n, plot: this.tblAns(n).map((a, ri) => ({ r: a[0], y: a[1], ok: 1, row: ri })),
-               plotSel: null, plotLine: 1, plotLink: this.tblAns(n).length,
+               plotSel: null, plotLine: 0, plotLink: 0,
                plotPred: null, plotGx: null, plotGy: null, plotEq: null };
     }
     /* 2026-09-27 — 첫 줄을 미리 찍어 두지 않는다. 화면에 들어오면 눈금을 누르는 모습을 시연으로 보여 주고,
@@ -2744,6 +2744,7 @@ class Component extends DCLogic {
     if (ri == null) { this.setState(clearG); return; }
     const ans = this.tblAns()[ri], ok = (r === ans[0] && y === ans[1]);
     this.plog(ok ? 'plot_hit' : 'plot_miss', { row: ri, r, y });
+    /* 2026-09-27 — 점 찍기 화면(stage:'draw')은 점을 다 찍으면 거기서 끝난다. 선 잇기는 다음 화면에서 한다 */
     /* 지침 5.2 — 잘못 찍은 자리에는 그 양으로 섞은 색을 그대로 남겨, 다른 색이 나온다는 것을 눈으로 보게 한다 */
     if (!ok) {
       this.setState(Object.assign({ plot: S.plot.concat([{ r, y, ok: 0 }]) }, clearG));
@@ -2757,8 +2758,15 @@ class Component extends DCLogic {
     const plot = S.plot.concat([{ r, y, ok: 1, row: ri }]);
     this.setState(Object.assign({ plot, plotSel: null }, clearG));
     this.sfx('ok');
-    if (this.tblAns().every(a => plot.some(p => p.ok && p.r === a[0] && p.y === a[1])))
-      this.toast('📍', '점을 다 찍었어요!', '이제 첫 번째 점(빨강 ' + this.tblAns()[0][0] + ')부터 차례로 눌러 선으로 이어 볼까요?', 'ok');
+    if (this.tblAns().every(a => plot.some(p => p.ok && p.r === a[0] && p.y === a[1]))) {
+      /* 점 찍기 화면은 여기서 끝난다 — 선 잇기는 다음 화면에서(2026-09-27 사용자 지시) */
+      if ((this.STEPS[S.i] || {}).stage !== 'pred') {
+        this.markSolved();
+        this.toast('📍', '점을 다 찍었어요!', '「다음 →」을 눌러 점들을 선으로 이어 볼까요?', 'ok');
+      } else {
+        this.toast('📍', '점을 다 찍었어요!', '이제 첫 번째 점(빨강 ' + this.tblAns()[0][0] + ')부터 차례로 눌러 선으로 이어 볼까요?', 'ok');
+      }
+    }
   }
   /* 점 잇기(2026-09-22 수정의견) — 도구가 선을 그어 주지 않고, 학습자가 표의 차례대로
      첫 점부터 끝 점까지 눌러 선분을 하나씩 잇는다. 다 이으면 선을 늘인 자리에서 예측한다. */
@@ -2822,6 +2830,7 @@ class Component extends DCLogic {
   }
   plotLineGo() {
     if (!this.plotDone() || this.state.plotLine) return;
+    /* 선을 다 이으면(예측 화면) 예측으로 넘어간다 — 통과는 식까지 채워야 한다 */
     this.plog('plot_line', {});
     this.setState({ plotLine: 1 });
     /* 2026-09-27 — 선을 다 이으면 이 화면은 끝. 예측은 다음 화면에서 한다 */
@@ -3772,7 +3781,9 @@ class Component extends DCLogic {
         /* 아직 찍지 않은 첫 줄 — 안내 문구에서 그 줄의 두 수를 그대로 불러 준다 */
         const todo = ans.find(a => !S.plot.some(p => p.ok && p.r === a[0] && p.y === a[1]));
         const demo0 = ans[0];
-        v.plotHint = S.plotLine
+        v.plotHint = (!isPred && done)
+          ? '✅ 점을 모두 찍었어요 — 「다음 →」을 눌러요'
+          : S.plotLine
           ? (!isPred ? '✅ 점을 모두 잇고 선을 만들었어요 — 「다음 →」을 눌러요'
              : (S.plotPred ? (S.plotEq ? '✅ 식까지 완성했어요 — 다음으로 넘어가요' : '✖️ 노랑은 빨강의 몇 배일까요? 빈칸에 들어갈 숫자를 눌러요')
                            : '📍 선을 늘여 빨강 ' + g.pred[0] + ' 자리를 찾아 눌러 보세요'))
