@@ -1786,7 +1786,7 @@ class Component extends DCLogic {
     if (this.STEPS[n].k === 'plot') {
       const open = this.plotOpen(n);
       if (open) this.setState(open);
-      if (this.STEPS[n].stage !== 'pred' && open) setTimeout(() => this.plotDemoRun(n), 60);
+      if (this.STEPS[n].stage !== 'pred' && open) { this._plotDemoT0 = null; setTimeout(() => this.plotDemoRun(n), 60); }
     } else this.plotDemoStop();
     if (this.STEPS[n].k === 'finish') { this.finishRoom(); setTimeout(() => this.awardDigit(), 350); }
     this.plog('nav', { to:n });
@@ -2698,9 +2698,23 @@ class Component extends DCLogic {
     const step = (ms, fn) => this._plotDemoT.push(setTimeout(() => { if (this.state.plotAt === n && !this._plotDemoOff) fn(); }, ms));
     this.plotDemoStop();
     this._plotDemoOff = 0; this._plotDemoT = [];
-    step(900,  () => { this.sfx('tap'); this.setState({ plotGx: ans[0] }); });
-    step(2000, () => { this.sfx('tap'); this.setState({ plotGy: ans[1] }); });
-    step(3000, () => {
+    /* 2026-09-27 — 「이렇게 하면 돼」라는 말이 끝난 뒤에 시연이 시작된다(사용자 지시).
+       소리를 꺼 두었으면 narrating()이 거짓이라 곧바로 시작한다. */
+    /* 대사는 화면에 들어온 뒤 조금 있다 시작한다. 그래서 「아직 시작 전」도 기다린다.
+       소리를 꺼 두었으면(audio !== 'full') 곧바로 시연한다. */
+    if (this._plotDemoT0 == null) this._plotDemoT0 = Date.now();
+    const waiting = this.state.audio === 'full'
+      && (this._speaking || Date.now() - this._plotDemoT0 < 1800);
+    if (waiting) {
+      this._plotDemoT.push(setTimeout(() => {
+        if (this.state.plotAt === n && !this._plotDemoOff) this.plotDemoRun(n);
+      }, 300));
+      return;
+    }
+    this._plotDemoT0 = null;
+    step(500,  () => { this.sfx('tap'); this.setState({ plotGx: ans[0] }); });
+    step(1600, () => { this.sfx('tap'); this.setState({ plotGy: ans[1] }); });
+    step(2500, () => {
       this.plog('plot_demo', { r: ans[0], y: ans[1] });
       this.setState({ plot: [{ r: ans[0], y: ans[1], ok: 1, row: 0, demo: 1 }], plotGx: null, plotGy: null });
       this.sfx('ok');
