@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609230818"></script>
+<script src="tts/manifest.js?v=202609270953"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -3296,7 +3296,9 @@ class Component extends DCLogic {
   }
   wrapSay(t) {
     if (!t) return '';
-    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1')).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+    /* 2026-09-27 — 문장마다 줄을 바꾸던 것을 그만둔다. 짧은 문장이 이어질 때 자막이 다섯 줄까지
+       늘어나 무대가 밀려 내려갔다. 이제는 한 문단으로 흘려 쓰고 화면 폭에서 저절로 접힌다(사용자 지시). */
+    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1'));
   }
 
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }

@@ -38,6 +38,20 @@ const norm = (raw, room) => {
 const SENT = t => String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
 const ttsKey = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
 
+/* 허브(index.html)의 HUB_SAY — 방과 같은 규칙으로 문장을 나눠 음성 목록에 넣는다(2026-09-27) */
+function hubRows() {
+  const html = fs.readFileSync(path.join(V4, 'index.html'), 'utf8');
+  const m = html.match(/const HUB_SAY = \[([\s\S]*?)\];/);
+  if (!m) return [];
+  const lines = [];
+  const re = new RegExp("'((?:[^'\\\\]|\\\\.)*)'", 'g'); let g;
+  while ((g = re.exec(m[1]))) lines.push(g[1].replace(/\\'/g, "'"));
+  const out = [];
+  lines.forEach((l, i) => SENT(norm(l, 'ColorRoom')).forEach((t, j) => out.push({
+    step: i + j * 0.001, who: 'ratio', text: t, key: ttsKey('ratio|' + t) })));
+  return out;
+}
+
 function make(name, done) {
   const html = fs.readFileSync(path.join(V4, name + '.dc.html'), 'utf8');
   const src = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1]
@@ -128,6 +142,9 @@ const data = {
     { title: '🗺️ 지도의 방 — 전체',
       note: '색깔·소리를 마치고 들어온 차례입니다.',
       rows: lines('MapRoom', ['color', 'sound']) },
+    { title: '🏠 허브 — 시작하기 안내',
+      note: 'index.html의 HUB_SAY — 허브에서 「시작하기」를 누르면 레시오가 하는 말입니다.',
+      rows: hubRows() },
     { title: '🏛️ 평가의 방 — 전체',
       note: '세 방을 마친 뒤 듣는 차례입니다.',
       rows: lines('EvalRoom', ['color','sound','map']) },

@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609230818"></script>
+<script src="tts/manifest.js?v=202609270953"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -1240,7 +1240,7 @@ class Component extends DCLogic {
   }
   wrapSay(t) {
     if (!t) return '';
-    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1')).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1'));   /* 2026-09-27 문장마다 줄 바꾸지 않음(사용자 지시) */
   }
 
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }

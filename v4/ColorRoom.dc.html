@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609230818"></script>
+<script src="tts/manifest.js?v=202609270953"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -54,7 +54,7 @@ button{font-family:inherit}
 @keyframes rsSpin{to{transform:rotate(360deg)}}
 @keyframes rsBlend{from{opacity:0}to{opacity:1}}
 @keyframes rsTickR{0%,100%{box-shadow:0 0 0 3px #d3242f}50%{box-shadow:0 0 0 7px #d3242f55}}
-@keyframes rsTickY{0%,100%{box-shadow:0 0 0 3px #a87c00}50%{box-shadow:0 0 0 7px #a87c0055}}
+@keyframes rsTickY{0%,100%{box-shadow:0 0 0 3px #f5c400}50%{box-shadow:0 0 0 7px #f5c40066}}
 /* 반응형: 고정 폭 조작물은 태블릿/모바일에서 축소 (크롬북·태블릿 대상) */
 @media (max-width:1080px){.rs-fit{zoom:.85}}
 @media (max-width:700px){.rs-fit{zoom:.6}}
@@ -172,7 +172,8 @@ button{font-family:inherit}
           <div class="rs-cmp" style="box-shadow:{{beakerRing}}">
             <div class="rs-cmp-labs">
               <sc-if value="{{isLab}}" hint-placeholder-val="{{false}}">
-                <div class="rs-cmp-lab" style="color:#8c491a;border-right:3px solid #201e1d">내 색 {{beakerAmt}}</div>
+                <!-- 2026-09-27 — 「내 색 빨강 20, 노랑 40」처럼 양까지 작은 글씨로 붙던 것을 이름만 남긴다(사용자 지시). 양은 아래 조작 칸에 크게 보인다 -->
+                <div class="rs-cmp-lab" style="color:#8c491a;border-right:3px solid #201e1d">내가 만든 색</div>
               </sc-if>
               <div class="rs-cmp-lab" style="color:#645c50">목표 색</div>
             </div>
@@ -263,7 +264,7 @@ button{font-family:inherit}
                   <div style="font-size:20px;font-weight:800;color:{{q.ink}}">{{q.n}}컵</div>
                   <div style="font-size:12px;font-weight:800;color:#645c50">{{q.amt}}mL</div>
                 </div>
-                <div style="flex:1;min-height:54px;display:flex;flex-wrap:nowrap;gap:4px;align-items:flex-end;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:14px;padding:6px 8px;overflow:hidden">
+                <div style="flex:none;width:{{q.rowW}};min-height:54px;display:flex;flex-wrap:wrap;gap:4px;align-items:flex-end;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:14px;padding:6px 8px">
                   <sc-for list="{{q.cups}}" as="cu" hint-placeholder-count="3">
                     <div style="box-sizing:border-box;width:{{q.cupW}};height:{{q.cupH}};border:3px solid #201e1d;border-top-width:2px;border-radius:0 0 9px 9px;background:#f9f4ed;position:relative;overflow:hidden;flex:none">
                       <div style="position:absolute;left:0;right:0;bottom:0;height:74%;background:{{q.color}}"></div>
@@ -308,9 +309,10 @@ button{font-family:inherit}
                 <div style="font-size:17px;color:{{p.ink}};flex:none;height:28px;display:flex;align-items:center;justify-content:center;line-height:1">{{p.tag}}{{p.name}} {{p.amt}}mL</div>
                 <div onPointerDown="{{p.down}}" role="slider" aria-label="{{p.name}} 물감 양" aria-valuenow="{{p.amt}}" style="position:relative;flex:1;min-height:130px;width:min(20vw,84px);border-radius:16px;border:3.5px solid {{p.barBd}};background:#f9f4ed;overflow:hidden;cursor:{{p.cursor}};touch-action:none;box-shadow:inset 0 3px 8px rgba(32,30,29,.08)">
                   <div style="position:absolute;left:0;right:0;bottom:0;height:{{p.pct}}%;background:{{p.color}};transition:height .07s linear"></div>
-                  <div style="position:absolute;left:0;right:0;bottom:{{p.pct}}%;height:5px;background:rgba(255,255,255,.9);opacity:{{p.handleOp}}"></div>
-                  <div style="position:absolute;left:0;right:0;bottom:calc({{p.pct}}% - 13px);display:flex;justify-content:center;pointer-events:none;opacity:{{p.handleOp}}">
-                    <div style="width:40px;height:22px;border-radius:999px;background:#f9f4ed;border:2.5px solid #201e1d;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">⇅</div>
+                  <!-- 2026-09-27 — 손잡이를 크게 하고 커서를 손 모양으로 바꾼다. 끌 수 있는 자리인지 잘 안 보였다(사용자 지시) -->
+                  <div style="position:absolute;left:0;right:0;bottom:{{p.pct}}%;height:7px;background:rgba(255,255,255,.95);opacity:{{p.handleOp}}"></div>
+                  <div style="position:absolute;left:0;right:0;bottom:calc({{p.pct}}% - 19px);display:flex;justify-content:center;pointer-events:none;opacity:{{p.handleOp}}">
+                    <div style="width:62px;height:34px;border-radius:999px;background:#f9f4ed;border:3.5px solid #201e1d;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(32,30,29,.35)">⇅</div>
                   </div>
                 </div>
                 <div style="display:flex;gap:8px;flex:none;align-items:center">
@@ -343,10 +345,10 @@ button{font-family:inherit}
                 <div style="font-size:12.5px;font-weight:800;color:#645c50;line-height:1.35">🔬 내 가설<br><span style="font-size:14px;color:#8c491a">{{sumHypo}}</span></div>
               </sc-if>
               <div style="font-size:12.5px;font-weight:800;color:#645c50;line-height:1.35">🧪 지금 넣은 양</div>
-              <div style="font-size:19px;line-height:1.3;color:#201e1d">
-                <span style="color:#c0392b">빨강 {{redAmt}}</span><span style="font-size:14px;color:#645c50">mL</span>
-                <span style="color:#645c50">, </span>
-                <span style="color:#b3921e">노랑 {{yelAmt}}</span><span style="font-size:14px;color:#645c50">mL</span>
+              <!-- 2026-09-27 — 100mL·200mL가 되면 한 줄에 안 담겨 줄이 접혔다. 빨강·노랑을 줄을 나눠 적는다(사용자 지시) -->
+              <div style="font-size:19px;line-height:1.45;color:#201e1d">
+                <div><span style="color:#c0392b">빨강 :</span> {{redAmt}}<span style="font-size:14px;color:#645c50">mL</span></div>
+                <div><span style="color:#b3921e">노랑 :</span> {{yelAmt}}<span style="font-size:14px;color:#645c50">mL</span></div>
               </div>
               <sc-if value="{{simpleRatio}}" hint-placeholder-val="{{false}}">
                 <div style="font-size:15px;color:#8c491a;background:#fff2eb;border-radius:999px;padding:3px 10px;text-align:center">{{simpleRatio}}</div>
@@ -688,12 +690,12 @@ button{font-family:inherit}
               <sc-for list="{{plotXTicks}}" as="t" hint-placeholder-count="4">
                 <button onClick="{{t.pick}}" aria-label="빨강 눈금" style="position:absolute;left:{{t.left}};bottom:0;min-width:34px;height:30px;padding:0 5px;font-size:18px;font-weight:800;font-family:inherit;color:{{t.fg}};background:{{t.bg}};opacity:{{t.op}};pointer-events:{{t.pe}};box-shadow:{{t.sh}};animation:{{t.anim}};border:none;border-radius:8px;cursor:pointer;transform:translateX(-50%)">{{t.t}}</button>
               </sc-for>
-              <div style="position:absolute;left:{{plotGridLeft}}px;top:{{plotTop}}px;width:{{plotW}}px;height:{{plotH}}px;box-sizing:content-box;background:#fffdf6;border-left:5px solid {{cYel}};border-bottom:5px solid {{cRed}};background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCellY}}px)">
+              <div style="position:absolute;left:{{plotGridLeft}}px;top:{{plotTop}}px;width:{{plotW}}px;height:{{plotH}}px;box-sizing:content-box;background:#fffdf6;border-left:6px solid {{cYelAx}};border-bottom:5px solid {{cRed}};background-image:repeating-linear-gradient(to right,#e8dfce 0 1px,transparent 1px {{plotCell}}px),repeating-linear-gradient(to top,#e8dfce 0 1px,transparent 1px {{plotCellY}}px)">
                 <sc-if value="{{gxOn}}" hint-placeholder-val="{{false}}">
                   <div style="position:absolute;left:{{gxLeft}};top:0;bottom:0;width:3px;margin-left:-1px;background:{{cRed}};opacity:.55;animation:rsBlend .3s ease"></div>
                 </sc-if>
                 <sc-if value="{{gyOn}}" hint-placeholder-val="{{false}}">
-                  <div style="position:absolute;top:{{gyTop}};left:0;right:0;height:3px;margin-top:-1px;background:{{cYel}};opacity:.65;animation:rsBlend .3s ease"></div>
+                  <div style="position:absolute;top:{{gyTop}};left:0;right:0;height:4px;margin-top:-1px;background:{{cYelAx}};opacity:.9;animation:rsBlend .3s ease"></div>
                 </sc-if>
                 <sc-for list="{{plotSegs}}" as="sg" hint-placeholder-count="2">
                   <div style="position:absolute;left:{{sg.left}};top:{{sg.top}};width:{{sg.len}};height:4px;border-radius:999px;background:{{sg.bg}};transform-origin:0 50%;transform:{{sg.rot}};animation:rsBlend .4s ease;pointer-events:none"></div>
@@ -875,6 +877,10 @@ class Component extends DCLogic {
   PRIM = { '빨강':[230,40,55], '노랑':[250,215,45] };
   MAX = 200;                  /* 막대 상한 — 눈금이 촘촘히 보이도록 200mL까지만 연다 */
   STEP_ML = 1;                /* ＋− 버튼이 한 번에 더하고 빼는 양 — 1mL씩 미세하게 맞춘다 */
+  /* 비커 커서 — 가로줄(길이 46px) 한 줄. 가운데(23,10)가 가리키는 점이다. */
+  /* 비커 커서 — 물감 높이를 긋는 듯한 가로줄(길이 46px). 가운데(23,10)가 가리키는 점이다.
+     따옴표가 style 속성을 깨뜨리므로 SVG는 모두 퍼센트 부호로 적는다(2026-09-27). */
+  LINE_CUR = 'url(data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20width=%2746%27%20height=%2720%27%3E%3Cline%20x1=%273%27%20y1=%2710%27%20x2=%2743%27%20y2=%2710%27%20stroke=%27white%27%20stroke-width=%277%27%20stroke-linecap=%27round%27/%3E%3Cline%20x1=%273%27%20y1=%2710%27%20x2=%2743%27%20y2=%2710%27%20stroke=%27%23201e1d%27%20stroke-width=%273.5%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E) 23 10, ns-resize';
   SNAP_ML = 1;                /* 슬라이더를 끌 때 걸리는 눈금 — 버튼과 같이 1mL */
   CUP_ML = 10;                /* 실험 단계에서 한 번에 붓는 컵의 양 */
   CUP_LAB_MAX = 12;           /* 컵으로 탐색하는 실험에서 한 물감에 부을 수 있는 최대 컵 수 */
@@ -882,6 +888,9 @@ class Component extends DCLogic {
   /* 글자에 쓰는 물감 색 — 노랑을 그대로 쓰면 밝은 바탕에 묻혀 읽히지 않아 짙게 내린다 */
   C_RED = '#d3242f';
   C_YEL = '#a87c00';
+  /* 2026-09-27 — 그래프(19화면)의 세로축·눈금은 탁한 겨자색이 아니라 밝은 노랑으로 보이게 한다(사용자 지시).
+     글씨 색으로 쓰던 C_YEL은 크림 바탕에서 읽히도록 어둡게 둔 값이라 축에는 따로 쓴다. */
+  C_YEL_PLOT = '#f5c400';
   /* 실험 단계의 lockR — 빨강을 이 양으로 담아 두고 잠근다(노랑만 움직인다).
      세 번의 실험이 점점 열린다:
        1) 빨강 20 잠금 — 시범에서 쓴 그 양. 찾을 것은 노랑 하나뿐이라 출발이 막히지 않는다.
@@ -901,7 +910,7 @@ class Component extends DCLogic {
     picks: {}, solved: {}, refText:'', probe:{}, cupFlash:null, dots: [0,0,0,0,0], dotSel: 1, dotMix: null,
     cells: [], pot: 'r', bsize: 1, blanks: {}, used: {}, selBlank: null,
     toast: null, audio: 'full', cards: 0, demoP: { a:0, b:0 }, pouring: null,
-    labLog: [], wallDone: 0, failed: [], hypoPick: false,
+    labLog: [], wallDone: 0, failed: [], hypoPick: false, mDone: 0,
     tmpNum: {},
     /* 표·격자·식 — tbl은 표의 줄마다 놓인 수첩 기록의 번호,
        plot은 격자에 찍은 점, rule은 곱셈식의 빈칸에 놓인 수다. */
@@ -929,10 +938,7 @@ class Component extends DCLogic {
 
   get STEPS() {
     return [
-      { k:'story', who:'ratio', emoji:'🎨',
-        lines:['안녕하세요! 저는 비의 비밀을 함께 찾을 레시오예요.',
-               '여기 색깔의 비밀 방에는 화가와 과학자가 기다리고 있어요. 함께 풀어 볼까요?'],
-        btn:'탐험 시작! →' },
+      /* 2026-09-27 — 레시오의 첫 소개는 허브의 「시작하기」 팝업으로 옮겼다. 방은 뭉크부터 시작한다(사용자 지시) */
       { k:'story', who:'munch', art:'scream_half.jpg', artAlt:'칠하다 만 그림',
         artCap:'노을 진 하늘을 칠하다 말았어요',
         lines:['안녕? 나는 화가 뭉크야. 「절규」의 노을 진 하늘을 칠해야 하는데 물감이 말라 버렸어.',
@@ -961,25 +967,26 @@ class Component extends DCLogic {
       { k:'lab', mode:'more', unit:'cup', who:'munsell', run:'기록하기', lockR:40,
         say:'완벽해. 그런데 같은 색을 다른 양으로도 만들 수 있을까? 이번에는 빨강 물감을 10mL씩 네 컵 부었어. 노랑 물감은 10mL씩 몇 컵을 부어야 아까와 같은 색이 될까?',
         hi:'빨강이 두 배가 되었어요 · 노랑은 몇 컵일까요' },
-      { k:'lab', mode:'more', who:'munsell', run:'기록하기',
-        say:'빨강 20, 노랑 40으로 목표색을 찾았지? 이번에는 다른 양으로 목표색을 만들어 봐. 슬라이더로 양을 정하고, 찾으면 기록해 둬.',
-        hi:'미션 · 앞에서 만든 두 가지와 다른 양으로 목표색 만들기 · ＋－는 1mL씩 움직여요' },
-      /* 세 번의 실험이 끝나자마자, 아직 비를 수로 적기 전에 또래 아이가 끼어들어 묻는다.
-         안내자가 미리 예고하지 않는다 — 다인이가 곧장 말을 걸어야 자연스럽다.
-         답은 어른이 말해 주지 않는다 — 다인이 말대로 직접 만들어 보고, 그 결과를 근거로
-         학습자가 설명을 완성한 뒤에야 '무엇이 그대로였나'를 한 마디로 모은다. */
-      { k:'story', who:'kid', emoji:'🙋',
-        lines:['만약 같은 양만큼 물감을 더하면 어떻게 되나요?',
-               '빨강도 30을 더 넣고, 노랑도 30을 더 넣으면 아까랑 같은 색이 나오나요?'],
-        btn:'실험으로 알아내기 →' },
-      /* 오개념을 말로 반박하지 않는다 — 다인이가 말한 그대로 손으로 만들어 보고,
-         목표색 옆에 나란히 놓아 달라진다는 것을 눈으로 확인하게 한다. */
+      /* 찾은 관계를 큰 통에 그대로 옮겨 쓰는 자리 — 빨강 50mL는 이미 담겨 있고,
+         노랑을 10mL 컵으로 부어 학습자가 1 : 2를 스스로 지킨다.
+         2026-09-27 — 편지 뒤가 아니라 컵 실험 두 번 뒤로 옮기고, 문제는 먼셀이 낸다(사용자 지시). */
+      { k:'lab', mode:'wall', unit:'cup', who:'munsell', run:'완성하기', lockR:50,
+        say:'이번에는 뭉크가 쓸 물감을 큰 통에 가득 만들어 보자. 큰 통에 빨강을 50mL 넣었어. 앞에서 찾은 관계대로라면 노랑은 얼마나 넣어야 할까?',
+        hi:'10mL 컵으로 노랑을 부어요' },
+      /* 2026-09-27 — 또래 아이(다인이)가 갑자기 나타나 묻던 화면을 없앴다. 레시오가 물음을 던지고
+         그 자리에서 바로 실험하게 해 한 단계를 줄였다(사용자 지시). 오개념은 말로 반박하지 않고,
+         물음대로 손으로 만들어 목표색 옆에 나란히 놓아 눈으로 확인하게 하는 구조는 그대로다. */
       { k:'lab', mode:'trap', unit:'cup', who:'munsell', run:'확인하기',
         startR:20, startY:40, trapA:50, trapB:70,
-        say:'좋은 질문이야! 실험으로 보여 주자. 비커에는 빨강 20mL와 노랑 40mL가 들어 있어. 다인이 말대로 양쪽에 30mL씩 더 넣어 봐. 목표색과 같아질까?',
+        say:'이번엔 다른 방법을 실험해 보자. 빨강과 노랑에 각 물감을 30mL씩 같은 양만큼 더 넣어 보자. 아까와 같은 목표색이 될까, 다른 색이 될까? 지금 비커에 빨강 20mL와 노랑 40mL가 들어 있어. 양쪽에 30mL씩 더 넣고 목표색과 비교해 봐.',   /* 2026-09-27 사용자 문안 */
         hi:'빨강도 세 컵, 노랑도 세 컵 더 부어요' },
       { k:'blank', id:'why', who:'munsell', demo:'cups',
-        say:'아래 그림을 같이 볼까? 왼쪽은 두 양에 같은 수를 곱했고, 오른쪽은 두 양에 같은 양을 더했어. 다인이에게 해 줄 설명을 낱말 카드를 끌어서 완성해 봐.' },
+        say:'왼쪽은 빨강 20, 노랑 40에 각각 2를 곱한 양으로 섞어 만든 색이야. 오른쪽은 빨강 20, 노랑 40에 각각 30mL를 더한 양으로 섞어 만든 색이야. 같은 색 물감을 만들려면 어떻게 해야 할까? 낱말 카드를 끌어 빈칸에 넣어 알맞은 문장을 완성해 봐.' },   /* 2026-09-27 사용자 문안 */
+      /* 2026-09-27 — 한 번만 만들고 넘어가면 「양이 달라도 비가 같으면 같은 색」이 한 사례로만 남는다.
+         다른 양으로 두 번 만들게 해 두 사례를 나란히 보게 한다(사용자 지시). need는 이 화면에서 새로 찾아야 하는 횟수다. */
+      { k:'lab', mode:'more', who:'munsell', run:'기록하기', need:2,
+        say:'빨강 20에 노랑 40을, 빨강 40에 노랑 80을 섞으면 목표색이 되었지? 이번에는 이것과 다른 양으로 목표색을 두 번 만들어 볼 거야. [[마우스로 슬라이더를 움직이거나 ＋－를 눌러|마우스로 슬라이더를 움직이거나 플러스 마이너스 단추를 눌러]] 양을 정하고, 목표색이 되면 기록하기를 눌러!',
+        hi:'미션 · 앞과 다른 양으로 두 번 만들기 · 슬라이더나 ＋－로 1mL씩 조절해요' },
       /* 실험과 다인이의 반례를 모두 겪은 뒤에 묻는다 — 더해도 안 되고 곱하면 되는 까닭을
          한 마디로 모으는 자리다. */
       /* 단위화(재합성) — 두 번 되풀이한다. 양에 맞춰 묶는 단위를 바꾸면
@@ -1015,31 +1022,34 @@ class Component extends DCLogic {
       { k:'blank', id:'sym', who:'munsell', demo:'sym',
         say:'두 번 다 네가 만들어 낸 [[1컵과 2컵|한 컵과 두 컵]]에 이름을 붙여 줄게. 이렇게 두 양을 비교하여 나타낸 것을 「비」라고 해. 두 수를 적고 그 사이에 쌍점을 찍는단다. 아래 낱말 카드를 끌어서 빈칸을 채워 보렴.',
         hi:'📝 두 수 사이에 쌍점을 찍어 적어요' },
-      /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
-         앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
-      { k:'blank', id:'letter', who:'munsell', demo:'recipe', card:0,
-        say:'이제 빨강과 노랑을 몇 대 몇의 비율로 섞으면 그 색이 만들어지는지 뭉크에게 편지를 써 보렴. 아래 숫자 카드를 누른 채 끌어서 빈칸 위에 놓으면 돼.' },
-      /* 찾은 비를 큰 통에 그대로 옮겨 쓰는 자리 — 빨강 50mL는 이미 담겨 있고,
-         노랑을 10mL 컵으로 부어 학습자가 1 : 2를 스스로 지킨다. */
-      { k:'lab', mode:'wall', unit:'cup', who:'munch', run:'완성하기', lockR:50,
-        say:'빨강과 노랑을 1 대 2로 섞으면 그 색이 나오는구나. 알아내줘서 고마워! 큰 통에 빨강을 50mL 넣었어. 그럼 노랑은 얼마나 넣어야 할까?',
-        hi:'10mL 컵으로 노랑을 부어요' },
-      { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
-        lines:['네가 준 물감으로 노을을 칠해 완성했어.',
-               '정말 고마워!'],
-        btn:'다음 →' },
       /* ── 표와 그래프 ──
          먼셀이 지금까지 나온 값을 표로 정리해 보여 주고, 학습자는 그 표를 그래프로만 옮긴다(2026-09-14).
          표 옮기기와 식 세우기 단계는 시간 때문에 뺐다. */
       { k:'plot', who:'munsell',
         say:'지금까지 나왔던 모든 값을 표로 나타내 봤어. 표에 나타낸 값을 그래프로 나타내 보자. 첫 줄은 내가 미리 찍어 두었어. 반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다. 점을 다 찍으면 첫 번째 점부터 차례로 눌러 선으로 이어 보렴.',
         hi:'📈 점을 찍고, 첫 번째 점부터 차례로 눌러 이어요' },
-      /* 시냐크 소개 — 시냐크 본인의 점묘화 대표작을 그대로 보여 준다. */
-      { k:'story', who:'signac', art:'signac_feneon_hi.jpg', art2:'signac_incomplete_hi.jpg', art2Wash:1,   /* 2026-09-22 밤 — 점이 보이게 고해상도(위키미디어 공용, 공유 저작물)로 바꾸고 크게 */
-        artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890)  ·  「양산을 든 여인」 — 주황이 빠진 미완성',
-        lines:['안녕? 나는 점을 찍어 색을 표현하는 화가 \'시냐크\'라고 해.',
-               '그런데 지금 「양산을 든 여인」을 그릴 때 필요한 주황색을 만드는 중이야.',
-               '같이 점을 찍으며 색을 만드는 걸 도와주겠니?'],
+      /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
+         앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
+      { k:'blank', id:'letter', who:'munsell', demo:'recipe', card:0,
+        say:'이제 빨강과 노랑을 몇 대 몇의 비율로 섞으면 그 색이 만들어지는지 뭉크에게 편지를 써 보렴. 아래 숫자 카드를 누른 채 끌어서 빈칸 위에 놓으면 돼.' },
+      { k:'story', who:'munch', art:'scream.jpg', artCap:'에드바르 뭉크, 「절규」',
+        lines:['네가 준 물감으로 노을을 칠해 완성했어.',
+               '정말 고마워!'],
+        btn:'다음 →' },
+      /* 2026-09-27 — 시냐크가 불쑥 나타나던 자리. 뭉크와 일을 마친 먼셀이 넘겨주고,
+         시냐크는 다음 화면에서 직접 인사한다(사용자 지시). 그림 두 장은 그대로 둔다. */
+      { k:'story', who:'munsell', art:'signac_feneon_hi.jpg',   /* 2026-09-27 — 이 화면은 점묘화 대표작 한 장만(사용자 지시) */
+        artCap:'폴 시냐크, 「펠릭스 페네옹의 초상」(1890)',
+        lines:['뭉크의 색을 함께 만들어 줘서 고마워. 빨강과 노랑을 1 대 2로 섞으면, 양이 달라도 같은 색이 나온다는 걸 네가 직접 찾아냈지.',
+               '이 그림을 봐. 물감을 섞지 않고 작은 점을 찍어서 색을 만든 그림이야.',
+               '이번에는 점을 찍어 색을 만드는 화가를 도와줄래? 우리가 함께 공부한 비를 기억하면 도울 수 있을 거야.'],
+        btn:'좋아요!' },
+      /* 2026-09-27 — 시냐크가 자기 그림을 보여 주며 인사하는 화면(사용자 지시). 점 찍기는 다음 화면부터 */
+      { k:'story', who:'signac', art:'signac_incomplete_hi.jpg', art2Wash:0, artWash:1,
+        artCap:'폴 시냐크, 「양산을 든 여인」 — 주황이 빠진 미완성',
+        lines:['안녕? 나는 점을 찍어 색을 표현하는 화가 시냐크라고 해.',
+               '지금 「양산을 든 여인」을 그리는 중인데, 여기에 쓸 주황이 아직 없어.',
+               '같이 점을 찍어 주황을 만들어 줄래?'],
         btn:'좋아요!' },
       { k:'dots', who:'signac',
         say:'나는 빨강과 노랑의 비가 2 대 3으로 주황을 만들고 싶어. 다섯 칸을 기준으로 빨강과 노랑을 점 찍어서 표현해 봐.',
@@ -1177,13 +1187,14 @@ class Component extends DCLogic {
         ['빨강 1컵과 노랑 2컵을 비교하면 빨강 : 노랑 = ', {a:'1'}, ' : ', {a:'2'}, ' 라고 적고'],
         ['「일 대 이」라고 읽어요.'] ],
       bank:['비','1','2','양','3'] },
-    why: { card:true, title:'📝 다인이에게 해 줄 설명', rows:[
+    why: { card:true, title:'📝 같은 색을 만드는 방법', rows:[
         /* 2026-09-22: 「나눠야」가 오답으로 처리되고 있었다 — 0이 아닌 같은 수로 나눠도 비는
            그대로다(40:80 → 1:2). 정답을 「0이 아닌 수로 곱하거나 나눠야」로 넓히고, 틀린
            것이 아닌 「나눠야」와 「빼면」을 꾸러미에서 뺐다. 정답이 길어지면서 「같은 수를」과
            겹쳐 틀을 「두 양을 똑같이 …」로 바꿨다.
            같은 날 오답 낱말을 「더하면」에서 「더하거나 빼야」로 — 정답과 짝이 맞고 빈칸에 넣어도 문장이 된다. */
-        ['같은 색 물감을 만들려면 두 양을 똑같이 ', {a:'0이 아닌 수로 곱하거나 나눠야'}, ' 해요.'] ],
+        /* 2026-09-27 사용자 문안 */
+        ['같은 색을 만들기 위해서는 두 양을 똑같이 ', {a:'0이 아닌 수로 곱하거나 나눠야'}, ' 한다.'] ],
       bank:['더하거나 빼야','0이 아닌 수로 곱하거나 나눠야'] },
     /* 방의 마무리 정리 카드. 없어진 '레시피 카드' 단계의 몫(노을빛 주황 = 빨강 1 : 노랑 2)까지
        이 한 장에 담아, 구체적인 레시피와 일반화된 결론을 나란히 적게 한다. */
@@ -1732,7 +1743,7 @@ class Component extends DCLogic {
     clearTimeout(this._tT); clearTimeout(this._autoT);
     this._wasHit = false;
     this._pts = new Map();
-    this.setState({ i:n, toast:null, amt:this.startAmt(n), labLog:[],
+    this.setState({ i:n, toast:null, amt:this.startAmt(n), labLog:[], mDone:0,
       cells: [], selBlank:null, dotMix:null, hypoPick:false, demoP:{ a:0, b:0 }, pouring:null,
       tmpNum:{},
       cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
@@ -1793,7 +1804,9 @@ class Component extends DCLogic {
   }
   wrapSay(t) {
     if (!t) return '';
-    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1')).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+    /* 2026-09-27 — 문장마다 줄을 바꾸던 것을 그만둔다. 짧은 문장이 이어질 때 자막이 다섯 줄까지
+       늘어나 무대가 밀려 내려갔다. 이제는 한 문단으로 흘려 쓰고 화면 폭에서 저절로 접힌다(사용자 지시). */
+    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1'));
   }
 
   markSolved() {
@@ -2089,7 +2102,7 @@ class Component extends DCLogic {
         this.autoNext(4200);
         return;
       }
-      this.toast('🤔', '빨강 ' + st.trapA + 'mL · 노랑 ' + st.trapB + 'mL로 맞춰 보자', '다인이가 말한 대로 빨강에도 30mL, 노랑에도 30mL를 더 넣어 볼까?');
+      this.toast('🤔', '빨강 ' + st.trapA + 'mL · 노랑 ' + st.trapB + 'mL로 맞춰 보자', '빨강에도 30mL, 노랑에도 30mL를 더 넣어 볼까요?');
       return;
     }
     if (!ok) {
@@ -2136,8 +2149,17 @@ class Component extends DCLogic {
       const key = a + ':' + b;
       if (this.state.found.some(f => f[0]+':'+f[1] === key)) { this.toast('🤔', '이미 실험한 양이에요', '새로운 양으로 도전!'); return; }
       const found = this.state.found.concat([[a,b]]);
-      this.setState({ found, amt: this.startAmt(this.state.i) });
-      this.markSolved(); this.confetti();
+      const mDone = (this.state.mDone || 0) + 1;
+      this.setState({ found, mDone, amt: this.startAmt(this.state.i) });
+      this.plog('lab_more', { n: mDone, need: st.need || 1, a, b });
+      this.confetti();
+      /* 두 번 찾게 하는 화면(need:2)에서는 첫 번째를 찾아도 아직 넘기지 않는다 */
+      if ((st.need || 1) > mDone) {
+        this.toast('🎉', '한 가지 찾았어요! 이제 또 다른 양으로',
+          '방금 빨강 ' + a + 'mL · 노랑 ' + b + 'mL. 남은 횟수 ' + ((st.need || 1) - mDone) + '번 — 또 다른 양으로 같은 색을 만들어 봐요.', 'ok');
+        return;
+      }
+      this.markSolved();
       /* 「간단히 하면 1 : 2」를 여기서 말하지 않는다 — 약분도 「:」도 학습자가
          20mL 컵으로 1컵·2컵을 만들어 낸 뒤(cups·sym 단계)에 처음 만나는 것이다(지침 4.1). */
       this.toast('🎉', '성공! 양은 달라도 같은 색이에요',
@@ -2363,7 +2385,7 @@ class Component extends DCLogic {
 
   /* 백분율 문제에서 쓰는 비커 그림 — 빨강 40 · 노랑 60이 섞여 주황 100이 된다 */
   /* 10mL 컵으로 세어 보는 시연 — 학습자가 실제로 만든 세 가지를 나란히 놓는다.
-     2:4(실험 1) · 5:7(다인이 방식) · 4:8(실험 2) */
+     2:4(실험 1) · 5:7(같은 양을 더한 경우) · 4:8(실험 2) */
   /* 물감 만드는 법 — 수첩에 적은 1 : 2를 그대로 만들어 뭉크에게 건넨다 */
   /* 「:」 기호를 처음 들이는 그림 — 부은 차례대로 앞뒤에 놓는다.
      2026-09-20: 「기준이 되는 양·비교하는 양」을 뺐다. 교과서에서 기준량은 비의 뒤 항이고
@@ -2583,7 +2605,7 @@ class Component extends DCLogic {
          그래프가 작아 보이지 않게 칸 너비는 72px로 넓힌다(2026-09-22 사용자 지시). 두 축 모두 한 칸 = 10mL. */
       const u = 10, k = 2, rmax = 60, ymax = 120;
       return { u, k, rmax, ymax, pred: [rmax, ymax],
-               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 72, cellY: 40 };
+               cx: rmax / u + 1, cy: ymax / u + 1, sx: 1, sy: 1, cell: 58, cellY: 27 };   /* 2026-09-27 한 화면에 담기도록 72×40 → 58×27 */
     }
     const rows = this.tblAns(), mr = rows[rows.length - 1][0];
     /* 단계가 한 칸의 양·배수·예측할 자리를 정한다 — 시냐크의 2 : 3 격자가 그렇다. */
@@ -2995,8 +3017,9 @@ class Component extends DCLogic {
           ? { display:'block', width:'min(300px,66vw)', aspectRatio:'1 / 0.84', objectFit:'cover', objectPosition:'center top', borderRadius:'3px' }
           /* artBig: 색상환처럼 글씨를 읽어야 하는 도해는 더 크게(자막·버튼을 밀어내지 않는 범위) */
           : st.artBig
-            ? { display:'block', maxWidth:'min(380px,68vw)', maxHeight:artMax(38), width:'auto', height:'auto', borderRadius:'3px' }
-            : { display:'block', maxWidth:'min(360px,72vw)', maxHeight:artMax(42), borderRadius:'3px' } }) : null,
+            ? { display:'block', maxWidth:'min(460px,70vw)', maxHeight:artMax(46), width:'auto', height:'auto', borderRadius:'3px' }
+            /* 2026-09-27 — 그림이 한 장뿐인 화면은 자리가 남아 더 크게 보인다(사용자 지시) */
+            : { display:'block', maxWidth:'min(520px,76vw)', maxHeight:artMax(52), borderRadius:'3px' } }) : null,
       /* 초상이 있으면 이모지 원은 그리지 않는다(초상 안쪽에 대체 표시로 들어감) */
       coachEmoji: who.img ? '' : (who.emoji || ''),
       coachName: who.name,
@@ -3112,11 +3135,14 @@ class Component extends DCLogic {
               const ic = quiet ? '📝' : '✅';
               const tt = quiet ? (st.mark === 'obs' ? '이렇게 관찰했군요' : '가설을 세웠어요') : c.t;
               const bd = quiet ? (st.mark === 'obs' ? (c.fb || '') : (c.t + ' — 실험으로 확인해 봐요!')) : (c.fb || '');
+              /* 2026-09-27 — 관찰을 고르는 화면(mark:'obs', 색깔 5화면)에서는 알림 상자를 띄우지 않는다.
+                 상자가 목표색과 내 색 위에 겹쳐서, 고르고 나서 두 색을 견주기 어려웠다(사용자 지시).
+                 고른 관찰은 화면의 견본과 「내 가설」 줄에 그대로 남으므로 알림이 없어도 되짚을 수 있다. */
               if (okCount >= needed) {
                 this.markSolved();
-                this.toast(ic, tt, bd, quiet ? 'quiet' : 'ok');
+                if (st.mark !== 'obs') this.toast(ic, tt, bd, quiet ? 'quiet' : 'ok');
                 this.autoNext(3000);
-              } else this.toast(ic, tt, (quiet ? bd : (c.fb || '') + ' 하나 더 찾아봐요!'), quiet ? 'quiet' : 'ok');
+              } else if (st.mark !== 'obs') this.toast(ic, tt, (quiet ? bd : (c.fb || '') + ' 하나 더 찾아봐요!'), quiet ? 'quiet' : 'ok');
             } else this.toast('💡', '먼셀의 힌트', c.fb || '');
           }
         };
@@ -3166,7 +3192,9 @@ class Component extends DCLogic {
           pct: S.amt[nm] / this.MAX * 100,
           tag: lk ? '🔒 ' : '',
           barBd: lk ? '#dcd3c4' : '#c0b6a5',
-          cursor: lk ? 'not-allowed' : 'ns-resize',
+          /* 2026-09-27 — 비커 위에서는 물감 높이를 긋는 듯한 가로줄 커서를 쓴다(사용자 지시).
+             하얀 테를 둘러 진한 물감 위에서도 보이게 한다. 커서를 못 그리는 기기에서는 ns-resize로 내려간다. */
+          cursor: lk ? 'not-allowed' : this.LINE_CUR,
           btnOp: lk ? 0.3 : 1,
           btnPe: lk ? 'none' : 'auto',
           handleOp: (lk || !(S.amt[nm] > 0)) ? 0 : 1,
@@ -3203,14 +3231,19 @@ class Component extends DCLogic {
         const needCups = Math.max(8, goalCups,
           ...v.paints.map(q => Math.round(S.amt[q.name] / this.CUP_ML)));
         const AVAIL = 206, CGAP = 4;
+        /* 2026-09-27 — 열 컵까지 한 줄에 넣으려다 컵이 작아져 앞 화면보다 양이 적어 보였다.
+           여덟 컵을 넘으면 두 줄로 접고, 컵 크기는 앞 화면(여덟 컵)과 같게 둔다(사용자 지시). */
+        const perRow = needCups > 8 ? Math.ceil(needCups / 2) : needCups;
+        const sizeBy = Math.max(8, perRow);
         const cupW = Math.max(13, Math.min(26,
-          Math.floor((AVAIL - CGAP * (needCups - 1)) / needCups)));
+          Math.floor((AVAIL - CGAP * (sizeBy - 1)) / sizeBy)));
         const cupH = Math.round(cupW * 1.46);
         v.cupPaints = v.paints.map(q => {
           const nm = q.name, cur = S.amt[nm], n = Math.round(cur / this.CUP_ML), lk = !!(lockR && nm === '빨강');
           return {
             name: nm, ink: q.ink, color: q.color, amt: cur, n: n, tag: q.tag,
             cupW: cupW + 'px', cupH: cupH + 'px',
+            rowW: (perRow * cupW + CGAP * (perRow - 1) + 20) + 'px',
             cups: new Array(n).fill(0).map((_, i) => ({ i: i })),
             btnOp: q.btnOp, btnPe: q.btnPe,
             add: lk ? (() => {}) : (() => this.setAmt(nm, Math.min(this.CUP_LAB_MAX * this.CUP_ML, cur + this.CUP_ML), 'cup')),
@@ -3232,7 +3265,7 @@ class Component extends DCLogic {
       v.barY = mkBar(this.TGT[1], this.rgb(this.PRIM['노랑']));
       const hypoHit = !!(S.hypo && g && ((a/g) + ':' + (b/g)) === S.hypo);
       const dup = st.mode === 'more' && S.found.some(f => f[0] === a && f[1] === b);
-      const goalMsg = st.mode === 'trap' ? '✅ 다인이가 말한 양이에요! ' + (st.run || '확인하기') + '를 눌러요'
+      const goalMsg = st.mode === 'trap' ? '✅ 같은 양만큼 더 넣었어요! ' + (st.run || '확인하기') + '를 눌러요'
                     : (st.mode === 'more' ? '✨ 앞에서 만든 색과 똑같아요! ' : '✨ 목표 색과 똑같아요! ')
                       + (st.run || '기록하기') + '를 눌러요';
       /* 내 색 원의 그림자. 목표 색에 닿으면 초록 테, 내 가설과 같은 비면 주황 테가 둘린다 */
@@ -3504,6 +3537,8 @@ class Component extends DCLogic {
       const ans = this.tblAns();
       const col = (p) => this.rgb(this.mix({ '빨강': p[0], '노랑': p[1] }));
       v.cRed = this.C_RED; v.cYel = this.C_YEL;
+      /* 축 선과 눈금 강조는 밝은 노랑, 글씨는 크림 바탕에서 읽히도록 진한 노랑 그대로 */
+      v.cYelAx = this.C_YEL_PLOT;
 
       if (st.k === 'tbl') {
         const notes = this.notes();
@@ -3606,9 +3641,9 @@ class Component extends DCLogic {
         for (let iy = 0; iy < g.cy; iy += skipY) {
           const y = iy * g.u;
           yt.push({ t: String(y), top: (PAD_T + (g.cy - 1 - iy) * CY) + 'px',
-                    fg: S.plotGy === y ? '#ffffff' : '#201e1d',
-                    bg: S.plotGy === y ? this.C_YEL : (yOpen(y) ? '#fff8dc' : 'transparent'),
-                    ...tickOn(yOpen(y), S.plotGy === y, this.C_YEL),
+                    fg: '#201e1d',
+                    bg: S.plotGy === y ? this.C_YEL_PLOT : (yOpen(y) ? '#fff8dc' : 'transparent'),
+                    ...tickOn(yOpen(y), S.plotGy === y, this.C_YEL_PLOT),
                     pick: () => this.plotGuide('y', y) });
         }
         v.plotXTicks = xt; v.plotYTicks = yt;
@@ -3748,7 +3783,9 @@ class Component extends DCLogic {
     v.footHint = (st.k === 'reflect')
       ? (refReady ? '' : '보기 하나를 고르면 제출할 수 있어요')
       : ((needsSolve && !gateOk && !v.liveBadge)
-          ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요') : '');
+          ? (solved ? '아래 물음에 답하면 다음으로 갈 수 있어요'
+             : (st.k === 'lab' ? '목표색을 만든 다음 「' + (st.run || '기록하기') + '」를 눌러야 다음으로 갈 수 있어요'
+                               : '문제를 해결하면 다음으로 갈 수 있어요')) : '');
     v.primary = () => {
       if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.toNextRoom(); return; } this.submitReflect(); return; }
       /* 마지막 화면에는 처음부터 다시 하는 길을 두지 않는다(네 방 공통).
@@ -3757,6 +3794,12 @@ class Component extends DCLogic {
         this.sfx('oops');
         if (solved && !probeOk) { this.toast('🤔', '조금만 더!', '아래 물음에 답하고 넘어가요.'); return; }
         if (st.k === 'cups') { this.cupGateHint(); return; }
+        /* 2026-09-27 — 실험 화면에서는 무엇을 눌러야 하는지 집어서 알려 준다(사용자 지시) */
+        if (st.k === 'lab') {
+          this.toast('🧪', '「' + (st.run || '기록하기') + '」를 눌러 주세요',
+            '목표색을 만든 다음 「' + (st.run || '기록하기') + '」를 눌러야 다음으로 갈 수 있어요.');
+          return;
+        }
         this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return;
       }
       this.sfx('tap'); this.go(1);
