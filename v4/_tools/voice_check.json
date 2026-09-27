@@ -1,5 +1,5 @@
 {
- "ver": "202609271154",
+ "ver": "202609271211",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -261,14 +261,23 @@
     {
      "step": 7,
      "who": "munsell",
-     "text": "이번에는 뭉크가 쓸 물감을 큰 통에 가득 만들어 보자.",
-     "key": "1rrnslm",
+     "text": "아주 잘하고 있어!",
+     "key": "bpr7bw",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
     },
     {
      "step": 7.001,
+     "who": "munsell",
+     "text": "마지막으로 뭉크가 쓸 물감을 큰 통에 가득 만들어 보자.",
+     "key": "5ib8oj",
+     "cast": "과학자 먼셀",
+     "speaker": "nwoosik",
+     "reg": true
+    },
+    {
+     "step": 7.002,
      "who": "munsell",
      "text": "큰 통에 빨강을 50 밀리리터 넣었어.",
      "key": "1ccousx",
@@ -277,7 +286,7 @@
      "reg": true
     },
     {
-     "step": 7.002,
+     "step": 7.003,
      "who": "munsell",
      "text": "앞에서 찾은 관계대로라면 노랑은 얼마나 넣어야 할까?",
      "key": "154i4wo",
@@ -558,8 +567,8 @@
     {
      "step": 16,
      "who": "munsell",
-     "text": "목표색이 되는 양 몇 가지를 표로 적어 두었어.",
-     "key": "h4zwyo",
+     "text": "우리가 목표색을 만들었던 빨강과 노랑의 값을 표로 만들었어.",
+     "key": "e4w9l",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -567,8 +576,8 @@
     {
      "step": 16.001,
      "who": "munsell",
-     "text": "표에 적은 값을 그래프로 나타내 보자.",
-     "key": "1oz5inw",
+     "text": "예를 들어 빨강이 10 밀리리터이고 노랑이 20 밀리리터이면 이렇게 하면 돼.",
+     "key": "1hxs9rz",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -576,8 +585,8 @@
     {
      "step": 16.002,
      "who": "munsell",
-     "text": "첫 줄은 내가 미리 찍어 두었어.",
-     "key": "1y8n8tp",
+     "text": "빨강이 20, 30, 40, 50일 때도 노랑과 만나게 해서 점을 찍어 보자.",
+     "key": "wyrytm",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -585,17 +594,8 @@
     {
      "step": 16.003,
      "who": "munsell",
-     "text": "반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다.",
-     "key": "a53xt7",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 16.004,
-     "who": "munsell",
-     "text": "점을 다 찍으면 첫 번째 점부터 차례로 눌러 선으로 이어 보렴.",
-     "key": "ntpqbx",
+     "text": "점을 다 찍으면 점들을 선으로 이어 보자.",
+     "key": "1a90c2e",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true

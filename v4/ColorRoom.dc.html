@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271154"></script>
+<script src="tts/manifest.js?v=202609271211"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -982,7 +982,7 @@ class Component extends DCLogic {
          노랑을 10mL 컵으로 부어 학습자가 1 : 2를 스스로 지킨다.
          2026-09-27 — 편지 뒤가 아니라 컵 실험 두 번 뒤로 옮기고, 문제는 먼셀이 낸다(사용자 지시). */
       { k:'lab', mode:'wall', unit:'cup', who:'munsell', run:'완성하기', lockR:50,
-        say:'이번에는 뭉크가 쓸 물감을 큰 통에 가득 만들어 보자. 큰 통에 빨강을 50mL 넣었어. 앞에서 찾은 관계대로라면 노랑은 얼마나 넣어야 할까?',
+        say:'아주 잘하고 있어! 마지막으로 뭉크가 쓸 물감을 큰 통에 가득 만들어 보자. 큰 통에 빨강을 50mL 넣었어. 앞에서 찾은 관계대로라면 노랑은 얼마나 넣어야 할까?',   /* 2026-09-27 사용자 문안 */
         hi:'10mL 컵으로 노랑을 부어요' },
       /* 2026-09-27 — 또래 아이(다인이)가 갑자기 나타나 묻던 화면을 없앴다. 레시오가 물음을 던지고
          그 자리에서 바로 실험하게 해 한 단계를 줄였다(사용자 지시). 오개념은 말로 반박하지 않고,
@@ -1043,7 +1043,7 @@ class Component extends DCLogic {
          앞 화면은 표를 그래프로 옮기는 데까지, 뒤 화면은 실험하지 않은 값(빨강 60)을 그래프로 예측하고 식으로 적는다.
          뒤 화면은 앞 화면의 점과 선을 그대로 이어받는다(plotOpen이 stage:'pred'에서는 지우지 않는다). */
       { k:'plot', stage:'draw', who:'munsell',
-        say:'목표색이 되는 양 몇 가지를 표로 적어 두었어. 표에 적은 값을 그래프로 나타내 보자. 첫 줄은 내가 미리 찍어 두었어. 반짝이는 빨강 숫자를 누르고, 이어서 노랑 숫자를 누르면 점이 찍힌단다. 점을 다 찍으면 첫 번째 점부터 차례로 눌러 선으로 이어 보렴.',
+        say:'우리가 목표색을 만들었던 빨강과 노랑의 값을 표로 만들었어. 예를 들어 빨강이 10mL이고 노랑이 20mL이면 이렇게 하면 돼. 빨강이 20, 30, 40, 50일 때도 노랑과 만나게 해서 점을 찍어 보자. 점을 다 찍으면 점들을 선으로 이어 보자.',
         hi:'📈 점을 찍고, 첫 번째 점부터 차례로 눌러 이어요' },
       { k:'plot', stage:'pred', who:'munsell',
         say:'만약 빨강이 60이면 노랑은 얼마가 필요할까? 실험해 보지 않고도 알 수 있을까? 그래프에서 찾아보자. 선을 따라가 빨강 60 자리를 찾아 눌러 보렴. 그다음 오른쪽 식의 빈칸도 채워 봐.',
@@ -1783,7 +1783,11 @@ class Component extends DCLogic {
       tmpNum:{},
       cupR:0, cupY:0, cupSeq:[], cupUndo:0, cupPick:null });
     /* 격자 화면에 들어서면 첫 점을 예시로 찍어 둔다 — 다른 비의 격자면 새로 연다 */
-    if (this.STEPS[n].k === 'plot') { const open = this.plotOpen(n); if (open) this.setState(open); }
+    if (this.STEPS[n].k === 'plot') {
+      const open = this.plotOpen(n);
+      if (open) this.setState(open);
+      if (this.STEPS[n].stage !== 'pred' && open) setTimeout(() => this.plotDemoRun(n), 60);
+    } else this.plotDemoStop();
     if (this.STEPS[n].k === 'finish') { this.finishRoom(); setTimeout(() => this.awardDigit(), 350); }
     this.plog('nav', { to:n });
     this._sayT = setTimeout(() => this.sayStep(n), 380);
@@ -2677,9 +2681,30 @@ class Component extends DCLogic {
     if (this.state.plotAt === n) return null;
     /* 예측 화면은 앞 화면에서 찍은 점과 이은 선을 그대로 쓴다 */
     if ((this.STEPS[n] || {}).stage === 'pred') return { plotAt: n };
-    const a = this.tblAns(n)[0];
-    return { plotAt: n, plot: [{ r: a[0], y: a[1], ok: 1, row: 0, demo: 1 }],
+    /* 2026-09-27 — 첫 줄을 미리 찍어 두지 않는다. 화면에 들어오면 눈금을 누르는 모습을 시연으로 보여 주고,
+       그 끝에 점이 찍힌다(사용자 지시). 시연은 plotDemoRun이 한다. */
+    return { plotAt: n, plot: [],
              plotSel: null, plotLine: 0, plotLink: 0, plotPred: null, plotGx: null, plotGy: null, plotEq: null };
+  }
+  /* 첫 줄(빨강 10 · 노랑 20)을 찍는 모습을 보여 준다 — 세로선, 가로선, 그리고 점.
+     학습자가 먼저 손을 대면 시연을 멈추고 그 자리에서 이어 간다(2026-09-27). */
+  plotDemoRun(n) {
+    const ans = this.tblAns(n)[0];
+    const step = (ms, fn) => this._plotDemoT.push(setTimeout(() => { if (this.state.plotAt === n && !this._plotDemoOff) fn(); }, ms));
+    this.plotDemoStop();
+    this._plotDemoOff = 0; this._plotDemoT = [];
+    step(900,  () => { this.sfx('tap'); this.setState({ plotGx: ans[0] }); });
+    step(2000, () => { this.sfx('tap'); this.setState({ plotGy: ans[1] }); });
+    step(3000, () => {
+      this.plog('plot_demo', { r: ans[0], y: ans[1] });
+      this.setState({ plot: [{ r: ans[0], y: ans[1], ok: 1, row: 0, demo: 1 }], plotGx: null, plotGy: null });
+      this.sfx('ok');
+    });
+  }
+  plotDemoStop() {
+    this._plotDemoOff = 1;
+    (this._plotDemoT || []).forEach(t => clearTimeout(t));
+    this._plotDemoT = [];
   }
   plotDone() {
     const P = this.state.plot;
@@ -2780,6 +2805,7 @@ class Component extends DCLogic {
         return;
       }
     }
+    this.plotDemoStop();
     this.sfx('tap');
     this.plog('plot_guide', { axis, v: val });
     const gx = axis === 'x' ? (this.state.plotGx === val ? null : val) : this.state.plotGx;
@@ -3754,7 +3780,7 @@ class Component extends DCLogic {
                           : '📍 눈금 숫자를 눌러 보세요'));
         const un = st.unitName || 'mL';
         v.plotUnit = un;
-        v.plotDemo = '점선 동그라미(빨강 ' + demo0[0] + ' · 노랑 ' + demo0[1] + ')는 미리 찍어 둔 예시예요';
+        v.plotDemo = '빨강 ' + demo0[0] + ' · 노랑 ' + demo0[1] + '은 먼셀이 보여 주는 예시예요';
       }
 
       if (st.k === 'fill') {
