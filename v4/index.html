@@ -111,6 +111,8 @@
       <img src="ratio_portrait.jpg" alt="레시오" style="width:150px;height:150px;border-radius:999px;border:5px solid #f6a06b;background:#fff;object-fit:cover;box-shadow:0 8px 22px rgba(246,160,107,.35)" onerror="this.style.display='none'">
       <div style="font-size:21px;font-weight:800;color:#8c491a">레시오</div>
     </div>
+    <!-- 2026-09-27 — 레시오가 하는 말도 글로 함께 보인다. 지금 읽는 문장은 진하게(사용자 지시) -->
+    <div id="introSay" style="font-size:17.5px;line-height:1.7;color:#5a4a3a;text-align:left;background:#fff2eb;border:2.5px solid #f6c49b;border-radius:16px;padding:12px 14px;margin-bottom:12px"></div>
     <div id="introText" style="font-size:18.5px;line-height:1.85;color:#3d3830;text-align:left"></div>
     <div id="introWait" style="font-size:14px;font-weight:700;color:#a19786;margin-top:12px">🔊 레시오의 이야기를 끝까지 들어 주세요</div>
     <button id="introGo" disabled style="margin-top:12px;min-height:58px;padding:14px 34px;border-radius:999px;border:none;background:#c0b6a5;color:#f9f4ed;font-size:20px;font-weight:800;cursor:not-allowed">탐험하기 →</button>
@@ -130,6 +132,9 @@
       <button class="del" data-k="del">← 지우기</button><button class="go" data-k="go">시작!</button>
     </div>
     <div id="lgErr" role="alert"></div>
+    <!-- 2026-09-27 — 학생 수집 때는 코드 없이 들어가지 못하게 감춘다.
+         지금은 앱을 고치는 중이라 열어 둔다. 감출 때는 아래 GUEST_LINK 를 false 로 바꾸면 된다.
+         false 로 두어도 연구자는 주소 끝에 ?guest=1 을 붙이면 쓸 수 있다(사용자 지시). -->
     <button class="ghost" id="guestBtn">🔎 로그인 없이 둘러보기 (기록이 남지 않아요)</button>
   </div>
 </div>
@@ -233,6 +238,9 @@ let introDone = false;
 function openIntro(){
   const ov=$('#introOv'); ov.style.display='flex';
   $('#introText').innerHTML = HUB_ITEMS.map((t, i) => '<div style="margin:6px 0">' + (i + 1) + '. ' + t + '</div>').join('');
+  const paintSay = (cur) => { $('#introSay').innerHTML = HUB_SAY.map((l, i) =>
+    '<div style="margin:3px 0;color:' + (i === cur ? '#8c491a' : '#8a7c6c') + ';font-weight:' + (i === cur ? 800 : 400) + '">' + l + '</div>').join(''); };
+  paintSay(-1);
   const parts=[]; HUB_SAY.forEach(l=>hubSent(hubNorm(l)).forEach(x=>parts.push(x)));
   const man = window.RS_TTS || {};
   const enable = () => { introDone=true; const b=$('#introGo'); b.disabled=false; b.style.background='#c67139'; b.style.cursor='pointer';
@@ -240,7 +248,8 @@ function openIntro(){
   if (introDone) { enable(); return; }
   let i=0;
   const next=()=>{
-    if(i>=parts.length){ enable(); return; }
+    if(i>=parts.length){ paintSay(-1); enable(); return; }
+    paintSay(Math.min(i, HUB_SAY.length - 1));
     const k=hubKey('ratio|'+parts[i]); i++;
     if(!man[k]){ next(); return; }
     const a=new Audio('tts/'+k+'.mp3?v='+(window.RS_TTS_V||'1'));
@@ -253,7 +262,13 @@ let code='';
 function paint(){const b=$('#codeShow').children;
   for(let i=0;i<b.length;i++){const el=b[i];el.textContent=code[i]||'';
     el.className='cbox'+(code[i]?' filled':(i===code.length?' cur':''));}}
-function openLogin(){code='';paint();padPaint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
+/* 게스트 단추를 보일지 — 학생 수집 시작 전에 false 로 바꾼다(2026-09-27) */
+const GUEST_LINK = true;
+function openLogin(){
+  try {
+    const q = new URLSearchParams(location.search).get('guest') === '1';
+    $('#guestBtn').style.display = (GUEST_LINK || q) ? '' : 'none';
+  } catch(e) {}code='';paint();padPaint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
 function showChip(code){
   $('#chipNo').textContent=code==='guest'?'게스트':code;
   $('#chip').style.display='inline-block';
