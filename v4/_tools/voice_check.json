@@ -1,5 +1,5 @@
 {
- "ver": "202609271211",
+ "ver": "202609271215",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1059,8 +1059,8 @@
     {
      "step": 4,
      "who": "ratio",
-     "text": "라와 미의 진동수의 비는 4 대 3 이에요.",
-     "key": "1t8p2uo",
+     "text": "라의 진동수는 440헤르츠, 미의 진동수는 330헤르츠예요.",
+     "key": "1aacisi",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1068,8 +1068,8 @@
     {
      "step": 4.001,
      "who": "ratio",
-     "text": "라는 440헤르츠, 미는 330헤르츠예요.",
-     "key": "462x5u",
+     "text": "진동수의 비는 4 대 3 이죠.",
+     "key": "o0zxs8",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1077,8 +1077,8 @@
     {
      "step": 4.002,
      "who": "ratio",
-     "text": "헤르츠는 진동수의 단위예요.",
-     "key": "1ap9hi7",
+     "text": "하지만 줄의 길이는 진동수와 반대예요.",
+     "key": "e5amdj",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1086,8 +1086,8 @@
     {
      "step": 4.003,
      "who": "ratio",
-     "text": "진동수의 비를 반대로 하면 줄의 길이의 비가 돼요.",
-     "key": "1m8wdlr",
+     "text": "라와 미의 줄의 길이의 비는 3 대 4 가 되지요.",
+     "key": "19d3h7d",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1095,23 +1095,14 @@
     {
      "step": 4.004,
      "who": "ratio",
-     "text": "그래서 라와 미의 줄의 길이의 비는 3 대 4 예요.",
-     "key": "17n8hw5",
+     "text": "라와 미의 줄의 길이의 비가 3 대 4 일 때, 라 줄이 60 센티미터 이면 미 줄은 몇 센티미터 일까요?",
+     "key": "1lgy5o9",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
     },
     {
      "step": 4.005,
-     "who": "ratio",
-     "text": "라 줄이 60 센티미터 일 때 미 줄은 몇 센티미터 일까요?",
-     "key": "4hqqw2",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 4.006,
      "who": "ratio",
      "text": "칸마다 소리를 들어 보고, 미 소리가 나는 칸을 골라 보세요.",
      "key": "2bn6r6",
