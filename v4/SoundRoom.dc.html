@@ -3509,48 +3509,51 @@ class Component extends DCLogic {
     const rev = cur > 0 && !!this.state.rates[nm];
     const W = 680, padL = 50, padR = 30, top = 54, bottom = 220;
     const midY = (top + bottom) / 2, amp = (bottom - top) / 2 - 8, plotW = W - padL - padR;
-    const bandW = plotW * 0.42, bx0 = padL, bx1 = padL + bandW;
+    /* 2026-09-27 — 화면 너비를 늘 「같은 시간」으로 삼는다(사용자 지적).
+       예전에는 한 묶음을 화면의 42%로 그려서, 어떤 음이든 만나는 횟수가 두세 번으로 같아 보였다.
+       이제 가로 한 화면이 도 여덟 번 떨리는 시간이다. 도는 늘 여덟 물결, 다른 음은 그 진동수만큼 더 촘촘히 그려진다.
+       꼭대기가 겹치는 것은 도가 nb번 떨릴 때마다이므로, 간단한 비일수록 한 화면에서 여러 번 만난다.
+       보기: 도′(1 : 2)는 여덟 번, 솔(2 : 3)은 네 번, 미(4 : 5)는 두 번, 시(8 : 15)는 한 번. */
+    const BASE = 8;                       /* 한 화면 = 도 여덟 번 떨리는 시간 */
+    const meetW = plotW * nb / BASE;      /* 만나는 자리 사이의 거리 */
+    const ph = this._hxPh || 0;           /* 흐름(화면 단위) */
     const P = [];
-    /* 2026-09-23 — 두 물결이 함께 흐르고, 꼭대기가 겹치는 자리마다 「만나요!」가 지나간다.
-       겹치는 자리의 간격이 곧 한 묶음이므로, 간단한 비일수록 자주 만나는 것이 눈으로 보인다. */
-    const ph = this._hxPh || 0;
-    const first = Math.floor(ph), last = Math.ceil(ph + plotW / bandW);
+    /* 만나는 구간마다 번갈아 옅은 바탕을 깐다 */
+    const first = Math.floor(ph * BASE / nb), last = Math.ceil((ph + 1) * BASE / nb);
     for (let m = first; m <= last; m++) {
-      const x0 = padL + (m - ph) * bandW, x1 = x0 + bandW;
-      if (x1 < padL || x0 > W - padR) continue;
+      const x0 = padL + (m * nb / BASE - ph) * plotW, x1 = x0 + meetW;
       const lo = Math.max(padL, x0), hi = Math.min(W - padR, x1);
-      if ((m % 2) === 0 && hi > lo) P.push('<rect x="' + lo.toFixed(1) + '" y="' + (top-8) + '" width="' + (hi-lo).toFixed(1) + '" height="' + (bottom-top+16) + '" rx="8" style="fill:' + this.C.a100 + '"/>');
+      if (hi <= lo) continue;
+      if ((m % 2) === 0) P.push('<rect x="' + lo.toFixed(1) + '" y="' + (top-8) + '" width="' + (hi-lo).toFixed(1) + '" height="' + (bottom-top+16) + '" rx="8" style="fill:' + this.C.a100 + '"/>');
     }
     P.push('<line x1="' + padL + '" y1="' + midY + '" x2="' + (W-padR) + '" y2="' + midY + '" style="stroke:' + this.C.n300 + ';stroke-width:1"/>');
     const wp = (cyc, col, wd) => {
-      let dd = ''; const span = W - padL - padR;
-      for (let px = 0; px <= span; px += 2) {
-        const x = padL + px, tt = px / bandW + ph;
+      let dd = '';
+      for (let px = 0; px <= plotW; px += 2) {
+        const x = padL + px, tt = px / plotW + ph;
         const y = midY - amp * Math.cos(2 * Math.PI * cyc * tt);
         dd += (px === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1) + ' ';
       }
       return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:' + wd + ';stroke-linecap:round"/>';
     };
-    P.push(wp(nb, this.C.g600, 4));
-    P.push(wp(nr, this.C.a600, 4));
-    /* 꼭대기가 겹치는 자리 — 점과 「만나요!」 */
+    P.push(wp(BASE, this.C.g600, 4));                 /* 도 */
+    P.push(wp(BASE * nr / nb, this.C.a600, 4));       /* 누른 음 */
+    /* 꼭대기가 겹치는 자리 — 몇 번째 만남인지 번호를 매긴다 */
     const cy0 = midY - amp;
-    /* 2026-09-27 — 같은 시간 안에 몇 번 만나는지 세어 보이게 한다(사용자 지시).
-       화면 왼쪽 끝에서부터 첫 번째·두 번째… 로 센다. 간단한 비일수록 번호가 빨리 늘어난다. */
     let meet = 0;
     for (let m = first; m <= last; m++) {
-      const x = padL + (m - ph) * bandW;
+      const x = padL + (m * nb / BASE - ph) * plotW;
       if (x < padL + 6 || x > W - padR - 6) continue;
       meet++;
       P.push('<line x1="' + x.toFixed(1) + '" y1="' + (top-10) + '" x2="' + x.toFixed(1) + '" y2="' + (bottom+10) + '" style="stroke:' + this.C.a700 + ';stroke-width:2" stroke-dasharray="5 4"/>');
       P.push('<circle cx="' + x.toFixed(1) + '" cy="' + cy0 + '" r="12" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>');
       P.push('<text x="' + x.toFixed(1) + '" y="' + (cy0 + 5) + '" text-anchor="middle" style="font-size:14px;font-weight:800;fill:' + this.C.a700 + '">' + meet + '</text>');
-      const anchor = (x > W - padR - 70) ? 'end' : (x < padL + 70 ? 'start' : 'middle');
-      P.push('<text x="' + x.toFixed(1) + '" y="' + (top - 16) + '" text-anchor="' + anchor + '" style="font-size:14.5px;font-weight:800;fill:' + this.C.a700 + '">' + meet + '번째 만남</text>');
     }
+    P.push('<text x="' + (W/2) + '" y="' + (top - 18) + '" text-anchor="middle" style="font-size:15px;font-weight:800;fill:' + this.C.a700 + '">'
+      + '같은 시간 안에 ' + meet + '번 만나요</text>');
     P.push('<text x="' + (W/2) + '" y="' + (bottom+34) + '" text-anchor="middle" style="font-size:14px;fill:' + this.C.n600 + '">'
-      + (rev ? ('도 ' + nb + '번 = ' + nm + ' ' + nr + '번마다 만나요 — 이 화면 안에서 ' + meet + '번 만나요')
-             : ('꼭대기가 겹친 자리에 번호를 매겼어요 — 이 화면 안에서 ' + meet + '번 만나요')) + '</text>');
+      + (rev ? ('도 ' + nb + '번 떨릴 때 ' + nm + ' ' + nr + '번 — 그때마다 꼭대기가 겹쳐요')
+             : '도가 ' + nb + '번 떨릴 때마다 꼭대기가 겹쳐요') + '</text>');
     /* 설명 글은 띠 오른쪽 끝의 「↺ 꼭대기가 다시 겹쳐요!」 하나로 둔다 — 따로 두면 두 글이 겹쳤다 */
     return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(360px,42vw)' : 'min(470px,54vw)', display:'block' }, P.join(''), 'hx');
   }
