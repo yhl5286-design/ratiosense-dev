@@ -44,6 +44,7 @@ button{font-family:inherit}
   .rs-labrow > *{max-width:100% !important}
   .rs-play{overflow-x:hidden}
 }
+@keyframes rsPoint{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 @keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
 @keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
@@ -371,6 +372,13 @@ button{font-family:inherit}
           <div style="display:flex;gap:min(7vw,44px);justify-content:center;flex-wrap:wrap">
             <sc-for list="{{demos}}" as="d" hint-placeholder-count="2">
               <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <!-- 2026-09-27 — 어디를 눌러야 하는지 가리키는 표시. 누르는 것이 아니라 가리키기만 한다(사용자 지시) -->
+                <sc-if value="{{d.tip}}" hint-placeholder-val="{{false}}">
+                  <div style="pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:0;animation:rsPoint 1.1s ease-in-out infinite">
+                    <div style="font-size:14.5px;font-weight:800;color:#8c491a;background:#ffe1d0;border:2.5px solid #f6a06b;border-radius:999px;padding:4px 12px">눌러 보기</div>
+                    <div style="font-size:20px;line-height:1;color:#c67139">▼</div>
+                  </div>
+                </sc-if>
                 <div style="display:flex;gap:7px;align-items:flex-end;min-height:56px">
                   <sc-for list="{{d.cups}}" as="cup" hint-placeholder-count="1">
                     <button onClick="{{cup.pour}}" aria-label="노랑 20mL 붓기" style="width:44px;height:{{cup.h}}px;border:4px solid #201e1d;border-top-width:2px;border-radius:0 0 12px 12px;background:#f9f4ed;cursor:{{cup.cur}};padding:0;position:relative;overflow:hidden;opacity:{{cup.op}};animation:{{cup.anim}};transform-origin:bottom right">
@@ -3340,6 +3348,7 @@ class Component extends DCLogic {
           color: this.rgb(this.mix(yellow ? { '빨강':20, '노랑':yellow } : { '빨강':20 })),
           label: yellow ? ('빨강 20 : 노랑 ' + yellow) : '빨강 20 (노랑 0)',
           left: cups - poured,
+          tip: (cups - poured) > 0 ? 1 : 0,
           /* 붓는 동안 노랑이 위에 쌓였다가(레이어), 부은 뒤 섞인 색으로 합쳐진다 */
           layerH: S.pouring === side ? 15 : 0,
           layerOp: S.pouring === side ? 1 : 0,
