@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609271428"></script>
+<script src="tts/manifest.js?v=202609271432"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -827,7 +827,7 @@ class Component extends DCLogic {
     i:0, audio:'full', cards:0, toast:null, solved:{},
     hzHeard:{}, hzHeardF:{}, hzAns:{}, hzRatio:{}, hzBars:'pair', linkGot:{},
     pfMade:{ '라':1, '레':1 }, pfSel:'', pfCut:36, pfHeard:0,   /* 팬플룻 — 라는 기준, 레는 딱 떨어지지 않아 미리 만들어 둔다 */
-    voiceMap:{}, pressKey:-1,
+    voiceMap:{}, pressKey:-1, pressKey2:-1,
     rates:{},                       /* 도와의 어울림 (음이름 → 'good' | 'bad', 9/22 전엔 별점 1~5) — harmx_rate */
     vibHit:[], vibCur:-1, vibAns:{}, vibMsg:'',
     hxCur:-1,
@@ -910,7 +910,7 @@ class Component extends DCLogic {
     st.push({ k:'harmx',
       /* 2026-09-22 수정의견 — 별점(1~5)을 두 버튼으로. 방도 둘(잘 어울리는 방 / 잘 어울리지 않는 방)로 줄였다.
          별점 3점이 어느 방인지 애매했고, 전문가 로그에서도 6명 중 4명이 가운데 방을 비우거나 다 몰아넣었다. */
-      say:'도와 다른 음을 함께 눌러 보세요. 소리를 듣고 물결 무늬를 본 다음 두 음이 잘 어울리는지 골라 보세요. 일곱 음을 모두 고르면 다음으로 가요.',
+      say:'도와 다른 음을 함께 눌러 두 음이 잘 어울리는지 하나씩 골라 보세요. 도의 진동수 그래프와 다른 음의 진동수 그래프가 얼마나 자주 만나는지 그래프도 확인해 보세요.',   /* 2026-09-27 사용자 문안 */
       hi:'🎹 일곱 음을 모두 골라야 다음으로 가요 · 물결 무늬도 함께 보세요' });
     st.push({ k:'rooms' });
     /* 진동수를 처음으로 수로 다루는 자리 — 여덟 음의 헤르츠와 도에 대한 비를 함께 보인다.
@@ -989,16 +989,15 @@ class Component extends DCLogic {
        strict — 위에서부터 차례로 채운다(맞는 다른 칸을 찾아 넣어 주면 2 : 3을 거꾸로 놓아도 풀린다).
        fb는 틀린 카드를 놓았을 때의 안내, fbw는 낱말마다 다른 안내다. */
     dosol: { card:true, title:'🃏 도와 솔로 악기 줄 만들기', rows:[
-        /* 2026-09-23 — 한 번에 묻지 않고 세 걸음으로 나눈다(어렵다는 의견). 위 칸 그림과 나란히 본다.
-           ① 진동수의 비를 뒤집어 줄 길이의 비 ② 90을 3칸으로 나눈 한 칸 ③ 그 2칸 */
-        ['① 줄 길이의 비는  도 : 솔 = ', {a:'3'}, ' : ', {a:'2'}],
-        ['② 한 칸 = 90 ÷ ', {a:'3'}, ' = ', {a:'30'}, 'cm'],
-        ['③ 솔은 2칸이니까  ', {a:'30'}, ' × 2 = ', {a:'60'}, 'cm'] ],
-      bank:['3','2','3','30','30','60','135','45'], strict:1,
+        /* 2026-09-27 — 세 걸음으로 잘게 나눴던 것을 세 줄로 줄인다(사용자 문안).
+           첫 줄은 주어진 값, 둘째 줄은 뒤집은 비, 셋째 줄은 길이. 카드도 다섯 장으로 줄였다. */
+        ['도와 솔 진동수의 비 = 2 : 3'],
+        ['도와 솔의 줄의 길이의 비 = ', {a:'3'}, ' : ', {a:'2'}],
+        ['도의 줄 길이가 90cm이면 솔의 줄 길이는? ', {a:'60'}, 'cm'] ],
+      bank:['2','3','45','60','135'], strict:1,
       fb:'솔은 도보다 높은 음이라 더 빨리 떨려요. 줄의 길이는 진동수의 비를 거꾸로 했지요?',
       fbw:{ '135':'진동수의 비 2 : 3을 그대로 쓴 답이에요. 줄 길이의 비는 3 : 2였지요?',
-            '45':'90을 3칸으로 나누면 한 칸은 얼마일까요? 그림의 눈금을 세어 보세요.',
-            '2':'첫 칸에는 도의 칸 수가 들어가요. 그림에서 도 줄은 몇 칸인가요?' } }
+            '45':'90을 3으로 나눈 값이에요. 솔은 그 한 칸이 몇 칸인지 다시 볼까요?' } }
   };
   /* 이 방을 마치면 받는 황금비 숫자 두 장 — 1.618 의 셋째·넷째 자리.
      비의 비밀 방은 sound1·sound2 를 기대하므로 두 장을 함께 준다(2026-09-22, 옛 'sound' 한 장은 3/4로 보이던 결함). */
@@ -1108,8 +1107,10 @@ class Component extends DCLogic {
     const du = d || 1.8;
     try {
       const c = this.ac(), t = c.currentTime;
+      /* 2026-09-27 — 두 음을 같은 크기로 같은 시간 울린다(사용자 지시).
+         전에는 높은 음을 더 크게 냈는데, 어느 쪽이 큰지가 어울림 판단에 끼어들었다. */
       this.pianoNote(fA, 0.105, du, t);
-      this.pianoNote(fB, 0.105 * Math.sqrt(fB / fA), du, t);
+      this.pianoNote(fB, 0.105, du, t);
     } catch(e) {}
   }
   strPluck(f) {
@@ -1676,7 +1677,7 @@ class Component extends DCLogic {
     this._plucks = [0,0,0,0,0,0,0,0]; this._w1env = 0; this._s1T = 0;
     this._vibT = 0; this._vibLast = null;
     const st = this.STEPS[n];
-    const patch = { i:n, toast:null, pressKey:-1,
+    const patch = { i:n, toast:null, pressKey:-1, pressKey2:-1,
       vibHit: this.state.solved[n] ? this.state.vibHit : [], vibCur:-1, vibAns: this.state.solved[n] ? this.state.vibAns : {}, vibMsg:'',
       hxCur:-1,
       clsStage:'idle', clsPlaced:{}, clsFly:null, clsMsg:'',
@@ -1844,10 +1845,10 @@ class Component extends DCLogic {
   }
 
   /* ── 건반 공통 ── */
-  press(i) {
+  press(i, also) {
     clearTimeout(this._pressT);
-    this.setState({ pressKey: i });
-    this._pressT = setTimeout(() => this.setState({ pressKey: -1 }), 180);
+    this.setState({ pressKey: i, pressKey2: (also == null ? -1 : also) });
+    this._pressT = setTimeout(() => this.setState({ pressKey: -1, pressKey2: -1 }), 320);
   }
 
   /* ── 1) 떨림 체험 (vib) ── */
@@ -1940,9 +1941,14 @@ class Component extends DCLogic {
   /* ── 2) 화음 미션 (harmx) ── */
   hxKey(i) {
     if (this.narrBlocked()) return;   /* 조작하면 안내를 멈춘다 */
+    /* 2026-09-27 — 도는 기준음이라 혼자 누를 수 없다. 다른 음을 누르면 도와 함께 울린다(사용자 지시) */
+    if (i === 0) {
+      this.toast('🎹', '도는 기준음이에요', '다른 음을 누르면 도와 함께 울려요.', 'quiet');
+      return;
+    }
     const n = this.NOTES[i];
-    this.press(i);
-    if (i === 0) this.tone(264, 0, 2); else this.chord(264, n[1], 2);
+    this.press(i, 0);   /* 누른 음과 도, 두 건반이 함께 눌린 것으로 보인다 */
+    this.chord(264, n[1], 2);
     this.plog('harmx', { n: n[0] });
     this._ph0 = performance.now();
     this.setState({ hxCur: i });
@@ -3526,16 +3532,22 @@ class Component extends DCLogic {
     P.push(wp(nr, this.C.a600, 4));
     /* 꼭대기가 겹치는 자리 — 점과 「만나요!」 */
     const cy0 = midY - amp;
+    /* 2026-09-27 — 같은 시간 안에 몇 번 만나는지 세어 보이게 한다(사용자 지시).
+       화면 왼쪽 끝에서부터 첫 번째·두 번째… 로 센다. 간단한 비일수록 번호가 빨리 늘어난다. */
+    let meet = 0;
     for (let m = first; m <= last; m++) {
       const x = padL + (m - ph) * bandW;
       if (x < padL + 6 || x > W - padR - 6) continue;
+      meet++;
       P.push('<line x1="' + x.toFixed(1) + '" y1="' + (top-10) + '" x2="' + x.toFixed(1) + '" y2="' + (bottom+10) + '" style="stroke:' + this.C.a700 + ';stroke-width:2" stroke-dasharray="5 4"/>');
-      P.push('<circle cx="' + x.toFixed(1) + '" cy="' + cy0 + '" r="8" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>');
+      P.push('<circle cx="' + x.toFixed(1) + '" cy="' + cy0 + '" r="12" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>');
+      P.push('<text x="' + x.toFixed(1) + '" y="' + (cy0 + 5) + '" text-anchor="middle" style="font-size:14px;font-weight:800;fill:' + this.C.a700 + '">' + meet + '</text>');
       const anchor = (x > W - padR - 70) ? 'end' : (x < padL + 70 ? 'start' : 'middle');
-      P.push('<text x="' + x.toFixed(1) + '" y="' + (top - 16) + '" text-anchor="' + anchor + '" style="font-size:15px;font-weight:800;fill:' + this.C.a700 + '">만나요!</text>');
+      P.push('<text x="' + x.toFixed(1) + '" y="' + (top - 16) + '" text-anchor="' + anchor + '" style="font-size:14.5px;font-weight:800;fill:' + this.C.a700 + '">' + meet + '번째 만남</text>');
     }
     P.push('<text x="' + (W/2) + '" y="' + (bottom+34) + '" text-anchor="middle" style="font-size:14px;fill:' + this.C.n600 + '">'
-      + (rev ? ('도 ' + nb + '번 = ' + nm + ' ' + nr + '번마다 만나요') : '꼭대기가 겹칠 때마다 「만나요!」가 지나가요') + '</text>');
+      + (rev ? ('도 ' + nb + '번 = ' + nm + ' ' + nr + '번마다 만나요 — 이 화면 안에서 ' + meet + '번 만나요')
+             : ('꼭대기가 겹친 자리에 번호를 매겼어요 — 이 화면 안에서 ' + meet + '번 만나요')) + '</text>');
     /* 설명 글은 띠 오른쪽 끝의 「↺ 꼭대기가 다시 겹쳐요!」 하나로 둔다 — 따로 두면 두 글이 겹쳤다 */
     return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(360px,42vw)' : 'min(470px,54vw)', display:'block' }, P.join(''), 'hx');
   }
@@ -4087,7 +4099,7 @@ class Component extends DCLogic {
     if (v.showPiano) {
       const isHx = st.k === 'harmx';
       v.keys = this.NOTES.map((n, i) => {
-        const pressed = S.pressKey === i;
+        const pressed = S.pressKey === i || S.pressKey2 === i;
         const isBase = isHx && i === 0;
         const rated = isHx && i > 0 ? (S.rates[n[0]] || 0) : 0;
         const fitMark = rated === 'good' || rated >= 4 ? ' 👣' : ' 🌀';

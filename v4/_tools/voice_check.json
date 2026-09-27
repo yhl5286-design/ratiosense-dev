@@ -1,5 +1,5 @@
 {
- "ver": "202609271428",
+ "ver": "202609271432",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -1149,8 +1149,8 @@
     {
      "step": 6,
      "who": "ratio",
-     "text": "도와 다른 음을 함께 눌러 보세요.",
-     "key": "v6f8a6",
+     "text": "도와 다른 음을 함께 눌러 두 음이 잘 어울리는지 하나씩 골라 보세요.",
+     "key": "igg9p3",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
@@ -1158,17 +1158,8 @@
     {
      "step": 6.001,
      "who": "ratio",
-     "text": "소리를 듣고 물결 무늬를 본 다음 두 음이 잘 어울리는지 골라 보세요.",
-     "key": "8un2e1",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 6.002,
-     "who": "ratio",
-     "text": "일곱 음을 모두 고르면 다음으로 가요.",
-     "key": "1gnyvo7",
+     "text": "도의 진동수 그래프와 다른 음의 진동수 그래프가 얼마나 자주 만나는지 그래프도 확인해 보세요.",
+     "key": "17iwbhf",
      "cast": "레시오",
      "speaker": "vhyeri",
      "reg": true
