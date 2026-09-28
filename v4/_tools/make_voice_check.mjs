@@ -83,7 +83,9 @@ function lines(name, done) {
   });
   /* 소리 방 4단계(rooms)는 STEPS에 say가 없고 roomsSay(stage)가 네 갈래를 만든다.
      넷 다 학습자가 듣는 대사이므로 모두 뽑는다. */
-  if (name === 'SoundRoom' && typeof room.roomsSay === 'function') {
+  /* 2026-09-28 — 두 방 화면을 뺐으므로 그 화면이 없으면 roomsSay 대사도 목록에 넣지 않는다 */
+  if (name === 'SoundRoom' && typeof room.roomsSay === 'function'
+      && (room.STEPS || []).some(s => s.k === 'rooms')) {
     const idx = (room.STEPS || []).findIndex(s => s.k === 'rooms');
     ['miss', 'collect', 'rooms', 'done'].forEach((stage, j) => {
       SENT(norm(room.roomsSay(stage), name)).forEach((p, k) => out.push({

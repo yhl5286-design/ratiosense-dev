@@ -1176,114 +1176,6 @@
     {
      "step": 7,
      "who": "ratio",
-     "text": "잠깐!",
-     "key": "121rfmx",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.001,
-     "who": "ratio",
-     "text": "아직 고르지 않은 음이 있어요.",
-     "key": "1nkwal",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.002,
-     "who": "ratio",
-     "text": "도와 함께 들어 보고 골라 주세요.",
-     "key": "6k6hoi",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.01,
-     "who": "ratio",
-     "text": "일곱 음을 모두 골랐어요.",
-     "key": "vakswj",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.011,
-     "who": "ratio",
-     "text": "내가 고른 대로 음들을 두 방에 모아 볼까요?",
-     "key": "1u06s3e",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.02,
-     "who": "ratio",
-     "text": "내가 고른 대로 음들이 두 방에 모였어요.",
-     "key": "uvcxq3",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.021,
-     "who": "ratio",
-     "text": "두 방의 음을 눌러 물결을 비교해 보세요.",
-     "key": "igyi27",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.021999999999999,
-     "who": "ratio",
-     "text": "잘 어울리는 소리는 물결의 꼭대기가 얼마나 자주 겹치나요?",
-     "key": "19deba3",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.03,
-     "who": "ratio",
-     "text": "맞아요!",
-     "key": "14yt8if",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.031000000000001,
-     "who": "ratio",
-     "text": "두 소리의 꼭대기가 자주 겹치면 잘 어울리게 들려요.",
-     "key": "o12wuy",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.032,
-     "who": "ratio",
-     "text": "이제 각 음의 진동수 비를 보여 줄게요.",
-     "key": "1fhnh3m",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 7.033,
-     "who": "ratio",
-     "text": "내 방과 비교해 보세요!",
-     "key": "1ct53vk",
-     "cast": "레시오",
-     "speaker": "vhyeri",
-     "reg": true
-    },
-    {
-     "step": 8,
-     "who": "ratio",
      "text": "진동수의 비로 음정 표를 만들었어요.",
      "key": "oo4u5m",
      "cast": "레시오",
@@ -1291,7 +1183,7 @@
      "reg": true
     },
     {
-     "step": 8.001,
+     "step": 7.001,
      "who": "ratio",
      "text": "「분류 시작」을 눌러 음악에서는 음을 어떻게 나누는지 보세요.",
      "key": "jgxj7s",
@@ -1300,7 +1192,7 @@
      "reg": true
     },
     {
-     "step": 8.002,
+     "step": 7.002,
      "who": "ratio",
      "text": "내가 나눈 두 방과 어떻게 다른지 비교해 보면 돼요.",
      "key": "1ld5bvk",
@@ -1309,7 +1201,7 @@
      "reg": true
     },
     {
-     "step": 8.5,
+     "step": 7.5,
      "who": "ratio",
      "text": "음악에서는 도와 함께 울릴 때 잘 어울리는 음과 잘 어울리지 않는 음을 두 방으로 나눠요.",
      "key": "1h2fro",
@@ -1318,7 +1210,7 @@
      "reg": true
     },
     {
-     "step": 8.51,
+     "step": 7.51,
      "who": "ratio",
      "text": "도와 솔은 2 대 3 이라 자주 겹치고, 도와 레는 8 대 9 라서 자주 겹치지 않아요.",
      "key": "1pzcbz4",
@@ -1327,7 +1219,7 @@
      "reg": true
     },
     {
-     "step": 9,
+     "step": 8,
      "who": "ratio",
      "text": "각 음의 진동수를 도를 기준으로 나타냈어요.",
      "key": "17l0kn6",
@@ -1336,7 +1228,7 @@
      "reg": true
     },
     {
-     "step": 9.001,
+     "step": 8.001,
      "who": "ratio",
      "text": "11헤르츠로 나누어 보기를 누르면 더 간단한 수로 보여요.",
      "key": "199ypfm",
@@ -1345,7 +1237,7 @@
      "reg": true
     },
     {
-     "step": 10,
+     "step": 9,
      "who": "ratio",
      "text": "지금까지 두 음이 잘 어울리는 건 진동수의 비 값이 작은 숫자일 때라는 걸 알아봤어요.",
      "key": "1q0yrqz",
@@ -1354,7 +1246,7 @@
      "reg": true
     },
     {
-     "step": 10.001,
+     "step": 9.001,
      "who": "ratio",
      "text": "하지만 소리의 떨림은 매우 빠르죠?",
      "key": "j98yjj",
@@ -1363,7 +1255,7 @@
      "reg": true
     },
     {
-     "step": 10.002,
+     "step": 9.002,
      "who": "ratio",
      "text": "이번에는 리듬으로 천천히 그 이유를 느껴 봐요.",
      "key": "1mq5ho6",
@@ -1372,7 +1264,7 @@
      "reg": true
     },
     {
-     "step": 11,
+     "step": 10,
      "who": "ratio",
      "text": "북과 트라이앵글을 함께 들어 보세요.",
      "key": "hgsdzm",
@@ -1381,7 +1273,7 @@
      "reg": true
     },
     {
-     "step": 11.001,
+     "step": 10.001,
      "who": "ratio",
      "text": "두 소리가 잘 맞아떨어지는지 귀로 느껴 보세요.",
      "key": "1vm5de4",
@@ -1390,7 +1282,7 @@
      "reg": true
     },
     {
-     "step": 12,
+     "step": 11,
      "who": "ratio",
      "text": "이번에는 다른 리듬이에요.",
      "key": "20qvr6",
@@ -1399,7 +1291,7 @@
      "reg": true
     },
     {
-     "step": 12.001,
+     "step": 11.001,
      "who": "ratio",
      "text": "두 소리를 함께 들어 보고, 아까와 어떻게 다른지 느껴 보세요.",
      "key": "1srp61",
@@ -1408,7 +1300,7 @@
      "reg": true
     },
     {
-     "step": 13,
+     "step": 12,
      "who": "ratio",
      "text": "다음 네 가지 리듬을 차례대로 들어 보면서, 두 소리가 같이 만나는 횟수를 세어 보세요.",
      "key": "1ratbeg",
@@ -1417,7 +1309,7 @@
      "reg": true
     },
     {
-     "step": 14,
+     "step": 13,
      "who": "ratio",
      "text": "이번에는 여러분이 리듬을 만들어 봐요.",
      "key": "1fjc5ky",
@@ -1426,7 +1318,7 @@
      "reg": true
     },
     {
-     "step": 14.001,
+     "step": 13.001,
      "who": "ratio",
      "text": "북과 트라이앵글이 각각 몇 칸마다 울릴지 골라 보세요.",
      "key": "1eln009",
@@ -1435,7 +1327,7 @@
      "reg": true
     },
     {
-     "step": 14.002,
+     "step": 13.002,
      "who": "ratio",
      "text": "두 소리는 몇 칸마다 다시 만날까요?",
      "key": "1xhx1h8",
@@ -1444,7 +1336,7 @@
      "reg": true
     },
     {
-     "step": 14.003,
+     "step": 13.003,
      "who": "ratio",
      "text": "만들고 나서 재생해 확인해 보세요.",
      "key": "vnwrcu",
@@ -1453,7 +1345,7 @@
      "reg": true
     },
     {
-     "step": 15,
+     "step": 14,
      "who": "ratio",
      "text": "북과 트라이앵글의 리듬을 들어 보았지요?",
      "key": "1sc9scr",
@@ -1462,7 +1354,7 @@
      "reg": true
     },
     {
-     "step": 15.001,
+     "step": 14.001,
      "who": "ratio",
      "text": "두 소리가 더 자주 만나는 것은 어느 쪽일까요?",
      "key": "12ci3o1",
@@ -1471,7 +1363,7 @@
      "reg": true
     },
     {
-     "step": 15.002,
+     "step": 14.002,
      "who": "ratio",
      "text": "고른 다음, 왜 그렇게 생각했는지도 골라 보세요.",
      "key": "8p0o0d",
@@ -1480,7 +1372,7 @@
      "reg": true
     },
     {
-     "step": 16,
+     "step": 15,
      "who": "ratio",
      "text": "소리의 비밀을 잘 찾아냈어요!",
      "key": "1x92gln",
@@ -1489,7 +1381,7 @@
      "reg": true
     },
     {
-     "step": 16.001,
+     "step": 15.001,
      "who": "ratio",
      "text": "이제 마지막 문으로 가 볼까요?",
      "key": "13u6tma",
