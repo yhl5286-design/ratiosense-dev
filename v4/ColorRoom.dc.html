@@ -10,7 +10,7 @@
 <helmet>
 <link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
 <script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
-<script src="tts/manifest.js?v=202609280110"></script>
+<script src="tts/manifest.js?v=202609280148"></script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
 <style>
@@ -486,7 +486,9 @@ button{font-family:inherit}
       </sc-if>
 
       <sc-if value="{{isDots}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:13px;animation:rsUp .3s ease">
+        <!-- 2026-09-28 — 백 칸 화면(그리드)처럼 무대는 제 높이만 쓰고, 남은 자리를 짚어보기 물음이 가져간다.
+             전에는 무대가 세로를 다 차지해 물음이 화면 아래로 밀렸다(사용자 지시) -->
+        <div style="flex:none;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsUp .3s ease">
           <div style="display:flex;gap:10px">
             <sc-for list="{{dotPal}}" as="q" hint-placeholder-count="2">
               <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 22px;border-radius:999px;border:4px solid {{q.bd}};background:#f9f4ed;font-size:17px;cursor:{{q.cur}};display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
@@ -498,13 +500,17 @@ button{font-family:inherit}
               <button onClick="{{dd.tap}}" aria-label="점" style="width:min(15vw,58px);aspect-ratio:1;border-radius:999px;border:3px {{dd.bs}} {{dd.bd}};background:{{dd.bg}};cursor:{{dotCur}};padding:0"></button>
             </sc-for>
           </div>
-          <div style="font-size:18px;color:#645c50">빨강 {{dotR}}개 · 노랑 {{dotY}}개</div>
-          <sc-if value="{{dotMix}}" hint-placeholder-val="{{false}}">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;animation:rsPop .4s ease">
-              <div style="width:96px;height:96px;border-radius:999px;border:4px solid #201e1d;background:{{dotMix}};filter:blur(1px)"></div>
-              <div style="font-size:13.5px;font-weight:800;color:#645c50">멀리서 본 내 점</div>
-            </div>
-          </sc-if>
+          <!-- 2026-09-28 — 「멀리서 본 내 점」을 점 개수 오른쪽에 둔다. 아래에 쌓으면 짚어보기 물음이
+               화면 밖으로 밀려 내려 불편했다(사용자 지시) -->
+          <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+            <div style="font-size:18px;color:#645c50">빨강 {{dotR}}개 · 노랑 {{dotY}}개</div>
+            <sc-if value="{{dotMix}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;align-items:center;gap:10px;animation:rsPop .4s ease">
+                <div style="width:72px;height:72px;border-radius:999px;border:4px solid #201e1d;background:{{dotMix}};filter:blur(1px);flex:none"></div>
+                <div style="font-size:13.5px;font-weight:800;color:#645c50;line-height:1.35;white-space:nowrap">멀리서 본<br>내 점</div>
+              </div>
+            </sc-if>
+          </div>
         </div>
       </sc-if>
 
@@ -723,8 +729,9 @@ button{font-family:inherit}
             </div>
             <div style="font-size:15px;font-weight:800;color:#645c50">가로 → <span style="color:{{cRed}}">빨강 ({{plotUnit}})</span> · 세로 ↑ <span style="color:{{cYel}}">노랑 ({{plotUnit}})</span></div>
           </div>
-          <!-- 셋째 칸 — 예측한 색 비교와 식 빈칸. 왼쪽 칸 아래에 두면 화면 밖으로 밀렸다(2026-09-22) -->
-          <sc-if value="{{plotEqOn}}" hint-placeholder-val="{{false}}">
+          <!-- 셋째 칸 — 예측한 색 비교와 식 빈칸. 왼쪽 칸 아래에 두면 화면 밖으로 밀렸다(2026-09-22).
+               2026-09-28 — 선 밖 실험 화면도 이 칸에 색을 나란히 놓는다(식 빈칸은 뜨지 않는다) -->
+          <sc-if value="{{plotSideOn}}" hint-placeholder-val="{{false}}">
           <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;align-self:center">
               <sc-if value="{{predMix}}" hint-placeholder-val="{{false}}">
                 <div style="display:flex;gap:13px;align-items:flex-end;justify-content:center;margin-top:9px;animation:rsPop .35s ease">
@@ -1057,6 +1064,21 @@ class Component extends DCLogic {
       { k:'plot', stage:'pred', who:'munsell',
         say:'점을 모두 찍었구나! 이제 첫 번째 점부터 차례로 눌러 선으로 이어 보자. 그리고 만약 빨강이 60이면 노랑은 얼마가 필요할까? 실험해 보지 않고도 그래프에서 찾을 수 있어. 선을 따라가 빨강 60 자리를 찾아 눌러 보렴. 그다음 오른쪽 식의 빈칸도 채워 봐.',
         hi:'📈 점을 차례로 눌러 선으로 잇고, 빨강 60 자리와 식의 빈칸을 채워요' },
+      /* 2026-09-28 — 선 위의 점만 보고 넘어가면 「한 줄에 놓인다」가 결과로만 남는다.
+         선에서 벗어난 자리를 직접 눌러 다른 주황이 나오는 것을 눈으로 보게 하고,
+         그 까닭을 비로 말하게 한다(사용자 지시). 점과 선은 앞 화면 그대로 이어받는다. */
+      { k:'plot', stage:'off', who:'munsell',
+        say:'선 위의 점들은 모두 목표색이 되었지? 그럼 선에서 벗어난 자리는 어떤 색일까? 격자에서 선 밖의 자리를 두 군데 눌러 색을 확인해 봐.',
+        hi:'📈 선 밖의 자리를 눌러 색을 확인해요 · 두 군데',
+        probe:{ title:'🤔 선 위와 선 밖을 견주어 볼까', rows:[
+          { q:'선 위의 점들은 왜 모두 목표색과 같았을까요?', opts:[
+            { t:'빨강과 노랑의 비가 모두 1 대 2로 같아서요', ok:1 },
+            { t:'점이 모두 한 줄에 놓여 있어서요', ok:0, fb:'한 줄에 놓인 것은 눈에 보이는 결과란다. 그 점들의 빨강과 노랑을 견주어 보면 무엇이 같지?' },
+            { t:'노랑이 빨강보다 많아서요', ok:0, fb:'선 밖에도 노랑이 더 많은 자리가 있었어. 그런데도 색이 달랐지?' } ] },
+          { q:'선에서 벗어난 자리는 왜 다른 색이 되었을까요?', opts:[
+            { t:'물감의 양이 너무 적어서요', ok:0, fb:'양이 많은 자리를 눌러도 색이 달랐단다. 양이 아니라 무엇이 달라졌는지 다시 볼까?' },
+            { t:'빨강과 노랑의 비가 1 대 2가 아니어서요', ok:1 },
+            { t:'점이 선 위에 없어서요', ok:0, fb:'선은 비가 1 대 2인 자리를 이어 놓은 것이란다. 그 자리를 벗어나면 무엇이 달라질까?' } ] } ] } },
       /* 만드는 법 그림과 편지를 한 장에 담는다 — 그림을 보며 그 자리에서 비를 적어 뭉크에게 건넨다.
          앱이 대신 포장해 주던 자리를 학습자의 손글씨가 대신한다. */
       { k:'blank', id:'letter', who:'munsell', demo:'recipe', card:0,
@@ -1822,7 +1844,7 @@ class Component extends DCLogic {
     if (this.STEPS[n].k === 'plot') {
       const open = this.plotOpen(n);
       if (open) this.setState(open);
-      if (this.STEPS[n].stage !== 'pred' && open) { this._plotDemoT0 = null; setTimeout(() => this.plotDemoRun(n), 60); }
+      if (this.STEPS[n].stage !== 'pred' && this.STEPS[n].stage !== 'off' && open) { this._plotDemoT0 = null; setTimeout(() => this.plotDemoRun(n), 60); }
     } else this.plotDemoStop();
     if (this.STEPS[n].k === 'finish') { this.finishRoom(); setTimeout(() => this.awardDigit(), 350); }
     this.plog('nav', { to:n });
@@ -2717,6 +2739,14 @@ class Component extends DCLogic {
     if (this.state.plotAt === n) return null;
     /* 예측 화면은 다섯 점과 이은 선이 이미 그려진 채로 시작한다(2026-09-27 사용자 지시).
        앞 화면에서 학습자가 찍은 것과 같은 값이며, 돌아왔다가 다시 와도 늘 같은 그림에서 시작한다. */
+    /* 2026-09-28 — 선 밖 실험 화면은 다섯 점과 이은 선, 예측한 점까지 모두 그려진 채로 시작한다 */
+    if ((this.STEPS[n] || {}).stage === 'off') {
+      const ans = this.tblAns(n), g = this.plotGeo();
+      return { plotAt: n, plot: ans.map((a, ri) => ({ r: a[0], y: a[1], ok: 1, row: ri })),
+               plotSel: null, plotLine: 1, plotLink: ans.length,
+               plotPred: null, plotGx: null, plotGy: null, plotEq: null,
+               plotOff: [], plotOffCur: null };
+    }
     if ((this.STEPS[n] || {}).stage === 'pred') {
       return { plotAt: n, plot: this.tblAns(n).map((a, ri) => ({ r: a[0], y: a[1], ok: 1, row: ri })),
                plotSel: null, plotLine: 0, plotLink: 0,
@@ -2765,9 +2795,37 @@ class Component extends DCLogic {
     const P = this.state.plot;
     return this.tblAns().every(a => P.some(p => p.ok && p.r === a[0] && p.y === a[1]));
   }
+  /* 선 밖의 자리를 눌러 보는 실험(2026-09-28) — 그 자리의 두 양으로 섞은 색을 목표색 옆에 놓는다.
+     두 자리를 눌러 보면 통과한다. 「선 위가 아니면 색이 다르다」를 한 번이 아니라 두 번 보게 하려는 것이다. */
+  plotOffTap(r, y) {
+    const S = this.state, g = this.plotGeo();
+    if (!(r > 0 && y > 0)) {
+      this.toast('🤔', '두 물감을 모두 넣어야 해', '빨강이나 노랑이 0인 자리는 색을 섞을 수 없단다. 두 눈금이 모두 0보다 큰 자리를 눌러 볼까?');
+      return;
+    }
+    if (y === r * g.k) {
+      this.plog('plot_off', { r, y, on: 1 });
+      this.toast('📏', '이 자리는 선 위란다', '선 위의 자리는 비가 1 대 2라서 목표색과 같은 색이 돼. 선에서 벗어난 자리를 눌러 볼까?');
+      return;
+    }
+    const off = (S.plotOff || []).slice();
+    const seen = off.some(o => o.r === r && o.y === y);
+    if (!seen) off.push({ r, y });
+    this.plog('plot_off', { r, y, on: 0, n: off.length });
+    this.sfx('pour');
+    const plot = S.plot.some(p => p.r === r && p.y === y) ? S.plot : S.plot.concat([{ r, y, ok: 0 }]);
+    this.setState({ plot, plotOff: off, plotOffCur: { r, y }, plotGx: null, plotGy: null });
+    if (off.length >= 2 && !this.state.solved[this.state.i]) {
+      this.markSolved();
+      this.toast('🎨', '선 밖은 색이 달라요!', '선 위의 자리는 모두 빨강과 노랑의 비가 1 대 2였어. 선에서 벗어나면 비가 달라져서 다른 주황이 된단다. 아래 물음에 답해 볼까?', 'ok');
+      return;
+    }
+    this.toast('🎨', '목표색과 달라졌네!', '빨강 ' + r + 'mL와 노랑 ' + y + 'mL를 섞은 색이야. 다른 자리도 한 군데 더 눌러 볼까?');
+  }
   plotTap(r, y) {
     const S = this.state;
     const clearG = { plotGx: null, plotGy: null };
+    if ((this.STEPS[S.i] || {}).stage === 'off') { this.plotOffTap(r, y); return; }
     /* 2026-09-27 — 선 잇기는 다음 화면(stage:'pred')에서만 한다. 점 찍기 화면에서는 점을 다 찍으면 끝난다 */
     if (this.plotDone() && !S.plotLine) {
       if ((this.STEPS[S.i] || {}).stage === 'pred') { this.plotLinkTap(r, y); return; }
@@ -3829,8 +3887,14 @@ class Component extends DCLogic {
         v.plotEqBg = S.plotEq ? '#f0fae1' : '#fffdf6';
         v.plotEqBs = S.plotEq ? 'solid' : 'dashed';
         v.plotEqCards = S.plotEq ? [] : this.RULE_CARDS.map(w => ({ t: w, pick: () => this.plotEqPick(w) }));
-        v.predMix = S.plotPred ? col([S.plotPred.r, S.plotPred.y]) : null;
-        v.predLabel = S.plotPred ? ('빨강 ' + S.plotPred.r + ' : 노랑 ' + S.plotPred.y) : '';
+        /* 2026-09-28 — 선 밖 실험 화면에서는 방금 누른 자리의 색을 목표색과 나란히 놓는다 */
+        const isOff = st.stage === 'off';
+        const offCur = isOff ? S.plotOffCur : null;
+        v.predMix = offCur ? col([offCur.r, offCur.y])
+                  : (S.plotPred ? col([S.plotPred.r, S.plotPred.y]) : null);
+        v.predLabel = offCur ? ('빨강 ' + offCur.r + ' : 노랑 ' + offCur.y)
+                  : (S.plotPred ? ('빨강 ' + S.plotPred.r + ' : 노랑 ' + S.plotPred.y) : '');
+        v.plotSideOn = (isOff ? (offCur ? 1 : 0) : ((isPred && S.plotPred) ? 1 : 0));
         /* 나란히 놓고 비교할 색은 표 첫 줄로 섞은 색이다 —
            1 : 2 격자에서는 그것이 곧 뭉크의 목표 색이고, 2 : 3 격자에서는 시냐크의 주황이다. */
         v.predRef = col(ans[0]);
@@ -3838,7 +3902,11 @@ class Component extends DCLogic {
         /* 아직 찍지 않은 첫 줄 — 안내 문구에서 그 줄의 두 수를 그대로 불러 준다 */
         const todo = ans.find(a => !S.plot.some(p => p.ok && p.r === a[0] && p.y === a[1]));
         const demo0 = ans[0];
-        v.plotHint = (!isPred && done)
+        v.plotHint = isOff
+          ? ((S.plotOff || []).length === 0 ? '📍 선에서 벗어난 자리를 눌러 색을 확인해요'
+             : ((S.plotOff || []).length === 1 ? '📍 한 군데 더 — 다른 자리도 눌러 볼까요?'
+                                               : '✅ 두 군데를 눌러 봤어요 — 아래 물음에 답해요'))
+          : (!isPred && done)
           ? '✅ 점을 모두 찍었어요 — 「다음 →」을 눌러요'
           : S.plotLine
           ? (!isPred ? '✅ 점을 모두 잇고 선을 만들었어요 — 「다음 →」을 눌러요'
