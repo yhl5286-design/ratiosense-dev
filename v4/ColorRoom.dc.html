@@ -685,6 +685,9 @@ button{font-family:inherit}
       <!-- 격자에 점 찍기 — 표의 줄과 격자의 점이 서로 이어져 있다(지침 3.5) -->
       <sc-if value="{{isPlot}}" hint-placeholder-val="{{false}}">
         <div class="rs-fit" style="display:flex;gap:20px;align-items:flex-start;justify-content:center;flex-wrap:wrap;animation:rsUp .3s ease">
+          <!-- 2026-09-28 — 선 밖 실험 화면(19)에서는 표를 감춘다. 표 자리를 비워 그래프를 왼쪽으로 붙이고,
+               오른쪽을 물음에 내준다(사용자 지시) -->
+          <sc-if value="{{plotTblOn}}" hint-placeholder-val="{{false}}">
           <div style="display:flex;flex-direction:column;gap:7px;align-items:stretch">
             <div style="text-align:center;font-size:16px;font-weight:800;color:#645c50">📋 먼셀이 정리한 표</div>
             <div style="display:flex;gap:7px">
@@ -704,6 +707,7 @@ button{font-family:inherit}
               <button onClick="{{plotLineGo}}" style="min-height:52px;margin-top:5px;padding:12px 16px;border-radius:16px;border:3px solid #c67139;background:#ffe1d0;font-size:16.5px;color:#8c491a;cursor:pointer;animation:rsPop .35s ease">📏 선으로 이어 보기</button>
             </sc-if>
           </div>
+          </sc-if>
           <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
             <div style="position:relative;width:{{plotOW}}px;height:{{plotOH}}px">
               <sc-for list="{{plotYTicks}}" as="t" hint-placeholder-count="4">
@@ -728,7 +732,42 @@ button{font-family:inherit}
               </div>
             </div>
             <div style="font-size:15px;font-weight:800;color:#645c50">가로 → <span style="color:{{cRed}}">빨강 ({{plotUnit}})</span> · 세로 ↑ <span style="color:{{cYel}}">노랑 ({{plotUnit}})</span></div>
+            <!-- 2026-09-28 — 선 밖 실험 화면은 안내와 색 비교를 그래프 바로 아래에 둔다 -->
+            <sc-if value="{{plotOffOn}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+                <div style="font-size:14.5px;font-weight:700;color:var(--color-neutral-700);text-align:center;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:16px;padding:6px 14px;line-height:1.4">{{plotHint}}</div>
+                <sc-if value="{{predMix}}" hint-placeholder-val="{{false}}">
+                  <div style="display:flex;gap:14px;align-items:flex-end;justify-content:center;animation:rsPop .35s ease">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                      <div style="width:62px;height:62px;border-radius:999px;border:4px solid #201e1d;background:{{predMix}}"></div>
+                      <div style="font-size:11.5px;font-weight:800;color:#8c491a;white-space:nowrap">{{predLabel}}</div>
+                    </div>
+                    <div style="font-size:16px;color:#645c50;padding-bottom:20px">vs</div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                      <div style="width:62px;height:62px;border-radius:999px;border:4px solid #201e1d;background:{{predRef}}"></div>
+                      <div style="font-size:11.5px;font-weight:800;color:#645c50">{{predRefName}}</div>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
           </div>
+          <!-- 2026-09-28 — 선 밖 실험 화면은 짚어보기 물음을 오른쪽에 세운다(아래에 두면 화면 밖으로 밀린다) -->
+          <sc-if value="{{probeAside}}" hint-placeholder-val="{{false}}">
+            <div style="flex:1 1 340px;min-width:300px;max-width:460px;align-self:stretch;overflow:auto;background:#fffdf6;border:3.5px solid #f6a06b;border-radius:24px;padding:12px 18px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:19px;font-weight:800;color:#8c491a">{{probeTitle}}</div>
+              <sc-for list="{{probeRows}}" as="row" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <div style="font-size:17.5px;font-weight:700;color:#474238;line-height:1.4"><b>{{row.no}}</b> {{row.q}}</div>
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <sc-for list="{{row.opts}}" as="o" hint-placeholder-count="3">
+                      <button onClick="{{o.pick}}" style="min-height:48px;padding:9px 16px;border-radius:14px;border:3px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}};font-size:16.5px;cursor:{{o.cur}};text-align:left;line-height:1.35;font-family:inherit">{{o.t}}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
           <!-- 셋째 칸 — 예측한 색 비교와 식 빈칸. 왼쪽 칸 아래에 두면 화면 밖으로 밀렸다(2026-09-22).
                2026-09-28 — 선 밖 실험 화면도 이 칸에 색을 나란히 놓는다(식 빈칸은 뜨지 않는다) -->
           <sc-if value="{{plotSideOn}}" hint-placeholder-val="{{false}}">
@@ -801,7 +840,7 @@ button{font-family:inherit}
       </sc-if>
 
       <!-- 조작 직후 발문(지침 5.1) — 조작물은 그대로 둔 채, 그 아래에서 어떻게·왜·기호를 묻는다 -->
-      <sc-if value="{{probeRows}}" hint-placeholder-val="{{false}}">
+      <sc-if value="{{probeBelowOn}}" hint-placeholder-val="{{false}}">
         <!-- 짚어보기 — 2026-09-22 글씨를 키우고 화면 폭을 거의 다 쓴다(수정의견). 세로로도 남는 자리를 채운다 -->
         <!-- 2026-09-23 세 물음이 상자를 넘어가 테두리가 첫 물음에만 보였다 — 상자 안에서 넘치면 스크롤한다 -->
         <div style="flex:1 1 auto;min-height:0;overflow:auto;width:min(1120px,98%);background:#fffdf6;border:3.5px solid #f6a06b;border-radius:24px;padding:12px 22px;box-shadow:0 8px 22px rgba(246,160,107,.22);animation:rsUp .35s ease;display:flex;flex-direction:column;justify-content:flex-start;gap:10px">
@@ -2820,7 +2859,7 @@ class Component extends DCLogic {
     this.setState({ plot, plotOff: off, plotOffCur: { r, y }, plotGx: null, plotGy: null });
     if (off.length >= 2 && !this.state.solved[this.state.i]) {
       this.markSolved();
-      this.toast('🎨', '선 밖은 색이 달라요!', '선 위의 자리는 모두 빨강과 노랑의 비가 1 대 2였어. 선에서 벗어나면 비가 달라져서 다른 주황이 된단다. 아래 물음에 답해 볼까?', 'ok');
+      this.toast('🎨', '선 밖은 색이 달라요!', '선 위의 자리는 모두 빨강과 노랑의 비가 1 대 2였어. 선에서 벗어나면 비가 달라져서 다른 주황이 된단다. 오른쪽 물음에 답해 볼까?', 'ok');
       return;
     }
     this.toast('🎨', '목표색과 달라졌네!', '빨강 ' + r + 'mL와 노랑 ' + y + 'mL를 섞은 색이야. 다른 자리도 한 군데 더 눌러 볼까?');
@@ -3897,7 +3936,10 @@ class Component extends DCLogic {
                   : (S.plotPred ? col([S.plotPred.r, S.plotPred.y]) : null);
         v.predLabel = offCur ? ('빨강 ' + offCur.r + ' : 노랑 ' + offCur.y)
                   : (S.plotPred ? ('빨강 ' + S.plotPred.r + ' : 노랑 ' + S.plotPred.y) : '');
-        v.plotSideOn = (isOff ? (offCur ? 1 : 0) : ((isPred && S.plotPred) ? 1 : 0));
+        /* 선 밖 실험 화면은 표를 감추고(왼쪽으로 붙이고) 색 비교를 그래프 아래에 둔다. 셋째 칸은 예측 화면에서만 */
+        v.plotSideOn = (!isOff && isPred && S.plotPred) ? 1 : 0;
+        v.plotTblOn = isOff ? 0 : 1;
+        v.plotOffOn = isOff ? 1 : 0;
         /* 나란히 놓고 비교할 색은 표 첫 줄로 섞은 색이다 —
            1 : 2 격자에서는 그것이 곧 뭉크의 목표 색이고, 2 : 3 격자에서는 시냐크의 주황이다. */
         v.predRef = col(ans[0]);
@@ -3908,7 +3950,7 @@ class Component extends DCLogic {
         v.plotHint = isOff
           ? ((S.plotOff || []).length === 0 ? '📍 선에서 벗어난 자리를 눌러 색을 확인해요'
              : ((S.plotOff || []).length === 1 ? '📍 한 군데 더 — 다른 자리도 눌러 볼까요?'
-                                               : '✅ 두 군데를 눌러 봤어요 — 아래 물음에 답해요'))
+                                               : '✅ 두 군데를 눌러 봤어요 — 오른쪽 물음에 답해요'))
           : (!isPred && done)
           ? '✅ 점을 모두 찍었어요 — 「다음 →」을 눌러요'
           : S.plotLine
@@ -3996,10 +4038,15 @@ class Component extends DCLogic {
       };
     }) : null;
 
+    /* 2026-09-28 — 선 밖 실험 화면(stage:'off')은 물음을 그래프 오른쪽에 세운다. 아래에 두면 화면 밖으로 밀렸다 */
+    v.probeAside = (v.probeRows && st.stage === 'off') ? 1 : 0;
+    v.probeBelowOn = (v.probeRows && st.stage !== 'off') ? 1 : 0;
+
     const needsSolve = (['chips','lab','demo','cups','dots','grid','blank','reflect','probe','tbl','plot','rule','fill'].indexOf(st.k) >= 0) && !this._guest;
     const gateOk = (st.k === 'probe') ? probeOk : (solved && probeOk);
     /* 마지막 화면에서는 이동 단추를 감춘다 — 화면 안의 '다음 방으로'만 쓴다 */
-    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '제출! →' : '다음 →');
+    /* 2026-09-28 — 색깔 방 마지막 물음의 단추는 「색깔의 방 탈출!」(사용자 지시) */
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →') : (st.k === 'reflect' ? '색깔의 방 탈출! →' : '다음 →');
     v.showPrimary = st.k !== 'finish';
     /* 되돌아보기는 자유 응답이다 — 무엇이든 적으면 곧바로 제출할 수 있고,
        단추도 잠긴 색으로 두지 않는다(지침 5.2). */
