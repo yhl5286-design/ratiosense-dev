@@ -160,15 +160,6 @@
      "reg": true
     },
     {
-     "step": 3.004,
-     "who": "munsell",
-     "text": "고르면 그 가설대로 바로 실험해 볼 거야.",
-     "key": "17eo2dj",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
      "step": 4,
      "who": "munsell",
      "text": "목표색을 만들기 위해 빨강 물감 10 밀리리터씩 두 컵을 부었어.",
