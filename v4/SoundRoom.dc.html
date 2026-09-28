@@ -836,6 +836,11 @@ class Component extends DCLogic {
            { t:'다시 만나는 것은 비와 상관없어요', ok:0, fb:'1 : 2와 8 : 9의 만나는 칸을 나란히 놓고 비교해 볼까요? 두 리듬이 아주 달랐어요.' } ];
 
   /* 디자인 토큰 참조 — hex 하드코딩 대신 styles.css 변수를 문자열로 사용 */
+  /* 2026-09-28 — 어울림 화면의 두 물결 색. 도는 파랑, 누른 음은 빨강으로 가른다(사용자 지시).
+     디자인 시스템에는 파랑·빨강이 없어 여기에서만 쓰는 값으로 둔다. */
+  HX_BLUE = '#2f6fd0';
+  HX_RED  = '#d1382b';
+
   C = {
     n100:'var(--color-neutral-100)', n200:'var(--color-neutral-200)', n300:'var(--color-neutral-300)',
     n400:'var(--color-neutral-400)', n500:'var(--color-neutral-500)', n600:'var(--color-neutral-600)',
@@ -3575,8 +3580,8 @@ class Component extends DCLogic {
   hxSvg() {
     const cur = this.state.hxCur;
     if (cur < 0) {
-      return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(360px,42vw)' : 'min(470px,54vw)', display:'block' },
-        '<text x="340" y="150" text-anchor="middle" style="font-size:21px;font-weight:700;fill:' + this.C.n500 + '">건반을 누르면 두 물결이 나타나요!</text>', 'hx');
+      return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(560px,64vw)' : 'min(700px,76vw)', display:'block' },
+        '<text x="340" y="150" text-anchor="middle" style="font-size:24px;font-weight:700;fill:' + this.C.n500 + '">건반을 누르면 두 물결이 나타나요!</text>', 'hx');
     }
     const nb = this.NOTES[cur][3], nr = this.NOTES[cur][2], nm = this.NOTES[cur][0];
     const rev = cur > 0 && !!this.state.rates[nm];
@@ -3609,8 +3614,8 @@ class Component extends DCLogic {
       }
       return '<path d="' + dd + '" style="fill:none;stroke:' + col + ';stroke-width:' + wd + ';stroke-linecap:round"/>';
     };
-    P.push(wp(BASE, this.C.g600, 4));                 /* 도 */
-    P.push(wp(BASE * nr / nb, this.C.a600, 4));       /* 누른 음 */
+    P.push(wp(BASE, this.HX_BLUE, 5));                /* 도 — 파랑 */
+    P.push(wp(BASE * nr / nb, this.HX_RED, 5));       /* 누른 음 — 빨강 */
     /* 꼭대기가 겹치는 자리 — 몇 번째 만남인지 번호를 매긴다 */
     const cy0 = midY - amp;
     let meet = 0;
@@ -3619,16 +3624,16 @@ class Component extends DCLogic {
       if (x < padL + 6 || x > W - padR - 6) continue;
       meet++;
       P.push('<line x1="' + x.toFixed(1) + '" y1="' + (top-10) + '" x2="' + x.toFixed(1) + '" y2="' + (bottom+10) + '" style="stroke:' + this.C.a700 + ';stroke-width:2" stroke-dasharray="5 4"/>');
-      P.push('<circle cx="' + x.toFixed(1) + '" cy="' + cy0 + '" r="12" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>');
-      P.push('<text x="' + x.toFixed(1) + '" y="' + (cy0 + 5) + '" text-anchor="middle" style="font-size:14px;font-weight:800;fill:' + this.C.a700 + '">' + meet + '</text>');
+      P.push('<circle cx="' + x.toFixed(1) + '" cy="' + cy0 + '" r="15" style="fill:#fff;stroke:' + this.C.a700 + ';stroke-width:3"/>');
+      P.push('<text x="' + x.toFixed(1) + '" y="' + (cy0 + 6) + '" text-anchor="middle" style="font-size:18px;font-weight:800;fill:' + this.C.a700 + '">' + meet + '</text>');
     }
-    P.push('<text x="' + (W/2) + '" y="' + (top - 18) + '" text-anchor="middle" style="font-size:15px;font-weight:800;fill:' + this.C.a700 + '">'
+    P.push('<text x="' + (W/2) + '" y="' + (top - 20) + '" text-anchor="middle" style="font-size:25px;font-weight:800;fill:' + this.C.a700 + '">'
       + '같은 시간 안에 ' + meet + '번 만나요</text>');
-    P.push('<text x="' + (W/2) + '" y="' + (bottom+34) + '" text-anchor="middle" style="font-size:14px;fill:' + this.C.n600 + '">'
+    P.push('<text x="' + (W/2) + '" y="' + (bottom+36) + '" text-anchor="middle" style="font-size:19px;fill:' + this.C.n600 + '">'
       + (rev ? ('도 ' + nb + '번 떨릴 때 ' + nm + ' ' + nr + '번 — 그때마다 꼭대기가 겹쳐요')
              : '도가 ' + nb + '번 떨릴 때마다 꼭대기가 겹쳐요') + '</text>');
     /* 설명 글은 띠 오른쪽 끝의 「↺ 꼭대기가 다시 겹쳐요!」 하나로 둔다 — 따로 두면 두 글이 겹쳤다 */
-    return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(360px,42vw)' : 'min(470px,54vw)', display:'block' }, P.join(''), 'hx');
+    return this.svgEl('0 0 680 300', { width: (typeof innerHeight === 'number' && innerHeight < 820) ? 'min(560px,64vw)' : 'min(700px,76vw)', display:'block' }, P.join(''), 'hx');
   }
   /* 방 단계의 정지 이중 파형 — waveHTML 이식 */
   grpWaveSvg(name) {
@@ -4257,9 +4262,10 @@ class Component extends DCLogic {
         const rev = !!S.rates[n[0]];
         if (rev) { v.hxRes = '도 : ' + n[0] + ' = 264Hz : ' + n[1] + 'Hz'; v.hxRatio = a + ' : ' + b; }
         else { v.hxRes = '도와 ' + n[0] + this.jz(n[0],'이','가') + ' 함께 울릴 때 잘 어울리나요? 무늬를 보고 두 물결의 꼭대기가 얼마나 자주 겹치는지 살펴보세요.'; }
+        /* 2026-09-28 — 물결 색을 파랑(도)·빨강(누른 음)으로 바꿨으므로 설명 글도 맞춘다 */
         v.hxWaveMsg = rev
-          ? '초록 물결(도)이 ' + a + '번, 주황 물결(' + n[0] + ')이 ' + b + '번 떨릴 때마다 꼭대기가 다시 겹쳐요!'
-          : '두 물결의 꼭대기가 얼마나 자주 겹치나요? 잘 보고 골라 봐요!';
+          ? '파란 물결(도)이 ' + a + '번, 빨간 물결(' + n[0] + ')이 ' + b + '번 떨릴 때마다 꼭대기가 다시 겹쳐요!'
+          : '파란 물결이 도, 빨간 물결이 지금 누른 음이에요. 두 물결의 꼭대기가 얼마나 자주 겹치나요?';
       }
       v.hxSvgEl = this.hxSvg();
       v.showRate = cur >= 1;
