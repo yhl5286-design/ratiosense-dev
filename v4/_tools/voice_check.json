@@ -1,5 +1,5 @@
 {
- "ver": "202609280108",
+ "ver": "202609280110",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -288,8 +288,8 @@
     {
      "step": 8.001,
      "who": "munsell",
-     "text": "빨강과 노랑에 각 물감을 30 밀리리터씩 같은 양만큼 더 넣어 보자.",
-     "key": "tcsgf7",
+     "text": "주황을 만들고 각 물감을 같은 양으로 더 넣으면 어떻게 될까?",
+     "key": "1shtwmm",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -297,8 +297,8 @@
     {
      "step": 8.002,
      "who": "munsell",
-     "text": "아까와 같은 목표색이 될까, 다른 색이 될까?",
-     "key": "15w3bsi",
+     "text": "색이 같을까, 다를까?",
+     "key": "182cihe",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -306,8 +306,8 @@
     {
      "step": 8.003,
      "who": "munsell",
-     "text": "지금 비커에 빨강 20 밀리리터와 노랑 40 밀리리터가 들어 있어.",
-     "key": "7z8yi9",
+     "text": "지금 빨강 20 밀리리터와 노랑 40 밀리리터가 들어 있어.",
+     "key": "msurfl",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
@@ -315,8 +315,8 @@
     {
      "step": 8.004,
      "who": "munsell",
-     "text": "양쪽에 30 밀리리터씩 더 넣고 목표색과 비교해 봐.",
-     "key": "1kjc7me",
+     "text": "빨강도 30 밀리리터, 노랑도 30 밀리리터씩 더 넣고 목표색과 비교해 봐.",
+     "key": "hpo4qp",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
