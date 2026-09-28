@@ -1,5 +1,5 @@
 {
- "ver": "202609271504",
+ "ver": "202609280108",
  "fixed": "1fcvula",
  "groups": [
   {
@@ -270,17 +270,8 @@
     {
      "step": 7.002,
      "who": "munsell",
-     "text": "큰 통에 빨강을 50 밀리리터 넣었어.",
-     "key": "1ccousx",
-     "cast": "과학자 먼셀",
-     "speaker": "nwoosik",
-     "reg": true
-    },
-    {
-     "step": 7.003,
-     "who": "munsell",
-     "text": "앞에서 찾은 관계대로라면 노랑은 얼마나 넣어야 할까?",
-     "key": "154i4wo",
+     "text": "큰 통에 빨강을 50 밀리리터 넣었다면 노랑은 얼마나 넣어야 목표색이 될까?",
+     "key": "cz4rce",
      "cast": "과학자 먼셀",
      "speaker": "nwoosik",
      "reg": true
