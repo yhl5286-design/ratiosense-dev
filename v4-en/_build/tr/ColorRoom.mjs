@@ -675,7 +675,7 @@ export default {
   "📈 점을 차례로 눌러 선으로 잇고, 빨강 60 자리와 식의 빈칸을 채워요": "📈 Tap the points in order to join them, then find red 60 and fill in the equation",
   "선 위의 점들은 모두 목표색이 되었지? 그럼 선에서 벗어난 자리는 어떤 색일까? 격자에서 선 밖의 자리를 두 군데 눌러 색을 확인해 봐.": "The points on the line all made the target color, right? Then what color are the spots off the line? Tap two spots off the line on the grid and check the color.",
   "📈 선 밖의 자리를 눌러 색을 확인해요 · 두 군데": "📈 Tap spots off the line to check the color · two spots",
-  "🤔 선 위와 선 밖을 견주어 볼까": "🤔 Let's compare on the line and off the line",
+  "🤔 선 위와 선 밖을 비교해 볼까": "🤔 Let's compare on the line and off the line",
   "선 위의 점들은 왜 모두 목표색과 같았을까요?": "Why were all the points on the line the same as the target color?",
   "빨강과 노랑의 비가 모두 1 대 2로 같아서요": "Because red to yellow is the same for all of them, 1 to 2",
   "점이 모두 한 줄에 놓여 있어서요": "Because the points are all in one line",
