@@ -20,7 +20,7 @@ export default {
   '소리 끔': 'Sound off',
 
   /* 인물 */
-  '레시오': 'Ratia',
+  '레시오': 'Ratio',
   '비의 비밀 탐색 안내자': 'your guide to the Secret of Ratio',
   '에라토스테네스': 'Eratosthenes',
   '지구를 처음 잰 옛 학자': 'the scholar who first measured the Earth',
@@ -32,7 +32,7 @@ export default {
 
   /* 들머리 */
   '안녕하세요! 저는 \\\'비(比)\\\'의 비밀 탐색을 돕는 안내자, 레시오예요. 이 방은 지도의 비밀 방이에요. 지도와 실제 거리를 여러 가지 방법으로 견주어 보면서 비의 비밀을 함께 찾아볼 거예요. 우리 함께 세 번째 비밀을 풀러 가볼까요?':
-    'Hello! I am Ratia, your guide on the hunt for the Secret of Ratio. This is the Map room. We will compare maps with real distances in all sorts of ways and find the secret together. Shall we go and solve the third secret?',
+    'Hello! I am Ratio, your guide on the hunt for the Secret of Ratio. This is the Map room. We will compare maps with real distances in all sorts of ways and find the secret together. Shall we go and solve the third secret?',
   /* “지도 속에 숨은 [비]의 비밀을 함께 찾아봐요!” */
   '지도 속에 숨은': "Let's find the secret of",
   '비': 'ratio',

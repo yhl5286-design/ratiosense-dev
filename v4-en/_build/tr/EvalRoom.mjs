@@ -1,6 +1,6 @@
 /* 마지막 방 「비의 비밀」 번역.
 
-   이름  레시오=Ratia(수학 용어 ratio·앱 이름 RatioSense와 겹치지 않게 한 이름) · 먼셀=Munsell · 시냐크=Signac · 뭉크=Munch · 에라토스테네스=Eratosthenes
+   이름  레시오=Ratio(2026-09-30 사용자 결정 — 9/2에는 Ratio였다) · 먼셀=Munsell · 시냐크=Signac · 뭉크=Munch · 에라토스테네스=Eratosthenes
    계이름 도=C 레=D 미=E 파=F 솔=G 라=A 시=B — 라 440Hz가 A440이므로 계이름보다 음이름이 분명하다.
    말투  초등 5~6학년이 읽을 수 있는 짧은 문장(CEFR A2 안팎).
 
@@ -125,7 +125,7 @@ export default {
     '" text-anchor="middle" style="font-size:13px;font-weight:800;fill:var(--color-neutral-600)">2 waves of C = 3 waves of G — a short pattern that repeats often</text>',
 
   /* 인물·설정 */
-  '레시오': 'Ratia',
+  '레시오': 'Ratio',
   '비의 비밀 탐색 안내자': 'your guide to the Secret of Ratio',
   '안내': 'Guide',
   '문제를 읽어 주는 목소리': 'the voice that reads the questions aloud',

@@ -54,14 +54,14 @@ export default {
   '🎒 시작하기': '🎒 Start',
   '탐험 순서: 색깔 → 소리 — 앞 방을 마쳐야 다음 방이 열려요! 두 방을 모두 마치면 마지막 문이 열려요.':
     'Your route: Color → Sound. Each room opens once you finish the one before it! Finish both rooms and the last door opens.',
-  '레시오': 'Ratia',
-  '🔊 레시오의 이야기를 끝까지 들어 주세요': '🔊 Please listen to Ratia until the end',
+  '레시오': 'Ratio',
+  '🔊 레시오의 이야기를 끝까지 들어 주세요': '🔊 Please listen to Ratio until the end',
   '탐험하기 →': "Let's explore →",
   /* “연구자에게 받은 [내 코드]를 눌러 주세요 (예: S01)” — 앞 조각은 'Tap in the' */
   '내 코드': 'code',
   '를 눌러 주세요 (예: S01)': ' the researcher gave you (for example: S01)',
   '먼저 앞 글자를 눌러 주세요': 'First, tap the letter',
-  '안녕하세요! 비의 비밀을 함께 찾을 레시오예요.': "Hello! I'm Ratia. Let's find the Secret of Ratio together.",
+  '안녕하세요! 비의 비밀을 함께 찾을 레시오예요.': "Hello! I'm Ratio. Let's find the Secret of Ratio together.",
   '색깔의 방과 소리의 방에서 비의 비밀을 찾아요.': 'We will look for it in the Color room and the Sound room.',
   '문제를 풀면 비밀 카드를 한 장씩 얻어요. 네 장을 모으면 마지막 문이 열려요.':
     'Solve a puzzle and you get a secret card. Collect four cards and the last door opens.',

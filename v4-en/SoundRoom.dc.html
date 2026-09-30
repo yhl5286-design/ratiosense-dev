@@ -1009,7 +1009,7 @@ class Component extends DCLogic {
        연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
     /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
        emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
-    ratio:    { name:'Ratia', role:'your guide to the Secret of Ratio', emoji:'🎼',
+    ratio:    { name:'Ratio', role:'your guide to the Secret of Ratio', emoji:'🎼',
                 img:'../v4/ratio_portrait.jpg', imgBare:1, tone:'a bright guiding voice',
                 male:0, pitch:1.06, pitchF:1.06, rate:1.04, gap:160 },
     narrator: { name:'Guide', role:'the voice that reads the questions aloud', emoji:'📣', tone:'female narration',
@@ -1899,7 +1899,7 @@ class Component extends DCLogic {
     try { localStorage.setItem('rs3_voices', JSON.stringify(vm)); } catch(e) {}
     this._pool = undefined;
     this.setState({ voiceMap: vm });
-    setTimeout(() => this.speak(who === 'narrator' ? 'I will read the questions for you.' : 'Ratia here. Nice to meet you!', who), 60);
+    setTimeout(() => this.speak(who === 'narrator' ? 'I will read the questions for you.' : 'Ratio here. Nice to meet you!', who), 60);
   }
 
   /* ── 건반 공통 ── */
@@ -1926,7 +1926,7 @@ class Component extends DCLogic {
     if (!this._nbT || now - this._nbT > 2500) {
       this._nbT = now;
       this.plog('narr_block', { slide: this.state.i });
-      this.toast('🔊', 'Try it after Ratia finishes talking', '', 'quiet');
+      this.toast('🔊', 'Try it after Ratio finishes talking', '', 'quiet');
     }
     return true;
   }
@@ -3429,11 +3429,11 @@ class Component extends DCLogic {
      (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
      화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
      '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
-  NAMES = ['Eratosthenes','Signac','Ratia','Munsell','Munch'];
+  NAMES = ['Eratosthenes','Signac','Ratio','Munsell','Munch'];
   markNames(t) {
     let s = String(t);
     this.NAMES.forEach(n => {
-      s = s.replace(new RegExp("(?<!['‘’\\w])" + n + "(?!['‘’\\w])", 'g'),
+      s = s.replace(new RegExp("(?<!['‘’\\w])(?<!of )" + n + "(?!['‘’\\w])", 'g'),
                     "'" + n + "'");
     });
     return s;
@@ -4604,7 +4604,7 @@ class Component extends DCLogic {
        소리를 끄면(🔇) 곧바로 열린다 — narrating()이 audio === 'full'일 때만 참이기 때문이다. */
     const talking = this.narrWait() && this.narrating();
     v.primaryBg = (!talking && (!needsSolve || gateOk || refOk)) ? this.C.acc : this.C.n400;
-    if (talking) v.footHint = '🔊 You can go on when Ratia finishes talking';
+    if (talking) v.footHint = '🔊 You can go on when Ratio finishes talking';
     else v.footHint = (needsSolve && !gateOk && !v.liveBadge && !refOk)
       ? ((st.k === 'reflect' && !st.mc) ? 'Choose one option and you can submit'
         : (solved ? 'Answer the question below and you can go on' : 'Solve this and you can go on')) : '';

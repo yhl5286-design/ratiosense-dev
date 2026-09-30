@@ -61,10 +61,11 @@ node _build/verify.mjs     # 한글 0 확인
 
 ## 번역에서 정한 것
 
-- **안내자 이름은 Ratia** — 레시오를 그대로 Ratio로 옮기면 수학 용어 *ratio*,
-  앱 이름 *RatioSense*와 겹쳐 「the world is full of 'Ratio'」처럼 읽힌다.
-  이름은 Ratia, 개념은 ratio로 갈랐다. 바꾸려면 `_build/tr/*.mjs`의
-  `'레시오'` 한 줄만 고치면 된다.
+- **안내자 이름은 Ratio**(2026-09-30 사용자 결정). 9/2에는 Ratia였다 — 인물 이름을 따옴표로
+  감싸는 `markNames`가 방 이름 「the Secret of Ratio」의 Ratio까지 감쌀까 봐서였다.
+  그래서 `patch.mjs`에서 `markNames`의 식에 `(?<!of )`를 넣어, 앞에 「of 」가 오면 감싸지 않게 했다.
+  대문자로 시작하는 낱말 「Ratio」만 이름으로 본다(ratio · RatioSense는 감싸지 않는다).
+  이름이 든 번역문은 `_build/tr/*.mjs`에 흩어져 있으므로 이름을 또 바꾸면 전부 찾아 바꾼다.
 - 나머지 인물은 원래 이름 그대로 — Munsell · Signac · Munch · Eratosthenes · Dain.
 - **계이름은 음이름으로** — 도레미파솔라시도′ → C D E F G A B C′.
   라 = 440Hz가 곧 A440이므로 영어권 교실에서는 음이름이 분명하다.

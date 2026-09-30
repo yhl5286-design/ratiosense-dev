@@ -1,5 +1,5 @@
 /* 색깔의 방 번역.
-   이름  레시오=Ratia · 뭉크=Munch · 먼셀=Munsell · 시냐크=Signac · 다인=Dain
+   이름  레시오=Ratio · 뭉크=Munch · 먼셀=Munsell · 시냐크=Signac · 다인=Dain
    말투  먼셀·시냐크는 어른이 아이에게 건네는 말씨, 다인은 또래 친구 말씨.
    {{ }} 안의 이름은 화면에 값을 끼워 넣는 자리이므로 그대로 둔다.
    <b>를 사이에 둔 조각은 이어 붙었을 때 한 문장이 되도록 맞추었다. */
@@ -117,7 +117,7 @@ export default {
   '그대로 두기': 'Leave it as it is',
 
   /* 인물 */
-  '레시오': 'Ratia',
+  '레시오': 'Ratio',
   '비의 비밀 탐색 안내자': 'your guide to the Secret of Ratio',
   '밝은 안내 목소리': 'a bright guiding voice',
   '화가 뭉크': 'Munch the painter',
@@ -145,7 +145,7 @@ export default {
   '반가워!': 'Nice to meet you!',
 
   /* 들머리 */
-  '안녕하세요! 저는 비의 비밀을 함께 찾을 레시오예요.': 'Hello! I am Ratia, and we are going to find the Secret of Ratio together.',
+  '안녕하세요! 저는 비의 비밀을 함께 찾을 레시오예요.': 'Hello! I am Ratio, and we are going to find the Secret of Ratio together.',
   '여기는 색깔의 비밀 방이에요. 도움이 필요한 화가와 과학자가 기다리고 있어요.':
     'This is the Color room. A painter and a scientist are waiting, and they need your help.',
   '함께 풀어 볼까요?': 'Shall we solve it together?',

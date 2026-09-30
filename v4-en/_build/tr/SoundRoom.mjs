@@ -29,7 +29,7 @@ export default {
   '소리 끔': 'Sound off',
 
   /* 인물 */
-  '레시오': 'Ratia',
+  '레시오': 'Ratio',
   '비의 비밀 탐색 안내자': 'your guide to the Secret of Ratio',
   '밝은 안내 목소리': 'a bright guiding voice',
   '안내': 'Guide',
@@ -40,7 +40,7 @@ export default {
   '먼셀': 'Munsell',
   '뭉크': 'Munch',
   '문제를 읽어 줄게요.': 'I will read the questions for you.',
-  '레시오예요. 반가워요!': 'Ratia here. Nice to meet you!',
+  '레시오예요. 반가워요!': 'Ratio here. Nice to meet you!',
 
   /* 들머리 */
   '소리의 비밀을 찾아봅시다!': 'Let us go and find the Sound Secret!',
@@ -835,7 +835,7 @@ export default {
   "네 장을 다 모았어요! 비의 비밀 방에서 마지막 문을 열어 보세요.": "You have all four! Open the last door in the Secret of Ratio room.",
   "네 장을 모으면 비의 비밀 방의 마지막 문을 열 수 있어요.": "Collect four cards to open the last door in the Secret of Ratio room.",
   "🃏 못 받은 카드 풀러 가기": "🃏 Go and solve for the cards you missed",
-  "레시오 말을 다 들은 뒤에 해 보세요": "Try it after Ratia finishes talking",
+  "레시오 말을 다 들은 뒤에 해 보세요": "Try it after Ratio finishes talking",
   "의 떨림이 아직 남아 있어요 — 끝까지 보고 나서 눌러 봐요": " is still shaking — watch until it stops, then press",
   "음이 점점 높아질수록 줄의 길이는 어떤가요?": "As the notes get higher, what happens to the string length?",
   "짧아져요": "It gets shorter",
@@ -1062,7 +1062,7 @@ export default {
   "\\n\\n✅ ㉮ 2 : 3 — 왜 그렇게 생각했나요?": "\n\n✅ A 2 : 3 — why do you think so?",
   "도 진동수 : 높은 도 진동수 = 1 : 2\\n도의 줄 길이 : 높은 도의 줄 길이 = 2 : 1\\n\\n도 줄이 100cm라면, 높은 도 줄은 몇 cm일까요?": "C frequency : high C frequency = 1 : 2\nC string length : high C string length = 2 : 1\n\nIf the C string is 100cm, how many cm is the high C string?",
   "도 진동수 : 높은 도 진동수 = 1 : 2\\n진동수와 줄 길이의 비는 서로 반대예요.\\n\\n도의 줄 길이 : 높은 도의 줄 길이 = ?\\n높은 도의 줄은 도의 줄의 몇 배가 되어야 할까요?": "C frequency : high C frequency = 1 : 2\nFrequency and string length ratios are opposite.\n\nC string length : high C string length = ?\nHow many times the C string should the high C string be?",
-  "🔊 레시오의 말이 끝나면 다음으로 갈 수 있어요": "🔊 You can go on when Ratia finishes talking",
+  "🔊 레시오의 말이 끝나면 다음으로 갈 수 있어요": "🔊 You can go on when Ratio finishes talking",
   "보기 하나를 고르면 제출할 수 있어요": "Choose one option and you can submit",
   /* 이미 옮긴 조각 가운데 새 문장과 이어 붙을 때 어색해진 것 — 뒤에 적은 값이 앞의 값을 덮는다 */
   "칸": " parts",
