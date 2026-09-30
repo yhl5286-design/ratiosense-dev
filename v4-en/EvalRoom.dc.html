@@ -60,6 +60,15 @@ button{font-family:inherit}
 .rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
 .rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
 .rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
+/* 마지막 화면의 활동 카드 — 다섯 장이 세 칸 두 줄로 앉게 칸 수를 못 박는다.
+   auto-fit에 맡기면 창이 조금만 좁아져도 세 칸 세 줄이 되어 화면 밖으로 넘친다. */
+.rs-wrapgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%}
+/* 그림 높이를 묶어 두 줄이 고르게 앉게 한다 — 한 장이라도 길면 그 줄 전체가 따라 커져
+   아래 맺음말이 화면 밖으로 밀린다. contain이라 그림은 잘리지 않고 여백만 생긴다. */
+.rs-wrapgrid figure>img{max-height:250px;object-fit:contain;background:var(--color-neutral-100)}
+.rs-wrapgrid figure>div{max-height:250px;overflow:hidden}
+@media (max-width:860px){.rs-wrapgrid{grid-template-columns:repeat(2,1fr);gap:10px}}
+@media (max-width:600px){.rs-wrapgrid{grid-template-columns:repeat(2,1fr);gap:9px}}
 .rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
 .rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
 @media (max-width:1080px){.rs-sub-text{font-size:19px}}
@@ -84,7 +93,7 @@ button{font-family:inherit}
       <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
     </div>
     <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
-    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <div data-cards-badge="1" style="flex:none;display:{{cardsDisp}};align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
     <button onClick="{{cycleAudio}}" aria-label="Sound settings" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
   </header>
 
@@ -93,6 +102,8 @@ button{font-family:inherit}
     <section class="rs-stage">
 
       <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <!-- 마지막 화면에서는 안내자가 말하지 않는다 — 화면이 스스로 정리해 보인다 -->
+      <sc-if value="{{showCoach}}" hint-placeholder-val="{{true}}">
       <div class="rs-sub">
         <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
           <div class="rs-sub-who">{{coachImgEl}}</div>
@@ -113,6 +124,7 @@ button{font-family:inherit}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
       </div>
+      </sc-if>
 
       <div class="rs-play">
 
@@ -125,34 +137,50 @@ button{font-family:inherit}
 
       <sc-if value="{{isDoor}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
+          <!-- 문 — 문틀에 두 짝이 달려 있고, 1618을 맞히면 양쪽으로 확 열리며 빛이 쏟아진다(2026-09-19) -->
+          <div style="perspective:1100px;height:274px;display:flex;align-items:center;justify-content:center;flex:none">
+            <div style="position:relative;width:248px;height:260px;border-radius:14px 14px 0 0;background:#3a2a1d;box-shadow:0 9px 26px rgba(0,0,0,.26)">
+              <div style="position:absolute;left:9px;top:9px;width:230px;height:242px;border-radius:7px 7px 0 0;background:radial-gradient(circle at 50% 62%,#fffbe8 0%,#ffdc74 42%,#f5a623 100%);opacity:{{doorGlow}};transition:opacity .4s ease"></div>
+              <!-- 문이 열리면 레시오가 문 안에 서 있다(2026-09-19). 문짝보다 DOM 앞에 두어 닫혀 있으면 가려진다 -->
+              <div style="position:absolute;left:124px;top:152px;width:128px;height:128px;margin-left:-64px;margin-top:-64px;border-radius:999px;overflow:hidden;background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:46px;opacity:{{doorRatioOp}};transform:{{doorRatioTf}};transition:opacity .45s ease .22s, transform .6s cubic-bezier(.16,1,.3,1) .22s">
+                🎼
+                <img src="../v4/ratio_portrait.jpg" alt="" onError="this.style.display='none'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+              </div>
+              <div style="position:absolute;left:9px;top:9px;width:115px;height:242px;border-radius:7px 0 0 0;background:linear-gradient(100deg,#ad764e,#8a5a39);border-right:2px solid #6f4728;box-shadow:inset -9px 0 18px rgba(0,0,0,.2);transform-origin:left center;transition:transform .55s cubic-bezier(.16,1,.3,1);transform:{{doorTfL}}"></div>
+              <div style="position:absolute;left:124px;top:9px;width:115px;height:242px;border-radius:0 7px 0 0;background:linear-gradient(80deg,#8a5a39,#ad764e);box-shadow:inset 9px 0 18px rgba(0,0,0,.2);transform-origin:right center;transition:transform .55s cubic-bezier(.16,1,.3,1);transform:{{doorTfR}}"></div>
+              <div style="position:absolute;left:124px;top:140px;width:38px;height:38px;margin-left:-19px;font-size:32px;text-align:center;opacity:{{doorLockOp}};transition:opacity .22s ease">🔒</div>
+            </div>
+          </div>
           <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
             <sc-for list="{{doorCards}}" as="c" hint-placeholder-count="4">
-              <div style="width:132px;border-radius:var(--radius-md);overflow:hidden;border:3px solid var(--color-accent-500);background:var(--color-neutral-100);box-shadow:var(--shadow-sm)">
-                <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:11.5px;text-align:center;padding:4px">{{c.no}}</div>
-                <div style="padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:5px">
-                  <div style="font-size:10.5px;font-weight:800;text-align:center;line-height:1.5;min-height:46px">{{c.concept}}</div>
-                  <div style="font-size:27px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-sm);padding:0 16px">{{c.digit}}</div>
+              <div style="width:96px;border-radius:var(--radius-md);overflow:hidden;border:2px solid var(--color-accent-500);background:var(--color-neutral-100);box-shadow:var(--shadow-sm)">
+                <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:9.5px;text-align:center;padding:3px">{{c.no}}</div>
+                <div style="padding:5px 4px;display:flex;flex-direction:column;align-items:center;gap:4px">
+                  <div style="font-size:9px;font-weight:800;text-align:center;line-height:1.45;min-height:34px">{{c.concept}}</div>
+                  <div style="font-size:19px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-sm);padding:0 11px">{{c.digit}}</div>
                 </div>
               </div>
             </sc-for>
           </div>
           <div style="display:flex;gap:10px;justify-content:center">
             <sc-for list="{{doorSlots}}" as="s" hint-placeholder-count="4">
-              <div style="width:58px;height:66px;border:3px solid {{s.bd}};border-radius:var(--radius-md);background:var(--color-neutral-100);font-size:32px;display:flex;align-items:center;justify-content:center">{{s.d}}</div>
+              <div style="width:42px;height:48px;border:2px solid {{s.bd}};border-radius:var(--radius-sm);background:var(--color-neutral-100);font-size:23px;display:flex;align-items:center;justify-content:center">{{s.d}}</div>
             </sc-for>
           </div>
-          <div style="display:grid;grid-template-columns:repeat(3,72px);gap:8px;justify-content:center">
+          <!-- 2026-09-22 밤 — 칸(54px)이 단추(72px)보다 좁아 번호가 겹쳤다. 칸을 단추 폭에 맞춘다 -->
+          <div style="display:grid;grid-template-columns:repeat(3,72px);gap:10px;justify-content:center">
             <sc-for list="{{doorPad}}" as="p" hint-placeholder-count="12">
               <button onClick="{{p.tap}}" class="rs-pad">{{p.k}}</button>
             </sc-for>
           </div>
-          <button onClick="{{doorGo}}" class="rs-pill">🔓 Open the door!</button>
         </div>
       </sc-if>
 
       <!-- 황금비 막대 — 기준을 늘여도 두 막대의 비는 그대로임을 눈으로 확인한다 -->
       <sc-if value="{{isPhi}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease;margin:auto 0">
+          <!-- 조작 안내는 대사에 넣지 않고 그림에만 둔다(2026-09-22 밤, 사용자 문안) -->
+          <div style="font-size:18px;font-weight:800;color:var(--color-accent-700);text-align:center">🎚️ Move the slider and feel the golden ratio, 1 to 1.618.</div>
 
           <div style="width:min(680px,94%);display:flex;flex-direction:column;gap:12px">
             <div style="display:flex;align-items:center;gap:10px">
@@ -185,42 +213,96 @@ button{font-family:inherit}
       </sc-if>
 
       <sc-if value="{{isFinale}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0;max-width:720px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsPop .5s ease;margin:auto 0;max-width:940px">
           <div style="display:flex;align-items:center;gap:12px;background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:var(--radius-lg);padding:var(--space-2) var(--space-4)">
             <span style="font-size:19px;color:var(--color-accent-700)">1 · 6 · 1 · 8 →</span>
             <span style="font-size:30px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 18px">1.618</span>
             <span style="font-size:19px;color:var(--color-accent-2-700)">The golden ratio φ!</span>
           </div>
           {{phiArt}}
-          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">In shapes, in nature and in numbers, the very same value <b>1.618</b> turns up.<br>Just as you found in color, sound and maps, the world is full of one thing — <b>The Secret of Ratio</b>!</div>
+          <div style="font-size:15.5px;font-weight:700;line-height:1.8;text-align:center;color:var(--color-neutral-800);max-width:680px">In shapes and in numbers, the very same value <b>1.618</b> turns up.<br>Just as you found in color and sound, the world is full of one thing — <b>The Secret of Ratio</b>!</div>
         </div>
       </sc-if>
 
-      <!-- 다섯 방에서 만난 비를 한자리에 모아 '비의 비밀'에 답한다 -->
+      <!-- 마지막 화면 — 안내자가 말하지 않는다. 그동안 한 활동을 그대로 펼쳐 놓고,
+           그것이 모두 하나의 비로 이어져 있었음을 화면이 스스로 보인다.
+           누를 것은 없다. 완료 기록은 이 화면에 들어오는 순간 go()에서 남긴다. -->
+      <!-- 「내가 한 것」 화면 — 2026-09-13에 단계 목록에서 빼 지금은 닿지 않는다.
+           면담의 자극 회상 자료로 갈무리만 남겨 두었다(4.학위논문\_면담지_갈무리).
+           되살리려면 STEPS 끝에 wrap 단계를 다시 넣고 finishRoom 자리를 옮긴다. -->
       <sc-if value="{{isWrap}}" hint-placeholder-val="{{false}}">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0;max-width:740px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:5px;animation:rsUp .35s ease;margin:auto 0;width:100%;max-width:min(1240px,96vw);padding:6px 0">
 
-          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;width:100%">
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Color</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of paints</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🎵</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Sound</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of pitches</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🥁</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Rhythm</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of beats</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🗺️</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Map</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of scale</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">🌍</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Earth</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">ratio of shadows</span></div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);padding:10px 8px;min-width:96px"><span style="font-size:34px;line-height:1">✨</span><span style="font-size:15px;font-weight:800;color:var(--color-neutral-800)">Golden ratio</span><span style="font-size:13px;font-weight:700;color:var(--color-accent-700)">1 : 1.618</span></div>
+          <div style="font-family:'Fredoka','Nunito',sans-serif;font-size:22px;color:var(--color-neutral-900)">What I did</div>
+
+          <div class="rs-wrapgrid">
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="../v4/wrap_color.jpg" alt="The screen where 2 cups of red and 4 cups of yellow made the target color" style="width:100%;display:block">
+              <figcaption style="padding:6px 9px 8px;text-align:center">
+                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">🎨 Color</div>
+                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">Paint ratio 20 : 40 = 1 : 2</div>
+              </figcaption>
+            </figure>
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="../v4/wrap_sound.jpg" alt="The screen where C and G were played together to look at the wave pattern" style="width:100%;display:block">
+              <figcaption style="padding:6px 9px 8px;text-align:center">
+                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">🎵 Sound</div>
+                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">Ratio of vibrations 2 : 3</div>
+              </figcaption>
+            </figure>
+
+            <!-- 「내가 정한 간격」 단계를 없앴으므로 그 화면 사진(wrap_rhythm.jpg)은 쓰지 않는다.
+                 실제로 한 활동 — 북과 트라이앵글을 함께 듣고 다시 만나는 칸을 센 것 — 을 그대로 그린다. -->
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <div style="padding:14px 10px 10px;background:#f4f1ea" aria-label="A grid: the drum plays every beat and the triangle every 2 beats, so they meet every 2 beats">
+                <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-bottom:5px">
+                  <span style="font-size:15px;width:22px;text-align:right">🥁</span>
+                  <span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-400);background:var(--color-accent-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-600);background:var(--color-accent-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-400);background:var(--color-accent-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-600);background:var(--color-accent-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-400);background:var(--color-accent-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-600);background:var(--color-accent-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;justify-content:center">
+                  <span style="font-size:15px;width:22px;text-align:right">🔺</span>
+                  <span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-neutral-300);background:var(--color-neutral-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-2-500);background:var(--color-accent-2-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-neutral-300);background:var(--color-neutral-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-2-500);background:var(--color-accent-2-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-neutral-300);background:var(--color-neutral-100)"></span><span style="display:inline-block;width:22px;height:22px;border-radius:5px;border:2px solid var(--color-accent-2-500);background:var(--color-accent-2-100);box-shadow:0 0 0 2px var(--color-accent-300)"></span>
+                </div>
+                <div style="text-align:center;font-size:13px;font-weight:800;color:var(--color-accent-700);margin-top:8px">They meet every 2 beats</div>
+              </div>
+              <figcaption style="padding:6px 9px 8px;text-align:center">
+                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">🥁 Rhythm</div>
+                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">Ratio of the two gaps 1 : 2</div>
+              </figcaption>
+            </figure>
+
+            <!-- 하프 공방 — 라 줄 72cm를 등분해 다른 줄의 길이를 구한 활동 -->
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <div style="padding:14px 10px 10px;background:linear-gradient(180deg,#3A3128,#201E1D);display:flex;align-items:flex-start;justify-content:center;gap:11px;min-height:104px" aria-label="A harp: the shorter the string, the higher the sound">
+                <span style="display:inline-block;width:3px;height:86px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:78px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:71px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:64px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:58px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:52px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span><span style="display:inline-block;width:3px;height:47px;border-radius:2px;background:linear-gradient(180deg,#EFC053,#C8952A)"></span>
+              </div>
+              <figcaption style="padding:6px 9px 8px;text-align:center">
+                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">🎻 Harp</div>
+                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">Ratio of string lengths 2 : 3</div>
+              </figcaption>
+            </figure>
+
+
+
+            <figure style="margin:0;background:var(--color-neutral-100);border:3px solid var(--color-accent-300);border-radius:var(--radius-md);overflow:hidden">
+              <img src="../v4/wrap_phi.jpg" alt="The golden ratio screen: stretch the base bar and the ratio of the two bars stays the same" style="width:100%;display:block">
+              <figcaption style="padding:6px 9px 8px;text-align:center">
+                <div style="font-size:17px;font-weight:800;color:var(--color-neutral-800)">✨ Golden ratio</div>
+                <div style="font-size:15.5px;font-weight:800;color:var(--color-accent-700)">1 : 1.618</div>
+              </figcaption>
+            </figure>
+
           </div>
 
-          <div style="font-size:20px;font-weight:800;color:var(--color-neutral-700)">↓</div>
-
-          <div style="font-size:22px;font-weight:800;color:var(--color-neutral-900);background:var(--color-neutral-100);border:4px solid var(--color-accent-2-400);border-radius:var(--radius-lg);padding:12px 28px;text-align:center">
-            It was all <span style="color:var(--color-accent-2-700)">ratio</span>!
+          <!-- 결론을 적어 두지 않는다(2026-09-13). 이 화면은 면담에서 자극 회상 자료로
+               쓰므로, 「모두 비였어요」처럼 답을 먼저 말해 주면 회상이 아니라 유도가 된다.
+               한 일을 그대로 펼쳐 놓기만 하고 뜻은 학습자가 말하게 둔다(지침 5.1·3.2). -->
+          <div style="font-family:'Fredoka','Nunito',sans-serif;font-size:23px;color:var(--color-accent-2-700);background:var(--color-accent-2-100);border:4px solid var(--color-accent-2-400);border-radius:999px;padding:6px 32px;margin-top:4px">
+            Great job!
           </div>
 
-          <div style="font-size:16px;font-weight:700;line-height:1.85;text-align:center;color:var(--color-neutral-800);max-width:660px">
-            Everywhere around us there is always a <b>ratio</b> in hiding — and that is <b>The Secret of Ratio</b>.<br>
-            Now that you know the Secret of Ratio, look around you and go find the ratios!
-          </div>
-
-          <a href="index.html" onClick="{{goNext}}" class="rs-pill2" style="min-height:52px;padding:13px 26px;font-size:17px">🏠 Finish here and go back</a>
         </div>
       </sc-if>
 
@@ -236,7 +318,9 @@ button{font-family:inherit}
             <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
           </sc-if>
         </div>
-        <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+                <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </sc-if>
         </div>
       </div>
     </section>
@@ -271,8 +355,8 @@ class Component extends DCLogic {
   CARDS = [
     { id:'color1', digit:'1', room:'🎨 The Color Secret ①', concept:'Different amounts, same ratio — the same color!' },
     { id:'color2', digit:'6', room:'🎨 The Color Secret ②', concept:'Different amounts, same ratio — the same color!' },
-    { id:'sound',  digit:'1', room:'🎼 The Sound Secret',   concept:'The simpler the ratio of the vibrations, the sweeter the chord!' },
-    { id:'map',    digit:'8', room:'🗺️ The Map Secret',   concept:'A map is the real distance shrunk by one steady ratio!' }
+    { id:'sound1', digit:'1', room:'🎼 The Sound Secret ①', concept:'The simpler the ratio of the vibrations, the sweeter the chord!' },
+    { id:'sound2', digit:'8', room:'🎼 The Sound Secret ②', concept:'Flip the ratio of the vibrations and you get the string lengths!' }
   ];
   WHO = {
     /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
@@ -295,26 +379,15 @@ class Component extends DCLogic {
 
   get STEPS() {
     return [
-      { k:'story',
-        lines:['This is the last room at last! The 1 and the 6 from the Color room, the 1 and the 8 from Sound and Map. All four secret cards are here together.',
-               'Tap the numbers on the cards in order and open the last door!'],
-        btn:'To the door →' },
+      /* 문 앞에서 말하고 문 앞에서 누른다 — 안내와 조작을 한 화면에 둔다 */
       { k:'door',
-        say:'All four cards are here! Tap the numbers on them in order — Color, Sound, Map — to open the last door.',
+        say:'Tap the number cards you collected, in order, to open the door to the last room: the Secret of Ratio.',
         hi:'🔐 The last door — the card numbers, in order' },
-      /* 1.618을 수로만 외우고 끝내지 않는다 — 1 : 1.618이 무엇을 뜻하는지
-         기준 막대를 직접 늘여 보며 확인하고, 그 뒤에 황금비를 기록한다. */
-      { k:'phi',
-        say:'The golden ratio 1.618 is not just one number — it is the ratio 1 to 1.618. If you call the base length 1, the golden length is 1.618 times as long. Move the bar below to change the base. What happens to the golden bar when the base gets longer?',
-        hi:'📏 Change the base a few times and compare the two bars' },
+      /* 마지막 자리이므로 말을 아낀다 — 작은 안내 글씨도 두지 않는다(2026-09-13). */
       { k:'finale',
-        say:'The golden ratio, 1.618, has been called beautiful for a very long time. Three examples stand out in mathematics. In a golden rectangle the long side is 1.618 times the short one, and if you cut a square off it, what is left is the same shape again. In a regular pentagon, the diagonal divided by a side is exactly 1.618. And in the Fibonacci numbers, where each number is the sum of the two before it, the ratio of neighbours creeps closer and closer to 1.618. Just as you found in color, sound and maps, the Secret of Ratio is hidden all over the world. Thank you so much for coming all this way with me!',
-        hi:'🎉 Journey complete — you have a real sense for ratio!' },
-      /* 다섯 방에서 따로 만난 비를 한자리에 모아 '비의 비밀'이 무엇인지 스스로 답하게 한다.
-         소재를 넘어 개념으로 올라가는 마지막 자리다(지침 2.3·5.3). */
-      { k:'wrap',
-        say:'So far you have uncovered the secrets of color, sound, rhythm, maps and the Earth, and you found the golden ratio too. So what is the Secret of Ratio? It is this: a ratio is always hiding somewhere around us. Now that you know it, keep looking around, find the ratios, and discover many more things!',
-        hi:'🔎 Every ratio in one place — the Secret of Ratio' }
+        /* 2026-09-22 밤 — 너무 길어 사용자 문안으로 줄였다 */
+        /* 2026-09-28 사용자 문안 */
+        say:'So the Secret of Ratio was hiding all over the world. Was it amazing to feel math with your eyes and ears? Thank you for exploring with me! See you next time!' }
     ];
   }
 
@@ -356,6 +429,17 @@ class Component extends DCLogic {
     else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
     else if (kind === 'card') { [523.25,659.25,783.99,1046.5,1318.5].forEach((f,i) => n(f, i*0.085, 0.5, 0.1 - i*0.008)); }
     else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+    /* 문이 열리는 소리 — 낮은 삐걱임 뒤에 문짝이 열리며 빠져나가는 결 */
+    else if (kind === 'door') {
+      n(98,   0,    0.24, 0.055, 'triangle'); n(123.5, 0.15, 0.26, 0.048, 'triangle');
+      n(196,  0.30, 0.34, 0.040, 'sine');    n(294,   0.40, 0.30, 0.030, 'sine');
+    }
+    /* 축하 빵빠레 — 금관 느낌으로 올라간 뒤 화음을 길게 문다 */
+    else if (kind === 'fanfare') {
+      [[392,0],[523.25,0.13],[659.25,0.26],[783.99,0.39]]
+        .forEach(s => { n(s[0], s[1], 0.34, 0.085, 'sawtooth'); n(s[0]*2, s[1], 0.24, 0.018, 'sine'); });
+      [523.25, 659.25, 783.99].forEach(f => n(f, 0.52, 0.95, 0.060, 'sawtooth'));
+    }
   }
 
   /* ── TTS (mp3 매니페스트 → speechSynthesis 폴백) ── */
@@ -373,7 +457,8 @@ class Component extends DCLogic {
     if (this.state.audio !== 'full') return;
     const raw = (text === null || text === undefined) ? '' :
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
-    const txt = raw
+    /* [[화면 글|읽을 말]] — 화면에는 앞, 음성에는 뒤(2026-09-22). _tools/make_voice_check.mjs의 norm과 같아야 음성 키가 맞는다 */
+    const txt = raw.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')
       .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
       /* A ratio written with a colon is spoken as "to": 2:3 → "2 to 3".
          Units are spelled out so the voice does not read them letter by letter.
@@ -384,21 +469,55 @@ class Component extends DCLogic {
       .replace(/Hz\b/g, ' hertz ')
       .replace(/\s+/g, ' ').replace(/ ([.,!?])/g, '$1').trim();
     if (!txt) return;
-    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
+       CLOVA에는 쉼 표기(SSML·break)가 없어 문장 사이 호흡을 이렇게밖에 낼 수 없다.
+       한 문장만 고치면 그 문장만 다시 만들면 된다.
+       ⚠ 문장 나누기(SENT)는 _tools/make_voice_check.mjs와 같아야 한다 — 다르면 음성 키가 어긋난다. */
+    const parts = this.SENT(txt);
+    if (!parts.length) return;
     const man = window.RS_TTS;
-    if (man && man[key]) {
-      try {
-        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
-           브라우저에 남은 옛 음성이 재생되지 않는다. */
-        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
-        a.volume = 0.95; this._mp3 = a; this._speaking = true;
-        a.onended = () => { this._speaking = false; };
-        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
-        return;
-      } catch(e) {}
-    }
-    this._speakSynth(txt, who);
+    const tok = this._vtok;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      /* 문장 사이 숨 — 한 덩어리로 합성할 때 뭉개지던 호흡을 여기서 낸다 */
+      const nextGap = () => { if (tok === this._vtok) this._sayT = setTimeout(() => step(i + 1), 200); };
+      const key = this.ttsKey((who||'ratio') + '|' + parts[i]);
+      if (man && man[key]) {
+        try {
+          /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+             브라우저에 남은 옛 음성이 재생되지 않는다. */
+          const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+          a.volume = 0.95; this._mp3 = a;
+          a.onended = nextGap;
+          /* 2026-09-27 — mp3가 있는 줄은 브라우저 기본 음성으로 대신 읽지 않는다.
+             화면을 빨리 넘기거나 자동 재생이 막히면 재생이 실패하는데, 그때 로봇 목소리가 나와
+             「합성 전 음성」처럼 들렸다(사용자 보고). 자동 재생이 막힌 것뿐이면 화면을 처음 누를 때
+             이어서 들려주고, 화면이 이미 바뀌었으면 그냥 멈춘다. */
+          a.play().catch(() => {
+            this._mp3 = null;
+            if (tok !== this._vtok) return;
+            const resume = () => {
+              document.removeEventListener('pointerdown', resume, true);
+              if (tok !== this._vtok) return;
+              this._mp3 = a;
+              a.play().catch(() => nextGap());
+            };
+            document.addEventListener('pointerdown', resume, true);
+          });
+          return;
+        } catch(e) {}
+      }
+      /* mp3가 없는 문장만 브라우저 음성으로 읽고 다음 문장으로 넘어간다 */
+      this._speakSynth(parts[i], who, nextGap);
+    };
+    step(0);
   }
+
+  /* 낭독을 문장으로 나눈다 — 마침표·물음표·느낌표 뒤에 공백이 있을 때만 자른다.
+     「1.618」처럼 소수점 뒤에는 공백이 없어 잘리지 않는다. */
+  SENT(t) { return String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean); }
   /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
      크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
   chunks(t) {
@@ -416,15 +535,15 @@ class Component extends DCLogic {
     });
     return out;
   }
-  _speakSynth(txt, who) {
-    if (!('speechSynthesis' in window)) return;
+  _speakSynth(txt, who, done) {
+    if (!('speechSynthesis' in window)) { if (done) done(); return; }
     const cfg = this.WHO[who] || this.WHO.ratio;
     const tok = this._vtok;
     const parts = this.chunks(txt);
     this._speaking = true;
     const step = (i) => {
       if (tok !== this._vtok) return;
-      if (i >= parts.length) { this._speaking = false; return; }
+      if (i >= parts.length) { if (done) done(); else this._speaking = false; return; }
       const u = new SpeechSynthesisUtterance(parts[i]);
       u.lang = 'en-US'; u.pitch = cfg.pitch; u.rate = cfg.rate; u.volume = 1;
       let adv = false;
@@ -436,15 +555,34 @@ class Component extends DCLogic {
   }
 
   /* ── 로그: pilot.evalV3.* (v3 eval 스키마 유지) ── */
+  /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
+     step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
+     t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
+  /* 기기 표시 — 허브와 같은 값을 쓴다(2026-09-27) */
+  devId() {
+    try {
+      let d = localStorage.getItem('rs3_dev');
+      if (!d) { d = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)); localStorage.setItem('rs3_dev', d); }
+      return d;
+    } catch(e) { return 'nodev'; }
+  }
   plog(ev, data) {
-    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    var d = data || {};
+    try {
+      var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
+      d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
+    } catch(e) {}
+    /* idle 기록 자체는 조작이 아니다. 여기서 갱신하면 긴 정지가 15초마다 쪼개져 여러 건 남는다(2026-09-14) */
+    if (ev !== 'idle') this._lastAct = Date.now();
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
       this._q = this._q || [];
-      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+      /* userName 자리에 기기 표시를 담는다(2026-09-27) — 시트가 「코드+기기」를 기억해 코드 중복을 막는다 */
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:this.devId(),
         seq: ++this._seq, clientTs:new Date().toISOString(),
         eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
-        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
       if (this._q.length >= 10) this.flush();
     } catch(e) {}
   }
@@ -504,6 +642,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this._seq = 0;
+    this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
+    this._lastAct = Date.now();
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest'); /* 게스트 자유 탐색: 단계 잠금 해제 */
@@ -514,14 +654,21 @@ class Component extends DCLogic {
       let blocked = false;
       try {
         const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
-        blocked = ['color','sound','map'].some(r => d.indexOf(r) < 0);
+        /* 2026-09-22: v4에는 지도 방이 없다(9/14 v5 심화판으로 분리). 'map'까지 요구하던 탓에
+           소리 방을 마친 참여자도 「마지막 문으로」를 누르면 허브로 튕겼다(E05 보고). v4의 두 방만 본다. */
+        blocked = ['color','sound'].some(r => d.indexOf(r) < 0);
+        /* 2026-09-28 — 비밀 카드 네 장을 모아야 마지막 문으로 올 수 있다(사용자 지시).
+           소리 방 마침 화면에서 못 받은 카드를 풀러 갈 수 있다. */
+        const raw = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]');
+        const ids = {}; raw.forEach(x => { if (x === 'sound') { ids.sound1 = 1; ids.sound2 = 1; } else ids[x] = 1; });
+        if (Object.keys(ids).length < 4) blocked = true;
       } catch(e) { blocked = false; }
       if (blocked) { try { location.replace('index.html'); } catch(e) {} }
     }
     let audio = 'full';
     try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
     let cards = 0;
-    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    try { const raw = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); const ids = {}; raw.forEach(x => { if (x === 'sound') { ids.sound1 = 1; ids.sound2 = 1; } else ids[x] = 1; }); cards = Object.keys(ids).length; } catch(e) {} /* 옛 'sound' 한 장은 sound1·sound2 두 장으로 센다(2026-09-22) */
     this.setState({ audio, cards });
     this._flushT = setInterval(() => this.flush(), 5000);
     this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
@@ -530,13 +677,96 @@ class Component extends DCLogic {
     /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
     this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
     addEventListener('pagehide', this._pageHide);
+
+    /* ── 무조작 정지 ── 15초 넘게 아무 조작이 없으면 한 구간당 한 번만 남긴다.
+       바로 앞에 focus:0도 overlay 열림도 없는 idle이라야 "화면을 보며 생각한 정지"로 읽을 수 있다. */
+    this._idleT = setInterval(() => {
+      const gap = Date.now() - (this._lastAct || 0);
+      if (gap > 15000 && !this._idleFlag) { this._idleFlag = 1; this.plog('idle', { ms: gap }); }
+      if (gap <= 15000) this._idleFlag = 0;
+    }, 5000);
+
+    /* ── 화면 이탈 ── 체류 시간에서 빼야 할 구간을 가른다. 기존 _hide는 flush 전용이라 그대로 둔다. */
+    this._vis = () => this.plog('focus', { v: document.visibilityState === 'visible' ? 1 : 0 });
+    document.addEventListener('visibilitychange', this._vis);
+
+    /* ── 비활성 영역 탭 ── 이 앱은 핸들러를 속성이 아니라 props로 묶으므로 [onclick] 선택자가 듣지 않는다.
+       커서 모양과 태그로 판정한다. 정상 조작 20회에 0건이어야 하며, 1건이라도 나오면 깊이를 늘린다.
+       tg·cl은 무엇을 눌렀는지 — 좌표만으로는 화면이 바뀐 뒤 오탐을 가려낼 수 없다. */
+    this._dead = (e) => {
+      try {
+        let el = e.target, hit = false;
+        for (let i = 0; el && i < 8; i++, el = el.parentElement) {
+          if (/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) { hit = true; break; }
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.hasAttribute('data-blank'))) { hit = true; break; }
+          const cs = getComputedStyle(el);
+          if (cs.cursor === 'pointer' || cs.cursor === 'grab' || cs.touchAction === 'none') { hit = true; break; }
+        }
+        if (!hit) this.plog('deadtap', { x: Math.round(e.clientX), y: Math.round(e.clientY),
+          tg: (e.target && e.target.tagName) || '', cl: ((e.target && e.target.className) || '').toString().slice(0, 20) });
+      } catch(err) {}
+    };
+    addEventListener('pointerdown', this._dead, true);
+
+    /* ── 영상 시각 맞추기 ── 오른쪽 위 모서리를 1.5초 누르면 조용히 기준점을 찍는다.
+       화면에는 아무 표시도 하지 않는다(학습자에게 보이면 안 되는 장치다). 진동이 유일한 확인 신호다. */
+    this._syncDown = (e) => {
+      if (e.clientX < innerWidth - 80 || e.clientY > 80) return;
+      this._syncT = setTimeout(() => {
+        this.plog('sync', { wall: new Date().toISOString() });
+        /* 노트북에는 진동이 없다. 모서리에 작은 점을 잠깐 띄워 연구자만 알아보게 한다.
+           학습자의 과제 영역을 가리지 않고, 0.5초 뒤 스스로 사라진다. */
+        try {
+          navigator.vibrate && navigator.vibrate(30);
+          const dot = document.createElement('div');
+          dot.style.cssText = 'position:fixed;top:6px;right:6px;width:9px;height:9px;border-radius:999px;' +
+            'background:#c67139;opacity:.85;z-index:2147483647;pointer-events:none';
+          document.body.appendChild(dot);
+          setTimeout(() => dot.remove(), 500);
+        } catch(err) {}
+      }, 1500);
+    };
+    this._syncUp = () => clearTimeout(this._syncT);
+    addEventListener('pointerdown', this._syncDown, true);
+    addEventListener('pointerup', this._syncUp, true);
+    addEventListener('pointercancel', this._syncUp, true);
+
+    /* ── 화면을 키우려는 시도 ── 노트북에서는 두 손가락 벌리기가 pointerdown 두 개로 오지 않는다.
+       트랙패드 확대는 ctrlKey가 붙은 wheel, 자판은 Ctrl +/-/0 이다.
+       뜻은 터치의 pinch_try와 다르다 — 화면 배율을 바꾸려는 것이므로 「글씨·그림이 작다」는
+       사용성 신호로 읽고, 두 양을 함께 늘리려는 곱셈적 조작의 증거로는 쓰지 않는다.
+       한 손짓이 wheel을 수십 번 내므로 1.2초에 한 번만 남긴다. */
+    this._zoomHit = (how) => {
+      const now = Date.now();
+      if (now - (this._zoomAt || 0) < 1200) return;
+      this._zoomAt = now;
+      let sc = 1; try { sc = (visualViewport && visualViewport.scale) || 1; } catch(e) {}
+      this.plog('zoom_try', { how: how, sc: Math.round(sc * 100) / 100, dpr: Math.round((devicePixelRatio || 1) * 100) / 100 });
+    };
+    this._wheelZ = (e) => { if (e.ctrlKey) this._zoomHit('pinch'); };
+    addEventListener('wheel', this._wheelZ, { passive: true, capture: true });
+    this._keyZ = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0', 'Add', 'Subtract'].indexOf(e.key) >= 0) this._zoomHit('key');
+    };
+    addEventListener('keydown', this._keyZ, true);
+
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
     clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
+    clearInterval(this._idleT);
     document.removeEventListener('visibilitychange', this._hide);
+    document.removeEventListener('visibilitychange', this._vis);
     removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerdown', this._dead, true);
+    removeEventListener('pointerdown', this._syncDown, true);
+    removeEventListener('pointerup', this._syncUp, true);
+    removeEventListener('pointercancel', this._syncUp, true);
+    removeEventListener('wheel', this._wheelZ, true);
+    removeEventListener('keydown', this._keyZ, true);
+    clearTimeout(this._syncT);
+    clearInterval(this._doorIv);
     this.stopVoice(); this.flush(true);
   }
 
@@ -573,14 +803,21 @@ class Component extends DCLogic {
     const t = s.k === 'story' ? s.lines.join(' ') : s.say;
     if (t) this.speak(t, 'ratio');
   }
-  autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3000); }
+  autoNext(ms) { clearTimeout(this._autoT); /* 저절로 넘기지 않는다 — 피드백을 읽고 「다음 →」을 눌러 넘어가게 한다. */ }
   /* 3초 자동 소멸. hold=true(보상 연출 등 낭독 동반 토스트)면 낭독이 끝날 때까지 유지 */
+  /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
+     본문은 남기지 않고 제목 40자만 남긴다. t는 plog가 붙이는 경과 ms이므로 제목은 ttl에 담는다. */
   toast(icon, title, body, kind, hold) {
+    this.plog('toast', { k: kind || 'info', ttl: String(title || '').slice(0, 40) });
     this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
+    /* 성공 피드백은 저절로 닫지 않는다 — 읽을 시간을 학습자가 정한다.
+       닫으려면 ✕를 누르거나 다음 화면으로 넘어가면 된다(go에서 지운다).
+       나머지 안내는 6초 뒤에 닫는다 — 3초로는 두 줄을 다 읽기 어렵다. */
+    if (kind === 'ok') return;
     const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
-    this._tT = setTimeout(close, 3000);
+    this._tT = setTimeout(close, 6000);
   }
   toastOk(t, b) { this.plog('success', { slide: this.state.i }); this.toast('✅', t, b, 'ok'); }
   toastRetry(b) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', 'Try once more!', b); }
@@ -598,9 +835,14 @@ class Component extends DCLogic {
     });
     return s;
   }
+  /* 문장마다 줄을 바꾼다. 2026-09-19: 대사에 빈 줄이 있으면 문단으로 보고
+     그 자리만 빈 줄로 남긴다 — 예전에는 모두 줄바꿈 하나로 합쳐 문단이 사라졌다. */
   wrapSay(t) {
     if (!t) return '';
-    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+    const NL = String.fromCharCode(10);
+    return String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1').split(/\n\s*\n/)
+      .map(par => this.markNames(par))   /* 2026-09-27 문장마다 줄 바꾸지 않음(사용자 지시) */
+      .join(NL + NL);
   }
 
   markSolved() {
@@ -613,6 +855,19 @@ class Component extends DCLogic {
     const n = (this._tries[key] = (this._tries[key] || 0) + 1);
     return stages[Math.min(n, stages.length) - 1];
   }
+  /* 방을 마쳤다는 기록 — 연구 로그와 진행 표시. 여러 번 불려도 한 번만 남는다. */
+  finishRoom() {
+    if (this._finished) return;
+    this._finished = true;
+    this.plog('complete', {});
+    /* 2026-09-28 — 「홈으로」를 누르지 않아도 기록이 끝나도록 여기서 바로 보낸다(사용자 지시) */
+    this.flush(true);
+    try {
+      const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+      if (d.indexOf('eval') < 0) { d.push('eval'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+    } catch(e) {}
+  }
+
   go(d) {
     const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
     if (n === this.state.i) return;
@@ -623,7 +878,13 @@ class Component extends DCLogic {
     if (this.STEPS[n].k === 'finale') {
       setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
     }
+    /* 마지막 화면에는 누를 것이 없다. 들어오는 순간 완료를 기록해 두어야
+       학습자가 그대로 창을 닫아도 활동 완료가 로그에 남는다. */
+    /* 2026-09-13에 「내가 한 것」 화면을 지우면서 완료 기록을 황금비 화면으로 옮겼다.
+       이 줄이 없으면 complete가 한 번도 안 찍힌다. */
     this.setState(patch);
+    /* 상태를 바꾼 뒤에 남겨야 complete의 step이 황금비 화면을 가리킨다(2026-09-14) */
+    if (this.STEPS[n].k === 'finale') this.finishRoom();
     this.plog('nav', { to:n });
     setTimeout(() => this.sayStep(n), 380);
   }
@@ -645,7 +906,7 @@ class Component extends DCLogic {
     try {
       const src = document.querySelector('[data-card-panel]');
       const dst = document.querySelector('[data-cards-badge]');
-      if (!src || !dst) return;
+      if (!src || !dst || this._guest) return;
       const a = src.getBoundingClientRect(), b = dst.getBoundingClientRect();
       const el = document.createElement('div');
       el.textContent = '🃏';
@@ -768,6 +1029,9 @@ class Component extends DCLogic {
     else if (k === 'C') v = '';
     else if (v.length < 4) v += k;
     this.setState({ doorVal: v });
+    /* 2026-09-19: 네 자리를 다 누르면 단추를 누르지 않아도 스스로 열어 본다.
+       마지막 숫자가 칸에 찍히는 것을 보여 준 뒤(220ms) 판정한다. */
+    if (v.length === 4) { clearTimeout(this._autoTry); this._autoTry = setTimeout(() => this.doorTry(), 220); }
   }
   doorTry() {
     const v = this.state.doorVal;
@@ -777,10 +1041,15 @@ class Component extends DCLogic {
       this.plog('door_open', {});
       this.markSolved();
       this.setState({ doorOpen: true });
-      this.sfx('win'); this.confetti();
-      this.toast('🔓', '1.618 — the golden ratio!', 'Line up the card numbers and you get the golden ratio φ! The door opens!', 'ok', true);
-      this.speak('1.618 — you found the golden ratio! The door opens!', 'ratio');
-      setTimeout(() => this.go(1), 2600);
+      /* 문 열리는 소리 → 빵빠레. sfx에 60ms 연속 호출 차단이 있어 간격을 둔다. */
+      this.sfx('door'); this.confetti();
+      setTimeout(() => this.sfx('fanfare'), 460);
+      /* 2026-09-19: 토스트와 낭독을 없앴다. 낭독이 끝나기를 기다리던 2.6~15초도
+         함께 없앤다. 문이 돌아 열리는 것(1초)만 보여 주고 곧 다음 화면으로 간다.
+         소리는 오디오 컨텍스트에 미리 잡아 둔 것이라 화면이 바뀌어도 끝까지 난다. */
+      clearInterval(this._doorIv); this._doorIv = null;
+      clearTimeout(this._doorT);
+      this._doorT = setTimeout(() => this.go(1), 2000);
     } else {
       this.sfx('oops');
       this.setState({ doorVal: '' });
@@ -818,7 +1087,7 @@ class Component extends DCLogic {
     const v = {
       pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
       stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
-      cards: S.cards,
+      cards: S.cards, cardsDisp: this._guest ? 'none' : 'flex',
       audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
       audioTitle: S.audio === 'full' ? 'Voice + sound effects' : (S.audio === 'sfx' ? 'Sound effects only' : 'Sound off'),
       cycleAudio: () => this.cycleAudio(),
@@ -830,32 +1099,38 @@ class Component extends DCLogic {
       coachHi: st.hi || '',
       replay: () => this.sayStep(S.i),
       isStory: st.k === 'story',
-      isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi',
+      isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi' || st.k === 'finale',
       isWrap: st.k === 'wrap',
+      /* 마지막 화면에서는 말풍선을 통째로 감춘다 */
+      showCoach: st.k !== 'wrap',
       phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
-      doorCards: null, doorSlots: null, doorPad: null,
+      doorCards: null, doorSlots: null, doorPad: null, doorGlow: '0', doorLockOp: '1',
+      doorTfL: 'rotateY(0deg)', doorTfR: 'rotateY(0deg)',
+      doorRatioOp: '0', doorRatioTf: 'scale(.62) translateY(18px)',
       prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
       toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
       toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
       toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
       closeToast: () => this.setState({ toast: null }),
-      goNext: () => {
-        this.plog('complete', {});
-        try {
-          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
-          if (d.indexOf('eval') < 0) { d.push('eval'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
-        } catch(e) {}
-      }
+      goNext: () => this.finishRoom()
     };
 
     if (st.k === 'door') {
       v.doorCards = this.CARDS.map((c, i) => ({ no: c.room, concept: c.concept, digit: c.digit }));
       v.doorSlots = [0,1,2,3].map(i => ({ d: S.doorVal[i] || '', bd: S.doorVal[i] ? 'var(--color-accent-500)' : 'var(--color-neutral-300)' }));
+      /* doorOpen을 화면에 잇는다 — 두 짝이 양쪽으로 열리고 자물쇠가 사라진다. */
+      v.doorTfL = S.doorOpen ? 'rotateY(-88deg)' : 'rotateY(0deg)';
+      v.doorTfR = S.doorOpen ? 'rotateY(88deg)' : 'rotateY(0deg)';
+      v.doorGlow = S.doorOpen ? '1' : '0';
+      v.doorLockOp = S.doorOpen ? '0' : '1';
+      /* 문이 열리면 레시오가 문 안에서 솟아오르며 나타난다 */
+      v.doorRatioOp = S.doorOpen ? '1' : '0';
+      v.doorRatioTf = S.doorOpen ? 'scale(1) translateY(0)' : 'scale(.62) translateY(18px)';
       v.doorPad = ['1','2','3','4','5','6','7','8','9','⌫','0','C'].map(k => ({ k, tap: () => this.doorKey(k) }));
       v.doorGo = () => this.doorTry();
     }
 
-    if (st.k === 'phi') {
+    if (st.k === 'phi' || st.k === 'finale') {
       const b = S.phiBase, g = Math.round(b * this.PHI * 10) / 10;
       /* 두 막대는 같은 자로 그린다 — 기준이 최대일 때 황금비 막대가 화면을 꽉 채우도록 */
       const span = this.PHI_MAX * this.PHI;
@@ -874,21 +1149,33 @@ class Component extends DCLogic {
 
     const last = S.i === this.STEPS.length - 1;
     const needsSolve = (st.k === 'door') && !this._guest;
-    v.primaryLabel = st.k === 'story' ? (st.btn || 'Next →')
-      : (last ? 'Start over' : (st.k === 'finale' ? 'So what is the secret? →' : 'Next →'));
-    v.primaryBg = (!needsSolve || solved) ? 'var(--color-accent)' : 'var(--color-neutral-400)';
+    /* 2026-09-19: 마지막 화면에도 단추를 둔다 — 「홈 화면으로 가기」.
+       로그 수집은 이 화면(비의 비밀 2단계)에서 끝난다. 들어올 때 complete가
+       남고, 이 단추는 새 기록을 남기지 않는다.
+       문 화면에는 단추를 두지 않는다 — 네 자리를 다 누르면 스스로 열리므로
+       「문 열기!」가 할 일이 없다(사용자 확인, 같은 날). */
+    v.showPrimary = st.k !== 'door';
+    v.primaryLabel = last ? '🏠 Go to the home screen'
+      : (st.k === 'story' ? (st.btn || 'Next →')
+      : (st.k === 'finale' ? 'So what is the secret? →' : (st.k === 'door' ? '🔓 Open the door!' : 'Next →')));
+    /* 2026-09-19: 문 화면에 단추가 둘이었다(화면 안 「문 열기!」 + 아래 「다음 →」).
+       아래 하나로 합치고 이름을 「문 열기!」로 바꿨으니 잠긴 것처럼 회색으로 두지 않는다. */
+    v.primaryBg = (!needsSolve || solved || st.k === 'door') ? 'var(--color-accent)' : 'var(--color-neutral-400)';
     v.footHint = (needsSolve && !solved)
       ? (st.k === 'door' ? 'Open the door with the card numbers to go on'
         : 'Solve this and you can go on')
       : '';
     v.primary = () => {
+      /* 마지막 화면 — 허브로 돌아간다. 남은 기록을 먼저 보내고 옮긴다. */
       if (last) {
-        this.stopVoice();
-        this._tries = {};
-        this.setState({ i:0, solved:{}, doorVal:'', doorOpen:false, toast:null });
-        setTimeout(() => this.sayStep(0), 380);
+        this.sfx('tap');
+        try { this.flush && this.flush(); } catch(e) {}
+        setTimeout(() => { try { location.href = 'index.html'; } catch(e) {} }, 250);
         return;
       }
+      /* 문 화면에서는 이 단추가 문을 연다. 열리면 doorTry가 낭독이 끝나기를
+         기다렸다가 스스로 다음으로 넘긴다. */
+      if (st.k === 'door' && !solved) { this.doorTry(); return; }
       if (needsSolve && !solved) { this.sfx('oops'); this.toast('🤔', 'Almost there!', 'Finish this one first, then move on.'); return; }
       this.sfx('tap'); this.go(1);
     };

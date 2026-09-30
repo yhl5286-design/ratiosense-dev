@@ -5,7 +5,7 @@
    v4-en 폴더에서:  node _build/check.mjs                                       */
 import fs from 'node:fs';
 import path from 'node:path';
-import { units, FILES } from './extract.mjs';
+import { units, FILES, SINO_BLOCK } from './extract.mjs';
 
 const SRC = path.resolve('../v4');
 let bad = 0;
@@ -25,6 +25,7 @@ for (const f of FILES) {
   for (const u of us) { holed += src.slice(q, u.a); q = u.b; }
   holed += src.slice(q);
   const noComment = holed
+    .replace(SINO_BLOCK, '')   /* 한자어 수 읽기 함수 — patch.mjs가 통째로 걷어 낸다 */
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .split('\n').map(l => {
@@ -37,7 +38,7 @@ for (const f of FILES) {
 
   /* 아래는 영어판에서 patch.mjs가 통째로 갈아 끼우는 한국어 전용 음성 코드다.
      번역 대상이 아니므로 빠짐으로 세지 않는다. */
-  const PATCHED = /SINO|가-힣|FEM =|MALE =|밀리리터|센티미터|헤르츠|const sj =|v\.scaleTitle|obj\.josa|1 : 10,000인 지도예요|josa:|this\.jz\(/;
+  const PATCHED = /SINO|가-힣|FEM =|MALE =|밀리리터|센티미터|헤르츠|const sj =|v\.scaleTitle|obj\.josa|1 : 10,000인 지도예요|josa:|this\.jz\(|' 대 '|const jsl =|\(jd\(/;
 
   const all = [...noComment.matchAll(/[^\n]*[가-힣][^\n]*/g)].map(m => m[0].trim());
   const left = all.filter(l => !PATCHED.test(l));

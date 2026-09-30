@@ -191,12 +191,12 @@ button{font-family:inherit}
       <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
           <div style="font-size:48px;line-height:1">📝</div>
-          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">Take one thing you <b>worked out for yourself</b> and write one line about <b>the secret of maps (scale)</b>!</div>
-          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="e.g. The bridge that is 3 centimetres on the map …" aria-label="In my own words" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">If you <b>made a map</b> yourself, what would you <b>research</b> and what would you <b>use</b>? Write it in one line!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="I will research (  ) and use (  ) to make my map" aria-label="In my own words" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
         </div>
       </sc-if>
 
-      <!-- 감각 잇기(지침 2.3) — 세 방에서 만난 비를 나란히 놓고 견주게 한다 -->
+      <!-- 감각 잇기(지침 2.3) — 세 방에서 만난 비를 나란히 놓고 비교하게 한다 -->
       <sc-if value="{{isBridge}}" hint-placeholder-val="{{false}}">
         <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;animation:rsUp .3s ease;margin:auto 0">
           <div style="display:flex;gap:min(4vw,20px);align-items:stretch;justify-content:center;flex-wrap:wrap">
@@ -258,18 +258,7 @@ button{font-family:inherit}
           <sc-if value="{{vidOpen}}" hint-placeholder-val="{{false}}">
             <video onEnded="{{movieEnd}}" src="../v4/eratos.mp4?v=2" controls playsinline preload="metadata" style="width:min(560px,88vw);border-radius:var(--radius-md);border:3px solid var(--color-neutral-300);background:var(--color-neutral-900)"></video>
           </sc-if>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .45s ease">
-            <div style="width:min(260px,80vw);border-radius:var(--radius-md);overflow:hidden;border:4px solid var(--color-accent-500);box-shadow:var(--shadow-lg);background:var(--color-neutral-100)">
-              <div style="background:linear-gradient(var(--color-accent-300),var(--color-accent-500));color:var(--color-accent-900);font-size:14px;text-align:center;padding:6px">🃏 The Map secret card</div>
-              <div style="padding:var(--space-3);display:flex;flex-direction:column;align-items:center;gap:8px">
-                <div style="font-size:15px;font-weight:800;text-align:center;line-height:1.6">A map is the real distance shrunk by one steady ratio!</div>
-                <div style="font-size:44px;background:var(--color-neutral-900);color:var(--color-accent-300);border-radius:var(--radius-md);padding:2px 26px;line-height:1.3">8</div>
-              </div>
-            </div>
-            <div style="font-size:13px;font-weight:700;color:var(--color-neutral-700)">This is the last digit of the golden ratio!</div>
-          </div>
-          <a href="EvalRoom.dc.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">📝 On to the last room →</a>
-          <a href="index.html" onClick="{{goNext}}" style="font-size:15px;font-weight:700;color:var(--color-accent-700);text-decoration:underline">🏠 Back to the start</a>
+          <a href="index.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🏠 Back to the start screen →</a>
         </div>
       </sc-if>
 
@@ -317,9 +306,11 @@ class Component extends DCLogic {
   LAB = 'mapV3en';
 
   /* 배율 문제 — 100%에서 3cm인 다리를 120·200%로 확대하면? */
+  /* 확대는 200%만 다룬다. zi:0 이므로 문제를 푸는 동안 지도가 100%(3cm)로 그려지고,
+     맞히면 200%(6cm)로 커진다. 120% 항목이 남아 있으면 문제 화면이 3.6cm로 그려져
+     「3cm였던 다리가」라는 대사와 어긋난다. */
   ZOOMQ = [
-    { p:120, ans:'3.6cm', opts:[['3.6 cm',1],['3.2 cm',0],['4.2 cm',0]] },
-    { p:200, ans:'6cm',   opts:[['6 cm',1],['5 cm',0],['9 cm',0]] }
+    { p:200, ans:'6cm', opts:[['6 cm',1],['5 cm',0],['9 cm',0]] }
   ];
 
   OBJS = [
@@ -415,22 +406,17 @@ class Component extends DCLogic {
   get STEPS() {
     return [
       { k:'story', who:'ratio',
-        say:'Hello! I am Ratia, your guide on the hunt for the Secret of Ratio. This is the Map room. We will compare maps with real distances in all sorts of ways and find the secret together. Shall we go and solve the third secret?',
+        say:'This is the Map Secret room. We will use the ratios you learned in the last two rooms to solve some puzzles!',
         hi:'🗺️ The Map Secret — off we go!', btn:'Start exploring! →' },
-      /* 축척이 무엇인지 먼저 짚고, 다음 단계에서 문제로 확인한다 */
-      { k:'scale', oi:2, intro:1, who:'ratio',
-        say:'A map is a picture of a wide piece of land squeezed onto paper, with every real distance shrunk by the same ratio. The scale tells you how much it was shrunk. Look at the bottom right of the map — it says the scale is 1 to 10,000. That means 1 on the map is 10,000 in real life.',
-        btn:'Got it! →' },
+      /* 축척이 무엇인지 짚고 그 자리에서 바로 묻는다 — 설명이 화면에 남은 채 답을 고르게 된다 */
       { k:'scale', oi:2, who:'ratio',
-        say:'This map has a scale of 1 to 10,000. On the map, 1 centimetre stands for how many centimetres in real life?',
+        say:'A map is a picture of a wide piece of land squeezed onto paper, with every real distance shrunk by the same ratio. The scale tells you how much it was shrunk. Look at the bottom right of the map — it says the scale is 1 to 10,000. That means 1 on the map is 10,000 in real life. So how many centimeters in real life is 1 centimeter on the map?',
         hi:'📏 Scale 1 : 10,000' },
       { k:'scale', oi:0, who:'ratio',
         say:'The bridge is drawn 3 centimetres long on the map. How long is the real bridge?',
         hi:'🌉 The bridge' },
       { k:'zoom', zi:0, who:'ratio',
-        say:'We put the map through a copier to make it easier to see. Blown up to one hundred and twenty per cent, how many centimetres long is the bridge?' },
-      { k:'zoom', zi:1, who:'ratio',
-        say:'Last one — blown up to two hundred per cent, how many centimetres long is the bridge?' },
+        say:'Say the map as it is now is 100 percent. We want to zoom in to 200 percent to see it bigger. The bridge was 3 centimeters on the map. How many centimeters long will it look now?' },
       /* 축척·배율 구간을 매듭짓고 에라토스테네스 이야기로 넘어가는 다리 */
       { k:'story', who:'ratio', art:'scholar',
         say:'You have worked out the secret of maps! Now let us use ratio to solve a secret that is not on paper — the secret of the Earth itself. A great mathematician is waiting for you.',
@@ -442,29 +428,24 @@ class Component extends DCLogic {
         say:'In Syene, the city to the south, they say that at noon on a summer day no shadow falls at all. The sun stands straight overhead, so its light comes down alongside the stick. The angle between stick and sunlight is zero degrees.' },
       { k:'comic', ci:1, who:'eratos', sid:'m-comic2',
         say:'Yet at that very hour, in Alexandria to the north, the stick does cast a shadow. I measured the angle: 7.2 degrees. The same sunlight, and a different angle — that could never happen if the Earth were flat.' },
-      { k:'comic', ci:2, who:'eratos', sid:'m-comic3',
-        say:'I could hardly walk right around the Earth to measure it. But the distance between Syene and Alexandria I could measure, and it was 800km.' },
       /* 각도의 비를 말한 그 화면에서 곧바로 지구 둘레를 구한다 */
       { k:'prop', who:'eratos', sid:'m-prop', quiz:'prop',
-        say:'A full circle is 360 degrees. Divide 360 by 7.2 and you get 50. So 7.2 degrees to 360 degrees is 1 to 50. And that means 1 to 50 is also 800 kilometres to the circumference of the Earth. Will you work out the circumference with me?',
+        say:'A whole circle is 360 degrees. Divide it by 7.2 degrees and you get 50. So 1 to 50 is the two cities to the whole Earth. And 1 to 50 is 800 kilometers to the circumference of the Earth. Now use the ratio and work out the circumference of the Earth.',
         hi:'🌍 The Earth’s circumference — 1 : 50 = 800km : ?' },
-      /* 감각 사이를 잇는 자리(지침 2.3) — 앞선 방에서 만난 1 : 2와 이 방의 1 : 50을 나란히 놓고,
-         셋이 같은 구조임을 학습자가 직접 확인하게 한다. 화자가 먼저 답을 말하지 않는다. */
-      { k:'bridge', who:'ratio',
-        say:'Hold on a moment! Here is the 1 to 2 you found in the Color room and the Sound room, side by side with the 1 to 50 you found in this one. What do all three have in common? Choose below.',
-        hi:'🎨 Color · 🎵 Sound · 🗺️ Map — comparing the ratios from all three rooms' },
-      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3) */
+      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3).
+         되짚기에 그치지 않고 「내가 지도를 만든다면」으로 옮겨 물어, 축척을 새 상황에
+         옮겨 쓰게 한다 — 조사할 것(실제 거리)과 이용할 것(축척)을 스스로 대게 한다. */
       { k:'reflect', who:'ratio',
-        say:'You worked out the length of a bridge from a map, you blew the map up, and you even found the circumference of the Earth. Pick one of those. Write one line about what you did and why it worked.',
-        hi:'Bridge length · zooming in · the Earth’s circumference — write about one of them' },
+        say:'In this room you found real distances with a scale, zoomed in on a map and measured the Earth. So if you made a map yourself, what would you research and what would you use? Write down your idea.',
+        hi:'🗺️ If I made a map — what would I research and what would I use?' },
       /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
          앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
       { k:'blank', id:'secret', who:'ratio',
-        say:'I have read what you wrote. You have studied ratio through maps, zooming and the circumference of the Earth. Now let us pull it together. Drag the word cards into the blanks.',
+        say:'You have studied the Map Secret. Put the word cards in the blanks.',
         hi:'🃏 The Map secret card — fill in the blanks' },
       { k:'finish', who:'ratio',
-        say:'You found the Map secret! You have earned the card number 8. Keep it safe!',
-        hi:'🎉 Room complete — card number 8 is yours' }
+        say:'You found the Map Secret! You worked out real distances with a scale, and you even measured the Earth with the ratio of shadows!',
+        hi:'🎉 The Map Secret — extra challenge complete' }
     ];
   }
 
@@ -520,7 +501,8 @@ class Component extends DCLogic {
     if (this.state.audio !== 'full') return;
     const raw = (text === null || text === undefined) ? '' :
       (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
-    const txt = raw
+    /* [[화면 글|읽을 말]] — 화면에는 앞, 음성에는 뒤(2026-09-22). _tools/make_voice_check.mjs의 norm과 같아야 음성 키가 맞는다 */
+    const txt = raw.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')
       .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
       /* A ratio written with a colon is spoken as "to": 2:3 → "2 to 3".
          Units are spelled out so the voice does not read them letter by letter.
@@ -531,21 +513,55 @@ class Component extends DCLogic {
       .replace(/Hz\b/g, ' hertz ')
       .replace(/\s+/g, ' ').replace(/ ([.,!?])/g, '$1').trim();
     if (!txt) return;
-    const key = this.ttsKey((who||'ratio') + '|' + txt);
+    /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
+       CLOVA에는 쉼 표기(SSML·break)가 없어 문장 사이 호흡을 이렇게밖에 낼 수 없다.
+       한 문장만 고치면 그 문장만 다시 만들면 된다.
+       ⚠ 문장 나누기(SENT)는 _tools/make_voice_check.mjs와 같아야 한다 — 다르면 음성 키가 어긋난다. */
+    const parts = this.SENT(txt);
+    if (!parts.length) return;
     const man = window.RS_TTS;
-    if (man && man[key]) {
-      try {
-        /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
-           브라우저에 남은 옛 음성이 재생되지 않는다. */
-        const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
-        a.volume = 0.95; this._mp3 = a; this._speaking = true;
-        a.onended = () => { this._speaking = false; };
-        a.play().catch(() => { this._mp3 = null; this._speakSynth(txt, who); });
-        return;
-      } catch(e) {}
-    }
-    this._speakSynth(txt, who);
+    const tok = this._vtok;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      /* 문장 사이 숨 — 한 덩어리로 합성할 때 뭉개지던 호흡을 여기서 낸다 */
+      const nextGap = () => { if (tok === this._vtok) this._sayT = setTimeout(() => step(i + 1), 200); };
+      const key = this.ttsKey((who||'ratio') + '|' + parts[i]);
+      if (man && man[key]) {
+        try {
+          /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+             브라우저에 남은 옛 음성이 재생되지 않는다. */
+          const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+          a.volume = 0.95; this._mp3 = a;
+          a.onended = nextGap;
+          /* 2026-09-27 — mp3가 있는 줄은 브라우저 기본 음성으로 대신 읽지 않는다.
+             화면을 빨리 넘기거나 자동 재생이 막히면 재생이 실패하는데, 그때 로봇 목소리가 나와
+             「합성 전 음성」처럼 들렸다(사용자 보고). 자동 재생이 막힌 것뿐이면 화면을 처음 누를 때
+             이어서 들려주고, 화면이 이미 바뀌었으면 그냥 멈춘다. */
+          a.play().catch(() => {
+            this._mp3 = null;
+            if (tok !== this._vtok) return;
+            const resume = () => {
+              document.removeEventListener('pointerdown', resume, true);
+              if (tok !== this._vtok) return;
+              this._mp3 = a;
+              a.play().catch(() => nextGap());
+            };
+            document.addEventListener('pointerdown', resume, true);
+          });
+          return;
+        } catch(e) {}
+      }
+      /* mp3가 없는 문장만 브라우저 음성으로 읽고 다음 문장으로 넘어간다 */
+      this._speakSynth(parts[i], who, nextGap);
+    };
+    step(0);
   }
+
+  /* 낭독을 문장으로 나눈다 — 마침표·물음표·느낌표 뒤에 공백이 있을 때만 자른다.
+     「1.618」처럼 소수점 뒤에는 공백이 없어 잘리지 않는다. */
+  SENT(t) { return String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean); }
   /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
      크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
   chunks(t) {
@@ -563,15 +579,15 @@ class Component extends DCLogic {
     });
     return out;
   }
-  _speakSynth(txt, who) {
-    if (!('speechSynthesis' in window)) return;
+  _speakSynth(txt, who, done) {
+    if (!('speechSynthesis' in window)) { if (done) done(); return; }
     const cfg = this.WHO[who] || this.WHO.ratio;
     const tok = this._vtok;
     const parts = this.chunks(txt);
     this._speaking = true;
     const step = (i) => {
       if (tok !== this._vtok) return;
-      if (i >= parts.length) { this._speaking = false; return; }
+      if (i >= parts.length) { if (done) done(); else this._speaking = false; return; }
       const u = new SpeechSynthesisUtterance(parts[i]);
       u.lang = 'en-US'; u.pitch = cfg.pitch; u.rate = cfg.rate; u.volume = 1;
       let adv = false;
@@ -582,15 +598,34 @@ class Component extends DCLogic {
     step(0);
   }
 
+  /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
+     step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
+     t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
+  /* 기기 표시 — 허브와 같은 값을 쓴다(2026-09-27) */
+  devId() {
+    try {
+      let d = localStorage.getItem('rs3_dev');
+      if (!d) { d = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)); localStorage.setItem('rs3_dev', d); }
+      return d;
+    } catch(e) { return 'nodev'; }
+  }
   plog(ev, data) {
-    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:data||{} }, '*'); } catch(e) {}
+    var d = data || {};
+    try {
+      var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
+      d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
+    } catch(e) {}
+    /* idle 기록 자체는 조작이 아니다. 여기서 갱신하면 긴 정지가 15초마다 쪼개져 여러 건 남는다(2026-09-14) */
+    if (ev !== 'idle') this._lastAct = Date.now();
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
       if (this._user === 'guest') return;
       this._q = this._q || [];
-      this._q.push({ _t:'events', schemaVersion:'1', sessionId:this._sess, userCode:this._user||'', userName:'',
+      /* userName 자리에 기기 표시를 담는다(2026-09-27) — 시트가 「코드+기기」를 기억해 코드 중복을 막는다 */
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:this.devId(),
         seq: ++this._seq, clientTs:new Date().toISOString(),
         eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
-        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(data||{}) });
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
       if (this._q.length >= 10) this.flush();
     } catch(e) {}
   }
@@ -643,6 +678,8 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this._seq = 0;
+    this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
+    this._lastAct = Date.now();
     this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
     try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
     this._guest = (this._user === 'guest');
@@ -669,13 +706,95 @@ class Component extends DCLogic {
     /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
     this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
     addEventListener('pagehide', this._pageHide);
+
+    /* ── 무조작 정지 ── 15초 넘게 아무 조작이 없으면 한 구간당 한 번만 남긴다.
+       바로 앞에 focus:0도 overlay 열림도 없는 idle이라야 "화면을 보며 생각한 정지"로 읽을 수 있다. */
+    this._idleT = setInterval(() => {
+      const gap = Date.now() - (this._lastAct || 0);
+      if (gap > 15000 && !this._idleFlag) { this._idleFlag = 1; this.plog('idle', { ms: gap }); }
+      if (gap <= 15000) this._idleFlag = 0;
+    }, 5000);
+
+    /* ── 화면 이탈 ── 체류 시간에서 빼야 할 구간을 가른다. 기존 _hide는 flush 전용이라 그대로 둔다. */
+    this._vis = () => this.plog('focus', { v: document.visibilityState === 'visible' ? 1 : 0 });
+    document.addEventListener('visibilitychange', this._vis);
+
+    /* ── 비활성 영역 탭 ── 이 앱은 핸들러를 속성이 아니라 props로 묶으므로 [onclick] 선택자가 듣지 않는다.
+       커서 모양과 태그로 판정한다. 정상 조작 20회에 0건이어야 하며, 1건이라도 나오면 깊이를 늘린다.
+       tg·cl은 무엇을 눌렀는지 — 좌표만으로는 화면이 바뀐 뒤 오탐을 가려낼 수 없다. */
+    this._dead = (e) => {
+      try {
+        let el = e.target, hit = false;
+        for (let i = 0; el && i < 8; i++, el = el.parentElement) {
+          if (/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) { hit = true; break; }
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.hasAttribute('data-blank'))) { hit = true; break; }
+          const cs = getComputedStyle(el);
+          if (cs.cursor === 'pointer' || cs.cursor === 'grab' || cs.touchAction === 'none') { hit = true; break; }
+        }
+        if (!hit) this.plog('deadtap', { x: Math.round(e.clientX), y: Math.round(e.clientY),
+          tg: (e.target && e.target.tagName) || '', cl: ((e.target && e.target.className) || '').toString().slice(0, 20) });
+      } catch(err) {}
+    };
+    addEventListener('pointerdown', this._dead, true);
+
+    /* ── 영상 시각 맞추기 ── 오른쪽 위 모서리를 1.5초 누르면 조용히 기준점을 찍는다.
+       화면에는 아무 표시도 하지 않는다(학습자에게 보이면 안 되는 장치다). 진동이 유일한 확인 신호다. */
+    this._syncDown = (e) => {
+      if (e.clientX < innerWidth - 80 || e.clientY > 80) return;
+      this._syncT = setTimeout(() => {
+        this.plog('sync', { wall: new Date().toISOString() });
+        /* 노트북에는 진동이 없다. 모서리에 작은 점을 잠깐 띄워 연구자만 알아보게 한다.
+           학습자의 과제 영역을 가리지 않고, 0.5초 뒤 스스로 사라진다. */
+        try {
+          navigator.vibrate && navigator.vibrate(30);
+          const dot = document.createElement('div');
+          dot.style.cssText = 'position:fixed;top:6px;right:6px;width:9px;height:9px;border-radius:999px;' +
+            'background:#c67139;opacity:.85;z-index:2147483647;pointer-events:none';
+          document.body.appendChild(dot);
+          setTimeout(() => dot.remove(), 500);
+        } catch(err) {}
+      }, 1500);
+    };
+    this._syncUp = () => clearTimeout(this._syncT);
+    addEventListener('pointerdown', this._syncDown, true);
+    addEventListener('pointerup', this._syncUp, true);
+    addEventListener('pointercancel', this._syncUp, true);
+
+    /* ── 화면을 키우려는 시도 ── 노트북에서는 두 손가락 벌리기가 pointerdown 두 개로 오지 않는다.
+       트랙패드 확대는 ctrlKey가 붙은 wheel, 자판은 Ctrl +/-/0 이다.
+       뜻은 터치의 pinch_try와 다르다 — 화면 배율을 바꾸려는 것이므로 「글씨·그림이 작다」는
+       사용성 신호로 읽고, 두 양을 함께 늘리려는 곱셈적 조작의 증거로는 쓰지 않는다.
+       한 손짓이 wheel을 수십 번 내므로 1.2초에 한 번만 남긴다. */
+    this._zoomHit = (how) => {
+      const now = Date.now();
+      if (now - (this._zoomAt || 0) < 1200) return;
+      this._zoomAt = now;
+      let sc = 1; try { sc = (visualViewport && visualViewport.scale) || 1; } catch(e) {}
+      this.plog('zoom_try', { how: how, sc: Math.round(sc * 100) / 100, dpr: Math.round((devicePixelRatio || 1) * 100) / 100 });
+    };
+    this._wheelZ = (e) => { if (e.ctrlKey) this._zoomHit('pinch'); };
+    addEventListener('wheel', this._wheelZ, { passive: true, capture: true });
+    this._keyZ = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0', 'Add', 'Subtract'].indexOf(e.key) >= 0) this._zoomHit('key');
+    };
+    addEventListener('keydown', this._keyZ, true);
+
     this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
     this._sayT = setTimeout(() => this.sayStep(0), 500);
   }
   componentWillUnmount() {
     clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
+    clearInterval(this._idleT);
     document.removeEventListener('visibilitychange', this._hide);
+    document.removeEventListener('visibilitychange', this._vis);
     removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerdown', this._dead, true);
+    removeEventListener('pointerdown', this._syncDown, true);
+    removeEventListener('pointerup', this._syncUp, true);
+    removeEventListener('pointercancel', this._syncUp, true);
+    removeEventListener('wheel', this._wheelZ, true);
+    removeEventListener('keydown', this._keyZ, true);
+    clearTimeout(this._syncT);
     this.stopVoice(); this.flush(true);
   }
 
@@ -701,13 +820,18 @@ class Component extends DCLogic {
   }
 
   sayStep(i) { const s = this.STEPS[i]; if (s) this.speak(s.say, s.who || 'ratio'); }
-  autoNext(ms) { clearTimeout(this._autoT); this._autoT = setTimeout(() => this.go(1), ms || 3200); }
+  autoNext(ms) { clearTimeout(this._autoT); /* 저절로 넘기지 않는다 — 피드백을 읽고 「다음 →」을 눌러 넘어가게 한다. */ }
+  /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
+     본문은 남기지 않고 제목 40자만 남긴다. t는 plog가 붙이는 경과 ms이므로 제목은 ttl에 담는다. */
   toast(icon, title, body, kind, hold) {
+    this.plog('toast', { k: kind || 'info', ttl: String(title || '').slice(0, 40) });
     this.sfx(kind === 'ok' ? 'ok' : 'oops');
     clearTimeout(this._tT);
     this.setState({ toast: { icon, title, body, kind } });
+    /* 성공 피드백은 저절로 닫지 않는다 — 읽을 시간을 학습자가 정한다. 닫으려면 ✕를 누르거나 다음 화면으로 넘어가면 된다. */
+    if (kind === 'ok') return;
     const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
-    this._tT = setTimeout(close, 3000);
+    this._tT = setTimeout(close, 6000);
   }
   toastOk(t, b) { this.plog('success', { slide: this.state.i }); this.toast('✅', t, b, 'ok'); }
   toastRetry(b) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', 'Try once more!', b); }
@@ -724,7 +848,7 @@ class Component extends DCLogic {
     clearTimeout(this._tT); clearTimeout(this._autoT);
     const patch = { i:n, toast:null, selBlank:null };
     if (this.STEPS[n].k === 'zoom') { patch.zPhase = 0; patch.zVal = 100; }
-    if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); this.awardDigit(); }, 350);
+    if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
     this.setState(patch);
     this.plog('nav', { to:n });
     this._sayT = setTimeout(() => this.sayStep(n), 380);
@@ -759,34 +883,31 @@ class Component extends DCLogic {
 
   /* 알렉산드리아 도서관 — 에라토스테네스가 일하던 곳. 배경 그림으로만 쓰고 글씨는 넣지 않는다 */
   /* 지도를 그리는 옛 학자 — 두루마리·지구본·책상만 남긴 간단한 장면 */
+  /* 에라토스테네스와 지구 — 화자 옆에 뜨는 그 초상(eratos_portrait.jpg)을 그대로 쓰고,
+     옆에 지구를 크게 그린다. 창밖 도시·책장·책상·두루마리는 뺐다 —
+     이 화면의 몫은 「이 사람이 이 지구를 쟀다」 한 가지다. */
   scholarSvg() {
-    const ink = 'var(--color-neutral-800)', st1 = 'var(--color-neutral-200)', st2 = 'var(--color-neutral-300)';
-    const sky = 'var(--color-accent-100)', robe = '#3f5b86', skin = '#e8c39a', wood = '#b98b5e';
-    let g = '<rect x="0" y="0" width="520" height="330" rx="14" style="fill:' + sky + '"/>';
-    /* 창 너머 도시 */
-    g += '<rect x="24" y="34" width="150" height="150" rx="8" style="fill:var(--color-neutral-100)"/>';
-    [0,1,2].forEach(i => { g += '<rect x="' + (40 + i*44) + '" y="' + (120 - i*14) + '" width="30" height="' + (64 + i*14) + '" style="fill:' + st2 + '"/>'; });
-    /* 책장과 두루마리 */
-    g += '<rect x="366" y="24" width="130" height="176" rx="6" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
-    [0,1,2].forEach(r => { g += '<line x1="366" y1="' + (80 + r*44) + '" x2="496" y2="' + (80 + r*44) + '" style="stroke:' + ink + ';stroke-width:2"/>';
-      [0,1,2,3].forEach(c => { g += '<circle cx="' + (386 + c*30) + '" cy="' + (60 + r*44) + '" r="10" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2"/>'; }); });
-    /* 학자 */
-    g += '<circle cx="252" cy="106" r="34" style="fill:' + skin + ';stroke:' + ink + ';stroke-width:2.5"/>';
-    g += '<path d="M218 100 Q252 62 286 100 Q286 76 252 70 Q218 76 218 100 Z" style="fill:var(--color-neutral-500)"/>';
-    g += '<path d="M232 128 Q252 158 272 128 Q262 148 252 148 Q242 148 232 128 Z" style="fill:var(--color-neutral-500)"/>';
-    g += '<path d="M196 224 Q200 152 252 148 Q304 152 308 224 Z" style="fill:' + robe + ';stroke:' + ink + ';stroke-width:2.5;stroke-linejoin:round"/>';
-    /* 책상과 지도 */
-    g += '<rect x="20" y="224" width="480" height="16" rx="4" style="fill:' + wood + ';stroke:' + ink + ';stroke-width:2.5"/>';
-    g += '<rect x="150" y="196" width="210" height="30" rx="4" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2.5"/>';
-    g += '<path d="M170 216 Q210 200 250 214 Q290 226 340 208" style="fill:none;stroke:' + ink + ';stroke-width:2;stroke-dasharray:6 5"/>';
-    /* 지구본 */
-    g += '<circle cx="424" cy="252" r="34" style="fill:#bcd6e8;stroke:' + ink + ';stroke-width:2.5"/>';
-    g += '<path d="M400 236 Q424 246 448 236 M398 262 Q424 272 450 262" style="fill:none;stroke:' + ink + ';stroke-width:2"/>';
-    g += '<ellipse cx="424" cy="252" rx="14" ry="34" style="fill:none;stroke:' + ink + ';stroke-width:2"/>';
-    g += '<rect x="418" y="286" width="12" height="20" style="fill:' + wood + ';stroke:' + ink + ';stroke-width:2"/>';
-    /* 두루마리 몇 개 */
-    [0,1,2].forEach(i => { g += '<rect x="' + (36 + i*40) + '" y="' + (252 + (i%2)*18) + '" width="44" height="14" rx="7" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2"/>'; });
-    return this.svgEl('0 0 520 330', { width:'min(520px,90%)', maxWidth:'100%', display:'block' }, g, 'scholar');
+    const R = React, ink = 'var(--color-neutral-800)';
+    const el = (t, a, ...k) => R.createElement(t, a, ...k);
+    const globe = el('svg', { key:'g', width:'200', height:'200', viewBox:'0 0 200 200',
+      style:{ display:'block', width:'min(200px,42vw)', height:'auto' } },
+      el('circle', { key:'o', cx:100, cy:100, r:88, fill:'#bcd6e8', stroke:ink, strokeWidth:4 }),
+      /* 위선 — 지구가 둥글다는 것을 드러내는 선 */
+      el('path', { key:'l1', d:'M 22 68 Q 100 90 178 68', fill:'none', stroke:ink, strokeWidth:2.5 }),
+      el('path', { key:'l2', d:'M 14 100 H 186', fill:'none', stroke:ink, strokeWidth:2.5 }),
+      el('path', { key:'l3', d:'M 22 132 Q 100 110 178 132', fill:'none', stroke:ink, strokeWidth:2.5 }),
+      /* 경선 */
+      el('ellipse', { key:'m1', cx:100, cy:100, rx:34, ry:88, fill:'none', stroke:ink, strokeWidth:2.5 }),
+      el('ellipse', { key:'m2', cx:100, cy:100, rx:68, ry:88, fill:'none', stroke:ink, strokeWidth:1.8,
+        style:{ opacity:0.55 } }));
+    return el('div', { key:'scholar',
+      style:{ display:'flex', gap:'min(5vw,26px)', alignItems:'center', justifyContent:'center',
+        flexWrap:'wrap', width:'100%' } },
+      el('img', { key:'p', src:'../v4/eratos_portrait.jpg',
+        alt:'Eratosthenes, a mathematician of ancient Greece',
+        style:{ width:'min(200px,42vw)', height:'auto', borderRadius:'18px',
+          border:'4px solid ' + ink, display:'block' } }),
+      globe);
   }
 
   librarySvg() {
@@ -1049,7 +1170,7 @@ class Component extends DCLogic {
     const picks = Object.assign({}, S.qpicks);
     picks[S.i] = (picks[S.i] || []).concat([opt[0]]);
     this.setState({ qpicks: picks });
-    this.plog('quiz', { step: st.sid || st.k, pick: opt[0], ok: !!opt[1] });
+    this.plog('quiz', { qid: st.sid || st.k, pick: opt[0], ok: !!opt[1] });
     if (opt[1]) {
       this.markSolved();
       if (id === 'prop') this.plog('prop', { ans: 40000 });
@@ -1064,21 +1185,23 @@ class Component extends DCLogic {
   submitReflect() {
     const v = (this.state.refText || '').trim();
     if (!v) { this.toastRetry('One line is plenty — say it your own way!'); return; }
-    this.plog('reflect', { room: 'map', text: v.slice(0, 300) });
+    this.plog('reflect', { room:'map', text: v.slice(0, 300),
+      ms: this._refT0 ? (Date.now() - this._refT0) : -1,
+      edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
     this.markSolved();
     this.sfx('ok');
     this.go(1);
   }
 
   /* ── 감각 잇기 (bridge) — 지침 2.3 ──
-     세 방에서 만난 비를 견주게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
+     세 방에서 만난 비를 비교하게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
   BRIDGE = [
     { t:'In all three, the sizes changed but the relationship held as long as the ratio stayed the same', ok:1,
       fb:'Exactly! Different amounts of paint, different vibrations, different map sizes — as long as the ratio was the same, the relationship held.' },
     { t:'In all three, bigger numbers made things more accurate', ok:0,
       fb:'Bigger numbers did not make the color redder or the map more accurate. Shall we think again?' },
     { t:'Maps have nothing to do with color or sound', ok:0,
-      fb:'All three rooms gave you a ratio comparing two quantities. Shall we look at that again?' }
+      fb:'All three rooms gave you a ratio comparing two quantities. Shall we compare that once more?' }
   ];
   bridgePick(ix) {
     const o = this.BRIDGE[ix];
@@ -1089,8 +1212,10 @@ class Component extends DCLogic {
     this.toast('🔗', 'The three rooms link up!', o.fb, 'ok');
   }
 
-  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣는다.
-     네 장(1 · 6 · 1 · 8)이 모이면 비의 비밀 마지막 문이 열린다. */
+  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣던 자리.
+     2026-09-11부터 지도의 비밀은 심화 학습이라 본 흐름 밖에 있고, 카드는 색깔·소리
+     두 방에서 네 장을 모두 받는다. 그래서 이 함수를 부르지 않는다.
+     심화를 다시 본 흐름에 넣는다면 부르는 자리를 되살리고 소리의 방에서 8을 빼야 한다. */
   awardDigit() {
     const D = this.DIGIT;
     let got = [];
@@ -1119,7 +1244,7 @@ class Component extends DCLogic {
   }
   wrapSay(t) {
     if (!t) return '';
-    return this.markNames(t).split(/(?<=[^0-9\s][.!?])\s+/).join(String.fromCharCode(10));
+    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1'));   /* 2026-09-27 문장마다 줄 바꾸지 않음(사용자 지시) */
   }
 
   blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
@@ -1151,7 +1276,7 @@ class Component extends DCLogic {
           this.plog('summary', { no: 1, a: keys.map(k => blanks[k.key]) });
           this.markSolved();
           this.confetti();
-          this.toast('✅', 'All wrapped up!', 'You have put the Map secret into words. Head back and carry on with the next adventure!', 'ok');
+          this.toast('✅', 'All wrapped up!', 'You have put the Map Secret into words. Now let\'s go on to the next room!', 'ok');
           this.autoNext(3400);
         }, 320);
       }
@@ -1174,6 +1299,7 @@ class Component extends DCLogic {
       g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
       document.body.appendChild(g);
       let moved = false;
+      const t0 = Date.now();
       const mv = (ev) => { moved = true; g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
       const up = (ev) => {
         document.removeEventListener('pointermove', mv);
@@ -1182,7 +1308,12 @@ class Component extends DCLogic {
         if (!moved) return;
         const el = document.elementFromPoint(ev.clientX, ev.clientY);
         const slot = el && el.closest ? el.closest('[data-blank]') : null;
-        if (slot && slot.getAttribute('data-blank')) {
+        const ok = !!(slot && slot.getAttribute('data-blank'));
+        /* 빈칸 밖에 놓은 경우(ok:0)를 반드시 남긴다 — 지금까지 통째로 사라지던 자료다.
+           빈칸을 겨냥했다 빗나가는 일이 조작적 어려움의 가장 직접적인 신호다. */
+        this.plog('chip_drag', { w: String(word).slice(0, 12), ok: ok ? 1 : 0,
+          slot: ok ? slot.getAttribute('data-blank') : '', ms: Date.now() - t0 });
+        if (ok) {
           this.setState({ selBlank: slot.getAttribute('data-blank') });
           setTimeout(() => this.place(word), 0);
         }
@@ -1222,7 +1353,16 @@ class Component extends DCLogic {
       rows: null, bank: null, cardTitle: '',
       vidOpen: S.vidOpen, vidBtn: !S.vidOpen,
       openVid: () => { this.sfx('tap'); this.plog('movie', { open: 1 }); this.setState({ vidOpen: true }); },
-      refText: S.refText, refInput: (e) => this.setState({ refText: e.target.value }),
+      refText: S.refText,
+    /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
+       이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
+      refInput: (e) => {
+        const s = e.target.value;
+        if (!this._refT0) this._refT0 = Date.now();
+        this._refN = (this._refN || 0) + 1;
+        this._refMax = Math.max(this._refMax || 0, s.length);
+        this.setState({ refText: s });
+      },
       isBridge: st.k === 'bridge',
       bridgeOpts: st.k === 'bridge' ? this.BRIDGE.map((o, ix) => ({
         t: o.t,
@@ -1238,6 +1378,8 @@ class Component extends DCLogic {
       movieEnd: () => this.movieEnd(),
       goNext: () => {
         this.plog('complete', {});
+    /* 2026-09-28 — 「홈으로」를 누르지 않아도 기록이 끝나도록 여기서 바로 보낸다(사용자 지시) */
+    this.flush(true);
         try {
           const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
           if (d.indexOf('map') < 0) { d.push('map'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
@@ -1251,7 +1393,8 @@ class Component extends DCLogic {
       v.scaleTitle = obj.shape === 'unit'
         ? 'This map has a scale of 1 : 10,000. On this map, 1cm stands for how many cm in real life?'
         : ('On the map the ' + obj.n + ' is drawn ' + obj.cells + 'cm long. How long is the real ' + obj.n + '?');
-      v.scaleHelp = obj.shape === 'unit' ? '' : 'On the map 1cm = 10,000cm in real life';
+      /* 축척과 이번 물음을 같은 비례식에 나란히 놓아 준다 — 두 번 쓰는 같은 비가 눈에 보이게 */
+      v.scaleHelp = obj.shape === 'unit' ? '' : ('1 : 10,000 = ' + obj.cells + ' : (  )');
       v.mapEl = this.mapSvg(obj, 1);
       v.choices = st.intro ? null : obj.opts.map(o => ({ t: o[0], pick: () => this.scalePick(o[1] === 1, obj) }));
     }
@@ -1260,7 +1403,7 @@ class Component extends DCLogic {
       const obj = this.OBJS[0], f = (solved ? this.ZOOMQ[st.zi].p : (st.zi === 0 ? 100 : this.ZOOMQ[st.zi-1].p)) / 100;
       v.mapEl = this.mapSvg(obj, f);
       const zq = this.ZOOMQ[st.zi];
-      v.zoomQ = (zq && !solved) ? ('Stretching the map to ' + zq.p + '%, how many cm long is the bridge?') : '';
+      v.zoomQ = (zq && !solved) ? ('Say the map now is 100%. If you zoom in to ' + zq.p + '%, how many cm long will the 3cm bridge be?') : '';
       v.zq = (zq && !solved) ? zq.opts.map(o => ({ t: o[0], pick: () => this.zoomPick(o[1] === 1) })) : null;
     }
 
@@ -1275,7 +1418,7 @@ class Component extends DCLogic {
         'At noon in Syene the shadow is 0° — the sunlight reaches straight down to the bottom of the well',
         solved ? 'The ground curves, so the two sticks point different ways — the Earth is a round circle!'
                : 'Same day, same hour, and yet the stick in Alexandria casts a shadow of 7.2°',
-        'I could not walk around the whole Earth, but the 800km between the two cities I could measure',
+        '800km between the two cities and an angle of 7.2° — let\'s measure the Earth with these two',
         solved ? '360 ÷ 7.2 = 50 — so 7.2° : 360° = 1 : 50, and therefore 1 : 50 = 800km : the Earth’s circumference!'
                : 'Out of a full 360°, the two cities are 7.2° apart — let us find the ratio of those two'
       ][st.ci];
@@ -1328,7 +1471,7 @@ class Component extends DCLogic {
       });
     }
 
-    /* 게스트(자유 탐색): needsSolve 게이트 무시 — 과제 미해결이어도 '다음' 활성. 실제 학습자는 순차 잠금 유지 */
+    /* 게스트(자유 탐색): needsSolve 게이트를 건너뛴다 — 검토와 수정 때 화면을 자유로이 오가야 하기 때문이다. 실제 학습자는 활동을 마쳐야 다음으로 넘어간다 */
     const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect','bridge'].indexOf(st.k) >= 0) || !!st.quiz;
     const gate = needsSolve && !solved && !this._guest;
     v.showPrimary = st.k !== 'finish';

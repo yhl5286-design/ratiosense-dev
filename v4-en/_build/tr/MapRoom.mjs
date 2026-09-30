@@ -262,4 +262,40 @@ export default {
   '알맞은 답을 고르면 다음으로 갈 수 있어요': 'Choose the right answer and you can go on',
   '문제를 해결하면 다음으로 갈 수 있어요': 'Solve this and you can go on',
   '지금 문제를 해결하고 넘어가요.': 'Finish this one first, then move on.',
+
+  /* ── 2026-09-30 한국어판 94bc22c(지도 방은 심화로 잠김)에 맞춘 추가분 ── */
+  /* “여러분이 직접 [지도를 만든다면], 무엇을 [조사]하고 무엇을 [이용]해야 할까요? 한 줄로 적어 보세요!”
+     → If you [made a map] yourself, what would you [research] and what would you [use]? Write it in one line! */
+  '여러분이 직접': 'If you',
+  '지도를 만든다면': 'made a map',
+  ', 무엇을': ' yourself, what would you',
+  '조사': 'research',
+  '하고 무엇을': ' and what would you',
+  '이용': 'use',
+  '해야 할까요? 한 줄로 적어 보세요!': '? Write it in one line!',
+  '(  )을 조사하고, (  )을 이용해서 지도를 만들 거예요': 'I will research (  ) and use (  ) to make my map',
+  '🏠 처음 화면으로 →': '🏠 Back to the start screen →',
+  '이 방은 지도의 비밀 방이에요. 지금까지 두 방에서 배웠던 비를 이용해서 문제를 풀어볼 거예요!':
+    'This is the Map Secret room. We will use the ratios you learned in the last two rooms to solve some puzzles!',
+  '지도는 넓은 땅을 종이 위에 담으려고 실제 거리를 일정한 비율로 줄여서 그린 그림이에요. 얼마나 줄였는지를 나타낸 것이 축척이에요. 지도 오른쪽 아래를 보면 축척 1 대 10,000이라고 적혀 있죠? 지도에서 1만큼이 실제로는 10,000만큼이라는 뜻이에요. 그러면 지도에서 1센티미터는 실제로 몇 센티미터일까요?':
+    'A map is a picture of a wide piece of land squeezed onto paper, with every real distance shrunk by the same ratio. The scale tells you how much it was shrunk. Look at the bottom right of the map — it says the scale is 1 to 10,000. That means 1 on the map is 10,000 in real life. So how many centimeters in real life is 1 centimeter on the map?',
+  '현재 지도를 100퍼센트라고 할 때 지도를 200퍼센트로 확대해서 크게 보려고 해요. 3센티미터였던 지도의 다리가 몇 센티미터로 나타날까요?':
+    'Say the map as it is now is 100 percent. We want to zoom in to 200 percent to see it bigger. The bridge was 3 centimeters on the map. How many centimeters long will it look now?',
+  '원 전체 360도를 7.2도로 나누면 50이라오. 1 대 50은 두 도시 대 지구 전체. 1 대 50은 800킬로미터 대 지구 둘레. 이제 비를 이용하여 지구의 둘레를 계산해 보시오.':
+    'A whole circle is 360 degrees. Divide it by 7.2 degrees and you get 50. So 1 to 50 is the two cities to the whole Earth. And 1 to 50 is 800 kilometers to the circumference of the Earth. Now use the ratio and work out the circumference of the Earth.',
+  '이 방에서는 축척으로 실제 거리 구하기, 지도 확대하기, 지구 둘레 구하기 등 다양한 활동을 해 보았어요. 그럼 여러분이 직접 지도를 만든다면, 무엇을 조사하고 무엇을 이용해야 할까요? 생각을 적어 보세요.':
+    'In this room you found real distances with a scale, zoomed in on a map and measured the Earth. So if you made a map yourself, what would you research and what would you use? Write down your idea.',
+  '🗺️ 내가 지도를 만든다면 — 무엇을 조사하고 무엇을 이용할까': '🗺️ If I made a map — what would I research and what would I use?',
+  '지도의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.': 'You have studied the Map Secret. Put the word cards in the blanks.',
+  '지도의 비밀을 잘 찾아냈어요! 축척으로 실제 거리를 구하고, 그림자의 비로 지구 둘레까지 재어 보았어요!':
+    'You found the Map Secret! You worked out real distances with a scale, and you even measured the Earth with the ratio of shadows!',
+  '🎉 지도의 비밀 — 심화 학습 완료': '🎉 The Map Secret — extra challenge complete',
+  '옛 그리스의 수학자 에라토스테네스': 'Eratosthenes, a mathematician of ancient Greece',
+  '세 방에서 모두 두 양을 비교하는 비가 나왔어요. 그 점을 다시 비교해 볼까요?':
+    'All three rooms gave you a ratio comparing two quantities. Shall we compare that once more?',
+  '지도의 비밀을 문장으로 정리했어요. 이제 다음 방으로 이어가요!': "You have put the Map Secret into words. Now let's go on to the next room!",
+  /* '지금 지도를 100%라고 할 때 ' + 배율 + '%로 확대하면, 3cm였던 다리는 몇 cm가 될까요?' */
+  '지금 지도를 100%라고 할 때 ': 'Say the map now is 100%. If you zoom in to ',
+  '%로 확대하면, 3cm였던 다리는 몇 cm가 될까요?': '%, how many cm long will the 3cm bridge be?',
+  '두 도시 사이 800km와 각도 7.2° — 이 둘로 지구를 재어 봅시다': "800km between the two cities and an angle of 7.2° — let's measure the Earth with these two",
 };

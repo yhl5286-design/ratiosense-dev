@@ -48,4 +48,35 @@ export default {
   '연구자에게 받은 4자리 코드를 입력해 주세요': 'Please enter the 4-character code the researcher gave you',
   '코드에 쓰지 않는 글자예요. 화면에 있는 글자 중에서 눌러 주세요':
     'That character is not used in codes. Please tap one of the characters on the screen',
+
+  /* ── 2026-09-30 한국어판 94bc22c(두 방 · 카드 네 장 · 코드 S01 형식)에 맞춘 추가분 ── */
+  '(색깔의 방 두 장, 소리의 방 두 장)': '(two from Color, two from Sound)',
+  '🎒 시작하기': '🎒 Start',
+  '탐험 순서: 색깔 → 소리 — 앞 방을 마쳐야 다음 방이 열려요! 두 방을 모두 마치면 마지막 문이 열려요.':
+    'Your route: Color → Sound. Each room opens once you finish the one before it! Finish both rooms and the last door opens.',
+  '레시오': 'Ratia',
+  '🔊 레시오의 이야기를 끝까지 들어 주세요': '🔊 Please listen to Ratia until the end',
+  '탐험하기 →': "Let's explore →",
+  /* “연구자에게 받은 [내 코드]를 눌러 주세요 (예: S01)” — 앞 조각은 'Tap in the' */
+  '내 코드': 'code',
+  '를 눌러 주세요 (예: S01)': ' the researcher gave you (for example: S01)',
+  '먼저 앞 글자를 눌러 주세요': 'First, tap the letter',
+  '안녕하세요! 비의 비밀을 함께 찾을 레시오예요.': "Hello! I'm Ratia. Let's find the Secret of Ratio together.",
+  '색깔의 방과 소리의 방에서 비의 비밀을 찾아요.': 'We will look for it in the Color room and the Sound room.',
+  '문제를 풀면 비밀 카드를 한 장씩 얻어요. 네 장을 모으면 마지막 문이 열려요.':
+    'Solve a puzzle and you get a secret card. Collect four cards and the last door opens.',
+  '🎨 <b>색깔의 방</b> — 물감을 섞어 색을 만들어요': '🎨 <b>The Color room</b> — mix paints to make colors',
+  '🎼 <b>소리의 방</b> — 소리에 담긴 비밀을 귀로 느껴요': '🎼 <b>The Sound room</b> — hear the secret inside sounds',
+  '🃏 문제를 풀면 <b>비밀 카드</b>를 한 장씩 (모두 네 장)': '🃏 Solve a puzzle, get a <b>secret card</b> (four in all)',
+  '🏛️ 네 장을 모으면 마지막 <b>「비의 비밀」</b> 문이 열려요': '🏛️ Collect all four and the last door, <b>“The Secret of Ratio”</b>, opens',
+  '다 들었어요! 이제 탐험을 떠나요': "All done! Now let's go exploring",
+  '먼저 앞 글자를 눌러 주세요 — 전문가는 E, 학생은 S': 'First, tap the letter — E for experts, S for students',
+  '이제 숫자 두 개를 눌러 주세요': 'Now tap two numbers',
+  '연구자에게 받은 코드를 눌러 주세요 — 앞 글자 하나(E 또는 S)와 숫자 두 개예요':
+    'Tap in the code the researcher gave you — one letter (E or S) and two numbers',
+  '코드를 확인하고 있어요…': 'Checking your code…',
+  '이미 사용 중인 코드예요. 연구자에게 알려 주세요.': 'This code is already in use. Please tell the researcher.',
+  '앞 글자는 E 또는 S예요': 'The first letter is E or S',
+  '뒤 두 칸은 숫자예요': 'The last two are numbers',
+  '코드에 쓰지 않는 글자예요. 화면에 있는 단추를 눌러 주세요': 'That character is not used in codes. Please tap a button on the screen',
 };

@@ -136,4 +136,37 @@ export default {
   '음성 + 효과음': 'Voice + sound effects',
   '효과음만': 'Sound effects only',
   '소리 끔': 'Sound off',
+
+  /* ── 2026-09-30 한국어판 94bc22c(두 방 · 카드 네 장 · 돌아보기 카드)에 맞춘 추가분 ── */
+  '🎚️ 슬라이더를 옮기면서 1 대 1.618 황금비를 느껴보세요.': '🎚️ Move the slider and feel the golden ratio, 1 to 1.618.',
+  /* “모양에서도, 수에서도 같은 값 [1.618]이 나와요. 여러분이 색과 소리에서 찾은 것처럼 — 세상은 [비의 비밀]로 가득해요!” */
+  '모양에서도, 수에서도 같은 값': 'In shapes and in numbers, the very same value',
+  '여러분이 색과 소리에서 찾은 것처럼 — 세상은': 'Just as you found in color and sound, the world is full of one thing —',
+  '내가 한 것': 'What I did',
+  '빨강 2컵과 노랑 4컵을 부어 목표색을 만든 화면': 'The screen where 2 cups of red and 4 cups of yellow made the target color',
+  '🎨 색깔': '🎨 Color',
+  '물감의 비 20 : 40 = 1 : 2': 'Paint ratio 20 : 40 = 1 : 2',
+  '도와 솔을 함께 눌러 물결 무늬를 살펴본 화면': 'The screen where C and G were played together to look at the wave pattern',
+  '🎵 소리': '🎵 Sound',
+  '진동수의 비 2 : 3': 'Ratio of vibrations 2 : 3',
+  '북은 한 칸마다, 트라이앵글은 두 칸마다 울려 두 칸마다 함께 만나는 격자':
+    'A grid: the drum plays every beat and the triangle every 2 beats, so they meet every 2 beats',
+  '두 칸마다 함께 만나요': 'They meet every 2 beats',
+  '🥁 리듬': '🥁 Rhythm',
+  '두 간격의 비 1 : 2': 'Ratio of the two gaps 1 : 2',
+  '줄이 짧을수록 소리가 높은 하프': 'A harp: the shorter the string, the higher the sound',
+  '🎻 하프': '🎻 Harp',
+  '줄 길이의 비 2 : 3': 'Ratio of string lengths 2 : 3',
+  '기준 막대를 늘여도 두 막대의 비가 그대로인 황금비 화면':
+    'The golden ratio screen: stretch the base bar and the ratio of the two bars stays the same',
+  '✨ 황금비': '✨ Golden ratio',
+  '수고했어요!': 'Great job!',
+  '🎼 소리의 비밀 ①': '🎼 The Sound Secret ①',
+  '🎼 소리의 비밀 ②': '🎼 The Sound Secret ②',
+  '진동수의 비를 거꾸로 하면 줄의 길이를 구할 수 있어요!': 'Flip the ratio of the vibrations and you get the string lengths!',
+  '여러분이 모은 숫자 카드를 순서대로 눌러 마지막 비의 비밀 방 문을 열어 보세요.':
+    'Tap the number cards you collected, in order, to open the door to the last room: the Secret of Ratio.',
+  '이렇게 세상 곳곳에 비의 비밀이 숨겨져 있었네요. 수학을 눈으로 소리로 느껴 보는 경험 신기했나요? 함께 해 줘서 고마워요! 다음에 또 만나요!':
+    'So the Secret of Ratio was hiding all over the world. Was it amazing to feel math with your eyes and ears? Thank you for exploring with me! See you next time!',
+  '🏠 홈 화면으로 가기': '🏠 Go to the home screen',
 };

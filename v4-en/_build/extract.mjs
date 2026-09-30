@@ -13,6 +13,8 @@ import path from 'node:path';
 const SRC = path.resolve('../v4');
 const OUT = path.resolve('_build/i18n');
 const HAN = /[가-힣]/;
+/* 한자어 수 읽기 함수 — 예전에는 한 줄, 2026-09-11부터 여러 줄이다. 끝은 두 칸 들여 쓴 「}」 줄. */
+export const SINO_BLOCK = /^ *SINO\(v\) \{(?:[^\n]*\}\r?\n|\r?\n[\s\S]*?\r?\n  \}\r?\n)/gm;
 export const FILES = ['index.html', 'ColorRoom.dc.html', 'SoundRoom.dc.html', 'MapRoom.dc.html', 'EvalRoom.dc.html'];
 
 /* ── 주석 구간 표시 — 그 안의 한글은 뽑지 않는다 ── */
@@ -35,7 +37,7 @@ function commentMask(s) {
   /* patch.mjs가 통째로 걷어내는 한국어 전용 음성 코드 — 그 안의 한글은 화면에 보이지
      않으므로 번역 대상이 아니다. 한자어 배열('영','일','이'…)이 대조표에 섞이면
      번역할 것이 남은 것처럼 보인다. */
-  for (const x of s.matchAll(/^ *SINO\(v\) \{[^\n]*\n/gm)) mark(x.index, x.index + x[0].length);
+  for (const x of s.matchAll(SINO_BLOCK)) mark(x.index, x.index + x[0].length);
   for (const x of s.matchAll(/\.replace\(\/\(\[가-힣A-Za-z0-9\]\+\)[\s\S]*?\.replace\(\/\\s\+\/g, ' '\)\.trim\(\);/g))
     mark(x.index, x.index + x[0].length);
   /* 지도 방의 축척 물음은 한국어 조사(는/이/가)를 이어 붙여 문장을 만든다.
@@ -45,7 +47,12 @@ function commentMask(s) {
   /* josa는 위 문장에서만 쓰이던 조사 값이다. 영어판에서는 patch.mjs가 지운다. */
   for (const x of s.matchAll(/josa:'[가-힣]+', /g)) mark(x.index, x.index + x[0].length);
   /* 소리 방의 조사 고르개 jz('이','가')도 마찬가지다 — 영어에는 조사가 없다. */
-  for (const x of s.matchAll(/this\.jz\([^)]*\)/g)) mark(x.index, x.index + x[0].length);
+  /* 소리 방 하프 설명의 숫자 뒤 조사 — jsl()은 '을'/'를', jd() ? '이' : '가'.
+     영어에는 조사가 없으므로 patch.mjs가 걷어 낸다(2026-09-30). */
+  for (const x of s.matchAll(/const jsl = \(n\) => [^\n]*?;/g)) mark(x.index, x.index + x[0].length);
+  for (const x of s.matchAll(/\(jd\([^()]*\) \? '이' : '가'\)/g)) mark(x.index, x.index + x[0].length);
+  /* 인자 안에 괄호가 한 겹 더 있을 수 있다 — jz(r.n.replace('′',''),'은','는') (2026-09-30) */
+  for (const x of s.matchAll(/this\.jz\((?:[^()]|\([^()]*\))*\)/g)) mark(x.index, x.index + x[0].length);
   return m;
 }
 const clean = (m, a, b) => { for (let i = a; i < b; i++) if (m[i]) return false; return true; };
