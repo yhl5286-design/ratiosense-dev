@@ -1829,8 +1829,15 @@ class Component extends DCLogic {
         n >= 4 ? '네 장을 다 모았어요! 비의 비밀 방에서 마지막 문을 열어 보세요.'
                : '네 장을 모으면 비의 비밀 방의 마지막 문을 열 수 있어요.'));
       /* 2026-09-28 — 못 받은 카드가 있으면 그 문제로 바로 가는 길을 지갑에 둔다(사용자 지시).
-         마침 화면에만 있던 길을 지갑으로 옮겨, 카드를 하나 받은 뒤에도 이어서 다음 카드를 풀러 갈 수 있다. */
-      if (n < 4) {
+         마침 화면에만 있던 길을 지갑으로 옮겨, 카드를 하나 받은 뒤에도 이어서 다음 카드를 풀러 갈 수 있다.
+         2026-10-07 — 파일럿에서 방 중간에 이 길로 화면을 건너뛰어 방 마침이 남지 않고 다음 방이 잠겼다(사용자: 「풀러 가기를 제지」).
+         이 방을 한 번 끝까지 마친 뒤에만 길을 보인다. 게스트는 자유 탐색이라 그대로 둔다. */
+      let roomDone = false;
+      try { roomDone = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]').indexOf('sound') >= 0; } catch(e) {}
+      if (n < 4 && !(this._guest || roomDone)) {
+        box.appendChild(mk('div', 'font-size:14.5px;font-weight:700;color:#7a6a5a;line-height:1.5', '이 방을 끝까지 마치면 못 받은 카드를 다시 풀러 갈 수 있어요.'));
+      }
+      if (n < 4 && (this._guest || roomDone)) {
         box.appendChild(mk('div', 'font-size:15px;font-weight:800;color:#8c491a;margin-top:2px', '🃏 못 받은 카드 풀러 가기'));
         const go = mk('div', 'display:flex;gap:8px;justify-content:center;flex-wrap:wrap');
         SLOTS.filter(s => got.indexOf(s[0]) < 0).forEach(([id, room]) => {
