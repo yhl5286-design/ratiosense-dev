@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RatioSense — A Ratio Adventure</title>
+<script>/* English edition speaks through the browser voice — no pre-made mp3 files. */
+window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
+<link rel="stylesheet" href="../final/_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+  /* 허브 — Organic 토큰만 사용 (hex·임의 px 값 하드코딩 없음) */
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0}body{min-height:100dvh}
+  /* 타이포 확정: 제목/헤더=Do Hyeon(도현), 나머지=Noto Sans KR(400 기본·강조 700 실굵기+색) */
+  body{font-family:"Nunito","Segoe UI",system-ui,sans-serif;font-weight:400;
+    background:var(--color-bg);color:var(--color-text);display:flex;align-items:center;justify-content:center}
+  b,strong{font-weight:700;color:var(--color-accent-700)}
+  :focus-visible{outline:3px solid var(--color-accent);outline-offset:3px}
+  .jua{font-family:'Fredoka','Nunito',sans-serif;font-weight:400}
+  .wrap{text-align:center;padding:var(--space-6) var(--space-3);max-width:980px;width:100%}
+  h1{font-family:'Fredoka','Nunito',sans-serif;font-weight:400;font-size:42px;margin:0 0 4px;letter-spacing:0}
+  .sub{font-size:18px;color:var(--color-neutral-700);font-weight:700;margin-bottom:var(--space-4)}
+  .chiprow{display:flex;gap:var(--space-2);justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:var(--space-4)}
+  .mychip{font-family:inherit;font-size:17px;background:var(--color-neutral-100);border:2.5px solid var(--color-accent-400);
+    border-radius:999px;padding:8px 20px;color:var(--color-accent-700)}
+  .wallet{font-family:inherit;font-size:17px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);
+    border-radius:999px;padding:8px 20px;color:var(--color-accent-700)}
+  .ghost{background:none;border:none;color:var(--color-neutral-700);font-weight:700;font-size:14px;
+    text-decoration:underline;cursor:pointer;font-family:inherit;text-underline-offset:3px}
+  .guestnote{font-size:13.5px;font-weight:700;color:var(--color-accent-700);background:var(--color-accent-100);
+    border-radius:999px;padding:5px 14px;display:none}
+  .rooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-3);max-width:920px;margin:0 auto}
+  .room{display:block;position:relative;background:var(--color-neutral-100);border:3px solid var(--color-neutral-300);
+    border-radius:calc(var(--radius-lg) * 1.15);padding:var(--space-6) var(--space-3) var(--space-4);
+    text-decoration:none;color:var(--color-text);transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;box-shadow:var(--shadow-sm)}
+  a.room:hover{transform:translateY(-6px);border-color:var(--color-accent);box-shadow:var(--shadow-lg);color:var(--color-text)}
+  .room .badge{position:absolute;top:12px;left:14px;width:34px;height:34px;border-radius:999px;background:var(--color-neutral-200);
+    border:2.5px solid var(--color-neutral-300);font-family:inherit;font-size:17px;color:var(--color-neutral-700);
+    display:flex;align-items:center;justify-content:center}
+  .room .donechk{position:absolute;top:12px;right:14px;font-size:24px}
+  .room.next-room{border-color:var(--color-accent-2-500);box-shadow:var(--shadow-md)}
+  .room.next-room .badge{background:var(--color-accent-2-500);border-color:var(--color-accent-2-500);color:var(--color-neutral-100)}
+  .room .em{font-size:56px;line-height:1.2}
+  .room .nm{font-family:inherit;font-size:21px;margin-top:8px}
+  .room .ds{font-size:14px;color:var(--color-neutral-700);font-weight:700;margin-top:6px;line-height:1.6}
+  .room.locked{opacity:.62;cursor:not-allowed}
+  .room.locked .em{filter:saturate(.4)}
+  .locktag{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;letter-spacing:.02em;
+    padding:3px 12px;border-radius:999px;background:var(--color-neutral-200);color:var(--color-neutral-700);font-weight:800}
+  .foot{margin-top:var(--space-6);font-size:13.5px;font-weight:700;color:var(--color-neutral-600)}
+  /* 로그인 오버레이 */
+  #loginOv{position:fixed;inset:0;background:color-mix(in srgb,var(--color-neutral-900) 52%,transparent);
+    display:none;align-items:center;justify-content:center;z-index:50;padding:var(--space-3)}
+  .lg{background:var(--color-neutral-100);border:4px solid var(--color-accent-400);border-radius:calc(var(--radius-lg) * 1.15);
+    padding:var(--space-6) var(--space-4);width:min(440px,94vw);max-height:94dvh;overflow:auto;
+    text-align:center;box-shadow:var(--shadow-lg)}
+  .lg h2{font-family:'Fredoka','Nunito',sans-serif;font-weight:400;font-size:26px;margin:0 0 4px}
+  .lg .hint{color:var(--color-neutral-700);font-weight:700;font-size:15.5px;margin-bottom:var(--space-3)}
+  /* 식별 코드 입력 — 4자리(영문 대문자+숫자). 터치 타깃 48px 이상 */
+  #codeShow{display:flex;gap:var(--space-2);justify-content:center;margin:var(--space-2) 0 var(--space-3)}
+  #codeShow .cbox{font-family:'Fredoka','Nunito',sans-serif;font-weight:400;font-size:34px;
+    width:56px;height:64px;line-height:64px;border:3px solid var(--color-neutral-300);border-bottom-width:5px;
+    border-radius:var(--radius-md);background:var(--color-neutral-200);color:var(--color-accent-700)}
+  #codeShow .cbox.filled{background:var(--color-accent-100);border-color:var(--color-accent-400)}
+  #codeShow .cbox.cur{background:var(--color-neutral-100);border-color:var(--color-accent)}
+  .padhint{font-size:13px;font-weight:700;color:var(--color-neutral-600);margin-bottom:var(--space-2)}
+  .pad{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-2)}
+/* 첫 칸(E·S)은 둘뿐이므로 크게 둘로 나눠 놓는다 — 고를 것이 적어야 헤매지 않는다 */
+.pad.heads{grid-template-columns:repeat(2,1fr);gap:var(--space-3)}
+.pad.heads button{min-height:96px;font-size:44px}
+  .padrow{display:grid;grid-template-columns:1fr 1.3fr;gap:var(--space-2);margin-top:var(--space-2)}
+  .pad button{font-family:inherit;font-weight:700;font-size:21px;min-height:48px;padding:var(--space-2) 0;
+    border:3px solid var(--color-neutral-300);border-radius:var(--radius-md);background:var(--color-neutral-100);
+    cursor:pointer;touch-action:manipulation;color:var(--color-text)}
+  .pad button.num{background:var(--color-accent-100);border-color:var(--color-accent-300);color:var(--color-accent-700)}
+  .padrow button{font-family:inherit;font-weight:700;font-size:19px;min-height:48px;
+    border:3px solid var(--color-neutral-300);border-radius:999px;background:var(--color-neutral-100);
+    cursor:pointer;touch-action:manipulation;color:var(--color-text)}
+  .pad button:hover,.padrow button:hover{background:var(--color-neutral-200)}
+  .pad button:active,.padrow button:active{transform:scale(.94);background:var(--color-accent-100);border-color:var(--color-accent-400)}
+  .padrow .del{color:var(--color-accent-700)}
+  .padrow .go{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-neutral-100)}
+  .padrow .go:hover{background:var(--color-accent-600);border-color:var(--color-accent-600)}
+  #lgErr{color:var(--color-accent-700);font-weight:800;font-size:15px;min-height:22px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>RatioSense</h1>
+  <div class="sub">A ratio adventure — every room hides <b>the Secret of Ratio</b>, and it is yours to find!<br>Collect the secret cards to open the last door</div>
+  <div class="chiprow">
+    <span class="mychip" id="chip" style="display:none">🙋 <span id="chipNo"></span></span>
+    <span class="wallet" id="wallet">🃏 Secret cards <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(two from Color, two from Sound)</span></span>
+    <button class="ghost" id="chgBtn" style="display:none">Change code</button>
+    <span class="guestnote" id="guestNote">🔎 Guest mode — nothing you do is recorded</span>
+  </div>
+  <div style="margin:14px 0 4px"><button id="introBtn" class="ghost" style="min-height:56px;padding:14px 32px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(198,113,57,.35)">🎒 Start</button></div>
+  <div class="rooms">
+    <a class="room" data-r="color" href="ColorRoom.dc.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">The Color Secret</div><div class="ds">Find the painter's lost<br>color by experimenting</div></a>
+    <a class="room" data-r="sound" id="soundCard" href="SoundRoom.dc.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">The Sound Secret</div><div class="ds">Chords and a harp made<br>from ratios of vibration</div><span class="locktag" id="soundLock" style="display:none">🔒 Opens when you finish the Color room</span></a>
+  </div>
+  <div class="foot">Your route: Color → Sound. Each room opens once you finish the one before it! Finish both rooms and the last door opens.</div>
+</div>
+
+<!-- 2026-09-27 — 색깔 방 첫 화면에 있던 레시오의 안내를 허브로 옮겼다(사용자 지시).
+     말이 다 끝나야 「탐험하기」가 열린다 — 규칙을 듣지 않고 지나가지 않게. -->
+<div id="introOv" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(32,30,29,.55);align-items:center;justify-content:center;padding:16px">
+  <div style="background:#fffdf6;border:4px solid #f6a06b;border-radius:24px;box-shadow:0 18px 44px rgba(32,30,29,.35);max-width:620px;width:100%;padding:22px 24px 18px;text-align:center">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px">
+      <img src="../final/ratio_portrait.jpg" alt="Ratio" style="width:150px;height:150px;border-radius:999px;border:5px solid #f6a06b;background:#fff;object-fit:cover;box-shadow:0 8px 22px rgba(246,160,107,.35)" onerror="this.style.display='none'">
+      <div style="font-size:21px;font-weight:800;color:#8c491a">Ratio</div>
+    </div>
+    <!-- 2026-09-27 — 레시오가 하는 말도 글로 함께 보인다. 지금 읽는 문장은 진하게(사용자 지시) -->
+    <div id="introSay" style="font-size:17.5px;line-height:1.7;color:#5a4a3a;text-align:left;background:#fff2eb;border:2.5px solid #f6c49b;border-radius:16px;padding:12px 14px;margin-bottom:12px"></div>
+    <div id="introText" style="font-size:18.5px;line-height:1.85;color:#3d3830;text-align:left"></div>
+    <div id="introWait" style="font-size:14px;font-weight:700;color:#a19786;margin-top:12px">🔊 Please listen to Ratio until the end</div>
+    <button id="introGo" disabled style="margin-top:12px;min-height:58px;padding:14px 34px;border-radius:999px;border:none;background:#c0b6a5;color:#f9f4ed;font-size:20px;font-weight:800;cursor:not-allowed">Let's explore →</button>
+  </div>
+</div>
+
+<div id="loginOv">
+  <div class="lg">
+    <h2>🙋 Tap in your code</h2>
+    <div class="hint">Tap in the <b>code</b> the researcher gave you (for example: S01)</div>
+    <div id="codeShow" aria-live="polite" aria-label="The code you entered">
+      <span class="cbox"></span><span class="cbox"></span><span class="cbox"></span>
+    </div>
+    <div class="padhint" id="padHint">First, tap the letter</div>
+    <div class="pad" id="padGrid"></div>
+    <div class="padrow">
+      <button class="del" data-k="del">← Delete</button><button class="go" data-k="go">Start!</button>
+    </div>
+    <div id="lgErr" role="alert"></div>
+    <!-- 2026-09-27 — 학생 수집 때는 코드 없이 들어가지 못하게 감춘다.
+         지금은 앱을 고치는 중이라 열어 둔다. 감출 때는 아래 GUEST_LINK 를 false 로 바꾸면 된다.
+         false 로 두어도 연구자는 주소 끝에 ?guest=1 을 붙이면 쓸 수 있다(사용자 지시). -->
+    <button class="ghost" id="guestBtn">🔎 Look around without signing in (nothing is recorded)</button>
+  </div>
+</div>
+
+<script>
+/* 허브 — 식별 코드(연구자가 부여한 E01·S01 꼴의 세 글자)만 사용, 성명·이메일·계정 미수집.
+   저장 키·형식은 구버전 v3와 동일: rs3_user {code,ts}, rs3_done:<code>, rs3_cards:<code> */
+/* 심화 학습 — 지도의 비밀은 사용성 평가 범위 밖이다. 평가 때는 학생도 전문가도 게스트도
+   색깔·소리 두 방만 한다. 모두가 같은 활동을 해야 로그·관찰·SUS를 견줄 수 있기 때문이다.
+   나중에 심화로 열 때는 이 한 줄만 true로 바꾼다. */
+const DEEP=false;
+const LOG_EP='https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+const LOG_TK='ratiosense-2026';
+/* 식별 코드 — 앞 글자 하나 + 두 자리 수(2026-09-11 개정).
+   E = 전문가(E01~), S = 학생(S01~). 예전에는 네 자리에 스무 글자를 섞어 눌러야 해
+   키패드에 단추가 스물다섯 개였고 아이들이 헤맸다. 이제 앞 글자는 둘 중 하나,
+   뒤 두 칸은 숫자뿐이라 잘못 누를 자리가 거의 없다. */
+const CODE_HEADS='ES';
+const CODE_DIGITS='0123456789';
+const CODE_CHARS=CODE_HEADS+CODE_DIGITS;
+const CODE_RE=/^[ES][0-9]{2}$/;
+const $=s=>document.querySelector(s);
+function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+
+/* ── 로그: 각 방과 같은 중복 적재 방지 규칙 ──
+   ① 큐에 쌓아 두고 flush ② 꺼낸 배치는 inflight에 "전송 중"으로 보관 → 성공하면 폐기, 진짜 네트워크 실패일 때만 큐로 복귀
+   ③ 전송이 확인된 eventId는 다시 보내지 않는다(visibilitychange+pagehide 이중 beacon 차단)
+   ④ 배치를 만들 때 같은 eventId가 이미 있으면 제외
+   fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해 실패로 오인하고 재전송하는 일을 막는다 */
+const LOG={q:[],sent:{},sentIds:[],inflight:{},bid:0,sending:false,sess:uid(),seq:0};
+const HUB_T0=Date.now();   /* 허브에 머문 시간의 기준 */
+function plog(code,ev,data){try{
+  if(!code||code==='guest')return; /* 게스트는 미전송 */
+  LOG.q.push({_t:'events',schemaVersion:'2',sessionId:LOG.sess,userCode:code,userName:devId(),
+    seq:++LOG.seq,clientTs:new Date().toISOString(),eventId:uid(),
+    tab:'hubV3en',eventType:'pilot.hubV3en.'+ev,payload:JSON.stringify(data||{})});
+  flushLog();
+}catch(e){}}
+function logMark(ids){for(let i=0;i<ids.length;i++)if(!LOG.sent[ids[i]]){LOG.sent[ids[i]]=1;LOG.sentIds.push(ids[i]);}
+  while(LOG.sentIds.length>800)delete LOG.sent[LOG.sentIds.shift()];}
+function logBatch(max){const batch=[],seen={};
+  while(LOG.q.length&&batch.length<max){const r=LOG.q.shift();
+    if(!r||!r.eventId||LOG.sent[r.eventId]||seen[r.eventId])continue; /* 이미 보냈거나 배치 내 중복 */
+    seen[r.eventId]=1;batch.push(r);}
+  return batch;}
+function flushLog(beacon){try{
+  if(!LOG.q.length)return;
+  const useBeacon=!!(beacon&&navigator.sendBeacon);
+  if(!useBeacon&&LOG.sending)return; /* 진행 중이면 새 POST를 만들지 않음 */
+  const batch=logBatch(50);
+  if(!batch.length)return;
+  const ids=batch.map(r=>r.eventId);
+  const body=JSON.stringify({token:LOG_TK,records:batch});
+  const bid='b'+(++LOG.bid);LOG.inflight[bid]=batch;
+  if(useBeacon){let ok=false;
+    try{ok=navigator.sendBeacon(LOG_EP,new Blob([body],{type:'text/plain'}));}catch(e){ok=false;}
+    delete LOG.inflight[bid];
+    if(ok)logMark(ids);else LOG.q.unshift.apply(LOG.q,batch);
+    return;}
+  LOG.sending=true;
+  const settle=ok=>{delete LOG.inflight[bid];LOG.sending=false;
+    if(ok)logMark(ids);else LOG.q.unshift.apply(LOG.q,batch);};
+  fetch(LOG_EP,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain'},body})
+    .then(()=>settle(true),()=>settle(false));
+}catch(e){LOG.sending=false;}}
+setInterval(()=>flushLog(),5000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushLog(true);});
+/* 허브를 떠나는 때 — 체류 시간을 남기고 큐를 마저 보낸다.
+   plog가 큐에 넣은 뒤 같은 손짓으로 flush까지 해야 마지막 한 건이 유실되지 않는다. */
+addEventListener('pagehide',()=>{plog(getUser(),'exit',{ms:Date.now()-HUB_T0,done:getDone()});flushLog(true);});
+
+/* 기기 표시(2026-09-27) — 코드 중복을 막는 데 쓴다. 브라우저마다 한 번 만들어 저장한다.
+   같은 기기에서 새로 고치거나 이어서 할 때는 막히지 않게 하려고 둔다. */
+function devId(){
+  try{
+    let d=localStorage.getItem('rs3_dev');
+    if(!d){ d=(Date.now().toString(36)+Math.random().toString(36).slice(2,10)); localStorage.setItem('rs3_dev',d); }
+    return d;
+  }catch(e){ return 'nodev'; }
+}
+/* 코드가 이미 다른 기기에서 쓰였는지 시트에 물어본다. 답이 늦거나 막히면 들여보낸다 —
+   수업 중에 인터넷이 흔들려도 학생이 갇히지 않게 하려는 것이다. */
+function checkCode(v){
+  return new Promise(res=>{
+    let done=0; const ok=(r)=>{ if(!done){ done=1; res(r); } };
+    setTimeout(()=>ok({allow:1,reason:'timeout'}),4000);
+    try{
+      fetch(LOG_EP+'?check=1&code='+encodeURIComponent(v)+'&dev='+encodeURIComponent(devId()),{method:'GET'})
+        .then(r=>r.json())
+        .then(j=>ok({allow: j && j.used && j.dev && j.dev!==devId() ? 0 : 1, at: j && j.at}))
+        .catch(()=>ok({allow:1,reason:'error'}));
+    }catch(e){ ok({allow:1,reason:'error'}); }
+  });
+}
+function saveUser(code){try{localStorage.setItem('rs3_user',JSON.stringify({code,ts:Date.now()}));}catch(e){}}
+function getUser(){try{return (JSON.parse(localStorage.getItem('rs3_user')||'null')||{}).code||'';}catch(e){return '';}}
+function uk(b){return b+':'+(getUser()||'anon');}
+function getDone(){try{return JSON.parse(localStorage.getItem(uk('rs3_done'))||'[]');}catch(e){return [];}}
+function getCards(){try{const r=JSON.parse(localStorage.getItem(uk('rs3_cards'))||'[]');const s=new Set();r.forEach(x=>{if(x==='sound'){s.add('sound1');s.add('sound2');}else s.add(x);});return [...s];}catch(e){return [];}} /* 옛 'sound' 한 장은 두 장으로 센다(2026-09-22) */
+
+/* 허브 인사말(2026-09-27) — 방의 speak와 같은 규칙으로 문장을 나누고 키를 만든다.
+   여기 문장을 고치면 _tools/make_voice_check.mjs가 같은 배열을 읽어 음성 목록에 넣는다. */
+const HUB_SAY = [
+  'Hello! I\'m Ratio. Let\'s find the Secret of Ratio together.',
+  'We will look for it in the Color room and the Sound room.',
+  'Solve a puzzle and you get a secret card. Collect four cards and the last door opens.'
+];
+/* 팝업에 보이는 개요 — 말은 짧게, 규칙은 번호로 본다(2026-09-27) */
+const HUB_ITEMS = [
+  '🎨 <b>The Color room</b> — mix paints to make colors',
+  '🎼 <b>The Sound room</b> — hear the secret inside sounds',
+  '🃏 Solve a puzzle, get a <b>secret card</b> (four in all)',
+  '🏛️ Collect all four and the last door, <b>“The Secret of Ratio”</b>, opens'
+];
+const hubNorm = t => String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')
+  .replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]/gu, '')
+  /* A ratio written with a colon is spoken as "to": 2:3 → "2 to 3".
+         Units are spelled out so the voice does not read them letter by letter.
+         No word boundary before the unit: it has to catch "20mL" as well as "mL". */
+      .replace(/°/g, ' degrees ')
+      .replace(/([A-Za-z0-9.]+)\s*:\s*([A-Za-z0-9.]+)/g, '$1 to $2')
+      .replace(/mL\b/g, ' milliliters ').replace(/cm\b/g, ' centimeters ')
+      .replace(/Hz\b/g, ' hertz ')
+      .replace(/\s+/g, ' ').replace(/ ([.,!?])/g, '$1').trim();
+const hubSent = t => String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
+const hubKey = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
+let introDone = false;
+function openIntro(){
+  const ov=$('#introOv'); ov.style.display='flex';
+  $('#introText').innerHTML = HUB_ITEMS.map((t, i) => '<div style="margin:6px 0">' + (i + 1) + '. ' + t + '</div>').join('');
+  /* 2026-09-27 — 읽는 문장을 따라가 진하게 하던 것을 그만둔다. 문장 길이와 mp3 길이가 어긋나
+     글씨와 소리가 따로 놀았다. 처음부터 모두 진하게 보인다(사용자 지시). */
+  const paintSay = () => { $('#introSay').innerHTML = HUB_SAY.map(l =>
+    '<div style="margin:3px 0;color:#8c491a;font-weight:800">' + l + '</div>').join(''); };
+  paintSay();
+  const parts=[]; HUB_SAY.forEach(l=>hubSent(hubNorm(l)).forEach(x=>parts.push(x)));
+  const man = window.RS_TTS || {};
+  const enable = () => { introDone=true; const b=$('#introGo'); b.disabled=false; b.style.background='#c67139'; b.style.cursor='pointer';
+    $('#introWait').textContent='All done! Now let\'s go exploring'; };
+  if (introDone) { enable(); return; }
+  let i=0;
+  const next=()=>{
+    if(i>=parts.length){ enable(); return; }
+    const k=hubKey('ratio|'+parts[i]); i++;
+    if(!man[k]){ next(); return; }
+    const a=new Audio('tts/'+k+'.mp3?v='+(window.RS_TTS_V||'1'));
+    a.onended=()=>setTimeout(next,200); a.onerror=()=>next();
+    a.play().catch(()=>{ enable(); });   /* 소리를 막아 둔 기기에서는 곧바로 열어 준다 */
+  };
+  next();
+}
+let code='';
+function paint(){const b=$('#codeShow').children;
+  for(let i=0;i<b.length;i++){const el=b[i];el.textContent=code[i]||'';
+    el.className='cbox'+(code[i]?' filled':(i===code.length?' cur':''));}}
+/* 게스트 단추를 보일지 — 학생 수집 시작 전에 false 로 바꾼다(2026-09-27)
+   2026-10-13 false: 코드가 막힌 학생이 게스트로 들어가 기록 없이 앱을 마쳤다(사용자 지시로 감춤).
+   게스트로 할 학생은 연구자가 주소 끝에 ?guest=1 을 붙여 열어 준다. */
+/* 2026-10-22(최종 프로토타입) — 평가가 끝났으므로 코드 없이 둘러보는 게스트 단추를 다시 보인다 */
+const GUEST_LINK = true;
+function openLogin(){
+  try {
+    const q = new URLSearchParams(location.search).get('guest') === '1';
+    $('#guestBtn').style.display = (GUEST_LINK || q) ? '' : 'none';
+  } catch(e) {}code='';paint();padPaint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
+function showChip(code){
+  $('#chipNo').textContent=code==='guest'?'Guest':code;
+  $('#chip').style.display='inline-block';
+  $('#chgBtn').style.display='inline-block';
+  $('#guestNote').style.display=code==='guest'?'inline-flex':'none';
+  /* 게스트는 비밀 카드를 모으지 않으므로 지갑도 숨긴다(2026-09-14) */
+  $('#wallet').style.display=code==='guest'?'none':'';}
+/* 카드는 시작할 때 거저 주지 않는다 — 1 · 6 · 1 · 8 네 장을 색깔·소리 두 방에서
+   직접 찾아내야 하고(방마다 두 장), 넷이 모여야 비의 비밀 마지막 문이 열린다. */
+function refresh(){
+  const dn=getDone();
+  $('#walN').textContent=getCards().length;
+  const ORDER=DEEP?['color','sound','map']:['color','sound'];
+  const next=ORDER.find(r=>!dn.includes(r));
+  const guest=(getUser()==='guest');
+  /* 방 게이트 — 식별 코드로 참여하는 학습자는 색깔 → 소리 → 지도 순서로만 연다.
+     앞 방에서 만든 비를 다음 방에서 다시 만나게 하는 설계이므로 순서가 내용의 일부다.
+     게스트는 기록이 남지 않는 자유 탐색이므로 모든 방을 연다. 색깔 방은 언제나 열려 있다. */
+  const GATE=[
+    {r:'sound',card:'#soundCard',lock:'#soundLock',href:'SoundRoom.dc.html',
+      open:guest||dn.includes('color')},
+    {r:'map',  card:'#mapCard',  lock:'#mapLock',  href:'MapRoom.dc.html',
+      open:DEEP&&(guest||(dn.includes('color')&&dn.includes('sound')))}
+  ];
+  const opened={color:true};
+  GATE.forEach(g=>{opened[g.r]=g.open;
+    const c=$(g.card); if(!c)return;
+    c.classList.toggle('locked',!g.open);
+    const lk=$(g.lock); if(lk)lk.style.display=g.open?'none':'inline-flex';
+    if(g.open){c.setAttribute('href',g.href);c.onclick=null;}
+    else{c.removeAttribute('href');c.onclick=e=>{e.preventDefault();};}});
+  /* 방으로 떠나는 때를 남긴다 — 방 진입 순서와 허브 체류가 이것으로만 복원된다.
+     잠긴 방을 눌러 본 것(open:0)도 남긴다. 열리지 않는 카드를 거듭 누르는 것은
+     게이트 규칙을 이해하지 못했다는 뜻이므로 그 자체가 사용성 자료다. */
+  document.querySelectorAll('a.room,.room').forEach(c=>{
+    if(c.__lg)return; c.__lg=1;
+    c.addEventListener('click',()=>{
+      const r=c.getAttribute('data-r')||'';
+      plog(getUser(),'room_open',{room:r,open:opened[r]?1:0,done:getDone(),ms:Date.now()-HUB_T0});
+    },true);});
+  /* 비의 비밀은 허브에 두지 않는다 — 소리의 비밀을 마치면 그 화면에서 바로 이어진다 */
+  document.querySelectorAll('.room').forEach(a=>{
+    a.classList.remove('next-room');
+    const old=a.querySelector('.donechk'); if(old)old.remove();
+    if(dn.includes(a.dataset.r)){const s=document.createElement('span');s.className='donechk';s.textContent='✅';a.appendChild(s);}
+    if(!guest&&a.dataset.r===next&&opened[a.dataset.r])a.classList.add('next-room');});
+}
+/* 화면 키패드 — 누를 차례에 맞는 단추만 띄운다.
+   첫 칸이면 E·S 둘만, 그 뒤로는 0~9만. 고를 것이 적어야 아이가 헤매지 않는다. */
+function padPaint(){
+  const pg=$('#padGrid'); if(!pg) return;
+  const first=(code.length===0);
+  pg.classList.toggle('heads',first);
+  pg.innerHTML='';
+  (first?CODE_HEADS:CODE_DIGITS).split('').forEach(ch=>{
+    const b=document.createElement('button');
+    b.type='button'; b.dataset.k=ch; b.textContent=ch;
+    if(!first) b.className='num';
+    pg.appendChild(b);});
+  const h=$('#padHint');
+  if(h) h.textContent = first ? 'First, tap the letter — E for experts, S for students'
+                              : 'Now tap two numbers';
+}
+async function submitCode(){
+  if($('#loginOv').style.display!=='flex')return; /* Enter+클릭이 겹쳐 두 번 들어오는 것 차단 */
+  const v=code.toUpperCase();
+  if(!CODE_RE.test(v)){$('#lgErr').textContent='Tap in the code the researcher gave you — one letter (E or S) and two numbers';return;}
+  /* 2026-09-27 — 다른 기기에서 이미 쓴 코드는 들어가지 못한다(사용자 지시).
+     잘못 눌러 잠긴 코드는 연구용 시트의 「코드사용」 탭에서 그 줄을 지우면 다시 열린다. */
+  if(submitCode._busy) return; submitCode._busy=1;
+  $('#lgErr').textContent='Checking your code…';
+  const r=await checkCode(v);
+  submitCode._busy=0;
+  if(!r.allow){
+    $('#lgErr').textContent='This code is already in use. Please tell the researcher.';
+    code=''; paint(); padPaint();
+    return;
+  }
+  saveUser(v);showChip(v);$('#loginOv').style.display='none';plog(v,'login',{dev:devId()});refresh();}
+function press(k){
+  if(k==='del'){code=code.slice(0,-1);}
+  else if(k==='go'){submitCode();return;}
+  else if(code.length<3){
+    const ch=String(k).toUpperCase();
+    /* 차례에 맞지 않는 글자는 받지 않는다 — 첫 칸은 E·S, 뒤 두 칸은 숫자 */
+    const ok = code.length===0 ? CODE_HEADS.indexOf(ch)>=0 : CODE_DIGITS.indexOf(ch)>=0;
+    if(!ok){$('#lgErr').textContent = code.length===0
+      ? 'The first letter is E or S' : 'The last two are numbers';return;}
+    code+=ch;
+  }
+  $('#lgErr').textContent='';paint();padPaint();
+  /* 세 칸이 다 차면 바로 들어간다 — 「시작!」을 한 번 더 누르지 않아도 된다 */
+  if(code.length===3) setTimeout(submitCode,180);}
+$('#padGrid').addEventListener('click',e=>{const b=e.target.closest('button');if(b)press(b.dataset.k);});
+document.querySelectorAll('.padrow button').forEach(b=>b.onclick=()=>press(b.dataset.k));
+/* 크롬북·태블릿 외장 키보드 입력도 그대로 받는다(소문자는 자동으로 대문자 변환) */
+addEventListener('keydown',e=>{
+  if($('#loginOv').style.display!=='flex')return;
+  if(e.key==='Backspace'){e.preventDefault();press('del');return;}
+  if(e.key==='Enter'){e.preventDefault();press('go');return;}
+  if(e.key.length!==1||e.ctrlKey||e.metaKey||e.altKey)return;
+  const ch=e.key.toUpperCase();
+  e.preventDefault();
+  if(CODE_CHARS.indexOf(ch)>=0)press(ch);
+  else $('#lgErr').textContent='That character is not used in codes. Please tap a button on the screen';});
+$('#guestBtn').onclick=()=>{saveUser('guest');try{localStorage.setItem('rs3_guest_ok','1');}catch(e){}showChip('guest');$('#loginOv').style.display='none';refresh();};
+$('#introBtn').onclick=()=>{ plog(getUser(),'intro_open',{}); openIntro(); };
+$('#introGo').onclick=()=>{ $('#introOv').style.display='none'; plog(getUser(),'intro_done',{}); };
+$('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');localStorage.removeItem('rs3_guest_ok');}catch(e){}
+  $('#chip').style.display='none';$('#chgBtn').style.display='none';$('#guestNote').style.display='none';$('#wallet').style.display='';openLogin();};
+/* 2026-09-19: 저장되어 있던 옛 코드는 검사 없이 그대로 쓰였다. CODE_RE는
+   숫자판 입력에만 걸려 있어, 규칙에 맞지 않는 값이 남아 있으면 그 값으로 기록이 쌓였다.
+   규칙에 맞지 않으면 지우고 로그인 화면을 띄운다. */
+let u=getUser();
+if(u&&u!=='guest'&&!CODE_RE.test(u)){try{localStorage.removeItem('rs3_user');}catch(e){}u='';}
+/* 2026-10-13: 게스트 단추를 감춰도, 전에 게스트로 들어간 기기에는 rs3_user=guest가 남아 있어
+   허브가 로그인 없이 게스트로 열렸다. ?guest=1 로 연구자가 열어 준 기기(rs3_guest_ok)가 아니면 지운다. */
+if(u==='guest'&&!GUEST_LINK){let ok=false;
+  try{ok=localStorage.getItem('rs3_guest_ok')==='1'||new URLSearchParams(location.search).get('guest')==='1';}catch(e){}
+  if(!ok){try{localStorage.removeItem('rs3_user');}catch(e){}u='';}}
+if(u){showChip(u);}else{openLogin();}
+refresh();
+</script>
+</body>
+</html>
