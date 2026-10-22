@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>소리의 방 1번째 대사 확인</title>
+<style>
+  body{margin:0;min-height:100vh;display:grid;place-items:center;
+       font-family:"Noto Sans KR","Malgun Gothic",sans-serif;background:#faf7f2;color:#2b2622}
+  .box{width:min(92vw,540px);background:#fff;border:3px solid #e6b34a;border-radius:18px;padding:28px}
+  h1{font-size:20px;margin:0 0 14px}
+  p{font-size:15px;line-height:1.7;margin:0 0 10px;color:#4a423b}
+  b{color:#a9761c}
+  a.go{display:block;margin-top:18px;text-align:center;text-decoration:none;
+       background:#e6b34a;color:#2b2622;font-size:17px;padding:14px;border-radius:999px}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>🎼 소리의 방 · 1번째 대사 확인</h1>
+  <p>색깔 방을 마친 학습자로 표시해 두었습니다. 이 상태에서만 나오는
+     <b>네 문장짜리 첫 대사</b>가 이번에 고친 부분입니다.</p>
+  <p>버튼을 누르면 소리의 방이 열립니다. 첫 화면에서 바로 나오는 낭독이
+     다른 단계의 레시오 목소리와 같은지 들어 보세요.</p>
+  <a class="go" href="../SoundRoom.dc.html">소리의 방 열기 →</a>
+</div>
+<script>
+  /* 이 페이지와 SoundRoom이 같은 출처이므로 여기서 심어 둔 진도가 그대로 읽힌다 */
+  try {
+    localStorage.setItem('rs3_user', JSON.stringify({ code: 'preview' }));
+    localStorage.setItem('rs3_done:preview', JSON.stringify(['color']));
+  } catch (e) {}
+</script>
+</body>
+</html>

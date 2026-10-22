@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/styles.css">
+<script src="_ds/organic-3a905540-269d-4093-86d4-de60cd03c54c/_ds_bundle.js"></script>
+<script src="tts/manifest.js?v=202609280205"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-weight:400;background:var(--color-bg);color:var(--color-text);overscroll-behavior:none;font-variant-numeric:tabular-nums}
+b,strong{font-weight:700;color:var(--color-accent-700)}
+[data-blank]{font-weight:400}
+a{color:var(--color-accent-700);text-decoration:none}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--color-accent);outline-offset:3px}
+::selection{background:var(--color-accent-200)}
+@keyframes rsUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes rsPop{0%{transform:scale(.82);opacity:0}60%{transform:scale(1.04)}100%{transform:none;opacity:1}}
+@keyframes rsFall{to{transform:translateY(110vh) rotate(560deg)}}
+.rs-round{flex:none;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:999px;border:2.5px solid var(--color-neutral-300);background:var(--color-neutral-100);font-size:19px;cursor:pointer;color:var(--color-accent-700)}
+.rs-round:hover{background:var(--color-neutral-200)}
+.rs-pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:13px 28px;border-radius:999px;border:none;background:var(--color-accent);color:var(--color-neutral-100);font-size:19px;cursor:pointer;box-shadow:var(--shadow-md);text-decoration:none}
+.rs-pill:hover{background:var(--color-accent-600)}
+.rs-pill:active{background:var(--color-accent-700)}
+.rs-pill2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:11px 20px;border-radius:999px;border:3px solid var(--color-neutral-300);background:var(--color-neutral-100);color:var(--color-accent-700);font-size:16px;cursor:pointer}
+.rs-pill2:hover{background:var(--color-neutral-200)}
+.rs-choice{min-height:60px;padding:14px 28px;border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);color:var(--color-accent-700);font-size:20px;cursor:pointer;max-width:100%}
+.rs-choice:hover{background:var(--color-accent-100)}
+.rs-dial{font-family:inherit;font-weight:700;font-size:19px;color:var(--color-text);line-height:1.6}
+@media (max-width:1080px){.rs-fit{zoom:.9}}
+@media (max-width:700px){.rs-fit{zoom:.62}}
+/* ── 무대 카드 + 대사 자막 ──
+   도우미 대사는 좀은 좌측 세로 패널이 아니라 무대 카드 상단에 얹힌 자막 띄로 보여 준다.
+   자막 띄·과제 영역·이동 막대가 한 카드 안의 세 층이라 같은 면으로 읽히고,
+   조작물은 자막 아래 칸에만 놓이므로 자막이 조작을 가리지 않는다. */
+.rs-stage{flex:1 1 auto;width:100%;max-width:1160px;min-width:0;min-height:0;display:flex;flex-direction:column;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.rs-sub{flex:none;display:flex;align-items:flex-start;gap:14px;padding:11px 18px 13px;background:var(--color-accent-100);border-bottom:2.5px solid var(--color-neutral-300);max-height:40dvh;overflow:auto}
+.rs-sub-who{flex:none;width:76px;height:76px;margin-top:2px}
+.rs-sub-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.rs-sub-tag{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rs-sub-name{font-size:16.5px;line-height:1.3}
+.rs-sub-text{margin:0;font-size:21px;line-height:1.62;font-weight:400;text-wrap:pretty;white-space:pre-line;max-width:74ch}
+.rs-sub-hi{align-self:flex-start;margin-top:5px;font-size:15.5px;color:var(--color-accent-700);background:var(--color-neutral-100);border-radius:var(--radius-md);padding:7px 13px;line-height:1.5;max-width:74ch}
+.rs-play{flex:1;min-width:0;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:8px;padding:8px}
+.rs-nav{flex:none;display:flex;justify-content:center;padding:8px 14px;border-top:2px solid var(--color-neutral-200);background:var(--color-neutral-100)}
+.rs-nav-in{width:100%;max-width:900px;display:flex;align-items:center;gap:8px;justify-content:space-between}
+@media (max-width:1080px){.rs-sub-text{font-size:19px}}
+@media (max-width:700px){.rs-sub{gap:9px;padding:8px 11px 10px;max-height:46dvh}.rs-sub-who{width:58px;height:58px}.rs-sub-text{font-size:17px;line-height:1.55}.rs-sub-hi{font-size:14.5px}.rs-play{padding:4px}}
+/* 좁은 화면에서 헤더가 가로로 넘치지 않도록: 간격·제목을 줄이고 진행 막대는 감춘다(진행은 n/N 글자로 읽힘) */
+@media (max-width:700px){
+  .rs-hd{gap:6px !important;padding:6px 8px !important}
+  .rs-hd-title{font-size:17px !important}
+  .rs-hd-bar{display:none !important}
+}
+</style>
+</helmet>
+
+<div style="height:100dvh;display:flex;flex-direction:column;background:var(--color-bg)">
+
+  <header class="rs-hd" style="flex:none;display:flex;align-items:center;gap:10px;padding:var(--space-2) var(--space-3);background:var(--color-neutral-100);border-bottom:2px solid var(--color-neutral-300)">
+    <a href="index.html" aria-label="홈으로" class="rs-round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    </a>
+    <div class="rs-hd-title" style="flex:none;font-family:'Do Hyeon','Noto Sans KR',sans-serif;font-size:20px">지도의 비밀</div>
+    <div class="rs-hd-bar" style="flex:1;min-width:36px;height:12px;border-radius:999px;background:var(--color-neutral-200);overflow:hidden">
+      <div style="height:100%;width:{{pct}}%;border-radius:999px;background:linear-gradient(90deg,var(--color-accent),var(--color-accent-400));transition:width .4s ease"></div>
+    </div>
+    <div style="flex:none;font-size:13px;font-weight:800;color:var(--color-neutral-700);white-space:nowrap">{{stepLabel}}</div>
+    <div data-cards-badge="1" style="flex:none;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--color-accent-200);border:2.5px solid var(--color-accent-400);font-size:16px;color:var(--color-accent-700);white-space:nowrap">🃏 {{cards}}/4</div>
+    <button onClick="{{cycleAudio}}" aria-label="소리 설정" title="{{audioTitle}}" class="rs-round">{{audioIcon}}</button>
+  </header>
+
+  <main style="flex:1;min-height:0;overflow:hidden;display:flex;padding:8px;align-items:stretch;justify-content:center">
+
+    <section class="rs-stage">
+
+      <!-- 대사 자막 — 무대 카드 상단에 얹힌 띄. 초상·이름은 자막 왼쪽에 인라인으로 붙는다 -->
+      <div class="rs-sub">
+        <sc-if value="{{coachImgEl}}" hint-placeholder-val="{{false}}">
+          <div class="rs-sub-who">{{coachImgEl}}</div>
+        </sc-if>
+        <sc-if value="{{coachEmoji}}" hint-placeholder-val="{{true}}">
+          <div class="rs-sub-who" style="border-radius:999px;border:3px solid var(--color-accent-400);background:var(--color-accent-200);display:flex;align-items:center;justify-content:center;font-size:42px">{{coachEmoji}}</div>
+        </sc-if>
+        <div class="rs-sub-body">
+          <div class="rs-sub-tag">
+            <div class="rs-sub-name">{{coachName}}</div>
+          </div>
+          <p class="rs-sub-text">{{coachText}}</p>
+          <sc-if value="{{coachHi}}" hint-placeholder-val="{{true}}">
+            <div class="rs-sub-hi">{{coachHi}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{replay}}" aria-label="대사 다시 듣기" title="대사 다시 듣기" class="rs-round" style="margin-top:2px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.75" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+
+      <div class="rs-play">
+
+      <sc-if value="{{isStory}}" hint-placeholder-val="{{true}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .35s ease;margin:auto 0">
+          <sc-if value="{{storyArt}}" hint-placeholder-val="{{false}}">
+            <div>{{storyArt}}</div>
+          </sc-if>
+          <sc-if value="{{storyEmoji}}" hint-placeholder-val="{{true}}">
+            <div style="font-size:96px;line-height:1">🗺️</div>
+            <div style="font-size:22px;color:var(--color-neutral-700);text-align:center;max-width:560px;line-height:1.6">지도 속에 숨은 <b>비</b>의 비밀을 함께 찾아봐요!</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isScale}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div style="max-width:98%;overflow-x:auto">{{mapEl}}</div>
+          <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{choices}}" as="c" hint-placeholder-count="3">
+              <button onClick="{{c.pick}}" class="rs-choice">{{c.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isZoom}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);width:100%;animation:rsUp .3s ease">
+          <div style="max-width:98%;overflow-x:auto">{{mapEl}}</div>
+          <sc-if value="{{zoomQ}}" hint-placeholder-val="{{true}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;animation:rsUp .3s ease">
+              <div class="rs-dial" style="font-size:20px;text-align:center">{{zoomQ}}</div>
+              <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+                <sc-for list="{{zq}}" as="c" hint-placeholder-count="3"><button onClick="{{c.pick}}" class="rs-choice">{{c.t}}</button></sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isMovie}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);animation:rsUp .3s ease;width:100%">
+          <div style="font-size:16px;background:var(--color-accent-100);color:var(--color-accent-700);border-radius:999px;padding:5px 16px">🏛️ 기원전 3세기 · 알렉산드리아</div>
+          <div class="rs-dial" style="font-size:20px;text-align:center"><b>에라토스테네스</b>를 만났어요!</div>
+          <div style="max-width:98%">{{meetEl}}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isComic}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);animation:rsUp .3s ease;width:100%">
+          <div style="max-width:98%;overflow-x:auto">{{comicEl}}</div>
+          <sc-if value="{{quizQ}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;animation:rsUp .3s ease">
+              <div class="rs-dial" style="font-size:19px;text-align:center;max-width:620px;background:var(--color-accent-100);border-radius:var(--radius-lg);padding:9px 18px">❓ {{quizQ}}</div>
+              <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+                <sc-for list="{{quiz}}" as="c" hint-placeholder-count="3">
+                  <button onClick="{{c.pick}}" class="rs-choice" style="font-size:17.5px;border-color:{{c.bd}};background:{{c.bg}};color:{{c.fg}}">{{c.t}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isProp}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-2);width:100%;animation:rsUp .3s ease">
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:700px"><b>지구의 둘레 구하기!</b><br>두 도시 그림자 각도의 차이 <b>7.2°</b> : 원 전체 <b>360°</b> = <b>1 : 50</b><br>두 도시 사이가 <b>800km</b>일 때, 지구 한 바퀴는 몇 km일까요?</div>
+          <div style="max-width:98%;overflow-x:auto">{{propEl}}</div>
+          <div class="rs-dial" style="font-size:22px">1 : 50 = 800km : <b>( ? )</b></div>
+          <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+            <sc-for list="{{quiz}}" as="c" hint-placeholder-count="3">
+              <button onClick="{{c.pick}}" class="rs-choice" style="border-color:{{c.bd}};background:{{c.bg}};color:{{c.fg}}">{{c.t}}</button>
+            </sc-for>
+          </div>
+          <sc-if value="{{propRevealEl}}" hint-placeholder-val="{{false}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;animation:rsPop .4s ease">
+              <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700)">에라토스테네스가 남긴 셈 — 800km × 50 = 40,000km</div>
+              <div style="max-width:98%">{{propRevealEl}}</div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isReflect}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-3);animation:rsUp .3s ease;margin:auto 0">
+          <div style="font-size:48px;line-height:1">📝</div>
+          <div class="rs-dial" style="font-size:20px;text-align:center;max-width:min(600px,92vw);line-height:1.55">여러분이 직접 <b>지도를 만든다면</b>, 무엇을 <b>조사</b>하고 무엇을 <b>이용</b>해야 할까요? 한 줄로 적어 보세요!</div>
+          <textarea value="{{refText}}" onChange="{{refInput}}" placeholder="(  )을 조사하고, (  )을 이용해서 지도를 만들 거예요" aria-label="내 말로 정리" style="width:min(560px,90vw);min-height:100px;font-size:19px;border-radius:var(--radius-lg);border:3px solid var(--color-neutral-300);padding:12px;resize:none;font-family:inherit;background:var(--color-neutral-100);color:var(--color-text)"></textarea>
+        </div>
+      </sc-if>
+
+      <!-- 감각 잇기(지침 2.3) — 세 방에서 만난 비를 나란히 놓고 비교하게 한다 -->
+      <sc-if value="{{isBridge}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:100%;animation:rsUp .3s ease;margin:auto 0">
+          <div style="display:flex;gap:min(4vw,20px);align-items:stretch;justify-content:center;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-400);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🎨 색깔의 방</div>
+              <div style="font-size:26px;color:var(--color-accent-700)">1 : 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">빨강과 노랑의 양</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-2-400);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🎵 소리의 방</div>
+              <div style="font-size:26px;color:var(--color-accent-2-700)">1 : 2</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">두 음의 진동수</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--color-neutral-100);border:3px solid var(--color-accent-500);border-radius:20px;padding:13px 18px;min-width:min(180px,86vw)">
+              <div style="font-size:14px;font-weight:800;color:var(--color-neutral-700)">🗺️ 지도의 방</div>
+              <div style="font-size:26px;color:var(--color-accent-700)">1 : 50</div>
+              <div style="font-size:13px;font-weight:700;color:var(--color-neutral-600);text-align:center">7.2도와 360도 · 800km와 지구 둘레</div>
+            </div>
+          </div>
+          <div class="rs-dial" style="font-size:19px;text-align:center;max-width:min(640px,92vw)">세 방에서 찾은 것은 <b>어떤 점이 같을까요?</b></div>
+          <div style="display:flex;flex-direction:column;gap:11px;align-items:stretch;max-width:min(640px,92vw);width:100%">
+            <sc-for list="{{bridgeOpts}}" as="o" hint-placeholder-count="3">
+              <button onClick="{{o.pick}}" style="min-height:58px;padding:14px 22px;border-radius:18px;border:3px solid {{o.bd}};background:{{o.bg}};color:var(--color-text);font-size:18px;cursor:pointer;text-align:left;line-height:1.45">{{o.t}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isBlank}}" hint-placeholder-val="{{false}}">
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:12px;width:100%">
+          <div data-card-panel="1" style="flex:none;background:var(--color-neutral-100);border:3.5px solid var(--color-accent-400);border-radius:24px;padding:16px 22px;max-width:720px;width:min(96%,720px);box-shadow:var(--shadow-md)">
+            <sc-if value="{{cardTitle}}" hint-placeholder-val="{{false}}">
+              <div style="font-size:20px;color:var(--color-accent-700);margin-bottom:8px">{{cardTitle}}</div>
+            </sc-if>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+              <div style="font-size:19px;font-weight:700;line-height:2.4;text-wrap:pretty">
+                <sc-for list="{{r.tokens}}" as="tk" hint-placeholder-count="3">
+                  <span data-blank="{{tk.key}}" onClick="{{tk.tap}}" style="display:{{tk.disp}};min-width:{{tk.minw}};min-height:{{tk.minh}};padding:{{tk.pad}};margin:{{tk.mar}};border-radius:{{tk.rad}};border-bottom:{{tk.bb}};background:{{tk.bg}};color:{{tk.fg}};text-align:center;vertical-align:middle;cursor:{{tk.cur}};outline:{{tk.out}}">{{tk.t}}</span>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:720px">
+            <sc-for list="{{bank}}" as="b" hint-placeholder-count="4">
+              <button onPointerDown="{{b.down}}" style="min-height:56px;padding:13px 24px;border-radius:18px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;cursor:grab;visibility:{{b.vis}};touch-action:none;color:var(--color-accent-700)">{{b.t}}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:15px;font-weight:700;color:var(--color-neutral-700);text-align:center;max-width:640px;background:var(--color-neutral-100);border:2.5px solid var(--color-neutral-300);border-radius:999px;padding:7px 18px">✋ 낱말을 <b>손가락이나 마우스로 누른 채 끌어서</b> 빈칸 위에 놓아 주세요</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isFinish}}" hint-placeholder-val="{{false}}">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:15px;animation:rsPop .5s ease;margin:auto 0">
+          <div style="font-size:72px;line-height:1">🗺️</div>
+          <div class="rs-dial" style="font-size:22px;text-align:center">지도의 비밀을 모두 찾아냈어요!</div>
+          <sc-if value="{{vidBtn}}" hint-placeholder-val="{{true}}">
+            <button onClick="{{openVid}}" class="rs-pill2">🎬 에라토스테네스 이야기 영상 보기</button>
+          </sc-if>
+          <sc-if value="{{vidOpen}}" hint-placeholder-val="{{false}}">
+            <video onEnded="{{movieEnd}}" src="eratos.mp4?v=2" controls playsinline preload="metadata" style="width:min(560px,88vw);border-radius:var(--radius-md);border:3px solid var(--color-neutral-300);background:var(--color-neutral-900)"></video>
+          </sc-if>
+          <a href="index.html" onClick="{{goNext}}" class="rs-pill" style="min-height:64px;padding:18px 36px;font-size:21px">🏠 처음 화면으로 →</a>
+        </div>
+      </sc-if>
+
+      </div>
+
+      <!-- 이동 막대 — 무대 카드 아래층에 고정(과제 영역이 길어져도 가려지지 않음) -->
+      <div class="rs-nav">
+        <div class="rs-nav-in">
+        <button onClick="{{prev}}" aria-label="이전" class="rs-pill2" style="opacity:{{prevOp}};min-height:48px;font-size:15px;color:var(--color-neutral-700)">← 이전</button>
+        <div style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center">
+          <sc-if value="{{footHint}}" hint-placeholder-val="{{false}}">
+            <div style="text-align:center;font-size:13px;font-weight:700;color:var(--color-neutral-700)">{{footHint}}</div>
+          </sc-if>
+        </div>
+        <sc-if value="{{showPrimary}}" hint-placeholder-val="{{true}}">
+          <button onClick="{{primary}}" class="rs-pill" style="min-height:50px;font-size:18px;background:{{primaryBg}}">{{primaryLabel}}</button>
+        </sc-if>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+    <div style="position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:60;width:min(94vw,560px);animation:rsUp .25s ease">
+      <div style="background:var(--color-neutral-100);border:4px solid {{toastBd}};border-radius:var(--radius-lg);padding:17px 21px;box-shadow:var(--shadow-lg);display:flex;gap:13px;align-items:flex-start">
+        <div style="font-size:30px;line-height:1;flex:none">{{toastIcon}}</div>
+        <div style="min-width:0">
+          <div style="font-size:20px;line-height:1.4">{{toastTitle}}</div>
+          <sc-if value="{{toastBody}}" hint-placeholder-val="{{false}}">
+            <div style="font-size:16.5px;font-weight:400;line-height:1.6;color:var(--color-neutral-800);margin-top:4px">{{toastBody}}</div>
+          </sc-if>
+        </div>
+        <button onClick="{{closeToast}}" aria-label="닫기" class="rs-round" style="margin-left:auto;width:40px;height:40px;font-size:16px;border-width:2px">✕</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+  LOG_TK = 'ratiosense-2026';
+  LAB = 'mapV3';
+
+  /* 배율 문제 — 100%에서 3cm인 다리를 120·200%로 확대하면? */
+  /* 확대는 200%만 다룬다. zi:0 이므로 문제를 푸는 동안 지도가 100%(3cm)로 그려지고,
+     맞히면 200%(6cm)로 커진다. 120% 항목이 남아 있으면 문제 화면이 3.6cm로 그려져
+     「3cm였던 다리가」라는 대사와 어긋난다. */
+  ZOOMQ = [
+    { p:200, ans:'6cm', opts:[['6 cm',1],['5 cm',0],['9 cm',0]] }
+  ];
+
+  OBJS = [
+    { em:'🌉', n:'다리', dim:'길이', josa:'는', cells:3, real:300, shape:'rect',
+      opts:[['30,000 cm',1],['3,000 cm',0],['300 cm',0]] },
+    { em:'🛣️', n:'도로', dim:'길이', josa:'는', cells:5, real:500, shape:'road',
+      opts:[['50,000 cm',1],['5,000 cm',0],['500 cm',0]] },
+    /* 축척을 알려 주는 대신 학습자가 먼저 찾아보게 하는 물음 */
+    { em:'📏', n:'한 칸', dim:'길이', josa:'는', cells:1, real:100, shape:'unit',
+      opts:[['10,000 cm',1],['100 cm',0],['1,000 cm',0]] }
+  ];
+
+  /* 대사 속 물음에 답을 고르는 선택 버튼 — 정답을 즉시 알려 주지 않고 hintNext 3단계로 안내 */
+  QUIZ = {
+    c2: {
+      q: '같은 날 같은 시각인데, 어째서 한쪽에만 그림자가 생겼겠소?',
+      opts: [
+        ['지구가 둥글기 때문이다', 1],
+        ['그날만 해가 기울었기 때문이다', 0],
+        ['막대를 기울여 꽂았기 때문이다', 0]
+      ],
+      okT: '그렇소! 지구가 둥글기 때문이오',
+      okB: '땅이 둥글게 굽어 있으니 두 도시의 막대는 서로 다른 쪽을 향한다오. 그래서 나는 지구가 둥근 원이라고 생각하기로 했소.',
+      hints: [
+        '두 막대는 모두 땅에 똑바로 세웠고, 해도 하나뿐이오. 그렇다면 두 도시에서 다른 것은 무엇이겠소?',
+        '땅이 평평하다면 두 막대는 같은 쪽을 향해 서 있을 것이오. 그러면 그림자도 똑같아야 하지 않겠소?',
+        '땅의 모양을 바꾸어 그려 보시오. 땅이 어떤 모양이라야 두 막대가 서로 다른 쪽을 향하게 되겠소?'
+      ]
+    },
+    c4: {
+      q: '7.2° : 360° 을 간단히 하면 어떤 비가 되겠소?',
+      opts: [
+        ['1 : 50', 1],
+        ['1 : 5', 0],
+        ['7 : 360', 0]
+      ],
+      okT: '바로 그 비라오! 7.2° : 360° = 1 : 50',
+      okB: '두 도시 사이의 각은 한 바퀴의 50분의 1이오. 그러니 두 도시 사이 거리도 지구 둘레의 50분의 1이 된다오.',
+      hints: [
+        '비를 간단히 할 때는 두 수를 같은 수로 나누면 되오. 여기서는 앞의 수 7.2로 나누어 보시오.',
+        '7.2 ÷ 7.2 는 1이오. 그러면 360 ÷ 7.2 는 얼마가 되겠소? 방금 내 이야기 속에 그 수가 있었다오.',
+        '7.2를 열 번 더하면 72이고, 72가 다섯 번이면 360이오. 그러니 7.2가 모두 몇 번 들어가는지 세어 보시오.'
+      ]
+    },
+    prop: {
+      q: '1 : 50 = 800km : ( ? ) — 지구 한 바퀴는 몇 km이겠소?',
+      opts: [
+        ['40,000 km', 1],
+        ['4,000 km', 0],
+        ['850 km', 0]
+      ],
+      okT: '지구는 거의 40,000km — 맞았소! 🌍',
+      okB: '2,200년 전에 그림자와 두 도시 사이 거리만으로 구한 값이라오. 오늘날 재어 본 지구 둘레와 거의 같다오.',
+      hints: [
+        '앞의 비 1 : 50에서 1이 800이 되려면 몇 배를 한 것이겠소? 왼쪽에 한 일은 오른쪽에도 똑같이 해야 하오.',
+        '1에 800을 곱해 800이 되었으니, 50에도 똑같이 800을 곱해야 비가 지켜진다오.',
+        '50 × 800을 차근차근 세어 보시오. 800의 열 배가 8,000이니, 그것을 다시 다섯 배 하면 되오.'
+      ]
+    }
+  };
+
+  /* 카드 문제 — 이 방을 통과해야 비밀 카드의 숫자를 받는다.
+     dist·earth 두 장은 예전 비의 비밀에 모아 두었던 지도 카드를 이 방으로 옮겨 온 것이다. */
+  BLANKS = {
+    secret: { card:true, title:'🃏 지도의 비밀 카드', rows:[
+        ['지도는 실제 거리를 일정한 ', {a:'비율'}, ' 로 줄여 나타낸 것이다.'],
+        ['축척 1:10,000은 실제 거리를 ', {a:'10,000'}, ' 분의 1로 줄인 것이다.'] ],
+      bank:['비율','10,000','거리','100'] },
+    /* 없어진 마트의 비밀 문제를 지도의 맥락으로 옮긴 두 장.
+       '1개당 값' → '1cm당 실제 거리', '어느 가게가 싼가' → '어느 지도가 자세한가' */
+  };
+  /* 이 방을 마치면 받는 황금비 숫자 — 1.618 의 넷째 자리 */
+  DIGIT = { id:'map', d:'8', concept:'지도는 실제 거리를 일정한 비율로 줄인 것!' };
+
+  WHO = {
+    /* role은 화면에 띄우지 않는다 — 이름 옆 역할 소개는 자막을 늘리고 대사보다 먼저 읽힌다.
+       연구 문서에서 배역을 가리킬 때 쓰는 자료로만 남긴다. */
+    /* 레시오 초상(ratio_portrait.jpg) — 원본에 원형 테두리가 그려져 있어 CSS 테두리를 덧대지 않는다(imgBare:1).
+       emoji는 이미지를 불러오지 못했을 때의 대체 표시 */
+    ratio:    { name:'레시오', role:'비의 비밀 탐색 안내자', emoji:'🧭',
+                img:'ratio_portrait.jpg', imgBare:1, pitch:1.06, rate:1.04, gap:160 },
+    eratos:   { name:'에라토스테네스', role:'지구를 처음 잰 옛 학자', emoji:'🧔', img:'eratos_portrait.jpg', pitch:0.82, rate:0.98, gap:190 },
+    narrator: { name:'안내', role:'문제를 읽어 주는 목소리', emoji:'📣', pitch:1.14, rate:1.05, gap:150 }
+  };
+
+  state = {
+    i:0, audio:'full', cards:0, toast:null, solved:{},
+    zVal:100, zPhase:0, qpicks:{}, vidOpen:false,
+    refText:'', bridgePick:null,
+    blanks:{}, used:{}, selBlank:null
+  };
+
+  get STEPS() {
+    return [
+      { k:'story', who:'ratio',
+        say:'이 방은 지도의 비밀 방이에요. 지금까지 두 방에서 배웠던 비를 이용해서 문제를 풀어볼 거예요!',
+        hi:'🗺️ 지도의 비밀 — 탐험 시작!', btn:'탐험 시작! →' },
+      /* 축척이 무엇인지 짚고 그 자리에서 바로 묻는다 — 설명이 화면에 남은 채 답을 고르게 된다 */
+      { k:'scale', oi:2, who:'ratio',
+        say:'지도는 넓은 땅을 종이 위에 담으려고 실제 거리를 일정한 비율로 줄여서 그린 그림이에요. 얼마나 줄였는지를 나타낸 것이 축척이에요. 지도 오른쪽 아래를 보면 축척 1 대 10,000이라고 적혀 있죠? 지도에서 1만큼이 실제로는 10,000만큼이라는 뜻이에요. 그러면 지도에서 1센티미터는 실제로 몇 센티미터일까요?',
+        hi:'📏 축척 1 : 10,000' },
+      { k:'scale', oi:0, who:'ratio',
+        say:'지도에 다리가 3센티미터로 그려져 있어요. 실제 다리는 얼마나 길까요?',
+        hi:'🌉 다리' },
+      { k:'zoom', zi:0, who:'ratio',
+        say:'현재 지도를 100퍼센트라고 할 때 지도를 200퍼센트로 확대해서 크게 보려고 해요. 3센티미터였던 지도의 다리가 몇 센티미터로 나타날까요?' },
+      /* 축척·배율 구간을 매듭짓고 에라토스테네스 이야기로 넘어가는 다리 */
+      { k:'story', who:'ratio', art:'scholar',
+        say:'지도의 비밀을 잘 알아봤어요! 이번에는 비를 이용해서 지도가 아닌 지구의 비밀도 풀어봐요! 위대한 수학자가 기다리고 있답니다.',
+        btn:'좋아요! →' },
+      { k:'movie', who:'eratos', sid:'m-movie',
+        say:"젊은 벗이여! 만나서 반갑소. 나는 옛 그리스의 수학자, '에라토스테네스' 라오. 내가 신기한 소식을 하나 들었소.",
+        hi:'🏛️ 2,200년 전 그리스 — 에라토스테네스를 만났어요' },
+      { k:'comic', ci:0, who:'eratos', sid:'m-comic1',
+        say:'남쪽 도시 시에네에서는 여름 한낮, 정오가 되면 그림자가 하나도 생기지 않는다고 하오. 해가 바로 머리 꼭대기에 있어 햇빛이 막대와 나란히 내려오기 때문이지. 막대와 햇빛이 이루는 각이 0도라는 뜻이라오.' },
+      { k:'comic', ci:1, who:'eratos', sid:'m-comic2',
+        say:'그런데 같은 시각, 북쪽 알렉산드리아에서는 막대에 그림자가 생긴단 말이오. 각을 재어 보니 7.2도였소. 같은 햇빛인데 각이 다르다니, 지구가 평평하다면 있을 수 없는 일이지요.' },
+      /* 각도의 비를 말한 그 화면에서 곧바로 지구 둘레를 구한다 */
+      { k:'prop', who:'eratos', sid:'m-prop', quiz:'prop',
+        say:'원 전체 360도를 7.2도로 나누면 50이라오. 1 대 50은 두 도시 대 지구 전체. 1 대 50은 800킬로미터 대 지구 둘레. 이제 비를 이용하여 지구의 둘레를 계산해 보시오.',
+        hi:'🌍 지구 둘레 — 1 : 50 = 800km : ?' },
+      /* 「내 말로 정리」는 앞서 직접 구해 본 것을 짚어 준 뒤에 묻는다(지침 5.3).
+         되짚기에 그치지 않고 「내가 지도를 만든다면」으로 옮겨 물어, 축척을 새 상황에
+         옮겨 쓰게 한다 — 조사할 것(실제 거리)과 이용할 것(축척)을 스스로 대게 한다. */
+      { k:'reflect', who:'ratio',
+        say:'이 방에서는 축척으로 실제 거리 구하기, 지도 확대하기, 지구 둘레 구하기 등 다양한 활동을 해 보았어요. 그럼 여러분이 직접 지도를 만든다면, 무엇을 조사하고 무엇을 이용해야 할까요? 생각을 적어 보세요.',
+        hi:'🗺️ 내가 지도를 만든다면 — 무엇을 조사하고 무엇을 이용할까' },
+      /* 형식화를 돕는 자리 — 앞선 조작을 한 번 더 이름으로 불러 준 뒤 문장으로 옮기게 한다.
+         앱은 학습자가 쓴 글을 읽지 못하므로, 내용을 짚지 않고 「받았다」는 것만 말한 뒤 정리로 넘어간다. */
+      { k:'blank', id:'secret', who:'ratio',
+        say:'지도의 비밀을 공부해 보았어요. 낱말 카드를 놓아 빈칸을 채워 보세요.',
+        hi:'🃏 지도의 비밀 카드 — 빈칸 채우기' },
+      { k:'finish', who:'ratio',
+        say:'지도의 비밀을 잘 찾아냈어요! 축척으로 실제 거리를 구하고, 그림자의 비로 지구 둘레까지 재어 보았어요!',
+        hi:'🎉 지도의 비밀 — 심화 학습 완료' }
+    ];
+  }
+
+  ac() {
+    if (!this._ac) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return null;
+      this._ac = new Ctx();
+      this._bus = this._ac.createGain(); this._bus.gain.value = 0.5;
+      const comp = this._ac.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.ratio.value = 6;
+      this._bus.connect(comp); comp.connect(this._ac.destination);
+    }
+    if (this._ac.state === 'suspended') this._ac.resume();
+    return this._ac;
+  }
+  sfx(kind) {
+    if (this.state.audio === 'mute') return;
+    const now = performance.now();
+    if (now - (this._lastSfx||0) < 60) return;
+    this._lastSfx = now;
+    const c = this.ac(); if (!c) return;
+    const t = c.currentTime, duck = this._speaking ? 0.35 : 1;
+    const n = (f, at, dur, vol, type) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || 'sine'; o.frequency.setValueAtTime(f, t+at);
+      g.gain.setValueAtTime(0.0001, t+at);
+      g.gain.linearRampToValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+0.02);
+      g.gain.setValueAtTime(Math.max(0.001,(vol||0.14)*duck), t+at+dur*0.55);
+      g.gain.exponentialRampToValueAtTime(0.0006, t+at+dur);
+      o.connect(g); g.connect(this._bus); o.start(t+at); o.stop(t+at+dur+0.05);
+    };
+    if (kind === 'tap') n(720, 0, 0.09, 0.08);
+    else if (kind === 'ok') {
+      [[523.25,0,0.30],[659.25,0.105,0.30],[783.99,0.21,0.34],[1046.5,0.315,0.62]]
+        .forEach((s,i) => { n(s[0], s[1], s[2], 0.115 - i*0.008, 'sine'); n(s[0]*2, s[1], s[2]*0.7, 0.026, 'sine'); });
+    }
+    else if (kind === 'oops') { n(300,0,0.13,0.10,'triangle'); n(238,0.11,0.2,0.08,'triangle'); }
+    else if (kind === 'win') { [523.25,659.25,783.99,1046.5].forEach((f,i) => n(f, i*0.11, 0.44, 0.1)); }
+  }
+
+  ttsKey(s) { let h = 5381; for (let i=0;i<s.length;i++) h = ((h*33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); }
+  stopVoice() {
+    clearTimeout(this._sayT);
+    this._vtok = (this._vtok||0) + 1;
+    this._speaking = false;
+    try { if (this._mp3) { this._mp3.pause(); this._mp3 = null; } } catch(e) {}
+    try { speechSynthesis.cancel(); } catch(e) {}
+  }
+  /* 비를 소리로 낼 때 쓰는 한자어 수 — 「1 대 2」를 「한 대 둘」이 아니라 「일 대 이」로 읽힌다.
+     만 단위까지 읽는다. 축척 1 : 10,000은 「일 대 만」이다(2026-09-11 연구자 결정).
+     네 방과 _tools/make_voice_check.mjs에 같은 규칙이 있다 — 한쪽만 고치면 음성 키가 어긋난다. */
+  SINO(v) {
+    const D = ['영','일','이','삼','사','오','육','칠','팔','구'];
+    const n = +String(v).replace(/,/g, '');
+    if (!isFinite(n) || n < 0 || n > 99999999 || String(v).indexOf('.') >= 0) return v;
+    if (n === 0) return '영';
+    const u4 = (x) => { const u = ['천','백','십',''], d = [1000,100,10,1]; let s = '';
+      for (let i = 0; i < 4; i++) { const q = Math.floor(x / d[i]) % 10;
+        if (q) s += ((q === 1 && i < 3) ? '' : D[q]) + u[i]; } return s; };
+    const man = Math.floor(n / 10000), rest = n % 10000;
+    return (man ? ((man === 1 ? '' : u4(man)) + '만') : '') + (rest ? u4(rest) : '');
+  }
+  speak(text, who) {
+    this.stopVoice();
+    if (this.state.audio !== 'full') return;
+    const raw = (text === null || text === undefined) ? '' :
+      (typeof text === 'string' ? text : (Array.isArray(text) ? text.join(' ') : String(text)));
+    /* [[화면 글|읽을 말]] — 화면에는 앞, 음성에는 뒤(2026-09-22). _tools/make_voice_check.mjs의 norm과 같아야 음성 키가 맞는다 */
+    const txt = raw.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')
+      .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '')
+      /* 비를 읽을 때 '1 대 2'가 '한 대 이'로 읽히지 않도록 한자어 수로 바꿔 넘긴다.
+         화면에는 숫자 그대로 두고, 소리로 나갈 때만 바꾼다.
+         '1 대 1.618'처럼 뒤가 소수인 경우에는 앞자리만 바꾼다 — 소수를 쪼개면 잘못 읽힌다. */
+      /* 비를 콜론으로 적은 것은 「대」로 읽는다 — 화면은 빨강:노랑, 소리는 「빨강 대 노랑」.
+         콜론은 소리로 쉼이 되지 않아 그대로 두면 앞뒤가 붙어 읽힌다.
+         숫자끼리도 여기서 '1 대 2' 꼴이 되므로 아래 한자어 규칙이 이어서 처리한다. */
+      .replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')
+      .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => a + ' 대 ' + b)
+      /* 10,000처럼 쉼표로 자릿수를 끊은 수는 건드리지 않는다 — 「십,000」이 되어 잘못 읽힌다.
+         「1 대 2, 2 대 3」처럼 쉼표가 문장부호일 때(뒤에 숫자가 없을 때)는 그대로 바꾼다. */
+      .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => a + ' 대 ' + b)
+      /* 2026-09-22 밤 — 비는 숫자 그대로 읽히고(「이 대 삼」 한글로 바꾸면 목소리가 이상해졌다),
+         뒤의 조사와는 띄어 쓴다(「2 대 3 이에요」가 가장 자연스러웠다 — 사용자 청취 비교). */
+      .replace(/(\d) 대 (\d[\d.,]*)(?=[가-힣])/g, '$1 대 $2 ')
+      .replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ').replace(/\s+/g, ' ').trim();
+    if (!txt) return;
+    /* 문장마다 따로 합성해 순서대로 이어 재생한다(2026-09-11).
+       CLOVA에는 쉼 표기(SSML·break)가 없어 문장 사이 호흡을 이렇게밖에 낼 수 없다.
+       한 문장만 고치면 그 문장만 다시 만들면 된다.
+       ⚠ 문장 나누기(SENT)는 _tools/make_voice_check.mjs와 같아야 한다 — 다르면 음성 키가 어긋난다. */
+    const parts = this.SENT(txt);
+    if (!parts.length) return;
+    const man = window.RS_TTS;
+    const tok = this._vtok;
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { this._speaking = false; return; }
+      /* 문장 사이 숨 — 한 덩어리로 합성할 때 뭉개지던 호흡을 여기서 낸다 */
+      const nextGap = () => { if (tok === this._vtok) this._sayT = setTimeout(() => step(i + 1), 200); };
+      const key = this.ttsKey((who||'ratio') + '|' + parts[i]);
+      if (man && man[key]) {
+        try {
+          /* 음성 판 번호를 붙여 요청한다. 목소리를 바꿔 다시 합성해도
+             브라우저에 남은 옛 음성이 재생되지 않는다. */
+          const a = new Audio('tts/' + key + '.mp3?v=' + (window.RS_TTS_V || '1'));
+          a.volume = 0.95; this._mp3 = a;
+          a.onended = nextGap;
+          /* 2026-09-27 — mp3가 있는 줄은 브라우저 기본 음성으로 대신 읽지 않는다.
+             화면을 빨리 넘기거나 자동 재생이 막히면 재생이 실패하는데, 그때 로봇 목소리가 나와
+             「합성 전 음성」처럼 들렸다(사용자 보고). 자동 재생이 막힌 것뿐이면 화면을 처음 누를 때
+             이어서 들려주고, 화면이 이미 바뀌었으면 그냥 멈춘다. */
+          a.play().catch(() => {
+            this._mp3 = null;
+            if (tok !== this._vtok) return;
+            const resume = () => {
+              document.removeEventListener('pointerdown', resume, true);
+              if (tok !== this._vtok) return;
+              this._mp3 = a;
+              a.play().catch(() => nextGap());
+            };
+            document.addEventListener('pointerdown', resume, true);
+          });
+          return;
+        } catch(e) {}
+      }
+      /* mp3가 없는 문장만 브라우저 음성으로 읽고 다음 문장으로 넘어간다 */
+      this._speakSynth(parts[i], who, nextGap);
+    };
+    step(0);
+  }
+
+  /* 낭독을 문장으로 나눈다 — 마침표·물음표·느낌표 뒤에 공백이 있을 때만 자른다.
+     「1.618」처럼 소수점 뒤에는 공백이 없어 잘리지 않는다. */
+  SENT(t) { return String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean); }
+  /* 긴 문장은 66자 안팎에서 쉼표나 띄어쓰기를 찾아 잘라 읽힌다.
+     크롬의 음성 합성은 한 번에 읽는 글이 길면 도중에 끊기므로, 짧게 나누어 이어 읽는다. */
+  chunks(t) {
+    const out = [];
+    t.split(/(?<=[.!?])\s+/).forEach(s0 => {
+      let s = s0.trim(); if (!s) return;
+      while (s.length > 66) {
+        let cut = s.lastIndexOf(',', 66);
+        if (cut < 22) cut = s.lastIndexOf(' ', 66);
+        if (cut < 22) cut = 66;
+        out.push(s.slice(0, cut + 1).trim());
+        s = s.slice(cut + 1).trim();
+      }
+      if (s) out.push(s);
+    });
+    return out;
+  }
+  _speakSynth(txt, who, done) {
+    if (!('speechSynthesis' in window)) { if (done) done(); return; }
+    const cfg = this.WHO[who] || this.WHO.ratio;
+    const tok = this._vtok;
+    const parts = this.chunks(txt);
+    this._speaking = true;
+    const step = (i) => {
+      if (tok !== this._vtok) return;
+      if (i >= parts.length) { if (done) done(); else this._speaking = false; return; }
+      const u = new SpeechSynthesisUtterance(parts[i]);
+      u.lang = 'ko-KR'; u.pitch = cfg.pitch; u.rate = cfg.rate; u.volume = 1;
+      let adv = false;
+      const go = () => { if (adv || tok !== this._vtok) return; adv = true; setTimeout(() => step(i+1), cfg.gap || 150); };
+      u.onend = go; u.onerror = go;
+      try { speechSynthesis.speak(u); } catch(e) { go(); }
+    };
+    step(0);
+  }
+
+  /* 이벤트마다 단계·경과 시각을 자동으로 붙인다.
+     step은 0-기반이고 화면 헤더는 (i+1)/N로 1-기반이므로, 관찰 기록과 맞출 때는 분석에서 +1 한다.
+     t는 방에 들어선 뒤 경과 ms — 영상 타임코드와 맞추는 기준이며 sync 이벤트를 원점으로 삼는다. */
+  /* 기기 표시 — 허브와 같은 값을 쓴다(2026-09-27) */
+  devId() {
+    try {
+      let d = localStorage.getItem('rs3_dev');
+      if (!d) { d = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10)); localStorage.setItem('rs3_dev', d); }
+      return d;
+    } catch(e) { return 'nodev'; }
+  }
+  plog(ev, data) {
+    var d = data || {};
+    try {
+      var st = (this.STEPS && this.state && this.STEPS[this.state.i]) || {};
+      d = Object.assign({ step: this.state.i, sk: st.k || '', t: Date.now() - (this._t0 || Date.now()) }, d);
+    } catch(e) {}
+    /* idle 기록 자체는 조작이 아니다. 여기서 갱신하면 긴 정지가 15초마다 쪼개져 여러 건 남는다(2026-09-14) */
+    if (ev !== 'idle') this._lastAct = Date.now();
+    try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
+    try {
+      if (this._user === 'guest') return;
+      this._q = this._q || [];
+      /* userName 자리에 기기 표시를 담는다(2026-09-27) — 시트가 「코드+기기」를 기억해 코드 중복을 막는다 */
+      this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:this.devId(),
+        seq: ++this._seq, clientTs:new Date().toISOString(),
+        eventId:'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),
+        tab:this.LAB, eventType:'pilot.'+this.LAB+'.'+ev, payload:JSON.stringify(d) });
+      if (this._q.length >= 10) this.flush();
+    } catch(e) {}
+  }
+  _logMark(ids) {
+    this._sentSet = this._sentSet || {}; this._sentIds = this._sentIds || [];
+    for (let i = 0; i < ids.length; i++) if (!this._sentSet[ids[i]]) { this._sentSet[ids[i]] = 1; this._sentIds.push(ids[i]); }
+    while (this._sentIds.length > 800) delete this._sentSet[this._sentIds.shift()];
+  }
+  _logBatch(max) {
+    this._sentSet = this._sentSet || {};
+    const q = this._q || [], batch = [], seen = {};
+    while (q.length && batch.length < max) {
+      const r = q.shift();
+      if (!r || !r.eventId || this._sentSet[r.eventId] || seen[r.eventId]) continue;
+      seen[r.eventId] = 1; batch.push(r);
+    }
+    return batch;
+  }
+  flush(beacon) {
+    try {
+      if (!this._q || !this._q.length) return;
+      const useBeacon = !!(beacon && navigator.sendBeacon);
+      if (!useBeacon && this._sending) return;
+      const batch = this._logBatch(50);
+      if (!batch.length) return;
+      const ids = batch.map(r => r.eventId);
+      const body = JSON.stringify({ token:this.LOG_TK, records:batch });
+      this._inflight = this._inflight || {};
+      this._bid = (this._bid || 0) + 1;
+      const bid = 'b' + this._bid;
+      this._inflight[bid] = batch;
+      if (useBeacon) {
+        let ok = false;
+        try { ok = navigator.sendBeacon(this.LOG_EP, new Blob([body], { type:'text/plain' })); } catch(e) { ok = false; }
+        delete this._inflight[bid];
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+        return;
+      }
+      this._sending = true;
+      const settle = (ok) => {
+        delete this._inflight[bid];
+        this._sending = false;
+        if (ok) this._logMark(ids); else this._q.unshift.apply(this._q, batch);
+      };
+      fetch(this.LOG_EP, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain' }, body })
+        .then(() => settle(true), () => settle(false));
+    } catch(e) { this._sending = false; }
+  }
+  ukey(b) { return b + ':' + (this._user || 'anon'); }
+
+  componentDidMount() {
+    this._seq = 0;
+    this._t0 = Date.now();          /* 방 진입 시각 — 모든 이벤트의 t가 여기서부터 잰다 */
+    this._lastAct = Date.now();
+    this._sess = 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
+    try { this._user = (JSON.parse(localStorage.getItem('rs3_user') || 'null') || {}).code || ''; } catch(e) { this._user = ''; }
+    this._guest = (this._user === 'guest');
+    if (!this._user && window === window.parent) { try { location.replace('index.html'); } catch(e) {} }
+    /* 순서 잠금 — 색깔·소리 방을 마치기 전에는 주소를 직접 열어도 허브로 돌려보낸다.
+       게스트는 자유 탐색이므로 통과. 저장소를 읽지 못하면 막지 않는다(잠금 오작동으로 참여자를 가두지 않는다). */
+    if (this._user && !this._guest && window === window.parent) {
+      let blocked = false;
+      try {
+        const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+        blocked = d.indexOf('color') < 0 || d.indexOf('sound') < 0;
+      } catch(e) { blocked = false; }
+      if (blocked) { try { location.replace('index.html'); } catch(e) {} }
+    }
+    let audio = 'full';
+    try { audio = localStorage.getItem('rs3_audio') || 'full'; } catch(e) {}
+    let cards = 0;
+    try { cards = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]').length; } catch(e) {}
+    this.setState({ audio, cards });
+    this._flushT = setInterval(() => this.flush(), 5000);
+    this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
+    document.addEventListener('visibilitychange', this._hide);
+    this._pageHide = () => this.flush(true);
+    /* 크롬은 긴 낭독 도중 스스로 멈춰 서는 일이 있다 — 멈춰 있으면 다시 이어 준다 */
+    this._wd = setInterval(() => { try { if (this._speaking && speechSynthesis.paused) speechSynthesis.resume(); } catch(e) {} }, 4000);
+    addEventListener('pagehide', this._pageHide);
+
+    /* ── 무조작 정지 ── 15초 넘게 아무 조작이 없으면 한 구간당 한 번만 남긴다.
+       바로 앞에 focus:0도 overlay 열림도 없는 idle이라야 "화면을 보며 생각한 정지"로 읽을 수 있다. */
+    this._idleT = setInterval(() => {
+      const gap = Date.now() - (this._lastAct || 0);
+      if (gap > 15000 && !this._idleFlag) { this._idleFlag = 1; this.plog('idle', { ms: gap }); }
+      if (gap <= 15000) this._idleFlag = 0;
+    }, 5000);
+
+    /* ── 화면 이탈 ── 체류 시간에서 빼야 할 구간을 가른다. 기존 _hide는 flush 전용이라 그대로 둔다. */
+    this._vis = () => this.plog('focus', { v: document.visibilityState === 'visible' ? 1 : 0 });
+    document.addEventListener('visibilitychange', this._vis);
+
+    /* ── 비활성 영역 탭 ── 이 앱은 핸들러를 속성이 아니라 props로 묶으므로 [onclick] 선택자가 듣지 않는다.
+       커서 모양과 태그로 판정한다. 정상 조작 20회에 0건이어야 하며, 1건이라도 나오면 깊이를 늘린다.
+       tg·cl은 무엇을 눌렀는지 — 좌표만으로는 화면이 바뀐 뒤 오탐을 가려낼 수 없다. */
+    this._dead = (e) => {
+      try {
+        let el = e.target, hit = false;
+        for (let i = 0; el && i < 8; i++, el = el.parentElement) {
+          if (/^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(el.tagName)) { hit = true; break; }
+          if (el.getAttribute && (el.getAttribute('role') === 'slider' || el.hasAttribute('data-blank'))) { hit = true; break; }
+          const cs = getComputedStyle(el);
+          if (cs.cursor === 'pointer' || cs.cursor === 'grab' || cs.touchAction === 'none') { hit = true; break; }
+        }
+        if (!hit) this.plog('deadtap', { x: Math.round(e.clientX), y: Math.round(e.clientY),
+          tg: (e.target && e.target.tagName) || '', cl: ((e.target && e.target.className) || '').toString().slice(0, 20) });
+      } catch(err) {}
+    };
+    addEventListener('pointerdown', this._dead, true);
+
+    /* ── 영상 시각 맞추기 ── 오른쪽 위 모서리를 1.5초 누르면 조용히 기준점을 찍는다.
+       화면에는 아무 표시도 하지 않는다(학습자에게 보이면 안 되는 장치다). 진동이 유일한 확인 신호다. */
+    this._syncDown = (e) => {
+      if (e.clientX < innerWidth - 80 || e.clientY > 80) return;
+      this._syncT = setTimeout(() => {
+        this.plog('sync', { wall: new Date().toISOString() });
+        /* 노트북에는 진동이 없다. 모서리에 작은 점을 잠깐 띄워 연구자만 알아보게 한다.
+           학습자의 과제 영역을 가리지 않고, 0.5초 뒤 스스로 사라진다. */
+        try {
+          navigator.vibrate && navigator.vibrate(30);
+          const dot = document.createElement('div');
+          dot.style.cssText = 'position:fixed;top:6px;right:6px;width:9px;height:9px;border-radius:999px;' +
+            'background:#c67139;opacity:.85;z-index:2147483647;pointer-events:none';
+          document.body.appendChild(dot);
+          setTimeout(() => dot.remove(), 500);
+        } catch(err) {}
+      }, 1500);
+    };
+    this._syncUp = () => clearTimeout(this._syncT);
+    addEventListener('pointerdown', this._syncDown, true);
+    addEventListener('pointerup', this._syncUp, true);
+    addEventListener('pointercancel', this._syncUp, true);
+
+    /* ── 화면을 키우려는 시도 ── 노트북에서는 두 손가락 벌리기가 pointerdown 두 개로 오지 않는다.
+       트랙패드 확대는 ctrlKey가 붙은 wheel, 자판은 Ctrl +/-/0 이다.
+       뜻은 터치의 pinch_try와 다르다 — 화면 배율을 바꾸려는 것이므로 「글씨·그림이 작다」는
+       사용성 신호로 읽고, 두 양을 함께 늘리려는 곱셈적 조작의 증거로는 쓰지 않는다.
+       한 손짓이 wheel을 수십 번 내므로 1.2초에 한 번만 남긴다. */
+    this._zoomHit = (how) => {
+      const now = Date.now();
+      if (now - (this._zoomAt || 0) < 1200) return;
+      this._zoomAt = now;
+      let sc = 1; try { sc = (visualViewport && visualViewport.scale) || 1; } catch(e) {}
+      this.plog('zoom_try', { how: how, sc: Math.round(sc * 100) / 100, dpr: Math.round((devicePixelRatio || 1) * 100) / 100 });
+    };
+    this._wheelZ = (e) => { if (e.ctrlKey) this._zoomHit('pinch'); };
+    addEventListener('wheel', this._wheelZ, { passive: true, capture: true });
+    this._keyZ = (e) => {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0', 'Add', 'Subtract'].indexOf(e.key) >= 0) this._zoomHit('key');
+    };
+    addEventListener('keydown', this._keyZ, true);
+
+    this.plog('enter', { ua: navigator.userAgent.slice(0,80) });
+    this._sayT = setTimeout(() => this.sayStep(0), 500);
+  }
+  componentWillUnmount() {
+    clearInterval(this._flushT); clearInterval(this._wd); clearTimeout(this._tT); clearTimeout(this._autoT);
+    clearInterval(this._idleT);
+    document.removeEventListener('visibilitychange', this._hide);
+    document.removeEventListener('visibilitychange', this._vis);
+    removeEventListener('pagehide', this._pageHide);
+    removeEventListener('pointerdown', this._dead, true);
+    removeEventListener('pointerdown', this._syncDown, true);
+    removeEventListener('pointerup', this._syncUp, true);
+    removeEventListener('pointercancel', this._syncUp, true);
+    removeEventListener('wheel', this._wheelZ, true);
+    removeEventListener('keydown', this._keyZ, true);
+    clearTimeout(this._syncT);
+    this.stopVoice(); this.flush(true);
+  }
+
+  /* 도우미 초상 — 56×56 원형 슬롯(에라토스테네스·레시오 공통 규격).
+     who.imgBare가 참이면 원본 그림에 이미 테두리가 있으므로 CSS 테두리를 덧대지 않는다(이중 테두리 방지).
+     초상 뒤에 이모지를 깔아 두고, 이미지 로드에 실패하면 이미지를 감춰 이모지가 대신 보이게 한다. */
+  coachPortrait(who) {
+    const bare = !!who.imgBare;
+    return React.createElement('div', { key: who.img,
+      style: { position:'relative', width:'100%', height:'100%', borderRadius:'999px', overflow:'hidden',
+               border: bare ? 'none' : '3px solid var(--color-accent-400)' } },
+      /* 대체 표시 — 초상 아래에 깔린 이모지 원. 초상이 뜨면 완전히 가려지고, 로드에 실패하면 드러난다 */
+      React.createElement('div', { key:'fb',
+        style: { position:'absolute', inset:'0', borderRadius:'999px',
+                 background:'var(--color-accent-200)', display:'flex', alignItems:'center',
+                 justifyContent:'center', fontSize:'27px',
+                 border: bare ? '3px solid var(--color-accent-400)' : 'none' } }, who.emoji || ''),
+      React.createElement('img', { key:'p', src: who.img, alt: '',
+        onError: (e) => { try { e.currentTarget.style.display = 'none'; } catch(err) {} },
+        style: { position:'absolute', inset:'0', width:'100%', height:'100%',
+                 objectFit:'cover', display:'block' } })
+    );
+  }
+
+  sayStep(i) { const s = this.STEPS[i]; if (s) this.speak(s.say, s.who || 'ratio'); }
+  autoNext(ms) { clearTimeout(this._autoT); /* 저절로 넘기지 않는다 — 피드백을 읽고 「다음 →」을 눌러 넘어가게 한다. */ }
+  /* 토스트 노출을 남긴다 — 같은 단계에서 k:'info'가 거듭 뜨면 조작적 어려움의 후보다.
+     본문은 남기지 않고 제목 40자만 남긴다. t는 plog가 붙이는 경과 ms이므로 제목은 ttl에 담는다. */
+  toast(icon, title, body, kind, hold) {
+    this.plog('toast', { k: kind || 'info', ttl: String(title || '').slice(0, 40) });
+    this.sfx(kind === 'ok' ? 'ok' : 'oops');
+    clearTimeout(this._tT);
+    this.setState({ toast: { icon, title, body, kind } });
+    /* 성공 피드백은 저절로 닫지 않는다 — 읽을 시간을 학습자가 정한다. 닫으려면 ✕를 누르거나 다음 화면으로 넘어가면 된다. */
+    if (kind === 'ok') return;
+    const close = () => { if (hold && this._speaking) { this._tT = setTimeout(close, 500); return; } this.setState({ toast: null }); };
+    this._tT = setTimeout(close, 6000);
+  }
+  toastOk(t, b) { this.plog('success', { slide: this.state.i }); this.toast('✅', t, b, 'ok'); }
+  toastRetry(b) { this.plog('retry', { slide: this.state.i }); this.toast('🤔', '다시 한번!', b); }
+  markSolved() { const s = Object.assign({}, this.state.solved); s[this.state.i] = true; this.setState({ solved: s }); }
+  hintNext(key, stages) {
+    this._tries = this._tries || {};
+    const n = (this._tries[key] = (this._tries[key] || 0) + 1);
+    return stages[Math.min(n, stages.length) - 1];
+  }
+  go(d) {
+    const n = Math.min(this.STEPS.length - 1, Math.max(0, this.state.i + d));
+    if (n === this.state.i) return;
+    this.stopVoice();
+    clearTimeout(this._tT); clearTimeout(this._autoT);
+    const patch = { i:n, toast:null, selBlank:null };
+    if (this.STEPS[n].k === 'zoom') { patch.zPhase = 0; patch.zVal = 100; }
+    if (this.STEPS[n].k === 'finish') setTimeout(() => { this.confetti(); this.sfx('win'); }, 350);
+    this.setState(patch);
+    this.plog('nav', { to:n });
+    this._sayT = setTimeout(() => this.sayStep(n), 380);
+  }
+  confetti() {
+    try {
+      for (let i=0;i<28;i++) {
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:-16px;width:11px;height:17px;border-radius:3px;z-index:200;pointer-events:none;animation:rsFall linear forwards';
+        d.style.left = (4 + Math.random()*92) + 'vw';
+        d.style.background = ['var(--color-accent)','var(--color-accent-400)','var(--color-accent-2-500)','var(--color-accent-500)','var(--color-accent-700)','var(--color-accent-2-300)'][i%6];
+        d.style.animationDelay = (Math.random()*0.5) + 's';
+        d.style.animationDuration = (1.3 + Math.random()*1.1) + 's';
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 3400);
+      }
+    } catch(e) {}
+  }
+  cycleAudio() {
+    const order = ['full','sfx','mute'];
+    const next = order[(order.indexOf(this.state.audio) + 1) % 3];
+    if (next !== 'full') this.stopVoice();
+    try { localStorage.setItem('rs3_audio', next); } catch(e) {}
+    this.setState({ audio: next });
+    if (next === 'full') this._sayT = setTimeout(() => this.sayStep(this.state.i), 150);
+    else if (next === 'sfx') { this._lastSfx = 0; this.sfx('tap'); }
+  }
+
+  svgEl(vb, styleObj, html, key) {
+    return React.createElement('svg', { key: key || vb, viewBox: vb, style: styleObj, dangerouslySetInnerHTML: { __html: html } });
+  }
+
+  /* 알렉산드리아 도서관 — 에라토스테네스가 일하던 곳. 배경 그림으로만 쓰고 글씨는 넣지 않는다 */
+  /* 지도를 그리는 옛 학자 — 두루마리·지구본·책상만 남긴 간단한 장면 */
+  /* 에라토스테네스와 지구 — 화자 옆에 뜨는 그 초상(eratos_portrait.jpg)을 그대로 쓰고,
+     옆에 지구를 크게 그린다. 창밖 도시·책장·책상·두루마리는 뺐다 —
+     이 화면의 몫은 「이 사람이 이 지구를 쟀다」 한 가지다. */
+  scholarSvg() {
+    const R = React, ink = 'var(--color-neutral-800)';
+    const el = (t, a, ...k) => R.createElement(t, a, ...k);
+    const globe = el('svg', { key:'g', width:'200', height:'200', viewBox:'0 0 200 200',
+      style:{ display:'block', width:'min(200px,42vw)', height:'auto' } },
+      el('circle', { key:'o', cx:100, cy:100, r:88, fill:'#bcd6e8', stroke:ink, strokeWidth:4 }),
+      /* 위선 — 지구가 둥글다는 것을 드러내는 선 */
+      el('path', { key:'l1', d:'M 22 68 Q 100 90 178 68', fill:'none', stroke:ink, strokeWidth:2.5 }),
+      el('path', { key:'l2', d:'M 14 100 H 186', fill:'none', stroke:ink, strokeWidth:2.5 }),
+      el('path', { key:'l3', d:'M 22 132 Q 100 110 178 132', fill:'none', stroke:ink, strokeWidth:2.5 }),
+      /* 경선 */
+      el('ellipse', { key:'m1', cx:100, cy:100, rx:34, ry:88, fill:'none', stroke:ink, strokeWidth:2.5 }),
+      el('ellipse', { key:'m2', cx:100, cy:100, rx:68, ry:88, fill:'none', stroke:ink, strokeWidth:1.8,
+        style:{ opacity:0.55 } }));
+    return el('div', { key:'scholar',
+      style:{ display:'flex', gap:'min(5vw,26px)', alignItems:'center', justifyContent:'center',
+        flexWrap:'wrap', width:'100%' } },
+      el('img', { key:'p', src:'eratos_portrait.jpg',
+        alt:'옛 그리스의 수학자 에라토스테네스',
+        style:{ width:'min(200px,42vw)', height:'auto', borderRadius:'18px',
+          border:'4px solid ' + ink, display:'block' } }),
+      globe);
+  }
+
+  librarySvg() {
+    const ink = 'var(--color-neutral-800)', st1 = 'var(--color-neutral-200)', st2 = 'var(--color-neutral-300)';
+    const sky = 'var(--color-accent-100)', sea = 'var(--color-accent-2-200)', acc = 'var(--color-accent-400)';
+    let g = '<rect x="0" y="0" width="520" height="300" rx="14" style="fill:' + sky + '"/>';
+    g += '<circle cx="432" cy="62" r="26" style="fill:var(--color-accent-300)"/>';
+    g += '<rect x="0" y="236" width="520" height="64" style="fill:' + sea + '"/>';
+    /* 등대 */
+    g += '<rect x="446" y="120" width="34" height="118" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<rect x="452" y="92" width="22" height="30" style="fill:' + st2 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<circle cx="463" cy="86" r="9" style="fill:var(--color-accent-300);stroke:' + ink + ';stroke-width:2.5"/>';
+    /* 도서관 본관 — 계단 · 기둥 · 박공지붕 */
+    g += '<rect x="46" y="228" width="330" height="12" style="fill:' + st2 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<rect x="60" y="214" width="302" height="14" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    for (let i = 0; i < 7; i++) {
+      const x = 78 + i * 44;
+      g += '<rect x="' + x + '" y="118" width="26" height="96" rx="3" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+      g += '<line x1="' + (x+8) + '" y1="124" x2="' + (x+8) + '" y2="208" style="stroke:' + st2 + ';stroke-width:3"/>';
+      g += '<line x1="' + (x+17) + '" y1="124" x2="' + (x+17) + '" y2="208" style="stroke:' + st2 + ';stroke-width:3"/>';
+    }
+    g += '<rect x="60" y="104" width="302" height="16" style="fill:' + st2 + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    g += '<path d="M52 104 L211 46 L370 104 Z" style="fill:' + st1 + ';stroke:' + ink + ';stroke-width:2.5;stroke-linejoin:round"/>';
+    g += '<circle cx="211" cy="84" r="12" style="fill:' + acc + ';stroke:' + ink + ';stroke-width:2.5"/>';
+    /* 두루마리 몇 개 */
+    for (let i = 0; i < 3; i++) {
+      const x = 392 + (i % 2) * 26, y = 200 + i * 14;
+      g += '<rect x="' + x + '" y="' + y + '" width="30" height="10" rx="5" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2"/>';
+    }
+    return this.svgEl('0 0 520 300', { width: 'min(520px,92%)', maxWidth: '100%', display: 'block' }, g, 'lib');
+  }
+
+  mapSvg(obj, f) {
+    const u = 62 * f, cells = obj.cells;
+    const padL = 52, gy = 118;
+    const W = Math.max(520, padL * 2 + u * cells + 30), H = 250;
+    const ink = 'var(--color-neutral-700)';
+    let g = '<rect x="0" y="0" width="' + W + '" height="' + H + '" rx="12" style="fill:var(--color-accent-100)"/>';
+    /* 강 — 다리 문제에서만 다리 아래를 가로지른다 */
+    if (obj.shape === 'rect') {
+    g += '<rect x="0" y="' + (gy - 34) + '" width="' + W + '" height="88" style="fill:#bcd6e8"/>';
+    g += '<path d="M0 ' + (gy - 34) + ' Q' + (W*0.3) + ' ' + (gy - 46) + ' ' + W + ' ' + (gy - 30) + '" style="fill:none;stroke:#8fb6cf;stroke-width:3"/>';
+    g += '<path d="M0 ' + (gy + 54) + ' Q' + (W*0.6) + ' ' + (gy + 66) + ' ' + W + ' ' + (gy + 50) + '" style="fill:none;stroke:#8fb6cf;stroke-width:3"/>';
+    }
+    const bx = padL, bw = u * cells, byy = gy + 6;
+    if (obj.shape === 'unit') {
+      /* 집 한 채 — 가로 1cm */
+      const hh = u * 0.72;
+      g += '<rect x="' + bx + '" y="' + (byy + 4) + '" width="' + bw.toFixed(1) + '" height="' + hh.toFixed(1) + '" style="fill:var(--color-neutral-100);stroke:' + ink + ';stroke-width:2.5"/>';
+      g += '<path d="M' + (bx - 8) + ' ' + (byy + 4) + ' L' + (bx + bw/2).toFixed(1) + ' ' + (byy - hh*0.55).toFixed(1) + ' L' + (bx + bw + 8).toFixed(1) + ' ' + (byy + 4) + ' Z" style="fill:var(--color-accent-400);stroke:' + ink + ';stroke-width:2.5;stroke-linejoin:round"/>';
+      g += '<rect x="' + (bx + bw*0.36).toFixed(1) + '" y="' + (byy + hh*0.42).toFixed(1) + '" width="' + (bw*0.28).toFixed(1) + '" height="' + (hh*0.58).toFixed(1) + '" style="fill:var(--color-neutral-400);stroke:' + ink + ';stroke-width:2"/>';
+    } else if (obj.shape === 'road') {
+      /* 도로 — 가로 5cm, 가운데 차선 */
+      g += '<rect x="' + bx + '" y="' + byy + '" width="' + bw.toFixed(1) + '" height="26" style="fill:var(--color-neutral-400);stroke:' + ink + ';stroke-width:2.5"/>';
+      const n = Math.max(3, Math.round(cells * 2));
+      for (let k = 0; k < n; k++) {
+        const w0 = bw / n * 0.5, x = bx + bw / n * k + w0 * 0.5;
+        g += '<rect x="' + x.toFixed(1) + '" y="' + (byy + 11) + '" width="' + w0.toFixed(1) + '" height="4" style="fill:var(--color-neutral-100)"/>';
+      }
+    } else {
+      /* 다리 — 강을 가로지른다 */
+      g += '<line x1="0" y1="' + (byy+14) + '" x2="' + bx + '" y2="' + (byy+14) + '" style="stroke:var(--color-neutral-300);stroke-width:16"/>';
+      g += '<line x1="' + (bx+bw) + '" y1="' + (byy+14) + '" x2="' + W + '" y2="' + (byy+14) + '" style="stroke:var(--color-neutral-300);stroke-width:16"/>';
+      g += '<rect x="' + bx + '" y="' + (byy+6) + '" width="' + bw.toFixed(1) + '" height="16" style="fill:var(--color-neutral-400);stroke:' + ink + ';stroke-width:2"/>';
+      g += '<rect x="' + bx + '" y="' + byy + '" width="' + bw.toFixed(1) + '" height="8" style="fill:var(--color-accent-400);stroke:' + ink + ';stroke-width:2"/>';
+      [0.25,0.5,0.75].forEach(t => { const x = bx + bw*t;
+        g += '<line x1="' + x.toFixed(1) + '" y1="' + (byy-12) + '" x2="' + x.toFixed(1) + '" y2="' + byy + '" style="stroke:' + ink + ';stroke-width:2.5"/>'; });
+      g += '<path d="M' + bx + ' ' + (byy-12) + ' Q' + (bx+bw/2).toFixed(1) + ' ' + (byy-26) + ' ' + (bx+bw).toFixed(1) + ' ' + (byy-12) + '" style="fill:none;stroke:' + ink + ';stroke-width:2.5"/>';
+    }
+    /* 다리 길이 — 지도에 적힌 값(확대해도 그대로 3cm로 주어진 값) */
+    const ly = byy + 54;
+    g += '<line x1="' + bx + '" y1="' + ly + '" x2="' + (bx+bw).toFixed(1) + '" y2="' + ly + '" style="stroke:' + ink + ';stroke-width:2"/>';
+    g += '<line x1="' + bx + '" y1="' + (ly-6) + '" x2="' + bx + '" y2="' + (ly+6) + '" style="stroke:' + ink + ';stroke-width:2"/>';
+    g += '<line x1="' + (bx+bw).toFixed(1) + '" y1="' + (ly-6) + '" x2="' + (bx+bw).toFixed(1) + '" y2="' + (ly+6) + '" style="stroke:' + ink + ';stroke-width:2"/>';
+    /* 지금 보이는 지도에서의 길이 — 확대했으면 그만큼 늘어난 값을 적는다 */
+    const shown = Math.round(cells * f * 100) / 100;
+    g += '<text x="' + (bx+bw/2).toFixed(1) + '" y="' + (ly+20) + '" text-anchor="middle" style="font-size:15px;font-weight:800;fill:' + ink + '">' + shown + 'cm</text>';
+    /* 축척은 원래 크기(100%)일 때만 — 확대하면 축척이 달라지므로 적지 않는다 */
+    if (f === 1) {
+      g += '<text x="' + (W-18) + '" y="' + (H-16) + '" text-anchor="end" style="font-size:14px;font-weight:800;fill:' + ink + '">축척 1 : 10,000</text>';
+    }
+    return this.svgEl('0 0 ' + W + ' ' + H, { width: Math.min(W, 880) + 'px', maxWidth: '100%', display: 'block' }, g, 'map' + cells + '-' + f);
+  }
+
+  sceneImg(src, key, maxH) {
+    return React.createElement('img', { src, alt: '', key,
+      style: { display:'block', maxWidth:'min(440px,86vw)', maxHeight: maxH || '52vh', width:'auto', height:'auto',
+        borderRadius:'var(--radius-lg)', border:'3px solid var(--color-neutral-300)', boxShadow:'var(--shadow-md)',
+        background:'var(--color-neutral-100)' } });
+  }
+
+  propSvg() {
+    const g =
+      '<circle cx="150" cy="150" r="118" style="fill:none;stroke:var(--color-neutral-400);stroke-width:2;stroke-dasharray:4 7"/>' +
+      '<circle cx="150" cy="150" r="96" style="fill:var(--color-accent-2-200);stroke:var(--color-accent-2-500);stroke-width:4"/>' +
+      '<circle cx="150" cy="150" r="4.5" style="fill:var(--color-neutral-900)"/>' +
+      '<line x1="150" y1="150" x2="150" y2="54" style="stroke:var(--color-neutral-700);stroke-width:3;stroke-dasharray:7 5"/>' +
+      '<line x1="150" y1="150" x2="108" y2="64" style="stroke:var(--color-neutral-700);stroke-width:3;stroke-dasharray:7 5"/>' +
+      '<path d="M108 64 A96 96 0 0 1 150 54" style="fill:none;stroke:var(--color-accent);stroke-width:8"/>' +
+      '<text x="158" y="120" style="font-size:16px;font-weight:800;fill:var(--color-accent-700)">7.2°</text>' +
+      '<text x="60" y="52" style="font-size:15px;font-weight:800;fill:var(--color-accent-700)">800km</text>' +
+      '<text x="156" y="48" style="font-size:12px;font-weight:800;fill:var(--color-neutral-800)">시에네</text>' +
+      '<text x="30" y="82" style="font-size:12px;font-weight:800;fill:var(--color-neutral-800)">알렉산드리아</text>' +
+      '<text x="150" y="292" text-anchor="middle" style="font-size:15px;font-weight:800;fill:var(--color-neutral-700)">지구 한 바퀴 = 360° = ? km</text>';
+    return this.svgEl('0 0 300 300', { width: 'min(344px,84vw)', display: 'block' }, g, 'prop');
+  }
+
+  /* 요약 만화 4컷 — 새 서사(① 시에네 0° ② 알렉산드리아 7.2° ③ 두 도시 800km ④ 각도비 1:50)에 맞춘 도해.
+     사진이 없는 장면은 모두 디자인 시스템 토큰만 쓴 인라인 SVG로 그립니다. */
+  comicSvg(k, solved) {
+    const ink = 'var(--color-neutral-900)', paper = 'var(--color-neutral-100)', sub = 'var(--color-neutral-700)';
+    const acc = 'var(--color-accent)', acc6 = 'var(--color-accent-600)', acc7 = 'var(--color-accent-700)';
+    const acc1 = 'var(--color-accent-100)', acc2 = 'var(--color-accent-200)', acc3 = 'var(--color-accent-300)';
+    const gr1 = 'var(--color-accent-2-100)', gr3 = 'var(--color-accent-2-300)', gr6 = 'var(--color-accent-2-600)', gr7 = 'var(--color-accent-2-700)';
+    const W = 360, H = 282;
+    const frame = '<rect x="1.5" y="1.5" width="' + (W-3) + '" height="' + (H-3) + '" rx="12" style="fill:' + paper + ';stroke:' + ink + ';stroke-width:3"/>';
+    const title = (t) => '<text x="14" y="25" style="font-size:14.5px;font-weight:800;fill:' + ink + '">' + t + '</text>';
+    const tx = (x,y,s,fs,fill,anc) => '<text x="' + x + '" y="' + y + '" ' + (anc ? 'text-anchor="' + anc + '" ' : '') +
+      'style="font-size:' + fs + 'px;font-weight:800;fill:' + (fill || ink) + '">' + s + '</text>';
+    const sun = (cx,cy,r) => {
+      let s = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" style="fill:' + acc + ';stroke:' + acc6 + ';stroke-width:2"/>';
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 4;
+        s += '<line x1="' + (cx + Math.cos(a)*(r+3)).toFixed(1) + '" y1="' + (cy + Math.sin(a)*(r+3)).toFixed(1) +
+             '" x2="' + (cx + Math.cos(a)*(r+8)).toFixed(1) + '" y2="' + (cy + Math.sin(a)*(r+8)).toFixed(1) +
+             '" style="stroke:' + acc6 + ';stroke-width:2.5;stroke-linecap:round"/>';
+      }
+      return s;
+    };
+    const stick = (x, top, base) =>
+      '<line x1="' + x + '" y1="' + top + '" x2="' + x + '" y2="' + base + '" style="stroke:' + sub + ';stroke-width:6;stroke-linecap:round"/>' +
+      '<rect x="' + (x-9) + '" y="' + (base-2) + '" width="18" height="6" rx="2" style="fill:' + sub + '"/>';
+    const badge = (cx, y, t, on) =>
+      '<rect x="' + (cx-46) + '" y="' + y + '" width="92" height="21" rx="10" style="fill:' + (on ? acc2 : gr1) + ';stroke:' + (on ? acc6 : gr6) + ';stroke-width:2"/>' +
+      tx(cx, y+15, t, 12, on ? acc7 : gr7, 'middle');
+
+    let body;
+    if (k === 0) {
+      /* 컷 1 — 해·햇빛 선·막대와 '그림자 0°' 표시만 남긴 간결한 그림 */
+      body =
+        '<rect x="6" y="200" width="348" height="76" rx="10" style="fill:' + gr1 + '"/>' +
+        '<line x1="6" y1="200" x2="354" y2="200" style="stroke:' + gr6 + ';stroke-width:2.5"/>' +
+        sun(150, 60, 20) +
+        [60, 100, 200, 240, 300].map(x =>
+          '<line x1="' + x + '" y1="90" x2="' + x + '" y2="196" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>').join('') +
+        '<line x1="150" y1="90" x2="150" y2="196" style="stroke:' + acc + ';stroke-width:5;stroke-linecap:round"/>' +
+        stick(270, 152, 200) +
+        '<line x1="270" y1="142" x2="270" y2="200" style="stroke:' + acc + ';stroke-width:3;stroke-dasharray:7 6"/>' +
+        badge(270, 214, '막대와 햇빛 0°', true);
+    } else if (k === 1) {
+      /* 컷 2 — 같은 날 같은 시각, 두 도시 비교 (물음을 던지는 장면) */
+      body = '<rect x="242" y="8" width="106" height="22" rx="11" style="fill:' + acc2 + ';stroke:' + acc6 + ';stroke-width:2"/>' +
+        '<line x1="180" y1="40" x2="180" y2="272" style="stroke:var(--color-neutral-300);stroke-width:2;stroke-dasharray:6 6"/>' +
+        '<rect x="8" y="204" width="166" height="70" rx="8" style="fill:' + gr1 + '"/>' +
+        '<line x1="8" y1="204" x2="174" y2="204" style="stroke:' + gr6 + ';stroke-width:2.5"/>' +
+        sun(60, 64, 12) +
+        [92, 128].map(x => '<line x1="' + x + '" y1="82" x2="' + x + '" y2="200" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>').join('') +
+        stick(92, 154, 204) +
+        badge(90, 214, '막대와 햇빛 0°', false) +
+        '<rect x="186" y="204" width="166" height="70" rx="8" style="fill:' + gr1 + '"/>' +
+        '<line x1="186" y1="204" x2="352" y2="204" style="stroke:' + gr6 + ';stroke-width:2.5"/>' +
+        sun(322, 58, 12) +
+        '<line x1="300" y1="76" x2="252" y2="200" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>' +
+        '<line x1="334" y1="82" x2="290" y2="200" style="stroke:' + acc + ';stroke-width:2.5;stroke-dasharray:7 6;opacity:.7"/>' +
+        stick(252, 154, 204) +
+        '<line x1="252" y1="204" x2="222" y2="204" style="stroke:' + ink + ';stroke-width:7;stroke-linecap:round"/>' +
+        '<line x1="252" y1="154" x2="222" y2="204" style="stroke:' + acc6 + ';stroke-width:2;stroke-dasharray:5 4"/>' +
+        '<path d="M252 188 A34 34 0 0 1 234.5 183.1" style="fill:none;stroke:' + acc7 + ';stroke-width:3"/>' +
+        badge(266, 214, '그림자 7.2°', true) +
+        badge(266, 214, '막대와 햇빛 7.2°', true);
+    } else if (k === 1) {
+    } else if (k === 2) {
+      /* 컷 3 — 지구 전체는 못 재지만 두 도시 사이 800km는 잴 수 있다 */
+      const cy = 391.3, r = 210, ax = 110, bx = 250, ay = 193.3;
+      body = title('컷 3 · 내가 잴 수 있는 것 — 두 도시 사이') +
+        '<path d="M10 268 A' + r + ' ' + r + ' 0 0 1 350 268 Z" style="fill:' + gr1 + ';stroke:' + gr6 + ';stroke-width:3"/>' +
+        '<circle cx="58" cy="86" r="26" style="fill:' + acc1 + ';stroke:' + acc3 + ';stroke-width:2.5"/>' +
+        '<path d="M46 74 L70 98 M70 74 L46 98" style="stroke:' + sub + ';stroke-width:4;stroke-linecap:round"/>' +
+        tx(58, 126, '지구 전체를', 10.5, sub, 'middle') +
+        tx(58, 140, '걸어 잴 수는 없소', 10.5, sub, 'middle') +
+        '<path d="M' + ax + ' ' + ay + ' A' + r + ' ' + r + ' 0 0 1 ' + bx + ' ' + ay + '" style="fill:none;stroke:' + acc + ';stroke-width:7;stroke-linecap:round"/>' +
+        '<circle cx="' + ax + '" cy="' + ay + '" r="6" style="fill:' + acc7 + '"/>' +
+        '<circle cx="' + bx + '" cy="' + ay + '" r="6" style="fill:' + acc7 + '"/>' +
+        '<line x1="' + ax + '" y1="' + (ay-22) + '" x2="' + ax + '" y2="' + (ay+8) + '" style="stroke:' + sub + ';stroke-width:2"/>' +
+        '<line x1="' + bx + '" y1="' + (ay-22) + '" x2="' + bx + '" y2="' + (ay+8) + '" style="stroke:' + sub + ';stroke-width:2"/>' +
+        '<line x1="' + ax + '" y1="' + (ay-16) + '" x2="' + bx + '" y2="' + (ay-16) + '" style="stroke:' + sub + ';stroke-width:2;stroke-dasharray:6 5"/>' +
+        '<rect x="150" y="' + (ay-33) + '" width="60" height="22" rx="11" style="fill:' + acc2 + ';stroke:' + acc6 + ';stroke-width:2"/>' +
+        tx(180, ay-17, '800km', 13, acc7, 'middle') +
+        tx(ax, ay+26, '알렉산드리아', 11.5, gr7, 'middle') +
+        tx(bx, ay+26, '시에네', 11.5, gr7, 'middle') +
+        '<path d="M232 96 l10 12 l20 -26" style="fill:none;stroke:' + gr6 + ';stroke-width:5;stroke-linecap:round;stroke-linejoin:round"/>' +
+        tx(272, 106, '두 도시 사이는', 11, gr7) +
+        tx(272, 122, '잴 수 있소!', 11, gr7);
+    } else {
+      /* 컷 4 — 중심각 7.2°와 한 바퀴 360°의 비 */
+      const cx = 104, cy0 = 172, R = 74;
+      const th = -116 * Math.PI / 180;
+      const px = (cx + R * Math.cos(th)).toFixed(1), py = (cy0 + R * Math.sin(th)).toFixed(1);
+      const ix = (cx + 42 * Math.cos(th)).toFixed(1), iy = (cy0 + 42 * Math.sin(th)).toFixed(1);
+      body = title('컷 4 · 각도의 비 — 7.2°와 360°') +
+        '<circle cx="' + cx + '" cy="' + cy0 + '" r="' + R + '" style="fill:' + gr1 + ';stroke:' + gr6 + ';stroke-width:3"/>' +
+        '<path d="M' + cx + ' ' + cy0 + ' L' + cx + ' ' + (cy0-42) + ' A42 42 0 0 0 ' + ix + ' ' + iy + ' Z" style="fill:' + acc2 + '"/>' +
+        '<line x1="' + cx + '" y1="' + cy0 + '" x2="' + cx + '" y2="' + (cy0-R) + '" style="stroke:' + sub + ';stroke-width:2.5;stroke-dasharray:6 5"/>' +
+        '<line x1="' + cx + '" y1="' + cy0 + '" x2="' + px + '" y2="' + py + '" style="stroke:' + sub + ';stroke-width:2.5;stroke-dasharray:6 5"/>' +
+        '<path d="M' + px + ' ' + py + ' A' + R + ' ' + R + ' 0 0 1 ' + cx + ' ' + (cy0-R) + '" style="fill:none;stroke:' + acc + ';stroke-width:7;stroke-linecap:round"/>' +
+        '<circle cx="' + cx + '" cy="' + cy0 + '" r="4" style="fill:' + ink + '"/>' +
+        tx(cx+8, cy0-14, '7.2°', 13, acc7) +
+        tx(96, 76, '800km', 12, acc7, 'end') +
+        tx(cx, cy0+R+22, '지구 한 바퀴 = 360°', 12, gr7, 'middle') +
+        '<rect x="200" y="86" width="148" height="118" rx="14" style="fill:' + acc1 + ';stroke:' + acc3 + ';stroke-width:3"/>' +
+        tx(274, 116, '360° ÷ 7.2° =', 14, ink, 'middle') +
+        tx(274, 146, solved ? '50' : '?', 26, solved ? gr7 : acc7, 'middle') +
+        '<line x1="216" y1="160" x2="332" y2="160" style="stroke:' + acc3 + ';stroke-width:2"/>' +
+        tx(274, 182, solved ? '7.2° : 360° = 1 : 50' : '7.2° : 360° = ( ? )', 13, solved ? gr7 : sub, 'middle');
+    }
+    return this.svgEl('0 0 ' + W + ' ' + H, { width: 'min(560px,92vw)', display: 'block' }, frame + body, 'comic' + k + (solved ? 's' : ''));
+  }
+
+
+  scalePick(ok, obj) {
+    if (this.state.solved[this.state.i]) return;
+    if (ok) {
+      this.plog('scale', { obj: obj.n });
+      this.markSolved();
+      const tot = (obj.cells * 10000).toLocaleString();
+      this.toastOk('맞았어요! ' + tot + 'cm = ' + obj.real + 'm!',
+        '지도 ' + obj.cells + 'cm × 10,000 = ' + tot + 'cm = ' + obj.real + 'm! 100m 단위를 ' + obj.cells + '번 반복한 길이예요.');
+      this.autoNext(3400);
+    } else {
+      this.toastRetry(this.hintNext('scale' + obj.n, [
+        '지도에서 한 칸은 실제로 몇 미터일까요? 칸 위의 100m를 다시 볼까요?',
+        '한 칸 100m를 칸 수만큼 반복하면 실제 길이가 돼요. 몇 번 반복할까요?',
+        'cm로 된 답은 실제 거리가 아니에요. m로 바뀐 답을 찾아볼까요?'
+      ]));
+    }
+  }
+
+  zoomPick(ok) {
+    const st = this.STEPS[this.state.i], zq = this.ZOOMQ[st.zi];
+    if (!zq) return;
+    if (!ok) {
+      this.toastRetry(this.hintNext('zoom' + st.zi, [
+        '지도를 ' + zq.p + '%로 늘이면 지도 위 길이도 그만큼 늘어나요.',
+        zq.p + '%는 ' + (zq.p/100) + '배예요. 3cm의 ' + (zq.p/100) + '배는 얼마일까요?',
+        '3 × ' + (zq.p/100) + '을 계산해 골라 보세요.'
+      ]));
+      return;
+    }
+    this.sfx('ok');
+    this.plog('zoom', { pct: zq.p });
+    this.markSolved();
+    this.toast('✅', '맞았어요! ' + zq.ans, '3cm × ' + (zq.p/100) + ' = ' + zq.ans
+      + (st.zi === this.ZOOMQ.length - 1 ? ' — 지도를 확대해도 실제 다리는 그대로예요!' : ''), 'ok');
+  }
+
+  /* 대사 속 물음에 답을 고르는 선택 버튼 — 오답이면 3단계 힌트, 정답이면 개념 문장과 함께 다음으로 */
+  quizPick(id, opt) {
+    const S = this.state, st = this.STEPS[S.i], q = this.QUIZ[id];
+    if (S.solved[S.i]) return;
+    const picks = Object.assign({}, S.qpicks);
+    picks[S.i] = (picks[S.i] || []).concat([opt[0]]);
+    this.setState({ qpicks: picks });
+    this.plog('quiz', { qid: st.sid || st.k, pick: opt[0], ok: !!opt[1] });
+    if (opt[1]) {
+      this.markSolved();
+      if (id === 'prop') this.plog('prop', { ans: 40000 });
+      this.toastOk(q.okT, q.okB);
+    } else {
+      this.toastRetry(this.hintNext('quiz-' + id, q.hints));
+    }
+  }
+
+  movieEnd() { this.plog('movie', { done: 1 }); }
+
+  submitReflect() {
+    const v = (this.state.refText || '').trim();
+    if (!v) { this.toastRetry('한 줄이면 충분해요 — 내 말로 적어 봐요!'); return; }
+    this.plog('reflect', { room:'map', text: v.slice(0, 300),
+      ms: this._refT0 ? (Date.now() - this._refT0) : -1,
+      edits: this._refN || 0, len: v.length, maxLen: this._refMax || v.length });
+    this.markSolved();
+    this.sfx('ok');
+    this.go(1);
+  }
+
+  /* ── 감각 잇기 (bridge) — 지침 2.3 ──
+     세 방에서 만난 비를 비교하게 한다. 답을 먼저 말하지 않고, 고른 뒤에 되짚어 준다. */
+  BRIDGE = [
+    { t:'세 방 모두 크기가 달라져도 비가 같으면 관계가 그대로였어요', ok:1,
+      fb:'맞아요! 물감의 양이 달라도, 진동수가 달라도, 지도의 크기가 달라도 비만 같으면 관계는 그대로였어요.' },
+    { t:'세 방 모두 수가 클수록 정확해졌어요', ok:0,
+      fb:'수가 크다고 색이 붉어지거나 지도가 정확해지지는 않았지요. 다시 한번 생각해볼까요?' },
+    { t:'지도는 색이나 소리와 상관이 없어요', ok:0,
+      fb:'세 방에서 모두 두 양을 비교하는 비가 나왔어요. 그 점을 다시 비교해 볼까요?' }
+  ];
+  bridgePick(ix) {
+    const o = this.BRIDGE[ix];
+    this.plog('bridge', { room:'map', pick: ix, ok: o.ok ? 1 : 0 });
+    if (!o.ok) { this.sfx('oops'); this.toastRetry(o.fb); return; }
+    this.markSolved();
+    this.setState({ bridgePick: ix });
+    this.toast('🔗', '세 방이 이어졌어요!', o.fb, 'ok');
+  }
+
+  /* 방을 마칠 때 황금비 숫자 한 자리를 지갑에 넣던 자리.
+     2026-09-11부터 지도의 비밀은 심화 학습이라 본 흐름 밖에 있고, 카드는 색깔·소리
+     두 방에서 네 장을 모두 받는다. 그래서 이 함수를 부르지 않는다.
+     심화를 다시 본 흐름에 넣는다면 부르는 자리를 되살리고 소리의 방에서 8을 빼야 한다. */
+  awardDigit() {
+    const D = this.DIGIT;
+    let got = [];
+    try { got = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); } catch(e) {}
+    if (got.indexOf(D.id) < 0) {
+      got.push(D.id);
+      try { localStorage.setItem(this.ukey('rs3_cards'), JSON.stringify(got)); } catch(e) {}
+    }
+    this.plog('card', { id: D.id, digit: D.d });
+    this.setState({ cards: got.length });
+  }
+
+  /* 자막 다듬기 —
+     (1) 인물 이름은 작은따옴표로 감싸 대사 속에서 눈에 띄게 한다(이미 감싼 것은 그대로 둔다).
+     (2) 한 문장이 한 줄로 읽히도록 문장이 끝나는 자리에서 줄을 나눈다.
+     화면 표시에만 쓰므로 낭독 텍스트는 그대로이고, 음성 파일도 바뀌지 않는다.
+     '1. 부터'나 '1.618'처럼 숫자 뒤의 마침표에서는 줄을 나누지 않는다. */
+  NAMES = ['에라토스테네스','시냐크','레시오','먼셀','뭉크'];
+  markNames(t) {
+    let s = String(t);
+    this.NAMES.forEach(n => {
+      s = s.replace(new RegExp("(?<![\u0027\u2018\u2019])" + n + "(?![\u0027\u2018\u2019])", 'g'),
+                    "'" + n + "'");
+    });
+    return s;
+  }
+  wrapSay(t) {
+    if (!t) return '';
+    return this.markNames(String(t).replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$1'));   /* 2026-09-27 문장마다 줄 바꾸지 않음(사용자 지시) */
+  }
+
+  blankDef() { return this.BLANKS[this.STEPS[this.state.i].id]; }
+  blankKeys() {
+    const def = this.blankDef(), id = this.STEPS[this.state.i].id, keys = [];
+    def.rows.forEach((row, ri) => row.forEach((tk, ti) => { if (typeof tk === 'object') keys.push({ key: id+'-'+ri+'-'+ti, a: tk.a }); }));
+    return keys;
+  }
+  place(word) {
+    const keys = this.blankKeys();
+    const blanks = Object.assign({}, this.state.blanks);
+    let target = this.state.selBlank && !blanks[this.state.selBlank]
+      ? keys.find(k => k.key === this.state.selBlank)
+      : keys.find(k => !blanks[k.key]);
+    if (!target) return;
+    if (target.a !== word && !this.state.selBlank) {
+      const other = keys.find(k => !blanks[k.key] && k.a === word);
+      if (other) target = other;
+    }
+    if (target.a === word) {
+      blanks[target.key] = word;
+      const used = Object.assign({}, this.state.used);
+      const uk = this.STEPS[this.state.i].id + '|' + word;
+      used[uk] = (used[uk] || 0) + 1;
+      this.sfx('ok');
+      this.setState({ blanks, used, selBlank: null });
+      if (keys.every(k => blanks[k.key])) {
+        setTimeout(() => {
+          this.plog('summary', { no: 1, a: keys.map(k => blanks[k.key]) });
+          this.markSolved();
+          this.confetti();
+          this.toast('✅', '정리 완성!', '지도의 비밀을 문장으로 정리했어요. 이제 다음 방으로 이어가요!', 'ok');
+          this.autoNext(3400);
+        }, 320);
+      }
+    } else {
+      this.sfx('oops');
+      this.toast('🤔', '다시 한번!', this.hintNext('blank', [
+        '지도가 실제 거리를 무엇으로 줄였는지 떠올려 볼까요?',
+        '축척 1:10,000은 실제를 몇 분의 1로 줄인 걸까요? 콜론 뒤의 수를 볼까요?',
+        '다른 카드를 놓아 볼까요? 문장을 소리 내어 읽어 보면 알맞은 낱말이 보여요.'
+      ]));
+    }
+  }
+  chipDown(word) {
+    return (e) => {
+      if (e.button === 1 || e.button === 2) return;
+      const src = e.currentTarget;
+      const g = document.createElement('div');
+      g.textContent = word;
+      g.style.cssText = 'position:fixed;z-index:300;pointer-events:none;padding:13px 24px;border-radius:18px;border:3px solid var(--color-accent-400);background:var(--color-neutral-100);font-size:19.5px;color:var(--color-accent-700);opacity:.94;transform:translate(-50%,-50%)';
+      g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px';
+      document.body.appendChild(g);
+      let moved = false;
+      const t0 = Date.now();
+      const mv = (ev) => { moved = true; g.style.left = ev.clientX + 'px'; g.style.top = ev.clientY + 'px'; };
+      const up = (ev) => {
+        document.removeEventListener('pointermove', mv);
+        document.removeEventListener('pointerup', up);
+        g.remove();
+        if (!moved) return;
+        const el = document.elementFromPoint(ev.clientX, ev.clientY);
+        const slot = el && el.closest ? el.closest('[data-blank]') : null;
+        const ok = !!(slot && slot.getAttribute('data-blank'));
+        /* 빈칸 밖에 놓은 경우(ok:0)를 반드시 남긴다 — 지금까지 통째로 사라지던 자료다.
+           빈칸을 겨냥했다 빗나가는 일이 조작적 어려움의 가장 직접적인 신호다. */
+        this.plog('chip_drag', { w: String(word).slice(0, 12), ok: ok ? 1 : 0,
+          slot: ok ? slot.getAttribute('data-blank') : '', ms: Date.now() - t0 });
+        if (ok) {
+          this.setState({ selBlank: slot.getAttribute('data-blank') });
+          setTimeout(() => this.place(word), 0);
+        }
+      };
+      document.addEventListener('pointermove', mv);
+      document.addEventListener('pointerup', up);
+      try { src.releasePointerCapture(e.pointerId); } catch(err) {}
+    };
+  }
+
+  renderVals() {
+    const S = this.state, st = this.STEPS[S.i];
+    const who = this.WHO[st.who] || this.WHO.ratio;
+    const solved = !!S.solved[S.i];
+    const v = {
+      pct: Math.round(S.i / (this.STEPS.length - 1) * 100),
+      stepLabel: (S.i + 1) + ' / ' + this.STEPS.length,
+      cards: S.cards,
+      audioIcon: S.audio === 'full' ? '🔊' : (S.audio === 'sfx' ? '🔈' : '🔇'),
+      audioTitle: S.audio === 'full' ? '음성 + 효과음' : (S.audio === 'sfx' ? '효과음만' : '소리 끔'),
+      cycleAudio: () => this.cycleAudio(),
+      coachImgEl: who.img ? this.coachPortrait(who) : null,
+      coachEmoji: who.img ? '' : (who.emoji || ''), coachName: who.name,
+      /* 대사가 빈 단계(m-prop)는 음성 없이 화면 글로만 안내 — screen은 읽어 주지 않습니다 */
+      coachText: this.wrapSay(st.say || st.screen || ''),
+      /* 자막 아래 안내 띠는 쓰지 않는다 — 화면에는 대사만 둔다(st.hi는 내부 표시용으로만 남긴다) */
+      coachHi: '',
+      replay: () => this.sayStep(S.i),
+      isStory: st.k === 'story',
+      storyArt: (st.k === 'story' && st.art === 'scholar') ? this.scholarSvg() : null,
+      storyEmoji: !(st.k === 'story' && st.art === 'scholar'), isScale: st.k === 'scale', isZoom: st.k === 'zoom',
+      isMovie: st.k === 'movie', isComic: st.k === 'comic', isProp: st.k === 'prop',
+      isReflect: st.k === 'reflect', isBlank: st.k === 'blank', isFinish: st.k === 'finish',
+      mapEl: null, comicEl: null, propEl: null, choices: null, meetEl: null, propRevealEl: null,
+      quiz: null, quizQ: '',
+      zq1: null, zq2: null, zoomQ1: false, zoomQ2: false, zVal: S.zVal,
+      rows: null, bank: null, cardTitle: '',
+      vidOpen: S.vidOpen, vidBtn: !S.vidOpen,
+      openVid: () => { this.sfx('tap'); this.plog('movie', { open: 1 }); this.setState({ vidOpen: true }); },
+      refText: S.refText,
+    /* 입력에 들인 시간과 고쳐 쓴 정도를 잰다 — 설계원리 5는 지금 최종 문자열 하나로만 잡힌다.
+       이 프레임워크의 onChange가 매 입력마다 도는지 확인해 두었다(세 글자에 _refN 3). */
+      refInput: (e) => {
+        const s = e.target.value;
+        if (!this._refT0) this._refT0 = Date.now();
+        this._refN = (this._refN || 0) + 1;
+        this._refMax = Math.max(this._refMax || 0, s.length);
+        this.setState({ refText: s });
+      },
+      isBridge: st.k === 'bridge',
+      bridgeOpts: st.k === 'bridge' ? this.BRIDGE.map((o, ix) => ({
+        t: o.t,
+        pick: () => this.bridgePick(ix),
+        bd: S.bridgePick === ix ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)',
+        bg: S.bridgePick === ix ? 'var(--color-accent-2-200)' : 'var(--color-neutral-100)'
+      })) : null,
+      prev: () => this.go(-1), prevOp: S.i === 0 ? 0.35 : 1,
+      toast: S.toast, toastIcon: S.toast ? S.toast.icon : '',
+      toastTitle: S.toast ? S.toast.title : '', toastBody: S.toast ? S.toast.body : '',
+      toastBd: S.toast && S.toast.kind === 'ok' ? 'var(--color-accent-2-300)' : 'var(--color-accent-400)',
+      closeToast: () => this.setState({ toast: null }),
+      movieEnd: () => this.movieEnd(),
+      goNext: () => {
+        this.plog('complete', {});
+    /* 2026-09-28 — 「홈으로」를 누르지 않아도 기록이 끝나도록 여기서 바로 보낸다(사용자 지시) */
+    this.flush(true);
+        try {
+          const d = JSON.parse(localStorage.getItem(this.ukey('rs3_done')) || '[]');
+          if (d.indexOf('map') < 0) { d.push('map'); localStorage.setItem(this.ukey('rs3_done'), JSON.stringify(d)); }
+        } catch(e) {}
+      }
+    };
+
+    if (st.k === 'scale') {
+      const obj = this.OBJS[st.oi];
+      v.scaleLabel = st.hi;
+      const sj = ((obj.n.charCodeAt(obj.n.length-1) - 0xAC00) % 28) ? '이' : '가';
+      v.scaleTitle = obj.shape === 'unit'
+        ? '축척이 1 : 10,000인 지도예요. 이 지도에서 1cm는 실제로 몇 cm일까요?'
+        : ('지도에 ' + obj.n + obj.josa + ' ' + obj.cells + 'cm로 그려져 있어요. 실제 ' + obj.n + '의 ' + obj.dim + obj.josa + ' 얼마일까요?');
+      /* 축척과 이번 물음을 같은 비례식에 나란히 놓아 준다 — 두 번 쓰는 같은 비가 눈에 보이게 */
+      v.scaleHelp = obj.shape === 'unit' ? '' : ('1 : 10,000 = ' + obj.cells + ' : (  )');
+      v.mapEl = this.mapSvg(obj, 1);
+      v.choices = st.intro ? null : obj.opts.map(o => ({ t: o[0], pick: () => this.scalePick(o[1] === 1, obj) }));
+    }
+
+    if (st.k === 'zoom') {
+      const obj = this.OBJS[0], f = (solved ? this.ZOOMQ[st.zi].p : (st.zi === 0 ? 100 : this.ZOOMQ[st.zi-1].p)) / 100;
+      v.mapEl = this.mapSvg(obj, f);
+      const zq = this.ZOOMQ[st.zi];
+      v.zoomQ = (zq && !solved) ? ('지금 지도를 100%라고 할 때 ' + zq.p + '%로 확대하면, 3cm였던 다리는 몇 cm가 될까요?') : '';
+      v.zq = (zq && !solved) ? zq.opts.map(o => ({ t: o[0], pick: () => this.zoomPick(o[1] === 1) })) : null;
+    }
+
+    if (st.k === 'movie') {
+      v.meetEl = this.librarySvg();
+    }
+
+    if (st.k === 'comic') {
+      v.comicNo = st.ci + 1;
+      v.comicEl = this.comicSvg(st.ci, solved);
+      v.comicCap = [
+        '시에네에서는 정오에 그림자가 0° — 우물 바닥까지 햇빛이 곧게 들어온다오',
+        solved ? '땅이 둥글게 굽어 있어 두 막대가 서로 다른 쪽을 향한 것이오 — 지구는 둥근 원!'
+               : '같은 날 같은 시각인데, 알렉산드리아의 막대에는 그림자가 7.2° 생겼소',
+        '두 도시 사이 800km와 각도 7.2° — 이 둘로 지구를 재어 봅시다',
+        solved ? '360 ÷ 7.2 = 50 — 7.2° : 360° = 1 : 50, 그러니 1 : 50 = 800km : 지구의 둘레!'
+               : '한 바퀴 360° 가운데 두 도시가 벌어진 각은 7.2° — 이 둘의 비를 구해 봅시다'
+      ][st.ci];
+    }
+
+    if (st.k === 'prop') {
+      v.propEl = this.propSvg();
+      v.propRevealEl = solved ? this.sceneImg('eratos_scene2.jpg', 'prop-scene2', '34vh') : null;
+    }
+
+    if (st.quiz) {
+      const q = this.QUIZ[st.quiz], picked = S.qpicks[S.i] || [];
+      v.quizQ = q.q;
+      v.quiz = q.opts.map(o => {
+        const on = picked.indexOf(o[0]) >= 0, good = on && !!o[1];
+        return {
+          t: o[0],
+          bd: good ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)',
+          bg: on ? (good ? 'var(--color-accent-2-100)' : 'var(--color-neutral-200)') : 'var(--color-neutral-100)',
+          fg: good ? 'var(--color-accent-2-700)' : 'var(--color-accent-700)',
+          pick: () => this.quizPick(st.quiz, o)
+        };
+      });
+    }
+
+    if (st.k === 'blank') {
+      const def = this.blankDef();
+      v.cardTitle = def.title || '';
+      v.rows = def.rows.map((row, ri) => ({
+        tokens: row.map((tk, ti) => {
+          if (typeof tk === 'string')
+            return { t: tk, key:'', disp:'inline', minw:'0', minh:'0', pad:'0', mar:'0', rad:'0', bb:'none', bg:'transparent', fg:'var(--color-neutral-900)', cur:'default', out:'none' };
+          const key = st.id + '-' + ri + '-' + ti, filled = S.blanks[key], sel = S.selBlank === key;
+          return {
+            t: filled || '', key, disp:'inline-block', minw:'92px', minh:'40px',
+            pad:'2px 12px', mar:'0 4px', rad:'12px 12px 0 0',
+            bb: '4px solid ' + (filled ? 'var(--color-accent-2-500)' : 'var(--color-accent-400)'),
+            bg: filled ? 'var(--color-accent-2-100)' : (sel ? 'var(--color-accent-200)' : 'var(--color-accent-100)'),
+            fg: filled ? 'var(--color-accent-2-700)' : 'var(--color-accent-700)', cur:'pointer',
+            out: sel ? '3px dashed var(--color-accent-700)' : 'none',
+            tap: () => { if (filled) return; this.sfx('tap'); this.setState({ selBlank: key }); }
+          };
+        })
+      }));
+      const seen = {};
+      v.bank = def.bank.map((w) => {
+        seen[w] = (seen[w] || 0) + 1;
+        const hidden = (S.used[st.id + '|' + w] || 0) >= seen[w];
+        return { t: w, vis: hidden ? 'hidden' : 'visible', down: this.chipDown(w) };
+      });
+    }
+
+    /* 게스트(자유 탐색): needsSolve 게이트를 건너뛴다 — 검토와 수정 때 화면을 자유로이 오가야 하기 때문이다. 실제 학습자는 활동을 마쳐야 다음으로 넘어간다 */
+    const needsSolve = (!st.intro && ['scale','zoom','prop','blank','reflect','bridge'].indexOf(st.k) >= 0) || !!st.quiz;
+    const gate = needsSolve && !solved && !this._guest;
+    v.showPrimary = st.k !== 'finish';
+    v.primaryLabel = st.k === 'story' ? (st.btn || '다음 →')
+      : (st.k === 'movie' ? '그 소식이 궁금해요! →'
+      : (st.k === 'comic' ? (st.ci < 3 ? '다음 컷 →' : '비로 계산해 보기! ✏️')
+      : (st.k === 'reflect' ? '제출! →' : '다음 →')));
+    v.primaryBg = gate ? 'var(--color-neutral-400)' : 'var(--color-accent)';
+    v.footHint = gate ? (st.k === 'blank' ? '빈칸을 모두 채우면 다음으로 갈 수 있어요'
+      : (st.quiz ? '알맞은 답을 고르면 다음으로 갈 수 있어요' : '문제를 해결하면 다음으로 갈 수 있어요')) : '';
+    v.primary = () => {
+      if (st.k === 'reflect') { if (this._guest && !(this.state.refText || '').trim()) { this.go(1); return; } this.submitReflect(); return; }
+      if (gate) { this.sfx('oops'); this.toast('🤔', '조금만 더!', '지금 문제를 해결하고 넘어가요.'); return; }
+      this.sfx('tap'); this.go(1);
+    };
+    return v;
+  }
+}
+</script>
+</body>
+</html>

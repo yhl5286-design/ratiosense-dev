@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RatioSense 음성 확인</title>
+<style>
+  :root{--bg:#faf7f2;--card:#fff;--line:#e8e0d4;--ink:#2b2622;--dim:#6d6459;--gold:#c9911f}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:"Noto Sans KR","Malgun Gothic",sans-serif;font-size:15px;line-height:1.6}
+  .wrap{max-width:940px;margin:0 auto;padding:24px 16px 90px}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--dim);font-size:14px;margin:0 0 8px}
+  h2{font-size:17px;margin:32px 0 2px}
+  .note{color:var(--dim);font-size:13.5px;margin:0 0 12px}
+  .row{display:flex;gap:12px;align-items:flex-start;background:var(--card);
+       border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+  .row.hit{border:2px solid var(--gold);background:#fffaf0}
+  .play{flex:none;width:46px;height:46px;border-radius:999px;border:2px solid var(--gold);
+        background:#fff;color:var(--gold);font-size:16px;cursor:pointer;font-family:inherit}
+  .play:hover,.play.on{background:var(--gold);color:#fff}
+  .meta{flex:none;width:104px;font-size:13px;color:var(--dim)}
+  .cast{color:var(--ink);font-weight:700}
+  .key{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:#a09484}
+  .txt{flex:1;min-width:0}
+  .bad{color:#b23c17;font-weight:700}
+  .bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);
+       padding:10px 16px;display:flex;gap:10px;align-items:center;font-size:14px;flex-wrap:wrap}
+  .bar button{border:2px solid var(--gold);background:#fff;color:var(--gold);border-radius:999px;
+              padding:8px 16px;font-size:14px;cursor:pointer;font-family:inherit}
+  .bar button:hover{background:var(--gold);color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>RatioSense v4 음성 확인</h1>
+  <p class="sub">방을 넘기지 않고 대사별 mp3를 바로 재생합니다. 게스트 모드로 단계를 밟을 필요가 없습니다.</p>
+  <div id="list">불러오는 중…</div>
+</div>
+<div class="bar">
+  <button id="stop">■ 멈춤</button>
+  <button id="allColor">🎨 색깔 방 이어 듣기</button>
+  <span id="now">—</span>
+</div>
+<script>
+let DATA = null, cur = null, curBtn = null;
+const list = document.getElementById('list'), now = document.getElementById('now');
+
+function stop() {
+  if (cur) { cur.pause(); cur = null; }
+  if (curBtn) { curBtn.classList.remove('on'); curBtn = null; }
+  now.textContent = '—';
+}
+function play(key, btn, label, onEnd) {
+  stop();
+  cur = new Audio('../tts/' + key + '.mp3?v=' + DATA.ver);
+  curBtn = btn; btn.classList.add('on'); now.textContent = '▶ ' + label;
+  cur.onended = () => { btn.classList.remove('on'); now.textContent = '—'; if (onEnd) onEnd(); };
+  cur.onerror = () => { btn.classList.remove('on'); now.textContent = '✗ 재생 실패 — ' + key; };
+  cur.play().catch(e => { now.textContent = '✗ 재생 실패 — ' + e.message; });
+}
+const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+fetch('voice_check.json?t=' + Date.now()).then(r => r.json()).then(d => {
+  DATA = d; list.innerHTML = '';
+  d.groups.forEach(g => {
+    const h = document.createElement('h2'); h.textContent = g.title; list.appendChild(h);
+    const n = document.createElement('p'); n.className = 'note'; n.textContent = g.note; list.appendChild(n);
+    g.rows.forEach(r => {
+      const el = document.createElement('div');
+      el.className = 'row' + (r.key === d.fixed ? ' hit' : '');
+      el.dataset.key = r.key;
+      el.innerHTML =
+        '<button class="play">▶</button>' +
+        '<div class="meta"><div class="cast">' + r.cast + '</div><div>' + r.speaker + '</div>' +
+        '<div class="key">' + r.key + '</div></div>' +
+        '<div class="txt">' + (r.reg ? '' : '<div class="bad">✗ 매니페스트 미등록</div>') + esc(r.text) + '</div>';
+      const btn = el.querySelector('.play');
+      btn.onclick = () => play(r.key, btn, r.cast);
+      list.appendChild(el);
+    });
+  });
+}).catch(e => { list.textContent = '자료를 읽지 못했습니다: ' + e.message; });
+
+document.getElementById('stop').onclick = stop;
+document.getElementById('allColor').onclick = () => {
+  if (!DATA) return;
+  stop();
+  const rows = DATA.groups[1].rows.slice();
+  let i = 0;
+  const step = () => {
+    if (i >= rows.length) { now.textContent = '색깔 방 끝'; return; }
+    const r = rows[i++];
+    const el = [...list.querySelectorAll('.row')].find(x => x.dataset.key === r.key);
+    el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    play(r.key, el.querySelector('.play'), r.cast + ' (' + i + '/' + rows.length + ')', step);
+  };
+  step();
+};
+</script>
+</body>
+</html>

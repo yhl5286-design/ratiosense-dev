@@ -1,0 +1,163 @@
+/* make_voice_check.mjs — 대사별 mp3를 바로 들어 보는 확인 페이지의 자료를 만든다.
+   방 코드에서 대사 차례를 그대로 뽑으므로 앱에서 듣는 순서와 같다.
+   결과는 _tools/voice_check.json — voice_check.html이 이 파일을 읽는다. */
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const V4 = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+/* 비를 한자어로 읽는 방 — 앱의 speak()에 같은 규칙이 들어 있는 방만 적는다.
+   규칙이 없는 방에까지 적용하면 이미 만들어 둔 mp3의 키와 어긋난다. */
+const SINO_ROOMS = new Set(['ColorRoom', 'EvalRoom', 'SoundRoom', 'MapRoom']);  /* 2026-08-27 네 방 모두 규칙 보유 */
+const SINO = v => {  /* 만 단위까지 읽는다 — 네 방의 SINO와 같아야 한다 */
+  const D = ['영','일','이','삼','사','오','육','칠','팔','구'];
+  const n = +String(v).replace(/,/g, '');
+  if (!isFinite(n) || n < 0 || n > 99999999 || String(v).indexOf('.') >= 0) return v;
+  if (n === 0) return '영';
+  const u4 = (x) => { const u = ['천','백','십',''], d = [1000,100,10,1]; let s = '';
+    for (let i = 0; i < 4; i++) { const q = Math.floor(x / d[i]) % 10;
+      if (q) s += ((q === 1 && i < 3) ? '' : D[q]) + u[i]; } return s; };
+  const man = Math.floor(n / 10000), rest = n % 10000;
+  return (man ? ((man === 1 ? '' : u4(man)) + '만') : '') + (rest ? u4(rest) : '');
+};
+const norm = (raw, room) => {
+  const t = raw == null ? '' : (typeof raw === 'string' ? raw : (Array.isArray(raw) ? raw.join(' ') : String(raw)));
+  let x = t.replace(/\[\[([^|\]]*)\|([^\]]*)\]\]/g, '$2')   /* [[화면 글|읽을 말]] — 네 방 speak와 같다 */
+    .replace(/[\u{1F300}-\u{1FAFF}☀-➿️]/gu, '');
+  if (SINO_ROOMS.has(room)) {
+    x = x.replace(/([가-힣A-Za-z0-9]+)\s*:\s*([가-힣A-Za-z0-9]+)/g, '$1 대 $2')   /* 빨강:노랑 → 빨강 대 노랑 */
+             .replace(/(?<![\d.])(\d+)\s*대\s*(\d+\.\d+)/g, (mm, a, b) => a + ' 대 ' + b)
+         .replace(/(?<![\d.,])(\d{1,3}(?:,\d{3})+|\d+)\s*대\s*(\d{1,3}(?:,\d{3})+|\d+)(?![.\d])/g, (mm, a, b) => a + ' 대 ' + b)  /* 10,000은 건드리지 않는다 */
+         .replace(/(\d) 대 (\d[\d.,]*)(?=[가-힣])/g, '$1 대 $2 ');  /* 2026-09-22 밤 — 숫자 그대로, 조사와 띄움(네 방 speak와 같다) */
+  }
+  return x.replace(/mL/g, ' 밀리리터').replace(/cm/g, ' 센티미터 ').replace(/Hz/g, ' 헤르츠 ')
+          .replace(/\s+/g, ' ').trim();
+};
+/* 낭독을 문장으로 나눈다 — 네 방의 SENT와 같아야 한다 */
+const SENT = t => String(t).split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean);
+const ttsKey = s => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h * 33) ^ s.charCodeAt(i)) >>> 0; return h.toString(36); };
+
+/* 허브(index.html)의 HUB_SAY — 방과 같은 규칙으로 문장을 나눠 음성 목록에 넣는다(2026-09-27) */
+function hubRows() {
+  const html = fs.readFileSync(path.join(V4, 'index.html'), 'utf8');
+  const m = html.match(/const HUB_SAY = \[([\s\S]*?)\];/);
+  if (!m) return [];
+  const lines = [];
+  const re = new RegExp("'((?:[^'\\\\]|\\\\.)*)'", 'g'); let g;
+  while ((g = re.exec(m[1]))) lines.push(g[1].replace(/\\'/g, "'"));
+  const out = [];
+  lines.forEach((l, i) => SENT(norm(l, 'ColorRoom')).forEach((t, j) => out.push({
+    step: i + j * 0.001, who: 'ratio', text: t, key: ttsKey('ratio|' + t) })));
+  return out;
+}
+
+function make(name, done) {
+  const html = fs.readFileSync(path.join(V4, name + '.dc.html'), 'utf8');
+  const src = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)[1]
+    .replace(/^\s*class Component extends DCLogic\s*\{/, 'class Component {');
+  const shim = [
+    'const localStorage = { getItem: (k) => (STORE[k] === undefined ? null : STORE[k]), setItem: () => {}, removeItem: () => {} };',
+    'const speechSynthesis = { getVoices: () => [], cancel(){}, speak(){}, resume(){} };',
+    'const document = { addEventListener(){}, visibilityState:"visible", createElement:()=>({style:{},appendChild(){}}) };',
+    'const window = { addEventListener(){}, localStorage, RS_TTS:{}, matchMedia:()=>({matches:false}) };',
+    'const Audio = function(){ return { play: () => ({ catch(){} }), pause(){}, addEventListener(){} }; };',
+  ].join('\n');
+  const store = { 'rs3_user': JSON.stringify({ code: 'scan' }), 'rs3_done:scan': JSON.stringify(done) };
+  return new (new Function('STORE', shim + '\n' + src + '\nreturn Component;')(store))();
+}
+
+function lines(name, done) {
+  const room = make(name, done), out = [];
+  (room.STEPS || []).forEach((s, i) => {
+    /* story라도 lines가 없으면 say를 읽는다 — 지도의 방은 sayStep이 언제나 say를 쓴다.
+       예전에는 story를 무조건 lines로만 보아 지도 1·5단계가 통째로 빠졌다. */
+    const raw = (s.k === 'story' && s.lines && s.lines.length) ? s.lines.join(' ') : s.say;
+    const t = norm(raw, name);
+    if (!t) return;
+    const who = name === 'EvalRoom' ? 'ratio' : (s.who || 'ratio');
+    /* 문장마다 따로 합성한다(2026-09-11) — 앱의 speak()가 문장 단위로 재생하므로
+       키도 문장 단위여야 한다. 나누는 규칙은 네 방의 SENT와 같다. */
+    SENT(t).forEach((p, j) => out.push({
+      step: i + j * 0.001, who, text: p, key: ttsKey(who + '|' + p) }));
+  });
+  /* 소리 방 4단계(rooms)는 STEPS에 say가 없고 roomsSay(stage)가 네 갈래를 만든다.
+     넷 다 학습자가 듣는 대사이므로 모두 뽑는다. */
+  /* 2026-09-28 — 두 방 화면을 뺐으므로 그 화면이 없으면 roomsSay 대사도 목록에 넣지 않는다 */
+  if (name === 'SoundRoom' && typeof room.roomsSay === 'function'
+      && (room.STEPS || []).some(s => s.k === 'rooms')) {
+    const idx = (room.STEPS || []).findIndex(s => s.k === 'rooms');
+    ['miss', 'collect', 'rooms', 'done'].forEach((stage, j) => {
+      SENT(norm(room.roomsSay(stage), name)).forEach((p, k) => out.push({
+        step: (idx < 0 ? 3 : idx) + j * 0.01 + k * 0.001, who: 'ratio', text: p,
+        key: ttsKey('ratio|' + p) }));
+    });
+  }
+  /* 소리 방 음정 표(table) 분류 대사 — 분류 시작과 끝에 CLS_SAY를 읽는다(2026-09-22 추가, 전에는 목록에서 빠졌다) */
+  if (name === 'SoundRoom' && room.CLS_SAY) {
+    const idx = (room.STEPS || []).findIndex(s => s.k === 'table');
+    ['p1', 'done'].forEach((stage, j) => {
+      SENT(norm(room.CLS_SAY[stage], name)).forEach((p, k) => out.push({
+        step: (idx < 0 ? 8 : idx) + 0.5 + j * 0.01 + k * 0.001, who: 'ratio', text: p,
+        key: ttsKey('ratio|' + p) }));
+    });
+  }
+  /* 방이 VOICE_EXTRA([[인물, 대사], …])로 알려 주는 실행 중 대사(2026-09-22) */
+  (room.VOICE_EXTRA || []).forEach(([who, txt], j) => {
+    SENT(norm(txt, name)).forEach((p, k) => out.push({
+      step: 99 + j * 0.01 + k * 0.001, who, text: p, key: ttsKey(who + '|' + p) }));
+  });
+  /* STEPS 밖에서 부르는 대사 — 색깔 방의 컵 세기 물음 */
+  if (name === 'ColorRoom' && room.CUP_ASK) {
+    SENT(norm(room.CUP_ASK, name)).forEach((p, j) => out.push({
+      step: 11.5 + j * 0.001, who: 'munsell', text: p, key: ttsKey('munsell|' + p) }));
+  }
+  return out.sort((a, b) => a.step - b.step);
+}
+
+/* 인물별 목소리는 _tools/cast.json 한 곳에서만 정한다. 파일이 없으면 예전 값을 쓴다. */
+const CAST = (() => {
+  const f = path.join(V4, '_tools', 'cast.json');
+  if (fs.existsSync(f)) {
+    const c = JSON.parse(fs.readFileSync(f, 'utf8')).cast, o = {};
+    for (const k in c) o[k] = [c[k].name, c[k].speaker];
+    return o;
+  }
+  return {
+    ratio: ['레시오', 'vhyeri'], munch: ['뭉크', 'njooahn'], munsell: ['먼셀', 'nwoosik'],
+    signac: ['시냐크', 'nraewon'], eratos: ['에라토스테네스', 'nwontak'], kid: ['다인', 'ndain'],
+  };
+})();
+const manSrc = fs.readFileSync(path.join(V4, 'tts', 'manifest.js'), 'utf8');
+const manKeys = new Set([...manSrc.matchAll(/['"]([0-9a-z]{1,9})['"]\s*:/g)].map(m => m[1]));
+
+const data = {
+  ver: (manSrc.match(/RS_TTS_V = '(\d+)'/) || [, '1'])[1],
+  fixed: '1fcvula',
+  groups: [
+    { title: '🎨 색깔의 비밀 방 — 전체',
+      note: '앱에서 나오는 차례 그대로입니다.',
+      rows: lines('ColorRoom', []) },
+    { title: '🎼 소리의 방 — 전체',
+      note: '색깔 방을 마치고 들어온 차례입니다.',
+      rows: lines('SoundRoom', ['color']) },
+    { title: '🗺️ 지도의 방 — 전체',
+      note: '색깔·소리를 마치고 들어온 차례입니다.',
+      rows: lines('MapRoom', ['color', 'sound']) },
+    { title: '🏠 허브 — 시작하기 안내',
+      note: 'index.html의 HUB_SAY — 허브에서 「시작하기」를 누르면 레시오가 하는 말입니다.',
+      rows: hubRows() },
+    { title: '🏛️ 평가의 방 — 전체',
+      note: '세 방을 마친 뒤 듣는 차례입니다.',
+      rows: lines('EvalRoom', ['color','sound','map']) },
+  ],
+};
+data.groups.forEach(g => g.rows.forEach(r => {
+  r.cast = CAST[r.who] ? CAST[r.who][0] : r.who;
+  r.speaker = CAST[r.who] ? CAST[r.who][1] : '—';
+  r.reg = manKeys.has(r.key);
+}));
+
+fs.writeFileSync(path.join(V4, '_tools', 'voice_check.json'), JSON.stringify(data, null, 1), 'utf8');
+console.log('만듦: _tools/voice_check.json');
+data.groups.forEach(g => console.log(`  ${g.title} — ${g.rows.length}줄`));
