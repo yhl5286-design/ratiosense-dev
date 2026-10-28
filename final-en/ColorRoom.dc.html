@@ -269,18 +269,26 @@ button{font-family:inherit}
                 </div>
                 <div style="flex:none;width:{{q.rowW}};min-height:54px;display:flex;flex-wrap:wrap;gap:4px;align-items:flex-end;background:#f9f4ed;border:2.5px dashed #dcd3c4;border-radius:14px;padding:6px 8px">
                   <sc-for list="{{q.cups}}" as="cu" hint-placeholder-count="3">
-                    <div style="box-sizing:border-box;width:{{q.cupW}};height:{{q.cupH}};border:3px solid #201e1d;border-top-width:2px;border-radius:0 0 9px 9px;background:#f9f4ed;position:relative;overflow:hidden;flex:none">
+                    <div style="box-sizing:border-box;width:{{q.cupW}};height:{{q.cupH}};border:3px solid #201e1d;border-top-width:2px;border-color:{{cu.bd}};margin-left:{{cu.ml}};border-radius:0 0 9px 9px;background:#f9f4ed;position:relative;overflow:hidden;flex:none">
                       <div style="position:absolute;left:0;right:0;bottom:0;height:74%;background:{{q.color}}"></div>
                     </div>
                   </sc-for>
                 </div>
-                <div style="display:flex;gap:6px;flex:none">
+                <div style="display:{{q.btnDisp}};gap:6px;flex:none">
                   <button onClick="{{q.sub}}" aria-label="Take out one cup of {{q.name}}" style="width:46px;height:46px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{q.btnOp}};pointer-events:{{q.btnPe}}">−</button>
                   <button onClick="{{q.add}}" aria-label="Pour in one cup of {{q.name}}" style="width:46px;height:46px;border-radius:999px;border:3px solid #f6a06b;background:#fff2eb;font-size:21px;color:#8c491a;cursor:pointer;padding:0;opacity:{{q.btnOp}};pointer-events:{{q.btnPe}}">＋</button>
                 </div>
               </div>
             </sc-for>
             <div style="font-size:12.5px;font-weight:800;color:#645c50;text-align:center">One cup holds 10mL</div>
+            <!-- 2026-10-28 — 같은 양을 더해 보는 화면(trap)은 물감마다 ＋−를 두지 않고 단추 하나로 두 물감에 같은 양을 붓는다.
+                 처음 담긴 컵은 덜어 낼 수 없고, 더 부은 컵은 테 색으로 나뉘어 「양쪽에 같은 수의 컵」이 보인다(사용자 지시). -->
+            <sc-if value="{{pourOn}}" hint-placeholder-val="{{false}}">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                <button onClick="{{pourGo}}" style="min-height:54px;padding:12px 24px;border-radius:999px;border:3px solid #c67139;background:#fff2eb;font-size:18px;color:#8c491a;cursor:pointer;opacity:{{pourOp}}">＋ Pour 10mL into both paints</button>
+                <div style="font-size:14px;font-weight:800;color:#8c491a">Added · red +{{pourAdd}}mL · yellow +{{pourAdd}}mL</div>
+              </div>
+            </sc-if>
             <!-- 맞혔을 때만 뜨는 두 배 막대 — 컵을 세지 않아도 길이로 배수가 보인다 -->
             <sc-if value="{{cupBarOn}}" hint-placeholder-val="{{false}}">
               <!-- 두 막대가 같은 왼쪽 선에서 출발해야 길이 차이가 그대로 배수로 읽힌다.
@@ -358,7 +366,9 @@ button{font-family:inherit}
               </sc-if>
             </div>
             <button onClick="{{runLab}}" style="min-height:58px;padding:14px 26px;border-radius:999px;border:none;opacity:{{labOp}};background:#c67139;color:#f9f4ed;font-size:19px;cursor:pointer;box-shadow:0 6px 16px rgba(198,113,57,.35)">🧪 {{runLabel}}</button>
-            <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">Empty it</button>
+            <sc-if value="{{showClear}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{clearLab}}" style="min-height:50px;padding:12px 22px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:16px;color:#645c50;cursor:pointer">Empty it</button>
+            </sc-if>
             <sc-if value="{{canChangeHypo}}" hint-placeholder-val="{{false}}">
               <button onClick="{{openHypo}}" style="min-height:48px;padding:11px 18px;border-radius:999px;border:3px solid #dcd3c4;background:#f9f4ed;font-size:15.5px;color:#8c491a;cursor:pointer">🔬 Change my hypothesis</button>
             </sc-if>
@@ -517,7 +527,8 @@ button{font-family:inherit}
       </sc-if>
 
       <sc-if value="{{isGrid}}" hint-placeholder-val="{{false}}">
-        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%">
+        <!-- 2026-10-28 — 칸 밖으로 나가도 붓 커서가 이어 보이도록 색칠 화면 전체에 붓 커서를 둔다(단추 위는 단추 커서, 사용자 지시) -->
+        <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;cursor:{{gridCur}}">
           <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;flex:none">
             <sc-for list="{{pots}}" as="q" hint-placeholder-count="2">
               <button onClick="{{q.pick}}" style="min-height:56px;padding:12px 20px;border-radius:999px;border:4px solid {{q.bd}};background:{{q.bg}};font-size:17px;cursor:{{q.cur}};display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:999px;background:{{q.color}}"></span>{{q.name}}</button>
@@ -1320,7 +1331,17 @@ class Component extends DCLogic {
   /* 색칠하는 자리의 마우스 커서를 붓으로 바꾼다. 붓끝 색은 지금 고른 물감 색이므로,
      무엇으로 칠하게 되는지를 말로 일러 주지 않아도 손끝에서 드러난다(지침 4.2·5.5).
      붓끝이 커서가 가리키는 지점(8, 26)에 오도록 맞추었다. */
-  brushCur(col) {
+  brushCur(col, big) {
+    /* 2026-10-28 — 큰 붓(10칸)을 고르면 한 줄을 한 번에 칠하는 넓은 붓으로 그린다.
+       작은 붓과 커서가 같아 어느 붓으로 칠하는지 손끝에서 보이지 않았다(사용자 지시). */
+    if (big) {
+      const wide = '<svg xmlns="http://www.w3.org/2000/svg" width="56" height="40">'
+        + '<rect x="25" y="2" width="6" height="16" rx="3" fill="#a97142" stroke="#201e1d" stroke-width="1.4"/>'
+        + '<rect x="8" y="17" width="40" height="6" rx="1.5" fill="#d8d2c7" stroke="#201e1d" stroke-width="1.4"/>'
+        + '<path d="M9 23h38l-1.5 11q-17.5 4-35 0z" fill="' + col + '" stroke="#201e1d" stroke-width="1.4"/>'
+        + '</svg>';
+      return "url('data:image/svg+xml," + encodeURIComponent(wide) + "') 28 34, pointer";
+    }
     const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34">'
       + '<g transform="rotate(45 17 17)">'
       + '<rect x="14.5" y="3" width="5" height="15" rx="2.5" fill="#a97142" stroke="#201e1d" stroke-width="1.4"/>'
@@ -2425,6 +2446,20 @@ class Component extends DCLogic {
   /* 비우기는 단계가 시작될 때의 상태로 되돌린다 — 첫 실험에서는 먼셀의 시범을 이어받은
      출발점(빨강만 담긴 비커)이 남아, 비우고 다시 해도 다시 막히지 않는다. */
   clearLab() { this.sfx('tap'); this._wasHit = false; this.setState({ amt: this.startAmt(this.state.i) }); }
+  /* 같은 양을 더해 보는 화면(trap)의 「두 물감에 10mL씩 함께 붓기」 — 한 번에 두 물감에 한 컵씩 붓는다.
+     학생 평가에서 물감마다 ＋−를 따로 누르다 처음 양 밑으로 덜어 내거나 50 · 70을 넘긴 학습자가 많았다.
+     여기서 할 일은 같은 양을 더한 색을 목표색과 비교하는 것이므로, 컵 수를 맞추는 수고는 단추가 맡는다
+     (지침 1.4 「도구는 정밀한 조작의 어려움만 보완하라」, 2026-10-28 사용자 지시). 세 번(30mL)까지만 붓는다. */
+  pourBoth() {
+    const st = this.STEPS[this.state.i];
+    if (!st || st.mode !== 'trap') return;
+    const amt = Object.assign({}, this.state.amt);
+    if (amt['Red'] - st.startR >= st.trapA - st.startR) return;
+    amt['Red'] += this.CUP_ML; amt['Yellow'] += this.CUP_ML;
+    this.plog('pour_both', { n: Math.round((amt['Red'] - st.startR) / this.CUP_ML), oR: amt['Red'], oY: amt['Yellow'] });
+    this.sfx('pour'); this.setState({ amt });
+    this.hitCue(amt['Red'], amt['Yellow']);
+  }
 
   /* 지침 6.5 — 재시도 횟수·오답 내용에 따른 단계적 힌트 (정답 직접 노출 금지) */
   hintNext(key, stages) {
@@ -3534,6 +3569,21 @@ class Component extends DCLogic {
       v.clearLab = labDone
         ? (() => this.toast('✅', 'Already recorded', 'Tap “Next →” to go on.', 'quiet'))
         : (() => this.clearLab());
+      /* 2026-10-28 — 같은 양을 더해 보는 화면(trap)은 「함께 붓기」 단추 하나로만 붓는다.
+         덜어 낼 일이 없으므로 비우기를 감추고, 세 번 다 붓기 전에는 확인하기를 흐리게 둔다(사용자 지시). */
+      const isTrapLab = st.mode === 'trap';
+      const trapAdd = isTrapLab ? (S.amt['Red'] - st.startR) : 0;
+      const trapFull = isTrapLab && trapAdd >= st.trapA - st.startR;
+      v.showClear = isTrapLab ? 0 : 1;
+      if (isTrapLab && !labDone && !trapFull) v.labOp = '.45';
+      v.pourOn = isTrapLab ? 1 : 0;
+      v.pourAdd = trapAdd;
+      v.pourOp = (labDone || trapFull) ? '.45' : '1';
+      v.pourGo = labDone
+        ? (() => this.toast('✅', 'Already recorded', 'Tap “Next →” to go on.', 'quiet'))
+        : trapFull
+          ? (() => this.toast('✅', 'You added the same amount to both', 'Tap Check it to compare with the target color.', 'quiet'))
+          : (() => this.pourBoth());
       v.padDown = (e) => this.padDown(e); v.padMove = (e) => this.padMove(e); v.padUp = (e) => this.padUp(e);
       /* 잠긴 물감은 막대·＋−를 모두 막고 자물쇠로 표시한다. 눌러 보면 왜 잠겼는지 알려 준다. */
       const lockR = this.lockR(st);
@@ -3595,11 +3645,16 @@ class Component extends DCLogic {
         const cupH = Math.round(cupW * 1.46);
         v.cupPaints = v.paints.map(q => {
           const nm = q.name, cur = S.amt[nm], n = Math.round(cur / this.CUP_ML), lk = !!(lockR && nm === 'Red') || labDone;
+          /* trap 화면 — 처음 담긴 컵 뒤에 틈을 두고, 더 부은 컵은 주황 테로 그린다 */
+          const base = isTrapLab ? Math.round((nm === 'Red' ? st.startR : st.startY) / this.CUP_ML) : n;
           return {
             name: nm, ink: q.ink, color: q.color, amt: cur, n: n, tag: q.tag,
             cupW: cupW + 'px', cupH: cupH + 'px',
-            rowW: (perRow * cupW + CGAP * (perRow - 1) + 20) + 'px',
-            cups: new Array(n).fill(0).map((_, i) => ({ i: i })),
+            rowW: (perRow * cupW + CGAP * (perRow - 1) + 20 + (isTrapLab ? 8 : 0)) + 'px',
+            cups: new Array(n).fill(0).map((_, i) => ({ i: i,
+              bd: i >= base ? '#c67139' : '#201e1d',
+              ml: (i === base && i > 0) ? '8px' : '0' })),
+            btnDisp: isTrapLab ? 'none' : 'flex',
             btnOp: q.btnOp, btnPe: q.btnPe,
             add: lk ? (() => {}) : (() => this.setAmt(nm, Math.min(this.CUP_LAB_MAX * this.CUP_ML, cur + this.CUP_ML), 'cup')),
             sub: lk ? (() => {}) : (() => this.setAmt(nm, cur - this.CUP_ML, 'cup'))
@@ -3677,7 +3732,9 @@ class Component extends DCLogic {
         bg: l.ok ? '#f0fae1' : '#fff2eb', fg: l.ok ? '#56633f' : '#8c491a',
         bd: l.ok ? '#ccdbb2' : '#ffc6a5'
       })) : null;
-      v.labSide = (v.noteRows || v.labLog) ? 1 : 0;
+      /* 2026-10-28 — 같은 양을 더해 보는 화면(trap)에서는 왼쪽 칸(나의 수첩 · 실험 기록)을 띄우지 않는다.
+         이 화면에서 할 일은 양쪽에 같은 양을 붓고 목표색과 비교하는 것 하나뿐이다(사용자 지시). */
+      v.labSide = (!isTrapLab && (v.noteRows || v.labLog)) ? 1 : 0;
     }
 
     if (st.k === 'demo') {
@@ -3813,8 +3870,8 @@ class Component extends DCLogic {
         { name:'Big brush (10 squares)', ic:32, bd: S.bsize === 10 ? '#201e1d' : '#dcd3c4', bg: S.bsize === 10 ? '#ffe1d0' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ bsize:10 }); } }
       ];
       v.pots = [
-        { name:'Red paint', color:this.rgb(this.PRIM['Red']), cur:this.brushCur(this.rgb(this.PRIM['Red'])), bd: S.pot === 'r' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'r' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'r' }); } },
-        { name:'Yellow paint', color:this.rgb(this.PRIM['Yellow']), cur:this.brushCur(this.rgb(this.PRIM['Yellow'])), bd: S.pot === 'y' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'y' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'y' }); } }
+        { name:'Red paint', color:this.rgb(this.PRIM['Red']), cur:this.brushCur(this.rgb(this.PRIM['Red']), n === 100 && S.bsize === 10), bd: S.pot === 'r' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'r' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'r' }); } },
+        { name:'Yellow paint', color:this.rgb(this.PRIM['Yellow']), cur:this.brushCur(this.rgb(this.PRIM['Yellow']), n === 100 && S.bsize === 10), bd: S.pot === 'y' ? '#201e1d' : '#dcd3c4', bg: S.pot === 'y' ? '#fff2eb' : '#f9f4ed', pick: () => { this.sfx('tap'); this.setState({ pot:'y' }); } }
       ];
       const r = cells.filter(c => c === 'r').length, y = cells.filter(c => c === 'y').length;
       v.gridCount = 'Red ' + r + ' squares · yellow ' + y + ' squares · left ' + (n - r - y) + ' squares';
@@ -3828,7 +3885,7 @@ class Component extends DCLogic {
       v.gridDown = () => { this._gdown = true; };
       v.gridUp = () => { this._gdown = false; };
       v.gridClear = () => { this.sfx('tap'); this.setState({ cells: new Array(n).fill('') }); };
-      v.gridCur = this.brushCur(this.rgb(this.PRIM[S.pot === 'y' ? 'Yellow' : 'Red']));
+      v.gridCur = this.brushCur(this.rgb(this.PRIM[S.pot === 'y' ? 'Yellow' : 'Red']), n === 100 && S.bsize === 10);
     }
 
     if (st.k === 'blank') {

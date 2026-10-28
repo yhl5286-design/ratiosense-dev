@@ -1,6 +1,6 @@
 {
  "_file": "ColorRoom.dc.html",
- "_count": 602,
+ "_count": 606,
  "strings": {
   "홈으로": "Home",
   "색깔의 비밀": "The Color Secret",
@@ -21,6 +21,8 @@
   "{{q.name}} 한 컵 덜어내기": "Take out one cup of {{q.name}}",
   "{{q.name}} 한 컵 붓기": "Pour in one cup of {{q.name}}",
   "컵 하나는 10mL예요": "One cup holds 10mL",
+  "＋ 두 물감에 10mL씩 함께 붓기": "＋ Pour 10mL into both paints",
+  "더 넣은 양 · 빨강 +{{pourAdd}}mL · 노랑 +{{pourAdd}}mL": "Added · red +{{pourAdd}}mL · yellow +{{pourAdd}}mL",
   "빨강": "Red",
   "노랑": "Yellow",
   "{{p.name}} 물감 양": "Amount of {{p.name}} paint",
@@ -548,6 +550,8 @@
   ", 노랑 ": ", yellow ",
   "이미 기록했어요": "Already recorded",
   "「다음 →」을 눌러 넘어가요.": "Tap “Next →” to go on.",
+  "같은 양만큼 다 부었어요": "You added the same amount to both",
+  "확인하기를 눌러 목표색과 비교해 봐요.": "Tap Check it to compare with the target color.",
   "빨강은 이미 부었어요": "The red is already poured",
   "빨강 물감은 먼셀이 이미 부어 두었어요. 노랑을 몇 컵 부을지 정해 봐요.": "Munsell has already poured the red. You decide how many cups of yellow go in.",
   "✅ 같은 양만큼 더 넣었어요! ": "✅ You added the same amount to both! Tap “",

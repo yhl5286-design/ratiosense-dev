@@ -928,4 +928,9 @@ export default {
   "처음부터 하기": "Start over",
   "이 방을 끝까지 마치면 못 받은 카드를 다시 풀러 갈 수 있어요.": "When you finish this room, you can come back for the cards you missed.",
   "아직 마치지 않은 방의 카드는 그 방을 끝까지 마친 뒤에 다시 풀 수 있어요.": "You can solve a card from an unfinished room after you finish that room.",
+  /* 2026-10-28 최종 프로토타입 수정 — 새 화면 글 · 알림 · 단추(대사 아님) */
+  "＋ 두 물감에 10mL씩 함께 붓기": "＋ Pour 10mL into both paints",
+  "더 넣은 양 · 빨강 +{{pourAdd}}mL · 노랑 +{{pourAdd}}mL": "Added · red +{{pourAdd}}mL · yellow +{{pourAdd}}mL",
+  "같은 양만큼 다 부었어요": "You added the same amount to both",
+  "확인하기를 눌러 목표색과 비교해 봐요.": "Tap Check it to compare with the target color.",
 };
