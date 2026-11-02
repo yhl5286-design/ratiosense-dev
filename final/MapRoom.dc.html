@@ -301,6 +301,7 @@ button{font-family:inherit}
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
 class Component extends DCLogic {
   LOG_EP = 'https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+  LOG_ON = false; /* 2026-11-02 공개판: 연구용 로그와 코드 사용 확인을 보내지 않는다(사용자 지시). 다시 연구할 때만 true */
   LOG_TK = 'ratiosense-2026';
   LAB = 'mapV3';
 
@@ -638,7 +639,7 @@ class Component extends DCLogic {
     if (ev !== 'idle') this._lastAct = Date.now();
     try { if (window !== window.parent) parent.postMessage({ type:'pilotLog', lab:this.LAB, event:ev, data:d }, '*'); } catch(e) {}
     try {
-      if (this._user === 'guest') return;
+      if (this._user === 'guest' || !this.LOG_ON) return;
       this._q = this._q || [];
       /* userName 자리에 기기 표시를 담는다(2026-09-27) — 시트가 「코드+기기」를 기억해 코드 중복을 막는다 */
       this._q.push({ _t:'events', schemaVersion:'2', sessionId:this._sess, userCode:this._user||'', userName:this.devId(),
@@ -664,6 +665,7 @@ class Component extends DCLogic {
     return batch;
   }
   flush(beacon) {
+    if (!this.LOG_ON) { this._q = []; return; }
     try {
       if (!this._q || !this._q.length) return;
       const useBeacon = !!(beacon && navigator.sendBeacon);

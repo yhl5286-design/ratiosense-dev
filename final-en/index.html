@@ -148,6 +148,7 @@ window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
    나중에 심화로 열 때는 이 한 줄만 true로 바꾼다. */
 const DEEP=false;
 const LOG_EP='https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
+const LOG_ON=false; /* 2026-11-02 공개판: 연구용 로그와 코드 사용 확인을 보내지 않는다(사용자 지시). 다시 연구할 때만 true */
 const LOG_TK='ratiosense-2026';
 /* 식별 코드 — 앞 글자 하나 + 두 자리 수(2026-09-11 개정).
    E = 전문가(E01~), S = 학생(S01~). 예전에는 네 자리에 스무 글자를 섞어 눌러야 해
@@ -167,7 +168,7 @@ function uid(){return 'x'+Date.now().toString(36)+Math.random().toString(36).sli
    fetch는 mode:'no-cors' + keepalive — 서버가 이미 처리했는데 응답을 읽지 못해 실패로 오인하고 재전송하는 일을 막는다 */
 const LOG={q:[],sent:{},sentIds:[],inflight:{},bid:0,sending:false,sess:uid(),seq:0};
 const HUB_T0=Date.now();   /* 허브에 머문 시간의 기준 */
-function plog(code,ev,data){try{
+function plog(code,ev,data){if(!LOG_ON)return;try{
   if(!code||code==='guest')return; /* 게스트는 미전송 */
   LOG.q.push({_t:'events',schemaVersion:'2',sessionId:LOG.sess,userCode:code,userName:devId(),
     seq:++LOG.seq,clientTs:new Date().toISOString(),eventId:uid(),
@@ -181,7 +182,7 @@ function logBatch(max){const batch=[],seen={};
     if(!r||!r.eventId||LOG.sent[r.eventId]||seen[r.eventId])continue; /* 이미 보냈거나 배치 내 중복 */
     seen[r.eventId]=1;batch.push(r);}
   return batch;}
-function flushLog(beacon){try{
+function flushLog(beacon){if(!LOG_ON)return;try{
   if(!LOG.q.length)return;
   const useBeacon=!!(beacon&&navigator.sendBeacon);
   if(!useBeacon&&LOG.sending)return; /* 진행 중이면 새 POST를 만들지 않음 */
@@ -219,6 +220,7 @@ function devId(){
 /* 코드가 이미 다른 기기에서 쓰였는지 시트에 물어본다. 답이 늦거나 막히면 들여보낸다 —
    수업 중에 인터넷이 흔들려도 학생이 갇히지 않게 하려는 것이다. */
 function checkCode(v){
+  if(!LOG_ON) return Promise.resolve({allow:1,reason:'off'});
   return new Promise(res=>{
     let done=0; const ok=(r)=>{ if(!done){ done=1; res(r); } };
     setTimeout(()=>ok({allow:1,reason:'timeout'}),4000);
