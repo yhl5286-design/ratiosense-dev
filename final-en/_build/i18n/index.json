@@ -1,6 +1,6 @@
 {
  "_file": "index.html",
- "_count": 47,
+ "_count": 58,
  "strings": {
   "RatioSense — 비율 탐험대": "RatioSense — A Ratio Adventure",
   "방마다 숨어 있는": "A ratio adventure — every room hides",
@@ -9,8 +9,8 @@
   "비밀 카드를 모아 마지막 문을 열어요": "Collect the secret cards to open the last door",
   "🃏 비밀 카드": "🃏 Secret cards",
   "(색깔의 방 두 장, 소리의 방 두 장)": "(two from Color, two from Sound)",
-  "코드 바꾸기": "Change code",
-  "🔎 게스트 모드 — 활동 기록이 남지 않아요": "🔎 Guest mode — nothing you do is recorded",
+  "모드 바꾸기": "Change mode",
+  "🧑‍🏫 교사 모드 — 모든 단계를 자유롭게 둘러봐요": "🧑‍🏫 Teacher mode — explore every step freely",
   "🎒 시작하기": "🎒 Start",
   "색깔의 비밀": "The Color Secret",
   "화가의 잃어버린 색을": "Find the painter's lost",
@@ -23,6 +23,14 @@
   "레시오": "Ratio",
   "🔊 레시오의 이야기를 끝까지 들어 주세요": "🔊 Please listen to Ratio until the end",
   "탐험하기 →": "Let's explore →",
+  "🙋 어떻게 시작할까요?": "🙋 How would you like to start?",
+  "🎒 학생 모드": "🎒 Student mode",
+  "처음부터 차례대로 풀어요": "Solve the puzzles in order from the start",
+  "과제를 풀어야 다음 화면으로 넘어가요. 색깔의 방을 마치면 소리의 방이 열리고, 비밀 카드 네 장을 모으면 마지막 문이 열려요. 진행 상황과 비밀 카드는 이 기기에만 저장돼요.": "You move to the next screen by solving each puzzle. Finishing the Color room opens the Sound room, and collecting all four secret cards opens the last door. Your progress and secret cards are saved on this device only.",
+  "🧑‍🏫 교사 모드": "🧑‍🏫 Teacher mode",
+  "모든 화면을 자유롭게 둘러봐요": "Look around every screen freely",
+  "단계 잠금 없이 어느 화면으로든 넘어갈 수 있어요. 수업을 준비하거나 시연할 때 쓰며, 비밀 카드와 진행 상황은 저장되지 않아요.": "Go to any screen without unlocking steps. Use it to prepare a lesson or give a demonstration. Secret cards and progress are not saved.",
+  "🔄 이 기기의 학생 기록 지우기": "🔄 Clear student progress on this device",
   "🙋 내 코드를 눌러 주세요": "🙋 Tap in your code",
   "연구자에게 받은": "Tap in the",
   "내 코드": "code",
@@ -31,7 +39,7 @@
   "먼저 앞 글자를 눌러 주세요": "First, tap the letter",
   "← 지우기": "← Delete",
   "시작!": "Start!",
-  "🔎 로그인 없이 둘러보기 (기록이 남지 않아요)": "🔎 Look around without signing in (nothing is recorded)",
+  "← 처음으로": "← Back",
   "안녕하세요! 비의 비밀을 함께 찾을 레시오예요.": "Hello! I'm Ratio. Let's find the Secret of Ratio together.",
   "색깔의 방과 소리의 방에서 비의 비밀을 찾아요.": "We will look for it in the Color room and the Sound room.",
   "문제를 풀면 비밀 카드를 한 장씩 얻어요. 네 장을 모으면 마지막 문이 열려요.": "Solve a puzzle and you get a secret card. Collect four cards and the last door opens.",
@@ -40,7 +48,8 @@
   "🃏 문제를 풀면 <b>비밀 카드</b>를 한 장씩 (모두 네 장)": "🃏 Solve a puzzle, get a <b>secret card</b> (four in all)",
   "🏛️ 네 장을 모으면 마지막 <b>「비의 비밀」</b> 문이 열려요": "🏛️ Collect all four and the last door, <b>“The Secret of Ratio”</b>, opens",
   "다 들었어요! 이제 탐험을 떠나요": "All done! Now let's go exploring",
-  "게스트": "Guest",
+  "교사 모드": "Teacher mode",
+  "학생 모드": "Student mode",
   "먼저 앞 글자를 눌러 주세요 — 전문가는 E, 학생은 S": "First, tap the letter — E for experts, S for students",
   "이제 숫자 두 개를 눌러 주세요": "Now tap two numbers",
   "연구자에게 받은 코드를 눌러 주세요 — 앞 글자 하나(E 또는 S)와 숫자 두 개예요": "Tap in the code the researcher gave you — one letter (E or S) and two numbers",
@@ -48,6 +57,8 @@
   "이미 사용 중인 코드예요. 연구자에게 알려 주세요.": "This code is already in use. Please tell the researcher.",
   "앞 글자는 E 또는 S예요": "The first letter is E or S",
   "뒤 두 칸은 숫자예요": "The last two are numbers",
-  "코드에 쓰지 않는 글자예요. 화면에 있는 단추를 눌러 주세요": "That character is not used in codes. Please tap a button on the screen"
+  "코드에 쓰지 않는 글자예요. 화면에 있는 단추를 눌러 주세요": "That character is not used in codes. Please tap a button on the screen",
+  "연구자에게 받은 코드(예: S01)를 눌러 시작해요. 활동 기록은 연구용으로 저장돼요.": "Tap in the code the researcher gave you (for example: S01) to start. Your activity is recorded for research.",
+  "이 기기의 학생 기록을 지웠어요. 학생 모드로 처음부터 시작할 수 있어요.": "Student progress on this device has been cleared. You can start again from the beginning in Student mode."
  }
 }

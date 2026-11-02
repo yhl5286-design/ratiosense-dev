@@ -93,8 +93,8 @@ window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
   <div class="chiprow">
     <span class="mychip" id="chip" style="display:none">🙋 <span id="chipNo"></span></span>
     <span class="wallet" id="wallet">🃏 Secret cards <b id="walN">0</b> / 4 <span style="font-size:12px;color:var(--color-neutral-600)">(two from Color, two from Sound)</span></span>
-    <button class="ghost" id="chgBtn" style="display:none">Change code</button>
-    <span class="guestnote" id="guestNote">🔎 Guest mode — nothing you do is recorded</span>
+    <button class="ghost" id="chgBtn" style="display:none">Change mode</button>
+    <span class="guestnote" id="guestNote">🧑‍🏫 Teacher mode — explore every step freely</span>
   </div>
   <div style="margin:14px 0 4px"><button id="introBtn" class="ghost" style="min-height:56px;padding:14px 32px;border-radius:999px;border:none;background:#c67139;color:#f9f4ed;font-size:20px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(198,113,57,.35)">🎒 Start</button></div>
   <div class="rooms">
@@ -120,8 +120,27 @@ window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
   </div>
 </div>
 
+<style>
+  /* 2026-11-02 — 학생 모드 · 교사 모드 고르기 */
+  #modeBox .modebtn{display:block;width:100%;min-height:64px;margin:12px 0 4px;padding:12px 16px;border-radius:18px;font-size:20px;font-weight:800;line-height:1.35;cursor:pointer}
+  #modeBox .modebtn.go{border:none;background:#c67139;color:#f9f4ed;box-shadow:0 8px 20px rgba(198,113,57,.3)}
+  #modeBox .modesub{font-size:15px;font-weight:700;opacity:.92}
+  #modeBox .modehelp{font-size:14.5px;line-height:1.6;color:var(--color-neutral-700,#5a4a3a);text-align:left;background:var(--color-accent-100,#fff2eb);border-radius:12px;padding:8px 12px;margin:0 0 6px}
+  #modeBox .tiny{background:none;border:none;color:var(--color-neutral-600,#8a7f72);font-size:13px;text-decoration:underline;cursor:pointer;margin-top:10px}
+  #resetMsg{font-size:13px;color:var(--color-accent-700,#8c491a);min-height:18px}
+</style>
 <div id="loginOv">
   <div class="lg">
+    <div id="modeBox">
+      <h2>🙋 How would you like to start?</h2>
+      <button class="go modebtn" id="studentBtn">🎒 Student mode<br><span class="modesub">Solve the puzzles in order from the start</span></button>
+      <div class="modehelp" id="studentHelp">You move to the next screen by solving each puzzle. Finishing the Color room opens the Sound room, and collecting all four secret cards opens the last door. Your progress and secret cards are saved on this device only.</div>
+      <button class="ghost modebtn" id="guestBtn">🧑‍🏫 Teacher mode<br><span class="modesub">Look around every screen freely</span></button>
+      <div class="modehelp">Go to any screen without unlocking steps. Use it to prepare a lesson or give a demonstration. Secret cards and progress are not saved.</div>
+      <button class="tiny" id="resetBtn">🔄 Clear student progress on this device</button>
+      <div id="resetMsg" role="status"></div>
+    </div>
+    <div id="codeBox" style="display:none">
     <h2>🙋 Tap in your code</h2>
     <div class="hint">Tap in the <b>code</b> the researcher gave you (for example: S01)</div>
     <div id="codeShow" aria-live="polite" aria-label="The code you entered">
@@ -133,13 +152,12 @@ window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
       <button class="del" data-k="del">← Delete</button><button class="go" data-k="go">Start!</button>
     </div>
     <div id="lgErr" role="alert"></div>
-    <!-- 2026-09-27 — 학생 수집 때는 코드 없이 들어가지 못하게 감춘다.
-         지금은 앱을 고치는 중이라 열어 둔다. 감출 때는 아래 GUEST_LINK 를 false 로 바꾸면 된다.
-         false 로 두어도 연구자는 주소 끝에 ?guest=1 을 붙이면 쓸 수 있다(사용자 지시). -->
-    <button class="ghost" id="guestBtn">🔎 Look around without signing in (nothing is recorded)</button>
+    <button class="ghost" id="backBtn">← Back</button>
+    </div>
   </div>
 </div>
 
+<script src="../final/rs-config.js"></script>
 <script>
 /* 허브 — 식별 코드(연구자가 부여한 E01·S01 꼴의 세 글자)만 사용, 성명·이메일·계정 미수집.
    저장 키·형식은 구버전 v3와 동일: rs3_user {code,ts}, rs3_done:<code>, rs3_cards:<code> */
@@ -148,7 +166,7 @@ window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
    나중에 심화로 열 때는 이 한 줄만 true로 바꾼다. */
 const DEEP=false;
 const LOG_EP='https://script.google.com/macros/s/AKfycbw2219DuM59NyjJd8D63JjZIPcUmZgvi84-7A5ShMXFTCRdJqMaJeUn0Kn4JEO45VCw/exec';
-const LOG_ON=false; /* 2026-11-02 공개판: 연구용 로그와 코드 사용 확인을 보내지 않는다(사용자 지시). 다시 연구할 때만 true */
+const LOG_ON=(window.RS_RESEARCH===true); /* 2026-11-02 연구 모드(rs-config.js)에서만 연구용 기록과 코드 사용 확인을 보낸다. 공개판은 false */
 const LOG_TK='ratiosense-2026';
 /* 식별 코드 — 앞 글자 하나 + 두 자리 수(2026-09-11 개정).
    E = 전문가(E01~), S = 학생(S01~). 예전에는 네 자리에 스무 글자를 섞어 눌러야 해
@@ -302,9 +320,9 @@ function openLogin(){
   try {
     const q = new URLSearchParams(location.search).get('guest') === '1';
     $('#guestBtn').style.display = (GUEST_LINK || q) ? '' : 'none';
-  } catch(e) {}code='';paint();padPaint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
+  } catch(e) {}$('#modeBox').style.display='';$('#codeBox').style.display='none';$('#resetMsg').textContent='';code='';paint();padPaint();$('#lgErr').textContent='';$('#loginOv').style.display='flex';}
 function showChip(code){
-  $('#chipNo').textContent=code==='guest'?'Guest':code;
+  $('#chipNo').textContent=code==='guest'?'Teacher mode':code==='student'?'Student mode':code;
   $('#chip').style.display='inline-block';
   $('#chgBtn').style.display='inline-block';
   $('#guestNote').style.display=code==='guest'?'inline-flex':'none';
@@ -400,7 +418,7 @@ $('#padGrid').addEventListener('click',e=>{const b=e.target.closest('button');if
 document.querySelectorAll('.padrow button').forEach(b=>b.onclick=()=>press(b.dataset.k));
 /* 크롬북·태블릿 외장 키보드 입력도 그대로 받는다(소문자는 자동으로 대문자 변환) */
 addEventListener('keydown',e=>{
-  if($('#loginOv').style.display!=='flex')return;
+  if($('#loginOv').style.display!=='flex'||$('#codeBox').style.display==='none')return;
   if(e.key==='Backspace'){e.preventDefault();press('del');return;}
   if(e.key==='Enter'){e.preventDefault();press('go');return;}
   if(e.key.length!==1||e.ctrlKey||e.metaKey||e.altKey)return;
@@ -409,6 +427,18 @@ addEventListener('keydown',e=>{
   if(CODE_CHARS.indexOf(ch)>=0)press(ch);
   else $('#lgErr').textContent='That character is not used in codes. Please tap a button on the screen';});
 $('#guestBtn').onclick=()=>{saveUser('guest');try{localStorage.setItem('rs3_guest_ok','1');}catch(e){}showChip('guest');$('#loginOv').style.display='none';refresh();};
+/* 2026-11-02 — 학생 모드 · 교사 모드(사용자 지시). 교사 모드는 예전의 게스트(자유 탐색)와 같다.
+   공개판(RS_RESEARCH=false)의 학생 모드는 코드 없이 'student'로 들어가 단계 잠금 · 비밀 카드 · 이어 하기가
+   코드로 들어간 것과 같이 작동하고, 진행 상황은 이 기기에만 남는다. 연구 모드에서는 코드를 눌러 들어간다. */
+const STUDENT='student';
+if(window.RS_RESEARCH===true){ $('#studentHelp').textContent='Tap in the code the researcher gave you (for example: S01) to start. Your activity is recorded for research.'; }
+$('#studentBtn').onclick=()=>{
+  if(window.RS_RESEARCH===true){ $('#modeBox').style.display='none'; $('#codeBox').style.display=''; padPaint(); return; }
+  saveUser(STUDENT);showChip(STUDENT);$('#loginOv').style.display='none';refresh();};
+$('#backBtn').onclick=()=>{ $('#codeBox').style.display='none'; $('#modeBox').style.display=''; $('#lgErr').textContent=''; };
+$('#resetBtn').onclick=()=>{
+  try{ Object.keys(localStorage).filter(k=>/:student$/.test(k)).forEach(k=>localStorage.removeItem(k)); }catch(e){}
+  $('#resetMsg').textContent='Student progress on this device has been cleared. You can start again from the beginning in Student mode.'; };
 $('#introBtn').onclick=()=>{ plog(getUser(),'intro_open',{}); openIntro(); };
 $('#introGo').onclick=()=>{ $('#introOv').style.display='none'; plog(getUser(),'intro_done',{}); };
 $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');localStorage.removeItem('rs3_guest_ok');}catch(e){}
@@ -417,7 +447,7 @@ $('#chgBtn').onclick=()=>{try{localStorage.removeItem('rs3_user');localStorage.r
    숫자판 입력에만 걸려 있어, 규칙에 맞지 않는 값이 남아 있으면 그 값으로 기록이 쌓였다.
    규칙에 맞지 않으면 지우고 로그인 화면을 띄운다. */
 let u=getUser();
-if(u&&u!=='guest'&&!CODE_RE.test(u)){try{localStorage.removeItem('rs3_user');}catch(e){}u='';}
+if(u&&u!=='guest'&&!(u==='student'&&window.RS_RESEARCH!==true)&&!CODE_RE.test(u)){try{localStorage.removeItem('rs3_user');}catch(e){}u='';}
 /* 2026-10-13: 게스트 단추를 감춰도, 전에 게스트로 들어간 기기에는 rs3_user=guest가 남아 있어
    허브가 로그인 없이 게스트로 열렸다. ?guest=1 로 연구자가 열어 준 기기(rs3_guest_ok)가 아니면 지운다. */
 if(u==='guest'&&!GUEST_LINK){let ok=false;

@@ -29,6 +29,8 @@ function rules(file) {
 
   /* ── 2. 자산 경로 → ../v4/ ── */
   r.push([/<script src="\.\/support\.js"><\/script>/g, '<script src="../final/support.js"></script>', room ? 1 : 0]);
+  /* 2026-11-02 모드 설정도 한국어판 것 하나를 같이 쓴다 — 연구 모드 스위치가 두 판에서 함께 움직인다 */
+  r.push([/<script src="\.\/rs-config\.js"><\/script>/g, '<script src="../final/rs-config.js"></script>', 1]);
   r.push([/(["'])(_ds\/organic-)/g, '$1../final/$2', 1]);
   /* 따옴표 안이 그림·영상 파일 이름뿐인 리터럴만 앞에 ../v4/를 붙인다 */
   r.push([/(['"])([\w./-]+\.(?:jpe?g|png|mp4|mp3)(?:\?[\w=.&-]*)?)\1/g,

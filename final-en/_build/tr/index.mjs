@@ -79,4 +79,25 @@ export default {
   '앞 글자는 E 또는 S예요': 'The first letter is E or S',
   '뒤 두 칸은 숫자예요': 'The last two are numbers',
   '코드에 쓰지 않는 글자예요. 화면에 있는 단추를 눌러 주세요': 'That character is not used in codes. Please tap a button on the screen',
+
+  /* ── 2026-11-02 학생 모드 · 교사 모드(게스트 대신), 연구 모드 설정(rs-config.js) ── */
+  '🙋 어떻게 시작할까요?': '🙋 How would you like to start?',
+  '🎒 학생 모드': '🎒 Student mode',
+  '처음부터 차례대로 풀어요': 'Solve the puzzles in order from the start',
+  '과제를 풀어야 다음 화면으로 넘어가요. 색깔의 방을 마치면 소리의 방이 열리고, 비밀 카드 네 장을 모으면 마지막 문이 열려요. 진행 상황과 비밀 카드는 이 기기에만 저장돼요.':
+    'You move to the next screen by solving each puzzle. Finishing the Color room opens the Sound room, and collecting all four secret cards opens the last door. Your progress and secret cards are saved on this device only.',
+  '🧑‍🏫 교사 모드': '🧑‍🏫 Teacher mode',
+  '모든 화면을 자유롭게 둘러봐요': 'Look around every screen freely',
+  '단계 잠금 없이 어느 화면으로든 넘어갈 수 있어요. 수업을 준비하거나 시연할 때 쓰며, 비밀 카드와 진행 상황은 저장되지 않아요.':
+    'Go to any screen without unlocking steps. Use it to prepare a lesson or give a demonstration. Secret cards and progress are not saved.',
+  '🔄 이 기기의 학생 기록 지우기': '🔄 Clear student progress on this device',
+  '이 기기의 학생 기록을 지웠어요. 학생 모드로 처음부터 시작할 수 있어요.':
+    'Student progress on this device has been cleared. You can start again from the beginning in Student mode.',
+  '← 처음으로': '← Back',
+  '모드 바꾸기': 'Change mode',
+  '교사 모드': 'Teacher mode',
+  '학생 모드': 'Student mode',
+  '🧑‍🏫 교사 모드 — 모든 단계를 자유롭게 둘러봐요': '🧑‍🏫 Teacher mode — explore every step freely',
+  '연구자에게 받은 코드(예: S01)를 눌러 시작해요. 활동 기록은 연구용으로 저장돼요.':
+    'Tap in the code the researcher gave you (for example: S01) to start. Your activity is recorded for research.',
 };
