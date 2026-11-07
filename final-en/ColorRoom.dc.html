@@ -4006,11 +4006,16 @@ class Component extends DCLogic {
         /* 눈금이 만나는 자리 — 학습자가 누를 곳. 찍힌 점은 그 양으로 섞은 색으로 채운다.
            손가락으로도 겨눌 수 있도록 34px로 넓힌다. */
         const HIT = 34, HOF = Math.round(HIT / 2);
+        /* 2026-11-07 — 사용성 평가에서 빨강 60일 때의 자리를 예측하며 틀리게 누른 자리의 대부분이 축 위였다.
+           선을 다 이은 뒤 예측할 때는 빨강 60의 세로선과 노랑 120의 가로선을 처음부터 세워 두고,
+           두 선이 만나는 점만 누르게 한다. 틀리게 누른 자리에 점이 남는 것은 그대로 둔다. 대사는 바꾸지 않는다. */
+        const predGuide = st.stage === 'pred' && S.plotLine && !S.plotPred;
+        const egx = predGuide ? g.pred[0] : S.plotGx, egy = predGuide ? g.pred[1] : S.plotGy;
         const hits = [];
         for (let ix = 0; ix < g.cx; ix++) for (let iy = 0; iy < g.cy; iy++) {
           const r = ix * g.u, y = iy * g.u;
           const put = S.plot.find(p => p.r === r && p.y === y);
-          const cross = (S.plotGx === r && S.plotGy === y);
+          const cross = (egx === r && egy === y);
           hits.push({
             left: (ix * CX - HOF) + 'px', top: ((g.cy - 1 - iy) * CY - HOF) + 'px',
             sz: HIT + 'px',
@@ -4037,9 +4042,9 @@ class Component extends DCLogic {
         const cur = (curRow != null) ? ans[curRow] : null;
         const isPred = st.stage === 'pred';
         const predOn = isPred && S.plotLine && !S.plotPred;
-        const xOpen = r => predOn ? (S.plotGx == null && r === g.pred[0])
+        const xOpen = r => predOn ? false
                                   : (!done && cur && S.plotGx == null && r === cur[0]);
-        const yOpen = y => predOn ? (S.plotGx != null)
+        const yOpen = y => predOn ? false
                                   : (!done && cur && S.plotGx != null && y === cur[1]);
         const tickOn = (open, picked, color) => ({
           op: (open || picked) ? '1' : '.28',
@@ -4053,25 +4058,25 @@ class Component extends DCLogic {
           xt.push({ t: String(r), left: (PAD_L + ix * CX) + 'px',
                     /* 숫자는 검정이라야 잘 보인다 — 축이 무슨 색인지는 축 선과 이름이 알려 준다.
                        고른 눈금만 축 색 바탕에 흰 글씨로 뒤집는다. */
-                    fg: S.plotGx === r ? '#ffffff' : '#201e1d',
-                    bg: S.plotGx === r ? this.C_RED : (xOpen(r) ? '#fff1ea' : 'transparent'),
-                    ...tickOn(xOpen(r), S.plotGx === r, this.C_RED),
+                    fg: egx === r ? '#ffffff' : '#201e1d',
+                    bg: egx === r ? this.C_RED : (xOpen(r) ? '#fff1ea' : 'transparent'),
+                    ...tickOn(xOpen(r), egx === r, this.C_RED),
                     pick: () => this.plotGuide('x', r) });
         }
         for (let iy = 0; iy < g.cy; iy += skipY) {
           const y = iy * g.u;
           yt.push({ t: String(y), top: (PAD_T + (g.cy - 1 - iy) * CY) + 'px',
                     fg: '#201e1d',
-                    bg: S.plotGy === y ? this.C_YEL_PLOT : (yOpen(y) ? '#fff8dc' : 'transparent'),
-                    ...tickOn(yOpen(y), S.plotGy === y, this.C_YEL_PLOT),
+                    bg: egy === y ? this.C_YEL_PLOT : (yOpen(y) ? '#fff8dc' : 'transparent'),
+                    ...tickOn(yOpen(y), egy === y, this.C_YEL_PLOT),
                     pick: () => this.plotGuide('y', y) });
         }
         v.plotXTicks = xt; v.plotYTicks = yt;
         /* 안내선 — 학습자가 고른 눈금에만 선다 */
-        v.gxOn = S.plotGx != null ? 1 : 0;
-        v.gyOn = S.plotGy != null ? 1 : 0;
-        v.gxLeft = ((S.plotGx || 0) / g.u * CX) + 'px';
-        v.gyTop = (v.plotH - (S.plotGy || 0) / g.u * CY) + 'px';
+        v.gxOn = egx != null ? 1 : 0;
+        v.gyOn = egy != null ? 1 : 0;
+        v.gxLeft = ((egx || 0) / g.u * CX) + 'px';
+        v.gyTop = (v.plotH - (egy || 0) / g.u * CY) + 'px';
         v.plotLineBtn = 0; /* 2026-09-22 — 「선으로 이어 보기」 단추 대신 학습자가 점을 차례로 잇는다 */
         /* 이은 선분 — 앞 점에서 다음 점까지. 다 이은 뒤에는 끝 점에서 격자 끝까지 점선으로 늘인다 */
         const px = r => r / g.u * CX, py = y => v.plotH - y / g.u * CY;
@@ -4132,7 +4137,7 @@ class Component extends DCLogic {
           : S.plotLine
           ? (!isPred ? '✅ You joined all the points into a line — tap “Next →”'
              : (S.plotPred ? (S.plotEq ? '✅ You finished the equation too — go on to the next' : '✖️ How many times the red is the yellow? Tap the number for the blank')
-                           : '📍 Stretch the line, find red ' + g.pred[0] + ' and tap it'))
+                           : '📍 Tap where the red ' + g.pred[0] + ' vertical line meets the yellow ' + g.pred[1] + ' horizontal line'))
           : (done ? ((S.plotLink || 0) === 0
                       ? '🔗 Tap the first point (red ' + ans[0][0] + ') to start joining'
                       : '🔗 Tap the next point (red ' + ans[S.plotLink][0] + ') to join it')

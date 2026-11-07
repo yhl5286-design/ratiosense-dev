@@ -933,4 +933,8 @@ export default {
   "더 넣은 양 · 빨강 +{{pourAdd}}mL · 노랑 +{{pourAdd}}mL": "Added · red +{{pourAdd}}mL · yellow +{{pourAdd}}mL",
   "같은 양만큼 다 부었어요": "You added the same amount to both",
   "확인하기를 눌러 목표색과 비교해 봐요.": "Tap Check it to compare with the target color.",
+  /* 2026-11-08 최종 프로토타입 — 18화면 예측: 빨강 60의 세로선 · 노랑 120의 가로선(대사 아님) */
+  "📍 빨강 ": "📍 Tap where the red ",
+  "의 세로선과 노랑 ": " vertical line meets the yellow ",
+  "의 가로선이 만나는 점을 눌러요": " horizontal line",
 };

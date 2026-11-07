@@ -1,6 +1,6 @@
 {
  "_file": "ColorRoom.dc.html",
- "_count": 606,
+ "_count": 607,
  "strings": {
   "홈으로": "Home",
   "색깔의 비밀": "The Color Secret",
@@ -585,8 +585,9 @@
   "✅ 점을 모두 잇고 선을 만들었어요 — 「다음 →」을 눌러요": "✅ You joined all the points into a line — tap “Next →”",
   "✅ 식까지 완성했어요 — 다음으로 넘어가요": "✅ You finished the equation too — go on to the next",
   "✖️ 노랑은 빨강의 몇 배일까요? 빈칸에 들어갈 숫자를 눌러요": "✖️ How many times the red is the yellow? Tap the number for the blank",
-  "📍 선을 늘여 빨강 ": "📍 Stretch the line, find red ",
-  " 자리를 찾아 눌러 보세요": " and tap it",
+  "📍 빨강 ": "📍 Tap where the red ",
+  "의 세로선과 노랑 ": " vertical line meets the yellow ",
+  "의 가로선이 만나는 점을 눌러요": " horizontal line",
   "🔗 첫 번째 점(빨강 ": "🔗 Tap the first point (red ",
   ")을 눌러 잇기를 시작해요": ") to start joining",
   "🔗 다음 점(빨강 ": "🔗 Tap the next point (red ",
