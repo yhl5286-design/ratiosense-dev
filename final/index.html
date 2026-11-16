@@ -99,6 +99,9 @@
   <div class="rooms">
     <a class="room" data-r="color" href="ColorRoom.dc.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">색깔의 비밀</div><div class="ds">화가의 잃어버린 색을<br>실험으로 찾아요</div></a>
     <a class="room" data-r="sound" id="soundCard" href="SoundRoom.dc.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">소리의 비밀</div><div class="ds">떨림의 비가 만드는<br>화음과 하프</div><span class="locktag" id="soundLock" style="display:none">🔒 색깔 방을 마치면 열려요</span></a>
+    <!-- 2026-11-16 — 교사 모드에서만 비의 비밀(마지막 문 · 황금비 · 정리 활동)을 허브에서 바로 연다(사용자 지시).
+         학생 모드는 지금처럼 소리의 비밀 마침 화면에서 카드 네 장으로 들어간다. -->
+    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html" style="display:none"><div class="badge">3</div><div class="em">🏛️</div><div class="nm">비의 비밀</div><div class="ds">마지막 문과 황금비,<br>정리 활동</div></a>
   </div>
   <div class="foot">탐험 순서: 색깔 → 소리 — 앞 방을 마쳐야 다음 방이 열려요! 두 방을 모두 마치면 마지막 문이 열려요.</div>
 </div>
@@ -356,7 +359,9 @@ function refresh(){
       const r=c.getAttribute('data-r')||'';
       plog(getUser(),'room_open',{room:r,open:opened[r]?1:0,done:getDone(),ms:Date.now()-HUB_T0});
     },true);});
-  /* 비의 비밀은 허브에 두지 않는다 — 소리의 비밀을 마치면 그 화면에서 바로 이어진다 */
+  /* 비의 비밀은 허브에 두지 않는다 — 소리의 비밀을 마치면 그 화면에서 바로 이어진다.
+     2026-11-16 — 교사 모드에서만 허브에 비의 비밀 칸을 보인다(자유 탐색). */
+  const ec=$('#evalCard'); if(ec) ec.style.display=guest?'':'none';
   document.querySelectorAll('.room').forEach(a=>{
     a.classList.remove('next-room');
     const old=a.querySelector('.donechk'); if(old)old.remove();
