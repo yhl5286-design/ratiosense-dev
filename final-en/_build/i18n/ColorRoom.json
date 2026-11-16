@@ -1,6 +1,6 @@
 {
  "_file": "ColorRoom.dc.html",
- "_count": 607,
+ "_count": 613,
  "strings": {
   "홈으로": "Home",
   "색깔의 비밀": "The Color Secret",
@@ -298,6 +298,10 @@
   "화면 ": "Screen ",
   "이어서 하기 →": "Continue →",
   "처음부터 하기": "Start over",
+  "다시 해 보기를 마쳤어요!": "You finished trying it again!",
+  "「끝내기」를 누르면 처음 화면으로 가요.": "Tap “Finish” to go to the start screen.",
+  "잘했어요!": "Well done!",
+  "다시 해 보기를 마쳤어요. 「끝내기」를 누르면 처음 화면으로 가요.": "You finished trying it again. Tap “Finish” to go to the start screen.",
   "색깔의 비밀 카드 1장을 얻었어요!": "You got a Color secret card!",
   "숫자 ": "Number ",
   " · 모은 비밀 카드 ": " · Secret cards collected ",
@@ -397,7 +401,6 @@
   "아직 그 주황이 아니야": "Not that orange yet",
   "지금은 빨강 ": "Right now it is red ",
   "이란다. 점의 수를 바꿔 한 번 더 만들어 볼까?": ". Shall we change the number of dots and try again?",
-  "잘했어요!": "Well done!",
   "칸 · 노랑 ": " squares · yellow ",
   "칸 = 2 : 3!": " squares = 2 : 3!",
   "아직 2 : 3이 아니야": "Not 2 : 3 yet",
@@ -608,6 +611,9 @@
   "아래 물음에 답하고 넘어가요.": "Answer the question below, then move on.",
   "」를 눌러 주세요": "” — please tap it",
   "」를 눌러야 다음으로 갈 수 있어요.": "” to go on.",
-  "지금 문제를 해결하고 넘어가요.": "Finish this one first, then move on."
+  "지금 문제를 해결하고 넘어가요.": "Finish this one first, then move on.",
+  "🏠 끝내기": "🏠 Finish",
+  "🔁 다시 해 보기 — 다 했으면 「끝내기」를 눌러요": "🔁 Trying it again — tap “Finish” when you are done",
+  "🔁 다시 해 보기 ": "🔁 Trying it again "
  }
 }

@@ -1103,4 +1103,12 @@ export default {
   "의 비로 섞은 주황을 클릭해 보세요.": "? Click it.",
   "이번에는 악기 줄에서 찾아요 — 어느 음정의 줄 길이의 비가 ": "Now look at the instrument strings — which interval has string lengths in the ratio ",
   "일까요? 줄을 하나씩 눌러 두 음을 비교해 보고 아래 단추에서 골라 보세요.": "? Tap each string to compare the two notes, then choose a button below.",
+  /* 2026-11-16 정리 활동 — 새 화면 글 · 알림 · 단추(대사 아님) */
+  "다시 해 보기를 마쳤어요!": "You finished trying it again!",
+  "「끝내기」를 누르면 처음 화면으로 가요.": "Tap “Finish” to go to the start screen.",
+  "다시 해 보기를 마쳤어요. 「끝내기」를 누르면 처음 화면으로 가요.": "You finished trying it again. Tap “Finish” to go to the start screen.",
+  "🏠 끝내기": "🏠 Finish",
+  "🔁 다시 해 보기 — 다 했으면 「끝내기」를 눌러요": "🔁 Trying it again — tap “Finish” when you are done",
+  "🔁 다시 해 보기 ": "🔁 Trying it again ",
+  "잘했어요!": "Well done!",
 };

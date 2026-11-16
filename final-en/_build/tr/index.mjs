@@ -100,4 +100,8 @@ export default {
   '🧑‍🏫 교사 모드 — 모든 단계를 자유롭게 둘러봐요': '🧑‍🏫 Teacher mode — explore every step freely',
   '연구자에게 받은 코드(예: S01)를 눌러 시작해요. 활동 기록은 연구용으로 저장돼요.':
     'Tap in the code the researcher gave you (for example: S01) to start. Your activity is recorded for research.',
+  /* 2026-11-16 정리 활동 — 새 화면 글 · 알림 · 단추(대사 아님) */
+  "비의 비밀": "The Secret of Ratio",
+  "마지막 문과 황금비,": "The last door and the golden ratio,",
+  "정리 활동": "wrap-up",
 };

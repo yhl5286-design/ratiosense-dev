@@ -937,4 +937,11 @@ export default {
   "📍 빨강 ": "📍 Tap where the red ",
   "의 세로선과 노랑 ": " vertical line meets the yellow ",
   "의 가로선이 만나는 점을 눌러요": " horizontal line",
+  /* 2026-11-16 정리 활동 — 새 화면 글 · 알림 · 단추(대사 아님) */
+  "다시 해 보기를 마쳤어요!": "You finished trying it again!",
+  "「끝내기」를 누르면 처음 화면으로 가요.": "Tap “Finish” to go to the start screen.",
+  "다시 해 보기를 마쳤어요. 「끝내기」를 누르면 처음 화면으로 가요.": "You finished trying it again. Tap “Finish” to go to the start screen.",
+  "🏠 끝내기": "🏠 Finish",
+  "🔁 다시 해 보기 — 다 했으면 「끝내기」를 눌러요": "🔁 Trying it again — tap “Finish” when you are done",
+  "🔁 다시 해 보기 ": "🔁 Trying it again ",
 };

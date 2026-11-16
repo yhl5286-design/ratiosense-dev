@@ -1,6 +1,6 @@
 {
  "_file": "SoundRoom.dc.html",
- "_count": 688,
+ "_count": 695,
  "strings": {
   "홈으로": "Home",
   "소리의 비밀": "The Sound Secret",
@@ -239,6 +239,8 @@
   "화면 ": "Screen ",
   "이어서 하기 →": "Continue →",
   "처음부터 하기": "Start over",
+  "다시 해 보기를 마쳤어요!": "You finished trying it again!",
+  "「끝내기」를 누르면 처음 화면으로 가요.": "Tap “Finish” to go to the start screen.",
   "잠깐! 아직 고르지 않은 음이 있어요. 도와 함께 들어 보고 골라 주세요.": "Wait! Some notes are not chosen yet. Listen to them with C and choose.",
   "일곱 음을 모두 골랐어요. 내가 고른 대로 음들을 두 방에 모아 볼까요?": "You chose for all seven notes. Shall we gather the notes into two rooms, the way you chose?",
   "내가 고른 대로 음들이 두 방에 모였어요. 두 방의 음을 눌러 물결을 비교해 보세요. 잘 어울리는 소리는 물결의 꼭대기가 얼마나 자주 겹치나요?": "The notes are in two rooms, the way you chose. Press the notes in both rooms and compare the waves. For sounds that blend well, how often do the peaks of the waves line up?",
@@ -499,6 +501,8 @@
   "두 방 모두 양이 달라져도 비가 같으면 결과가 같았어요": "In both, the amounts changed but the same ratio gave the same result",
   "맞아요! 물감의 양이 달라도 비가 1 대 2면 같은 색이었고, 진동수가 달라도 비가 1 대 2면 한 옥타브였어요. 두 방 모두 비가 정하고 있었지요.": "Exactly! Different amounts of paint at 1 to 2 gave the same color, and different frequencies at 1 to 2 gave an octave. In both rooms it was the ratio doing the deciding.",
   "두 방이 이어졌어요!": "The two rooms link up!",
+  "잘했어요!": "Well done!",
+  "다시 해 보기를 마쳤어요. 「끝내기」를 누르면 처음 화면으로 가요.": "You finished trying it again. Tap “Finish” to go to the start screen.",
   "소리의 비밀 카드 1장을 얻었어요!": "You got a Sound secret card!",
   "숫자 ": "Number ",
   " · 모은 비밀 카드 ": " · Secret cards collected ",
@@ -689,6 +693,9 @@
   "조금만 더!": "Almost there!",
   "아래 물음에 답하고 넘어가요.": "Answer the question below, then move on.",
   "건반을 눌러 남은 음을 모두 골라요. 남은 음: ": "Press the keys and choose for all the notes left. Notes left: ",
-  "지금 문제를 해결하고 넘어가요.": "Finish this one first, then move on."
+  "지금 문제를 해결하고 넘어가요.": "Finish this one first, then move on.",
+  "🏠 끝내기": "🏠 Finish",
+  "🔁 다시 해 보기 — 다 했으면 「끝내기」를 눌러요": "🔁 Trying it again — tap “Finish” when you are done",
+  "🔁 다시 해 보기 ": "🔁 Trying it again "
  }
 }

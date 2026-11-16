@@ -100,6 +100,9 @@ window.RS_TTS = {}; window.RS_TTS_V = 'en';</script>
   <div class="rooms">
     <a class="room" data-r="color" href="ColorRoom.dc.html"><div class="badge">1</div><div class="em">🎨</div><div class="nm">The Color Secret</div><div class="ds">Find the painter's lost<br>color by experimenting</div></a>
     <a class="room" data-r="sound" id="soundCard" href="SoundRoom.dc.html"><div class="badge">2</div><div class="em">🎼</div><div class="nm">The Sound Secret</div><div class="ds">Chords and a harp made<br>from ratios of vibration</div><span class="locktag" id="soundLock" style="display:none">🔒 Opens when you finish the Color room</span></a>
+    <!-- 2026-11-16 — 교사 모드에서만 비의 비밀(마지막 문 · 황금비 · 정리 활동)을 허브에서 바로 연다(사용자 지시).
+         학생 모드는 지금처럼 소리의 비밀 마침 화면에서 카드 네 장으로 들어간다. -->
+    <a class="room" data-r="eval" id="evalCard" href="EvalRoom.dc.html" style="display:none"><div class="badge">3</div><div class="em">🏛️</div><div class="nm">The Secret of Ratio</div><div class="ds">The last door and the golden ratio,<br>wrap-up</div></a>
   </div>
   <div class="foot">Your route: Color → Sound. Each room opens once you finish the one before it! Finish both rooms and the last door opens.</div>
 </div>
@@ -361,7 +364,9 @@ function refresh(){
       const r=c.getAttribute('data-r')||'';
       plog(getUser(),'room_open',{room:r,open:opened[r]?1:0,done:getDone(),ms:Date.now()-HUB_T0});
     },true);});
-  /* 비의 비밀은 허브에 두지 않는다 — 소리의 비밀을 마치면 그 화면에서 바로 이어진다 */
+  /* 비의 비밀은 허브에 두지 않는다 — 소리의 비밀을 마치면 그 화면에서 바로 이어진다.
+     2026-11-16 — 교사 모드에서만 허브에 비의 비밀 칸을 보인다(자유 탐색). */
+  const ec=$('#evalCard'); if(ec) ec.style.display=guest?'':'none';
   document.querySelectorAll('.room').forEach(a=>{
     a.classList.remove('next-room');
     const old=a.querySelector('.donechk'); if(old)old.remove();

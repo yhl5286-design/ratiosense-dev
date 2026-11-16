@@ -104,3 +104,10 @@ node _build/verify.mjs     # 한글 0 확인
   음색이 다르다. Windows Chrome은 영어 음성이 넉넉하지만 iPad Safari는
   적어 인물 구분이 한국어판 mp3보다 약하다. 부족하면 그때 영어 TTS로
   mp3를 사전 생성하는 단계를 붙인다.
+
+## 2026-11-16 갱신 — 비의 비밀 정리 활동
+
+- 한국어판 final/에 들어간 정리 활동(개념 정리 · 앱 활동 카드 다섯 장 · 내 말로 정리하기 · 다시 하기)과 색깔 · 소리 방의 다시 하기(`?replay=&to=`) 글 116줄을 `tr/*.mjs` 끝 「2026-11-16 정리 활동」 묶음에 번역했다(용어: 비 ratio · 비율 rate · 기준량 base amount · 비교하는 양 amount being compared · 백분율 percentage). 대사는 없다.
+- `patch.mjs` 두 줄 추가: 끝 화면 「활동 이름」의 앞 낫표를 “로, 활동 그림 `'rv/' + id`를 `'../final/rv-en/' + id`로.
+- 활동 그림은 영어 화면으로 따로 찍었다 → `final/rv-en/*.jpg` 16장(`C:\RatioSense_원자료\_분석결과\_앱수정_정리활동_2026-11-16\03_카드그림_찍기.cjs en`, 주행 도구 영어 사본 `inject_en.js`).
+- 확인: check · fill(남음 0) · build --strict · verify(한글 0), `08_영어판_확인.cjs`(화면마다 한글 0 · 그림 로드 · 404 0 · 페이지 오류 0 · 영어 다시 하기).

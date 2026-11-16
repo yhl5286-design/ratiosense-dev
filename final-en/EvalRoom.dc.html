@@ -226,6 +226,14 @@ button{font-family:inherit}
         </div>
       </sc-if>
 
+      <!-- 정리 활동(2026-11-16) — 황금비 뒤에 「정리 활동으로 가 봐요!」를 누르면 시작한다.
+           비와 비율 개념 정리 → 앱 활동 되돌아보기(카드 다섯 장) → 도움이 된 활동 → 다시 하기 · 끝내기.
+           새 화면에는 안내 음성이 없다(대사 불변 · 새 대사 없음). 화면 글로만 안내한다.
+           화면 요소는 rvEl()이 만든다. -->
+      <sc-if value="{{isRv}}" hint-placeholder-val="{{false}}">
+        <div style="width:100%;max-width:980px;margin:0 auto;padding:4px 6px 10px;animation:rsUp .3s ease">{{rvEl}}</div>
+      </sc-if>
+
       <!-- 마지막 화면 — 안내자가 말하지 않는다. 그동안 한 활동을 그대로 펼쳐 놓고,
            그것이 모두 하나의 비로 이어져 있었음을 화면이 스스로 보인다.
            누를 것은 없다. 완료 기록은 이 화면에 들어오는 순간 go()에서 남긴다. -->
@@ -375,7 +383,9 @@ class Component extends DCLogic {
     i:0, audio:'full', cards:0, toast:null, solved:{},
     doorVal:'', doorOpen:false,
     /* 황금비 막대 — 기준 길이(cm) */
-    phiBase:4
+    phiBase:4,
+    /* 정리 활동 — 답은 this._rv에 두고(기기 저장), 화면을 다시 그릴 때만 rvTick을 올린다 */
+    rvTick:0, rvEndPick:null
   };
   PHI = 1.618;
   PHI_MIN = 2; PHI_MAX = 20;   /* 기준 막대의 길이 범위(cm) */
@@ -390,9 +400,86 @@ class Component extends DCLogic {
       { k:'finale',
         /* 2026-09-22 밤 — 너무 길어 사용자 문안으로 줄였다 */
         /* 2026-09-28 사용자 문안 */
-        say:'So the Secret of Ratio was hiding all over the world. Was it amazing to feel math with your eyes and ears? Thank you for exploring with me! See you next time!' }
+        say:'So the Secret of Ratio was hiding all over the world. Was it amazing to feel math with your eyes and ears? Thank you for exploring with me! See you next time!' },
+      /* ── 정리 활동(2026-11-16, 사용자 설계) ── 대사(say)가 없다. 화면 글로만 안내한다.
+         ① 비와 비율 개념 정리(비 → 기준량 · 비교하는 양 → 비율 · 백분율) — 개념 정리로 바로 시작한다
+         ② 앱 활동 되돌아보기 — 카드 다섯 장(색깔 비 둘 · 비율 하나, 소리 비 둘). 카드마다
+            1) 이해도 빈칸 고르기 2) 비 · 비율 중 무엇과 관련 3) 이 활동을 한 이유(3지) — 11/16 밤 순서 바꾸고 「알게 된 것」 뺌
+         ③ 내 말로 정리하기(비 · 비율) ④ 비와 비율 이해에 도움이 된 활동 ⑤ 다시 해 보고 싶은 활동 하나 고르기 또는 끝내기
+         2026-11-16 사용자 「정리활동 시작할 때 첫 화면에서 비는 무엇인지 비율은 무엇인지 쓰라고 하기보다 개념 정리를 먼저 해주기」
+         → 처음에 두었던 「내 말로 쓰기」를 활동 되돌아보기 뒤로 옮겼다.
+         같은 날 사용자 「비의 정의는 그냥 빈 칸 없이」 「비의 정의, 기준량 비교하는 양 정의 한 화면. 그 다음에 앱 활동으로 문제 하나」
+         「비율 정의 한 화면. 그 다음에 비율 앱 활동으로 문제 하나」 → 정의는 빈칸 없이 보이고, 정의마다 앱 활동 문제 한 개를 둔다.
+         같은 날 밤 사용자 「비와 비율 개념 정리는 앱 화면 그림 삭제」 「비, 기준량 비교하는 양, 비율, 백분율 모두 개념 정리만 죽 이어서.
+         그 다음 앱 활동 돌아보기. 다시 하고 싶은 활동 고르기. 이렇게만」 + 「내 말로 정리하기」는 남김(질문 답)
+         → 개념 정리 한 화면(그림 없음) → 카드 다섯 장 → 내 말로 정리하기 → 다시 하고 싶은 활동 고르기 · 끝내기.
+           정의 사이의 앱 활동 문제 둘과 「도움이 된 활동」 화면은 뺐다. */
+      { k:'rv', rv:'def' },
+      { k:'rv', rv:'card', c:0 },
+      { k:'rv', rv:'card', c:1 },
+      { k:'rv', rv:'card', c:2 },
+      { k:'rv', rv:'card', c:3 },
+      { k:'rv', rv:'card', c:4 },
+      { k:'rv', rv:'own' },
+      { k:'rv', rv:'end' }
     ];
   }
+
+  /* ── 정리 활동 자료 ──────────────────────────────────────────────
+     RV_LIST: 면담에서 쓴 활동 카드 15장(황금비 막대 제외) + 색깔 29화면. 「도움이 된 활동」 · 「다시 하기」 목록.
+       scr~to는 다시 하기에서 열어 주는 화면 범위(1부터 센 화면 번호). 그림은 rv/<id>.jpg(최종판의 푼 뒤 화면).
+     RV_CARDS: 되돌아보기에서 푸는 다섯 장. rel 0 비 · 1 비율 · 2 비와 비율 모두. why.ok는 정답 보기의 자리. */
+  RV_LIST = [
+    { id:'c05', room:'color', scr:5,  to:5,  t:'Keep the red, pour yellow by cups to make the same color' },
+    { id:'c09', room:'color', scr:9,  to:9,  t:'Add the same amount to both' },
+    { id:'c11', room:'color', scr:11, to:12, t:'Drag the bars to make the same color twice' },
+    { id:'c13', room:'color', scr:13, to:14, t:'Pour into small cups' },
+    { id:'c17', room:'color', scr:17, to:18, t:'Plot points on the graph and join them with a line' },
+    { id:'c19', room:'color', scr:19, to:19, t:'Tap spots off the line' },
+    { id:'c24', room:'color', scr:24, to:24, t:'Place 2 : 3 in five dots' },
+    { id:'c26', room:'color', scr:26, to:26, t:'Paint 100 squares' },
+    { id:'c28', room:'color', scr:28, to:28, t:'Which orange is redder?' },
+    { id:'c29', room:'color', scr:29, to:29, t:'Show a rate with 100 squares' },
+    { id:'s02', room:'sound', scr:2,  to:2,  t:'Press keys and watch the strings vibrate' },
+    { id:'s04', room:'sound', scr:4,  to:4,  t:'Change the string length and listen' },
+    { id:'s05', room:'sound', scr:5,  to:5,  t:'Pick the spot on the harp string' },
+    { id:'s07', room:'sound', scr:7,  to:7,  t:'Pick notes that sound good with C' },
+    { id:'s11', room:'sound', scr:11, to:11, t:'Count the drum and triangle rhythm' },
+    { id:'s14', room:'sound', scr:14, to:14, t:'Make my own rhythm' }
+  ];
+  RV_CARDS = [
+    { id:'c11', tag:'🎨 The Color Secret · screens 11–12', t:'Drag the bars to make the same color twice',
+      recall:'You dragged the bars and made the target color twice with new amounts (red 50 · yellow 100, red 70 · yellow 140).',
+      fill:['To make the target color with 35mL of red, you need ', { b:'a', o:['45','55','70'], ok:'70' }, 'mL of yellow.'],
+      why:{ o:['To make as much paint as possible', 'To find out whether different amounts of red and yellow give the same color when their ratio is the same', 'To put in the same amount of red and yellow'], ok:1 },
+      rel:0 },
+    /* 2026-11-16 사용자 — 그래프 카드는 선 잇기(17~18) 대신 선 밖의 자리 눌러 보기(19)로, 비율 카드는 29 대신 백 칸 색칠하기(26)로 바꿈.
+       19 그림은 앱 물음(정답 표시)을 가리고 그래프만, 26 그림은 짚어 보기 상자를 빼고 100칸이 보이게 찍었다. 「관계를 알면 예측」 빈칸은 19 카드에 남긴다 */
+    { id:'c19', tag:'🎨 The Color Secret · screen 19', t:'Tap spots off the line',
+      recall:'You tapped spots on the line that joins the pairs that made the target color, and spots above and below the line, and compared their colors with the target color.',
+      /* 2026-11-16 밤 사용자 「빨강 30mL · 노랑 40mL 자리는 선 ㉠에 있어요 이 문제 삭제」 */
+      fill:['Spots off the line do not have red to yellow of 1 : 2, so their color is ', { b:'b', o:['the same as','different from'], ok:'different from' },
+        ' the target color. The points on the line are all pairs with a ratio of 1 : 2. If you know this relationship, you can predict that 70mL of red, which is not in the table, needs ', { b:'c', o:['90','100','140'], ok:'140' }, 'mL of yellow.'],
+      why:{ o:['To find the biggest number on the graph', 'To compare spots on and off the line and check that only pairs with red to yellow of 1 : 2 make the target color', 'To tap as many spots off the line as possible'], ok:1 },
+      rel:0 },
+    { id:'c26', tag:'🎨 The Color Secret · screen 26', t:'Paint 100 squares',
+      recall:'You painted 100 squares so that red : yellow = 2 : 3. You painted 40 red squares and 60 yellow squares, 100 squares in all.',
+      fill:['In the rate of the 60 yellow squares to all 100 squares, the base amount is ', { b:'a', o:['all 100 squares','the 60 yellow squares','the 40 red squares'], ok:'all 100 squares' }, ', and as a percentage this rate is ', { b:'b', o:['40','60','100'], ok:'60' },
+        '%. If you add red’s 40% and yellow’s percentage, you get ', { b:'c', o:['60','100','150'], ok:'100' }, '%.'],
+      why:{ o:['To learn how to paint 100 squares quickly', 'To paint more yellow than red', 'To check that red to yellow stays 2 : 3 even with 100 squares, and to see how much of all 100 squares each color takes'], ok:2 },
+      rel:2 },
+    { id:'s07', tag:'🎼 The Sound Secret · screen 7', t:'Pick notes that sound good with C',
+      recall:'You listened to C together with other notes and chose whether they sounded good together. Each note showed its frequency ratio with C.',
+      fill:['The frequency ratio of C and high C is 264 : 528 = ', { b:'a', o:['1 : 2','2 : 3','8 : 9'], ok:'1 : 2' }, '.'],
+      why:{ o:['To find the highest note', 'To see whether notes with a bigger frequency sound better', 'To hear whether two notes sound better together when their frequency ratio is simpler'], ok:2 },
+      rel:0 },
+    { id:'s11', tag:'🎼 The Sound Secret · screen 11', t:'Count the drum and triangle rhythm',
+      recall:'The drum sounded every 1 beat and the triangle every 2 beats, and the two sounds met again every 2 beats.',
+      fill:['Drum every 1 beat : triangle every 2 beats, written as a ratio, is ', { b:'a', o:['2 : 1','1 : 2','1 : 3'], ok:'1 : 2' }, '.'],
+      why:{ o:['To make a fast rhythm', 'To find 1 : 2 in rhythm too and compare it with the 1 : 2 of the paints and the notes', 'To see whether the drum sounds louder than the triangle'], ok:1 },
+      rel:0 }
+  ];
+  RV_REL = ['ratio', 'rate', 'both ratio and rate'];
 
   /* ── 오디오/효과음 (SoundRoom 관례) ── */
   /* 2026-10-22(최종 프로토타입) — 앱 안 음량 조절. 학습자 평가에서 소리가 커서 설명을 끄고 글로 읽었다는 말이 있었다.
@@ -691,6 +778,7 @@ class Component extends DCLogic {
     let cards = 0;
     try { const raw = JSON.parse(localStorage.getItem(this.ukey('rs3_cards')) || '[]'); const ids = {}; raw.forEach(x => { if (x === 'sound') { ids.sound1 = 1; ids.sound2 = 1; } else ids[x] = 1; }); cards = Object.keys(ids).length; } catch(e) {} /* 옛 'sound' 한 장은 sound1·sound2 두 장으로 센다(2026-09-22) */
     this.setState({ audio, cards });
+    this.rvLoad();
     this._flushT = setInterval(() => this.flush(), 5000);
     this._hide = () => { if (document.visibilityState === 'hidden') { this.stopVoice(); this.flush(true); } };
     document.addEventListener('visibilitychange', this._hide);
@@ -907,6 +995,8 @@ class Component extends DCLogic {
     /* 상태를 바꾼 뒤에 남겨야 complete의 step이 황금비 화면을 가리킨다(2026-09-14) */
     if (this.STEPS[n].k === 'finale') this.finishRoom();
     this.plog('nav', { to:n });
+    /* 정리 활동 화면은 길어 아래로 내려 읽는다 — 화면을 넘기면 맨 위부터 보이게 한다 */
+    setTimeout(() => { try { const pl = document.querySelector('.rs-play'); if (pl) pl.scrollTop = 0; } catch(e) {} }, 30);
     setTimeout(() => this.sayStep(n), 380);
   }
   confetti() {
@@ -1102,6 +1192,285 @@ class Component extends DCLogic {
       style:{ width:'min(460px,86vw)', display:'block' }, dangerouslySetInnerHTML:{ __html: html } });
   }
 
+  /* ══ 정리 활동(2026-11-16) ═══════════════════════════════════════════
+     답은 this._rv에 모은다 — { txt, draw, mode, ans, help:{ picks, best } }.
+     학생 모드는 이 기기에만 남긴다(rs3_review:student — 허브의 「이 기기의 학생 기록 지우기」가 함께 지운다).
+     교사 모드는 남기지 않는다. 서버로는 연구 모드(LOG_ON)에서만 plog가 보낸다. */
+  rvKey() { return this.ukey('rs3_review'); }
+  rvLoad() {
+    let r = null;
+    if (!this._guest) { try { r = JSON.parse(localStorage.getItem(this.rvKey()) || 'null'); } catch(e) { r = null; } }
+    r = (r && typeof r === 'object') ? r : {};
+    ['txt','draw','mode','ans'].forEach(k => { if (!r[k] || typeof r[k] !== 'object') r[k] = {}; });
+    if (!r.help || typeof r.help !== 'object') r.help = { picks:[], best:null };
+    if (!Array.isArray(r.help.picks)) r.help.picks = [];
+    this._rv = r;
+  }
+  rvSave() {
+    if (this._guest) return;
+    clearTimeout(this._rvSaveT);
+    this._rvSaveT = setTimeout(() => {
+      try { localStorage.setItem(this.rvKey(), JSON.stringify(this._rv)); }
+      catch(e) { /* 저장 공간이 모자라면 손글씨 그림을 빼고 남긴다 */
+        try { localStorage.setItem(this.rvKey(), JSON.stringify(Object.assign({}, this._rv, { draw:{} }))); } catch(e2) {} }
+    }, 250);
+  }
+  rvTouch() { this.setState({ rvTick: (this.state.rvTick || 0) + 1 }); }
+  rvHas(key) { const r = this._rv || {}; return !!(((r.txt || {})[key] || '').trim() || (r.draw || {})[key]); }
+  /* 빈칸 묶음(parts)의 빈칸이 모두 맞았는가 */
+  rvDone(qid, parts) {
+    const a = (this._rv || {}).ans || {};
+    return parts.filter(p => p && p.b).every(p => a[qid + '.' + p.b] && a[qid + '.' + p.b].ok);
+  }
+  /* 빈칸 · 보기 고르기 — 틀리면 다시 고르게 하고, 처음 고른 답(first)을 남긴다 */
+  rvPick(qid, b, v, ok) {
+    const a = this._rv.ans, k = qid + '.' + b, prev = a[k];
+    if (prev && prev.ok) return;
+    a[k] = { first: prev ? prev.first : v, cur: v, ok: !!ok, n: (prev ? prev.n : 0) + 1 };
+    this.plog('rv_pick', { q: k, v: String(v).slice(0, 80), ok: ok ? 1 : 0, first: prev ? 0 : 1 });
+    this.rvSave();
+    if (ok) { this.sfx('ok'); this.setState({ toast: null }); }
+    else this.toastRetry('Shall we think again? Remember the activity you did.');
+    this.rvTouch();
+  }
+  /* 카드 화면에서 몇 번째 물음까지 열렸는가 — 1) 빈칸 → 2) 무엇과 관련 → 3) 이 활동을 한 이유 → 4) 다 함.
+     2026-11-16 밤 사용자 — 관련을 2번, 이유를 3번으로 두고, 카드마다 쓰던 「알게 된 것」은 뺐다
+     (글 · 손그림은 모든 활동을 돌아본 뒤 「내 말로 정리하기」에서만) */
+  rvCardStage(c) {
+    const a = this._rv.ans;
+    if (!this.rvDone('f_' + c.id, c.fill)) return 1;
+    const w = a['w_' + c.id + '.a'], r = a['r_' + c.id + '.a'];
+    if (!(r && r.ok)) return 2;
+    if (!(w && w.ok)) return 3;
+    return 4;
+  }
+  /* 지금 화면을 마쳤는가 — 학생 모드의 「다음 →」 잠금에 쓴다 */
+  rvReady(st) {
+    const r = this._rv; if (!r || st.k !== 'rv') return true;
+    if (st.rv === 'own') return this.rvHas('own_ratio') && this.rvHas('own_rate');
+    if (st.rv === 'card') return this.rvCardStage(this.RV_CARDS[st.c]) >= 4;
+    return true;
+  }
+  /* 다시 하기 — 그 방을 ?replay=화면&to=화면 으로 연다. 방 쪽에서 이미 마친 방인지 다시 확인하고,
+     그 범위의 화면만 열어 「끝내기」로 마치게 한다(완료 · 카드 · 이어 하기 기록은 건드리지 않는다). */
+  rvReplay(it) {
+    this.plog('rv_replay', { id: it.id, room: it.room, from: it.scr, to: it.to });
+    this.sfx('tap'); this.stopVoice();
+    try { clearTimeout(this._rvSaveT); if (!this._guest) localStorage.setItem(this.rvKey(), JSON.stringify(this._rv)); } catch(e) {}
+    try { this.flush(true); } catch(e) {}
+    const url = (it.room === 'color' ? 'ColorRoom' : 'SoundRoom') + '.dc.html?replay=' + it.scr + '&to=' + it.to;
+    setTimeout(() => { try { location.href = url; } catch(e) {} }, 250);
+  }
+  /* 손으로 쓰기 · 그리기 — 캔버스 한 장(900 × 260). 손을 뗄 때마다 그림을 저장한다 */
+  rvCanvasRef(key) {
+    return (el) => {
+      if (!el || el._rvBound) return;
+      el._rvBound = 1;
+      const W = 900, H = 260; el.width = W; el.height = H;
+      const ctx = el.getContext('2d');
+      const bg = () => { ctx.fillStyle = '#fffdf6'; ctx.fillRect(0, 0, W, H); };
+      bg();
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = '#201e1d';
+      const prev = this._rv.draw[key];
+      if (prev) { const im = new Image(); im.onload = () => { try { ctx.drawImage(im, 0, 0, W, H); } catch(e) {} }; im.src = prev; }
+      let down = false, last = null;
+      const pt = (e) => { const r = el.getBoundingClientRect(); return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height]; };
+      el.addEventListener('pointerdown', (e) => { down = true; last = pt(e); try { el.setPointerCapture(e.pointerId); } catch(er) {} e.preventDefault();
+        ctx.beginPath(); ctx.arc(last[0], last[1], 2.4, 0, Math.PI * 2); ctx.fillStyle = '#201e1d'; ctx.fill(); });
+      el.addEventListener('pointermove', (e) => { if (!down) return; const p = pt(e);
+        ctx.beginPath(); ctx.moveTo(last[0], last[1]); ctx.lineTo(p[0], p[1]); ctx.stroke(); last = p; e.preventDefault(); });
+      const up = () => { if (!down) return; down = false;
+        try { this._rv.draw[key] = el.toDataURL('image/png'); } catch(e) {}
+        this._rvLastDraw = this._rvLastDraw || {};
+        if (!this._rvLastDraw[key]) { this._rvLastDraw[key] = 1; this.plog('rv_draw', { q: key }); }
+        this.rvSave(); this.rvTouch(); };
+      el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+      el._rvClear = () => { bg(); };
+    };
+  }
+  /* 그림 크게 보기 — 화면 가득 띄우고, 아무 데나 누르면 닫는다 */
+  rvZoom(src, alt) {
+    try {
+      this.sfx('tap'); this.plog('rv_zoom', { src: String(src).slice(3) });
+      const ov = document.createElement('div');
+      ov.style.cssText = 'position:fixed;inset:0;z-index:400;background:rgba(32,30,29,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px;cursor:zoom-out';
+      const im = document.createElement('img');
+      im.src = src; im.alt = alt || '';
+      im.style.cssText = 'max-width:98vw;max-height:88dvh;object-fit:contain;border-radius:14px;background:#fffdf6;box-shadow:0 14px 40px rgba(0,0,0,.4)';
+      const tip = document.createElement('div');
+      tip.textContent = 'Tap anywhere to close';
+      tip.style.cssText = 'color:#f9f4ed;font-size:16px;font-weight:700';
+      ov.appendChild(im); ov.appendChild(tip);
+      ov.addEventListener('click', () => ov.remove());
+      document.body.appendChild(ov);
+    } catch(e) {}
+  }
+  rvClearDraw(key) {
+    delete this._rv.draw[key];
+    try { const el = document.querySelector('[data-rv-canvas="' + key + '"]'); if (el && el._rvClear) el._rvClear(); } catch(e) {}
+    this.sfx('tap'); this.rvSave(); this.rvTouch();
+  }
+
+  rvEl() {
+    const h = (t, a, ...c) => React.createElement(t, a, ...c);
+    const S = this.state, st = this.STEPS[S.i] || {}, r = this._rv;
+    if (!r) return null;
+    const free = this._guest;   /* 교사 모드 — 물음을 한꺼번에 보이고 잠그지 않는다 */
+    const C = { a7:'var(--color-accent-700)', a4:'var(--color-accent-400)', a2:'var(--color-accent-200)', a1:'var(--color-accent-100)',
+                g7:'var(--color-accent-2-700)', g4:'var(--color-accent-2-400)', g1:'var(--color-accent-2-100)',
+                n1:'var(--color-neutral-100)', n2:'var(--color-neutral-200)', n3:'var(--color-neutral-300)', n7:'var(--color-neutral-700)', n8:'var(--color-neutral-800)' };
+    const title = (k, txt, sub) => h('div', { key:k, style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'5px', margin:'2px 0 12px' } },
+      h('div', { key:'t', style:{ fontFamily:"'Fredoka','Nunito',sans-serif", fontSize:'26px', color:C.n8, textAlign:'center' } }, txt),
+      sub ? h('div', { key:'s', style:{ fontSize:'16px', fontWeight:700, color:C.n7, textAlign:'center', lineHeight:1.6, maxWidth:'760px' } }, sub) : null);
+    const box = (k, kids, opt) => h('div', { key:k, style:Object.assign({ background:C.n1, border:'3px solid ' + C.n3, borderRadius:'18px',
+      padding:'14px 16px', margin:'0 0 12px', display:'flex', flexDirection:'column', gap:'11px' }, opt || {}) }, ...kids.filter(Boolean));
+    const qhead = (k, no, txt) => h('div', { key:k, style:{ fontSize:'18.5px', fontWeight:800, color:C.a7, lineHeight:1.5 } }, (no ? no + ' ' : '') + (txt || ''));
+    const para = (k, txt, opt) => h('div', { key:k, style:Object.assign({ fontSize:'17.5px', lineHeight:1.75, color:C.n8 }, opt || {}) }, txt);
+    /* 활동 그림 — 과제 부분만 잘라 찍은 그림(rv/<id>.jpg). 누르면 화면 가득 크게 본다(2026-11-16 「화면이 작아서 보이지 않음」) */
+    const img = (id, alt, maxH) => h('div', { key:'img_' + id, style:{ display:'flex', flexDirection:'column', alignItems:'center', gap:'4px' } },
+      h('img', { key:'i', src:'../final/rv-en/' + id + '.jpg', alt: alt || '', onClick: () => this.rvZoom('../final/rv-en/' + id + '.jpg', alt),
+        onError: (e) => { try { e.currentTarget.parentNode.style.display = 'none'; } catch(err) {} },
+        style:{ width:'100%', maxHeight:(maxH || 440) + 'px', objectFit:'contain', borderRadius:'12px', border:'2px solid ' + C.n3, background:C.n1, display:'block', cursor:'zoom-in' } }),
+      h('div', { key:'z', style:{ fontSize:'13px', fontWeight:700, color:C.n7 } }, '🔍 Tap the picture to see it bigger'));
+    const MK = ['㉠', '㉡', '㉢'];
+    /* 빈칸 문장 — 빈칸마다 아래에 보기 단추 줄을 둔다. 맞힌 빈칸은 문장 안에 채워지고 보기 줄이 사라진다 */
+    const blanks = (qid, parts) => {
+      let bi = 0;
+      const sent = parts.map((p, i) => {
+        if (typeof p === 'string') return h('span', { key:'s' + i }, p);
+        const mk = MK[bi++] || '', rr = r.ans[qid + '.' + p.b], done = rr && rr.ok;
+        return h('span', { key:'b' + i, style:{ display:'inline-block', minWidth:'66px', margin:'0 4px', padding:'0 10px', borderRadius:'10px', textAlign:'center', lineHeight:1.7,
+          border:'2.5px ' + (done ? 'solid ' + C.g4 : 'dashed ' + C.a4), background: done ? C.g1 : C.n1, color: done ? C.g7 : C.a7, fontWeight:800 } }, done ? rr.cur : mk);
+      });
+      const rows = parts.filter(p => p && p.b).map((p, j) => {
+        const rr = r.ans[qid + '.' + p.b];
+        if (rr && rr.ok) return null;
+        return h('div', { key:'r' + j, style:{ display:'flex', alignItems:'center', gap:'8px', flexWrap:'wrap' } },
+          h('span', { key:'m', style:{ fontSize:'18px', fontWeight:800, color:C.a7, minWidth:'26px' } }, MK[j] || ''),
+          ...p.o.map((o, oi) => h('button', { key:'o' + oi, className:'rs-pill2', onClick: () => this.rvPick(qid, p.b, o, o === p.ok),
+            style:{ minHeight:'46px', fontSize:'17px', color:C.n8, borderColor: (rr && rr.cur === o) ? C.a4 : C.n3 } }, o)));
+      }).filter(Boolean);
+      return h('div', { key:'bl_' + qid, style:{ display:'flex', flexDirection:'column', gap:'10px' } },
+        h('div', { key:'sent', style:{ fontSize:'18.5px', lineHeight:2.1, color:C.n8 } }, ...sent),
+        rows.length ? h('div', { key:'rows', style:{ display:'flex', flexDirection:'column', gap:'8px' } }, ...rows) : null);
+    };
+    /* 보기 고르기(세 개) — 맞히면 그 보기에 ✅ */
+    const choices = (qid, opts, okIx) => {
+      const rr = r.ans[qid + '.a'];
+      return h('div', { key:'ch_' + qid, style:{ display:'flex', flexDirection:'column', gap:'8px' } },
+        ...opts.map((o, oi) => {
+          const on = rr && rr.cur === o, good = on && rr.ok;
+          return h('button', { key:'o' + oi, onClick: () => this.rvPick(qid, 'a', o, oi === okIx),
+            style:{ textAlign:'left', fontFamily:'inherit', fontSize:'17px', lineHeight:1.55, padding:'11px 16px', borderRadius:'14px', cursor:'pointer',
+              border:'3px solid ' + (good ? C.g4 : (on ? C.a4 : C.n3)), background: good ? C.g1 : (on ? C.a1 : C.n1), color:C.n8 } },
+            (good ? '✅ ' : '') + o);
+        }));
+    };
+    /* 쓰는 칸 — 글로 쓰기(기본) 또는 손으로 쓰기 · 그리기(태블릿) */
+    const write = (key, prompt) => {
+      const mode = r.mode[key] || 'type';
+      const tg = (m, txt) => h('button', { key:'m_' + m, onClick: () => { r.mode[key] = m; this.sfx('tap'); this.rvSave(); this.rvTouch(); },
+        style:{ fontFamily:'inherit', fontSize:'15px', fontWeight:700, padding:'7px 14px', borderRadius:'999px', cursor:'pointer',
+          border:'2.5px solid ' + (mode === m ? C.a4 : C.n3), background: mode === m ? C.a2 : C.n1, color:C.a7 } }, txt);
+      const area = mode === 'type'
+        ? h('textarea', { key:'ta_' + key, defaultValue: r.txt[key] || '', rows:3, placeholder:'Write here',
+            onInput: (e) => { r.txt[key] = e.target.value; this.rvSave(); clearTimeout(this._rvTT); this._rvTT = setTimeout(() => this.rvTouch(), 350); },
+            onBlur: (e) => { const v2 = (e.target.value || '').trim(); if (v2 && v2 !== (this._rvLogged || {})[key]) { this._rvLogged = Object.assign({}, this._rvLogged); this._rvLogged[key] = v2; this.plog('rv_text', { q:key, len:v2.length, text:v2.slice(0, 300) }); } },
+            style:{ width:'100%', boxSizing:'border-box', fontFamily:'inherit', fontSize:'18px', lineHeight:1.6, padding:'10px 12px', borderRadius:'12px',
+              border:'2.5px solid ' + C.n3, background:'#fffdf6', resize:'vertical' } })
+        : h('div', { key:'cv_' + key, style:{ display:'flex', flexDirection:'column', gap:'6px' } },
+            h('canvas', { key:'c', 'data-rv-canvas':key, ref: this.rvCanvasRef(key),
+              style:{ width:'100%', height:'auto', aspectRatio:'900 / 260', borderRadius:'12px', border:'2.5px solid ' + C.n3, background:'#fffdf6', touchAction:'none', cursor:'crosshair' } }),
+            h('button', { key:'x', className:'rs-pill2', onClick: () => this.rvClearDraw(key), style:{ alignSelf:'flex-end', minHeight:'40px', fontSize:'14px', padding:'7px 16px' } }, 'Erase'));
+      return h('div', { key:'w_' + key, style:{ display:'flex', flexDirection:'column', gap:'8px' } },
+        prompt ? qhead('p', '', prompt) : null,
+        h('div', { key:'tg', style:{ display:'flex', gap:'8px', flexWrap:'wrap' } }, tg('type', '⌨️ Type'), tg('draw', '✍️ Write or draw by hand')),
+        area);
+    };
+    /* 앞에서 내 말로 쓴 것을 다시 보여 준다 */
+    const mine = (key, label) => !this.rvHas(key) ? null : h('div', { key:'mine_' + key, style:{ background:C.a1, border:'2px dashed ' + C.a4, borderRadius:'14px', padding:'10px 14px', margin:'0 0 12px', display:'flex', flexDirection:'column', gap:'6px' } },
+      h('div', { key:'l', style:{ fontSize:'14.5px', fontWeight:800, color:C.a7 } }, label),
+      (r.txt[key] || '').trim() ? h('div', { key:'t', style:{ fontSize:'17px', lineHeight:1.6, color:C.n8, whiteSpace:'pre-wrap' } }, r.txt[key]) : null,
+      r.draw[key] ? h('img', { key:'d', src:r.draw[key], alt:'', style:{ width:'100%', maxWidth:'560px', borderRadius:'10px', border:'1.5px solid ' + C.n3, background:'#fffdf6' } }) : null);
+    /* 활동 목록(16장) — 도움이 된 활동 · 다시 하기에서 쓴다 */
+    /* 활동 칸 — 칸을 누르면 고르고, 🔍를 누르면 그림을 크게 본다. 그림이 잘 보이도록 칸을 크게(한 줄에 둘~셋) 둔다 */
+    const tile = (it, on, tap, mark) => h('div', { key:'tl_' + it.id, role:'button', onClick: tap,
+      style:{ position:'relative', display:'flex', flexDirection:'column', gap:'6px', padding:'8px', borderRadius:'16px', cursor:'pointer', textAlign:'center',
+        border:'3px solid ' + (on ? C.g4 : C.n3), background: on ? C.g1 : C.n1 } },
+      h('img', { key:'i', src:'../final/rv-en/' + it.id + '.jpg', alt:'', onError:(e) => { try { e.currentTarget.style.visibility = 'hidden'; } catch(er) {} },
+        style:{ width:'100%', height:'190px', objectFit:'contain', borderRadius:'10px', background:'#fffdf6', display:'block' } }),
+      h('button', { key:'z', 'aria-label':'See the picture bigger', onClick:(e) => { e.stopPropagation(); this.rvZoom('../final/rv-en/' + it.id + '.jpg', it.t); },
+        style:{ position:'absolute', top:'12px', right:'12px', width:'40px', height:'40px', borderRadius:'999px', border:'2px solid ' + C.n3,
+          background:'rgba(255,253,246,.92)', fontSize:'18px', cursor:'zoom-in' } }, '🔍'),
+      h('div', { key:'t', style:{ fontSize:'16px', fontWeight:700, lineHeight:1.45, color:C.n8 } }, (it.room === 'color' ? '🎨 ' : '🎼 ') + it.t),
+      on && mark ? h('div', { key:'c', style:{ fontSize:'14px', fontWeight:800, color:C.g7 } }, mark) : null);
+    const grid = (k, kids) => h('div', { key:k, style:{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(270px,1fr))', gap:'12px', margin:'0 0 12px' } }, ...kids);
+
+    /* 내 말로 정리하기 — 개념 정리와 앱 활동 되돌아보기를 마친 뒤에 둔다(2026-11-16 사용자 지시) */
+    if (st.rv === 'own') return h('div', { key:'rv_own' },
+      title('t', '✏️ Sum it up in my own words', 'You have looked back at the activities you did in the app. Thinking about them, sum up in your own words what a ratio and a rate are.'),
+      box('b1', [write('own_ratio', 'What is a ratio?')]),
+      box('b2', [write('own_rate', 'What is a rate?')]));
+
+    /* ── 개념 정리 — 비 · 기준량과 비교하는 양 · 비율 · 백분율을 그림 없이 한 화면에 죽 잇는다(2026-11-16 밤 사용자 지시).
+       정의 · 읽기 · 비율 · 백분율은 교과서 문장 그대로(충북교육청 6-1 학습지 2026 · 미래엔 6-1 · 2015 국정 6-1과 같은 문장) ── */
+    const sec = (k, txt) => h('div', { key:k, style:{ fontFamily:"'Fredoka','Nunito',sans-serif", fontSize:'23px', color:C.a7, margin:'2px 0 8px 4px' } }, txt);
+    const defLine = (k, txt) => para(k, txt, { fontWeight:800, fontSize:'19px', color:C.n8 });
+    const defBox = (k, kids) => box(k, kids, { background:C.a1, borderColor:C.a4 });
+
+    if (st.rv === 'def') return h('div', { key:'rv_def' },
+      title('t', '📝 Ratio and rate: the ideas'),
+      sec('s1', 'ratio'),
+      defBox('b1', [
+        defLine('d1', 'When we compare two numbers by division and write them with the sign :, we call it a ratio.'),
+        para('d2', 'We write a ratio to compare how many times one amount is, taking another amount as the base.', { fontWeight:700, color:C.a7 }),
+        para('e1', 'Example) When we compare the 2 red squares and the 3 yellow squares painted in five squares, we write 2 : 3 and read it “2 to 3.” We can also say “the ratio of 2 to 3” or “the ratio of 2 with 3 as the base.”')
+      ]),
+      sec('s2', 'Base amount and amount being compared'),
+      defBox('b2', [
+        defLine('d3', 'The base amount is the amount we compare against. The amount being compared is the amount we want to measure against the base amount.'),
+        para('e2', 'Example) When 40 of 100 squares are painted red and we find how much red there is compared with the whole, the base amount is all 100 squares and the amount being compared is the 40 red squares. As a ratio, it is 40 : 100.'),
+        para('tx', 'In the ratio 40 : 100, the 100 on the right of the sign : is the base amount, and the 40 on the left is the amount being compared.', { fontWeight:800, color:C.a7 })
+      ]),
+      sec('s3', 'rate'),
+      defBox('b3', [
+        defLine('d4', 'The size of the amount being compared relative to the base amount is called a rate.'),
+        para('f', '(rate) = (amount being compared) ÷ (base amount) = (amount being compared) / (base amount)', { fontWeight:800, color:C.a7, fontSize:'18.5px' }),
+        para('e3', 'Example) The ratio 40 : 100 as a rate is 40 ÷ 100 = 40/100 = 0.4.')
+      ]),
+      sec('s4', 'Percentage'),
+      defBox('b4', [
+        defLine('d5', 'A rate with the base amount taken as 100 is called a percentage. A percentage is written with the sign %.'),
+        para('e4', 'Example) The rate 40/100 (0.4) as a percentage is 40%.')
+      ]));
+
+    if (st.rv === 'card') {
+      const c = this.RV_CARDS[st.c], stage = free ? 4 : this.rvCardStage(c);
+      return h('div', { key:'rv_card_' + c.id },
+        title('t', 'Looking back at the app · ' + (st.c + 1) + ' / ' + this.RV_CARDS.length),
+        box('sc', [
+          h('div', { key:'tag', style:{ fontSize:'14.5px', fontWeight:800, color:C.n7 } }, c.tag),
+          h('div', { key:'tt', style:{ fontFamily:"'Fredoka','Nunito',sans-serif", fontSize:'23px', color:C.n8 } }, c.t),
+          img(c.id, c.t),
+          para('rc', c.recall)
+        ], { background:C.a1, borderColor:C.a4 }),
+        box('q1', [qhead('h', '1)', 'Think back to this activity and fill in the blanks.'), blanks('f_' + c.id, c.fill)]),
+        stage >= 2 ? box('q2', [qhead('h', '2)', 'What is this activity about?'), choices('r_' + c.id, this.RV_REL, c.rel)]) : null,
+        stage >= 3 ? box('q3', [qhead('h', '3)', 'Why did we do this activity?'), choices('w_' + c.id, c.why.o, c.why.ok)]) : null);
+    }
+
+    if (st.rv === 'end') {
+      const it = this.RV_LIST.find(x => x.id === S.rvEndPick);
+      return h('div', { key:'rv_end' },
+        title('t', 'Great job!', 'Is there an activity you want to try again? Pick one and you can do it again. If not, tap “Finish” below.'),
+        grid('g', this.RV_LIST.map(x => tile(x, S.rvEndPick === x.id, () => { this.sfx('tap'); this.setState({ rvEndPick: S.rvEndPick === x.id ? null : x.id }); }, '🔁 To try again'))),
+        it ? box('go', [para('p', '“' + it.t + '” — shall we try this activity again? When you are done, tap “Finish” to go to the start screen.', { textAlign:'center' }),
+          h('button', { key:'go', className:'rs-pill', onClick: () => this.rvReplay(it), style:{ alignSelf:'center' } }, '🔁 Try this activity again →')],
+          { background:C.g1, borderColor:C.g4 }) : null);
+    }
+    return null;
+  }
+
   renderVals() {
     const S = this.state, st = this.STEPS[S.i];
     const solved = !!S.solved[S.i];
@@ -1123,8 +1492,9 @@ class Component extends DCLogic {
       isStory: st.k === 'story',
       isDoor: st.k === 'door', isFinale: st.k === 'finale', isPhi: st.k === 'phi' || st.k === 'finale',
       isWrap: st.k === 'wrap',
-      /* 마지막 화면에서는 말풍선을 통째로 감춘다 */
-      showCoach: st.k !== 'wrap',
+      /* 마지막 화면에서는 말풍선을 통째로 감춘다. 정리 활동 화면도 대사가 없으므로 감춘다 */
+      showCoach: st.k !== 'wrap' && st.k !== 'rv',
+      isRv: st.k === 'rv', rvEl: st.k === 'rv' ? this.rvEl() : null,
       phiArt: st.k === 'finale' ? this.phiGalleryEl() : null,
       doorCards: null, doorSlots: null, doorPad: null, doorGlow: '0', doorLockOp: '1',
       doorTfL: 'rotateY(0deg)', doorTfR: 'rotateY(0deg)',
@@ -1176,18 +1546,28 @@ class Component extends DCLogic {
        남고, 이 단추는 새 기록을 남기지 않는다.
        문 화면에는 단추를 두지 않는다 — 네 자리를 다 누르면 스스로 열리므로
        「문 열기!」가 할 일이 없다(사용자 확인, 같은 날). */
-    v.showPrimary = st.k !== 'door';
-    v.primaryLabel = last ? '🏠 Go to the home screen'
+    /* 2026-11-16 — 교사 모드는 다른 방처럼 풀지 않고도 넘어갈 수 있게 문 화면에도 「다음 →」을 둔다 */
+    v.showPrimary = st.k !== 'door' || this._guest;
+    /* 2026-11-16 — 황금비(마침) 화면 뒤에 정리 활동을 둔다. 마침 화면의 단추가 정리 활동으로 간다.
+       마지막 화면(다시 하기 · 끝내기)의 단추는 「끝내기」로 허브에 돌아간다. */
+    v.primaryLabel = last ? '🏠 Finish'
       : (st.k === 'story' ? (st.btn || 'Next →')
-      : (st.k === 'finale' ? 'So what is the secret? →' : (st.k === 'door' ? '🔓 Open the door!' : 'Next →')));
+      : (st.k === 'finale' ? '📝 Let’s go to the wrap-up!' : (st.k === 'door' ? (this._guest ? 'Next →' : '🔓 Open the door!') : 'Next →')));
+    /* 정리 활동 — 학생 모드에서는 그 화면의 물음에 모두 답해야 다음으로 간다(교사 모드는 자유) */
+    const rvBlock = st.k === 'rv' && !last && !this._guest && !this.rvReady(st);
     /* 2026-09-19: 문 화면에 단추가 둘이었다(화면 안 「문 열기!」 + 아래 「다음 →」).
        아래 하나로 합치고 이름을 「문 열기!」로 바꿨으니 잠긴 것처럼 회색으로 두지 않는다. */
-    v.primaryBg = (!needsSolve || solved || st.k === 'door') ? 'var(--color-accent)' : 'var(--color-neutral-400)';
+    v.primaryBg = rvBlock ? 'var(--color-neutral-400)'
+      : ((!needsSolve || solved || st.k === 'door') ? 'var(--color-accent)' : 'var(--color-neutral-400)');
     v.footHint = (needsSolve && !solved)
       ? (st.k === 'door' ? 'Open the door with the card numbers to go on'
         : 'Solve this and you can go on')
-      : '';
+      : (rvBlock ? 'Answer all the questions to go on'
+        : (st.k === 'finale' ? 'Look back at the app activities and sum up ratio and rate' : ''));
+    if (st.k === 'door' && this._guest && !solved) v.footHint = '🧑‍🏫 Teacher mode — you can skip the door with “Next →”';
     v.primary = () => {
+      if (rvBlock) { this.sfx('oops'); this.toast('🤔', 'Almost there!', 'Answer all the questions on this screen to go on.'); return; }
+      if (st.k === 'door' && this._guest && !solved) { this.sfx('tap'); this.go(1); return; }
       /* 마지막 화면 — 허브로 돌아간다. 남은 기록을 먼저 보내고 옮긴다. */
       if (last) {
         this.sfx('tap');
